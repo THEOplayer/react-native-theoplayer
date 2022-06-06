@@ -1,0 +1,26 @@
+h1,
+h5,
+span {
+    color: #ffffff;
+}
+
+body {
+    background-color: #373a3c;
+}
+
+.container {
+  flex: 1
+}
+
+#theoplayer-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.theoplayer-container {
+  flex: 1;
+  z-index: 0;
+}

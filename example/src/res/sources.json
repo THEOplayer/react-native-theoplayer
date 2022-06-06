@@ -1,0 +1,204 @@
+[
+  {
+    "name": "DASH - Thumbnails in manifest",
+    "os": [
+      "android",
+      "web"
+    ],
+    "source": {
+      "sources": [
+        {
+          "src": "https://dash.akamaized.net/akamai/bbb_30fps/bbb_with_multiple_tiled_thumbnails.mpd",
+          "type": "application/dash+xml"
+        }
+      ]
+    }
+  },
+  {
+    "name": "DASH - Thumbnails Side-loaded",
+    "os": [
+      "android",
+      "web"
+    ],
+    "source": {
+      "sources": [
+        {
+          "src": "https://contentserver.prudentgiraffe.com/videos/dash/big_buck_bunny/BigBuckBunny_10s_simple_2014_05_09.mpd",
+          "type": "application/dash+xml"
+        }
+      ],
+      "textTracks": [{
+        "default": true,
+        "src": "https://cdn.theoplayer.com/dash/theoplayer/thumbnails/big_buck_bunny_thumbnails.vtt",
+        "label": "thumbnails",
+        "kind": "metadata"
+      }]
+    }
+  },
+  {
+    "name": "DASH - VOD - Clear",
+    "os": [
+      "android",
+      "web"
+    ],
+    "source": {
+      "sources": [
+        {
+          "src": "https://contentserver.prudentgiraffe.com/videos/dash/webvtt-embedded-in-isobmff/Manifest.mpd",
+          "type": "application/dash+xml"
+        }
+      ]
+    }
+  },
+  {
+    "name": "DASH - VOD - Widevine",
+    "os": [
+      "android",
+      "web"
+    ],
+    "source": {
+      "sources": {
+        "src": "https://contentserver.prudentgiraffe.com/tos-dash-widevine/tos_h264_main.mpd",
+        "type": "application/dash+xml",
+        "contentProtection": {
+          "widevine": {
+            "licenseAcquisitionURL": "https://widevine-dash.ezdrm.com/proxy?pX=62448C"
+          },
+          "integration": "ezdrm"
+        }
+      }
+    }
+  },
+  {
+    "name": "DASH - Live - Clear",
+    "os": [
+      "android",
+      "web"
+    ],
+    "source": {
+      "sources": {
+        "src": "https://livesim.dashif.org/livesim/chunkdur_1/ato_7/testpic4_8s/Manifest.mpd"
+      }
+    }
+  },
+  {
+    "name": "DASH - VOD - Clear - IMA PreRoll ad",
+    "os": [
+      "android",
+      "web"
+    ],
+    "source": {
+      "sources": [
+        {
+          "src": "https://contentserver.prudentgiraffe.com/videos/dash/webvtt-embedded-in-isobmff/Manifest.mpd",
+          "type": "application/dash+xml"
+        }
+      ],
+      "ads": [
+        {
+          "integration": "google-ima",
+          "sources": "https://cdn.theoplayer.com/demos/ads/vast/dfp-preroll-no-skip.xml"
+        }
+      ]
+    }
+  },
+  {
+    "name": "HLS - VOD - Clear - Elephant's dream",
+    "os": [
+      "ios",
+      "web"
+    ],
+    "source": {
+      "sources": {
+        "src": "https://cdn.theoplayer.com/video/elephants-dream/playlist.m3u8",
+        "type": "application/x-mpegurl"
+      }
+    }
+  },
+  {
+    "name": "HLS - VOD - Clear - The Venture Bros",
+    "os": [
+      "ios"
+    ],
+    "source": {
+      "sources": {
+        "src": "https://cdn.theoplayer.com/video/adultswim/clip.m3u8",
+        "type": "application/x-mpegurl"
+      },
+      "poster": "https://cdn.theoplayer.com/video/adultswim/poster.jpg"
+    }
+  },
+  {
+    "name": "HLS - VOD - AES128 - Big Buck Bunny",
+    "os": [
+      "ios"
+    ],
+    "source": {
+      "sources": {
+        "src": "https://cdn.theoplayer.com/video/big_buck_bunny_encrypted/stream-800/index.m3u8",
+        "type": "application/x-mpegurl"
+      },
+      "poster": "https://cdn.theoplayer.com/video/big_buck_bunny/poster.jpg"
+    }
+  },
+  {
+    "name": "HLS - VOD/Thumbnails - Clear - Big Buck Bunny",
+    "os": [
+      "ios",
+      "web"
+    ],
+    "source": {
+      "sources": {
+        "src": "https://cdn.theoplayer.com/video/big_buck_bunny/big_buck_bunny.m3u8",
+        "type": "application/x-mpegurl"
+      },
+      "poster": "https://cdn.theoplayer.com/video/big_buck_bunny/poster.jpg",
+      "textTracks": [
+        {
+          "default": true,
+          "src": "https://cdn.theoplayer.com/dash/theoplayer/thumbnails/big_buck_bunny_thumbnails.vtt",
+          "label": "thumbnails",
+          "kind": "metadata",
+          "srclang": "en"
+        }
+      ]
+    }
+  },
+  {
+    "name": "HLS - VOD - Clear - Star Wars Docu",
+    "os": [
+      "ios"
+    ],
+    "source": {
+      "sources": {
+        "src": "https://cdn.theoplayer.com/video/star_wars_episode_vii-the_force_awakens_official_comic-con_2015_reel_(2015)/index.m3u8",
+        "type": "application/x-mpegurl"
+      },
+      "poster": "https://cdn.theoplayer.com/video/star_wars_episode_vii-the_force_awakens_official_comic-con_2015_reel_(2015)/poster.jpg"
+    }
+  },
+  {
+    "name": "MP4 - Big Buck Bunny",
+    "os": [
+      "ios",
+      "web"
+    ],
+    "source": {
+      "sources": {
+        "src": "https://www.w3schools.com/html/mov_bbb.mp4"
+      }
+    }
+  },
+  {
+    "name": "MP3 - SoundHelix Song1",
+    "os": [
+      "ios",
+      "web"
+    ],
+    "source": {
+      "sources": {
+        "src": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+      }
+    }
+  }
+]

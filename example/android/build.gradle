@@ -1,0 +1,63 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    ext {
+        buildToolsVersion = "29.0.3"
+        minSdkVersion = 21
+        compileSdkVersion = 29
+        targetSdkVersion = 29
+        ndkVersion = "23.1.7779620"
+
+        // Override compileSdkVersion
+//         THEOplayer_compileSdkVersion = 31
+
+        // Override minSdkVersion
+//         THEOplayer_minSdkVersion = 21
+
+        // Override targetSdkVersion
+//         THEOplayer_targetSdkVersion = 31
+
+        // Specify a specfic SDK version (default: the lastest available version).
+//         THEOplayer_sdk = "3.5.0"
+
+        // Optionally limit timeUpdate rate, which could improve performance. Possible values:
+        // - "com.theoplayer.TimeUpdateRate.UNLIMITED"
+        // - "com.theoplayer.TimeUpdateRate.LIMITED_ONE_HZ"
+        // - "com.theoplayer.TimeUpdateRate.LIMITED_TWO_HZ"
+        // - "com.theoplayer.TimeUpdateRate.LIMITED_THREE_HZ"
+//        THEOplayer_timeUpdateRate = "com.theoplayer.TimeUpdateRate.LIMITED_TWO_HZ"
+
+        // Toggle player event logging
+//        THEOplayer_logPlayerEvents = "false"
+
+        // Toggle playerView event logging
+//        THEOplayer_logViewEvents = "false"
+    }
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath("com.android.tools.build:gradle:4.1.0")
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        mavenLocal()
+        maven {
+            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+            url("$rootDir/../node_modules/react-native/android")
+        }
+        maven {
+            // Android JSC is installed from npm
+            url("$rootDir/../node_modules/jsc-android/dist")
+        }
+
+        google()
+        jcenter()
+        maven { url 'https://www.jitpack.io' }
+    }
+}

@@ -1,0 +1,90 @@
+buildscript {
+  if (project == rootProject) {
+    repositories {
+      google()
+      mavenCentral()
+    }
+
+    dependencies {
+      classpath 'com.android.tools.build:gradle:4.2.2'
+    }
+  }
+}
+
+apply plugin: 'com.android.library'
+
+def safeExtGet(prop, fallback) {
+  rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+}
+
+def TimeUpdateRate = "com.theoplayer.TimeUpdateRate"
+
+android {
+  compileSdkVersion safeExtGet('THEOplayer_compileSdkVersion', 31)
+  defaultConfig {
+    minSdkVersion safeExtGet('THEOplayer_minSdkVersion', 21)
+    targetSdkVersion safeExtGet('THEOplayer_targetSdkVersion', 31)
+    versionCode 1
+    versionName "1.0"
+  }
+
+  buildTypes {
+    debug {
+      // Optionally limit timeUpdate rate. Possible values:
+      // - "com.theoplayer.TimeUpdateRate.UNLIMITED"
+      // - "com.theoplayer.TimeUpdateRate.LIMITED_ONE_HZ"
+      // - "com.theoplayer.TimeUpdateRate.LIMITED_TWO_HZ"
+      // - "com.theoplayer.TimeUpdateRate.LIMITED_THREE_HZ"
+      buildConfigField TimeUpdateRate, "TIMEUPDATE_RATE", safeExtGet('THEOplayer_timeUpdateRate', "${TimeUpdateRate}.UNLIMITED")
+
+      // Optionally log events to logcat
+      buildConfigField "boolean", "LOG_PLAYER_EVENTS", safeExtGet('THEOplayer_logPlayerEvents', "false")
+      buildConfigField "boolean", "LOG_VIEW_EVENTS", safeExtGet('THEOplayer_logViewEvents', "false")
+    }
+    release {
+      minifyEnabled false
+
+      // Optionally limit timeUpdate rate, which could improve performance. Possible values:
+      // - "com.theoplayer.TimeUpdateRate.UNLIMITED"
+      // - "com.theoplayer.TimeUpdateRate.LIMITED_ONE_HZ"
+      // - "com.theoplayer.TimeUpdateRate.LIMITED_TWO_HZ"
+      // - "com.theoplayer.TimeUpdateRate.LIMITED_THREE_HZ"
+      buildConfigField TimeUpdateRate, "TIMEUPDATE_RATE", safeExtGet('THEOplayer_timeUpdateRate', "${TimeUpdateRate}.UNLIMITED")
+
+      // Optionally log events to logcat
+      buildConfigField "boolean", "LOG_PLAYER_EVENTS", safeExtGet('THEOplayer_logPlayerEvents', "false")
+      buildConfigField "boolean", "LOG_VIEW_EVENTS", safeExtGet('THEOplayer_logViewEvents', "false")
+    }
+  }
+  lintOptions {
+    disable 'GradleCompatible'
+  }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+  packagingOptions {
+    exclude 'META-INF/kotlin-stdlib.kotlin_module'
+    exclude 'META-INF/annotation-experimental_release.kotlin_module'
+  }
+}
+
+repositories {
+  mavenLocal()
+  maven {
+    // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+    url("$rootDir/../node_modules/react-native/android")
+  }
+  google()
+  mavenCentral()
+  maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+  //noinspection GradleDynamicVersion
+  implementation "com.facebook.react:react-native:+"  // From node_modules
+  implementation "com.theoplayer.theoplayer-sdk-android:unified:${safeExtGet('THEOplayer_sdk', '+')}"
+  implementation "com.theoplayer.theoplayer-sdk-android:unified-ads:${safeExtGet('THEOplayer_sdk', '+')}"
+  implementation "com.theoplayer.theoplayer-sdk-android:unified-ads-ima:${safeExtGet('THEOplayer_sdk', '+')}"
+  implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
+}
