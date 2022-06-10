@@ -53,7 +53,7 @@ React Native works to speed up the way of working with THEOplayer React Native S
 This section starts with creating a minimal demo app that integrates the `react-native-theoplayer` package,
 followed by an overview of the available properties and functionality of the THEOplayerView component.
 An example application including a basic user interface and demo sources is included in the
-[git repository](https://github.com/THEOplayer/react-native-theoplayer/example),
+[git repository](https://github.com/THEOplayer/react-native-theoplayer/tree/master/example),
 and discussed in the next section. Finally, an overview of features, limitations and known issues is listed.
 
 - [Creating a minimal demo app](./doc/creating-minimal-app.md)
