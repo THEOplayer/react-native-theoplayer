@@ -2,7 +2,7 @@
 
 The `react-native-theoplayer` package only provides the `THEOplayerView` component.
 The example application on our react-native-theoplayer
-[git repository](https://github.com/THEOplayer/react-native-theoplayer/tree/develop/example) demonstrates how to integrate
+[git repository](https://github.com/THEOplayer/react-native-theoplayer/tree/master/example) demonstrates how to integrate
 the component in a single-page app with a basic UI that allows interaction on both touch-based and remote-controlled devices.
 
 The example app depends on [`react-native-tvos`](https://github.com/react-native-tvos/react-native-tvos),
