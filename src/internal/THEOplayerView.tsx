@@ -13,6 +13,7 @@ import type {
   SegmentNotFoundEvent,
   TextTrackListEvent,
   TextTrackEvent,
+  AdEvent,
 } from 'react-native-theoplayer';
 
 import styles from './THEOplayerView.style';
@@ -42,6 +43,7 @@ interface THEOplayerRCTViewProps extends THEOplayerViewProps {
   onNativeSegmentNotFound: (event: NativeSyntheticEvent<SegmentNotFoundEvent>) => void;
   onNativeTextTrackListEvent: (event: NativeSyntheticEvent<TextTrackListEvent>) => void;
   onNativeTextTrackEvent: (event: NativeSyntheticEvent<TextTrackEvent>) => void;
+  onNativeAdEvent: (event: NativeSyntheticEvent<AdEvent>) => void;
   onNativeFullscreenPlayerWillPresent?: () => void;
   onNativeFullscreenPlayerDidPresent?: () => void;
   onNativeFullscreenPlayerWillDismiss?: () => void;
@@ -243,6 +245,12 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
     }
   };
 
+  private _onAdEvent = (event: NativeSyntheticEvent<AdEvent>) => {
+    if (this.props.onAdEvent) {
+      this.props.onAdEvent(event.nativeEvent);
+    }
+  };
+
   private _onFullscreenPlayerWillPresent = () => {
     if (this.props.onFullscreenPlayerWillPresent) {
       this.props.onFullscreenPlayerWillPresent();
@@ -304,6 +312,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
           onNativeSegmentNotFound={this._onSegmentNotFound}
           onNativeTextTrackListEvent={this._onTextTrackListEvent}
           onNativeTextTrackEvent={this._onTextTrackEvent}
+          onNativeAdEvent={this._onAdEvent}
           onNativeFullscreenPlayerWillPresent={this._onFullscreenPlayerWillPresent}
           onNativeFullscreenPlayerDidPresent={this._onFullscreenPlayerDidPresent}
           onNativeFullscreenPlayerWillDismiss={this._onFullscreenPlayerWillDismiss}
