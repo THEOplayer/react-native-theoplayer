@@ -294,7 +294,7 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
       final boolean playerIsPaused = player.isPaused();
       if (!paused && playerIsPaused) {
         player.play();
-      } else if (paused && !playerIsPaused) {
+      } else if (paused && (!playerIsPaused || player.getAds().isPlaying())) {
         player.pause();
       }
     }
