@@ -19,43 +19,39 @@ def safeExtGet(prop, fallback) {
   rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
 }
 
-def TimeUpdateRate = "com.theoplayer.TimeUpdateRate"
-
 android {
   compileSdkVersion safeExtGet('THEOplayer_compileSdkVersion', 31)
+
   defaultConfig {
     minSdkVersion safeExtGet('THEOplayer_minSdkVersion', 21)
     targetSdkVersion safeExtGet('THEOplayer_targetSdkVersion', 31)
     versionCode 1
     versionName "1.0"
+
+    // Optionally limit timeUpdate rate. Possible values:
+    // - "com.theoplayer.TimeUpdateRate.UNLIMITED"
+    // - "com.theoplayer.TimeUpdateRate.LIMITED_ONE_HZ"
+    // - "com.theoplayer.TimeUpdateRate.LIMITED_TWO_HZ"
+    // - "com.theoplayer.TimeUpdateRate.LIMITED_THREE_HZ"
+    def TimeUpdateRate = "com.theoplayer.TimeUpdateRate"
+    buildConfigField TimeUpdateRate, "TIMEUPDATE_RATE", safeExtGet('THEOplayer_timeUpdateRate', "${TimeUpdateRate}.UNLIMITED")
+
+    // Optionally log events to logcat
+    buildConfigField "boolean", "LOG_PLAYER_EVENTS", safeExtGet('THEOplayer_logPlayerEvents', "false")
+    buildConfigField "boolean", "LOG_VIEW_EVENTS", safeExtGet('THEOplayer_logViewEvents', "false")
+
+    // Extensions
+    buildConfigField "boolean", "EXTENSION_GOOGLE_IMA", safeExtGet("THEOplayer_extensionGoogleIMA", "false")
+    buildConfigField "boolean", "EXTENSION_CAST", safeExtGet("THEOplayer_extensionCast", "false")
+    buildConfigField "boolean", "EXTENSION_MEDIATAILOR", safeExtGet("THEOplayer_extensionMediaTailor", "false")
   }
 
   buildTypes {
     debug {
-      // Optionally limit timeUpdate rate. Possible values:
-      // - "com.theoplayer.TimeUpdateRate.UNLIMITED"
-      // - "com.theoplayer.TimeUpdateRate.LIMITED_ONE_HZ"
-      // - "com.theoplayer.TimeUpdateRate.LIMITED_TWO_HZ"
-      // - "com.theoplayer.TimeUpdateRate.LIMITED_THREE_HZ"
-      buildConfigField TimeUpdateRate, "TIMEUPDATE_RATE", safeExtGet('THEOplayer_timeUpdateRate', "${TimeUpdateRate}.UNLIMITED")
-
-      // Optionally log events to logcat
-      buildConfigField "boolean", "LOG_PLAYER_EVENTS", safeExtGet('THEOplayer_logPlayerEvents', "false")
-      buildConfigField "boolean", "LOG_VIEW_EVENTS", safeExtGet('THEOplayer_logViewEvents', "false")
+      minifyEnabled false
     }
     release {
       minifyEnabled false
-
-      // Optionally limit timeUpdate rate, which could improve performance. Possible values:
-      // - "com.theoplayer.TimeUpdateRate.UNLIMITED"
-      // - "com.theoplayer.TimeUpdateRate.LIMITED_ONE_HZ"
-      // - "com.theoplayer.TimeUpdateRate.LIMITED_TWO_HZ"
-      // - "com.theoplayer.TimeUpdateRate.LIMITED_THREE_HZ"
-      buildConfigField TimeUpdateRate, "TIMEUPDATE_RATE", safeExtGet('THEOplayer_timeUpdateRate', "${TimeUpdateRate}.UNLIMITED")
-
-      // Optionally log events to logcat
-      buildConfigField "boolean", "LOG_PLAYER_EVENTS", safeExtGet('THEOplayer_logPlayerEvents', "false")
-      buildConfigField "boolean", "LOG_VIEW_EVENTS", safeExtGet('THEOplayer_logViewEvents', "false")
     }
   }
   lintOptions {
@@ -86,6 +82,26 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"  // From node_modules
   implementation "com.theoplayer.theoplayer-sdk-android:unified:${safeExtGet('THEOplayer_sdk', '+')}"
-  implementation "com.theoplayer.theoplayer-sdk-android:unified-ads:${safeExtGet('THEOplayer_sdk', '+')}"
-  implementation "com.theoplayer.theoplayer-sdk-android:unified-ads-ima:${safeExtGet('THEOplayer_sdk', '+')}"
+
+  if (safeExtGet("THEOplayer_extensionGoogleIMA", false)) {
+    implementation "com.theoplayer.theoplayer-sdk-android:unified-ads:${safeExtGet('THEOplayer_sdk', '+')}"
+    implementation "com.theoplayer.theoplayer-sdk-android:unified-ads-ima:${safeExtGet('THEOplayer_sdk', '+')}"
+  } else {
+    compileOnly "com.theoplayer.theoplayer-sdk-android:unified-ads:${safeExtGet('THEOplayer_sdk', '+')}"
+    compileOnly "com.theoplayer.theoplayer-sdk-android:unified-ads-ima:${safeExtGet('THEOplayer_sdk', '+')}"
+  }
+
+  if (safeExtGet("THEOplayer_extensionCast", false)) {
+    implementation "com.theoplayer.theoplayer-sdk-android:unified-cast:${safeExtGet('THEOplayer_sdk', '+')}"
+  } else {
+    compileOnly "com.theoplayer.theoplayer-sdk-android:unified-cast:${safeExtGet('THEOplayer_sdk', '+')}"
+  }
+
+//  if (safeExtGet("THEOplayer_extensionMediaTailor", false)) {
+//    implementation "com.theoplayer.theoplayer-sdk-android:unified-ads:${safeExtGet('THEOplayer_sdk', '+')}"
+//    implementation "com.theoplayer.theoplayer-sdk-android:unified-ads-mediatailor:${safeExtGet('THEOplayer_sdk', '+')}"
+//  } else {
+//    compileOnly "com.theoplayer.theoplayer-sdk-android:unified-ads:${safeExtGet('THEOplayer_sdk', '+')}"
+//    compileOnly "com.theoplayer.theoplayer-sdk-android:unified-ads-mediatailor:${safeExtGet('THEOplayer_sdk', '+')}"
+//  }
 }

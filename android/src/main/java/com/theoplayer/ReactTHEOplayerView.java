@@ -24,6 +24,8 @@ import com.theoplayer.android.api.THEOplayerConfig;
 import com.theoplayer.android.api.THEOplayerView;
 import com.theoplayer.android.api.ads.ima.GoogleImaIntegration;
 import com.theoplayer.android.api.ads.ima.GoogleImaIntegrationFactory;
+import com.theoplayer.android.api.cast.CastIntegration;
+import com.theoplayer.android.api.cast.CastIntegrationFactory;
 import com.theoplayer.android.api.player.Player;
 import com.theoplayer.android.api.player.RequestCallback;
 import com.theoplayer.android.api.player.track.mediatrack.MediaTrack;
@@ -174,8 +176,14 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
   }
 
   private void addIntegrations(@NonNull final THEOplayerView playerView) {
-    GoogleImaIntegration googleImaIntegration = GoogleImaIntegrationFactory.createGoogleImaIntegration(playerView);
-    playerView.getPlayer().addIntegration(googleImaIntegration);
+    if (BuildConfig.EXTENSION_GOOGLE_IMA) {
+      GoogleImaIntegration googleImaIntegration = GoogleImaIntegrationFactory.createGoogleImaIntegration(playerView);
+      playerView.getPlayer().addIntegration(googleImaIntegration);
+    }
+    if (BuildConfig.EXTENSION_CAST) {
+      CastIntegration castIntegration = CastIntegrationFactory.createCastIntegration(playerView);
+      playerView.getPlayer().addIntegration(castIntegration);
+    }
     // Add other future integrations here.
   }
 

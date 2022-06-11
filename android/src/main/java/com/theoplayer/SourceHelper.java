@@ -263,10 +263,7 @@ public class SourceHelper {
   }
 
   /**
-   * Eliminate all the Readable* classes from the map
-   *
-   * @param readableMap
-   * @return
+   * Eliminate all the Readable* classes from the map.
    */
   protected static HashMap<String, Object> eliminateReadables(ReadableMap readableMap) {
     HashMap<String, Object> hashMap = readableMap.toHashMap();
@@ -285,10 +282,7 @@ public class SourceHelper {
   }
 
   /**
-   * Eliminate all the Readable* classes from the array
-   *
-   * @param readableArray
-   * @return
+   * Eliminate all the Readable* classes from the array.
    */
   protected static ArrayList<Object> eliminateReadables(ReadableArray readableArray) {
     ArrayList<Object> arrayList = readableArray.toArrayList();
