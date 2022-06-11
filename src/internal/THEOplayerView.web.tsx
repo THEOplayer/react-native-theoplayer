@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 
 import type { PlayerError, TextTrack, THEOplayerViewProps, TimeRange } from 'react-native-theoplayer';
-import { TextTrackEventType, TrackListEventType } from 'react-native-theoplayer';
+import { AdEventNames, TextTrackEventType, TrackListEventType } from 'react-native-theoplayer';
 import type { Event, TextTrackCue as NativeTextTrackCue } from 'theoplayer';
 
 import type {
@@ -391,6 +391,14 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
         onTextTrackListEvent({
           type: TrackListEventType.RemoveTrack,
           track: event.track as unknown as TextTrack,
+        });
+      }
+    });
+    player.ads?.addEventListener(AdEventNames,(event) => {
+      const { onAdEvent } = this.props;
+      if (onAdEvent) {
+        onAdEvent({
+          type: event.type
         });
       }
     });
