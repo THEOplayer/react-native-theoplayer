@@ -187,7 +187,7 @@ PODS:
   - React-jsinspector (0.66.3-0)
   - React-logger (0.66.3-0):
     - glog
-  - react-native-theoplayer (0.1.0):
+  - react-native-theoplayer (1.1.0):
     - React-Core
     - THEOplayerSDK-basic
   - React-perflogger (0.66.3-0)
@@ -247,7 +247,7 @@ PODS:
     - React-jsi (= 0.66.3-0)
     - React-logger (= 0.66.3-0)
     - React-perflogger (= 0.66.3-0)
-  - THEOplayerSDK-basic (3.1.0)
+  - THEOplayerSDK-basic (3.5.0)
   - Yoga (1.14.0)
 
 DEPENDENCIES:
@@ -369,7 +369,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 50e1e965f7df835844bb363055a596a2f00782ab
   React-jsinspector: 961bca344b37d028fa31147b3ee92f973066376a
   React-logger: 2ede08149c5cfd3b57d1151639196d64c80bcf58
-  react-native-theoplayer: b335872ee6657eef518f5c553c7ab89a25671294
+  react-native-theoplayer: 06426d484baac6091cd5cd85b298460f920fa101
   React-perflogger: 7db35d04efa01f6afa9e43eb58a07f8950b62129
   React-RCTAnimation: b382e08174c554128723a2dcd0fafb896000217e
   React-RCTBlob: 80cc190a6271aa59c2af27e36395e5228d9de95e
@@ -380,7 +380,7 @@ SPEC CHECKSUMS:
   React-RCTText: 3be60cc1ef044a6c80425bf9ad9960b876712066
   React-runtimeexecutor: 7bbeb13e7750d45f93fdb7cb5546a1eb5ffaa5c7
   ReactCommon: 6fc4f9a125b2d5aa354f573f328086b737e5102f
-  THEOplayerSDK-basic: 9fec634100fcd08e7e25bd4a73645b1e4644d0da
+  THEOplayerSDK-basic: 1a087615c9a00bb70de714e03818e96e30aae0c9
   Yoga: 9efca3331f0d4023de2b109f4cc685b5394288ab
 
 PODFILE CHECKSUM: 999492198646b8b3b66bcba768e564831fda0e1b
