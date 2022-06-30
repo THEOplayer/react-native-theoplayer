@@ -64,9 +64,9 @@ class THEOplayerRCTViewEventHandler {
     private var removeCueListeners: [Int:EventListener] = [:]
     
     
-    // MARK: - Initialisation / deinitialisation
-    deinit {
-        // detach listeners
+    // MARK: - destruction
+    func destroy() {
+        // dettach listeners
         self.dettachListeners()
     }
     
