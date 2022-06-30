@@ -33,6 +33,7 @@ class THEOplayerRCTView: UIView {
     }
     
     deinit {
+        self.eventHandler.destroy()
         self.player?.destroy()
         self.player = nil
     }
