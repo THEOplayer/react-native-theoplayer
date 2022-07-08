@@ -8,12 +8,12 @@ Hence additional features will be introduced into THEO product roadmap.
 
 | Feature                                           | Android<br/>AndroidTV<br/>FireTV |       Web       |   iOS / tvOS    |
 |---------------------------------------------------|:--------------------------------:|:---------------:|:---------------:|
-| DASH (mp4)                                        |          as of v3.6.0*           |        V        |                 |
+| DASH (mp4)                                        |          as of v3.6.1*           |        V        |                 |
 | DASH (fmp4)                                       |                V                 |        V        |                 |
-| HLS (ts)                                          |          as of v3.6.0*           |                 |        V        |
+| HLS (ts)                                          |          as of v3.6.1*          |                 |        V        |
 | HLS (fmp4)                                        |                V                 |        V        |        V        |
-| plain MP4                                         |          as of v3.6.0*           |        V        |        V        |
-| MP3                               		              |          as of v3.6.0*           |        V        |        V        |
+| plain MP4                                         |          as of v3.6.1*           |        V        |        V        |
+| MP3                               		              |          as of v3.6.1*           |        V        |        V        |
 | DRM protection (Widevine)                         |                V                 |        V        |                 |
 | DRM protection (PlayReady)                        |                V                 |        V        |                 |
 | DRM protection (FairPlay)                         |                                  |     Safari      |        V        |
