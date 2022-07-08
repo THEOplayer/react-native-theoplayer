@@ -8,7 +8,7 @@ There is no React Native UI included in this app, as this is covered in the acco
 ### Table of Contents
 - [Setting up a new project](#setting-up-a-new-project)
 - [Getting started on Android](#getting-started-on-android)
-- [Getting started on iOS](#getting-started-on-ios)
+- [Getting started on iOS](#getting-started-on-ios-and-tvos)
 - [Getting started on Web](#getting-started-on-web)
 - [Building and running the app](#building-and-running-the-app)
 - [Final notes](#final-notes)
