@@ -8,7 +8,7 @@ There is no React Native UI included in this app, as this is covered in the acco
 ### Table of Contents
 - [Setting up a new project](#setting-up-a-new-project)
 - [Getting started on Android](#getting-started-on-android)
-- [Getting started on iOS](#getting-started-on-ios)
+- [Getting started on iOS](#getting-started-on-ios-and-tvos)
 - [Getting started on Web](#getting-started-on-web)
 - [Building and running the app](#building-and-running-the-app)
 - [Final notes](#final-notes)
@@ -50,15 +50,8 @@ import React from 'react';
 import { Platform, View } from 'react-native';
 import { PlayerConfiguration, THEOplayerView } from 'react-native-theoplayer';
 
-const license = Platform.select(
-  {
-    android: undefined, // insert Android THEOplayer license here
-    ios: undefined,     // insert iOS THEOplayer license here
-    web: undefined,     // insert Web THEOplayer license here
-  });
-
 const playerConfig: PlayerConfiguration = {
-  license
+  license: undefined,     // insert THEOplayer React Native license here
 };
 
 const source = {
@@ -81,7 +74,7 @@ const App = () => {
 export default App;
 ```
 
-A license for each player SDK needs to be obtained through the 'Licenses' built in the [THEOplayer portal](https://portal.theoplayer.com/)
+A license for the React Native SDK needs to be obtained through the 'Licenses' built in the [THEOplayer portal](https://portal.theoplayer.com/)
 or request a [free trial license](https://www.theoplayer.com/free-trial-theoplayer?hsLang=en-us).
 
 ![license_portal](./license_portal.png)
