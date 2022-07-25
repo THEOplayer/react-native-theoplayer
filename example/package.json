@@ -21,7 +21,8 @@
     "react-native-web": "^0.17.5",
     "react-native-web-image-loader": "^0.1.1",
     "ts-loader": "^8.2.0",
-    "url-polyfill": "^1.1.12"
+    "url-polyfill": "^1.1.12",
+    "react-native-theoplayer": "../"
   },
   "devDependencies": {
     "@babel/core": "^7.16.7",
