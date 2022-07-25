@@ -86,5 +86,4 @@ dependencies {
   implementation "com.theoplayer.theoplayer-sdk-android:unified:${safeExtGet('THEOplayer_sdk', '+')}"
   implementation "com.theoplayer.theoplayer-sdk-android:unified-ads:${safeExtGet('THEOplayer_sdk', '+')}"
   implementation "com.theoplayer.theoplayer-sdk-android:unified-ads-ima:${safeExtGet('THEOplayer_sdk', '+')}"
-  implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
 }
