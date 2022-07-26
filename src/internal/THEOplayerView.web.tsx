@@ -227,7 +227,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
           textTracks: player.textTracks.map((textTrack: NativeTextTrack) => fromNativeTextTrack(textTrack)),
           audioTracks: player.audioTracks.map((audioTrack: NativeMediaTrack) => fromNativeMediaTrack(audioTrack)),
           videoTracks: player.videoTracks.map((videoTrack: NativeMediaTrack) => fromNativeMediaTrack(videoTrack)),
-          duration: player.duration,
+          duration: 1e03 * player.duration,
           selectedTextTrack: player.textTracks.find((track: NativeTextTrack) => track.mode === 'showing')?.uid,
           selectedVideoTrack: player.videoTracks.find((track: NativeMediaTrack) => track.enabled)?.uid,
           selectedAudioTrack: player.audioTracks.find((track: NativeMediaTrack) => track.enabled)?.uid,
