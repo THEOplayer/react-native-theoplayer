@@ -118,7 +118,8 @@
   {
     "name": "HLS - VOD - Clear - The Venture Bros",
     "os": [
-      "ios"
+      "ios",
+      "android"
     ],
     "source": {
       "sources": {
@@ -131,7 +132,8 @@
   {
     "name": "HLS - VOD - AES128 - Big Buck Bunny",
     "os": [
-      "ios"
+      "ios",
+      "android"
     ],
     "source": {
       "sources": {
@@ -181,7 +183,8 @@
     "name": "MP4 - Big Buck Bunny",
     "os": [
       "ios",
-      "web"
+      "web",
+      "android"
     ],
     "source": {
       "sources": {
