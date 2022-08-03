@@ -14,6 +14,7 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://www.theoplayer.com/.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m,mm,swift}"
+  s.resources = ['ios/**/*.css']
 
   s.dependency "React-Core"
   s.dependency "THEOplayerSDK-basic"
