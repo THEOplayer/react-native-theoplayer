@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { StyleSheet, requireNativeComponent, View, UIManager, Platform, NativeSyntheticEvent } from 'react-native';
+import { findNodeHandle, StyleSheet, requireNativeComponent, View, UIManager, Platform, NativeSyntheticEvent } from 'react-native';
 import type {
   DurationChangeEvent,
   ErrorEvent,
@@ -68,6 +68,20 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
     super(props);
     this._root = React.createRef();
     this.state = THEOplayerView.initialState;
+  }
+
+  componentWillUnmount() {
+    if (Platform.OS == 'ios') {
+      // on iOS, we trigger an explicit 'destroy' to clean up the underlying THEOplayer
+      this.destroyTheoPlayer();
+    }
+  }
+
+  private destroyTheoPlayer() {
+    const node = findNodeHandle(this._root.current);
+    const command = UIManager['THEOplayerRCTView'].Commands.destroy;
+    const params = [];
+    UIManager.dispatchViewManagerCommand(node, command, params);
   }
 
   public seek(time: number): void {
