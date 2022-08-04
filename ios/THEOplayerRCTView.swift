@@ -32,10 +32,11 @@ class THEOplayerRCTView: UIView {
         super.init(frame: .zero)
     }
     
-    deinit {
+    func destroy() {
         self.eventHandler.destroy()
         self.player?.destroy()
         self.player = nil
+        if DEBUG_THEOPLAYER_INTERACTION { print("[NATIVE] THEOplayer instance destroyed.") }
     }
     
     required init?(coder aDecoder: NSCoder) {
