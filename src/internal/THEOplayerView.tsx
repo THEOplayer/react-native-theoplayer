@@ -71,7 +71,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
   }
 
   componentWillUnmount() {
-    if (Platform.OS == 'ios') {
+    if (Platform.OS === 'ios') {
       // on iOS, we trigger an explicit 'destroy' to clean up the underlying THEOplayer
       this.destroyTheoPlayer();
     }
@@ -79,8 +79,8 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
 
   private destroyTheoPlayer() {
     const node = findNodeHandle(this._root.current);
-    const command = UIManager['THEOplayerRCTView'].Commands.destroy;
-    const params = [];
+    const command = (UIManager as {[index: string]: any})['THEOplayerRCTView'].Commands.destroy;
+    const params: any[] = [];
     UIManager.dispatchViewManagerCommand(node, command, params);
   }
 
