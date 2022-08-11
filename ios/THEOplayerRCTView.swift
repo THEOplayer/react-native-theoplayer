@@ -32,10 +32,11 @@ class THEOplayerRCTView: UIView {
         super.init(frame: .zero)
     }
     
-    deinit {
+    func destroy() {
         self.eventHandler.destroy()
         self.player?.destroy()
         self.player = nil
+        if DEBUG_THEOPLAYER_INTERACTION { print("[NATIVE] THEOplayer instance destroyed.") }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -82,7 +83,7 @@ class THEOplayerRCTView: UIView {
         if (self.player == nil) {
             // 'lazy' init THEOplayer instance, performed on next runloop, to make sure all props have been set (license config is needed to init player)
             DispatchQueue.main.async {
-                if DEBUG_THEOPLAYER_INTERACTION { print("[NATIVE] 'lazy' init THEOplayer intance") }
+                if DEBUG_THEOPLAYER_INTERACTION { print("[NATIVE] 'lazy' init THEOplayer instance") }
 #if os(tvOS)
                 self.player = THEOplayer(configuration: THEOplayerConfiguration(chromeless: self.chromeless, license: self.license, licenseUrl: self.licenseUrl, pip: nil))
 #else
