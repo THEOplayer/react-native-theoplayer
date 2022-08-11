@@ -416,10 +416,12 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ReactNativeTHEOplayer/Pods-ReactNativeTHEOplayer-resources.sh",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core-iOS/AccessibilityResources.bundle",
+				"${PODS_ROOT}/../../../ios/style.css",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/style.css",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -484,10 +486,12 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ReactNativeTHEOplayer-tvOS/Pods-ReactNativeTHEOplayer-tvOS-resources.sh",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core-tvOS/AccessibilityResources.bundle",
+				"${PODS_ROOT}/../../../ios/style.css",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/style.css",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -542,10 +546,12 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests/Pods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests-resources.sh",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core-tvOS/AccessibilityResources.bundle",
+				"${PODS_ROOT}/../../../ios/style.css",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/style.css",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -626,10 +632,12 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests/Pods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests-resources.sh",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core-iOS/AccessibilityResources.bundle",
+				"${PODS_ROOT}/../../../ios/style.css",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/style.css",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

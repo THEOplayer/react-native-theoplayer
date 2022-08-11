@@ -6,7 +6,6 @@ import androidx.annotation.Nullable;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.google.gson.Gson;
-import com.theoplayer.android.api.player.track.texttrack.TextTrack;
 import com.theoplayer.android.api.player.track.texttrack.TextTrackKind;
 import com.theoplayer.android.api.source.SourceDescription;
 import com.theoplayer.android.api.source.SourceType;
@@ -20,7 +19,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -136,6 +134,24 @@ public class SourceHelper {
       }
       if ("video/mp4".equals(type)) {
         return SourceType.MP4;
+      }
+      if ("audio/mpeg".equals(type)) {
+        return SourceType.MP3;
+      }
+    } else {
+      // No type given, check for known extension.
+      String src = jsonTypedSource.optString("src");
+      if (src.endsWith(".mpd")) {
+        return SourceType.DASH;
+      }
+      if (src.endsWith(".m3u8")) {
+        return SourceType.HLSX;
+      }
+      if (src.endsWith(".mp4")) {
+        return SourceType.MP4;
+      }
+      if (src.endsWith(".mp3")) {
+        return SourceType.MP3;
       }
     }
     return null;
