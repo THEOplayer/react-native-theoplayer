@@ -86,7 +86,9 @@ class THEOplayerRCTView: UIView {
 #if os(tvOS)
                 self.player = THEOplayer(configuration: THEOplayerConfiguration(chromeless: self.chromeless, license: self.license, licenseUrl: self.licenseUrl, pip: nil))
 #else
-                self.player = THEOplayer(configuration: THEOplayerConfiguration(chromeless: self.chromeless, pip: nil, license: self.license, licenseUrl: self.licenseUrl))
+                let stylePath = Bundle.main.path(forResource:"style", ofType: "css")
+                let cssPaths = stylePath != nil ? [stylePath!] : []
+                self.player = THEOplayer(configuration: THEOplayerConfiguration(chromeless: self.chromeless, cssPaths: cssPaths, pip: nil, license: self.license, licenseUrl: self.licenseUrl))
 #endif
                 if let player = self.player {
                     // couple player instance to event handler
