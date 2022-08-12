@@ -17,5 +17,4 @@ Pod::Spec.new do |s|
   s.resources = ['ios/**/*.css']
 
   s.dependency "React-Core"
-  s.dependency "THEOplayerSDK-basic"
 end
