@@ -284,6 +284,9 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
     });
 
     player.addEventListener('playing', () => {
+      // potentially notify change in buffering state
+      this.maybeChangeBufferingState(false);
+
       const { onPlaying } = this.props;
       if (onPlaying) {
         onPlaying();
