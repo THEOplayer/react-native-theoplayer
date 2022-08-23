@@ -84,7 +84,7 @@
     }
   },
   {
-    "name": "DASH - VOD - Clear - IMA PreRoll ad",
+    "name": "IMA PreRoll ad",
     "os": [
       "android",
       "web"
@@ -100,6 +100,49 @@
         {
           "integration": "google-ima",
           "sources": "https://cdn.theoplayer.com/demos/ads/vast/dfp-preroll-no-skip.xml"
+        }
+      ]
+    }
+  },
+  {
+    "name": "IMA MidRoll VAST ad",
+    "os": [
+      "android",
+      "web"
+    ],
+    "source": {
+      "sources": [
+        {
+          "src": "https://contentserver.prudentgiraffe.com/videos/dash/webvtt-embedded-in-isobmff/Manifest.mpd",
+          "type": "application/dash+xml"
+        }
+      ],
+      "ads": [
+        {
+          "integration": "google-ima",
+          "sources": "https://contentserver.prudentgiraffe.com/ads/vast-skippable.xml",
+          "timeOffset": 10
+        }
+      ]
+    }
+  },
+  {
+    "name": "IMA MidRoll VMAP ad",
+    "os": [
+      "android",
+      "web"
+    ],
+    "source": {
+      "sources": [
+        {
+          "src": "https://contentserver.prudentgiraffe.com/videos/dash/webvtt-embedded-in-isobmff/Manifest.mpd",
+          "type": "application/dash+xml"
+        }
+      ],
+      "ads": [
+        {
+          "integration": "google-ima",
+          "sources": "https://contentserver.prudentgiraffe.com/ads/double-midroll-mergeable-adbreak.xml"
         }
       ]
     }
