@@ -38,6 +38,7 @@ import com.theoplayer.android.api.event.EventType;
 import com.theoplayer.android.api.event.player.DurationChangeEvent;
 import com.theoplayer.android.api.event.player.ErrorEvent;
 import com.theoplayer.android.api.event.player.LoadedMetadataEvent;
+import com.theoplayer.android.api.event.player.PauseEvent;
 import com.theoplayer.android.api.event.player.ReadyStateChangeEvent;
 import com.theoplayer.android.api.event.player.SeekedEvent;
 import com.theoplayer.android.api.event.player.SeekingEvent;
@@ -201,7 +202,7 @@ class VideoEventEmitter {
     playerListeners.put(PROGRESS, event -> onProgress());
     playerListeners.put(TIMEUPDATE, (EventListener<TimeUpdateEvent>) this::onTimeUpdate);
     playerListeners.put(DURATIONCHANGE, (EventListener<DurationChangeEvent>) this::onDurationChange);
-    playerListeners.put(PAUSE, event -> receiveEvent(EVENT_PAUSE, null));
+    playerListeners.put(PAUSE, (EventListener<PauseEvent>) this::onPause);
     playerListeners.put(SEGMENTNOTFOUND, (EventListener<SegmentNotFoundEvent>) this::onSegmentNotFound);
 
     textTrackListeners.put(TextTrackListEventTypes.ADDTRACK, (EventListener<AddTrackEvent>) this::onTextTrackAdd);
@@ -276,6 +277,14 @@ class VideoEventEmitter {
     return (timeUpdateRate == TimeUpdateRate.LIMITED_ONE_HZ && dt < 1e03) ||
       (timeUpdateRate == TimeUpdateRate.LIMITED_TWO_HZ && dt < 500) ||
       (timeUpdateRate == TimeUpdateRate.LIMITED_THREE_HZ && dt < 333);
+  }
+
+  private void onPause(@NonNull final PauseEvent event) {
+    Player player = playerView.getPlayer();
+    // Do not forward the pause event in case the content player is paused because the ad player starts.
+    if (player != null && !player.getAds().isPlaying()) {
+      receiveEvent(EVENT_PAUSE, null);
+    }
   }
 
   private void onTimeUpdate(@NonNull final TimeUpdateEvent event) {

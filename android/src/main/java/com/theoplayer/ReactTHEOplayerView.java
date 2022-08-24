@@ -227,6 +227,11 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
     }, 1);
   }
 
+  @Nullable
+  public Player getPlayer() {
+    return player;
+  }
+
   @Override
   public void onHostResume() {
     if (BuildConfig.LOG_VIEW_EVENTS) {
