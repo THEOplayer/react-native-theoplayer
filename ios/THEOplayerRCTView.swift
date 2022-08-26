@@ -14,6 +14,9 @@ class THEOplayerRCTView: UIView {
     private var license: String?
     private var licenseUrl: String?
     private var chromeless: Bool = true
+    private var adShowCountDown: Bool = true
+    private var adPreloadType: THEOplayerSDK.AdPreloadType = THEOplayerSDK.AdPreloadType.MIDROLL_AND_POSTROLL
+    private var googleImaUsesNativeIma: Bool = true
     private var config: THEOplayerConfiguration?
     private var paused: Bool = false
     private var muted: Bool = true
@@ -121,8 +124,10 @@ class THEOplayerRCTView: UIView {
     }
     
     private func initAdsConfiguration() -> AdsConfiguration? {
-#if GOOGLE_IMA
-        return AdsConfiguration(showCountdown: false, preload: .MIDROLL_AND_POSTROLL, googleImaConfiguration: GoogleIMAConfiguration(useNativeIma: true))
+#if ADS && GOOGLE_IMA
+        return AdsConfiguration(showCountdown: self.adShowCountDown,
+                                preload: self.adPreloadType,
+                                googleImaConfiguration: GoogleIMAConfiguration(useNativeIma: self.googleImaUsesNativeIma))
 #else
         return nil
 #endif
@@ -143,6 +148,15 @@ class THEOplayerRCTView: UIView {
         self.license = configDict["license"] as? String
         self.licenseUrl = configDict["licenseUrl"] as? String
         self.chromeless = configDict["chromeless"] as? Bool ?? true
+        if let adsConfig = configDict["ads"] as? NSDictionary {
+            self.adShowCountDown = adsConfig["showCountdown"] as? Bool ?? true
+            if let adPreloadType = adsConfig["preload"] as? String {
+                self.adPreloadType = adPreloadType == "none" ? THEOplayerSDK.AdPreloadType.NONE : THEOplayerSDK.AdPreloadType.MIDROLL_AND_POSTROLL
+            }
+            if let googleImaConfiguration = adsConfig["googleImaConfiguration"] as? NSDictionary {
+                self.googleImaUsesNativeIma = googleImaConfiguration["useNativeIma"] as? Bool ?? true
+            }
+        }
         if DEBUG_PROP_UPDATES  { print("[NATIVE] config prop updated.") }
     }
     

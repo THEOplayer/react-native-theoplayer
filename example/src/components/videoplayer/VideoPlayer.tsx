@@ -167,7 +167,7 @@ export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerStat
   private onAdEvent = (data: AdEvent) => {
     const { type, ad } = data;
     console.log(TAG, 'onAdEvent', type, ad);
-  }
+  };
 
   private onProgress = (data: ProgressEvent) => {
     const { seekable } = data;
