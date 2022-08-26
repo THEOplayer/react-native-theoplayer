@@ -148,6 +148,53 @@
     }
   },
   {
+    "name": "HLS - IMA Preroll Ad",
+    "os": [
+      "ios",
+      "web"
+    ],
+    "source": {
+      "sources": [
+        {
+          "src": "https://cdn.theoplayer.com/video/elephants-dream/playlist.m3u8",
+          "type": "application/x-mpegurl"
+        }
+      ],
+      "ads": [
+        {
+          "integration": "google-ima",
+          "sources": {
+            "src": "https://cdn.theoplayer.com/demos/ads/vast/dfp-preroll-no-skip.xml"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "HLS - IMA MidRoll VAST ad",
+    "os": [
+      "ios",
+      "web"
+    ],
+    "source": {
+      "sources": [
+        {
+          "src": "https://cdn.theoplayer.com/video/elephants-dream/playlist.m3u8",
+          "type": "application/x-mpegurl"
+        }
+      ],
+      "ads": [
+        {
+          "integration": "google-ima",
+          "sources": {
+            "src": "https://contentserver.prudentgiraffe.com/ads/vast-skippable.xml"
+          },
+          "timeOffset": 10
+        }
+      ]
+    }
+  },
+  {
     "name": "HLS - VOD - Clear - Elephant's dream",
     "os": [
       "ios",
