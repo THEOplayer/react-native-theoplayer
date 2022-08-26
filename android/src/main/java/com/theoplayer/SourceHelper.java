@@ -231,8 +231,16 @@ public class SourceHelper {
   @Nullable
   private static GoogleImaAdDescription parseImaAdFromJS(JSONObject jsonAdDescription) throws JSONException {
     if (jsonAdDescription.optString("integration").equals("google-ima")) {
+      String source;
+      // Property `sources` is of type string | AdSource.
+      JSONObject sourceObj = jsonAdDescription.optJSONObject("sources");
+      if (sourceObj != null) {
+        source = sourceObj.optString("src");
+      } else {
+        source = jsonAdDescription.optString("sources");
+      }
       return GoogleImaAdDescription.Builder.googleImaAdDescription()
-        .source(jsonAdDescription.optString("sources"))
+        .source(source)
         .timeOffset(jsonAdDescription.optString("timeOffset"))
         .build();
     }
