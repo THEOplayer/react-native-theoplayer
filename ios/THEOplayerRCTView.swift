@@ -80,16 +80,10 @@ class THEOplayerRCTView: UIView {
         }
         
         if (self.player == nil) {
-            // 'lazy' init THEOplayer instance, performed on next runloop, to make sure all props have been set (license config is needed to init player)
             DispatchQueue.main.async {
-                if DEBUG_THEOPLAYER_INTERACTION { print("[NATIVE] 'lazy' init THEOplayer instance") }
-#if os(tvOS)
-                self.player = THEOplayer(configuration: THEOplayerConfiguration(chromeless: self.chromeless, license: self.license, licenseUrl: self.licenseUrl, pip: nil))
-#else
-                let stylePath = Bundle.main.path(forResource:"style", ofType: "css")
-                let cssPaths = stylePath != nil ? [stylePath!] : []
-                self.player = THEOplayer(configuration: THEOplayerConfiguration(chromeless: self.chromeless, cssPaths: cssPaths, pip: nil, license: self.license, licenseUrl: self.licenseUrl))
-#endif
+                // 'lazy' init the THEOplayer instance to make sure all props have been set (some bridged config is needed to init the player)
+                // Therefore, dispatched to next runloop tick
+                self.initPlayer()
                 if let player = self.player {
                     // couple player instance to event handler
                     self.eventHandler.setPlayer(player)
@@ -105,6 +99,17 @@ class THEOplayerRCTView: UIView {
                 self.player?.play()
             }
         }
+    }
+    
+    private func initPlayer() {
+        if DEBUG_THEOPLAYER_INTERACTION { print("[NATIVE] 'lazy' init THEOplayer instance") }
+#if os(tvOS)
+        self.player = THEOplayer(configuration: THEOplayerConfiguration(chromeless: self.chromeless, license: self.license, licenseUrl: self.licenseUrl, pip: nil))
+#else
+        let stylePath = Bundle.main.path(forResource:"style", ofType: "css")
+        let cssPaths = stylePath != nil ? [stylePath!] : []
+        self.player = THEOplayer(configuration: THEOplayerConfiguration(chromeless: self.chromeless, cssPaths: cssPaths, pip: nil, license: self.license, licenseUrl: self.licenseUrl))
+#endif
     }
     
     private func syncPlayerSrc() {
