@@ -14,10 +14,12 @@ import type {
   TextTrackListEvent,
   TextTrackEvent,
   AdEvent,
+  AdsAPI,
 } from 'react-native-theoplayer';
 
 import styles from './THEOplayerView.style';
 import type { SourceDescription } from 'react-native-theoplayer';
+import { THEOplayerAdsAPI } from "./ads/THEOplayerAdsAPI";
 import { decodeNanInf } from './utils/TypeUtils';
 
 interface THEOplayerRCTViewProps extends THEOplayerViewProps {
@@ -92,6 +94,14 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
       throw new Error('Specified time is not a number');
     }
     this.setNativeProps({ seek: time });
+  }
+
+  public get nodeHandle(): number | null {
+    return findNodeHandle(this._root.current);
+  }
+
+  public get ads(): AdsAPI {
+    return new THEOplayerAdsAPI(this);
   }
 
   private reset() {

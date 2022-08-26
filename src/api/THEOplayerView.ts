@@ -14,6 +14,7 @@ import type { HostComponent } from 'react-native';
 import type { PlayerConfiguration } from './config/PlayerConfiguration';
 import type { ABRConfiguration } from './abr/ABRConfiguration';
 import type { AdEvent } from "./event/AdEvent";
+import type { AdsAPI } from "./ads/AdsAPI";
 
 export interface THEOplayerViewProps {
   /**
@@ -238,4 +239,9 @@ export interface THEOplayerViewComponent extends HostComponent<THEOplayerViewPro
    * @param seekTime - new time, in milliseconds.
    */
   seek: (seekTime: number) => void;
+
+  /**
+   * The API for advertisements.
+   */
+  ads: AdsAPI;
 }
