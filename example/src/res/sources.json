@@ -99,7 +99,9 @@
       "ads": [
         {
           "integration": "google-ima",
-          "sources": "https://cdn.theoplayer.com/demos/ads/vast/dfp-preroll-no-skip.xml"
+          "sources": {
+            "src": "https://cdn.theoplayer.com/demos/ads/vast/dfp-preroll-no-skip.xml"
+          }
         }
       ]
     }
@@ -120,7 +122,9 @@
       "ads": [
         {
           "integration": "google-ima",
-          "sources": "https://contentserver.prudentgiraffe.com/ads/vast-skippable.xml",
+          "sources": {
+            "src": "https://contentserver.prudentgiraffe.com/ads/vast-skippable.xml"
+          },
           "timeOffset": 10
         }
       ]
@@ -142,7 +146,9 @@
       "ads": [
         {
           "integration": "google-ima",
-          "sources": "https://contentserver.prudentgiraffe.com/ads/double-midroll-mergeable-adbreak.xml"
+          "sources": {
+            "src": "https://contentserver.prudentgiraffe.com/ads/double-midroll-mergeable-adbreak.xml"
+          }
         }
       ]
     }
