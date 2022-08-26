@@ -64,4 +64,5 @@ android/keystores/debug.keystore
 lib/
 *.hprof
 *.aar
+ios/custom/Frameworks/ios/*.xcframework
 ios/custom/Frameworks/candidates
