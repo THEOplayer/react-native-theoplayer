@@ -1,5 +1,7 @@
 package com.theoplayer.ads;
 
+import androidx.annotation.Nullable;
+
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
@@ -107,8 +109,11 @@ public class AdInfo {
     return adPayload;
   }
 
-  public static WritableMap fromAdbreak(final AdBreak adbreak) {
+  public static WritableMap fromAdbreak(@Nullable final AdBreak adbreak) {
     WritableMap adbreakPayload = Arguments.createMap();
+    if (adbreak == null) {
+      return adbreakPayload;
+    }
     adbreakPayload.putString(PROP_ADBREAK_INTEGRATION, adbreak.getIntegration().getType());
     adbreakPayload.putInt(PROP_ADBREAK_MAXDURATION, adbreak.getMaxDuration());
     adbreakPayload.putInt(PROP_ADBREAK_TIMEOFFSET, adbreak.getTimeOffset());
