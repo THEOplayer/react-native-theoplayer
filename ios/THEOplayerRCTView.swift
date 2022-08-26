@@ -104,12 +104,29 @@ class THEOplayerRCTView: UIView {
     private func initPlayer() {
         if DEBUG_THEOPLAYER_INTERACTION { print("[NATIVE] 'lazy' init THEOplayer instance") }
 #if os(tvOS)
-        self.player = THEOplayer(configuration: THEOplayerConfiguration(chromeless: self.chromeless, license: self.license, licenseUrl: self.licenseUrl, pip: nil))
+        self.player = THEOplayer(configuration: THEOplayerConfiguration(chromeless: self.chromeless,
+                                                                        license: self.license,
+                                                                        licenseUrl: self.licenseUrl,
+                                                                        pip: nil))
 #else
         let stylePath = Bundle.main.path(forResource:"style", ofType: "css")
         let cssPaths = stylePath != nil ? [stylePath!] : []
-        self.player = THEOplayer(configuration: THEOplayerConfiguration(chromeless: self.chromeless, cssPaths: cssPaths, pip: nil, license: self.license, licenseUrl: self.licenseUrl))
+        self.player = THEOplayer(configuration: THEOplayerConfiguration(chromeless: self.chromeless,
+                                                                        cssPaths: cssPaths,
+                                                                        pip: nil,
+                                                                        ads: self.initAdsConfiguration(),
+                                                                        license: self.license,
+                                                                        licenseUrl: self.licenseUrl))
 #endif
+    }
+    
+    private func initAdsConfiguration() -> AdsConfiguration? {
+#if GOOGLE_IMA
+        return AdsConfiguration(showCountdown: false, preload: .MIDROLL_AND_POSTROLL, googleImaConfiguration: GoogleIMAConfiguration(useNativeIma: true))
+#else
+        return nil
+#endif
+        
     }
     
     private func syncPlayerSrc() {
