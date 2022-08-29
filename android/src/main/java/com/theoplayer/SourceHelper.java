@@ -29,6 +29,9 @@ import com.theoplayer.android.api.source.drm.preintegration.TitaniumDRMConfigura
 import com.theoplayer.android.api.source.drm.preintegration.VudrmDRMConfiguration;
 import com.theoplayer.android.api.source.drm.preintegration.XstreamConfiguration;
 import com.theoplayer.android.api.source.hls.HlsPlaybackConfiguration;
+import com.theoplayer.android.api.source.ssai.GoogleDaiConfiguration;
+import com.theoplayer.android.api.source.ssai.SsaiDescription;
+import com.theoplayer.android.api.source.ssai.YoSpaceDescription;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -181,6 +184,19 @@ public class SourceHelper {
           tsBuilder.drm(gson.fromJson(jsonTypedSource.get(PROP_CONTENT_PROTECTION).toString(), DRMConfiguration.class));
         }
       }
+      if (jsonTypedSource.has("ssai")) {
+        SsaiDescription ssaiDescription = gson.fromJson(jsonTypedSource.get("ssai").toString(), SsaiDescription.class);
+          switch(ssaiDescription.getIntegration()) {
+            case GOOGLE_DAI:
+              tsBuilder.ssai(gson.fromJson(jsonTypedSource.get("ssai").toString(), GoogleDaiConfiguration.class));
+              break;
+            case YOSPACE:
+              tsBuilder.ssai(gson.fromJson(jsonTypedSource.get("ssai").toString(), YoSpaceDescription.class));
+              break;
+            default:
+              Log.e(TAG, "SSAI integration not supported: " + ssaiDescription.getIntegration());
+          }
+      }
       return tsBuilder.build();
     }
     catch(JSONException e) {
@@ -259,7 +275,7 @@ public class SourceHelper {
   }
 
   @NonNull
-  private static GoogleImaAdDescription parseImaAdFromJS(JSONObject jsonAdDescription) throws JSONException {
+  private static GoogleImaAdDescription parseImaAdFromJS(JSONObject jsonAdDescription) {
       String source;
       // Property `sources` is of type string | AdSource.
       JSONObject sourceObj = jsonAdDescription.optJSONObject("sources");
