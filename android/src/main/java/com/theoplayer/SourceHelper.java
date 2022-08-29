@@ -54,6 +54,18 @@ public class SourceHelper {
   private static final String PROP_HLS_DATERANGE = "hlsDateRange";
   private static final String PROP_HLS_PLAYBACK_CONFIG = "hls";
   private static final String PROP_TIME_SERVER = "timeServer";
+  public static final String PROP_SSAI = "ssai";
+  public static final String PROP_TYPE = "type";
+  public static final String PROP_SRC = "src";
+  public static final String PROP_SOURCES = "sources";
+  public static final String PROP_DEFAULT = "default";
+  public static final String PROP_LABEL = "label";
+  public static final String PROP_KIND = "kind";
+  public static final String PROP_TIME_OFFSET = "timeOffset";
+  public static final String PROP_INTEGRATION = "integration";
+  public static final String PROP_TEXT_TRACKS = "textTracks";
+  public static final String PROP_POSTER = "poster";
+  public static final String PROP_ADS = "ads";
 
   private final Gson gson = new Gson();
 
@@ -67,7 +79,7 @@ public class SourceHelper {
         ArrayList<TypedSource> typedSources = new ArrayList<>();
 
         // sources can be an array or single object
-        JSONArray jsonSources = jsonSourceObject.optJSONArray("sources");
+        JSONArray jsonSources = jsonSourceObject.optJSONArray(PROP_SOURCES);
         if (jsonSources != null) {
           for (int i = 0 ; i < jsonSources.length(); i++) {
             TypedSource typedSource = parseTypedSource((JSONObject)jsonSources.get(i));
@@ -76,17 +88,17 @@ public class SourceHelper {
             }
           }
         } else {
-          TypedSource typedSource = parseTypedSource(jsonSourceObject.getJSONObject("sources"));
+          TypedSource typedSource = parseTypedSource(jsonSourceObject.getJSONObject(PROP_SOURCES));
           if (typedSource != null) {
             typedSources.add(typedSource);
           }
         }
 
         // poster
-        String poster = jsonSourceObject.optString("poster");
+        String poster = jsonSourceObject.optString(PROP_POSTER);
 
         // ads
-        JSONArray jsonAds = jsonSourceObject.optJSONArray("ads");
+        JSONArray jsonAds = jsonSourceObject.optJSONArray(PROP_ADS);
         ArrayList<AdDescription> ads = new ArrayList<>();
         if (jsonAds != null) {
           for (int i = 0 ; i < jsonAds.length(); i++) {
@@ -101,7 +113,7 @@ public class SourceHelper {
         }
 
         // Side-loaded text tracks
-        JSONArray textTracks = jsonSourceObject.optJSONArray("textTracks");
+        JSONArray textTracks = jsonSourceObject.optJSONArray(PROP_TEXT_TRACKS);
         ArrayList<TextTrackDescription> sideLoadedTextTracks = new ArrayList<>();
         if (textTracks != null) {
           for (int i = 0 ; i < textTracks.length(); i++) {
@@ -126,7 +138,7 @@ public class SourceHelper {
   private TypedSource parseTypedSource(@NonNull final JSONObject jsonTypedSource) {
     try {
       SourceType sourceType = parseSourceType(jsonTypedSource);
-      String src = jsonTypedSource.getString("src");
+      String src = jsonTypedSource.getString(PROP_SRC);
       TypedSource.Builder tsBuilder = TypedSource.Builder.typedSource().src(src);
       if (sourceType != null) {
         tsBuilder.type(sourceType);
@@ -184,18 +196,19 @@ public class SourceHelper {
           tsBuilder.drm(gson.fromJson(jsonTypedSource.get(PROP_CONTENT_PROTECTION).toString(), DRMConfiguration.class));
         }
       }
-      if (jsonTypedSource.has("ssai")) {
-        SsaiDescription ssaiDescription = gson.fromJson(jsonTypedSource.get("ssai").toString(), SsaiDescription.class);
-          switch(ssaiDescription.getIntegration()) {
-            case GOOGLE_DAI:
-              tsBuilder.ssai(gson.fromJson(jsonTypedSource.get("ssai").toString(), GoogleDaiConfiguration.class));
-              break;
-            case YOSPACE:
-              tsBuilder.ssai(gson.fromJson(jsonTypedSource.get("ssai").toString(), YoSpaceDescription.class));
-              break;
-            default:
-              Log.e(TAG, "SSAI integration not supported: " + ssaiDescription.getIntegration());
-          }
+      if (jsonTypedSource.has(PROP_SSAI)) {
+        final String ssaiProp = jsonTypedSource.get(PROP_SSAI).toString();
+        SsaiDescription ssaiDescription = gson.fromJson(ssaiProp, SsaiDescription.class);
+        switch(ssaiDescription.getIntegration()) {
+          case GOOGLE_DAI:
+            tsBuilder.ssai(gson.fromJson(ssaiProp, GoogleDaiConfiguration.class));
+            break;
+          case YOSPACE:
+            tsBuilder.ssai(gson.fromJson(ssaiProp, YoSpaceDescription.class));
+            break;
+          default:
+            Log.e(TAG, "SSAI integration not supported: " + ssaiDescription.getIntegration());
+        }
       }
       return tsBuilder.build();
     }
@@ -206,7 +219,7 @@ public class SourceHelper {
   }
 
   private static SourceType parseSourceType(@NonNull final JSONObject jsonTypedSource) {
-    String type = jsonTypedSource.optString("type");
+    String type = jsonTypedSource.optString(PROP_TYPE);
     if (!type.isEmpty()) {
       if ("application/dash+xml".equals(type)) {
         return SourceType.DASH;
@@ -228,7 +241,7 @@ public class SourceHelper {
       }
     } else {
       // No type given, check for known extension.
-      String src = jsonTypedSource.optString("src");
+      String src = jsonTypedSource.optString(PROP_SRC);
       if (src.endsWith(".mpd")) {
         return SourceType.DASH;
       }
@@ -259,7 +272,7 @@ public class SourceHelper {
 
   @Nullable
   public static AdDescription parseAdFromJS(JSONObject jsonAdDescription) throws JSONException {
-    AdIntegrationKind integrationKind = AdIntegrationKind.from(jsonAdDescription.optString("integration"));
+    AdIntegrationKind integrationKind = AdIntegrationKind.from(jsonAdDescription.optString(PROP_INTEGRATION));
     switch (integrationKind) {
       // Currently only IMA is supported.
       case GOOGLE_IMA: return parseImaAdFromJS(jsonAdDescription);
@@ -278,24 +291,24 @@ public class SourceHelper {
   private static GoogleImaAdDescription parseImaAdFromJS(JSONObject jsonAdDescription) {
       String source;
       // Property `sources` is of type string | AdSource.
-      JSONObject sourceObj = jsonAdDescription.optJSONObject("sources");
+      JSONObject sourceObj = jsonAdDescription.optJSONObject(PROP_SOURCES);
       if (sourceObj != null) {
-        source = sourceObj.optString("src");
+        source = sourceObj.optString(PROP_SRC);
       } else {
-        source = jsonAdDescription.optString("sources");
+        source = jsonAdDescription.optString(PROP_SOURCES);
       }
       return GoogleImaAdDescription.Builder.googleImaAdDescription()
         .source(source)
-        .timeOffset(jsonAdDescription.optString("timeOffset"))
+        .timeOffset(jsonAdDescription.optString(PROP_TIME_OFFSET))
         .build();
   }
 
   private static TextTrackDescription parseTextTrackFromJS(JSONObject jsonTextTrack) throws JSONException {
     TextTrackDescription.Builder builder = TextTrackDescription.Builder.textTrackDescription()
-      .isDefault(jsonTextTrack.optBoolean("default"))
-      .src(jsonTextTrack.optString("src"))
-      .label(jsonTextTrack.optString("label"))
-      .kind(parseTextTrackKind(jsonTextTrack.optString("kind")));
+      .isDefault(jsonTextTrack.optBoolean(PROP_DEFAULT))
+      .src(jsonTextTrack.optString(PROP_SRC))
+      .label(jsonTextTrack.optString(PROP_LABEL))
+      .kind(parseTextTrackKind(jsonTextTrack.optString(PROP_KIND)));
     return builder.build();
   }
 
