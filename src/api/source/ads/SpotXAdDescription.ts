@@ -123,32 +123,4 @@ export interface SpotXAdDescription extends AdDescription {
    * <br/> - Available since v2.38.0.
    */
   queryParameters?: SpotxQueryParameter;
-
-  /**
-   * Custom SpotX data.
-   *
-   * @deprecated Superseded by {@link SpotXAdDescription.queryParameters | queryParameters.custom}.
-   */
-  custom?: SpotxData;
-
-  /**
-   * Application specific SpotX data.
-   *
-   * @deprecated Superseded by {@link SpotXAdDescription.queryParameters | queryParameters.app}.
-   */
-  app?: SpotxData;
-
-  /**
-   * Device specific SpotX data.
-   *
-   * @deprecated Superseded by {@link SpotXAdDescription.queryParameters | queryParameters.device}.
-   */
-  device?: SpotxData;
-
-  /**
-   * User specific SpotX data.
-   *
-   * @deprecated Superseded by {@link SpotXAdDescription.queryParameters | queryParameters.user}.
-   */
-  user?: SpotxData;
 }
