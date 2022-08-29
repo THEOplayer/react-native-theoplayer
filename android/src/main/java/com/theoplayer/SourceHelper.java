@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.google.gson.Gson;
+import com.theoplayer.android.api.event.ads.AdIntegrationKind;
 import com.theoplayer.android.api.player.track.texttrack.TextTrackKind;
 import com.theoplayer.android.api.source.SourceDescription;
 import com.theoplayer.android.api.source.SourceType;
@@ -89,7 +90,7 @@ public class SourceHelper {
             JSONObject jsonAdDescription = (JSONObject) jsonAds.get(i);
 
             // Currently only ima-ads are supported.
-            GoogleImaAdDescription ad = parseImaAdFromJS(jsonAdDescription);
+            AdDescription ad = parseAdFromJS(jsonAdDescription);
             if (ad != null) {
               ads.add(ad);
             }
@@ -229,8 +230,36 @@ public class SourceHelper {
   }
 
   @Nullable
+  public AdDescription parseAdFromJS(ReadableMap map) {
+    HashMap<String, Object> hashmap = eliminateReadables(map);
+    try {
+      JSONObject jsonAdDescription = new JSONObject(gson.toJson(hashmap));
+      return parseAdFromJS(jsonAdDescription);
+    } catch(JSONException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  @Nullable
+  public static AdDescription parseAdFromJS(JSONObject jsonAdDescription) throws JSONException {
+    AdIntegrationKind integrationKind = AdIntegrationKind.from(jsonAdDescription.optString("integration"));
+    switch (integrationKind) {
+      // Currently only IMA is supported.
+      case GOOGLE_IMA: return parseImaAdFromJS(jsonAdDescription);
+      case DEFAULT:
+      case THEO:
+      case FREEWHEEL:
+      case SPOTX:
+      default: {
+        Log.e(TAG, "Ad integration not supported: " + integrationKind);
+        return null;
+      }
+    }
+  }
+
+  @NonNull
   private static GoogleImaAdDescription parseImaAdFromJS(JSONObject jsonAdDescription) throws JSONException {
-    if (jsonAdDescription.optString("integration").equals("google-ima")) {
       String source;
       // Property `sources` is of type string | AdSource.
       JSONObject sourceObj = jsonAdDescription.optJSONObject("sources");
@@ -243,8 +272,6 @@ public class SourceHelper {
         .source(source)
         .timeOffset(jsonAdDescription.optString("timeOffset"))
         .build();
-    }
-    return null;
   }
 
   private static TextTrackDescription parseTextTrackFromJS(JSONObject jsonTextTrack) throws JSONException {
