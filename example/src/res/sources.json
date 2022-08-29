@@ -84,7 +84,7 @@
     }
   },
   {
-    "name": "IMA PreRoll ad",
+    "name": "DASH - CSAI - Google IMA pre-roll",
     "os": [
       "android",
       "web"
@@ -107,7 +107,7 @@
     }
   },
   {
-    "name": "IMA MidRoll VAST ad",
+    "name": "DASH - CSAI - Google IMA mid-roll VAST",
     "os": [
       "android",
       "web"
@@ -131,7 +131,7 @@
     }
   },
   {
-    "name": "IMA MidRoll VMAP ad",
+    "name": "DASH - CSAI - Google IMA mid-roll VMAP",
     "os": [
       "android",
       "web"
@@ -154,7 +154,7 @@
     }
   },
   {
-    "name": "HLS - IMA Preroll Ad",
+    "name": "HLS - CSAI - Google IMA pre-roll",
     "os": [
       "ios",
       "web"
@@ -177,7 +177,7 @@
     }
   },
   {
-    "name": "HLS - IMA MidRoll VAST ad",
+    "name": "HLS - CSAI - Google IMA mid-roll VAST",
     "os": [
       "ios",
       "web"
@@ -198,6 +198,41 @@
           "timeOffset": 10
         }
       ]
+    }
+  },
+  {
+    "name": "DASH - SSAI - Google DAI",
+    "os": [
+      "android",
+      "web"
+    ],
+    "source": {
+      "sources": {
+        "type": "application/dash+xml",
+        "ssai": {
+          "integration": "google-dai",
+          "availabilityType": "vod",
+          "contentSourceID": "2474148",
+          "videoID": "bbb-clear"
+        }
+      }
+    }
+  },
+  {
+    "name": "HLS - SSAI - Google DAI",
+    "os": [
+      "ios",
+      "web"
+    ],
+    "source": {
+      "sources": {
+        "ssai": {
+          "integration": "google-dai",
+          "availabilityType": "vod",
+          "contentSourceID": "19463",
+          "videoID": "tears-of-steel"
+        }
+      }
     }
   },
   {
