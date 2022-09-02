@@ -10,7 +10,16 @@ let SD_PROP_TEXTTRACKS: String = "textTracks"
 let SD_PROP_ADS: String = "ads"
 let SD_PROP_SRC: String = "src"
 let SD_PROP_TYPE: String = "type"
+let SD_PROP_SSAI: String = "ssai"
 let SD_PROP_INTEGRATION: String = "integration"
+let SD_PROP_AVAILABILITY_TYPE: String = "availabilityType"
+let SD_PROP_AUTH_TOKEN: String = "authToken"
+let SD_PROP_STREAM_ACTIVITY_MONITOR_ID: String = "streamActivityMonitorID"
+let SD_PROP_AD_TAG_PARAMETERS: String = "adTagParameters"
+let SD_PROP_APIKEY: String = "apiKey"
+let SD_PROP_VIDEOID: String = "videoID"
+let SD_PROP_CONTENT_SOURCE_ID: String = "contentSourceID"
+let SD_PROP_ASSET_KEY: String = "assetKey"
 let SD_PROP_TIME_OFFSET: String = "timeOffset"
 let SD_PROP_SRC_LANG: String = "srclang"
 let SD_PROP_DEFAULT: String = "default"
@@ -149,7 +158,52 @@ class THEOplayerRCTSourceDescriptionBuilder {
                                type: type,
                                drm: contentProtection)
         }
-
+        
+#if ADS && GOOGLE_DAI
+        // check for alternative Google DAI SSAI
+        if let ssaiData = typedSourceData[SD_PROP_SSAI] as? [String:Any] {
+            if let integration = ssaiData[SD_PROP_INTEGRATION] as? String,
+               integration == SSAIIntegrationId.GoogleDAISSAIIntegrationID._rawValue {
+                if let availabilityType = ssaiData[SD_PROP_AVAILABILITY_TYPE] as? String {
+                    // build a GoogleDAIConfiguration
+                    var googleDaiConfig: GoogleDAIConfiguration?
+                    let authToken = ssaiData[SD_PROP_AUTH_TOKEN] as? String
+                    let streamActivityMonitorID = ssaiData[SD_PROP_STREAM_ACTIVITY_MONITOR_ID] as? String
+                    let adTagParameters = ssaiData[SD_PROP_AD_TAG_PARAMETERS] as? [String:String]
+                    let apiKey = ssaiData[SD_PROP_APIKEY] as? String ?? ""
+                    switch availabilityType {
+                    case StreamType.vod._rawValue:
+                        if let videoId = ssaiData[SD_PROP_VIDEOID] as? String,
+                           let contentSourceID = ssaiData[SD_PROP_CONTENT_SOURCE_ID] as? String {
+                            googleDaiConfig = GoogleDAIVodConfiguration(videoID: videoId,
+                                                                        contentSourceID: contentSourceID,
+                                                                        apiKey: apiKey,
+                                                                        authToken: authToken,
+                                                                        streamActivityMonitorID: streamActivityMonitorID,
+                                                                        adTagParameters: adTagParameters)
+                        }
+                    case StreamType.live._rawValue:
+                        if let assetKey = ssaiData[SD_PROP_ASSET_KEY] as? String {
+                            googleDaiConfig = GoogleDAILiveConfiguration(assetKey: assetKey,
+                                                                         apiKey: apiKey,
+                                                                         authToken: authToken,
+                                                                         streamActivityMonitorID: streamActivityMonitorID,
+                                                                         adTagParameters: adTagParameters)
+                        }
+                    default:
+                        if DEBUG_SOURCE_DESCRIPTION_BUIDER {
+                            print("[NATIVE] THEOplayer ssai 'availabilityType' must be 'live' or 'vod'")
+                        }
+                        return nil
+                    }
+                    // when valid, create a GoolgeDAITypedSource from the GoogleDAIConfiguration
+                    if let config = googleDaiConfig {
+                        return GoogleDAITypedSource(ssai: config)
+                    }
+                }
+            }
+        }
+#endif
         if DEBUG_SOURCE_DESCRIPTION_BUIDER {
             print("[NATIVE] THEOplayer TypedSource requires 'src' property in 'sources' description")
         }
