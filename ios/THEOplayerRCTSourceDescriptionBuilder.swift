@@ -7,9 +7,11 @@ import UIKit
 let SD_PROP_SOURCES: String = "sources"
 let SD_PROP_POSTER: String = "poster"
 let SD_PROP_TEXTTRACKS: String = "textTracks"
+let SD_PROP_ADS: String = "ads"
 let SD_PROP_SRC: String = "src"
 let SD_PROP_TYPE: String = "type"
 let SD_PROP_INTEGRATION: String = "integration"
+let SD_PROP_TIME_OFFSET: String = "timeOffset"
 let SD_PROP_SRC_LANG: String = "srclang"
 let SD_PROP_DEFAULT: String = "default"
 let SD_PROP_LABEL: String = "label"
@@ -87,7 +89,40 @@ class THEOplayerRCTSourceDescriptionBuilder {
             
         }
         
-        // 4. construct and return SourceDescription
+        // 4. extract Google IMA "ads"
+        var adsDescriptions: [AdDescription]?
+        
+#if ADS && GOOGLE_IMA
+        if let ads = sourceData[SD_PROP_ADS] {
+            adsDescriptions = []
+            // case: array of ads objects
+            if let adsDataArray = ads as? [[String:Any]] {
+                for adsData in adsDataArray {
+                    if let adDescription = THEOplayerRCTSourceDescriptionBuilder.buildAdDescription(adsData) {
+                        adsDescriptions?.append(adDescription)
+                    } else {
+                        if DEBUG_SOURCE_DESCRIPTION_BUIDER {
+                            print("[NATIVE] Could not create THEOplayer GoogleImaAdDescription from adsData array")
+                        }
+                        return nil
+                    }
+                }
+            }
+            // case: single ads object
+            else if let adsData = ads as? [String:Any] {
+                if let adDescription = THEOplayerRCTSourceDescriptionBuilder.buildAdDescription(adsData) {
+                    adsDescriptions?.append(adDescription)
+                } else {
+                    if DEBUG_SOURCE_DESCRIPTION_BUIDER {
+                        print("[NATIVE] Could not create THEOplayer GoogleImaAdDescription from adsData")
+                    }
+                    return nil
+                }
+            }
+        }
+#endif
+        
+        // 5. construct and return SourceDescription
         return SourceDescription(sources: typedSources,
                                  textTracks: textTrackDescriptions,
                                  poster: poster,
@@ -144,6 +179,30 @@ class THEOplayerRCTSourceDescriptionBuilder {
         return nil
     }
     
+    /**
+        Creates a THEOplayer GoogleImaAdDescription. This requires an ads property in the RN source description.
+     - returns: a THEOplayer GoogleImaAdDescription
+     */
+    private static func buildAdDescription(_ adsData: [String:Any]) -> AdDescription? {
+        if let integration = adsData[SD_PROP_INTEGRATION] as? String,
+           integration == AdIntegration.google_ima._rawValue {
+            let timeOffset = adsData[SD_PROP_TIME_OFFSET] as? Int
+            var srcString: String?
+            if let sourcesData = adsData[SD_PROP_SOURCES] as? [String:Any] {
+                srcString = sourcesData[SD_PROP_SRC] as? String
+            } else if let sourcesData = adsData[SD_PROP_SOURCES] as? String {
+                srcString = sourcesData
+            }
+            if let src = srcString {
+                return GoogleImaAdDescription(src: src, timeOffset: String(timeOffset ?? 0))
+            } else {
+                if DEBUG_PROP_UPDATES  { print("[NATIVE] AdDescription requires 'src' property in 'ads' description.") }
+            }
+        }
+        if DEBUG_PROP_UPDATES  { print("[NATIVE] We currently require and only support the 'google-ima' integration in the 'ads' description.") }
+        return nil
+    }
+
     /**
         Creates a THEOplayer DRMConfiguration. This requires a contentProtection property in the RN source description.
      - returns: a THEOplayer DRMConfiguration
