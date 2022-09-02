@@ -154,6 +154,20 @@
     }
   },
   {
+    "name": "HLS - VOD - Clear - The Venture Bros",
+    "os": [
+      "ios",
+      "android"
+    ],
+    "source": {
+      "sources": {
+        "src": "https://cdn.theoplayer.com/video/adultswim/clip.m3u8",
+        "type": "application/x-mpegurl"
+      },
+      "poster": "https://cdn.theoplayer.com/video/adultswim/poster.jpg"
+    }
+  },
+  {
     "name": "HLS - CSAI - Google IMA pre-roll",
     "os": [
       "ios",
@@ -169,9 +183,7 @@
       "ads": [
         {
           "integration": "google-ima",
-          "sources": {
-            "src": "https://cdn.theoplayer.com/demos/ads/vast/dfp-preroll-no-skip.xml"
-          }
+          "sources": "https://cdn.theoplayer.com/demos/ads/vast/dfp-preroll-no-skip.xml"
         }
       ]
     }
@@ -229,7 +241,7 @@
         "ssai": {
           "integration": "google-dai",
           "availabilityType": "vod",
-          "contentSourceID": "19463",
+          "contentSourceID": "2528370",
           "videoID": "tears-of-steel"
         }
       }
@@ -246,20 +258,6 @@
         "src": "https://cdn.theoplayer.com/video/elephants-dream/playlist.m3u8",
         "type": "application/x-mpegurl"
       }
-    }
-  },
-  {
-    "name": "HLS - VOD - Clear - The Venture Bros",
-    "os": [
-      "ios",
-      "android"
-    ],
-    "source": {
-      "sources": {
-        "src": "https://cdn.theoplayer.com/video/adultswim/clip.m3u8",
-        "type": "application/x-mpegurl"
-      },
-      "poster": "https://cdn.theoplayer.com/video/adultswim/poster.jpg"
     }
   },
   {
