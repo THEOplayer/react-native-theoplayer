@@ -248,33 +248,6 @@
     }
   },
   {
-    "name": "HLS - VOD - Clear - Elephant's dream",
-    "os": [
-      "ios",
-      "web"
-    ],
-    "source": {
-      "sources": {
-        "src": "https://cdn.theoplayer.com/video/elephants-dream/playlist.m3u8",
-        "type": "application/x-mpegurl"
-      }
-    }
-  },
-  {
-    "name": "HLS - VOD - AES128 - Big Buck Bunny",
-    "os": [
-      "ios",
-      "android"
-    ],
-    "source": {
-      "sources": {
-        "src": "https://cdn.theoplayer.com/video/big_buck_bunny_encrypted/stream-800/index.m3u8",
-        "type": "application/x-mpegurl"
-      },
-      "poster": "https://cdn.theoplayer.com/video/big_buck_bunny/poster.jpg"
-    }
-  },
-  {
     "name": "HLS - VOD/Thumbnails - Clear - Big Buck Bunny",
     "os": [
       "ios",
@@ -298,16 +271,21 @@
     }
   },
   {
-    "name": "HLS - VOD - Clear - Star Wars Docu",
+    "name": "HLS - VOD - ezDRM - Drop",
     "os": [
-      "ios"
+      "ios",
+      "web"
     ],
     "source": {
       "sources": {
-        "src": "https://cdn.theoplayer.com/video/star_wars_episode_vii-the_force_awakens_official_comic-con_2015_reel_(2015)/index.m3u8",
-        "type": "application/x-mpegurl"
-      },
-      "poster": "https://cdn.theoplayer.com/video/star_wars_episode_vii-the_force_awakens_official_comic-con_2015_reel_(2015)/poster.jpg"
+        "src": "https://fps.ezdrm.com/demo/video/ezdrm.m3u8",
+        "contentProtection": {
+          "fairplay": {
+            "certificateURL": "https://fps.ezdrm.com/demo/video/eleisure.cer",
+            "licenseAcquisitionURL": "https://fps.ezdrm.com/api/licenses/09cc0377-6dd4-40cb-b09d-b582236e70fe"
+          }
+        }
+      }
     }
   },
   {
