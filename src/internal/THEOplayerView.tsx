@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { findNodeHandle, StyleSheet, requireNativeComponent, View, UIManager, Platform, NativeSyntheticEvent } from 'react-native';
+import { findNodeHandle, StyleSheet, requireNativeComponent, View, UIManager, Platform, NativeSyntheticEvent, HostComponent } from 'react-native';
 import type {
   DurationChangeEvent,
   ErrorEvent,
@@ -19,7 +19,7 @@ import type {
 
 import styles from './THEOplayerView.style';
 import type { SourceDescription } from 'react-native-theoplayer';
-import { THEOplayerAdsAPI } from "./ads/THEOplayerAdsAPI";
+import { THEOplayerNativeAdsAPI } from './ads/THEOplayerNativeAdsAPI';
 import { decodeNanInf } from './utils/TypeUtils';
 
 interface THEOplayerRCTViewProps extends THEOplayerViewProps {
@@ -57,12 +57,13 @@ interface THEOplayerRCTViewState {
   error?: PlayerError;
 }
 
-interface THEOplayerViewNativeComponent extends THEOplayerViewComponent {
+interface THEOplayerViewNativeComponent extends THEOplayerViewComponent, HostComponent<THEOplayerViewProps> {
   setNativeProps: (props: Partial<THEOplayerRCTViewProps>) => void;
 }
 
-export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplayerRCTViewState> {
+export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplayerRCTViewState> implements THEOplayerViewComponent {
   private readonly _root: React.RefObject<THEOplayerViewNativeComponent>;
+  private readonly _adsApi: THEOplayerNativeAdsAPI;
 
   private static initialState: THEOplayerRCTViewState = {
     isBuffering: false,
@@ -73,6 +74,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
     super(props);
     this._root = React.createRef();
     this.state = THEOplayerView.initialState;
+    this._adsApi = new THEOplayerNativeAdsAPI(this);
   }
 
   componentWillUnmount() {
@@ -96,12 +98,12 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
     this.setNativeProps({ seek: time });
   }
 
-  public get nodeHandle(): number | null {
+  public get nativeHandle(): number | null {
     return findNodeHandle(this._root.current);
   }
 
   public get ads(): AdsAPI {
-    return new THEOplayerAdsAPI(this);
+    return this._adsApi;
   }
 
   private reset() {

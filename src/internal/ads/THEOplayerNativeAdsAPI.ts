@@ -1,12 +1,12 @@
 import type { AdBreak, AdsAPI } from "react-native-theoplayer";
 import { NativeModules } from "react-native";
-import type { THEOplayerView } from "../THEOplayerView";
 import type { AdDescription } from "../../api/source/ads/Ads";
 import type { Ad } from "react-native-theoplayer";
+import type { THEOplayerView } from "react-native-theoplayer";
 
 const TAG = 'THEOplayerAdsAPI';
 
-export class THEOplayerAdsAPI implements AdsAPI {
+export class THEOplayerNativeAdsAPI implements AdsAPI {
 
   constructor(private player: THEOplayerView) {
   }
@@ -14,7 +14,7 @@ export class THEOplayerAdsAPI implements AdsAPI {
   playing(): Promise<boolean> {
     return new Promise((resolve, reject) => {
       try {
-        NativeModules.AdsModule.playing(this.player.nodeHandle, (isPlaying: boolean) => {
+        NativeModules.AdsModule.playing(this.player.nativeHandle, (isPlaying: boolean) => {
           resolve(isPlaying);
         });
       } catch (e) {
@@ -26,7 +26,7 @@ export class THEOplayerAdsAPI implements AdsAPI {
 
   skip(): void {
     try {
-      NativeModules.AdsModule.skip(this.player.nodeHandle);
+      NativeModules.AdsModule.skip(this.player.nativeHandle);
     } catch (e) {
       console.error(TAG, e);
     }
@@ -35,7 +35,7 @@ export class THEOplayerAdsAPI implements AdsAPI {
   currentAdBreak(): Promise<AdBreak> {
     return new Promise((resolve, reject) => {
       try {
-        NativeModules.AdsModule.currentAdBreak(this.player.nodeHandle, (adbreak: AdBreak) => {
+        NativeModules.AdsModule.currentAdBreak(this.player.nativeHandle, (adbreak: AdBreak) => {
           resolve(adbreak);
         });
       } catch (e) {
@@ -48,7 +48,7 @@ export class THEOplayerAdsAPI implements AdsAPI {
   currentAds(): Promise<Ad[]> {
     return new Promise((resolve, reject) => {
       try {
-        NativeModules.AdsModule.currentAds(this.player.nodeHandle, (ads: Ad[]) => {
+        NativeModules.AdsModule.currentAds(this.player.nativeHandle, (ads: Ad[]) => {
           resolve(ads);
         });
       } catch (e) {
@@ -61,7 +61,7 @@ export class THEOplayerAdsAPI implements AdsAPI {
   scheduledAdBreaks(): Promise<AdBreak[]> {
     return new Promise((resolve, reject) => {
       try {
-        NativeModules.AdsModule.scheduledAdBreaks(this.player.nodeHandle, (adBreaks: AdBreak[]) => {
+        NativeModules.AdsModule.scheduledAdBreaks(this.player.nativeHandle, (adBreaks: AdBreak[]) => {
           resolve(adBreaks);
         });
       } catch (e) {
@@ -73,7 +73,7 @@ export class THEOplayerAdsAPI implements AdsAPI {
 
   schedule(ad: AdDescription): void {
     try {
-      NativeModules.AdsModule.schedule(this.player.nodeHandle, ad);
+      NativeModules.AdsModule.schedule(this.player.nativeHandle, ad);
     } catch (e) {
       console.error(TAG, e);
     }

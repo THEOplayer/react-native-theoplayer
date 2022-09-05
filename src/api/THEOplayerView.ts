@@ -10,7 +10,6 @@ import type {
   SegmentNotFoundEvent,
 } from './event/PlayerEvent';
 import type { TextTrackEvent, TextTrackListEvent } from './event/TrackEvent';
-import type { HostComponent } from 'react-native';
 import type { PlayerConfiguration } from './config/PlayerConfiguration';
 import type { ABRConfiguration } from './abr/ABRConfiguration';
 import type { AdEvent } from "./event/AdEvent";
@@ -232,7 +231,7 @@ export interface THEOplayerViewProps {
   onAdEvent?: (event: AdEvent) => void;
 }
 
-export interface THEOplayerViewComponent extends HostComponent<THEOplayerViewProps> {
+export interface THEOplayerViewComponent {
   /**
    * Seek to a new position.
    *
