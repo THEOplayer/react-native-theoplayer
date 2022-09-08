@@ -8,7 +8,6 @@ let REMOVE_TRACK: Int = 1
 let ADD_CUE: Int = 0
 let REMOVE_CUE: Int = 1
 
-
 class THEOplayerRCTViewTextTrackEventHandler {
     // MARK: Members
     private weak var player: THEOplayer?
