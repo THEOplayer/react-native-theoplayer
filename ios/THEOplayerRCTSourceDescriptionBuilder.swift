@@ -240,7 +240,8 @@ class THEOplayerRCTSourceDescriptionBuilder {
     private static func buildAdDescription(_ adsData: [String:Any]) -> AdDescription? {
         if let integration = adsData[SD_PROP_INTEGRATION] as? String,
            integration == AdIntegration.google_ima._rawValue {
-            let timeOffset = adsData[SD_PROP_TIME_OFFSET] as? Int
+            // timeOffset can be Int or String: 10, "01:32:54.78", "1234.56", "start", "end", "10%", ...
+            let timeOffset = adsData[SD_PROP_TIME_OFFSET] as? String ?? String(adsData[SD_PROP_TIME_OFFSET] as? Int ?? 0)
             var srcString: String?
             if let sourcesData = adsData[SD_PROP_SOURCES] as? [String:Any] {
                 srcString = sourcesData[SD_PROP_SRC] as? String
@@ -248,7 +249,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
                 srcString = sourcesData
             }
             if let src = srcString {
-                return GoogleImaAdDescription(src: src, timeOffset: String(timeOffset ?? 0))
+                return GoogleImaAdDescription(src: src, timeOffset: timeOffset)
             } else {
                 if DEBUG_PROP_UPDATES  { print("[NATIVE] AdDescription requires 'src' property in 'ads' description.") }
             }
