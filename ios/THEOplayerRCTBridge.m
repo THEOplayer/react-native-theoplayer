@@ -40,8 +40,11 @@ RCT_EXPORT_VIEW_PROPERTY(onNativeFullscreenPlayerWillPresent, RCTDirectEventBloc
 RCT_EXPORT_VIEW_PROPERTY(onNativeFullscreenPlayerDidPresent, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeFullscreenPlayerWillDismiss, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeFullscreenPlayerDidDismiss, RCTDirectEventBlock);
+
 RCT_EXPORT_VIEW_PROPERTY(onNativeTextTrackListEvent, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeTextTrackEvent, RCTDirectEventBlock);
+
+RCT_EXPORT_VIEW_PROPERTY(onNativeAdEvent, RCTDirectEventBlock);
 
 RCT_EXTERN_METHOD(destroy:(nonnull NSNumber *)node);
 
