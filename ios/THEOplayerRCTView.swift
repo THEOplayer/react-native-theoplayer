@@ -471,5 +471,10 @@ class THEOplayerRCTView: UIView {
     }
     
     // MARK: - Listener based AD event bridging
-    // todo
+    
+    @objc(setOnNativeAdEvent:)
+    func setOnNativeAdEvent(nativeAdEvent: @escaping RCTDirectEventBlock) {
+        self.adEventHandler.onNativeAdEvent = nativeAdEvent
+        if DEBUG_PROP_UPDATES  { print("[NATIVE] nativeAdEvent prop set.") }
+    }
 }
