@@ -9,18 +9,18 @@ let PROP_AD_ID: String = "id"
 let PROP_AD_BREAK: String = "adBreak"
 let PROP_AD_SKIP_OFFSET: String = "skipOffset"
 let PROP_AD_COMPANIONS: String = "companions"
+let PROP_AD_RESOURCE_URI: String = "resourceURI"
+let PROP_AD_UNIVERSAL_AD_IDS: String = "universalAdIds"
 let PROP_GOOGLE_AD_AD_SYSTEM: String = "adSystem"
 let PROP_GOOGLE_AD_CREATIVE_ID: String = "creativeId"
 let PROP_GOOGLE_AD_TRAFFICKING_PARAMETERS_STRING: String = "traffickingParametersString"
+let PROP_GOOGLE_AD_TRAFFICKING_PARAMETERS: String = "traffickingParameters"
 let PROP_GOOGLE_AD_BITRATE: String = "bitrate"
-let PROP_GOOGLE_AD_TITLE: String = "title"
-let PROP_GOOGLE_AD_DURATION: String = "duration"
 let PROP_GOOGLE_AD_WIDTH: String = "width"
 let PROP_GOOGLE_AD_HEIGHT: String = "height"
 let PROP_GOOGLE_AD_CONTENT_TYPE: String = "contentType"
-let PROP_GOOGLE_AD_ID_REGISTRY: String = "adIdRegistry";
+let PROP_GOOGLE_AD_ID_REGISTRY: String = "adIdRegistry"
 let PROP_GOOGLE_AD_ID_VALUE: String = "adIdValue"
-let PROP_GOOLGE_AD_UNIVERSAL_AD_IDS: String = "universalAdIds"
 let PROP_GOOLGE_AD_WRAPPER_AD_IDS: String = "wrapperAdIds"
 let PROP_GOOLGE_AD_WRAPPER_AD_SYSTEMS: String = "wrapperAdSystems"
 let PROP_GOOLGE_AD_WRAPPER_CREATIVE_IDS: String = "wrapperCreativeIds"
@@ -28,12 +28,12 @@ let PROP_ADBREAK_MAX_DURATION: String = "maxDuration"
 let PROP_ADBREAK_TIME_OFFSET: String = "timeOffset"
 let PROP_ADBREAK_MAX_REMAINING_DURATION: String = "maxRemainingDuration"
 let PROP_ADBREAK_ADS: String = "ads"
-let PROP_COMPANION_AD_SLOT_ID: String = "adSlotId";
-let PROP_COMPANION_ALT_TEXT: String = "altText";
-let PROP_COMPANION_CLICK_THROUGH: String = "clickThrough";
-let PROP_COMPANION_WIDTH: String = "width";
-let PROP_COMPANION_HEIGHT: String = "height";
-let PROP_COMPANION_RESOURCE_URI: String = "resourceURI";
+let PROP_COMPANION_AD_SLOT_ID: String = "adSlotId"
+let PROP_COMPANION_ALT_TEXT: String = "altText"
+let PROP_COMPANION_CLICK_THROUGH: String = "clickThrough"
+let PROP_COMPANION_WIDTH: String = "width"
+let PROP_COMPANION_HEIGHT: String = "height"
+let PROP_COMPANION_RESOURCE_URI: String = "resourceURI"
 
 class THEOplayerRCTAdAggregator {
 
@@ -41,26 +41,44 @@ class THEOplayerRCTAdAggregator {
         var adData: [String:Any] = [:]
         adData[PROP_AD_INTEGRATION] = ad.integration._rawValue
         adData[PROP_AD_TYPE] = ad.type
-        adData[PROP_AD_ID] = ad.id ?? ""
+        if let adId = ad.id {
+            adData[PROP_AD_ID] = adId
+        }
+        if let resourceURI = ad.resourceURI {
+            adData[PROP_AD_RESOURCE_URI] = resourceURI
+        }
+        if let skipOffset = ad.skipOffset {
+            adData[PROP_AD_SKIP_OFFSET] = skipOffset
+        }
         if processAdBreak,
            let adBreak = ad.adBreak {
             adData[PROP_AD_BREAK] = THEOplayerRCTAdAggregator.aggregateAdBreak(adBreak: adBreak)
+        } else {
+            adData[PROP_AD_BREAK] = [:]
         }
         adData[PROP_AD_COMPANIONS] = THEOplayerRCTAdAggregator.aggregateCompanionAds(companionAds: ad.companions)
-        adData[PROP_AD_SKIP_OFFSET] = ad.skipOffset ?? 0
-        
+        adData[PROP_AD_UNIVERSAL_AD_IDS] = []
+
         // Add additional properties for GoogleIma Ads
         if let googleImaAd = ad as? GoogleImaAd {
-            adData[PROP_GOOGLE_AD_AD_SYSTEM] = googleImaAd.adSystem ?? ""
-            adData[PROP_GOOGLE_AD_CREATIVE_ID] = googleImaAd.creativeId ?? ""
-            adData[PROP_GOOGLE_AD_TRAFFICKING_PARAMETERS_STRING] = googleImaAd.traffickingParameters
+            if let adSystem = googleImaAd.adSystem {
+                adData[PROP_GOOGLE_AD_AD_SYSTEM] = adSystem
+            }
+            if let creativeId = googleImaAd.creativeId {
+                adData[PROP_GOOGLE_AD_CREATIVE_ID] = creativeId
+            }
+            let traffickingParametersString = googleImaAd.traffickingParameters
+            adData[PROP_GOOGLE_AD_TRAFFICKING_PARAMETERS_STRING] = traffickingParametersString
+            if let traffickingParameters = THEOplayerRCTAdAggregator.aggregateTraffickingParameters(traffickingParametersString: traffickingParametersString) {
+                adData[PROP_GOOGLE_AD_TRAFFICKING_PARAMETERS] = traffickingParameters
+            }
             adData[PROP_GOOGLE_AD_BITRATE] = googleImaAd.vastMediaBitrate
-            adData[PROP_GOOGLE_AD_TITLE] = ""                               // not available on iOS SDK
-            adData[PROP_GOOGLE_AD_DURATION] = 0.0                           // not available on iOS SDK
-            adData[PROP_GOOGLE_AD_WIDTH] = googleImaAd.width ?? 0
-            adData[PROP_GOOGLE_AD_HEIGHT] = googleImaAd.height ?? 0
-            adData[PROP_GOOGLE_AD_CONTENT_TYPE] = ""                        // not available on iOS SDK
-        
+            if let width = googleImaAd.width {
+                adData[PROP_GOOGLE_AD_WIDTH] = width
+            }
+            if let height = googleImaAd.height {
+                adData[PROP_GOOGLE_AD_HEIGHT] = height
+            }
             if !googleImaAd.universalAdIds.isEmpty {
                 var adIdList: [[String:Any]] = []
                 for adId in googleImaAd.universalAdIds {
@@ -69,17 +87,11 @@ class THEOplayerRCTAdAggregator {
                     adIdData[PROP_GOOGLE_AD_ID_VALUE] = adId.adIdValue
                     adIdList.append(adIdData)
                 }
-                adData[PROP_GOOLGE_AD_UNIVERSAL_AD_IDS] = adIdList
+                adData[PROP_AD_UNIVERSAL_AD_IDS] = adIdList
             }
-            if !googleImaAd.wrapperAdIds.isEmpty {
-                adData[PROP_GOOLGE_AD_WRAPPER_AD_IDS] = googleImaAd.wrapperAdIds
-            }
-            if !googleImaAd.wrapperAdSystems.isEmpty {
-                adData[PROP_GOOLGE_AD_WRAPPER_AD_SYSTEMS] = googleImaAd.wrapperAdSystems
-            }
-            if !googleImaAd.wrapperCreativeIds.isEmpty {
-                adData[PROP_GOOLGE_AD_WRAPPER_CREATIVE_IDS] = googleImaAd.wrapperCreativeIds
-            }
+            adData[PROP_GOOLGE_AD_WRAPPER_AD_IDS] = googleImaAd.wrapperAdIds
+            adData[PROP_GOOLGE_AD_WRAPPER_AD_SYSTEMS] = googleImaAd.wrapperAdSystems
+            adData[PROP_GOOLGE_AD_WRAPPER_CREATIVE_IDS] = googleImaAd.wrapperCreativeIds
         }
         
         return adData
@@ -116,5 +128,12 @@ class THEOplayerRCTAdAggregator {
             }
         }
         return companionAdsData
+    }
+    
+    class private func aggregateTraffickingParameters(traffickingParametersString: String) -> [String:Any]? {
+        if let data = traffickingParametersString.data(using: .utf8) {
+            return try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String:Any]
+        }
+        return nil
     }
 }
