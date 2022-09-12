@@ -3,7 +3,7 @@ package com.theoplayer.ads;
 import androidx.annotation.NonNull;
 
 import com.facebook.react.bridge.Arguments;
-import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -40,40 +40,35 @@ public class AdsModule extends ReactContextBaseJavaModule {
 
   // The currently playing ad break.
   @ReactMethod
-  public void currentAdBreak(Integer tag, Callback successCallBack) {
+  public void currentAdBreak(Integer tag, Promise promise) {
     viewResolver.resolveViewByTag(tag, view -> {
       Player player = view != null ? view.getPlayer() : null;
       if (player == null) {
-        successCallBack.invoke(Arguments.createMap());
+        promise.resolve(Arguments.createMap());
       } else {
-        successCallBack.invoke(AdInfo.fromAdbreak(player.getAds().getCurrentAdBreak()));
+        promise.resolve(AdInfo.fromAdbreak(player.getAds().getCurrentAdBreak()));
       }
     });
   }
 
   // List of ad breaks which still need to be played.
   @ReactMethod
-  public void scheduledAdBreaks(Integer tag, Callback successCallBack) {
+  public void scheduledAdBreaks(Integer tag, Promise promise) {
     viewResolver.resolveViewByTag(tag, view -> {
-      Player player = view != null ? view.getPlayer() : null;
-      if (player == null) {
-        successCallBack.invoke(Arguments.createMap());
-      } else {
-        // TODO
-        successCallBack.invoke(Arguments.createMap());
-      }
+      // NYI
+       promise.reject(new Exception("Not yet implemented"));
     });
   }
 
   // Whether a linear ad is currently playing.
   @ReactMethod
-  public void playing(Integer tag, Callback successCallBack) {
+  public void playing(Integer tag, Promise promise) {
     viewResolver.resolveViewByTag(tag, view -> {
       Player player = view != null ? view.getPlayer() : null;
       if (player == null) {
-        successCallBack.invoke(false);
+        promise.resolve(false);
       } else {
-        successCallBack.invoke(player.getAds().isPlaying());
+        promise.resolve(player.getAds().isPlaying());
       }
     });
   }

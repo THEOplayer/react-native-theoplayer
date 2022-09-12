@@ -1,81 +1,35 @@
 import type { AdBreak, AdsAPI } from "react-native-theoplayer";
 import { NativeModules } from "react-native";
-import type { AdDescription } from "../../api/source/ads/Ads";
+import type { AdDescription } from "react-native-theoplayer";
 import type { Ad } from "react-native-theoplayer";
 import type { THEOplayerView } from "react-native-theoplayer";
-
-const TAG = 'THEOplayerAdsAPI';
 
 export class THEOplayerNativeAdsAPI implements AdsAPI {
 
   constructor(private player: THEOplayerView) {
   }
 
-  playing(): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-      try {
-        NativeModules.AdsModule.playing(this.player.nativeHandle, (isPlaying: boolean) => {
-          resolve(isPlaying);
-        });
-      } catch (e) {
-        console.error(TAG, e);
-        reject(e);
-      }
-    });
+  async playing(): Promise<boolean> {
+    return NativeModules.AdsModule.playing(this.player.nativeHandle);
   }
 
   skip(): void {
-    try {
-      NativeModules.AdsModule.skip(this.player.nativeHandle);
-    } catch (e) {
-      console.error(TAG, e);
-    }
+    NativeModules.AdsModule.skip(this.player.nativeHandle);
   }
 
-  currentAdBreak(): Promise<AdBreak> {
-    return new Promise((resolve, reject) => {
-      try {
-        NativeModules.AdsModule.currentAdBreak(this.player.nativeHandle, (adbreak: AdBreak) => {
-          resolve(adbreak);
-        });
-      } catch (e) {
-        console.error(TAG, e);
-        reject(e);
-      }
-    });
+  async currentAdBreak(): Promise<AdBreak> {
+    return NativeModules.AdsModule.currentAdBreak(this.player.nativeHandle);
   }
 
-  currentAds(): Promise<Ad[]> {
-    return new Promise((resolve, reject) => {
-      try {
-        NativeModules.AdsModule.currentAds(this.player.nativeHandle, (ads: Ad[]) => {
-          resolve(ads);
-        });
-      } catch (e) {
-        console.error(TAG, e);
-        reject(e);
-      }
-    });
+  async currentAds(): Promise<Ad[]> {
+    return NativeModules.AdsModule.currentAds(this.player.nativeHandle);
   }
 
   scheduledAdBreaks(): Promise<AdBreak[]> {
-    return new Promise((resolve, reject) => {
-      try {
-        NativeModules.AdsModule.scheduledAdBreaks(this.player.nativeHandle, (adBreaks: AdBreak[]) => {
-          resolve(adBreaks);
-        });
-      } catch (e) {
-        console.error(TAG, e);
-        reject(e);
-      }
-    });
+    return NativeModules.AdsModule.scheduledAdBreaks(this.player.nativeHandle);
   }
 
   schedule(ad: AdDescription): void {
-    try {
-      NativeModules.AdsModule.schedule(this.player.nativeHandle, ad);
-    } catch (e) {
-      console.error(TAG, e);
-    }
+    NativeModules.AdsModule.schedule(this.player.nativeHandle, ad);
   }
 }
