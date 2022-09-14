@@ -4,6 +4,7 @@
 import type { AdDescription } from "../source/ads/Ads";
 import type { AdBreak } from "./AdBreak";
 import type { Ad } from "./Ad";
+import type { GoogleDAI } from "./GoogleDai";
 
 export interface AdsAPI {
   /**
@@ -41,4 +42,12 @@ export interface AdsAPI {
    * <br/> - Prefer scheduling ad breaks up front through SourceConfiguration.ads.
    */
   schedule(ad: AdDescription): void;
+
+  /**
+   * The Google DAI API.
+   *
+   * @remarks
+   * <br/> - Only available when the feature or extension `'google-dai'` is enabled.
+   */
+  readonly dai?: GoogleDAI;
 }
