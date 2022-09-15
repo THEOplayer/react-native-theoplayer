@@ -1,5 +1,8 @@
 package com.theoplayer;
 
+import android.text.TextUtils;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -14,6 +17,16 @@ import com.theoplayer.android.api.source.TypedSource;
 import com.theoplayer.android.api.source.addescription.AdDescription;
 import com.theoplayer.android.api.source.addescription.GoogleImaAdDescription;
 import com.theoplayer.android.api.source.drm.DRMConfiguration;
+import com.theoplayer.android.api.source.drm.DRMIntegrationId;
+import com.theoplayer.android.api.source.drm.preintegration.AxinomDRMConfiguration;
+import com.theoplayer.android.api.source.drm.preintegration.AzureDRMConfiguration;
+import com.theoplayer.android.api.source.drm.preintegration.ConaxDRMConfiguration;
+import com.theoplayer.android.api.source.drm.preintegration.DRMTodayConfiguration;
+import com.theoplayer.android.api.source.drm.preintegration.IrdetoConfiguration;
+import com.theoplayer.android.api.source.drm.preintegration.KeyOSDRMConfiguration;
+import com.theoplayer.android.api.source.drm.preintegration.TitaniumDRMConfiguration;
+import com.theoplayer.android.api.source.drm.preintegration.VudrmDRMConfiguration;
+import com.theoplayer.android.api.source.drm.preintegration.XstreamConfiguration;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,6 +40,11 @@ import java.util.Map;
  * Source parsing helper class, because we don't support GSON object deserialization currently
  */
 public class SourceHelper {
+
+  private static final String TAG = "SourceHelper";
+
+  public static final String PROP_CONTENT_PROTECTION = "contentProtection";
+  public static final String PROP_CONTENT_PROTECTION_INTEGRATION = "integration";
 
   private final Gson gson = new Gson();
 
@@ -104,10 +122,44 @@ public class SourceHelper {
       if (sourceType != null) {
         tsBuilder.type(sourceType);
       }
+      if (jsonTypedSource.has(PROP_CONTENT_PROTECTION)) {
+        JSONObject contentProtection = jsonTypedSource.getJSONObject(PROP_CONTENT_PROTECTION);
 
-      if (jsonTypedSource.has("contentProtection")) {
-        DRMConfiguration drmConfiguration = gson.fromJson(jsonTypedSource.get("contentProtection").toString(), DRMConfiguration.class);
-        tsBuilder.drm(drmConfiguration);
+        // Look for specific DRM pre-integration, otherwise use default.
+        final String integration = contentProtection.optString(PROP_CONTENT_PROTECTION_INTEGRATION);
+        DRMIntegrationId integrationId = null;
+        if (!TextUtils.isEmpty(integration)) {
+          integrationId = DRMIntegrationId.from(integration);
+          if (integrationId == null) {
+            Log.e(TAG, "ContentProtection integration not supported: " + integration);
+          }
+        }
+        if (integrationId != null) {
+          switch (integrationId) {
+            case AXINOM:
+              tsBuilder.drm(gson.fromJson(contentProtection.toString(), AxinomDRMConfiguration.class)); break;
+            case AZURE:
+              tsBuilder.drm(gson.fromJson(contentProtection.toString(), AzureDRMConfiguration.class)); break;
+            case CONAX:
+              tsBuilder.drm(gson.fromJson(contentProtection.toString(), ConaxDRMConfiguration.class)); break;
+            case DRMTODAY:
+              tsBuilder.drm(gson.fromJson(contentProtection.toString(), DRMTodayConfiguration.class)); break;
+            case IRDETO:
+              tsBuilder.drm(gson.fromJson(contentProtection.toString(), IrdetoConfiguration.class)); break;
+            case KEYOS:
+              tsBuilder.drm(gson.fromJson(contentProtection.toString(), KeyOSDRMConfiguration.class)); break;
+            case TITANIUM:
+              tsBuilder.drm(gson.fromJson(contentProtection.toString(), TitaniumDRMConfiguration.class)); break;
+            case VUDRM:
+              tsBuilder.drm(gson.fromJson(contentProtection.toString(), VudrmDRMConfiguration.class)); break;
+            case XSTREAM:
+              tsBuilder.drm(gson.fromJson(contentProtection.toString(), XstreamConfiguration.class)); break;
+            default:
+              Log.e(TAG, "ContentProtection integration not supported: " + integration);
+          }
+        } else {
+          tsBuilder.drm(gson.fromJson(jsonTypedSource.get(PROP_CONTENT_PROTECTION).toString(), DRMConfiguration.class));
+        }
       }
       return tsBuilder.build();
     }
