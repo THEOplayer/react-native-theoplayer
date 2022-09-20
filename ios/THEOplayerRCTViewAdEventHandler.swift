@@ -99,7 +99,7 @@ class THEOplayerRCTViewAdEventHandler {
             if let forwardedAdEvent = self?.onNativeAdEvent,
                let adBreak = event.ad {
                 forwardedAdEvent([
-                    AD_EVENT_PROP_TYPE: EVENT_TYPE_AD_END,
+                    AD_EVENT_PROP_TYPE: EVENT_TYPE_ADBREAK_END,
                     AD_EVENT_PROP_AD: THEOplayerRCTAdAggregator.aggregateAdBreak(adBreak: adBreak)
                 ])
             }

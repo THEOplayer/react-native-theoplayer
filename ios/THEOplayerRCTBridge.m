@@ -7,7 +7,9 @@
 //
 
 #import <React/RCTViewManager.h>
+#import <React/RCTBridgeModule.h>
 
+// View Manager
 @interface RCT_EXTERN_MODULE(THEOplayerRCTViewManager, RCTViewManager)
 
 RCT_EXPORT_VIEW_PROPERTY(src, NSDictionary);
@@ -47,5 +49,31 @@ RCT_EXPORT_VIEW_PROPERTY(onNativeTextTrackEvent, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeAdEvent, RCTDirectEventBlock);
 
 RCT_EXTERN_METHOD(destroy:(nonnull NSNumber *)node);
+
+@end
+
+// Ads Module
+@interface RCT_EXTERN_REMAP_MODULE(AdsModule, THEOplayerRCTAdsAPI, NSObject)
+
+RCT_EXTERN_METHOD(skip:(nonnull NSNumber *)node)
+
+RCT_EXTERN_METHOD(playing:(nonnull NSNumber *)node
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(currentAdBreak:(nonnull NSNumber *)node
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(currentAds:(nonnull NSNumber *)node
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(scheduledAdBreaks:(nonnull NSNumber *)node
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(schedule:(nonnull NSNumber *)node
+                  ad: NSDictionary)
 
 @end

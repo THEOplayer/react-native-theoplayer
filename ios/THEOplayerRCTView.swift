@@ -48,6 +48,13 @@ class THEOplayerRCTView: UIView {
         if DEBUG_THEOPLAYER_INTERACTION { print("[NATIVE] THEOplayer instance destroyed.") }
     }
     
+    func ads() -> Ads? {
+        guard let player = self.player else {
+            return nil
+        }
+        return player.ads
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("[NATIVE] init(coder:) has not been implemented")
     }
@@ -132,7 +139,7 @@ class THEOplayerRCTView: UIView {
     }
     
     private func initAdsConfiguration() -> AdsConfiguration? {
-#if ADS && GOOGLE_IMA
+#if ADS && (GOOGLE_IMA || GOOGLE_DAI)
         return AdsConfiguration(showCountdown: self.adShowCountDown,
                                 preload: self.adPreloadType,
                                 googleImaConfiguration: GoogleIMAConfiguration(useNativeIma: self.googleImaUsesNativeIma))

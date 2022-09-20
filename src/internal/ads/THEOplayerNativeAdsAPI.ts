@@ -9,7 +9,7 @@ export class THEOplayerNativeAdsAPI implements AdsAPI {
   constructor(private player: THEOplayerView) {
   }
 
-  async playing(): Promise<boolean> {
+  playing(): Promise<boolean> {
     return NativeModules.AdsModule.playing(this.player.nativeHandle);
   }
 
@@ -17,11 +17,11 @@ export class THEOplayerNativeAdsAPI implements AdsAPI {
     NativeModules.AdsModule.skip(this.player.nativeHandle);
   }
 
-  async currentAdBreak(): Promise<AdBreak> {
+  currentAdBreak(): Promise<AdBreak> {
     return NativeModules.AdsModule.currentAdBreak(this.player.nativeHandle);
   }
 
-  async currentAds(): Promise<Ad[]> {
+  currentAds(): Promise<Ad[]> {
     return NativeModules.AdsModule.currentAds(this.player.nativeHandle);
   }
 

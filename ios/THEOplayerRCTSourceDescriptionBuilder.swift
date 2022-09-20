@@ -237,7 +237,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
         Creates a THEOplayer GoogleImaAdDescription. This requires an ads property in the RN source description.
      - returns: a THEOplayer GoogleImaAdDescription
      */
-    private static func buildAdDescription(_ adsData: [String:Any]) -> AdDescription? {
+    static func buildAdDescription(_ adsData: [String:Any]) -> AdDescription? {
         if let integration = adsData[SD_PROP_INTEGRATION] as? String,
            integration == AdIntegration.google_ima._rawValue {
             // timeOffset can be Int or String: 10, "01:32:54.78", "1234.56", "start", "end", "10%", ...
