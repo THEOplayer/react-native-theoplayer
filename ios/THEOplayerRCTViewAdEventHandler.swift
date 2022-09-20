@@ -37,7 +37,9 @@ class THEOplayerRCTViewAdEventHandler {
     // MARK: - destruction
     func destroy() {
         // dettach listeners
+#if ADS && (GOOGLE_IMA || GOOLGE_DAI)
         self.dettachListeners()
+#endif
     }
     
     // MARK: - player setup / breakdown
@@ -45,7 +47,9 @@ class THEOplayerRCTViewAdEventHandler {
         self.player = player;
         
         // attach listeners
+#if ADS && (GOOGLE_IMA || GOOLGE_DAI)
         self.attachListeners()
+#endif
     }
     
     // MARK: - attach/dettach Listeners
@@ -53,7 +57,7 @@ class THEOplayerRCTViewAdEventHandler {
         guard let player = self.player else {
             return
         }
-        
+
         // AD_BEGIN
         self.adBeginListener = player.ads.addEventListener(type: AdsEventTypes.AD_BEGIN) { [weak self] event in
             if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received AD_BEGIN event from THEOplayer Ads") }
@@ -231,5 +235,4 @@ class THEOplayerRCTViewAdEventHandler {
             if DEBUG_EVENTHANDLER { print("[NATIVE] adLoadedListener listener dettached from THEOplayer.ads") }
         }
     }
-    
 }

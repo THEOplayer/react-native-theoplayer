@@ -16,10 +16,12 @@ let ERROR_CODE_ADS_GET_CURRENT_ADBREAK_UNDEFINED = "ads_get_current_adbreak_unde
 let ERROR_CODE_ADS_GET_CURRENT_ADS_FAILED = "ads_get_current_ads_failure"
 let ERROR_CODE_ADS_GET_CURRENT_ADS_UNDEFINED = "ads_get_current_ads_undefined"
 let ERROR_CODE_ADS_SCHEDULED_ADBREAKS_UNSUPPORTED = "ads_scheduled_ads_unsupported"
+let ERROR_CODE_ADS_UNSUPPORTED_FEATURE = "ads_unsupported_feature"
 let ERROR_MESSAGE_ADS_ACCESS_FAILURE = "Could not access THEOplayer Ads"
 let ERROR_MESSAGE_ADS_GET_CURRENT_ADBREAK_UNDEFINED = "Undefined adBreak object"
 let ERROR_MESSAGE_ADS_GET_CURRENT_ADS_UNDEFINED = "Undefined ads array"
 let ERROR_MESSAGE_ADS_SCHEDULED_ADBREAKS_UNSUPPORTED = "Not yet implemented"
+let ERROR_MESSAGE_ADS_SCHEDULED_UNSUPPORTED_FEATURE = "This functionality is not supported by the underlying iOS SDK"
 
 @objc(THEOplayerRCTAdsAPI)
 class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
@@ -32,9 +34,11 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
     static func requiresMainQueueSetup() -> Bool {
         return false
     }
-    
+
+#if ADS && (GOOGLE_IMA || GOOGLE_DAI)
     @objc(skip:)
     func skip(_ node: NSNumber) -> Void {
+        
         DispatchQueue.main.async {
             let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
             if let ads = theView.ads() {
@@ -134,4 +138,39 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
             }
         }
     }
+    
+#else
+    
+    @objc(skip:)
+    func skip(_ node: NSNumber) -> Void {
+        return
+    }
+    
+    @objc(playing:resolver:rejecter:)
+    func playing(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+        reject(ERROR_CODE_ADS_UNSUPPORTED_FEATURE, ERROR_MESSAGE_ADS_SCHEDULED_UNSUPPORTED_FEATURE, nil)
+    }
+    
+    @objc(currentAdBreak:resolver:rejecter:)
+    func currentAdBreak(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+        reject(ERROR_CODE_ADS_UNSUPPORTED_FEATURE, ERROR_MESSAGE_ADS_SCHEDULED_UNSUPPORTED_FEATURE, nil)
+    }
+    
+    @objc(currentAds:resolver:rejecter:)
+    func currentAds(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+        reject(ERROR_CODE_ADS_UNSUPPORTED_FEATURE, ERROR_MESSAGE_ADS_SCHEDULED_UNSUPPORTED_FEATURE, nil)
+    }
+    
+    @objc(scheduledAdBreaks:resolver:rejecter:)
+    func scheduledAdBreaks(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+        reject(ERROR_CODE_ADS_SCHEDULED_ADBREAKS_UNSUPPORTED, ERROR_MESSAGE_ADS_SCHEDULED_ADBREAKS_UNSUPPORTED, nil)
+        // TODO: handle request for scheduled adbreaks. Blocked by iOS SDK implementation
+    }
+    
+    @objc(schedule:ad:)
+    func schedule(_ node: NSNumber, adDict: NSDictionary) -> Void {
+        return
+    }
+    
+#endif
 }

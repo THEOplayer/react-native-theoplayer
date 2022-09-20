@@ -85,6 +85,7 @@ class THEOplayerRCTViewMainEventHandler {
         if DEBUG_EVENTHANDLER { print("[NATIVE] Play listener attached to THEOplayer") }
         
         // PAUSE
+#if ADS && (GOOGLE_IMA || GOOGLED_DAI)
         self.pauseListener = player.addEventListener(type: PlayerEventTypes.PAUSE) { [weak self] event in
             player.ads.requestPlaying { playing, error in
                 if DEBUG_EVENTHANDLER,
@@ -103,6 +104,14 @@ class THEOplayerRCTViewMainEventHandler {
                 }
             }
         }
+#else
+        self.pauseListener = player.addEventListener(type: PlayerEventTypes.PAUSE) { [weak self] event in
+            if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received PAUSE event from THEOplayer") }
+            if let forwardedPauseEvent = self?.onNativePause {
+                forwardedPauseEvent([:])
+            }
+        }
+#endif
         if DEBUG_EVENTHANDLER { print("[NATIVE] Pause listener attached to THEOplayer") }
         
         // SOURCE_CHANGE

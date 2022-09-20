@@ -233,6 +233,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
         return nil
     }
     
+#if ADS && GOOGLE_IMA
     /**
         Creates a THEOplayer GoogleImaAdDescription. This requires an ads property in the RN source description.
      - returns: a THEOplayer GoogleImaAdDescription
