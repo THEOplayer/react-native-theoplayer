@@ -86,9 +86,21 @@ class THEOplayerRCTViewMainEventHandler {
         
         // PAUSE
         self.pauseListener = player.addEventListener(type: PlayerEventTypes.PAUSE) { [weak self] event in
-            if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received PAUSE event from THEOplayer") }
-            if let forwardedPauseEvent = self?.onNativePause {
-                forwardedPauseEvent([:])
+            player.ads.requestPlaying { playing, error in
+                if DEBUG_EVENTHANDLER,
+                   let adError = error {
+                    print("[NATIVE] Error encountered: \(adError.localizedDescription)")
+                }
+                // Don't forward the pause event in case the player is paused because the ad player starts.
+                if let adIsPlaying = playing,
+                   !adIsPlaying {
+                    if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received PAUSE event from THEOplayer") }
+                    if let forwardedPauseEvent = self?.onNativePause {
+                        forwardedPauseEvent([:])
+                    }
+                } else {
+                    if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Intercepted PAUSE event from THEOplayer") }
+                }
             }
         }
         if DEBUG_EVENTHANDLER { print("[NATIVE] Pause listener attached to THEOplayer") }
