@@ -153,6 +153,7 @@ class THEOplayerRCTView: UIView {
         // set sourceDescription on player
         if DEBUG_THEOPLAYER_INTERACTION { print("[NATIVE] Setting new source on TheoPlayer") }
         if let player = self.player {
+            self.setPaused(paused: true)
             player.source = self.src
         }
     }
