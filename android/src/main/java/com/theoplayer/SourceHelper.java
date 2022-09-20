@@ -27,6 +27,7 @@ import com.theoplayer.android.api.source.drm.preintegration.KeyOSDRMConfiguratio
 import com.theoplayer.android.api.source.drm.preintegration.TitaniumDRMConfiguration;
 import com.theoplayer.android.api.source.drm.preintegration.VudrmDRMConfiguration;
 import com.theoplayer.android.api.source.drm.preintegration.XstreamConfiguration;
+import com.theoplayer.android.api.source.hls.HlsPlaybackConfiguration;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,8 +44,12 @@ public class SourceHelper {
 
   private static final String TAG = "SourceHelper";
 
-  public static final String PROP_CONTENT_PROTECTION = "contentProtection";
-  public static final String PROP_CONTENT_PROTECTION_INTEGRATION = "integration";
+  private static final String PROP_CONTENT_PROTECTION = "contentProtection";
+  private static final String PROP_CONTENT_PROTECTION_INTEGRATION = "integration";
+  private static final String PROP_LIVE_OFFSET = "liveOffset";
+  private static final String PROP_HLS_DATERANGE = "hlsDateRange";
+  private static final String PROP_HLS_PLAYBACK_CONFIG = "hls";
+  private static final String PROP_TIME_SERVER = "timeServer";
 
   private final Gson gson = new Gson();
 
@@ -121,6 +126,20 @@ public class SourceHelper {
       TypedSource.Builder tsBuilder = TypedSource.Builder.typedSource().src(src);
       if (sourceType != null) {
         tsBuilder.type(sourceType);
+      }
+      if (jsonTypedSource.has(PROP_LIVE_OFFSET)) {
+        tsBuilder.liveOffset(jsonTypedSource.getDouble(PROP_LIVE_OFFSET));
+      }
+      if (jsonTypedSource.has(PROP_HLS_DATERANGE)) {
+        tsBuilder.hlsDateRange(jsonTypedSource.getBoolean(PROP_HLS_DATERANGE));
+      }
+      if (jsonTypedSource.has(PROP_HLS_PLAYBACK_CONFIG)) {
+        HlsPlaybackConfiguration hlsConfig =
+          gson.fromJson(jsonTypedSource.get(PROP_HLS_PLAYBACK_CONFIG).toString(), HlsPlaybackConfiguration.class);
+        tsBuilder.hls(hlsConfig);
+      }
+      if (jsonTypedSource.has(PROP_TIME_SERVER)) {
+        tsBuilder.timeServer(jsonTypedSource.getString(PROP_TIME_SERVER));
       }
       if (jsonTypedSource.has(PROP_CONTENT_PROTECTION)) {
         JSONObject contentProtection = jsonTypedSource.getJSONObject(PROP_CONTENT_PROTECTION);
