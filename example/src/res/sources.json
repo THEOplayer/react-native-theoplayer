@@ -176,7 +176,7 @@
     "source": {
       "sources": [
         {
-          "src": "https://cdn.theoplayer.com/video/elephants-dream/playlist.m3u8",
+          "src": "https://cdn.theoplayer.com/video/elephants-dream/playlistCorrectionENG.m3u8",
           "type": "application/x-mpegurl"
         }
       ],
@@ -197,7 +197,7 @@
     "source": {
       "sources": [
         {
-          "src": "https://cdn.theoplayer.com/video/elephants-dream/playlist.m3u8",
+          "src": "https://cdn.theoplayer.com/video/elephants-dream/playlistCorrectionENG.m3u8",
           "type": "application/x-mpegurl"
         }
       ],

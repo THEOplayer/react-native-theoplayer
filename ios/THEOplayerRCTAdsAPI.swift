@@ -143,32 +143,38 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
     
     @objc(skip:)
     func skip(_ node: NSNumber) -> Void {
+        if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_SCHEDULED_UNSUPPORTED_FEATURE) }
         return
     }
     
     @objc(playing:resolver:rejecter:)
     func playing(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+        if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_SCHEDULED_UNSUPPORTED_FEATURE) }
         reject(ERROR_CODE_ADS_UNSUPPORTED_FEATURE, ERROR_MESSAGE_ADS_SCHEDULED_UNSUPPORTED_FEATURE, nil)
     }
     
     @objc(currentAdBreak:resolver:rejecter:)
     func currentAdBreak(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+        if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_SCHEDULED_UNSUPPORTED_FEATURE) }
         reject(ERROR_CODE_ADS_UNSUPPORTED_FEATURE, ERROR_MESSAGE_ADS_SCHEDULED_UNSUPPORTED_FEATURE, nil)
     }
     
     @objc(currentAds:resolver:rejecter:)
     func currentAds(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+        if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_SCHEDULED_UNSUPPORTED_FEATURE) }
         reject(ERROR_CODE_ADS_UNSUPPORTED_FEATURE, ERROR_MESSAGE_ADS_SCHEDULED_UNSUPPORTED_FEATURE, nil)
     }
     
     @objc(scheduledAdBreaks:resolver:rejecter:)
     func scheduledAdBreaks(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+        if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_SCHEDULED_UNSUPPORTED_FEATURE) }
         reject(ERROR_CODE_ADS_SCHEDULED_ADBREAKS_UNSUPPORTED, ERROR_MESSAGE_ADS_SCHEDULED_ADBREAKS_UNSUPPORTED, nil)
         // TODO: handle request for scheduled adbreaks. Blocked by iOS SDK implementation
     }
     
     @objc(schedule:ad:)
     func schedule(_ node: NSNumber, adDict: NSDictionary) -> Void {
+        if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_SCHEDULED_UNSUPPORTED_FEATURE) }
         return
     }
     
