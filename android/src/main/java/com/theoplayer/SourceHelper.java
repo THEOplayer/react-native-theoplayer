@@ -11,6 +11,7 @@ import com.facebook.react.bridge.ReadableMap;
 import com.google.gson.Gson;
 import com.theoplayer.android.api.event.ads.AdIntegrationKind;
 import com.theoplayer.android.api.player.track.texttrack.TextTrackKind;
+import com.theoplayer.android.api.source.GoogleDaiTypedSource;
 import com.theoplayer.android.api.source.SourceDescription;
 import com.theoplayer.android.api.source.SourceType;
 import com.theoplayer.android.api.source.TextTrackDescription;
@@ -29,9 +30,10 @@ import com.theoplayer.android.api.source.drm.preintegration.TitaniumDRMConfigura
 import com.theoplayer.android.api.source.drm.preintegration.VudrmDRMConfiguration;
 import com.theoplayer.android.api.source.drm.preintegration.XstreamConfiguration;
 import com.theoplayer.android.api.source.hls.HlsPlaybackConfiguration;
-import com.theoplayer.android.api.source.ssai.GoogleDaiConfiguration;
-import com.theoplayer.android.api.source.ssai.SsaiDescription;
+import com.theoplayer.android.api.source.ssai.SsaiIntegration;
 import com.theoplayer.android.api.source.ssai.YoSpaceDescription;
+import com.theoplayer.android.api.source.ssai.dai.GoogleDaiLiveConfiguration;
+import com.theoplayer.android.api.source.ssai.dai.GoogleDaiVodConfiguration;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -66,6 +68,7 @@ public class SourceHelper {
   public static final String PROP_TEXT_TRACKS = "textTracks";
   public static final String PROP_POSTER = "poster";
   public static final String PROP_ADS = "ads";
+  public static final String PROP_AVAILABILITY_TYPE = "availabilityType";
 
   private final Gson gson = new Gson();
 
@@ -137,9 +140,33 @@ public class SourceHelper {
   @Nullable
   private TypedSource parseTypedSource(@NonNull final JSONObject jsonTypedSource) {
     try {
+      TypedSource.Builder tsBuilder = TypedSource.Builder.typedSource();
+      if (jsonTypedSource.has(PROP_SSAI)) {
+        final JSONObject ssaiJson = jsonTypedSource.getJSONObject(PROP_SSAI);
+
+        // Check for valid SsaiIntegration
+        SsaiIntegration ssaiIntegration = SsaiIntegration.from(ssaiJson.optString(PROP_INTEGRATION));
+        if (ssaiIntegration != null) {
+          switch (ssaiIntegration) {
+            case GOOGLE_DAI:
+              if (ssaiJson.optString(PROP_AVAILABILITY_TYPE).equals("vod")) {
+                tsBuilder = new GoogleDaiTypedSource.Builder(gson.fromJson(ssaiJson.toString(), GoogleDaiVodConfiguration.class));
+              } else {
+                tsBuilder = new GoogleDaiTypedSource.Builder(gson.fromJson(ssaiJson.toString(), GoogleDaiLiveConfiguration.class));
+              }
+              break;
+            case YOSPACE:
+              tsBuilder.ssai(gson.fromJson(ssaiJson.toString(), YoSpaceDescription.class));
+              break;
+            default:
+              Log.e(TAG, "SSAI integration not supported: " + ssaiIntegration);
+          }
+        } else {
+          Log.e(TAG, "Missing SSAI integration");
+        }
+      }
+      tsBuilder.src(jsonTypedSource.optString(PROP_SRC));
       SourceType sourceType = parseSourceType(jsonTypedSource);
-      String src = jsonTypedSource.getString(PROP_SRC);
-      TypedSource.Builder tsBuilder = TypedSource.Builder.typedSource().src(src);
       if (sourceType != null) {
         tsBuilder.type(sourceType);
       }
@@ -194,20 +221,6 @@ public class SourceHelper {
           }
         } else {
           tsBuilder.drm(gson.fromJson(jsonTypedSource.get(PROP_CONTENT_PROTECTION).toString(), DRMConfiguration.class));
-        }
-      }
-      if (jsonTypedSource.has(PROP_SSAI)) {
-        final String ssaiProp = jsonTypedSource.get(PROP_SSAI).toString();
-        SsaiDescription ssaiDescription = gson.fromJson(ssaiProp, SsaiDescription.class);
-        switch(ssaiDescription.getIntegration()) {
-          case GOOGLE_DAI:
-            tsBuilder.ssai(gson.fromJson(ssaiProp, GoogleDaiConfiguration.class));
-            break;
-          case YOSPACE:
-            tsBuilder.ssai(gson.fromJson(ssaiProp, YoSpaceDescription.class));
-            break;
-          default:
-            Log.e(TAG, "SSAI integration not supported: " + ssaiDescription.getIntegration());
         }
       }
       return tsBuilder.build();
