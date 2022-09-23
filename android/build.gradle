@@ -42,6 +42,7 @@ android {
 
     // Extensions
     buildConfigField "boolean", "EXTENSION_GOOGLE_IMA", safeExtGet("THEOplayer_extensionGoogleIMA", "false")
+    buildConfigField "boolean", "EXTENSION_GOOGLE_DAI", safeExtGet("THEOplayer_extensionGoogleDAI", "false")
     buildConfigField "boolean", "EXTENSION_CAST", safeExtGet("THEOplayer_extensionCast", "false")
     buildConfigField "boolean", "EXTENSION_MEDIATAILOR", safeExtGet("THEOplayer_extensionMediaTailor", "false")
   }
@@ -90,6 +91,15 @@ dependencies {
     compileOnly "com.theoplayer.theoplayer-sdk-android:unified-ads:${safeExtGet('THEOplayer_sdk', '+')}"
     compileOnly "com.theoplayer.theoplayer-sdk-android:unified-ads-ima:${safeExtGet('THEOplayer_sdk', '+')}"
   }
+
+// NOTE: Uncomment once DAI extension module is available
+//  if (safeExtGet("THEOplayer_extensionGoogleDAI", false)) {
+//    implementation "com.theoplayer.theoplayer-sdk-android:unified-ads:${safeExtGet('THEOplayer_sdk', '+')}"
+//    implementation "com.theoplayer.theoplayer-sdk-android:unified-ads-dai:${safeExtGet('THEOplayer_sdk', '+')}"
+//  } else {
+//    compileOnly "com.theoplayer.theoplayer-sdk-android:unified-ads:${safeExtGet('THEOplayer_sdk', '+')}"
+//    compileOnly "com.theoplayer.theoplayer-sdk-android:unified-ads-dai:${safeExtGet('THEOplayer_sdk', '+')}"
+//  }
 
   if (safeExtGet("THEOplayer_extensionCast", false)) {
     implementation "com.theoplayer.theoplayer-sdk-android:unified-cast:${safeExtGet('THEOplayer_sdk', '+')}"

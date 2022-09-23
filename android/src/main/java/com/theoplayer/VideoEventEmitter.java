@@ -208,18 +208,20 @@ class VideoEventEmitter {
     textTrackListeners.put(TextTrackListEventTypes.ADDTRACK, (EventListener<AddTrackEvent>) this::onTextTrackAdd);
     textTrackListeners.put(TextTrackListEventTypes.REMOVETRACK, (EventListener<RemoveTrackEvent>) this::onTextTrackRemove);
 
-    adListeners.put(GoogleImaAdEventType.LOADED, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
-    adListeners.put(GoogleImaAdEventType.AD_BREAK_STARTED, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
-    adListeners.put(GoogleImaAdEventType.STARTED, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
-    adListeners.put(GoogleImaAdEventType.FIRST_QUARTILE, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
-    adListeners.put(GoogleImaAdEventType.MIDPOINT, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
-    adListeners.put(GoogleImaAdEventType.THIRD_QUARTILE, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
-    adListeners.put(GoogleImaAdEventType.COMPLETED, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
-    adListeners.put(GoogleImaAdEventType.AD_BREAK_ENDED, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
-    adListeners.put(GoogleImaAdEventType.SKIPPED, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
-    adListeners.put(GoogleImaAdEventType.AD_ERROR, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
-    adListeners.put(GoogleImaAdEventType.AD_BUFFERING, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
-    adListeners.put(GoogleImaAdEventType.AD_BREAK_FETCH_ERROR, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
+    if (BuildConfig.EXTENSION_GOOGLE_IMA || BuildConfig.EXTENSION_GOOGLE_DAI) {
+      adListeners.put(GoogleImaAdEventType.LOADED, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
+      adListeners.put(GoogleImaAdEventType.AD_BREAK_STARTED, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
+      adListeners.put(GoogleImaAdEventType.STARTED, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
+      adListeners.put(GoogleImaAdEventType.FIRST_QUARTILE, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
+      adListeners.put(GoogleImaAdEventType.MIDPOINT, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
+      adListeners.put(GoogleImaAdEventType.THIRD_QUARTILE, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
+      adListeners.put(GoogleImaAdEventType.COMPLETED, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
+      adListeners.put(GoogleImaAdEventType.AD_BREAK_ENDED, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
+      adListeners.put(GoogleImaAdEventType.SKIPPED, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
+      adListeners.put(GoogleImaAdEventType.AD_ERROR, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
+      adListeners.put(GoogleImaAdEventType.AD_BUFFERING, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
+      adListeners.put(GoogleImaAdEventType.AD_BREAK_FETCH_ERROR, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
+    }
   }
 
   public void setViewId(int viewId) {
