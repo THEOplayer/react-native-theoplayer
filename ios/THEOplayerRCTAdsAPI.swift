@@ -10,18 +10,18 @@ import Foundation
 import UIKit
 
 let ERROR_CODE_ADS_ACCESS_FAILURE = "ads_access_failure"
+let ERROR_CODE_DAI_ACCESS_FAILURE = "dai_access_failure"
 let ERROR_CODE_ADS_GET_PLAYING_STATE_FAILED = "ads_get_playing_state_failure"
 let ERROR_CODE_ADS_GET_CURRENT_ADBREAK_FAILED = "ads_get_current_adbreak_failure"
 let ERROR_CODE_ADS_GET_CURRENT_ADBREAK_UNDEFINED = "ads_get_current_adbreak_undefined"
 let ERROR_CODE_ADS_GET_CURRENT_ADS_FAILED = "ads_get_current_ads_failure"
 let ERROR_CODE_ADS_GET_CURRENT_ADS_UNDEFINED = "ads_get_current_ads_undefined"
-let ERROR_CODE_ADS_SCHEDULED_ADBREAKS_UNSUPPORTED = "ads_scheduled_ads_unsupported"
-let ERROR_CODE_ADS_UNSUPPORTED_FEATURE = "ads_unsupported_feature"
-let ERROR_MESSAGE_ADS_ACCESS_FAILURE = "Could not access THEOplayer Ads"
+
+let ERROR_MESSAGE_ADS_ACCESS_FAILURE = "Could not access THEOplayer Ads Module"
+let ERROR_MESSAGE_DAI_ACCESS_FAILURE = "Could not access THEOplayer Ads DAI Module"
 let ERROR_MESSAGE_ADS_GET_CURRENT_ADBREAK_UNDEFINED = "Undefined adBreak object"
 let ERROR_MESSAGE_ADS_GET_CURRENT_ADS_UNDEFINED = "Undefined ads array"
-let ERROR_MESSAGE_ADS_SCHEDULED_ADBREAKS_UNSUPPORTED = "Not yet implemented"
-let ERROR_MESSAGE_ADS_SCHEDULED_UNSUPPORTED_FEATURE = "This functionality is not supported by the underlying iOS SDK"
+let ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE = "This functionality is not supported by the provided iOS SDK"
 
 @objc(THEOplayerRCTAdsAPI)
 class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
@@ -121,8 +121,9 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
     
     @objc(scheduledAdBreaks:resolver:rejecter:)
     func scheduledAdBreaks(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
-        reject(ERROR_CODE_ADS_SCHEDULED_ADBREAKS_UNSUPPORTED, ERROR_MESSAGE_ADS_SCHEDULED_ADBREAKS_UNSUPPORTED, nil)
-        // TODO: handle request for scheduled adbreaks. Blocked by iOS SDK implementation
+        if DEBUG_ADS_API { print("[NATIVE] scheduledAdBreaks is not yet implemented in iOS SDK") }
+        resolve([])
+        // TODO: handle request for scheduled adbreaks. Currently not available in native iOS SDK
     }
     
     @objc(schedule:ad:)
@@ -139,43 +140,99 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
         }
     }
     
+    @objc(daiSnapback:resolver:rejecter:)
+    func daiSnapback(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+        // should always be active for DAI streaming
+        resolve(true)
+    }
+    
+    @objc(daiContentTimeForStreamTime:time:resolver:rejecter:)
+    func daiContentTimeForStreamTime(_ node: NSNumber, timeValue: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+        DispatchQueue.main.async {
+            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
+            if let ads = theView.ads(),
+               let dai = ads.dai {
+                let streamTime = timeValue.doubleValue * 0.001                      // msec -> sec
+                let contentTime = dai.contentTime(from: streamTime) * 1000.0        // sec -> msec
+                resolve(contentTime)
+            } else {
+                reject(ERROR_CODE_DAI_ACCESS_FAILURE, ERROR_MESSAGE_DAI_ACCESS_FAILURE, nil)
+                if DEBUG_ADS_API { print("[NATIVE] Could not convert stream time to content time (ads DAI module unavailable).") }
+            }
+        }
+    }
+    
+    @objc(daiStreamTimeForContentTime:time:resolver:rejecter:)
+    func daiStreamTimeForContentTime(_ node: NSNumber, timeValue: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+        DispatchQueue.main.async {
+            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
+            if let ads = theView.ads(),
+               let dai = ads.dai {
+                let contentTime = timeValue.doubleValue * 0.001                     // msec -> sec
+                let streamTime = dai.streamTime(from: contentTime) * 1000.0         // sec -> msec
+                resolve(streamTime)
+            } else {
+                reject(ERROR_CODE_DAI_ACCESS_FAILURE, ERROR_MESSAGE_DAI_ACCESS_FAILURE, nil)
+                if DEBUG_ADS_API { print("[NATIVE] Could not convert content time to stream time (ads DAI module unavailable).") }
+            }
+        }
+    }
+    
 #else
     
     @objc(skip:)
     func skip(_ node: NSNumber) -> Void {
-        if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_SCHEDULED_UNSUPPORTED_FEATURE) }
+        if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE) }
         return
     }
     
     @objc(playing:resolver:rejecter:)
     func playing(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
-        if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_SCHEDULED_UNSUPPORTED_FEATURE) }
-        reject(ERROR_CODE_ADS_UNSUPPORTED_FEATURE, ERROR_MESSAGE_ADS_SCHEDULED_UNSUPPORTED_FEATURE, nil)
+        if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE) }
+        resolve(false)
     }
     
     @objc(currentAdBreak:resolver:rejecter:)
     func currentAdBreak(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
-        if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_SCHEDULED_UNSUPPORTED_FEATURE) }
-        reject(ERROR_CODE_ADS_UNSUPPORTED_FEATURE, ERROR_MESSAGE_ADS_SCHEDULED_UNSUPPORTED_FEATURE, nil)
+        if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE) }
+        resolve([:])
     }
     
     @objc(currentAds:resolver:rejecter:)
     func currentAds(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
-        if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_SCHEDULED_UNSUPPORTED_FEATURE) }
-        reject(ERROR_CODE_ADS_UNSUPPORTED_FEATURE, ERROR_MESSAGE_ADS_SCHEDULED_UNSUPPORTED_FEATURE, nil)
+        if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE) }
+        resolve([])
     }
     
     @objc(scheduledAdBreaks:resolver:rejecter:)
     func scheduledAdBreaks(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
-        if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_SCHEDULED_UNSUPPORTED_FEATURE) }
-        reject(ERROR_CODE_ADS_SCHEDULED_ADBREAKS_UNSUPPORTED, ERROR_MESSAGE_ADS_SCHEDULED_ADBREAKS_UNSUPPORTED, nil)
-        // TODO: handle request for scheduled adbreaks. Blocked by iOS SDK implementation
+        if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE) }
+        resolve([])
+        // TODO: handle request for scheduled adbreaks. Awaiting iOS SDK implementation
     }
     
     @objc(schedule:ad:)
     func schedule(_ node: NSNumber, adDict: NSDictionary) -> Void {
-        if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_SCHEDULED_UNSUPPORTED_FEATURE) }
+        if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE) }
         return
+    }
+    
+    @objc(daiSnapback:resolver:rejecter:)
+    func daiSnapback(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+        if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE) }
+        resolve(false)
+    }
+    
+    @objc(daiContentTimeForStreamTime:time:resolver:rejecter:)
+    func daiContentTimeForStreamTime(_ node: NSNumber, timeValue: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+        if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE) }
+        resolve(timeValue.doubleValue)
+    }
+    
+    @objc(daiStreamTimeForContentTime:time:resolver:rejecter:)
+    func daiStreamTimeForContentTime(_ node: NSNumber, timeValue: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+        if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE) }
+        resolve(timeValue.doubleValue)
     }
     
 #endif

@@ -76,4 +76,18 @@ RCT_EXTERN_METHOD(scheduledAdBreaks:(nonnull NSNumber *)node
 RCT_EXTERN_METHOD(schedule:(nonnull NSNumber *)node
                   ad: NSDictionary)
 
+RCT_EXTERN_METHOD(daiSnapback:(nonnull NSNumber *)node
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(daiContentTimeForStreamTime:(nonnull NSNumber *)node
+                  time:(nonnull NSNumber *)timeValue
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(daiStreamTimeForContentTime:(nonnull NSNumber *)node
+                  time:(nonnull NSNumber *)timeValue
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
 @end
