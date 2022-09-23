@@ -84,4 +84,43 @@ public class AdsModule extends ReactContextBaseJavaModule {
       }
     });
   }
+
+  @ReactMethod
+  public void daiSnapback(Integer tag, Promise promise) {
+    viewResolver.resolveViewByTag(tag, view -> {
+      Player player = view != null ? view.getPlayer() : null;
+      if (player == null) {
+        promise.resolve(false);
+      } else {
+        // TODO
+        promise.resolve(false);
+      }
+    });
+  }
+
+  @ReactMethod
+  public void daiContentTimeForStreamTime(Integer tag, Integer time, Promise promise) {
+    viewResolver.resolveViewByTag(tag, view -> {
+      Player player = view != null ? view.getPlayer() : null;
+      if (player == null) {
+        promise.resolve(0);
+      } else {
+        // TODO
+        promise.resolve(time);
+      }
+    });
+  }
+
+  @ReactMethod
+  public void daiStreamTimeForContentTime(Integer tag, Integer time, Promise promise) {
+    viewResolver.resolveViewByTag(tag, view -> {
+      Player player = view != null ? view.getPlayer() : null;
+      if (player == null) {
+        promise.resolve(0);
+      } else {
+        // TODO
+        promise.resolve(time);
+      }
+    });
+  }
 }
