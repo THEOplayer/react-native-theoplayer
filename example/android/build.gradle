@@ -34,6 +34,10 @@ buildscript {
 //        // Toggle playerView event logging (default: false)
 //        THEOplayer_logViewEvents = "true"
 
+//        // By default get the THEOplayer dependencies from Maven.
+//        // Set 'THEOplayer_local' to get dependencies from a local folder instead.
+//        THEOplayer_local = new File("${project.projectDir}" + '/app/libs/')
+
         // Extensions (default: disabled)
         THEOplayer_extensionGoogleIMA = true
         THEOplayer_extensionGoogleDAI = true
