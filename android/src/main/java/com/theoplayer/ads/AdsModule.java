@@ -9,6 +9,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.theoplayer.SourceHelper;
+import com.theoplayer.android.ads.dai.api.GoogleDaiIntegration;
 import com.theoplayer.android.api.player.Player;
 import com.theoplayer.util.ViewResolver;
 
@@ -88,12 +89,11 @@ public class AdsModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void daiSnapback(Integer tag, Promise promise) {
     viewResolver.resolveViewByTag(tag, view -> {
-      Player player = view != null ? view.getPlayer() : null;
-      if (player == null) {
+      GoogleDaiIntegration daiIntegration = view != null ? view.getDaiIntegration() : null;
+      if (daiIntegration == null) {
         promise.resolve(false);
       } else {
-        // TODO
-        promise.resolve(false);
+        promise.resolve(true);
       }
     });
   }
@@ -101,12 +101,11 @@ public class AdsModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void daiContentTimeForStreamTime(Integer tag, Integer time, Promise promise) {
     viewResolver.resolveViewByTag(tag, view -> {
-      Player player = view != null ? view.getPlayer() : null;
-      if (player == null) {
-        promise.resolve(0);
-      } else {
-        // TODO
+      GoogleDaiIntegration daiIntegration = view != null ? view.getDaiIntegration() : null;
+      if (daiIntegration == null) {
         promise.resolve(time);
+      } else {
+        promise.resolve((long)(1e03 * daiIntegration.contentTimeForStreamTime(1e-03 * time)));
       }
     });
   }
@@ -114,12 +113,11 @@ public class AdsModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void daiStreamTimeForContentTime(Integer tag, Integer time, Promise promise) {
     viewResolver.resolveViewByTag(tag, view -> {
-      Player player = view != null ? view.getPlayer() : null;
-      if (player == null) {
-        promise.resolve(0);
-      } else {
-        // TODO
+      GoogleDaiIntegration daiIntegration = view != null ? view.getDaiIntegration() : null;
+      if (daiIntegration == null) {
         promise.resolve(time);
+      } else {
+        promise.resolve((long)(1e03 * daiIntegration.streamTimeForContentTime(1e-03 * time)));
       }
     });
   }

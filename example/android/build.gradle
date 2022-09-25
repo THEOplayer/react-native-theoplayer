@@ -35,10 +35,10 @@ buildscript {
 //        THEOplayer_logViewEvents = "true"
 
         // Extensions (default: disabled)
-        THEOplayer_extensionGoogleIMA = "true"
-        THEOplayer_extensionGoogleDAI = "true"
-        THEOplayer_extensionCast = "true"
-        THEOplayer_extensionMediaTailor = "true"
+        THEOplayer_extensionGoogleIMA = true
+        THEOplayer_extensionGoogleDAI = true
+        THEOplayer_extensionCast = true
+        THEOplayer_extensionMediaTailor = true
     }
     repositories {
         google()

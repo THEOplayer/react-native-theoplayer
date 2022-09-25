@@ -19,6 +19,8 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.ThemedReactContext;
+import com.theoplayer.android.ads.dai.api.GoogleDaiIntegration;
+import com.theoplayer.android.ads.dai.api.GoogleDaiIntegrationFactory;
 import com.theoplayer.abr.ABRConfigurationAdapter;
 import com.theoplayer.android.api.THEOplayerConfig;
 import com.theoplayer.android.api.THEOplayerView;
@@ -56,6 +58,8 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
 
   private THEOplayerView playerView;
 
+  private GoogleDaiIntegration daiIntegration;
+
   private Player player;
   private ReadableMap abrConfig;
   private boolean paused;
@@ -76,6 +80,11 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
 
   public void initialize(@Nullable ReadableMap configProps) {
     createViews(PlayerConfigHelper.fromProps(configProps));
+  }
+
+  @Nullable
+  public GoogleDaiIntegration getDaiIntegration() {
+    return daiIntegration;
   }
 
   @NonNull
@@ -176,15 +185,28 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
   }
 
   private void addIntegrations(@NonNull final THEOplayerView playerView) {
-    if (BuildConfig.EXTENSION_GOOGLE_IMA) {
-      GoogleImaIntegration googleImaIntegration = GoogleImaIntegrationFactory.createGoogleImaIntegration(playerView);
-      playerView.getPlayer().addIntegration(googleImaIntegration);
+    try {
+      if (BuildConfig.EXTENSION_GOOGLE_IMA) {
+        GoogleImaIntegration googleImaIntegration = GoogleImaIntegrationFactory.createGoogleImaIntegration(playerView);
+        playerView.getPlayer().addIntegration(googleImaIntegration);
+      }
+    } catch (Exception ignore) {
     }
-    if (BuildConfig.EXTENSION_CAST) {
-      CastIntegration castIntegration = CastIntegrationFactory.createCastIntegration(playerView);
-      playerView.getPlayer().addIntegration(castIntegration);
+    try {
+      if (BuildConfig.EXTENSION_GOOGLE_DAI) {
+        daiIntegration = GoogleDaiIntegrationFactory.createGoogleDaiIntegration(playerView);
+        playerView.getPlayer().addIntegration(daiIntegration);
+      }
+    } catch (Exception ignore) {
     }
-    // Add other future integrations here.
+    try {
+      if (BuildConfig.EXTENSION_CAST) {
+        CastIntegration castIntegration = CastIntegrationFactory.createCastIntegration(playerView);
+        playerView.getPlayer().addIntegration(castIntegration);
+      }
+      // Add other future integrations here.
+    } catch (Exception ignore) {
+    }
   }
 
   @Override
