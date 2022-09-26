@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.5.0]
+
+### Fixed
+
+- Fixed disabling all debug logs for iOS/tvOS release builds.
+- Fixed duration from seconds to milliseconds on iOS/tvOS.
+
+### Added
+
+- Support for DRM pre-integrations on Android.
+- Support for additional source properties on Android: `liveOffset`, `hlsDateRange`, `timeServer` and `hls`.
+
 ## [1.4.0]
 
 ### Fixed
