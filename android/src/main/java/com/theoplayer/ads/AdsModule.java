@@ -105,7 +105,7 @@ public class AdsModule extends ReactContextBaseJavaModule {
       if (daiIntegration == null) {
         promise.resolve(time);
       } else {
-        promise.resolve((long)(1e03 * daiIntegration.contentTimeForStreamTime(1e-03 * time)));
+        promise.resolve((int)(1e03 * daiIntegration.contentTimeForStreamTime(1e-03 * time)));
       }
     });
   }
@@ -117,7 +117,7 @@ public class AdsModule extends ReactContextBaseJavaModule {
       if (daiIntegration == null) {
         promise.resolve(time);
       } else {
-        promise.resolve((long)(1e03 * daiIntegration.streamTimeForContentTime(1e-03 * time)));
+        promise.resolve((int)(1e03 * daiIntegration.streamTimeForContentTime(1e-03 * time)));
       }
     });
   }
