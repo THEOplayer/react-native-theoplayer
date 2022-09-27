@@ -159,9 +159,17 @@ public class TrackListInfo {
 
       final QualityList<VideoQuality> qualityList = videoTrack.getQualities();
       WritableArray qualities = Arguments.createArray();
+
       if (qualityList != null) {
-        for (int j = 0; j < qualityList.length(); j++) {
-          final VideoQuality quality = qualityList.getItem(j);
+        // Sort qualities according to (height, bandwidth)
+        final QualityListAdapter<VideoQuality> sortedQualityList = new QualityListAdapter<>(qualityList);
+        sortedQualityList.sort(
+          (o, t1) ->
+            (o.getHeight() == t1.getHeight()) ?
+              Long.compare(t1.getBandwidth(), o.getBandwidth()) : Integer.compare(t1.getHeight(), o.getHeight())
+        );
+
+        for (final VideoQuality quality : sortedQualityList) {
           WritableMap videoQualityPayload = Arguments.createMap();
           videoQualityPayload.putString(PROP_ID, quality.getId());
           videoQualityPayload.putInt(PROP_UID, quality.getUid());

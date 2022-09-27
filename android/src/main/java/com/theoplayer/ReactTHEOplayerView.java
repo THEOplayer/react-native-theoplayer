@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.LifecycleEventListener;
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
@@ -27,6 +28,8 @@ import com.theoplayer.android.api.player.RequestCallback;
 import com.theoplayer.android.api.player.track.mediatrack.MediaTrack;
 import com.theoplayer.android.api.player.track.mediatrack.MediaTrackList;
 import com.theoplayer.android.api.player.track.mediatrack.quality.AudioQuality;
+import com.theoplayer.android.api.player.track.mediatrack.quality.Quality;
+import com.theoplayer.android.api.player.track.mediatrack.quality.QualityList;
 import com.theoplayer.android.api.player.track.mediatrack.quality.VideoQuality;
 import com.theoplayer.android.api.player.track.texttrack.TextTrack;
 import com.theoplayer.android.api.player.track.texttrack.TextTrackList;
@@ -34,6 +37,7 @@ import com.theoplayer.android.api.player.track.texttrack.TextTrackMode;
 import com.theoplayer.android.api.player.track.texttrack.cue.TextTrackCue;
 import com.theoplayer.android.api.source.SourceDescription;
 import com.theoplayer.android.api.timerange.TimeRanges;
+import com.theoplayer.track.QualityListFilter;
 import com.theoplayer.track.TrackListInfo;
 
 @SuppressLint("ViewConstructor")
@@ -382,6 +386,21 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
     if (player != null) {
       for (final MediaTrack<VideoQuality> track: player.getVideoTracks()) {
         track.setEnabled(track.getUid() == uid);
+      }
+    }
+  }
+
+  public void setTargetVideoQualities(ReadableArray uids) {
+    MediaTrack<VideoQuality> currentVideoTrack = getSelectedVideoTrack();
+    if (currentVideoTrack != null) {
+      if (uids.size() == 0) {
+        // Reset target qualities when passing empty list.
+        currentVideoTrack.setTargetQuality(null);
+      } else {
+        QualityList<VideoQuality> qualities = currentVideoTrack.getQualities();
+        if (qualities != null) {
+          currentVideoTrack.setTargetQualities(new QualityListFilter<>(qualities).filterQualityList(uids));
+        }
       }
     }
   }

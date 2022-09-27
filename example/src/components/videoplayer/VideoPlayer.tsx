@@ -53,6 +53,7 @@ interface VideoPlayerState {
   audioTracks: MediaTrack[];
   selectedTextTrack: number | undefined;
   selectedVideoTrack: number | undefined;
+  targetVideoQuality: number | number[] | undefined;
   selectedAudioTrack: number | undefined;
   error: PlayerError | undefined;
 }
@@ -74,6 +75,7 @@ export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerStat
     audioTracks: [],
     selectedTextTrack: undefined,
     selectedVideoTrack: undefined,
+    targetVideoQuality: undefined,
     selectedAudioTrack: undefined,
     error: undefined,
   };
@@ -82,7 +84,7 @@ export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerStat
 
   constructor(props: VideoPlayerProps) {
     super(props);
-    this.state = {...VideoPlayer.initialState};
+    this.state = { ...VideoPlayer.initialState };
   }
 
   private logEvent = (eventName: string) => (data?: unknown) => {
@@ -195,6 +197,10 @@ export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerStat
     this.setState({ selectedVideoTrack: uid });
   };
 
+  private onUISelectTargetVideoQuality = (uid: number | number[] | undefined) => {
+    this.setState({ targetVideoQuality: uid });
+  };
+
   private onUISetPlayPause = (paused: boolean) => {
     this.setState({ paused });
   };
@@ -236,6 +242,7 @@ export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerStat
       selectedTextTrack,
       videoTracks,
       selectedVideoTrack,
+      targetVideoQuality,
       audioTracks,
       selectedAudioTrack,
     } = this.state;
@@ -261,6 +268,7 @@ export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerStat
           selectedTextTrack={selectedTextTrack}
           selectedAudioTrack={selectedAudioTrack}
           selectedVideoTrack={selectedVideoTrack}
+          targetVideoQuality={targetVideoQuality}
           onBufferingStateChange={this.onBufferingStateChange}
           onSourceChange={this.logEvent('sourcechange')}
           onLoadStart={this.onLoadStart}
@@ -300,6 +308,7 @@ export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerStat
             audioTracks={audioTracks}
             selectedTextTrack={selectedTextTrack}
             selectedVideoTrack={selectedVideoTrack}
+            targetVideoTrackQuality={targetVideoQuality}
             selectedAudioTrack={selectedAudioTrack}
             error={error}
             onSetPlayPause={this.onUISetPlayPause}
@@ -308,6 +317,7 @@ export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerStat
             onSelectTextTrack={this.onUISelectTextTrack}
             onSelectAudioTrack={this.onUISelectAudioTrack}
             onSelectVideoTrack={this.onUISelectVideoTrack}
+            onSelectTargetVideoQuality={this.onUISelectTargetVideoQuality}
             onSetFullScreen={this.onUISetFullscreen}
             onSetMuted={this.onUISetMuted}
             onSetPlaybackRate={this.onUISetPlaybackRate}

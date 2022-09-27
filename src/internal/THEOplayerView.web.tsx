@@ -13,7 +13,7 @@ import type {
   TextTrack as NativeTextTrack,
 } from 'theoplayer';
 import * as THEOplayer from 'theoplayer';
-import { fromNativeCue, fromNativeMediaTrack, fromNativeTextTrack } from './web/TrackUtils';
+import { findNativeQualitiesByUid, fromNativeCue, fromNativeMediaTrack, fromNativeTextTrack } from './web/TrackUtils';
 
 interface THEOplayerRCTViewState {
   isBuffering: boolean;
@@ -79,12 +79,14 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
       return;
     }
     // track property changes
-    const { paused, volume, selectedTextTrack, selectedAudioTrack, selectedVideoTrack, source, muted, playbackRate, fullscreen } = this.props;
+    const { paused, volume, selectedTextTrack, selectedAudioTrack, selectedVideoTrack, targetVideoQuality, source, muted, playbackRate, fullscreen } =
+      this.props;
     const {
       paused: wasPaused,
       selectedTextTrack: prevSelectedTextTrack,
       selectedAudioTrack: prevSelectedAudioTrack,
       selectedVideoTrack: prevSelectedVideoTrack,
+      targetVideoQuality: prevTargetVideoQuality,
       source: prevSource,
       muted: wasMuted,
       playbackRate: prevPlaybackRate,
@@ -140,6 +142,12 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
       this._player.videoTracks.forEach((videoTrack: NativeMediaTrack) => {
         videoTrack.enabled = videoTrack.uid === selectedVideoTrack;
       });
+    }
+    if (targetVideoQuality != prevTargetVideoQuality) {
+      const videoTrack = this._player.videoTracks.find((videoTrack: NativeMediaTrack) => videoTrack.uid === selectedVideoTrack);
+      if (videoTrack) {
+        videoTrack.targetQuality = findNativeQualitiesByUid(videoTrack, targetVideoQuality);
+      }
     }
   }
 
@@ -227,7 +235,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
           textTracks: player.textTracks.map((textTrack: NativeTextTrack) => fromNativeTextTrack(textTrack)),
           audioTracks: player.audioTracks.map((audioTrack: NativeMediaTrack) => fromNativeMediaTrack(audioTrack)),
           videoTracks: player.videoTracks.map((videoTrack: NativeMediaTrack) => fromNativeMediaTrack(videoTrack)),
-          duration: 1e03 * player.duration,
+          duration: 1e3 * player.duration,
           selectedTextTrack: player.textTracks.find((track: NativeTextTrack) => track.mode === 'showing')?.uid,
           selectedVideoTrack: player.videoTracks.find((track: NativeMediaTrack) => track.enabled)?.uid,
           selectedAudioTrack: player.audioTracks.find((track: NativeMediaTrack) => track.enabled)?.uid,

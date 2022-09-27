@@ -39,6 +39,7 @@ export default StyleSheet.create({
     right: 20,
     padding: 10,
     paddingBottom: 20,
+    zIndex: 1,
   },
   bottomControlsContainer: {
     flexDirection: 'row',

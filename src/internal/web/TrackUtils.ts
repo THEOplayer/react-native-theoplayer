@@ -1,4 +1,9 @@
-import type { TextTrackCue as NativeTextTrackCue, TextTrack as NativeTextTrack, MediaTrack as NativeMediaTrack } from 'theoplayer';
+import type {
+  TextTrackCue as NativeTextTrackCue,
+  TextTrack as NativeTextTrack,
+  MediaTrack as NativeMediaTrack,
+  Quality as NativeQuality,
+} from 'theoplayer';
 import type { TextTrack, TextTrackCue, MediaTrack } from 'react-native-theoplayer';
 
 export function fromNativeCue(cue: NativeTextTrackCue): TextTrackCue {
@@ -41,4 +46,20 @@ export function fromNativeMediaTrack(track: NativeMediaTrack): MediaTrack {
     qualities,
     targetQuality,
   } as MediaTrack;
+}
+
+export function findNativeQualityByUid(mediaTrack: NativeMediaTrack, uid: number | undefined): NativeQuality | undefined {
+  return mediaTrack.qualities.find((quality) => quality.uid === uid);
+}
+
+export function findNativeQualitiesByUid(mediaTrack: NativeMediaTrack | undefined, uid: number | number[] | undefined): NativeQuality[] | undefined {
+  if (uid && mediaTrack) {
+    if (Array.isArray(uid)) {
+      return mediaTrack.qualities.filter((quality) => uid.includes(quality.uid));
+    } else {
+      const quality = findNativeQualityByUid(mediaTrack, uid);
+      return quality ? [quality] : undefined;
+    }
+  }
+  return undefined;
 }

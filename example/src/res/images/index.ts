@@ -5,5 +5,6 @@ import SubtitlesIcon from './subtitles.png';
 import MutedIcon from './muted.png';
 import UnMutedIcon from './unmuted.png';
 import AudioIcon from './audio.png';
+import SettingsIcon from './settings.png';
 import ListIcon from './list.png';
-export { PlayButton, FullScreenIcon, FullScreenExitIcon, SubtitlesIcon, AudioIcon, MutedIcon, UnMutedIcon, ListIcon };
+export { PlayButton, FullScreenIcon, FullScreenExitIcon, SubtitlesIcon, AudioIcon, SettingsIcon, MutedIcon, UnMutedIcon, ListIcon };

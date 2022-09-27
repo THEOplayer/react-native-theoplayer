@@ -26,6 +26,7 @@ export interface VideoPlayerUIProps {
   audioTracks: MediaTrack[];
   selectedTextTrack: number | undefined;
   selectedVideoTrack: number | undefined;
+  targetVideoTrackQuality: number | number[] | undefined;
   selectedAudioTrack: number | undefined;
   error: PlayerError | undefined;
 
@@ -35,6 +36,7 @@ export interface VideoPlayerUIProps {
   onSelectTextTrack?: (uid: number | undefined) => void;
   onSelectAudioTrack?: (uid: number | undefined) => void;
   onSelectVideoTrack?: (uid: number | undefined) => void;
+  onSelectTargetVideoQuality?: (uid: number | number[] | undefined) => void;
   onSetFullScreen?: (fullscreen: boolean) => void;
   onSetMuted?: (muted: boolean) => void;
   onSetPlaybackRate?: (playbackRate: number) => void;

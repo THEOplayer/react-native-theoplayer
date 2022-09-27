@@ -75,6 +75,11 @@ export interface THEOplayerViewProps {
   selectedVideoTrack?: number | null;
 
   /**
+   * Used to set the current selected video quality by passing its `uid`, or `null` to select none.
+   */
+  targetVideoQuality?: number | number[] | undefined;
+
+  /**
    * Used to set the current selected audio track by passing its `uid`, or `null` to select none.
    */
   selectedAudioTrack?: number | null;

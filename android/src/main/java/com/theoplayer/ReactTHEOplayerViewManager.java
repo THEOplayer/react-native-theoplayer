@@ -3,6 +3,7 @@ package com.theoplayer;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.ThemedReactContext;
@@ -25,6 +26,7 @@ public class ReactTHEOplayerViewManager extends ViewGroupManager<ReactTHEOplayer
   private static final String PROP_SELECTED_TEXTTRACK = "selectedTextTrack";
   private static final String PROP_SELECTED_AUDIOTRACK = "selectedAudioTrack";
   private static final String PROP_SELECTED_VIDEOTRACK = "selectedVideoTrack";
+  private static final String PROP_TARGET_VIDEOQUALITY = "targetVideoQuality";
 
   @Override
   @NonNull
@@ -100,6 +102,11 @@ public class ReactTHEOplayerViewManager extends ViewGroupManager<ReactTHEOplayer
     if (uid != -1) {
       videoView.setSelectedVideoTrack(uid);
     }
+  }
+
+  @ReactProp(name = PROP_TARGET_VIDEOQUALITY)
+  public void setTargetVideoQuality(final ReactTHEOplayerView videoView, final ReadableArray uid) {
+      videoView.setTargetVideoQualities(uid);
   }
 
   @Override

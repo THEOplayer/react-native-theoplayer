@@ -1,10 +1,10 @@
 import { StyleSheet } from 'react-native';
 
-const DEFAULT_SIZE = 30;
+const DEFAULT_SIZE = 25;
 
 export default StyleSheet.create({
   container: {
-    marginLeft: 20,
+    marginLeft: 15,
     marginVertical: 10,
     alignSelf: 'center',
   },

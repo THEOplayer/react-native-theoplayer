@@ -37,7 +37,7 @@ export interface MediaTrack extends Track {
   /**
    * The label of the media track.
    */
-  label: string;
+  readonly label: string;
 
   /**
    * The language of the media track.
@@ -61,5 +61,25 @@ export interface MediaTrack extends Track {
    * <br/> - If desired qualities are present, the Adaptive Bitrate mechanism of the player will limit itself to these qualities.
    * <br/> - If one desired quality is present, the Adaptive Bitrate mechanism of the player will be disabled and the desired quality will be played back.
    */
-  targetQuality: number | number[] | undefined;
+  readonly targetQuality: number | number[] | undefined;
+}
+
+export function findMediaTrackByUid(mediaTracks: MediaTrack[], uid: number | undefined): MediaTrack | undefined {
+  return mediaTracks.find((track) => track.uid === uid);
+}
+
+export function findQualityByUid(mediaTrack: MediaTrack, uid: number | undefined): Quality | undefined {
+  return mediaTrack.qualities.find((quality) => quality.uid === uid);
+}
+
+export function findQualitiesByUid(mediaTrack: MediaTrack | undefined, uid: number | number[] | undefined): Quality[] | undefined {
+  if (uid && mediaTrack) {
+    if (Array.isArray(uid)) {
+      return mediaTrack.qualities.filter((quality) => uid.includes(quality.uid));
+    } else {
+      const quality = findQualityByUid(mediaTrack, uid);
+      return quality ? [quality] : undefined;
+    }
+  }
+  return undefined;
 }

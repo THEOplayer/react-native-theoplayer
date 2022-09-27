@@ -79,7 +79,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
 
   private destroyTheoPlayer() {
     const node = findNodeHandle(this._root.current);
-    const command = (UIManager as {[index: string]: any})['THEOplayerRCTView'].Commands.destroy;
+    const command = (UIManager as { [index: string]: any })['THEOplayerRCTView'].Commands.destroy;
     const params: any[] = [];
     UIManager.dispatchViewManagerCommand(node, command, params);
   }
@@ -261,9 +261,20 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
     }
   };
 
-  public render(): JSX.Element {
-    const wrapperProps = Object.assign({}, this.props);
+  private buildWrapperProps(): THEOplayerViewProps {
+    const { targetVideoQuality } = this.props;
+    return Object.assign(
+      {},
+      {
+        ...this.props,
+        // Always pass an array for targetVideoQuality.
+        targetVideoQuality: !targetVideoQuality ? [] : Array.isArray(targetVideoQuality) ? targetVideoQuality : [targetVideoQuality],
+      },
+    );
+  }
 
+  public render(): JSX.Element {
+    const wrapperProps = this.buildWrapperProps();
     return (
       <View style={[styles.base, wrapperProps.style]}>
         <THEOplayerRCTView
