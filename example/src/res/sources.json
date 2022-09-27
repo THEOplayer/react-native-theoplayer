@@ -231,7 +231,7 @@
     }
   },
   {
-    "name": "HLS - SSAI - Google DAI",
+    "name": "HLS - SSAI - Google DAI - VOD",
     "os": [
       "ios",
       "web"
@@ -243,6 +243,22 @@
           "availabilityType": "vod",
           "contentSourceID": "2528370",
           "videoID": "tears-of-steel"
+        }
+      }
+    }
+  },
+  {
+    "name": "HLS - SSAI - Google DAI - LIVE",
+    "os": [
+      "ios",
+      "web"
+    ],
+    "source": {
+      "sources": {
+        "ssai": {
+          "integration": "google-dai",
+          "availabilityType": "live",
+          "assetKey": "sN_IYUG8STe1ZzhIIE_ksA"
         }
       }
     }
