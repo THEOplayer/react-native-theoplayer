@@ -95,27 +95,22 @@ class THEOplayerRCTView: UIView {
             return
         }
         
-        if (self.player == nil) {
-            DispatchQueue.main.async {
-                // 'lazy' init the THEOplayer instance to make sure all props have been set (some bridged config is needed to init the player)
-                // Therefore, dispatched to next runloop tick
-                self.initPlayer()
-                if let player = self.player {
-                    // couple player instance to event handlers
-                    self.mainEventHandler.setPlayer(player)
-                    self.textTrackEventHandler.setPlayer(player)
-                    self.adEventHandler.setPlayer(player)
-                    // couple player instance to view
-                    player.addAsSubview(of: self)
-                }
-                self.syncAllPlayerProps()
+        // reset player for new source
+        if self.player != nil {
+            self.player?.destroy()
+            self.player = nil
+        }
+        DispatchQueue.main.async {
+            self.initPlayer()
+            if let player = self.player {
+                // couple player instance to event handlers
+                self.mainEventHandler.setPlayer(player)
+                self.textTrackEventHandler.setPlayer(player)
+                self.adEventHandler.setPlayer(player)
+                // couple player instance to view
+                player.addAsSubview(of: self)
             }
-        } else {
-            self.syncPlayerSrc()
-            self.syncPlayerMuted()
-            if !self.paused {
-                self.player?.play()
-            }
+            self.syncAllPlayerProps()
         }
     }
     
@@ -153,7 +148,6 @@ class THEOplayerRCTView: UIView {
         // set sourceDescription on player
         if DEBUG_THEOPLAYER_INTERACTION { print("[NATIVE] Setting new source on TheoPlayer") }
         if let player = self.player {
-            self.setPaused(paused: true)
             player.source = self.src
         }
     }
