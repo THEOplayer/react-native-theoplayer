@@ -210,7 +210,9 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
           player.play();
         }
 
-        seekTo(this.seekTime);
+        if (this.seekTime != TIME_UNSET) {
+          seekTo(this.seekTime);
+        }
       }
     }, 1);
   }
