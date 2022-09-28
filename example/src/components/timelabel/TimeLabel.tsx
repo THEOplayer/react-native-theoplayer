@@ -24,12 +24,16 @@ export const TimeLabel = (props: TimeLabelProps) => {
     return <Text style={[styles.timeLabel, style]}>{LIVE_LABEL}</Text>;
   }
 
-  const renderHours = duration >= 3600 * 1e3;
-  const s = renderHours ? 11 : 14;
-  const currentTimeLabel = new Date(currentTime).toISOString().substring(s, 19);
-  const durationLabel = new Date(duration).toISOString().substring(s, 19);
-  const label = showDuration ? `${currentTimeLabel} / ${durationLabel}` : currentTimeLabel;
-  return <Text style={[styles.timeLabel, style]}>{label}</Text>;
+  try {
+    const renderHours = duration >= 3600 * 1e3;
+    const s = renderHours ? 11 : 14;
+    const currentTimeLabel = new Date(currentTime).toISOString().substring(s, 19);
+    const durationLabel = new Date(duration).toISOString().substring(s, 19);
+    const label = showDuration ? `${currentTimeLabel} / ${durationLabel}` : currentTimeLabel;
+    return <Text style={[styles.timeLabel, style]}>{label}</Text>;
+  } catch (ignore) {
+    return <></>;
+  }
 };
 
 TimeLabel.defaultProps = {
