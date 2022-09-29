@@ -1,5 +1,6 @@
 export * from './abr/barrel';
 export * from './ads/barrel';
+export * from './casting/barrel';
 export * from './config/barrel';
 export * from './error/barrel';
 export * from './event/barrel';
