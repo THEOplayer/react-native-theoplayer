@@ -6,7 +6,7 @@ source 'https://cdn.cocoapods.org/'
 
 target 'ReactNativeTHEOplayer' do
 
-  platform :ios, '11.0'
+  platform :ios, '12.0'
 
   config = use_native_modules!
 
