@@ -3,6 +3,10 @@
 import Foundation
 import UIKit
 import THEOplayerSDK
+
+#if CHROMECAST
+import GoogleCast
+#endif
  
 class THEOplayerRCTView: UIView {
     // MARK: Members
@@ -26,6 +30,8 @@ class THEOplayerRCTView: UIView {
     private var selectedAudioTrackUid: Int = 0
     private var seek: Double? = nil                  // in msec
     private var fullscreen: Bool = false
+    private var chromecastReceiverApplicationId: String?
+    private var castStrategy: THEOplayerSDK.CastStrategy = THEOplayerSDK.CastStrategy.manual
     
 #if os(iOS) && ADS && (GOOGLE_IMA || GOOGLE_DAI)
     private var adSUIEnabled: Bool = true
@@ -136,6 +142,7 @@ class THEOplayerRCTView: UIView {
                                                                         cssPaths: cssPaths,
                                                                         pip: nil,
                                                                         ads: self.initAdsConfiguration(),
+                                                                        cast: self.initCastConfiguration(),
                                                                         license: self.license,
                                                                         licenseUrl: self.licenseUrl))
 #endif
@@ -151,6 +158,22 @@ class THEOplayerRCTView: UIView {
                                 googleImaConfiguration: googleIMAConfiguration)
 #elseif os(tvOS) && ADS && GOOGLE_IMA
         return AdsConfiguration()
+#else
+        return nil
+#endif
+    }
+    
+    private func initCastConfiguration() -> CastConfiguration? {
+#if CHROMECAST
+        // Set the correct chromecast receiver application id
+        if let castReceiverApplicationId = self.chromecastReceiverApplicationId {
+            let options = GCKCastOptions(discoveryCriteria: GCKDiscoveryCriteria(applicationID: castReceiverApplicationId))
+            GCKCastContext.setSharedInstanceWith(options)
+        }
+#endif
+#if CHROMECAST || AIRPLAY
+        // prepre the config
+        return CastConfiguration(strategy: self.castStrategy)
 #else
         return nil
 #endif
@@ -181,6 +204,24 @@ class THEOplayerRCTView: UIView {
             }
         }
 #endif
+        if let castConfig = configDict["cast"] as? NSDictionary {
+            if let castStrategy = castConfig["strategy"] as? String {
+                switch castStrategy {
+                case "auto":
+                    self.castStrategy = THEOplayerSDK.CastStrategy.auto
+                case "manual":
+                    self.castStrategy = THEOplayerSDK.CastStrategy.manual
+                case "disabled":
+                    self.castStrategy = THEOplayerSDK.CastStrategy.disabled
+                default :
+                    self.castStrategy = THEOplayerSDK.CastStrategy.manual
+                }
+            }
+            if let chromecastConfig = castConfig["chromecast"] as? NSDictionary,
+                let castReceiverApplicationId = chromecastConfig["appID"] as? String {
+                self.chromecastReceiverApplicationId = castReceiverApplicationId
+            }
+        }
         if DEBUG_PROP_UPDATES  { print("[NATIVE] config prop updated.") }
     }
     
