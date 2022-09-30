@@ -8,41 +8,9 @@ buildscript {
         targetSdkVersion = 33
         ndkVersion = "23.1.7779620"
 
-//        // Override compileSdkVersion
-//        THEOplayer_compileSdkVersion = 31
-//
-//        // Override minSdkVersion
-//        THEOplayer_minSdkVersion = 21
-//
-//        // Override targetSdkVersion
-//        THEOplayer_targetSdkVersion = 31
-//
-//        // Specify a specfic SDK version (default: the latest available version).
-//        THEOplayer_sdk = "3.7.0"
-//
-//        // Optionally limit timeUpdate rate, which could improve performance.
-//        // Possible values: (default: UNLIMITED)
-//        // - "com.theoplayer.TimeUpdateRate.UNLIMITED"
-//        // - "com.theoplayer.TimeUpdateRate.LIMITED_ONE_HZ"
-//        // - "com.theoplayer.TimeUpdateRate.LIMITED_TWO_HZ"
-//        // - "com.theoplayer.TimeUpdateRate.LIMITED_THREE_HZ"
-//        THEOplayer_timeUpdateRate = "com.theoplayer.TimeUpdateRate.UNLIMITED"
-//
-//        // Toggle player event logging (default: false)
-//        THEOplayer_logPlayerEvents = "true"
-//
-//        // Toggle playerView event logging (default: false)
-//        THEOplayer_logViewEvents = "true"
-
 //        // By default get the THEOplayer dependencies from Maven.
 //        // Set 'THEOplayer_local' to get dependencies from a local folder instead.
 //        THEOplayer_local = new File("${project.projectDir}" + '/app/libs/')
-
-        // Extensions (default: disabled)
-        THEOplayer_extensionGoogleIMA = true
-        THEOplayer_extensionGoogleDAI = true
-        THEOplayer_extensionCast = true
-        THEOplayer_extensionMediaTailor = true
     }
     repositories {
         google()
