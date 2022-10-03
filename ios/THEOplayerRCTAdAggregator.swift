@@ -30,6 +30,7 @@ let PROP_ADBREAK_MAX_DURATION: String = "maxDuration"
 let PROP_ADBREAK_TIME_OFFSET: String = "timeOffset"
 let PROP_ADBREAK_MAX_REMAINING_DURATION: String = "maxRemainingDuration"
 let PROP_ADBREAK_ADS: String = "ads"
+let PROP_ADBREAK_INTEGRATION: String = "integration"
 let PROP_COMPANION_AD_SLOT_ID: String = "adSlotId"
 let PROP_COMPANION_ALT_TEXT: String = "altText"
 let PROP_COMPANION_CLICK_THROUGH: String = "clickThrough"
@@ -125,6 +126,10 @@ class THEOplayerRCTAdAggregator {
                 adList.append(THEOplayerRCTAdAggregator.aggregateAd(ad: ad, processAdBreak: false))
             }
             adBreakData[PROP_ADBREAK_ADS] = adList
+            if adList.count > 0,
+               let integration = adList[0][PROP_AD_INTEGRATION] {
+                adBreakData[PROP_ADBREAK_INTEGRATION] = integration
+            }
         }
         return adBreakData
     }
