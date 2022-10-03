@@ -56,8 +56,6 @@ class THEOplayerRCTAdAggregator {
         if processAdBreak,
            let adBreak = ad.adBreak {
             adData[PROP_AD_BREAK] = THEOplayerRCTAdAggregator.aggregateAdBreak(adBreak: adBreak)
-        } else {
-            adData[PROP_AD_BREAK] = [:]
         }
         adData[PROP_AD_COMPANIONS] = THEOplayerRCTAdAggregator.aggregateCompanionAds(companionAds: ad.companions)
         adData[PROP_AD_UNIVERSAL_AD_IDS] = []
