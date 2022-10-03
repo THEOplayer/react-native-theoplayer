@@ -7,8 +7,10 @@ let PROP_AD_INTEGRATION: String = "integration"
 let PROP_AD_TYPE: String = "type"
 let PROP_AD_ID: String = "id"
 let PROP_AD_BREAK: String = "adBreak"
+let PROP_AD_DURATION: String = "duration"
 let PROP_AD_SKIP_OFFSET: String = "skipOffset"
 let PROP_AD_COMPANIONS: String = "companions"
+let PROP_AD_CLICK_THROUGH: String = "clickThrough"
 let PROP_AD_RESOURCE_URI: String = "resourceURI"
 let PROP_AD_UNIVERSAL_AD_IDS: String = "universalAdIds"
 let PROP_GOOGLE_AD_AD_SYSTEM: String = "adSystem"
@@ -58,6 +60,20 @@ class THEOplayerRCTAdAggregator {
         }
         adData[PROP_AD_COMPANIONS] = THEOplayerRCTAdAggregator.aggregateCompanionAds(companionAds: ad.companions)
         adData[PROP_AD_UNIVERSAL_AD_IDS] = []
+        
+        // Add additional properties for Linear Ads
+        if let linearAd = ad as? LinearAd {
+            if let adDuration = linearAd.duration {
+                adData[PROP_AD_DURATION] = adDuration
+            }
+        }
+        
+        // Add additional properties for NonLinear Ads
+        if let nonLinearAd = ad as? NonLinearAd {
+            if let adClickThrough = nonLinearAd.clickThrough {
+                adData[PROP_AD_CLICK_THROUGH] = adClickThrough
+            }
+        }
 
         // Add additional properties for GoogleIma Ads
         if let googleImaAd = ad as? GoogleImaAd {
