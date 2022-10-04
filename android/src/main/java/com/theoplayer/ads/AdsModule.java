@@ -10,7 +10,6 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.theoplayer.SourceHelper;
 import com.theoplayer.android.ads.dai.api.GoogleDaiIntegration;
-import com.theoplayer.android.api.player.Player;
 import com.theoplayer.util.ViewResolver;
 
 public class AdsModule extends ReactContextBaseJavaModule {
@@ -32,9 +31,8 @@ public class AdsModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void schedule(Integer tag, ReadableMap ad) {
     viewResolver.resolveViewByTag(tag, view -> {
-      Player player = view != null ? view.getPlayer() : null;
-      if (player != null) {
-        player.getAds().schedule(sourceHelper.parseAdFromJS(ad));
+      if (view != null) {
+        view.getAdsApi().schedule(sourceHelper.parseAdFromJS(ad));
       }
     });
   }
@@ -43,11 +41,10 @@ public class AdsModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void currentAdBreak(Integer tag, Promise promise) {
     viewResolver.resolveViewByTag(tag, view -> {
-      Player player = view != null ? view.getPlayer() : null;
-      if (player == null) {
+      if (view == null) {
         promise.resolve(Arguments.createMap());
       } else {
-        promise.resolve(AdInfo.fromAdbreak(player.getAds().getCurrentAdBreak()));
+        promise.resolve(AdInfo.fromAdBreak(view.getAdsApi().getCurrentAdBreak()));
       }
     });
   }
@@ -56,8 +53,11 @@ public class AdsModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void scheduledAdBreaks(Integer tag, Promise promise) {
     viewResolver.resolveViewByTag(tag, view -> {
-      // NYI
-       promise.reject(new Exception("Not yet implemented"));
+      if (view == null) {
+        promise.resolve(Arguments.createMap());
+      } else {
+        promise.resolve(AdInfo.fromAdBreaks(view.getAdsApi().getScheduledAdBreaks()));
+      }
     });
   }
 
@@ -65,11 +65,10 @@ public class AdsModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void playing(Integer tag, Promise promise) {
     viewResolver.resolveViewByTag(tag, view -> {
-      Player player = view != null ? view.getPlayer() : null;
-      if (player == null) {
+      if (view == null) {
         promise.resolve(false);
       } else {
-        promise.resolve(player.getAds().isPlaying());
+        promise.resolve(view.getAdsApi().isPlaying());
       }
     });
   }
@@ -79,9 +78,8 @@ public class AdsModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void skip(Integer tag) {
     viewResolver.resolveViewByTag(tag, view -> {
-      Player player = view != null ? view.getPlayer() : null;
-      if (player != null) {
-        player.getAds().skip();
+      if (view != null) {
+        view.getAdsApi().skip();
       }
     });
   }

@@ -28,10 +28,7 @@ import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
-import com.theoplayer.ads.AdInfo;
-import com.theoplayer.android.api.ads.Ad;
-import com.theoplayer.android.api.ads.ima.GoogleImaAdEvent;
-import com.theoplayer.android.api.ads.ima.GoogleImaAdEventType;
+import com.theoplayer.ads.AdEventAdapter;
 import com.theoplayer.android.api.error.THEOplayerException;
 import com.theoplayer.android.api.event.EventListener;
 import com.theoplayer.android.api.event.EventType;
@@ -65,7 +62,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-class VideoEventEmitter {
+@SuppressWarnings({"rawtypes", "unchecked"})
+public class VideoEventEmitter {
 
   private static final String EVENT_SOURCECHANGE = "onNativeSourceChange";
   private static final String EVENT_LOADSTART = "onNativeLoadStart";
@@ -145,7 +143,7 @@ class VideoEventEmitter {
     EVENT_FULLSCREEN_WILL_DISMISS,
     EVENT_FULLSCREEN_DID_DISMISS
   })
-  @interface VideoEvents {
+  public @interface VideoEvents {
   }
 
   private static final String EVENT_PROP_CURRENT_TIME = "currentTime";
@@ -170,16 +168,14 @@ class VideoEventEmitter {
   private static final String EVENT_PROP_TRACK_UID = "trackUid";
   private static final String EVENT_PROP_CUE = "cue";
   private static final String EVENT_PROP_TYPE = "type";
-  private static final String EVENT_PROP_AD = "ad";
 
   private final RCTEventEmitter eventEmitter;
   private int viewId = View.NO_ID;
   private final HashMap<EventType, EventListener> playerListeners = new HashMap<>();
   private final HashMap<EventType, EventListener> textTrackListeners = new HashMap<>();
-  private final HashMap<EventType, EventListener> adListeners = new HashMap<>();
-
   private final ReactTHEOplayerView playerView;
 
+  private AdEventAdapter adEventAdapter;
   private long lastTimeUpdate = 0;
   private double lastCurrentTime = 0.0;
 
@@ -207,21 +203,6 @@ class VideoEventEmitter {
 
     textTrackListeners.put(TextTrackListEventTypes.ADDTRACK, (EventListener<AddTrackEvent>) this::onTextTrackAdd);
     textTrackListeners.put(TextTrackListEventTypes.REMOVETRACK, (EventListener<RemoveTrackEvent>) this::onTextTrackRemove);
-
-    if (BuildConfig.EXTENSION_GOOGLE_IMA || BuildConfig.EXTENSION_GOOGLE_DAI) {
-      adListeners.put(GoogleImaAdEventType.LOADED, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
-      adListeners.put(GoogleImaAdEventType.AD_BREAK_STARTED, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
-      adListeners.put(GoogleImaAdEventType.STARTED, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
-      adListeners.put(GoogleImaAdEventType.FIRST_QUARTILE, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
-      adListeners.put(GoogleImaAdEventType.MIDPOINT, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
-      adListeners.put(GoogleImaAdEventType.THIRD_QUARTILE, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
-      adListeners.put(GoogleImaAdEventType.COMPLETED, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
-      adListeners.put(GoogleImaAdEventType.AD_BREAK_ENDED, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
-      adListeners.put(GoogleImaAdEventType.SKIPPED, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
-      adListeners.put(GoogleImaAdEventType.AD_ERROR, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
-      adListeners.put(GoogleImaAdEventType.AD_BUFFERING, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
-      adListeners.put(GoogleImaAdEventType.AD_BREAK_FETCH_ERROR, (EventListener<GoogleImaAdEvent>) this::onAdEvent);
-    }
   }
 
   public void setViewId(int viewId) {
@@ -284,7 +265,7 @@ class VideoEventEmitter {
   private void onPause(@NonNull final PauseEvent event) {
     Player player = playerView.getPlayer();
     // Do not forward the pause event in case the content player is paused because the ad player starts.
-    if (player != null && !player.getAds().isPlaying()) {
+    if (player != null && !playerView.getAdsApi().isPlaying()) {
       receiveEvent(EVENT_PAUSE, null);
     }
   }
@@ -392,32 +373,6 @@ class VideoEventEmitter {
     receiveEvent(EVENT_TEXTTRACK_EVENT, payload);
   }
 
-  private void onAdEvent(@NonNull GoogleImaAdEvent event) {
-    WritableMap payload = Arguments.createMap();
-    String type;
-    switch ((GoogleImaAdEventType)event.getType()) {
-      case LOADED: type = "adloaded"; break;
-      case AD_BREAK_STARTED: type = "adbreakbegin"; break;
-      case STARTED: type = "adbegin"; break;
-      case FIRST_QUARTILE: type = "adfirstquartile"; break;
-      case MIDPOINT: type = "admidpoint"; break;
-      case THIRD_QUARTILE: type = "adthirdquartile"; break;
-      case COMPLETED: type = "adend"; break;
-      case SKIPPED: type = "adskip"; break;
-      case AD_BREAK_ENDED: type = "adbreakend"; break;
-      case AD_ERROR: type = "aderror"; break;
-      case AD_BUFFERING: type = "adbuffering"; break;
-      case AD_BREAK_FETCH_ERROR: type = "aderror"; break;
-      default: type = event.getType().getName().toLowerCase();
-    }
-    payload.putString(EVENT_PROP_TYPE, type);
-    Ad ad = event.getAd();
-    if (ad != null) {
-      payload.putMap(EVENT_PROP_AD, AdInfo.fromAd(ad));
-    }
-    receiveEvent(EVENT_AD_EVENT, payload);
-  }
-
   public void onFullscreenWillPresent() {
     receiveEvent(EVENT_FULLSCREEN_WILL_PRESENT, null);
   }
@@ -455,9 +410,9 @@ class VideoEventEmitter {
       player.getTextTracks().addEventListener(entry.getKey(), entry.getValue());
     }
 
-    // Attach ad listeners
-    for (Map.Entry<EventType, EventListener> entry : adListeners.entrySet()) {
-      player.getAds().addEventListener(entry.getKey(), entry.getValue());
+    // Attach AdStateHolder
+    if (BuildConfig.EXTENSION_GOOGLE_IMA || BuildConfig.EXTENSION_GOOGLE_DAI) {
+      adEventAdapter = new AdEventAdapter(playerView.getAdsApi(), payload -> receiveEvent(EVENT_AD_EVENT, payload));
     }
   }
 
@@ -472,9 +427,8 @@ class VideoEventEmitter {
       player.getTextTracks().removeEventListener(entry.getKey(), entry.getValue());
     }
 
-    // Remove ad listeners
-    for (Map.Entry<EventType, EventListener> entry : adListeners.entrySet()) {
-      player.getAds().removeEventListener(entry.getKey(), entry.getValue());
+    if (adEventAdapter != null) {
+      adEventAdapter.destroy();
     }
   }
 }

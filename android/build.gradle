@@ -102,11 +102,13 @@ dependencies {
     // NOTE: remove stub once DAI extension module is available on Maven (v4.2)
     if (safeExtGet("THEOplayer_extensionGoogleDAI", false)) {
       println('ENABLE THEOplayer DAI extension.')
+      implementation files('libs/ads-wrapper-0.1.0.aar')
       implementation files('libs/theoplayer-android-daistub.aar')
 //    implementation "com.theoplayer.theoplayer-sdk-android:unified-ads:${safeExtGet('THEOplayer_sdk', '+')}"
 //    implementation "com.theoplayer.theoplayer-sdk-android:unified-ads-dai:${safeExtGet('THEOplayer_sdk', '+')}"
     } else {
       println('DISABLE THEOplayer DAI extension.')
+      compileOnly files('libs/ads-wrapper-0.1.0.aar')
       compileOnly files('libs/theoplayer-android-daistub.aar')
 //    compileOnly "com.theoplayer.theoplayer-sdk-android:unified-ads:${safeExtGet('THEOplayer_sdk', '+')}"
 //    compileOnly "com.theoplayer.theoplayer-sdk-android:unified-ads-dai:${safeExtGet('THEOplayer_sdk', '+')}"
@@ -123,6 +125,7 @@ dependencies {
     println("Using THEOplayer local dependencies from ${THEOplayer_local}")
 
     implementation fileTree(dir: THEOplayer_local, include: ["*.aar"])
+    implementation files('libs/ads-wrapper-0.1.0.aar')
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.google.android.gms:play-services-basement:17.6.0'
     implementation "com.google.ads.interactivemedia.v3:interactivemedia:3.25.1"

@@ -61,7 +61,7 @@ public class AdInfo {
     adPayload.putString(PROP_AD_ID, ad.getId());
     AdBreak adBreak = ad.getAdBreak();
     if (includeAdBreak && adBreak != null) {
-      adPayload.putMap(PROP_AD_BREAK, fromAdbreak(adBreak));
+      adPayload.putMap(PROP_AD_BREAK, fromAdBreak(adBreak));
     }
     adPayload.putArray(PROP_AD_COMPANIONS, fromCompanions(ad.getCompanions()));
     adPayload.putInt(PROP_AD_SKIPOFFSET, ad.getSkipOffset());
@@ -70,13 +70,17 @@ public class AdInfo {
       GoogleImaAd googleImaAd = (GoogleImaAd)ad;
       adPayload.putString(PROP_AD_SYSTEM, googleImaAd.getAdSystem());
       adPayload.putString(PROP_AD_CREATIVE_ID, googleImaAd.getCreativeId());
-      adPayload.putString(PROP_AD_TRAFFICKING_PARAMETERS, googleImaAd.getImaAd().getTraffickingParameters());
+      adPayload.putString(PROP_AD_TRAFFICKING_PARAMETERS, googleImaAd.getTraffickingParameters());
       adPayload.putInt(PROP_AD_BITRATE, googleImaAd.getVastMediaBitrate());
-      adPayload.putString(PROP_AD_TITLE, googleImaAd.getImaAd().getTitle());
-      adPayload.putDouble(PROP_AD_DURATION, googleImaAd.getImaAd().getDuration());
-      adPayload.putDouble(PROP_AD_WIDTH, googleImaAd.getImaAd().getVastMediaWidth());
-      adPayload.putDouble(PROP_AD_HEIGHT, googleImaAd.getImaAd().getVastMediaHeight());
-      adPayload.putString(PROP_AD_CONTENT_TYPE, googleImaAd.getImaAd().getContentType());
+      try {
+        adPayload.putString(PROP_AD_TITLE, googleImaAd.getImaAd().getTitle());
+        adPayload.putInt(PROP_AD_DURATION, (int)(1e3 * googleImaAd.getImaAd().getDuration()));
+        adPayload.putDouble(PROP_AD_WIDTH, googleImaAd.getImaAd().getVastMediaWidth());
+        adPayload.putDouble(PROP_AD_HEIGHT, googleImaAd.getImaAd().getVastMediaHeight());
+        adPayload.putString(PROP_AD_CONTENT_TYPE, googleImaAd.getImaAd().getContentType());
+      } catch (Exception ignore) {
+        // googleImaAd.getImaAd() is not known yet
+      }
 
       WritableArray universalAdIdsPayload = Arguments.createArray();
       for (UniversalAdId universalAdId: googleImaAd.getUniversalAdIds()) {
@@ -109,15 +113,15 @@ public class AdInfo {
     return adPayload;
   }
 
-  public static WritableMap fromAdbreak(@Nullable final AdBreak adbreak) {
+  public static WritableMap fromAdBreak(@Nullable final AdBreak adbreak) {
     WritableMap adbreakPayload = Arguments.createMap();
     if (adbreak == null) {
       return adbreakPayload;
     }
     adbreakPayload.putString(PROP_ADBREAK_INTEGRATION, adbreak.getIntegration().getType());
-    adbreakPayload.putInt(PROP_ADBREAK_MAXDURATION, adbreak.getMaxDuration());
-    adbreakPayload.putInt(PROP_ADBREAK_TIMEOFFSET, adbreak.getTimeOffset());
-    adbreakPayload.putDouble(PROP_ADBREAK_MAXREMAININGDURATION, adbreak.getMaxRemainingDuration());
+    adbreakPayload.putInt(PROP_ADBREAK_MAXDURATION, (int)(1e3 * adbreak.getMaxDuration()));
+    adbreakPayload.putInt(PROP_ADBREAK_TIMEOFFSET, (int)(1e3 * adbreak.getTimeOffset()));
+    adbreakPayload.putInt(PROP_ADBREAK_MAXREMAININGDURATION, (int)(1e3 * adbreak.getMaxRemainingDuration()));
 
     WritableArray adsPayload = Arguments.createArray();
     for (Ad ad: adbreak.getAds()) {
@@ -129,6 +133,14 @@ public class AdInfo {
     adbreakPayload.putArray(PROP_ADBREAK_ADS, adsPayload);
 
     return adbreakPayload;
+  }
+
+  public static WritableArray fromAdBreaks(final List<AdBreak> adbreaks) {
+    WritableArray payload = Arguments.createArray();
+    for (AdBreak adbreak: adbreaks) {
+      payload.pushMap(fromAdBreak(adbreak));
+    }
+    return payload;
   }
 
   public static WritableArray fromCompanions(final List<CompanionAd> companions) {

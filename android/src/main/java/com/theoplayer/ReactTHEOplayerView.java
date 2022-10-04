@@ -26,6 +26,7 @@ import com.theoplayer.android.api.THEOplayerConfig;
 import com.theoplayer.android.api.THEOplayerView;
 import com.theoplayer.android.api.ads.ima.GoogleImaIntegration;
 import com.theoplayer.android.api.ads.ima.GoogleImaIntegrationFactory;
+import com.theoplayer.android.ads.wrapper.api.AdsApiWrapper;
 import com.theoplayer.android.api.cast.CastIntegration;
 import com.theoplayer.android.api.cast.CastIntegrationFactory;
 import com.theoplayer.android.api.player.Player;
@@ -60,6 +61,8 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
 
   private GoogleDaiIntegration daiIntegration;
 
+  private final AdsApiWrapper adsApi;
+
   private Player player;
   private ReadableMap abrConfig;
   private boolean paused;
@@ -76,6 +79,7 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
     this.reactContext = context;
     this.eventEmitter = new VideoEventEmitter(context, this);
     reactContext.addLifecycleEventListener(this);
+    adsApi = new AdsApiWrapper();
   }
 
   public void initialize(@Nullable ReadableMap configProps) {
@@ -238,6 +242,10 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
         player.setPlaybackRate(this.playbackRate);
         player.setSource(this.sourceDescription);
 
+        if (BuildConfig.EXTENSION_GOOGLE_IMA || BuildConfig.EXTENSION_GOOGLE_DAI) {
+          adsApi.initialize(player, daiIntegration);
+        }
+
         if (!this.paused) {
           player.play();
         }
@@ -252,6 +260,11 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
   @Nullable
   public Player getPlayer() {
     return player;
+  }
+
+  @NonNull
+  public AdsApiWrapper getAdsApi() {
+    return adsApi;
   }
 
   @Override
@@ -292,6 +305,11 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
   private void releasePlayer() {
     if (player != null) {
       eventEmitter.removeListeners(player);
+
+      if (adsApi != null) {
+        adsApi.destroy();
+      }
+
       player.stop();
       player = null;
     }
@@ -321,7 +339,7 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
       final boolean playerIsPaused = player.isPaused();
       if (!paused && playerIsPaused) {
         player.play();
-      } else if (paused && (!playerIsPaused || player.getAds().isPlaying())) {
+      } else if (paused && (!playerIsPaused || adsApi.isPlaying())) {
         player.pause();
       }
     }
