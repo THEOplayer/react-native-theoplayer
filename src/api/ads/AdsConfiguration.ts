@@ -19,15 +19,11 @@ export interface AdsConfiguration {
   allowedMimeTypes?: string[];
 
   /**
-   * Whether an advertisement duration countdown will be shown in the UI.
-   *
-   * @remarks
-   * <br/> - Available since v2.22.9.
-   * <br/> - This feature is only available for Google IMA.
+   * Whether an advertisement UI is shown.
    *
    * @defaultValue `true`
    */
-  showCountdown?: boolean;
+  uiEnabled?: boolean;
 
   /**
    * Whether media files of mid- and postrolls are preloaded.

@@ -19,6 +19,8 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.ThemedReactContext;
+import com.google.ads.interactivemedia.v3.api.AdsRenderingSettings;
+import com.google.ads.interactivemedia.v3.api.ImaSdkFactory;
 import com.theoplayer.android.ads.dai.api.GoogleDaiIntegration;
 import com.theoplayer.android.ads.dai.api.GoogleDaiIntegrationFactory;
 import com.theoplayer.abr.ABRConfigurationAdapter;
@@ -45,6 +47,8 @@ import com.theoplayer.android.api.timerange.TimeRanges;
 import com.theoplayer.track.QualityListFilter;
 import com.theoplayer.track.TrackListInfo;
 import com.theoplayer.util.TypeUtils;
+
+import java.util.Collections;
 
 @SuppressLint("ViewConstructor")
 public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventListener {
@@ -185,13 +189,14 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
     playerView.setLayoutParams(layoutParams);
 
     addView(playerView, 0, layoutParams);
-    addIntegrations(playerView);
+    addIntegrations(playerView, playerConfig);
   }
 
-  private void addIntegrations(@NonNull final THEOplayerView playerView) {
+  private void addIntegrations(@NonNull final THEOplayerView playerView, @NonNull THEOplayerConfig playerConfig) {
     try {
       if (BuildConfig.EXTENSION_GOOGLE_IMA) {
         GoogleImaIntegration googleImaIntegration = GoogleImaIntegrationFactory.createGoogleImaIntegration(playerView);
+        googleImaIntegration.setAdsRenderingSettings(createRenderSettings(playerConfig));
         playerView.getPlayer().addIntegration(googleImaIntegration);
       }
     } catch (Exception ignore) {
@@ -199,6 +204,7 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
     try {
       if (BuildConfig.EXTENSION_GOOGLE_DAI) {
         daiIntegration = GoogleDaiIntegrationFactory.createGoogleDaiIntegration(playerView);
+        daiIntegration.setAdsRenderingSettings(createRenderSettings(playerConfig));
         playerView.getPlayer().addIntegration(daiIntegration);
       }
     } catch (Exception ignore) {
@@ -211,6 +217,14 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
       // Add other future integrations here.
     } catch (Exception ignore) {
     }
+  }
+
+  private AdsRenderingSettings createRenderSettings(@NonNull THEOplayerConfig playerConfig) {
+    AdsRenderingSettings renderingSettings = ImaSdkFactory.getInstance().createAdsRenderingSettings();
+    if (playerConfig.getAds() != null && !playerConfig.getAds().isShowCountdown()) {
+      renderingSettings.setUiElements(Collections.emptySet());
+    }
+    return renderingSettings;
   }
 
   @Override

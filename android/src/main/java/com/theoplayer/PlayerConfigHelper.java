@@ -16,7 +16,7 @@ public class PlayerConfigHelper {
   static final private String PROP_LICENSE_URL = "licenseUrl";
   static final private String PROP_CHROMELESS = "chromeless";
   static final private String PROP_PRELOAD = "preload";
-  static final private String PROP_SHOW_COUNTDOWN = "showCountdown";
+  static final private String PROP_UI_ENABLED = "uiEnabled";
   static final private String PROP_GOOGLE_IMA_CONFIGURATION = "googleImaConfiguration";
   static final private String PROP_USE_NATIVE_IMA = "useNativeIma";
 
@@ -51,7 +51,7 @@ public class PlayerConfigHelper {
     if (!TextUtils.isEmpty(preloadTypeString)) {
       builder.preload(AdPreloadType.from(preloadTypeString));
     }
-    builder.showCountdown(!configProps.hasKey(PROP_SHOW_COUNTDOWN) || configProps.getBoolean(PROP_SHOW_COUNTDOWN));
+    builder.showCountdown(!configProps.hasKey(PROP_UI_ENABLED) || configProps.getBoolean(PROP_UI_ENABLED));
     GoogleImaConfiguration googleImaConfiguration = googleImaConfigurationFromProps(configProps.getMap(PROP_GOOGLE_IMA_CONFIGURATION));
     if (googleImaConfiguration != null) {
       builder.googleImaConfiguration(googleImaConfiguration);
