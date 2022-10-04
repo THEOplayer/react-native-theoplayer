@@ -65,6 +65,8 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
 
   private GoogleDaiIntegration daiIntegration;
 
+  private GoogleImaIntegration imaIntegration;
+
   private final AdsApiWrapper adsApi;
 
   private Player player;
@@ -195,9 +197,9 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
   private void addIntegrations(@NonNull final THEOplayerView playerView, @NonNull THEOplayerConfig playerConfig) {
     try {
       if (BuildConfig.EXTENSION_GOOGLE_IMA) {
-        GoogleImaIntegration googleImaIntegration = GoogleImaIntegrationFactory.createGoogleImaIntegration(playerView);
-        googleImaIntegration.setAdsRenderingSettings(createRenderSettings(playerConfig));
-        playerView.getPlayer().addIntegration(googleImaIntegration);
+        imaIntegration = GoogleImaIntegrationFactory.createGoogleImaIntegration(playerView);
+        imaIntegration.setAdsRenderingSettings(createRenderSettings(playerConfig));
+        playerView.getPlayer().addIntegration(imaIntegration);
       }
     } catch (Exception ignore) {
     }
@@ -251,21 +253,21 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
         player = playerView.getPlayer();
         ABRConfigurationAdapter.INSTANCE.applyABRConfigurationFromProps(player, abrConfig);
         eventEmitter.attachListeners(player);
-        player.setMuted(this.muted);
-        player.setVolume(this.volume);
-        player.setPlaybackRate(this.playbackRate);
-        player.setSource(this.sourceDescription);
+        player.setMuted(muted);
+        player.setVolume(volume);
+        player.setPlaybackRate(playbackRate);
+        player.setSource(sourceDescription);
 
         if (BuildConfig.EXTENSION_GOOGLE_IMA || BuildConfig.EXTENSION_GOOGLE_DAI) {
-          adsApi.initialize(player, daiIntegration);
+          adsApi.initialize(player, imaIntegration, daiIntegration);
         }
 
         if (!this.paused) {
           player.play();
         }
 
-        if (this.seekTime != TIME_UNSET) {
-          seekTo(this.seekTime);
+        if (seekTime != TIME_UNSET) {
+          seekTo(seekTime);
         }
       }
     }, 1);
