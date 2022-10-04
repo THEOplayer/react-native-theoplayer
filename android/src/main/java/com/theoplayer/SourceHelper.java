@@ -141,6 +141,8 @@ public class SourceHelper {
   private TypedSource parseTypedSource(@NonNull final JSONObject jsonTypedSource) {
     try {
       TypedSource.Builder tsBuilder = TypedSource.Builder.typedSource();
+      SourceType sourceType = parseSourceType(jsonTypedSource);
+
       if (jsonTypedSource.has(PROP_SSAI)) {
         final JSONObject ssaiJson = jsonTypedSource.getJSONObject(PROP_SSAI);
 
@@ -154,6 +156,10 @@ public class SourceHelper {
               } else {
                 tsBuilder = new GoogleDaiTypedSource.Builder(gson.fromJson(ssaiJson.toString(), GoogleDaiLiveConfiguration.class));
               }
+              // Prefer DASH if not SSAI type specified
+              if (sourceType == null) {
+                tsBuilder.type(SourceType.DASH);
+              }
               break;
             case YOSPACE:
               tsBuilder.ssai(gson.fromJson(ssaiJson.toString(), YoSpaceDescription.class));
@@ -166,7 +172,6 @@ public class SourceHelper {
         }
       }
       tsBuilder.src(jsonTypedSource.optString(PROP_SRC));
-      SourceType sourceType = parseSourceType(jsonTypedSource);
       if (sourceType != null) {
         tsBuilder.type(sourceType);
       }
