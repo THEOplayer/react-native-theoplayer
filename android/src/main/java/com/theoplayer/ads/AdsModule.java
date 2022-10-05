@@ -1,5 +1,7 @@
 package com.theoplayer.ads;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.facebook.react.bridge.Arguments;
@@ -10,9 +12,11 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.theoplayer.SourceHelper;
 import com.theoplayer.android.ads.dai.api.GoogleDaiIntegration;
+import com.theoplayer.android.api.error.THEOplayerException;
 import com.theoplayer.util.ViewResolver;
 
 public class AdsModule extends ReactContextBaseJavaModule {
+  private static final String TAG = "AdsModule";
   private final SourceHelper sourceHelper = new SourceHelper();
   private final ViewResolver viewResolver;
 
@@ -24,7 +28,7 @@ public class AdsModule extends ReactContextBaseJavaModule {
   @NonNull
   @Override
   public String getName() {
-    return "AdsModule";
+    return TAG;
   }
 
   // Add an ad break request.
@@ -32,7 +36,11 @@ public class AdsModule extends ReactContextBaseJavaModule {
   public void schedule(Integer tag, ReadableMap ad) {
     viewResolver.resolveViewByTag(tag, view -> {
       if (view != null) {
-        view.getAdsApi().schedule(sourceHelper.parseAdFromJS(ad));
+        try {
+          view.getAdsApi().schedule(sourceHelper.parseAdFromJS(ad));
+        } catch (THEOplayerException exception) {
+          Log.e(TAG, exception.getMessage());
+        }
       }
     });
   }

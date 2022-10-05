@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringDef;
 
 import com.facebook.react.bridge.Arguments;
@@ -209,6 +210,19 @@ public class VideoEventEmitter {
     this.viewId = viewId;
   }
 
+  public void emitError(@NonNull THEOplayerException exception) {
+    emitError(exception.getCode().name(), exception.getMessage());
+  }
+
+  public void emitError(@NonNull String code, @Nullable String message) {
+    WritableMap error = Arguments.createMap();
+    error.putString(EVENT_PROP_ERROR_CODE, code);
+    error.putString(EVENT_PROP_ERROR_MESSAGE, message != null ? message : "");
+    WritableMap payload = Arguments.createMap();
+    payload.putMap(EVENT_PROP_ERROR, error);
+    receiveEvent(EVENT_ERROR, payload);
+  }
+
   private void onLoadedMetadata(final LoadedMetadataEvent event) {
     WritableMap payload = Arguments.createMap();
     payload.putArray(EVENT_PROP_TEXT_TRACKS, playerView.getTextTrackInfo());
@@ -303,13 +317,7 @@ public class VideoEventEmitter {
   }
 
   private void onError(@NonNull final ErrorEvent event) {
-    WritableMap error = Arguments.createMap();
-    final THEOplayerException exception = event.getErrorObject();
-    error.putString(EVENT_PROP_ERROR_CODE, exception.getCode().name());
-    error.putString(EVENT_PROP_ERROR_MESSAGE, exception.getMessage());
-    WritableMap payload = Arguments.createMap();
-    payload.putMap(EVENT_PROP_ERROR, error);
-    receiveEvent(EVENT_ERROR, payload);
+    emitError(event.getErrorObject());
   }
 
   private void onProgress() {
@@ -411,7 +419,7 @@ public class VideoEventEmitter {
     }
 
     // Attach AdStateHolder
-    if (BuildConfig.EXTENSION_GOOGLE_IMA || BuildConfig.EXTENSION_GOOGLE_DAI) {
+    if (BuildConfig.EXTENSION_ADS) {
       adEventAdapter = new AdEventAdapter(playerView.getAdsApi(), payload -> receiveEvent(EVENT_AD_EVENT, payload));
     }
   }

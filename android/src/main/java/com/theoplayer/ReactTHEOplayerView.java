@@ -31,6 +31,7 @@ import com.theoplayer.android.api.ads.ima.GoogleImaIntegrationFactory;
 import com.theoplayer.android.ads.wrapper.api.AdsApiWrapper;
 import com.theoplayer.android.api.cast.CastIntegration;
 import com.theoplayer.android.api.cast.CastIntegrationFactory;
+import com.theoplayer.android.api.error.THEOplayerException;
 import com.theoplayer.android.api.player.Player;
 import com.theoplayer.android.api.player.RequestCallback;
 import com.theoplayer.android.api.player.track.mediatrack.MediaTrack;
@@ -258,7 +259,7 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
         player.setPlaybackRate(playbackRate);
         player.setSource(sourceDescription);
 
-        if (BuildConfig.EXTENSION_GOOGLE_IMA || BuildConfig.EXTENSION_GOOGLE_DAI) {
+        if (BuildConfig.EXTENSION_ADS) {
           adsApi.initialize(player, imaIntegration, daiIntegration);
         }
 
@@ -335,6 +336,15 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
     }
 
     reactContext.removeLifecycleEventListener(this);
+  }
+
+  public void setSource(@Nullable final ReadableMap source) {
+    try {
+      setSource(new SourceHelper().parseSourceFromJS(source));
+    } catch (THEOplayerException exception) {
+      Log.e(TAG, exception.getMessage());
+      eventEmitter.emitError(exception);
+    }
   }
 
   public void setABRConfig(@Nullable ReadableMap abrConfigProps) {

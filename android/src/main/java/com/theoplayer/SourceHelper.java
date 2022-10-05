@@ -9,6 +9,8 @@ import androidx.annotation.Nullable;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.google.gson.Gson;
+import com.theoplayer.android.api.error.ErrorCode;
+import com.theoplayer.android.api.error.THEOplayerException;
 import com.theoplayer.android.api.event.ads.AdIntegrationKind;
 import com.theoplayer.android.api.player.track.texttrack.TextTrackKind;
 import com.theoplayer.android.api.source.GoogleDaiTypedSource;
@@ -70,9 +72,16 @@ public class SourceHelper {
   public static final String PROP_ADS = "ads";
   public static final String PROP_AVAILABILITY_TYPE = "availabilityType";
 
+  private static final String ERROR_DAI_NOT_ENABLED = "Google DAI support not enabled.";
+  private static final String ERROR_UNSUPPORTED_SSAI_INTEGRATION = "Unsupported SSAI integration";
+  private static final String ERROR_MISSING_SSAI_INTEGRATION = "Missing SSAI integration";
+  private static final String ERROR_IMA_NOT_ENABLED = "Google IMA support not enabled.";
+  private static final String ERROR_UNSUPPORTED_CSAI_INTEGRATION = "Unsupported CSAI integration";
+  private static final String ERROR_MISSING_CSAI_INTEGRATION = "Missing CSAI integration";
+
   private final Gson gson = new Gson();
 
-  public SourceDescription parseSourceFromJS(ReadableMap source) {
+  public SourceDescription parseSourceFromJS(ReadableMap source) throws THEOplayerException {
       HashMap<String, Object> hashmap = eliminateReadables(source);
       try {
         String json = gson.toJson(hashmap);
@@ -108,10 +117,7 @@ public class SourceHelper {
             JSONObject jsonAdDescription = (JSONObject) jsonAds.get(i);
 
             // Currently only ima-ads are supported.
-            AdDescription ad = parseAdFromJS(jsonAdDescription);
-            if (ad != null) {
-              ads.add(ad);
-            }
+            ads.add(parseAdFromJS(jsonAdDescription));
           }
         }
 
@@ -138,7 +144,7 @@ public class SourceHelper {
   }
 
   @Nullable
-  private TypedSource parseTypedSource(@NonNull final JSONObject jsonTypedSource) {
+  private TypedSource parseTypedSource(@NonNull final JSONObject jsonTypedSource) throws THEOplayerException {
     try {
       TypedSource.Builder tsBuilder = TypedSource.Builder.typedSource();
       SourceType sourceType = parseSourceType(jsonTypedSource);
@@ -147,10 +153,17 @@ public class SourceHelper {
         final JSONObject ssaiJson = jsonTypedSource.getJSONObject(PROP_SSAI);
 
         // Check for valid SsaiIntegration
-        SsaiIntegration ssaiIntegration = SsaiIntegration.from(ssaiJson.optString(PROP_INTEGRATION));
-        if (ssaiIntegration != null) {
+        final String ssaiIntegrationStr = ssaiJson.optString(PROP_INTEGRATION);
+        if (!TextUtils.isEmpty(ssaiIntegrationStr)) {
+          SsaiIntegration ssaiIntegration = SsaiIntegration.from(ssaiIntegrationStr);
+          if (ssaiIntegration == null) {
+            throw new THEOplayerException(ErrorCode.AD_ERROR, ERROR_UNSUPPORTED_SSAI_INTEGRATION + ": " + ssaiIntegrationStr);
+          }
           switch (ssaiIntegration) {
             case GOOGLE_DAI:
+              if (!BuildConfig.EXTENSION_GOOGLE_DAI) {
+                throw new THEOplayerException(ErrorCode.AD_ERROR, ERROR_DAI_NOT_ENABLED);
+              }
               if (ssaiJson.optString(PROP_AVAILABILITY_TYPE).equals("vod")) {
                 tsBuilder = new GoogleDaiTypedSource.Builder(gson.fromJson(ssaiJson.toString(), GoogleDaiVodConfiguration.class));
               } else {
@@ -165,10 +178,10 @@ public class SourceHelper {
               tsBuilder.ssai(gson.fromJson(ssaiJson.toString(), YoSpaceDescription.class));
               break;
             default:
-              Log.e(TAG, "SSAI integration not supported: " + ssaiIntegration);
+              throw new THEOplayerException(ErrorCode.AD_ERROR, ERROR_UNSUPPORTED_SSAI_INTEGRATION + ": " + ssaiIntegrationStr);
           }
         } else {
-          Log.e(TAG, "Missing SSAI integration");
+          throw new THEOplayerException(ErrorCode.AD_ERROR, ERROR_MISSING_SSAI_INTEGRATION);
         }
       }
       tsBuilder.src(jsonTypedSource.optString(PROP_SRC));
@@ -277,7 +290,7 @@ public class SourceHelper {
   }
 
   @Nullable
-  public AdDescription parseAdFromJS(ReadableMap map) {
+  public AdDescription parseAdFromJS(ReadableMap map) throws THEOplayerException {
     HashMap<String, Object> hashmap = eliminateReadables(map);
     try {
       JSONObject jsonAdDescription = new JSONObject(gson.toJson(hashmap));
@@ -288,37 +301,45 @@ public class SourceHelper {
     }
   }
 
-  @Nullable
-  public static AdDescription parseAdFromJS(JSONObject jsonAdDescription) throws JSONException {
-    AdIntegrationKind integrationKind = AdIntegrationKind.from(jsonAdDescription.optString(PROP_INTEGRATION));
-    switch (integrationKind) {
-      // Currently only IMA is supported.
-      case GOOGLE_IMA: return parseImaAdFromJS(jsonAdDescription);
-      case DEFAULT:
-      case THEO:
-      case FREEWHEEL:
-      case SPOTX:
-      default: {
-        Log.e(TAG, "Ad integration not supported: " + integrationKind);
-        return null;
+  @NonNull
+  public static AdDescription parseAdFromJS(JSONObject jsonAdDescription) throws JSONException, THEOplayerException {
+    final String integrationKindStr = jsonAdDescription.optString(PROP_INTEGRATION);
+    if (!TextUtils.isEmpty(integrationKindStr)) {
+      AdIntegrationKind integrationKind = AdIntegrationKind.from(integrationKindStr);
+      switch (integrationKind) {
+        // Currently only IMA is supported.
+        case GOOGLE_IMA:
+          return parseImaAdFromJS(jsonAdDescription);
+        case DEFAULT:
+        case THEO:
+        case FREEWHEEL:
+        case SPOTX:
+        default: {
+          throw new THEOplayerException(ErrorCode.AD_ERROR, ERROR_UNSUPPORTED_CSAI_INTEGRATION + ": " + integrationKindStr);
+        }
       }
+    } else {
+      throw new THEOplayerException(ErrorCode.AD_ERROR, ERROR_MISSING_CSAI_INTEGRATION + ": " + integrationKindStr);
     }
   }
 
   @NonNull
-  private static GoogleImaAdDescription parseImaAdFromJS(JSONObject jsonAdDescription) {
-      String source;
-      // Property `sources` is of type string | AdSource.
-      JSONObject sourceObj = jsonAdDescription.optJSONObject(PROP_SOURCES);
-      if (sourceObj != null) {
-        source = sourceObj.optString(PROP_SRC);
-      } else {
-        source = jsonAdDescription.optString(PROP_SOURCES);
-      }
-      return GoogleImaAdDescription.Builder.googleImaAdDescription()
-        .source(source)
-        .timeOffset(jsonAdDescription.optString(PROP_TIME_OFFSET))
-        .build();
+  private static GoogleImaAdDescription parseImaAdFromJS(JSONObject jsonAdDescription) throws THEOplayerException {
+    if (!BuildConfig.EXTENSION_GOOGLE_IMA) {
+      throw new THEOplayerException(ErrorCode.AD_ERROR, ERROR_IMA_NOT_ENABLED);
+    }
+    String source;
+    // Property `sources` is of type string | AdSource.
+    JSONObject sourceObj = jsonAdDescription.optJSONObject(PROP_SOURCES);
+    if (sourceObj != null) {
+      source = sourceObj.optString(PROP_SRC);
+    } else {
+      source = jsonAdDescription.optString(PROP_SOURCES);
+    }
+    return GoogleImaAdDescription.Builder.googleImaAdDescription()
+      .source(source)
+      .timeOffset(jsonAdDescription.optString(PROP_TIME_OFFSET))
+      .build();
   }
 
   private static TextTrackDescription parseTextTrackFromJS(JSONObject jsonTextTrack) throws JSONException {

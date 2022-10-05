@@ -58,7 +58,7 @@ public class ReactTHEOplayerViewManager extends ViewGroupManager<ReactTHEOplayer
 
   @ReactProp(name = PROP_SRC)
   public void setSource(final ReactTHEOplayerView videoView, @Nullable ReadableMap src) {
-    videoView.setSource(new SourceHelper().parseSourceFromJS(src));
+    videoView.setSource(src);
   }
 
   @ReactProp(name = PROP_SEEK)
