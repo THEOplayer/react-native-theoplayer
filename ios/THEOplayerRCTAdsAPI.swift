@@ -16,12 +16,15 @@ let ERROR_CODE_ADS_GET_CURRENT_ADBREAK_FAILED = "ads_get_current_adbreak_failure
 let ERROR_CODE_ADS_GET_CURRENT_ADBREAK_UNDEFINED = "ads_get_current_adbreak_undefined"
 let ERROR_CODE_ADS_GET_CURRENT_ADS_FAILED = "ads_get_current_ads_failure"
 let ERROR_CODE_ADS_GET_CURRENT_ADS_UNDEFINED = "ads_get_current_ads_undefined"
+let ERROR_CODE_ADS_GET_SCHEDULED_ADBREAKS_FAILED = "ads_get_scheduled_adbreaks_failure"
+let ERROR_CODE_ADS_GET_SCHEDULED_ADBREAKS_UNDEFINED = "ads_get_scheduled_adbreaks_undefined"
 
 let ERROR_MESSAGE_ADS_ACCESS_FAILURE = "Could not access THEOplayer Ads Module"
 let ERROR_MESSAGE_DAI_ACCESS_FAILURE = "Could not access THEOplayer Ads DAI Module"
 let ERROR_MESSAGE_ADS_GET_CURRENT_ADBREAK_UNDEFINED = "Undefined adBreak object"
 let ERROR_MESSAGE_ADS_GET_CURRENT_ADS_UNDEFINED = "Undefined ads array"
 let ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE = "This functionality is not supported by the provided iOS SDK"
+let ERROR_MESSAGE_ADS_GET_SCHEDULED_ADBREAKS_UNDEFINED = "Undefined adbreaks array"
 
 @objc(THEOplayerRCTAdsAPI)
 class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
@@ -121,9 +124,29 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
     
     @objc(scheduledAdBreaks:resolver:rejecter:)
     func scheduledAdBreaks(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
-        if DEBUG_ADS_API { print("[NATIVE] scheduledAdBreaks is not yet implemented in iOS SDK") }
-        resolve([])
-        // TODO: handle request for scheduled adbreaks. Currently not available in native iOS SDK
+        DispatchQueue.main.async {
+            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
+            if let ads = theView.ads() {
+                ads.requestScheduledAdBreaks { adBreaksArray, error in
+                    if let err = error {
+                        reject(ERROR_CODE_ADS_GET_SCHEDULED_ADBREAKS_FAILED, err.localizedDescription, error)
+                        if DEBUG_ADS_API { print("[NATIVE] Retrieving scheduled adbreaks failed: \(err.localizedDescription)") }
+                    } else if let currentAdBreaksArray = adBreaksArray {
+                        var currentAdBreaks: [[String:Any]] = []
+                        for adbreak in currentAdBreaksArray {
+                            currentAdBreaks.append(THEOplayerRCTAdAggregator.aggregateAdBreak(adBreak: adbreak))
+                        }
+                        resolve(currentAdBreaks)
+                    } else {
+                        reject(ERROR_CODE_ADS_GET_SCHEDULED_ADBREAKS_UNDEFINED, ERROR_MESSAGE_ADS_GET_SCHEDULED_ADBREAKS_UNDEFINED, nil)
+                        if DEBUG_ADS_API { print("[NATIVE] Retrieving current adbreaks failed: could not load adbreaks.") }
+                    }
+                }
+            } else {
+                reject(ERROR_CODE_ADS_ACCESS_FAILURE, ERROR_MESSAGE_ADS_ACCESS_FAILURE, nil)
+                if DEBUG_ADS_API { print("[NATIVE] Could not retrieve current ad (ads module unavailable).") }
+            }
+        }
     }
     
     @objc(schedule:ad:)

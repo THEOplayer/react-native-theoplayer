@@ -43,7 +43,7 @@ let DRM_INTEGRATION_ID_VERIMATRIX = "verimatrix"
 class THEOplayerRCTSourceDescriptionBuilder {
     
     /**
-        Builds a THEOplayer SourceDescription that can be passed as a source for the THEOplayer.
+     Builds a THEOplayer SourceDescription that can be passed as a source for the THEOplayer.
      - returns: a THEOplayer TypedSource. In case of SSAI we  support GoogleDAITypedSource with GoogleDAIVodConfiguration or GoogleDAILiveConfiguration
      */
     static func buildSourceDescription(_ sourceData: NSDictionary) -> SourceDescription? {
@@ -141,7 +141,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
     // MARK: Private build methods
     
     /**
-        Creates a THEOplayer TypedSource. This requires a source property for non SSAI strreams (either as a string or as an object contiaining a src property). For SSAI streams the TypeSource can be created from the ssai property.
+     Creates a THEOplayer TypedSource. This requires a source property for non SSAI strreams (either as a string or as an object contiaining a src property). For SSAI streams the TypeSource can be created from the ssai property.
      - returns: a THEOplayer TypedSource. In case of SSAI we  support GoogleDAITypedSource with GoogleDAIVodConfiguration or GoogleDAILiveConfiguration
      */
     private static func buildTypedSource(_ typedSourceData: [String:Any]) -> TypedSource? {
@@ -211,7 +211,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
     }
     
     /**
-        Creates a THEOplayer TextTrackDescription. This requires a textTracks property in the RN source description.
+     Creates a THEOplayer TextTrackDescription. This requires a textTracks property in the RN source description.
      - returns: a THEOplayer TextTrackDescription
      */
     private static func buildTextTrackDescriptions(_ textTracksData: [String:Any]) -> TextTrackDescription? {
@@ -235,7 +235,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
     
 #if ADS && GOOGLE_IMA
     /**
-        Creates a THEOplayer GoogleImaAdDescription. This requires an ads property in the RN source description.
+     Creates a THEOplayer GoogleImaAdDescription. This requires an ads property in the RN source description.
      - returns: a THEOplayer GoogleImaAdDescription
      */
     static func buildAdDescription(_ adsData: [String:Any]) -> AdDescription? {
@@ -258,9 +258,10 @@ class THEOplayerRCTSourceDescriptionBuilder {
         if DEBUG_PROP_UPDATES  { print("[NATIVE] We currently require and only support the 'google-ima' integration in the 'ads' description.") }
         return nil
     }
-
+#endif
+    
     /**
-        Creates a THEOplayer DRMConfiguration. This requires a contentProtection property in the RN source description.
+     Creates a THEOplayer DRMConfiguration. This requires a contentProtection property in the RN source description.
      - returns: a THEOplayer DRMConfiguration
      */
     private static func buildContentProtection(_ contentProtectionData: [String:Any]) -> MultiplatformDRMConfiguration? {
