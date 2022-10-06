@@ -12,7 +12,7 @@ let REMOVE_CUE: Int = 1
 class THEOplayerRCTViewEventHandler {
     // MARK: Members
     private weak var player: THEOplayer?
-    private var currentPresentationMode = PresentationMode.inline // TheoPlayer's initial presentationMode
+    private var currentPresentationMode = THEOplayerSDK.PresentationMode.inline // TheoPlayer's initial presentationMode
         
     // MARK: Events
     var onNativePlay: RCTDirectEventBlock?
