@@ -70,14 +70,13 @@ class THEOplayerRCTView: UIView {
     // MARK: - Property bridging
     @objc(setSrc:)
     func setSrc(srcDict: NSDictionary) {
-        do {
-            // store sourceDescription
-            let data = try JSONSerialization.data(withJSONObject: srcDict)
-            let sourceDescription = try JSONDecoder().decode(SourceDescription.self, from: data)
-            self.src = sourceDescription
+        // build THEOplayer SourceDescription
+        if let src = THEOplayerRCTSourceDescriptionBuilder.buildSourceDescription(srcDict) {
+            self.src = src
             if DEBUG_PROP_UPDATES  { print("[NATIVE] src prop updated.") }
-        } catch {
-            print(error)
+        } else {
+            if DEBUG_PROP_UPDATES  { print("[NATIVE] failed to update THEOplayer source.") }
+            return
         }
         
         if (self.player == nil) {
