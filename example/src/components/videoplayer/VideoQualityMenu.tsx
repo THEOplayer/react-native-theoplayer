@@ -71,9 +71,9 @@ export function VideoQualityMenu(props: VideoQualityMenuProps) {
       icon={SettingsIcon}
       data={[...availableVideoQualities, undefined].map((q) => new MenuItem(getQualityLabel(q as VideoQuality))).sort()}
       onItemSelected={selectTargetVideoQuality}
-      minimumItems={2}
+      minimumItems={3}
       selectedItem={
-        targetVideoTrackQuality
+        targetVideoTrackQuality !== undefined
           ? availableVideoQualities.findIndex((quality) => quality.uid === targetVideoTrackQuality)
           : availableVideoQualities.length
       }
