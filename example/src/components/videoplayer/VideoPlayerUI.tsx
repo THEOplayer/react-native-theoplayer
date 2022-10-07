@@ -1,30 +1,21 @@
 import React, { PureComponent } from 'react';
-import { filterRenderableTracks, filterThumbnailTracks, findMediaTrackByUid, MediaTrack, TextTrack, VideoQuality } from 'react-native-theoplayer';
+import { filterThumbnailTracks } from 'react-native-theoplayer';
 
 import { Platform, Text, View } from 'react-native';
 import { SeekBar } from '../seekbar/SeekBar';
 import styles from './VideoPlayerUI.style';
 import { DelayedActivityIndicator } from '../delayedactivityindicator/DelayedActivityIndicator';
-import {
-  FullScreenIcon,
-  FullScreenExitIcon,
-  SubtitlesIcon,
-  AudioIcon,
-  SettingsIcon,
-  PlayButton,
-  MutedIcon,
-  UnMutedIcon,
-  ListIcon,
-} from '../../res/images';
-import { MenuButton } from '../menubutton/MenuButton';
-import { MenuItem } from '../modalmenu/MenuItem';
-import { getISO639LanguageByCode } from '../../utils/language/Language';
+import { FullScreenIcon, FullScreenExitIcon, PlayButton, MutedIcon, UnMutedIcon } from '../../res/images';
 import { ActionButton } from '../actionbutton/ActionButton';
 import { TimeLabel } from '../timelabel/TimeLabel';
 import type { VideoPlayerUIProps } from './VideoPlayerUIProps';
 import { THUMBNAIL_MODE, THUMBNAIL_SIZE } from './VideoPlayerUIProps';
 import { ThumbnailView } from '../thumbnail/ThumbnailView';
 import type { SeekBarPosition } from '../seekbar/SeekBarPosition';
+import { VideoQualityMenu } from './VideoQualityMenu';
+import { AudioTrackMenu } from './AudioTrackMenu';
+import { TextTrackMenu } from './TextTrackMenu';
+import { SourceMenu } from './SourceMenu';
 
 export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
   constructor(props: VideoPlayerUIProps) {
@@ -57,90 +48,6 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
     if (onSetMuted) {
       onSetMuted(!muted);
     }
-  };
-
-  private selectTextTrack = (index: number) => {
-    const { textTracks, onSelectTextTrack } = this.props;
-    if (onSelectTextTrack) {
-      const uid = textTracks && index >= 0 && index < textTracks.length ? textTracks[index].uid : undefined;
-      onSelectTextTrack(uid);
-    }
-  };
-
-  private selectAudioTrack = (index: number) => {
-    const { audioTracks, onSelectAudioTrack } = this.props;
-    if (onSelectAudioTrack) {
-      if (audioTracks && index >= 0 && index < audioTracks.length) {
-        onSelectAudioTrack(audioTracks[index].uid);
-      }
-    }
-  };
-
-  private selectTargetVideoQuality = (index: number | undefined) => {
-    const { videoTracks, selectedVideoTrack, onSelectTargetVideoQuality } = this.props;
-    if (onSelectTargetVideoQuality) {
-      if (!videoTracks || !selectedVideoTrack) {
-        return;
-      }
-      const videoTrack = videoTracks.find((track) => track.uid === selectedVideoTrack);
-      const qualities = videoTrack?.qualities;
-      if (!qualities) {
-        return;
-      }
-      if (index && index >= 0 && index < qualities.length) {
-        onSelectTargetVideoQuality(qualities[index].uid);
-      } else {
-        // deselect target quality
-        onSelectTargetVideoQuality(undefined);
-      }
-    }
-  };
-
-  private selectSource = (index: number) => {
-    const { onSelectSource } = this.props;
-    if (onSelectSource) {
-      onSelectSource(index);
-    }
-  };
-
-  private getTrackLabel = (track: MediaTrack | TextTrack): string => {
-    if (track.label) {
-      return track.label;
-    }
-    const languageCode: string = track.language;
-    if (languageCode) {
-      const iso639Language = getISO639LanguageByCode(languageCode);
-      if (iso639Language) {
-        return iso639Language.local;
-      }
-    }
-    return languageCode || '';
-  };
-
-  private getQualityLabel = (quality: VideoQuality | undefined): string => {
-    if (!quality) {
-      return 'auto';
-    }
-    if (quality.label && quality.label !== '') {
-      return quality.label;
-    }
-    let label = '';
-    if (quality.height) {
-      label = quality.height + 'p';
-    }
-    if (!quality.bandwidth) {
-      return label;
-    }
-    let bandwidth = '';
-    if (quality.bandwidth > 1e7) {
-      bandwidth = (quality.bandwidth / 1e6).toFixed(0) + 'Mbps';
-    } else if (quality.bandwidth > 1e6) {
-      bandwidth = (quality.bandwidth / 1e6).toFixed(1) + 'Mbps';
-    } else {
-      bandwidth = (quality.bandwidth / 1e3).toFixed(0) + 'kbps';
-    }
-    const isHD = quality.height ? quality.height >= 720 : false;
-    return `${label} - ${bandwidth} ${isHD ? '(HD)' : ''}`;
   };
 
   private renderThumbnailCarousel = (seekBarPosition: SeekBarPosition) => {
@@ -210,10 +117,11 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
       targetVideoTrackQuality,
       audioTracks,
       selectedAudioTrack,
+      onSelectSource,
+      onSelectTargetVideoQuality,
+      onSelectAudioTrack,
+      onSelectTextTrack,
     } = this.props;
-
-    const selectableTextTracks = filterRenderableTracks(textTracks);
-    const availableVideoQualities = findMediaTrackByUid(videoTracks, selectedVideoTrack)?.qualities || [];
 
     return (
       <View style={[styles.container, style]}>
@@ -266,60 +174,21 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
             <View style={{ flexGrow: 1 }} />
 
             {/*TextTrack menu */}
-            {selectableTextTracks && selectableTextTracks.length > 0 && (
-              <MenuButton
-                title={'Subtitles'}
-                icon={SubtitlesIcon}
-                data={[...selectableTextTracks, null].map((textTrack) =>
-                  textTrack ? new MenuItem(this.getTrackLabel(textTrack)) : new MenuItem('None'),
-                )}
-                onItemSelected={this.selectTextTrack}
-                selectedItem={selectedTextTrack ? textTracks.findIndex((textTrack) => textTrack.uid === selectedTextTrack) : textTracks.length}
-                keyExtractor={(index: number) => `sub${index}`}
-              />
-            )}
+            <TextTrackMenu textTracks={textTracks} selectedTextTrack={selectedTextTrack} onSelectTextTrack={onSelectTextTrack} />
 
             {/*AudioTrack menu */}
-            {audioTracks && audioTracks.length > 0 && (
-              <MenuButton
-                title={'Language'}
-                icon={AudioIcon}
-                data={audioTracks.map((audioTrack) => new MenuItem(this.getTrackLabel(audioTrack)))}
-                onItemSelected={this.selectAudioTrack}
-                minimumItems={2}
-                selectedItem={audioTracks.findIndex((audioTrack) => audioTrack.uid === selectedAudioTrack)}
-                keyExtractor={(index: number) => `lng${index}`}
-              />
-            )}
+            <AudioTrackMenu audioTracks={audioTracks} selectedAudioTrack={selectedAudioTrack} onSelectAudioTrack={onSelectAudioTrack} />
 
             {/*Video quality menu */}
-            {availableVideoQualities && availableVideoQualities.length > 0 && (
-              <MenuButton
-                title={'Quality'}
-                icon={SettingsIcon}
-                data={[...availableVideoQualities, undefined].map((q) => new MenuItem(this.getQualityLabel(q as VideoQuality))).sort()}
-                onItemSelected={this.selectTargetVideoQuality}
-                minimumItems={2}
-                selectedItem={
-                  targetVideoTrackQuality
-                    ? availableVideoQualities.findIndex((quality) => quality.uid === targetVideoTrackQuality)
-                    : availableVideoQualities.length
-                }
-                keyExtractor={(index: number) => `vq${index}`}
-              />
-            )}
+            <VideoQualityMenu
+              videoTracks={videoTracks}
+              selectedVideoTrack={selectedVideoTrack}
+              targetVideoTrackQuality={targetVideoTrackQuality}
+              onSelectTargetVideoQuality={onSelectTargetVideoQuality}
+            />
 
             {/*Source menu */}
-            {sources && sources.length > 0 && (
-              <MenuButton
-                title={'Source'}
-                icon={ListIcon}
-                data={sources.map((source) => new MenuItem(source.name))}
-                onItemSelected={this.selectSource}
-                selectedItem={srcIndex}
-                keyExtractor={(index: number) => `src${index}`}
-              />
-            )}
+            <SourceMenu sources={sources} selectedSourceIndex={srcIndex} onSelectSource={onSelectSource} />
 
             {/*Fullscreen*/}
             {!Platform.isTV && (
