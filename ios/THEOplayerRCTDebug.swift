@@ -14,3 +14,6 @@ let DEBUG_THEOPLAYER_INTERACTION = DEBUG && true
 
 // Debug flag to monitor all updates made  on bridged properties
 let DEBUG_PROP_UPDATES = DEBUG && true
+
+// Debug flag to monitor correct SourceDescription buildup
+let DEBUG_SOURCE_DESCRIPTION_BUIDER = DEBUG && true
