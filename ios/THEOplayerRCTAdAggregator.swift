@@ -51,7 +51,7 @@ class THEOplayerRCTAdAggregator {
             adData[PROP_AD_RESOURCE_URI] = resourceURI
         }
         if let skipOffset = ad.skipOffset {
-            adData[PROP_AD_SKIP_OFFSET] = skipOffset
+            adData[PROP_AD_SKIP_OFFSET] = (skipOffset == -1) ? skipOffset : skipOffset * 1000 // sec -> msec
         }
         if processAdBreak,
            let adBreak = ad.adBreak {
@@ -63,7 +63,7 @@ class THEOplayerRCTAdAggregator {
         // Add additional properties for Linear Ads
         if let linearAd = ad as? LinearAd {
             if let adDuration = linearAd.duration {
-                adData[PROP_AD_DURATION] = adDuration
+                adData[PROP_AD_DURATION] = adDuration * 1000 // sec -> msec
             }
         }
         
@@ -114,9 +114,9 @@ class THEOplayerRCTAdAggregator {
     
     class func aggregateAdBreak(adBreak: AdBreak) -> [String:Any] {
         var adBreakData: [String:Any] = [:]
-        adBreakData[PROP_ADBREAK_MAX_DURATION] = adBreak.maxDuration
-        adBreakData[PROP_ADBREAK_TIME_OFFSET] = adBreak.timeOffset
-        adBreakData[PROP_ADBREAK_MAX_REMAINING_DURATION] = adBreak.maxRemainingDuration
+        adBreakData[PROP_ADBREAK_MAX_DURATION] = adBreak.maxDuration * 1000 // sec -> msec
+        adBreakData[PROP_ADBREAK_TIME_OFFSET] = adBreak.timeOffset * 1000 // sec -> msec
+        adBreakData[PROP_ADBREAK_MAX_REMAINING_DURATION] = adBreak.maxRemainingDuration * 1000.0 // sec -> msec
         // process adds when adbreak contains them
         if !adBreak.ads.isEmpty {
             var adList: [[String:Any]] = []
