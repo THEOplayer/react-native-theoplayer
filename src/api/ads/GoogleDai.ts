@@ -20,6 +20,13 @@ export interface GoogleDAI {
 
   /**
    * Whether snapback is enabled. When enabled and the user seeks over multiple ad breaks, the last ad break that was seeked past will be played.
+   *
+   * @defaultValue `true`
    */
-  snapback: Promise<boolean>;
+  readonly snapback: Promise<boolean>;
+
+  /**
+   * Set snapback value. When enabled and the user seeks over multiple ad breaks, the last ad break that was seeked past will be played.
+   */
+  setSnapback(enabled: boolean): void;
 }

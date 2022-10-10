@@ -1,13 +1,15 @@
-import type { GoogleDAI } from "react-native-theoplayer";
-import type { GoogleDAI as NativeGoogleDAI } from "theoplayer";
+import type { GoogleDAI } from 'react-native-theoplayer';
+import type { GoogleDAI as NativeGoogleDAI } from 'theoplayer';
 
 export class THEOplayerWebGoogleDAI implements GoogleDAI {
-
-  public constructor(private readonly _googleDAI: NativeGoogleDAI) {
-  }
+  public constructor(private readonly _googleDAI: NativeGoogleDAI) {}
 
   get snapback(): Promise<boolean> {
     return Promise.resolve(this._googleDAI.snapback);
+  }
+
+  setSnapback(enabled: boolean): void {
+    this._googleDAI.snapback = enabled;
   }
 
   contentTimeForStreamTime(time: number): Promise<number> {

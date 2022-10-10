@@ -99,7 +99,17 @@ public class AdsModule extends ReactContextBaseJavaModule {
       if (daiIntegration == null) {
         promise.resolve(false);
       } else {
-        promise.resolve(true);
+        promise.resolve(daiIntegration.getEnableSnapback());
+      }
+    });
+  }
+
+  @ReactMethod
+  public void daiSetSnapback(Integer tag, Boolean enabled) {
+    viewResolver.resolveViewByTag(tag, view -> {
+      GoogleDaiIntegration daiIntegration = view != null ? view.getDaiIntegration() : null;
+      if (daiIntegration != null) {
+        daiIntegration.setEnableSnapback(enabled);
       }
     });
   }
