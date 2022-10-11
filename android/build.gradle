@@ -98,15 +98,14 @@ dependencies {
   if (useMaven) {
     println('Using THEOplayer Maven dependencies.')
     implementation "com.theoplayer.theoplayer-sdk-android:unified:${safeExtGet('THEOplayer_sdk', '+')}"
+    implementation files("libs/ads-wrapper-${adsWrapperVersion}.aar")
 
     if (enabledGoogleIMA) {
       println('ENABLE THEOplayer IMA extension.')
-      implementation files("libs/ads-wrapper-${adsWrapperVersion}.aar")
       implementation "com.theoplayer.theoplayer-sdk-android:unified-ads:${safeExtGet('THEOplayer_sdk', '+')}"
       implementation "com.theoplayer.theoplayer-sdk-android:unified-ads-ima:${safeExtGet('THEOplayer_sdk', '+')}"
     } else {
       println('DISABLE THEOplayer IMA extension.')
-      compileOnly files("libs/ads-wrapper-${adsWrapperVersion}.aar")
       compileOnly "com.theoplayer.theoplayer-sdk-android:unified-ads:${safeExtGet('THEOplayer_sdk', '+')}"
       compileOnly "com.theoplayer.theoplayer-sdk-android:unified-ads-ima:${safeExtGet('THEOplayer_sdk', '+')}"
     }
@@ -115,13 +114,11 @@ dependencies {
     if (enabledGoogleDAI) {
       println('ENABLE THEOplayer DAI extension.')
       implementation files('libs/theoplayer-android-daistub.aar')
-      implementation files("libs/ads-wrapper-${adsWrapperVersion}.aar")
 //    implementation "com.theoplayer.theoplayer-sdk-android:unified-ads:${safeExtGet('THEOplayer_sdk', '+')}"
 //    implementation "com.theoplayer.theoplayer-sdk-android:unified-ads-dai:${safeExtGet('THEOplayer_sdk', '+')}"
     } else {
       println('DISABLE THEOplayer DAI extension.')
       compileOnly files('libs/theoplayer-android-daistub.aar')
-      compileOnly files("libs/ads-wrapper-${adsWrapperVersion}.aar")
 //    compileOnly "com.theoplayer.theoplayer-sdk-android:unified-ads:${safeExtGet('THEOplayer_sdk', '+')}"
 //    compileOnly "com.theoplayer.theoplayer-sdk-android:unified-ads-dai:${safeExtGet('THEOplayer_sdk', '+')}"
     }
