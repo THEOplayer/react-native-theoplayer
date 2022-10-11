@@ -182,8 +182,7 @@ android {
     }
 
     packagingOptions {
-      exclude 'META-INF/kotlin-stdlib.kotlin_module'
-      exclude 'META-INF/annotation-experimental_release.kotlin_module'
+      exclude 'META-INF/*.kotlin_module'
     }
 }
 

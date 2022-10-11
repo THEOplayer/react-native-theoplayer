@@ -21,14 +21,14 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.google.ads.interactivemedia.v3.api.AdsRenderingSettings;
 import com.google.ads.interactivemedia.v3.api.ImaSdkFactory;
-import com.theoplayer.android.ads.dai.api.GoogleDaiIntegration;
-import com.theoplayer.android.ads.dai.api.GoogleDaiIntegrationFactory;
+import com.theoplayer.android.api.ads.dai.GoogleDaiIntegration;
+import com.theoplayer.android.api.ads.dai.GoogleDaiIntegrationFactory;
 import com.theoplayer.abr.ABRConfigurationAdapter;
 import com.theoplayer.android.api.THEOplayerConfig;
 import com.theoplayer.android.api.THEOplayerView;
 import com.theoplayer.android.api.ads.ima.GoogleImaIntegration;
 import com.theoplayer.android.api.ads.ima.GoogleImaIntegrationFactory;
-import com.theoplayer.android.ads.wrapper.api.AdsApiWrapper;
+import com.theoplayer.android.api.ads.wrapper.AdsApiWrapper;
 import com.theoplayer.android.api.cast.CastIntegration;
 import com.theoplayer.android.api.cast.CastIntegrationFactory;
 import com.theoplayer.android.api.error.THEOplayerException;
@@ -253,15 +253,15 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
       if (player == null) {
         player = playerView.getPlayer();
         ABRConfigurationAdapter.INSTANCE.applyABRConfigurationFromProps(player, abrConfig);
+        if (BuildConfig.EXTENSION_ADS) {
+          adsApi.initialize(player, imaIntegration, daiIntegration);
+        }
         eventEmitter.attachListeners(player);
         player.setMuted(muted);
         player.setVolume(volume);
         player.setPlaybackRate(playbackRate);
-        player.setSource(sourceDescription);
 
-        if (BuildConfig.EXTENSION_ADS) {
-          adsApi.initialize(player, imaIntegration, daiIntegration);
-        }
+        setSource(sourceDescription);
 
         if (!this.paused) {
           player.play();
@@ -354,6 +354,9 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
 
   public void setSource(@Nullable final SourceDescription sourceDescription) {
     this.sourceDescription = sourceDescription;
+    if (adsApi != null) {
+      adsApi.setSource(sourceDescription);
+    }
     if (player != null && sourceDescription != null) {
       player.setSource(sourceDescription);
     }

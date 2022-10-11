@@ -11,7 +11,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.theoplayer.SourceHelper;
-import com.theoplayer.android.ads.dai.api.GoogleDaiIntegration;
+import com.theoplayer.android.api.ads.dai.GoogleDaiIntegration;
 import com.theoplayer.android.api.error.THEOplayerException;
 import com.theoplayer.util.ViewResolver;
 

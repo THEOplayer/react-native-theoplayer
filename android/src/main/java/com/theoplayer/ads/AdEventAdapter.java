@@ -2,8 +2,8 @@ package com.theoplayer.ads;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableMap;
-import com.theoplayer.android.ads.wrapper.api.AdEventListener;
-import com.theoplayer.android.ads.wrapper.api.AdsApiWrapper;
+import com.theoplayer.android.api.ads.wrapper.AdEventListener;
+import com.theoplayer.android.api.ads.wrapper.AdsApiWrapper;
 import com.theoplayer.android.api.ads.Ad;
 import com.theoplayer.android.api.ads.AdBreak;
 import com.theoplayer.android.api.ads.ima.GoogleImaAdEventType;
