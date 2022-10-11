@@ -221,8 +221,6 @@ class THEOplayerRCTSourceDescriptionBuilder {
             let textTrackLabel = textTracksData[SD_PROP_LABEL] as? String
             let textTrackKind = THEOplayerRCTSourceDescriptionBuilder.extractTextTrackKind(textTracksData[SD_PROP_KIND] as? String)
             let textTrackFormat = THEOplayerRCTSourceDescriptionBuilder.extractTextTrackFormat(textTracksData[SD_PROP_FORMAT] as? String)
-            print(textTrackKind._rawValue)
-            print(textTrackFormat._rawValue)
             return TextTrackDescription(src: textTrackSrc,
                                         srclang: textTrackSrcLang,
                                         isDefault: textTrackIsDefault,
@@ -252,10 +250,10 @@ class THEOplayerRCTSourceDescriptionBuilder {
             if let src = srcString {
                 return GoogleImaAdDescription(src: src, timeOffset: timeOffset)
             } else {
-                if DEBUG_PROP_UPDATES  { print("[NATIVE] AdDescription requires 'src' property in 'ads' description.") }
+                if DEBUG_SOURCE_DESCRIPTION_BUIDER  { print("[NATIVE] AdDescription requires 'src' property in 'ads' description.") }
             }
         }
-        if DEBUG_PROP_UPDATES  { print("[NATIVE] We currently require and only support the 'google-ima' integration in the 'ads' description.") }
+        if DEBUG_SOURCE_DESCRIPTION_BUIDER  { print("[NATIVE] We currently require and only support the 'google-ima' integration in the 'ads' description.") }
         return nil
     }
 #endif
