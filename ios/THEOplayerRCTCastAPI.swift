@@ -10,10 +10,13 @@ import Foundation
 import UIKit
 
 let ERROR_CODE_CAST_ACCESS_FAILURE = "cast_access_failure"
+let ERROR_CODE_CHROMECAST_ACCESS_FAILURE = "chromecast_access_failure"
+
 let ERROR_MESSAGE_CASTING_UNSUPPORTED_FEATURE = "Chromecast and Airplay are not supported by the provided iOS SDK"
 let ERROR_MESSAGE_CHROMECAST_UNSUPPORTED_FEATURE = "Chromecast is not supported by the provided iOS SDK"
 let ERROR_MESSAGE_AIRPLAY_UNSUPPORTED_FEATURE = "Airplay is not supported by the provided iOS SDK"
 let ERROR_MESSAGE_CAST_ACCESS_FAILURE = "Could not access THEOplayer Cast Module"
+let ERROR_MESSAGE_CHROMECAST_ACCESS_FAILURE = "Could not access THEOplayer Chromecast API"
 
 @objc(THEOplayerRCTCastAPI)
 class THEOplayerRCTCastAPI: NSObject, RCTBridgeModule {
@@ -62,34 +65,82 @@ class THEOplayerRCTCastAPI: NSObject, RCTBridgeModule {
     
     @objc(chromecastCasting:resolver:rejecter:)
     func chromecastCasting(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
-        print("CastModule - chromecastCasting: todo")
-        resolve(false)
+        DispatchQueue.main.async {
+            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
+            if let cast = theView.cast(),
+               let chromecast = cast.chromecast {
+                resolve(chromecast.casting)
+            } else {
+                reject(ERROR_CODE_CHROMECAST_ACCESS_FAILURE, ERROR_MESSAGE_CHROMECAST_ACCESS_FAILURE, nil)
+                if DEBUG_ADS_API { print("[NATIVE] Could not retrieve current chromecast casting status.") }
+            }
+        }
     }
     
     @objc(chromecastState:resolver:rejecter:)
     func chromecastState(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
-        print("CastModule - chromecastState: todo")
-        resolve("unavailable")
+        DispatchQueue.main.async {
+            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
+            if let cast = theView.cast(),
+               let chromecast = cast.chromecast {
+                resolve(chromecast.state?._rawValue)
+            } else {
+                reject(ERROR_CODE_CHROMECAST_ACCESS_FAILURE, ERROR_MESSAGE_CHROMECAST_ACCESS_FAILURE, nil)
+                if DEBUG_ADS_API { print("[NATIVE] Could not retrieve current chromecast state.") }
+            }
+        }
     }
     
     @objc(chromecastStart:)
     func chromecastStart(_ node: NSNumber) -> Void {
-        print("CastModule - chromecastStart: todo")
+        DispatchQueue.main.async {
+            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
+            if let cast = theView.cast(),
+               let chromecast = cast.chromecast {
+                chromecast.start()
+            } else {
+                if DEBUG_ADS_API { print("[NATIVE] Could not start chromecast session.") }
+            }
+        }
     }
     
     @objc(chromecastStop:)
     func chromecastStop(_ node: NSNumber) -> Void {
-        print("CastModule - chromecastStop: todo")
+        DispatchQueue.main.async {
+            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
+            if let cast = theView.cast(),
+               let chromecast = cast.chromecast {
+                chromecast.stop()
+            } else {
+                if DEBUG_ADS_API { print("[NATIVE] Could not stop chromecast session.") }
+            }
+        }
     }
     
     @objc(chromecastJoin:)
     func chromecastJoin(_ node: NSNumber) -> Void {
-        print("CastModule - chromecastJoin: todo")
+        DispatchQueue.main.async {
+            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
+            if let cast = theView.cast(),
+               let chromecast = cast.chromecast {
+                chromecast.join()
+            } else {
+                if DEBUG_ADS_API { print("[NATIVE] Could not join chromecast session.") }
+            }
+        }
     }
     
     @objc(chromecastLeave:)
     func chromecastLeave(_ node: NSNumber) -> Void {
-        print("CastModule - chromecastLeave: todo")
+        DispatchQueue.main.async {
+            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
+            if let cast = theView.cast(),
+               let chromecast = cast.chromecast {
+                chromecast.leave()
+            } else {
+                if DEBUG_ADS_API { print("[NATIVE] Could not leave chromecast session.") }
+            }
+        }
     }
     
 #else
