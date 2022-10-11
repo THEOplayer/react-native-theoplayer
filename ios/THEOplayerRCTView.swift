@@ -67,6 +67,13 @@ class THEOplayerRCTView: UIView {
         return player.ads
     }
     
+    func cast() -> Cast? {
+        guard let player = self.player else {
+            return nil
+        }
+        return player.cast
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("[NATIVE] init(coder:) has not been implemented")
     }
