@@ -215,8 +215,8 @@ class THEOplayerRCTSourceDescriptionBuilder {
      - returns: a THEOplayer TextTrackDescription
      */
     private static func buildTextTrackDescriptions(_ textTracksData: [String:Any]) -> TextTrackDescription? {
-        if let textTrackSrc = textTracksData[SD_PROP_SRC] as? String,
-           let textTrackSrcLang = textTracksData[SD_PROP_SRC_LANG] as? String {
+        if let textTrackSrc = textTracksData[SD_PROP_SRC] as? String {
+            let textTrackSrcLang = textTracksData[SD_PROP_SRC_LANG] as? String ?? ""
             let textTrackIsDefault = textTracksData[SD_PROP_DEFAULT] as? Bool
             let textTrackLabel = textTracksData[SD_PROP_LABEL] as? String
             let textTrackKind = THEOplayerRCTSourceDescriptionBuilder.extractTextTrackKind(textTracksData[SD_PROP_KIND] as? String)
