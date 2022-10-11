@@ -169,6 +169,19 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
         resolve(true)
     }
     
+    @objc(daiSetSnapback:enabled:)
+    func daiSetSnapback(_ node: NSNumber, enabled: Bool) -> Void {
+        DispatchQueue.main.async {
+            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
+            if let ads = theView.ads() {
+               // todo
+                print("[NATIVE] daiSetSnapback: to be implemented.")
+            } else {
+                if DEBUG_ADS_API { print("[NATIVE] Could not update snapBack") }
+            }
+        }
+    }
+    
     @objc(daiContentTimeForStreamTime:time:resolver:rejecter:)
     func daiContentTimeForStreamTime(_ node: NSNumber, timeValue: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         DispatchQueue.main.async {

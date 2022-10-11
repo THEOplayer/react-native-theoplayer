@@ -80,6 +80,9 @@ RCT_EXTERN_METHOD(daiSnapback:(nonnull NSNumber *)node
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(daiSetSnapback:(nonnull NSNumber *)node
+                  enabled:(BOOL)enabled)
+
 RCT_EXTERN_METHOD(daiContentTimeForStreamTime:(nonnull NSNumber *)node
                   time:(nonnull NSNumber *)timeValue
                   resolver:(RCTPromiseResolveBlock)resolve
