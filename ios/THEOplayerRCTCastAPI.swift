@@ -11,12 +11,14 @@ import UIKit
 
 let ERROR_CODE_CAST_ACCESS_FAILURE = "cast_access_failure"
 let ERROR_CODE_CHROMECAST_ACCESS_FAILURE = "chromecast_access_failure"
+let ERROR_CODE_AIRPLAY_ACCESS_FAILURE = "airplay_access_failure"
 
 let ERROR_MESSAGE_CASTING_UNSUPPORTED_FEATURE = "Chromecast and Airplay are not supported by the provided iOS SDK"
 let ERROR_MESSAGE_CHROMECAST_UNSUPPORTED_FEATURE = "Chromecast is not supported by the provided iOS SDK"
 let ERROR_MESSAGE_AIRPLAY_UNSUPPORTED_FEATURE = "Airplay is not supported by the provided iOS SDK"
 let ERROR_MESSAGE_CAST_ACCESS_FAILURE = "Could not access THEOplayer Cast Module"
 let ERROR_MESSAGE_CHROMECAST_ACCESS_FAILURE = "Could not access THEOplayer Chromecast API"
+let ERROR_MESSAGE_AIRPLAY_ACCESS_FAILURE = "Could not access THEOplayer Airplay API"
 
 @objc(THEOplayerRCTCastAPI)
 class THEOplayerRCTCastAPI: NSObject, RCTBridgeModule {
@@ -187,24 +189,56 @@ class THEOplayerRCTCastAPI: NSObject, RCTBridgeModule {
     
     @objc(airplayCasting:resolver:rejecter:)
     func airplayCasting(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
-        print("CastModule - airplayCasting: todo")
-        resolve(false)
+        DispatchQueue.main.async {
+            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
+            if let cast = theView.cast(),
+               let airplay = cast.airPlay {
+                resolve(airplay.casting)
+            } else {
+                reject(ERROR_CODE_AIRPLAY_ACCESS_FAILURE, ERROR_MESSAGE_AIRPLAY_ACCESS_FAILURE, nil)
+                if DEBUG_ADS_API { print("[NATIVE] Could not retrieve current airplay casting status.") }
+            }
+        }
     }
     
     @objc(airplayState:resolver:rejecter:)
     func airplayState(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
-        print("CastModule - airplayState: todo")
-        resolve("unavailable")
+        DispatchQueue.main.async {
+            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
+            if let cast = theView.cast(),
+               let airplay = cast.airPlay {
+                resolve(airplay.state._rawValue)
+            } else {
+                reject(ERROR_CODE_AIRPLAY_ACCESS_FAILURE, ERROR_MESSAGE_AIRPLAY_ACCESS_FAILURE, nil)
+                if DEBUG_ADS_API { print("[NATIVE] Could not retrieve current airplay state.") }
+            }
+        }
     }
     
     @objc(airplayStart:)
     func airplayStart(_ node: NSNumber) -> Void {
-        print("CastModule - airplayStart: todo")
+        DispatchQueue.main.async {
+            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
+            if let cast = theView.cast(),
+               let airplay = cast.airPlay {
+                airplay.start()
+            } else {
+                if DEBUG_ADS_API { print("[NATIVE] Could not start airplay session.") }
+            }
+        }
     }
     
     @objc(airplayStop:)
     func airplayStop(_ node: NSNumber) -> Void {
-        print("CastModule - airplayStop: todo")
+        DispatchQueue.main.async {
+            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
+            if let cast = theView.cast(),
+               let airplay = cast.airPlay {
+                airplay.stop()
+            } else {
+                if DEBUG_ADS_API { print("[NATIVE] Could not stop airplay session.") }
+            }
+        }
     }
     
 #else
