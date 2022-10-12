@@ -1,6 +1,7 @@
 package com.theoplayer;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,6 +27,7 @@ import com.theoplayer.android.api.source.ssai.YoSpaceDescription;
 import com.theoplayer.android.api.source.ssai.dai.GoogleDaiLiveConfiguration;
 import com.theoplayer.android.api.source.ssai.dai.GoogleDaiVodConfiguration;
 import com.theoplayer.drm.ContentProtectionAdapter;
+import com.theoplayer.android.api.source.metadata.MetadataDescription;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,6 +35,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -45,6 +48,7 @@ public class SourceHelper {
   private static final String PROP_HLS_DATERANGE = "hlsDateRange";
   private static final String PROP_HLS_PLAYBACK_CONFIG = "hls";
   private static final String PROP_TIME_SERVER = "timeServer";
+  private static final String PROP_METADATA = "metadata";
   public static final String PROP_SSAI = "ssai";
   public static final String PROP_TYPE = "type";
   public static final String PROP_SRC = "src";
@@ -65,6 +69,7 @@ public class SourceHelper {
   private static final String ERROR_IMA_NOT_ENABLED = "Google IMA support not enabled.";
   private static final String ERROR_UNSUPPORTED_CSAI_INTEGRATION = "Unsupported CSAI integration";
   private static final String ERROR_MISSING_CSAI_INTEGRATION = "Missing CSAI integration";
+  private static final String TAG = "SourceHelper";
 
   private final Gson gson = new Gson();
 
@@ -96,6 +101,13 @@ public class SourceHelper {
         // poster
         String poster = jsonSourceObject.optString(PROP_POSTER);
 
+        // metadata
+        MetadataDescription metadataDescription = null;
+        JSONObject jsonMetadata = jsonSourceObject.optJSONObject(PROP_METADATA);
+        if (jsonMetadata != null) {
+          metadataDescription = parseMetadataDescription(jsonMetadata);
+        }
+
         // ads
         JSONArray jsonAds = jsonSourceObject.optJSONArray(PROP_ADS);
         ArrayList<AdDescription> ads = new ArrayList<>();
@@ -118,11 +130,14 @@ public class SourceHelper {
           }
         }
 
-        return SourceDescription.Builder.sourceDescription(typedSources.toArray(new TypedSource[]{}))
+        SourceDescription.Builder builder = SourceDescription.Builder.sourceDescription(typedSources.toArray(new TypedSource[]{}))
           .poster(poster)
           .ads(ads.toArray(new AdDescription[]{}))
-          .textTracks(sideLoadedTextTracks.toArray(new TextTrackDescription[]{}))
-          .build();
+          .textTracks(sideLoadedTextTracks.toArray(new TextTrackDescription[]{}));
+        if (metadataDescription != null) {
+          builder.metadata(metadataDescription);
+        }
+        return builder.build();
       } catch (JSONException e) {
         e.printStackTrace();
       }
@@ -317,6 +332,20 @@ public class SourceHelper {
       case "descriptions": return TextTrackKind.DESCRIPTIONS;
     }
     return null;
+  }
+
+  private static MetadataDescription parseMetadataDescription(JSONObject metadataDescription) {
+    HashMap<String, Object> metadata = new HashMap<>();
+    Iterator<String> keys = metadataDescription.keys();
+    while (keys.hasNext()) {
+      String key = keys.next();
+      try {
+        metadata.put(key, metadataDescription.get(key));
+      } catch (JSONException e) {
+        Log.w(TAG, "Failed to parse metadata key " + key);
+      }
+    }
+    return new MetadataDescription(metadata);
   }
 
   /**

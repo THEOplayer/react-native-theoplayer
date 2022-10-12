@@ -22,6 +22,7 @@ def enabledGoogleIMA = safeExtGet("THEOplayer_extensionGoogleIMA", 'false').toBo
 def enabledGoogleDAI = safeExtGet("THEOplayer_extensionGoogleDAI", 'false').toBoolean()
 def enabledAds = enabledGoogleIMA || enabledGoogleDAI
 def enabledCast = safeExtGet("THEOplayer_extensionCast", 'false').toBoolean()
+def enabledMediaSession = safeExtGet("THEOplayer_extensionMediaSession", 'true').toBoolean()
 
 android {
   compileSdkVersion safeExtGet('THEOplayer_compileSdkVersion', 31)
@@ -43,12 +44,14 @@ android {
     // Optionally log events to logcat
     buildConfigField "boolean", "LOG_PLAYER_EVENTS", "${safeExtGet('THEOplayer_logPlayerEvents', 'false')}"
     buildConfigField "boolean", "LOG_VIEW_EVENTS", "${safeExtGet('THEOplayer_logViewEvents', 'false')}"
+    buildConfigField "boolean", "LOG_MEDIASESSION_EVENTS", "${safeExtGet('THEOplayer_logMediaSessionEvents', 'false')}"
 
     // Extension buildConfig fields
     buildConfigField "boolean", "EXTENSION_GOOGLE_IMA", "${enabledGoogleIMA}"
     buildConfigField "boolean", "EXTENSION_GOOGLE_DAI", "${enabledGoogleDAI}"
     buildConfigField "boolean", "EXTENSION_ADS", "${enabledAds}"
     buildConfigField "boolean", "EXTENSION_CAST", "${enabledCast}"
+    buildConfigField "boolean", "EXTENSION_MEDIASESSION", "${enabledMediaSession}"
   }
 
   buildTypes {
@@ -94,7 +97,8 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"  // From node_modules
   implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
-  implementation "com.theoplayer.theoplayer-sdk-android:ads-wrapper:4.3.0"
+  implementation 'com.theoplayer.theoplayer-sdk-android:ads-wrapper:4.3.0'
+  implementation 'com.theoplayer.theoplayer-sdk-android:mediasession:4.2.0-1'
 
   def THEOplayerVersion = safeExtGet('THEOplayer_sdk', '+')
 

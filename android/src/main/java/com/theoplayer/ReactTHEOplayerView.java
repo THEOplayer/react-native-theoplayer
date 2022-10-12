@@ -46,6 +46,7 @@ import com.theoplayer.android.api.player.track.texttrack.cue.TextTrackCue;
 import com.theoplayer.android.api.source.SourceDescription;
 import com.theoplayer.android.api.timerange.TimeRanges;
 import com.theoplayer.track.QualityListFilter;
+import com.theoplayer.mediasession.MediaSessionIntegration;
 import com.theoplayer.track.TrackListInfo;
 import com.theoplayer.util.TypeUtils;
 
@@ -63,6 +64,8 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
   private final ThemedReactContext reactContext;
 
   private THEOplayerView playerView;
+
+  private MediaSessionIntegration mediaSessionIntegration;
 
   private GoogleDaiIntegration daiIntegration;
 
@@ -258,6 +261,11 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
           adsApi.initialize(player, imaIntegration, daiIntegration);
         }
         eventEmitter.attachListeners(player);
+
+        if (BuildConfig.EXTENSION_MEDIASESSION) {
+          mediaSessionIntegration = new MediaSessionIntegration(getContext(), player);
+        }
+
         player.setMuted(muted);
         player.setVolume(volume);
         player.setPlaybackRate(playbackRate);
@@ -292,6 +300,9 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
     }
     if (playerView != null) {
       playerView.onResume();
+      if (mediaSessionIntegration != null) {
+        mediaSessionIntegration.onResume();
+      }
     }
   }
 
@@ -302,6 +313,9 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
     }
     if (playerView != null) {
       playerView.onPause();
+      if (mediaSessionIntegration != null) {
+        mediaSessionIntegration.onPause();
+      }
     }
   }
 
@@ -334,6 +348,10 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
 
     if (playerView != null) {
       playerView.onDestroy();
+    }
+
+    if (mediaSessionIntegration != null) {
+      mediaSessionIntegration.onDestroy();
     }
 
     reactContext.removeLifecycleEventListener(this);
