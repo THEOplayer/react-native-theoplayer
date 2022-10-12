@@ -9,7 +9,7 @@ import { FullScreenIcon, FullScreenExitIcon, PlayButton, MutedIcon, UnMutedIcon 
 import { ActionButton } from '../actionbutton/ActionButton';
 import { TimeLabel } from '../timelabel/TimeLabel';
 import type { VideoPlayerUIProps } from './VideoPlayerUIProps';
-import { THUMBNAIL_MODE, THUMBNAIL_SIZE } from './VideoPlayerUIProps';
+import { THUMBNAIL_MODE, THUMBNAIL_SIZE, ENABLE_QUALITY_MENU } from './VideoPlayerUIProps';
 import { ThumbnailView } from '../thumbnail/ThumbnailView';
 import type { SeekBarPosition } from '../seekbar/SeekBarPosition';
 import { VideoQualityMenu } from './VideoQualityMenu';
@@ -179,13 +179,15 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
             {/*AudioTrack menu */}
             <AudioTrackMenu audioTracks={audioTracks} selectedAudioTrack={selectedAudioTrack} onSelectAudioTrack={onSelectAudioTrack} />
 
-            {/*Video quality menu */}
-            <VideoQualityMenu
-              videoTracks={videoTracks}
-              selectedVideoTrack={selectedVideoTrack}
-              targetVideoTrackQuality={targetVideoTrackQuality}
-              onSelectTargetVideoQuality={onSelectTargetVideoQuality}
-            />
+            {/*Video quality menu. Note: quality selection is not available on iOS */}
+            {ENABLE_QUALITY_MENU && (
+              <VideoQualityMenu
+                videoTracks={videoTracks}
+                selectedVideoTrack={selectedVideoTrack}
+                targetVideoTrackQuality={targetVideoTrackQuality}
+                onSelectTargetVideoQuality={onSelectTargetVideoQuality}
+              />
+            )}
 
             {/*Source menu */}
             <SourceMenu sources={sources} selectedSourceIndex={srcIndex} onSelectSource={onSelectSource} />

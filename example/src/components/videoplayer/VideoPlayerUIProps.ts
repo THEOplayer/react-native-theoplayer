@@ -9,6 +9,9 @@ export const THUMBNAIL_SIZE = 0.19 * Math.max(Dimensions.get('window').width, Di
 // carousel mode
 export const THUMBNAIL_MODE: 'single' | 'carousel' = 'carousel';
 
+// whether to show a video quality selection menu. Hidden by default.
+export const ENABLE_QUALITY_MENU = false;
+
 export interface VideoPlayerUIProps {
   sources: Source[];
   srcIndex: number;
