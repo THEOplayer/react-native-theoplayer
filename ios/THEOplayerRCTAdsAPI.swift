@@ -18,6 +18,8 @@ let ERROR_CODE_ADS_GET_CURRENT_ADS_FAILED = "ads_get_current_ads_failure"
 let ERROR_CODE_ADS_GET_CURRENT_ADS_UNDEFINED = "ads_get_current_ads_undefined"
 let ERROR_CODE_ADS_GET_SCHEDULED_ADBREAKS_FAILED = "ads_get_scheduled_adbreaks_failure"
 let ERROR_CODE_ADS_GET_SCHEDULED_ADBREAKS_UNDEFINED = "ads_get_scheduled_adbreaks_undefined"
+let ERROR_CODE_DAI_GET_SNAPBACK_FAILED = "dai_get_snapback_failed"
+let ERROR_CODE_DAI_GET_SNAPBACK_UNDEFINED = "dai_get_snapback_undefined"
 
 let ERROR_MESSAGE_ADS_ACCESS_FAILURE = "Could not access THEOplayer Ads Module"
 let ERROR_MESSAGE_DAI_ACCESS_FAILURE = "Could not access THEOplayer Ads DAI Module"
@@ -25,6 +27,7 @@ let ERROR_MESSAGE_ADS_GET_CURRENT_ADBREAK_UNDEFINED = "Undefined adBreak object"
 let ERROR_MESSAGE_ADS_GET_CURRENT_ADS_UNDEFINED = "Undefined ads array"
 let ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE = "This functionality is not supported by the provided iOS SDK"
 let ERROR_MESSAGE_ADS_GET_SCHEDULED_ADBREAKS_UNDEFINED = "Undefined adbreaks array"
+let ERROR_MESSAGE_DAI_GET_SNAPBACK_UNDEFINED = "Undefined dai snapback"
 
 @objc(THEOplayerRCTAdsAPI)
 class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
@@ -165,19 +168,37 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
     
     @objc(daiSnapback:resolver:rejecter:)
     func daiSnapback(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
-        // should always be active for DAI streaming
-        resolve(true)
+        DispatchQueue.main.async {
+            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
+            if let ads = theView.ads(),
+               let dai = ads.dai {
+                dai.requestSnapBack { enabled, error in
+                    if let err = error {
+                        reject(ERROR_CODE_DAI_GET_SNAPBACK_FAILED, err.localizedDescription, error)
+                        if DEBUG_ADS_API { print("[NATIVE] Retrieving dai snapback status failed: \(err.localizedDescription)") }
+                    } else if let snapBack = enabled {
+                        resolve(snapBack)
+                    } else {
+                        reject(ERROR_CODE_DAI_GET_SNAPBACK_UNDEFINED, ERROR_MESSAGE_DAI_GET_SNAPBACK_UNDEFINED, nil)
+                        if DEBUG_ADS_API { print("[NATIVE] Retrieving dai snapback status failed.") }
+                    }
+                }
+            } else {
+                reject(ERROR_CODE_DAI_ACCESS_FAILURE, ERROR_MESSAGE_DAI_ACCESS_FAILURE, nil)
+                if DEBUG_ADS_API { print("[NATIVE] Could not retrieve dai snapback status (ads DAI module unavailable).") }
+            }
+        }
     }
     
     @objc(daiSetSnapback:enabled:)
     func daiSetSnapback(_ node: NSNumber, enabled: Bool) -> Void {
         DispatchQueue.main.async {
             let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            if let ads = theView.ads() {
-               // todo
-                print("[NATIVE] daiSetSnapback: to be implemented.")
+            if let ads = theView.ads(),
+               let dai = ads.dai {
+                dai.setSnapBack(enabled, completionHandler: nil)
             } else {
-                if DEBUG_ADS_API { print("[NATIVE] Could not update snapBack") }
+                if DEBUG_ADS_API { print("[NATIVE] Could not update dai snapback status (ads DAI module unavailable).") }
             }
         }
     }
