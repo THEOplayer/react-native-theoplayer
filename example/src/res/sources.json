@@ -11,7 +11,16 @@
           "src": "https://cdn.theoplayer.com/video/dash/bbb_30fps/bbb_with_multiple_tiled_thumbnails.mpd",
           "type": "application/dash+xml"
         }
-      ]
+      ],
+      "metadata": {
+        "title": "Big Buck Bunny",
+        "displaySubtitle": "by THEOplayer",
+        "mediaId": "testId",
+        "mediaUri": "https://theoplayer.com",
+        "displayIconUri": "https://www.theoplayer.com/hubfs/Logos/THEOplayer%20logo%20squa%20MED%20opac.jpg",
+        "album": "react-native-theoplayer test streams",
+        "artist": "THEOplayer"
+      }
     }
   },
   {
