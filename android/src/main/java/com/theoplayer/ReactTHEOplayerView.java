@@ -68,6 +68,8 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
 
   private GoogleImaIntegration imaIntegration;
 
+  private CastIntegration castIntegration;
+
   private final AdsApiWrapper adsApi;
 
   private Player player;
@@ -90,12 +92,17 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
   }
 
   public void initialize(@Nullable ReadableMap configProps) {
-    createViews(PlayerConfigHelper.fromProps(configProps));
+    createViews(new PlayerConfigAdapter().fromProps(configProps));
   }
 
   @Nullable
   public GoogleDaiIntegration getDaiIntegration() {
     return daiIntegration;
+  }
+
+  @Nullable
+  public CastIntegration getCastIntegration() {
+    return castIntegration;
   }
 
   @NonNull
@@ -214,7 +221,7 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
     }
     try {
       if (BuildConfig.EXTENSION_CAST) {
-        CastIntegration castIntegration = CastIntegrationFactory.createCastIntegration(playerView);
+        castIntegration = CastIntegrationFactory.createCastIntegration(playerView);
         playerView.getPlayer().addIntegration(castIntegration);
       }
       // Add other future integrations here.
@@ -284,6 +291,8 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
   public AdsApiWrapper getAdsApi() {
     return adsApi;
   }
+
+
 
   @Override
   public void onHostResume() {
