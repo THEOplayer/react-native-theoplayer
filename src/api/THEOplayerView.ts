@@ -14,7 +14,7 @@ import type { PlayerConfiguration } from './config/PlayerConfiguration';
 import type { ABRConfiguration } from './abr/ABRConfiguration';
 import type { AdEvent } from './event/AdEvent';
 import type { AdsAPI } from './ads/AdsAPI';
-import type { CastAPI } from './casting/CastAPI';
+import type { CastAPI } from './cast/CastAPI';
 
 export interface THEOplayerViewProps {
   /**

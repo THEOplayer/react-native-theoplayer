@@ -1,5 +1,5 @@
-import type { AdsConfiguration } from "../ads/AdsConfiguration";
-import type { CastConfiguration } from "../casting/CastConfiguration";
+import type { AdsConfiguration } from '../ads/AdsConfiguration';
+import type { CastConfiguration } from '../cast/CastConfiguration';
 
 export interface PlayerConfiguration {
   /**

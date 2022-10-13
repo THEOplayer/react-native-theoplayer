@@ -23,7 +23,7 @@ import type {
 import styles from './THEOplayerView.style';
 import type { SourceDescription } from 'react-native-theoplayer';
 import { THEOplayerNativeAdsAPI } from './ads/THEOplayerNativeAdsAPI';
-import { THEOplayerNativeCastAPI } from './casting/THEOplayerNativeCastApi';
+import { THEOplayerNativeCastAPI } from './cast/THEOplayerNativeCastApi';
 import { decodeNanInf } from './utils/TypeUtils';
 
 interface THEOplayerRCTViewProps extends THEOplayerViewProps {

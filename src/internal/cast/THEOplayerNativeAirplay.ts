@@ -1,10 +1,8 @@
-import type {Airplay, CastState, THEOplayerView} from "react-native-theoplayer";
-import {NativeModules} from "react-native";
+import type { Airplay, CastState, THEOplayerView } from 'react-native-theoplayer';
+import { NativeModules } from 'react-native';
 
 export class THEOplayerNativeAirplay implements Airplay {
-
-  public constructor(private readonly _player: THEOplayerView) {
-  }
+  public constructor(private readonly _player: THEOplayerView) {}
 
   casting(): Promise<boolean> {
     return NativeModules.CastModule.airplayCasting(this._player.nativeHandle);

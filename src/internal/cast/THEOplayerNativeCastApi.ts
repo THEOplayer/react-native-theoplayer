@@ -1,14 +1,13 @@
-import {NativeModules} from "react-native";
-import {THEOplayerNativeChromecast} from "./THEOplayerNativeChromecast"
-import {THEOplayerNativeAirplay} from "./THEOplayerNativeAirplay";
-import type {Airplay, CastAPI, Chromecast, THEOplayerView} from "react-native-theoplayer";
+import { NativeModules } from 'react-native';
+import { THEOplayerNativeChromecast } from './THEOplayerNativeChromecast';
+import { THEOplayerNativeAirplay } from './THEOplayerNativeAirplay';
+import type { Airplay, CastAPI, Chromecast, THEOplayerView } from 'react-native-theoplayer';
 
 export class THEOplayerNativeCastAPI implements CastAPI {
-
   private readonly _chromecast: Chromecast;
   private readonly _airplay: Airplay;
 
-  constructor(private _player: THEOplayerView) {
+  constructor(private readonly _player: THEOplayerView) {
     this._chromecast = new THEOplayerNativeChromecast(this._player);
     this._airplay = new THEOplayerNativeAirplay(this._player);
   }
