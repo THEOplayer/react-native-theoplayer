@@ -226,6 +226,7 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
     AdsRenderingSettings renderingSettings = ImaSdkFactory.getInstance().createAdsRenderingSettings();
     if (playerConfig.getAds() != null && !playerConfig.getAds().isShowCountdown()) {
       renderingSettings.setUiElements(Collections.emptySet());
+      renderingSettings.setDisableUi(true);
     }
     return renderingSettings;
   }
