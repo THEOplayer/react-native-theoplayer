@@ -134,6 +134,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
         // 5. construct and return SourceDescription
         return SourceDescription(sources: typedSources,
                                  textTracks: textTrackDescriptions,
+                                 ads: adsDescriptions,
                                  poster: poster,
                                  metadata: nil)     // TODO
     }
