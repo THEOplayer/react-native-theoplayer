@@ -64,6 +64,7 @@ import com.theoplayer.android.api.player.track.mediatrack.quality.VideoQuality;
 import com.theoplayer.android.api.player.track.texttrack.TextTrack;
 import com.theoplayer.track.MediaTrackEventType;
 import com.theoplayer.track.MediaTrackType;
+import com.theoplayer.cast.CastEventAdapter;
 import com.theoplayer.track.TextTrackCueEventType;
 import com.theoplayer.track.TrackEventType;
 import com.theoplayer.track.TrackListInfo;
@@ -103,6 +104,7 @@ public class VideoEventEmitter {
   private static final String EVENT_FULLSCREEN_DID_PRESENT = "onNativeFullscreenPlayerDidPresent";
   private static final String EVENT_FULLSCREEN_WILL_DISMISS = "onNativeFullscreenPlayerWillDismiss";
   private static final String EVENT_FULLSCREEN_DID_DISMISS = "onNativeFullscreenPlayerDidDismiss";
+  private static final String EVENT_CAST_EVENT = "onNativeCastEvent";
 
   private static final String TAG = VideoEventEmitter.class.getName();
 
@@ -132,6 +134,7 @@ public class VideoEventEmitter {
     EVENT_FULLSCREEN_DID_PRESENT,
     EVENT_FULLSCREEN_WILL_DISMISS,
     EVENT_FULLSCREEN_DID_DISMISS,
+    EVENT_CAST_EVENT
   };
 
   @Retention(RetentionPolicy.SOURCE)
@@ -160,7 +163,8 @@ public class VideoEventEmitter {
     EVENT_FULLSCREEN_WILL_PRESENT,
     EVENT_FULLSCREEN_DID_PRESENT,
     EVENT_FULLSCREEN_WILL_DISMISS,
-    EVENT_FULLSCREEN_DID_DISMISS
+    EVENT_FULLSCREEN_DID_DISMISS,
+    EVENT_CAST_EVENT
   })
   public @interface VideoEvents {
   }
@@ -199,6 +203,7 @@ public class VideoEventEmitter {
   private final ReactTHEOplayerView playerView;
 
   private AdEventAdapter adEventAdapter;
+  private CastEventAdapter castEventAdapter;
   private long lastTimeUpdate = 0;
   private double lastCurrentTime = 0.0;
 
@@ -548,6 +553,10 @@ public class VideoEventEmitter {
     if (BuildConfig.EXTENSION_ADS) {
       adEventAdapter = new AdEventAdapter(playerView.getAdsApi(), payload -> receiveEvent(EVENT_AD_EVENT, payload));
     }
+
+    if (BuildConfig.EXTENSION_CAST && playerView.getCastApi() != null) {
+      castEventAdapter = new CastEventAdapter(playerView.getCastApi(), payload -> receiveEvent(EVENT_CAST_EVENT, payload));
+    }
   }
 
   public void removeListeners(@NonNull Player player) {
@@ -569,6 +578,10 @@ public class VideoEventEmitter {
     // Remove video track listeners
     for (Map.Entry<EventType, EventListener> entry : videoTrackListeners.entrySet()) {
       player.getVideoTracks().removeEventListener(entry.getKey(), entry.getValue());
+	}
+
+    if (castEventAdapter != null) {
+      castEventAdapter.destroy();
     }
 
     if (adEventAdapter != null) {

@@ -18,6 +18,7 @@ import type {
   MediaTrackEvent,
   MediaTrackListEvent,
   CastAPI,
+  CastEvent,
 } from 'react-native-theoplayer';
 
 import styles from './THEOplayerView.style';
@@ -52,6 +53,7 @@ interface THEOplayerRCTViewProps extends THEOplayerViewProps {
   onNativeMediaTrackListEvent: (event: NativeSyntheticEvent<MediaTrackListEvent>) => void;
   onNativeMediaTrackEvent: (event: NativeSyntheticEvent<MediaTrackEvent>) => void;
   onNativeAdEvent: (event: NativeSyntheticEvent<AdEvent>) => void;
+  onNativeCastEvent: (event: NativeSyntheticEvent<CastEvent>) => void;
   onNativeFullscreenPlayerWillPresent?: () => void;
   onNativeFullscreenPlayerDidPresent?: () => void;
   onNativeFullscreenPlayerWillDismiss?: () => void;
@@ -290,6 +292,12 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
     }
   };
 
+  private _onCastEvent = (event: NativeSyntheticEvent<CastEvent>) => {
+    if (this.props.onCastEvent) {
+      this.props.onCastEvent(event.nativeEvent);
+    }
+  };
+
   private _onFullscreenPlayerWillPresent = () => {
     if (this.props.onFullscreenPlayerWillPresent) {
       this.props.onFullscreenPlayerWillPresent();
@@ -354,6 +362,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
           onNativeMediaTrackListEvent={this._onMediaTrackListEvent}
           onNativeMediaTrackEvent={this._onMediaTrackEvent}
           onNativeAdEvent={this._onAdEvent}
+          onNativeCastEvent={this._onCastEvent}
           onNativeFullscreenPlayerWillPresent={this._onFullscreenPlayerWillPresent}
           onNativeFullscreenPlayerDidPresent={this._onFullscreenPlayerDidPresent}
           onNativeFullscreenPlayerWillDismiss={this._onFullscreenPlayerWillDismiss}

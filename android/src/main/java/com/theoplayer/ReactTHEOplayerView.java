@@ -29,6 +29,7 @@ import com.theoplayer.android.api.THEOplayerView;
 import com.theoplayer.android.api.ads.ima.GoogleImaIntegration;
 import com.theoplayer.android.api.ads.ima.GoogleImaIntegrationFactory;
 import com.theoplayer.android.api.ads.wrapper.AdsApiWrapper;
+import com.theoplayer.android.api.cast.Cast;
 import com.theoplayer.android.api.cast.CastIntegration;
 import com.theoplayer.android.api.cast.CastIntegrationFactory;
 import com.theoplayer.android.api.error.THEOplayerException;
@@ -103,6 +104,11 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
   @Nullable
   public CastIntegration getCastIntegration() {
     return castIntegration;
+  }
+
+  @Nullable
+  public Cast getCastApi() {
+    return playerView != null ? playerView.getCast() : null;
   }
 
   @NonNull
