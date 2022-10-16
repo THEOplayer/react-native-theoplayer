@@ -15,11 +15,18 @@ There is no React Native UI included in this app, as this is covered in the acco
 
 ### Setting up a new project
 
-First initialize a template for a React Native app. In this demo we use a template that also provides support for tvOS, as it will
-depend on `react-native-tvos`, a fork of the main React Native branch.
+First initialize a new project with a React Native app template:
 
 ```bash
-$ npx react-native init rntheodemo --template=react-native-template-typescript-tv
+$ npx react-native init rntheodemo --template=react-native-template-typescript
+$ cd rntheodemo
+```
+
+Alternatively use a template that also provides support for tvOS, as it will create a dependency to
+`react-native-tvos`, a fork of the main React Native branch:
+
+```bash
+$ npx react-native init rntheodemo --template=react-native-template-typescript-tv@6.5.8-0
 $ cd rntheodemo
 ```
 
