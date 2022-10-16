@@ -210,9 +210,6 @@ public class SourceHelper {
         DRMIntegrationId integrationId = null;
         if (!TextUtils.isEmpty(integration)) {
           integrationId = DRMIntegrationId.from(integration);
-          if (integrationId == null) {
-            Log.e(TAG, "ContentProtection integration not supported: " + integration);
-          }
         }
         if (integrationId != null) {
           switch (integrationId) {
