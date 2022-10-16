@@ -8,7 +8,7 @@
     "source": {
       "sources": [
         {
-          "src": "https://dash.akamaized.net/akamai/bbb_30fps/bbb_with_multiple_tiled_thumbnails.mpd",
+          "src": "https://cdn.theoplayer.com/video/dash/bbb_30fps/bbb_with_multiple_tiled_thumbnails.mpd",
           "type": "application/dash+xml"
         }
       ]
@@ -23,16 +23,18 @@
     "source": {
       "sources": [
         {
-          "src": "https://contentserver.prudentgiraffe.com/videos/dash/big_buck_bunny/BigBuckBunny_10s_simple_2014_05_09.mpd",
+          "src": "https://cdn.theoplayer.com/video/dash/big_buck_bunny/BigBuckBunny_10s_simple_2014_05_09.mpd",
           "type": "application/dash+xml"
         }
       ],
-      "textTracks": [{
-        "default": true,
-        "src": "https://cdn.theoplayer.com/dash/theoplayer/thumbnails/big_buck_bunny_thumbnails.vtt",
-        "label": "thumbnails",
-        "kind": "metadata"
-      }]
+      "textTracks": [
+        {
+          "default": true,
+          "src": "https://cdn.theoplayer.com/dash/theoplayer/thumbnails/big_buck_bunny_thumbnails.vtt",
+          "label": "thumbnails",
+          "kind": "metadata"
+        }
+      ]
     }
   },
   {
@@ -44,7 +46,7 @@
     "source": {
       "sources": [
         {
-          "src": "https://contentserver.prudentgiraffe.com/videos/dash/webvtt-embedded-in-isobmff/Manifest.mpd",
+          "src": "https://cdn.theoplayer.com/video/dash/webvtt-embedded-in-isobmff/Manifest.mpd",
           "type": "application/dash+xml"
         }
       ]
@@ -58,7 +60,7 @@
     ],
     "source": {
       "sources": {
-        "src": "https://contentserver.prudentgiraffe.com/tos-dash-widevine/tos_h264_main.mpd",
+        "src": "https://cdn.theoplayer.com/video/dash/tos-dash-widevine/tos_h264_main.mpd",
         "type": "application/dash+xml",
         "contentProtection": {
           "widevine": {
@@ -90,7 +92,7 @@
     "source": {
       "sources": [
         {
-          "src": "https://contentserver.prudentgiraffe.com/videos/dash/webvtt-embedded-in-isobmff/Manifest.mpd",
+          "src": "https://cdn.theoplayer.com/video/dash/webvtt-embedded-in-isobmff/Manifest.mpd",
           "type": "application/dash+xml"
         }
       ],
@@ -180,7 +182,7 @@
     }
   },
   {
-    "name": "MP4 - Big Buck Bunny",
+    "name": "MP4 - Elephants Dream",
     "os": [
       "ios",
       "web",
@@ -188,7 +190,7 @@
     ],
     "source": {
       "sources": {
-        "src": "https://www.w3schools.com/html/mov_bbb.mp4"
+        "src": "https://cdn.theoplayer.com/video/elephants-dream.mp4"
       }
     }
   },
