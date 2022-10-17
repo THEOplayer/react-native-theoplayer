@@ -41,6 +41,12 @@ export default StyleSheet.create({
     paddingBottom: 20,
     zIndex: 1,
   },
+  topContainer: {
+    margin: 20,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    zIndex: 1,
+  },
   bottomControlsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -93,4 +99,5 @@ export default StyleSheet.create({
   thumbnailCarousel: {
     margin: 4,
   },
+  castButton: { width: 24, height: 24, tintColor: 'white' },
 });

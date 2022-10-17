@@ -9,13 +9,14 @@ import { FullScreenIcon, FullScreenExitIcon, PlayButton, MutedIcon, UnMutedIcon 
 import { ActionButton } from '../actionbutton/ActionButton';
 import { TimeLabel } from '../timelabel/TimeLabel';
 import type { VideoPlayerUIProps } from './VideoPlayerUIProps';
-import { THUMBNAIL_MODE, THUMBNAIL_SIZE, ENABLE_QUALITY_MENU } from './VideoPlayerUIProps';
+import { THUMBNAIL_MODE, THUMBNAIL_SIZE, ENABLE_QUALITY_MENU, ENABLE_CAST_BUTTON } from './VideoPlayerUIProps';
 import { ThumbnailView } from '../thumbnail/ThumbnailView';
 import type { SeekBarPosition } from '../seekbar/SeekBarPosition';
 import { VideoQualityMenu } from './VideoQualityMenu';
 import { AudioTrackMenu } from './AudioTrackMenu';
 import { TextTrackMenu } from './TextTrackMenu';
 import { SourceMenu } from './SourceMenu';
+import { CastButton } from 'react-native-google-cast';
 
 export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
   constructor(props: VideoPlayerUIProps) {
@@ -128,13 +129,17 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
         {/*Background*/}
         <View style={styles.background} />
 
+        <View style={styles.topContainer}>
+          <CastButton style={styles.castButton} />
+        </View>
+
         {showLoadingIndicator && !paused && (
           <View style={styles.fullScreenCenter}>
             <DelayedActivityIndicator size="large" color="#ffc50f" />
           </View>
         )}
 
-        {!error && (
+        {ENABLE_CAST_BUTTON && !error && (
           <ActionButton
             touchable={!Platform.isTV}
             icon={paused ? PlayButton : null}
