@@ -16,7 +16,7 @@ class THEOplayerRCTView: UIView {
     private var license: String?
     private var licenseUrl: String?
     private var chromeless: Bool = true
-    private var adShowCountDown: Bool = true
+    private var adSUIEnabled: Bool = true
     private var adPreloadType: THEOplayerSDK.AdPreloadType = THEOplayerSDK.AdPreloadType.MIDROLL_AND_POSTROLL
     private var googleImaUsesNativeIma: Bool = true
     private var config: THEOplayerConfiguration?
@@ -135,9 +135,12 @@ class THEOplayerRCTView: UIView {
     
     private func initAdsConfiguration() -> AdsConfiguration? {
 #if ADS && (GOOGLE_IMA || GOOGLE_DAI)
-        return AdsConfiguration(showCountdown: self.adShowCountDown,
+        let googleIMAConfiguration = GoogleIMAConfiguration()
+        googleIMAConfiguration.useNativeIma = self.googleImaUsesNativeIma
+        googleIMAConfiguration.disableUI = !self.adSUIEnabled
+        return AdsConfiguration(showCountdown: self.adSUIEnabled,
                                 preload: self.adPreloadType,
-                                googleImaConfiguration: GoogleIMAConfiguration(useNativeIma: self.googleImaUsesNativeIma))
+                                googleImaConfiguration: googleIMAConfiguration)
 #else
         return nil
 #endif
@@ -159,7 +162,7 @@ class THEOplayerRCTView: UIView {
         self.licenseUrl = configDict["licenseUrl"] as? String
         self.chromeless = configDict["chromeless"] as? Bool ?? true
         if let adsConfig = configDict["ads"] as? NSDictionary {
-            self.adShowCountDown = adsConfig["showCountdown"] as? Bool ?? true
+            self.adSUIEnabled = adsConfig["uiEnabled"] as? Bool ?? true
             if let adPreloadType = adsConfig["preload"] as? String {
                 self.adPreloadType = adPreloadType == "none" ? THEOplayerSDK.AdPreloadType.NONE : THEOplayerSDK.AdPreloadType.MIDROLL_AND_POSTROLL
             }
