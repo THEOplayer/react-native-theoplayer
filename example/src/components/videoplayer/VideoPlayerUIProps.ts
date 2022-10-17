@@ -35,6 +35,7 @@ export interface VideoPlayerUIProps {
   selectedVideoTrack: number | undefined;
   targetVideoTrackQuality: number | number[] | undefined;
   selectedAudioTrack: number | undefined;
+  message?: string;
   error: PlayerError | undefined;
 
   onSetPlayPause?: (pause: boolean) => void;

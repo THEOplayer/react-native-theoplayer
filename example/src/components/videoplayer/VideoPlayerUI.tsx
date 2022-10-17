@@ -104,6 +104,7 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
       sources,
       srcIndex,
       error,
+      message,
       paused,
       muted,
       fullscreen,
@@ -151,13 +152,15 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
 
         {error && (
           <View style={styles.errorContainer}>
-            <Text style={styles.error}>
+            <Text style={styles.message}>
               {error.errorCode} - {error.errorMessage}
             </Text>
           </View>
         )}
 
         <View style={styles.controlsContainer}>
+          {message && <Text style={styles.message}>{message}</Text>}
+
           <SeekBar
             // On TV platforms we use the progress dot to play/pause
             onDotPress={this.togglePlayPause}

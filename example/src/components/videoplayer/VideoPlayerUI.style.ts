@@ -60,13 +60,14 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  error: {
+  message: {
     textAlignVertical: 'center',
     textAlign: 'center',
     fontSize: 16,
     paddingLeft: 50,
     paddingRight: 50,
     color: 'white',
+    backgroundColor: 'black',
   },
   playButton: {
     width: 90,
