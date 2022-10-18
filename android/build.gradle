@@ -26,8 +26,6 @@ def enabledAds = enabledGoogleIMA || enabledGoogleDAI
 def enabledCast = safeExtGet("THEOplayer_extensionCast", 'false').toBoolean()
 def enabledMediaTailor = safeExtGet("THEOplayer_extensionMediaTailor", 'false').toBoolean()
 
-def adsWrapperVersion = safeExtGet("adsWrapperVersion", '4.2.0')
-
 android {
   compileSdkVersion safeExtGet('THEOplayer_compileSdkVersion', 31)
 
@@ -78,6 +76,12 @@ android {
   }
 }
 
+rootProject.allprojects {
+  repositories {
+    maven { url("$rootDir/../node_modules/react-native-theoplayer/android/local") }
+  }
+}
+
 repositories {
   mavenLocal()
   maven {
@@ -86,19 +90,20 @@ repositories {
   }
   google()
   mavenCentral()
+  maven { url("local") }
   maven { url 'https://jitpack.io' }
 }
 
 dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"  // From node_modules
+  implementation "com.theoplayer.theoplayer-sdk-android:ads-wrapper:4.2.0"
 
-  def useMaven = safeExtGet("THEOplayer_local", null) == null
+  def preReleaseVersion = safeExtGet("THEOplayer_usePreRelease", null)
 
-  if (useMaven) {
+  if (preReleaseVersion == null) {
     println('Using THEOplayer Maven dependencies.')
     implementation "com.theoplayer.theoplayer-sdk-android:unified:${safeExtGet('THEOplayer_sdk', '+')}"
-    implementation files("libs/ads-wrapper-${adsWrapperVersion}.aar")
 
     if (enabledGoogleIMA) {
       println('ENABLE THEOplayer IMA extension.')
@@ -110,15 +115,15 @@ dependencies {
       compileOnly "com.theoplayer.theoplayer-sdk-android:unified-ads-ima:${safeExtGet('THEOplayer_sdk', '+')}"
     }
 
-    // NOTE: remove stub once DAI extension module is available on Maven (v4.2)
+    // NOTE: remove stub once DAI extension module is available on Maven (v4.3)
     if (enabledGoogleDAI) {
       println('ENABLE THEOplayer DAI extension.')
-      implementation files('libs/theoplayer-android-daistub.aar')
+      implementation "com.theoplayer.theoplayer-sdk-android:dai-stub:4.2.0"
 //    implementation "com.theoplayer.theoplayer-sdk-android:unified-ads:${safeExtGet('THEOplayer_sdk', '+')}"
 //    implementation "com.theoplayer.theoplayer-sdk-android:unified-ads-dai:${safeExtGet('THEOplayer_sdk', '+')}"
     } else {
       println('DISABLE THEOplayer DAI extension.')
-      compileOnly files('libs/theoplayer-android-daistub.aar')
+      implementation "com.theoplayer.theoplayer-sdk-android:dai-stub:4.2.0"
 //    compileOnly "com.theoplayer.theoplayer-sdk-android:unified-ads:${safeExtGet('THEOplayer_sdk', '+')}"
 //    compileOnly "com.theoplayer.theoplayer-sdk-android:unified-ads-dai:${safeExtGet('THEOplayer_sdk', '+')}"
     }
@@ -130,15 +135,13 @@ dependencies {
       println('DISABLE THEOplayer cast extension.')
       compileOnly "com.theoplayer.theoplayer-sdk-android:unified-cast:${safeExtGet('THEOplayer_sdk', '+')}"
     }
-  } else {
-    println("Using THEOplayer local dependencies from ${THEOplayer_local}")
-
-    implementation files("libs/ads-wrapper-${adsWrapperVersion}.aar")
-    implementation fileTree(dir: THEOplayer_local, include: ["*.aar"])
-    implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'com.google.android.gms:play-services-basement:17.6.0'
-    implementation "com.google.ads.interactivemedia.v3:interactivemedia:3.28.2"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.6.10"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9"
+  } else
+  {
+    println("Using THEOplayer PRE-RELEASE ${preReleaseVersion}")
+    implementation "com.theoplayer.theoplayer-sdk-android:unified-pre:${preReleaseVersion}"
+    implementation "com.theoplayer.theoplayer-sdk-android:unified-cast-pre:${preReleaseVersion}"
+    implementation "com.theoplayer.theoplayer-sdk-android:unified-dai-pre:${preReleaseVersion}"
+    implementation "com.theoplayer.theoplayer-sdk-android:unified-ima-pre:${preReleaseVersion}"
+    implementation "com.theoplayer.theoplayer-sdk-android:unified-ads-pre:${preReleaseVersion}"
   }
 }
