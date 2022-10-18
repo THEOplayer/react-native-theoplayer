@@ -15,6 +15,7 @@ class THEOplayerRCTView: UIView {
     private var textTrackEventHandler: THEOplayerRCTViewTextTrackEventHandler
     private var mediaTrackEventHandler: THEOplayerRCTViewMediaTrackEventHandler
     private var adEventHandler: THEOplayerRCTViewAdEventHandler
+    private var castEventHandler: THEOplayerRCTViewCastEventHandler
     
     // MARK: Bridged props
     private var src: SourceDescription?
@@ -46,6 +47,7 @@ class THEOplayerRCTView: UIView {
         self.textTrackEventHandler = THEOplayerRCTViewTextTrackEventHandler()
         self.mediaTrackEventHandler = THEOplayerRCTViewMediaTrackEventHandler()
         self.adEventHandler = THEOplayerRCTViewAdEventHandler()
+        self.castEventHandler = THEOplayerRCTViewCastEventHandler()
         
         super.init(frame: .zero)
     }
@@ -55,6 +57,8 @@ class THEOplayerRCTView: UIView {
         self.textTrackEventHandler.destroy()
         self.mediaTrackEventHandler.destroy()
         self.adEventHandler.destroy()
+        self.castEventHandler.destroy()
+        
         self.player?.destroy()
         self.player = nil
         if DEBUG_THEOPLAYER_INTERACTION { print("[NATIVE] THEOplayer instance destroyed.") }
@@ -127,6 +131,7 @@ class THEOplayerRCTView: UIView {
                 self.textTrackEventHandler.setPlayer(player)
                 self.mediaTrackEventHandler.setPlayer(player)
                 self.adEventHandler.setPlayer(player)
+                self.castEventHandler.setPlayer(player)
                 // couple player instance to view
                 player.addAsSubview(of: self)
             }
@@ -554,5 +559,13 @@ class THEOplayerRCTView: UIView {
     func setOnNativeAdEvent(nativeAdEvent: @escaping RCTDirectEventBlock) {
         self.adEventHandler.onNativeAdEvent = nativeAdEvent
         if DEBUG_PROP_UPDATES  { print("[NATIVE] nativeAdEvent prop set.") }
+    }
+    
+    // MARK: - Listener based CAST event bridging
+    
+    @objc(setOnNativeCastEvent:)
+    func setOnNativeCastEvent(nativeCastEvent: @escaping RCTDirectEventBlock) {
+        self.castEventHandler.onNativeCastEvent = nativeCastEvent
+        if DEBUG_PROP_UPDATES  { print("[NATIVE] nativeCastEvent prop set.") }
     }
 }

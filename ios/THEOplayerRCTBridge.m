@@ -53,6 +53,8 @@ RCT_EXPORT_VIEW_PROPERTY(onNativeMediaTrackEvent, RCTDirectEventBlock);
 
 RCT_EXPORT_VIEW_PROPERTY(onNativeAdEvent, RCTDirectEventBlock);
 
+RCT_EXPORT_VIEW_PROPERTY(onNativeCastEvent, RCTDirectEventBlock);
+
 RCT_EXTERN_METHOD(destroy:(nonnull NSNumber *)node);
 
 @end
