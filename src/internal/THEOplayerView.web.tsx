@@ -9,7 +9,7 @@ import {
   THEOplayerViewComponent,
   TrackListEventType,
 } from 'react-native-theoplayer';
-import type { Event, TextTrackCue as NativeTextTrackCue, TrackChangeEvent } from 'theoplayer';
+import type { Event, TextTrackCue as NativeTextTrackCue, TrackChangeEvent, SourceDescription as NativeSourceDescription } from 'theoplayer';
 
 import type {
   AddTrackEvent,
@@ -63,7 +63,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
 
     Object.assign(this._player.abr, abrConfig);
     this._player.prepareWithUserAction();
-    this._player.source = source;
+    this._player.source = source as NativeSourceDescription;
     this.addEventListeners();
   }
 
@@ -115,7 +115,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
     } = prevProps;
 
     if (source !== prevSource) {
-      this._player.source = source;
+      this._player.source = source as NativeSourceDescription;
     }
     if (paused !== wasPaused) {
       if (paused) {
