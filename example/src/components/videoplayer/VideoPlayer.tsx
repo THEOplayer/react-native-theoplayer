@@ -89,7 +89,7 @@ export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerStat
     error: undefined,
   };
 
-  private video!: THEOplayerView;
+  private video!: any;
 
   constructor(props: VideoPlayerProps) {
     super(props);
@@ -289,7 +289,7 @@ export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerStat
     return (
       <View style={styles.container}>
         <PlayerView
-          ref={(ref: any) => {
+          ref={(ref) => {
             this.video = ref;
           }}
           config={config}

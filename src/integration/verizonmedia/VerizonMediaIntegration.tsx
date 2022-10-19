@@ -1,11 +1,7 @@
-import React, { PureComponent } from 'react';
-import type { AdsAPI, SourceDescription, THEOplayerView, THEOplayerViewComponent, THEOplayerViewProps } from 'react-native-theoplayer';
+import React, { ForwardedRef, forwardRef, useEffect, useState } from 'react';
+import type { SourceDescription, THEOplayerView, THEOplayerViewProps } from 'react-native-theoplayer';
 import { VerizonMediaConnector } from './VerizonMediaConnector';
 import type { VerizonMediaPreplayResponse } from './source/VerizonMediaPreplayResponse';
-
-interface WithVerizonMediaState {
-  src?: SourceDescription;
-}
 
 export interface WithVerizonMediaProps extends THEOplayerViewProps {
   /**
@@ -14,64 +10,37 @@ export interface WithVerizonMediaProps extends THEOplayerViewProps {
   onVerizonPreplayResponse?: (response: VerizonMediaPreplayResponse) => void;
 }
 
-export type WithVerizonMediaComponent = THEOplayerViewComponent;
+export const withVerizonMedia = (WrappedComponent: typeof THEOplayerView) => {
+  interface WithVerizonMediaComponentProps extends WithVerizonMediaProps {
+    forwardRef: ForwardedRef<any>;
+  }
+  function Wrapper(props: WithVerizonMediaComponentProps) {
+    const [connector] = useState(new VerizonMediaConnector());
+    const [src, setSrc] = useState<SourceDescription | undefined>(undefined);
 
-export const withVerizonMedia = (WrappedComponent: typeof THEOplayerView) =>
-  class Wrapper extends PureComponent<WithVerizonMediaProps, WithVerizonMediaState> implements WithVerizonMediaComponent {
-    readonly _root: React.RefObject<THEOplayerView>;
-
-    readonly _verizonIntegration = new VerizonMediaConnector();
-
-    static initialState: WithVerizonMediaState = {
-      src: undefined,
-    };
-
-    constructor(props: WithVerizonMediaProps) {
-      super(props);
-      this._root = React.createRef();
-      this.state = Wrapper.initialState;
-    }
-
-    componentDidMount() {
-      // Install Verizon integration.
-      this._verizonIntegration.setOnSourceReadyListener((src) => {
-        this.setState({ src });
+    // Initial setup
+    useEffect(() => {
+      connector.setOnSourceReadyListener((src) => {
+        setSrc(src);
       });
-      this._verizonIntegration.setOnPreplayResponseListener((response: VerizonMediaPreplayResponse) => {
-        const { onVerizonPreplayResponse } = this.props;
+      connector.setOnPreplayResponseListener((response: VerizonMediaPreplayResponse) => {
+        const { onVerizonPreplayResponse } = props;
         if (onVerizonPreplayResponse) {
           onVerizonPreplayResponse(response);
         }
       });
-      const { source } = this.props;
-      this.applySource(source);
-    }
+    }, []);
 
-    componentDidUpdate(prevProps: Readonly<THEOplayerViewProps>) {
-      const { source } = this.props;
-      const { source: prevSource } = prevProps;
-      if (JSON.stringify(source) !== JSON.stringify(prevSource)) {
-        // Update source
-        this.applySource(source);
-      }
-    }
+    // Source changes
+    useEffect(() => {
+      connector.setSource(props.source);
+    }, [JSON.stringify(props.source)]);
 
-    applySource(source: SourceDescription) {
-      this._verizonIntegration.setSource(source);
-    }
+    const { forwardRef, ...passThrougProps } = props;
+    return <WrappedComponent {...passThrougProps} ref={forwardRef} source={src || {}} />;
+  }
 
-    public get ads(): AdsAPI {
-      const adsApi = this._root?.current?.ads;
-      return adsApi!; // TODO
-    }
-
-    seek(seekTime: number): void {
-      return this._root?.current?.seek(seekTime);
-    }
-
-    render() {
-      const wrapperProps = Object.assign({}, this.props);
-      const { src } = this.state;
-      return <WrappedComponent {...wrapperProps} ref={this._root} source={src || {}} />;
-    }
-  };
+  const Wrapped = forwardRef((props: WithVerizonMediaProps, ref: ForwardedRef<typeof WrappedComponent>) => <Wrapper {...props} forwardRef={ref} />);
+  Wrapped.displayName = 'VerizonMedia';
+  return Wrapped;
+};
