@@ -26,6 +26,7 @@ import {
   TimeRange,
   TimeUpdateEvent,
   TrackListEventType,
+  withVerizonMedia,
 } from 'react-native-theoplayer';
 import ALL_SOURCES from '../../res/sources.json';
 
@@ -62,6 +63,8 @@ interface VideoPlayerState {
   selectedAudioTrack: number | undefined;
   error: PlayerError | undefined;
 }
+
+const PlayerView = withVerizonMedia(THEOplayerView);
 
 export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerState> {
   private static initialState: VideoPlayerState = {
@@ -280,8 +283,8 @@ export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerStat
 
     return (
       <View style={styles.container}>
-        <THEOplayerView
-          ref={(ref: THEOplayerView) => {
+        <PlayerView
+          ref={(ref: any) => {
             this.video = ref;
           }}
           config={config}
