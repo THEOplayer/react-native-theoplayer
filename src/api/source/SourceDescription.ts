@@ -11,7 +11,7 @@ import type { DRMConfiguration } from './drm/DRMConfiguration';
 import type { HlsPlaybackConfiguration } from './hls/HlsPlaybackConfiguration';
 import type { AdDescription } from './ads/Ads';
 import type { MetadataDescription } from './metadata/MetadataDescription';
-import type { ServerSideAdInsertionConfiguration } from "./ads/ssai/ServerSideAdInsertionConfiguration";
+import type { ServerSideAdInsertionConfiguration } from './ads/ssai/ServerSideAdInsertionConfiguration';
 
 export type Source = TypedSource;
 
@@ -262,6 +262,14 @@ export interface BaseSource {
    * <br/> - Ignored for non-HLS streams.
    */
   hls?: HlsPlaybackConfiguration;
+
+  /**
+   * The integration ID of the source.
+   *
+   * @remarks
+   * <br/> - This can be used to signal that a source is specific to an integration.
+   */
+  integration?: string;
 }
 
 /**
