@@ -36,6 +36,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -219,39 +220,40 @@ public class SourceHelper {
   }
 
   private static SourceType parseSourceType(@NonNull final JSONObject jsonTypedSource) {
-    String type = jsonTypedSource.optString(PROP_TYPE);
+    String type = jsonTypedSource.optString("type");
     if (!type.isEmpty()) {
-      if ("application/dash+xml".equals(type)) {
+      final String lowercaseType = type.toLowerCase(Locale.ROOT);
+      if ("application/dash+xml".equals(lowercaseType)) {
         return SourceType.DASH;
       }
-      if ("application/x-mpegurl".equals(type)) {
+      if ("application/x-mpegurl".equals(lowercaseType)) {
         return SourceType.HLSX;
       }
-      if ("application/vnd.theo.hesp+json".equals(type)) {
+      if ("application/vnd.theo.hesp+json".equals(lowercaseType)) {
         return SourceType.HESP;
       }
-      if ("application/vnd.apple.mpegurl".equals(type)) {
+      if ("application/vnd.apple.mpegurl".equals(lowercaseType)) {
         return SourceType.HLS;
       }
-      if ("video/mp4".equals(type)) {
+      if ("video/mp4".equals(lowercaseType)) {
         return SourceType.MP4;
       }
-      if ("audio/mpeg".equals(type)) {
+      if ("audio/mpeg".equals(lowercaseType)) {
         return SourceType.MP3;
       }
     } else {
       // No type given, check for known extension.
-      String src = jsonTypedSource.optString(PROP_SRC);
-      if (src.endsWith(".mpd")) {
+      String src = jsonTypedSource.optString("src");
+      if (src.contains(".mpd")) {
         return SourceType.DASH;
       }
-      if (src.endsWith(".m3u8")) {
+      if (src.contains(".m3u8")) {
         return SourceType.HLSX;
       }
-      if (src.endsWith(".mp4")) {
+      if (src.contains(".mp4")) {
         return SourceType.MP4;
       }
-      if (src.endsWith(".mp3")) {
+      if (src.contains(".mp3")) {
         return SourceType.MP3;
       }
     }
