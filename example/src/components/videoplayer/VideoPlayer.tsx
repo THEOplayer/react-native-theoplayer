@@ -26,6 +26,7 @@ import {
   TimeRange,
   TimeUpdateEvent,
   TrackListEventType,
+  VerizonMediaPreplayResponse,
   withVerizonMedia,
 } from 'react-native-theoplayer';
 import ALL_SOURCES from '../../res/sources.json';
@@ -186,6 +187,10 @@ export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerStat
         break;
     }
     console.log(TAG, `onMediaTrackEvent: ${typeStr} ${trackTypeStr} track`, trackUid, data.qualities);
+  }
+
+  private onVerizonPreplayResponse = (data: VerizonMediaPreplayResponse) => {
+    console.log(TAG, 'onVerizonPreplayResponse', data);
   };
 
   private onAdEvent = (data: AdEvent) => {
@@ -319,6 +324,7 @@ export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerStat
           onTextTrackEvent={this.onTextTrackEvent}
           onMediaTrackListEvent={this.onMediaTrackListEvent}
           onMediaTrackEvent={this.onMediaTrackEvent}
+          onVerizonPreplayResponse={this.onVerizonPreplayResponse}
           onAdEvent={this.onAdEvent}
         />
 
