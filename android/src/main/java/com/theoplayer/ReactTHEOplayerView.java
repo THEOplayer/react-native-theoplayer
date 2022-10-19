@@ -271,14 +271,6 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
         player.setPlaybackRate(playbackRate);
 
         setSource(sourceDescription);
-
-        if (!this.paused) {
-          player.play();
-        }
-
-        if (seekTime != TIME_UNSET) {
-          seekTo(seekTime);
-        }
       }
     }, 1);
   }
@@ -378,11 +370,18 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
     }
     if (player != null && sourceDescription != null) {
       player.setSource(sourceDescription);
+
+      // Apply paused state
+      applyPaused();
+
+      // Optionally seek to time offset
+      if (this.seekTime != TIME_UNSET) {
+        seekTo(this.seekTime);
+      }
     }
   }
 
-  public void setPaused(boolean paused) {
-    this.paused = paused;
+  private void applyPaused() {
     if (player != null) {
       final boolean playerIsPaused = player.isPaused();
       if (!paused && playerIsPaused) {
@@ -391,6 +390,11 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
         player.pause();
       }
     }
+  }
+
+  public void setPaused(boolean paused) {
+    this.paused = paused;
+    applyPaused();
   }
 
   public void setMuted(boolean muted) {
