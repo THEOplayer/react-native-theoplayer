@@ -339,8 +339,8 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
       for (final TextTrack track: player.getTextTracks()) {
         if (track.getUid() == uid) {
           track.setMode(TextTrackMode.SHOWING);
-        } else {
-          track.setMode(TextTrackMode.HIDDEN);
+        } else if (track.getMode() == TextTrackMode.SHOWING) {
+          track.setMode(TextTrackMode.DISABLED);
         }
       }
     }
