@@ -44,7 +44,7 @@ class THEOplayerRCTCastAPI: NSObject, RCTBridgeModule {
                 resolve(cast.casting)
             } else {
                 reject(ERROR_CODE_CAST_ACCESS_FAILURE, ERROR_MESSAGE_CAST_ACCESS_FAILURE, nil)
-                if DEBUG_ADS_API { print("[NATIVE] Could not retrieve current casting status (cast module unavailable).") }
+                if DEBUG_CAST_API { print("[NATIVE] Could not retrieve current casting status (cast module unavailable).") }
             }
         }
     }
@@ -74,7 +74,7 @@ class THEOplayerRCTCastAPI: NSObject, RCTBridgeModule {
                 resolve(chromecast.casting)
             } else {
                 reject(ERROR_CODE_CHROMECAST_ACCESS_FAILURE, ERROR_MESSAGE_CHROMECAST_ACCESS_FAILURE, nil)
-                if DEBUG_ADS_API { print("[NATIVE] Could not retrieve current chromecast casting status.") }
+                if DEBUG_CAST_API { print("[NATIVE] Could not retrieve current chromecast casting status.") }
             }
         }
     }
@@ -88,7 +88,7 @@ class THEOplayerRCTCastAPI: NSObject, RCTBridgeModule {
                 resolve(chromecast.state?._rawValue)
             } else {
                 reject(ERROR_CODE_CHROMECAST_ACCESS_FAILURE, ERROR_MESSAGE_CHROMECAST_ACCESS_FAILURE, nil)
-                if DEBUG_ADS_API { print("[NATIVE] Could not retrieve current chromecast state.") }
+                if DEBUG_CAST_API { print("[NATIVE] Could not retrieve current chromecast state.") }
             }
         }
     }
@@ -99,9 +99,10 @@ class THEOplayerRCTCastAPI: NSObject, RCTBridgeModule {
             let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
             if let cast = theView.cast(),
                let chromecast = cast.chromecast {
+                if DEBUG_CAST_API { print("[NATIVE] Starting chromecast session.") }
                 chromecast.start()
             } else {
-                if DEBUG_ADS_API { print("[NATIVE] Could not start chromecast session.") }
+                if DEBUG_CAST_API { print("[NATIVE] Could not start chromecast session.") }
             }
         }
     }
@@ -112,9 +113,10 @@ class THEOplayerRCTCastAPI: NSObject, RCTBridgeModule {
             let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
             if let cast = theView.cast(),
                let chromecast = cast.chromecast {
+                if DEBUG_CAST_API { print("[NATIVE] Stopping chromecast session.") }
                 chromecast.stop()
             } else {
-                if DEBUG_ADS_API { print("[NATIVE] Could not stop chromecast session.") }
+                if DEBUG_CAST_API { print("[NATIVE] Could not stop chromecast session.") }
             }
         }
     }
@@ -125,9 +127,10 @@ class THEOplayerRCTCastAPI: NSObject, RCTBridgeModule {
             let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
             if let cast = theView.cast(),
                let chromecast = cast.chromecast {
+                if DEBUG_CAST_API { print("[NATIVE] Joining chromecast session.") }
                 chromecast.join()
             } else {
-                if DEBUG_ADS_API { print("[NATIVE] Could not join chromecast session.") }
+                if DEBUG_CAST_API { print("[NATIVE] Could not join chromecast session.") }
             }
         }
     }
@@ -138,9 +141,10 @@ class THEOplayerRCTCastAPI: NSObject, RCTBridgeModule {
             let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
             if let cast = theView.cast(),
                let chromecast = cast.chromecast {
+                if DEBUG_CAST_API { print("[NATIVE] Leaving chromecast session.") }
                 chromecast.leave()
             } else {
-                if DEBUG_ADS_API { print("[NATIVE] Could not leave chromecast session.") }
+                if DEBUG_CAST_API { print("[NATIVE] Could not leave chromecast session.") }
             }
         }
     }
@@ -196,7 +200,7 @@ class THEOplayerRCTCastAPI: NSObject, RCTBridgeModule {
                 resolve(airplay.casting)
             } else {
                 reject(ERROR_CODE_AIRPLAY_ACCESS_FAILURE, ERROR_MESSAGE_AIRPLAY_ACCESS_FAILURE, nil)
-                if DEBUG_ADS_API { print("[NATIVE] Could not retrieve current airplay casting status.") }
+                if DEBUG_CAST_API { print("[NATIVE] Could not retrieve current airplay casting status.") }
             }
         }
     }
@@ -210,7 +214,7 @@ class THEOplayerRCTCastAPI: NSObject, RCTBridgeModule {
                 resolve(airplay.state._rawValue)
             } else {
                 reject(ERROR_CODE_AIRPLAY_ACCESS_FAILURE, ERROR_MESSAGE_AIRPLAY_ACCESS_FAILURE, nil)
-                if DEBUG_ADS_API { print("[NATIVE] Could not retrieve current airplay state.") }
+                if DEBUG_CAST_API { print("[NATIVE] Could not retrieve current airplay state.") }
             }
         }
     }
@@ -221,9 +225,10 @@ class THEOplayerRCTCastAPI: NSObject, RCTBridgeModule {
             let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
             if let cast = theView.cast(),
                let airplay = cast.airPlay {
+                if DEBUG_CAST_API { print("[NATIVE] Starting airplay session.") }
                 airplay.start()
             } else {
-                if DEBUG_ADS_API { print("[NATIVE] Could not start airplay session.") }
+                if DEBUG_CAST_API { print("[NATIVE] Could not start airplay session.") }
             }
         }
     }
@@ -234,9 +239,10 @@ class THEOplayerRCTCastAPI: NSObject, RCTBridgeModule {
             let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
             if let cast = theView.cast(),
                let airplay = cast.airPlay {
+                if DEBUG_CAST_API { print("[NATIVE] Stopping airplay session.") }
                 airplay.stop()
             } else {
-                if DEBUG_ADS_API { print("[NATIVE] Could not stop airplay session.") }
+                if DEBUG_CAST_API { print("[NATIVE] Could not stop airplay session.") }
             }
         }
     }
