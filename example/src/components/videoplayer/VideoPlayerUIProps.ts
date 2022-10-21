@@ -22,6 +22,8 @@ export interface VideoPlayerUIProps {
   playbackRate: number;
   volume: number;
   muted: boolean;
+  airplayConnected: boolean;
+  chromecastConnected: boolean;
   duration: number;
   seekable: TimeRange[];
   currentTime: number;
@@ -49,6 +51,7 @@ export interface VideoPlayerUIProps {
   onSetMuted?: (muted: boolean) => void;
   onSetPlaybackRate?: (playbackRate: number) => void;
   onSetVolume?: (volume: number) => void;
+  onAirplayToggled?: () => void;
 
   style?: StyleProp<ViewStyle>;
 }

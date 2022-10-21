@@ -100,5 +100,14 @@ export default StyleSheet.create({
   thumbnailCarousel: {
     margin: 4,
   },
-  castButton: { width: 24, height: 24, tintColor: 'white' },
+  castButton: {
+    width: 24,
+    height: 24,
+    tintColor: 'white',
+    marginRight : 15
+  },
+  castIcon: {
+    width: 24,
+    height: 24,
+  },
 });
