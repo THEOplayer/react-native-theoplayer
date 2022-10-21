@@ -8,6 +8,8 @@
 #import <THEOplayerSDK/THEOplayerSDK-Swift.h>
 #endif
 
+#import <GoogleCast/GoogleCast.h>
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -30,6 +32,13 @@
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  
+  NSString *receiverAppID = @"CC1AD845"; // default THEOplayer v3 receiver
+  GCKDiscoveryCriteria *criteria = [[GCKDiscoveryCriteria alloc] initWithApplicationID:receiverAppID];
+  GCKCastOptions* options = [[GCKCastOptions alloc] initWithDiscoveryCriteria:criteria];
+  options.startDiscoveryAfterFirstTapOnCastButton = false;
+  [GCKCastContext setSharedInstanceWithOptions:options];
+  
   return YES;
 }
 
