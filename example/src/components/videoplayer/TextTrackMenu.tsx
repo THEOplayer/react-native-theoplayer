@@ -40,7 +40,9 @@ export function TextTrackMenu(props: TextTrackMenuProps) {
       icon={SubtitlesIcon}
       data={[...selectableTextTracks, null].map((textTrack) => (textTrack ? new MenuItem(getTrackLabel(textTrack)) : new MenuItem('None')))}
       onItemSelected={selectTextTrack}
-      selectedItem={selectedTextTrack !== undefined ? textTracks.findIndex((textTrack) => textTrack.uid === selectedTextTrack) : textTracks.length}
+      selectedItem={
+        selectedTextTrack !== undefined ? textTracks.findIndex((textTrack) => textTrack.uid === selectedTextTrack) : selectableTextTracks.length
+      }
       keyExtractor={(index: number) => `sub${index}`}
     />
   );
