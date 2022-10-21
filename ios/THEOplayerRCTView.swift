@@ -118,23 +118,25 @@ class THEOplayerRCTView: UIView {
             return
         }
         
-        // reset player for new source
-        if self.player != nil {
+        let isCasting = self.player?.cast?.casting ?? false // TO FIX: remove 'isCasting' workaround
+        if !isCasting || self.player == nil {
             self.player?.destroy()
             self.player = nil
-        }
-        DispatchQueue.main.async {
-            self.initPlayer()
-            if let player = self.player {
-                // couple player instance to event handlers
-                self.mainEventHandler.setPlayer(player)
-                self.textTrackEventHandler.setPlayer(player)
-                self.mediaTrackEventHandler.setPlayer(player)
-                self.adEventHandler.setPlayer(player)
-                self.castEventHandler.setPlayer(player)
-                // couple player instance to view
-                player.addAsSubview(of: self)
+            DispatchQueue.main.async {
+                self.initPlayer()
+                if let player = self.player {
+                    // couple player instance to event handlers
+                    self.mainEventHandler.setPlayer(player)
+                    self.textTrackEventHandler.setPlayer(player)
+					self.mediaTrackEventHandler.setPlayer(player)
+                    self.adEventHandler.setPlayer(player)
+                    self.castEventHandler.setPlayer(player)
+                    // couple player instance to view
+                    player.addAsSubview(of: self)
+                }
+                self.syncAllPlayerProps()
             }
+        } else {
             self.syncAllPlayerProps()
         }
     }
