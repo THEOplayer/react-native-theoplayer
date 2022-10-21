@@ -31,6 +31,7 @@ import com.theoplayer.android.api.ads.ima.GoogleImaIntegrationFactory;
 import com.theoplayer.android.api.ads.wrapper.AdsApiWrapper;
 import com.theoplayer.android.api.cast.CastIntegration;
 import com.theoplayer.android.api.cast.CastIntegrationFactory;
+import com.theoplayer.android.api.error.ErrorCode;
 import com.theoplayer.android.api.error.THEOplayerException;
 import com.theoplayer.android.api.player.Player;
 import com.theoplayer.android.api.player.RequestCallback;
@@ -355,6 +356,9 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
     } catch (THEOplayerException exception) {
       Log.e(TAG, exception.getMessage());
       eventEmitter.emitError(exception);
+    } catch (Exception exception) {
+      Log.e(TAG, exception.getMessage());
+      eventEmitter.emitError(new THEOplayerException(ErrorCode.SOURCE_INVALID, "Failed to set source."));
     }
   }
 

@@ -83,6 +83,11 @@ public class SourceHelper {
         // typed sources
         ArrayList<TypedSource> typedSources = new ArrayList<>();
 
+        // handle empty source description
+        if (!jsonSourceObject.has(PROP_SOURCES)) {
+          return null;
+        }
+
         // sources can be an array or single object
         JSONArray jsonSources = jsonSourceObject.optJSONArray(PROP_SOURCES);
         if (jsonSources != null) {
