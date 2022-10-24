@@ -39,7 +39,7 @@ class THEOplayerRCTMetadataAggregator {
             EVENT_PROP_SELECTED_TEXT_TRACK: THEOplayerRCTMetadataAggregator.selectedTextTrack(textTracks: textTracks),
             EVENT_PROP_SELECTED_AUDIO_TRACK: THEOplayerRCTMetadataAggregator.selectedAudioTrack(audioTracks: audioTracks),
             EVENT_PROP_SELECTED_VIDEO_TRACK: THEOplayerRCTMetadataAggregator.selectedVideoTrack(videoTracks: videoTracks),
-            EVENT_PROP_DURATION: player.duration ?? 0
+            EVENT_PROP_DURATION: THEOplayerRCTTypeUtils.encodeInfNan((player.duration ?? Double.nan) * 1000)
         ]
     }
 

@@ -145,7 +145,7 @@ class THEOplayerRCTViewEventHandler {
             if let forwardedDurationChangeEvent = self?.onNativeDurationChange {
                 forwardedDurationChangeEvent(
                     [
-                        "duration": (event.duration ?? 0.0) * 1000          // sec -> msec
+                        "duration": THEOplayerRCTTypeUtils.encodeInfNan((event.duration ?? Double.nan) * 1000)             // sec -> msec
                     ]
                 )
             }
