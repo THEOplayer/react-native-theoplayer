@@ -17,6 +17,7 @@ import type {
 
 import styles from './THEOplayerView.style';
 import type { SourceDescription } from 'react-native-theoplayer';
+import { decodeNanInf } from './utils/TypeUtils';
 
 interface THEOplayerRCTViewProps extends THEOplayerViewProps {
   ref: React.RefObject<THEOplayerViewNativeComponent>;
@@ -140,7 +141,10 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
 
   private _onLoadedMetadata = (event: NativeSyntheticEvent<LoadedMetadataEvent>) => {
     if (this.props.onLoadedMetadata) {
-      this.props.onLoadedMetadata(event.nativeEvent);
+      this.props.onLoadedMetadata({
+        ...event.nativeEvent,
+        duration: decodeNanInf(event.nativeEvent.duration),
+      });
     }
   };
 
@@ -215,7 +219,9 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
 
   private _onDurationChange = (event: NativeSyntheticEvent<DurationChangeEvent>) => {
     if (this.props.onDurationChange) {
-      this.props.onDurationChange(event.nativeEvent);
+      this.props.onDurationChange({
+        duration: decodeNanInf(event.nativeEvent.duration),
+      });
     }
   };
 

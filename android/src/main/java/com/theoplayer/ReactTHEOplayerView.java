@@ -28,7 +28,6 @@ import com.theoplayer.android.api.player.RequestCallback;
 import com.theoplayer.android.api.player.track.mediatrack.MediaTrack;
 import com.theoplayer.android.api.player.track.mediatrack.MediaTrackList;
 import com.theoplayer.android.api.player.track.mediatrack.quality.AudioQuality;
-import com.theoplayer.android.api.player.track.mediatrack.quality.Quality;
 import com.theoplayer.android.api.player.track.mediatrack.quality.QualityList;
 import com.theoplayer.android.api.player.track.mediatrack.quality.VideoQuality;
 import com.theoplayer.android.api.player.track.texttrack.TextTrack;
@@ -39,6 +38,7 @@ import com.theoplayer.android.api.source.SourceDescription;
 import com.theoplayer.android.api.timerange.TimeRanges;
 import com.theoplayer.track.QualityListFilter;
 import com.theoplayer.track.TrackListInfo;
+import com.theoplayer.util.TypeUtils;
 
 @SuppressLint("ViewConstructor")
 public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventListener {
@@ -116,7 +116,7 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
   }
 
   public double getDuration() {
-    return player != null? 1e03 * player.getDuration() : Double.NaN;
+    return TypeUtils.INSTANCE.encodeInfNan(player != null? 1e03 * player.getDuration() : Double.NaN);
   }
 
   public void getSeekableRange(RequestCallback<TimeRanges> callback) {

@@ -52,6 +52,7 @@ import com.theoplayer.android.api.player.track.mediatrack.quality.VideoQuality;
 import com.theoplayer.android.api.player.track.texttrack.TextTrack;
 import com.theoplayer.track.TextTrackCueEventType;
 import com.theoplayer.track.TrackEventType;
+import com.theoplayer.util.TypeUtils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -283,7 +284,7 @@ class VideoEventEmitter {
 
   private void onDurationChange(final @NonNull DurationChangeEvent event) {
     WritableMap payload = Arguments.createMap();
-    payload.putDouble(EVENT_PROP_DURATION, 1e03 * event.getDuration());
+    payload.putDouble(EVENT_PROP_DURATION, TypeUtils.INSTANCE.encodeInfNan(1e03 * event.getDuration()));
     receiveEvent(EVENT_DURATIONCHANGE, payload);
   }
 
