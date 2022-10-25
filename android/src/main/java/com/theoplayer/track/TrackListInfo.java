@@ -8,6 +8,7 @@ import com.facebook.react.bridge.WritableMap;
 import com.theoplayer.android.api.player.track.mediatrack.MediaTrack;
 import com.theoplayer.android.api.player.track.mediatrack.MediaTrackList;
 import com.theoplayer.android.api.player.track.mediatrack.quality.AudioQuality;
+import com.theoplayer.android.api.player.track.mediatrack.quality.Quality;
 import com.theoplayer.android.api.player.track.mediatrack.quality.QualityList;
 import com.theoplayer.android.api.player.track.mediatrack.quality.VideoQuality;
 import com.theoplayer.android.api.player.track.texttrack.TextTrack;
@@ -90,122 +91,143 @@ public class TrackListInfo {
     return cuePayload;
   }
 
+  static public WritableMap fromQuality(@NonNull final Quality quality) {
+    return quality instanceof AudioQuality ? fromAudioQuality((AudioQuality)quality) : fromVideoQuality((VideoQuality) quality);
+  }
+
+  static public WritableMap fromAudioQuality(@NonNull final AudioQuality quality) {
+    WritableMap audioQualityPayload = Arguments.createMap();
+    audioQualityPayload.putString(PROP_ID, quality.getId());
+    audioQualityPayload.putInt(PROP_UID, quality.getUid());
+    audioQualityPayload.putString(PROP_CODECS, quality.getCodecs());
+    audioQualityPayload.putString(PROP_NAME, quality.getName());
+    audioQualityPayload.putDouble(PROP_BANDWIDTH, quality.getBandwidth());
+    audioQualityPayload.putDouble(PROP_AUDIO_SAMPLING_RATE, quality.getAudioSamplingRate());
+    return audioQualityPayload;
+  }
+
+  static public <Q extends Quality> WritableMap fromMediaTrack(@NonNull final MediaTrack<Q> track,
+                                                               MediaTrackType trackType) {
+    //noinspection unchecked
+    return trackType == MediaTrackType.AUDIO ?
+      fromAudioTrack((MediaTrack<AudioQuality>)track) :
+      fromVideoTrack((MediaTrack<VideoQuality>)track);
+  }
+
+  static public WritableMap fromAudioTrack(@NonNull final MediaTrack<AudioQuality> audioTrack) {
+    WritableMap audioTrackPayload = Arguments.createMap();
+    audioTrackPayload.putString(PROP_ID, audioTrack.getId());
+    audioTrackPayload.putInt(PROP_UID, audioTrack.getUid());
+    audioTrackPayload.putString(PROP_KIND, audioTrack.getKind());
+    audioTrackPayload.putString(PROP_LABEL, audioTrack.getLabel());
+    audioTrackPayload.putString(PROP_LANGUAGE, audioTrack.getLanguage());
+
+    final QualityList<AudioQuality> qualityList = audioTrack.getQualities();
+    WritableArray qualities = Arguments.createArray();
+    if (qualityList != null) {
+      for (int j = 0; j < qualityList.length(); j++) {
+        qualities.pushMap(fromAudioQuality(qualityList.getItem(j)));
+      }
+    }
+    audioTrackPayload.putArray(PROP_QUALITIES, qualities);
+
+    final QualityList<AudioQuality> targetQualityList = audioTrack.getTargetQualities();
+    WritableArray targetQualities = Arguments.createArray();
+    if (targetQualityList != null) {
+      for (int j = 0; j < targetQualityList.length(); j++) {
+        final AudioQuality quality = targetQualityList.getItem(j);
+        WritableMap audioQualityPayload = Arguments.createMap();
+        audioQualityPayload.putInt(PROP_UID, quality.getUid());
+        targetQualities.pushMap(audioQualityPayload);
+      }
+    }
+    final AudioQuality activeQuality = audioTrack.getActiveQuality();
+    if (activeQuality != null) {
+      audioTrackPayload.putInt(PROP_ACTIVE_QUALITY, activeQuality.getUid());
+    }
+    final AudioQuality targetQuality = audioTrack.getTargetQuality();
+    if (targetQuality != null) {
+      audioTrackPayload.putInt(PROP_TARGET_QUALITY, targetQuality.getUid());
+    }
+    return audioTrackPayload;
+  }
+
   @NonNull
   public static WritableArray fromAudioTrackList(@NonNull final MediaTrackList<AudioQuality> audioTrackList) {
     WritableArray audioTracks = Arguments.createArray();
     for (int i = 0; i < audioTrackList.length(); i++) {
-      final MediaTrack<AudioQuality> audioTrack = audioTrackList.getItem(i);
-      WritableMap audioTrackPayload = Arguments.createMap();
-      audioTrackPayload.putString(PROP_ID, audioTrack.getId());
-      audioTrackPayload.putInt(PROP_UID, audioTrack.getUid());
-      audioTrackPayload.putString(PROP_KIND, audioTrack.getKind());
-      audioTrackPayload.putString(PROP_LABEL, audioTrack.getLabel());
-      audioTrackPayload.putString(PROP_LANGUAGE, audioTrack.getLanguage());
-
-      final QualityList<AudioQuality> qualityList = audioTrack.getQualities();
-      WritableArray qualities = Arguments.createArray();
-      if (qualityList != null) {
-        for (int j = 0; j < qualityList.length(); j++) {
-          final AudioQuality audioQuality = qualityList.getItem(j);
-          WritableMap audioQualityPayload = Arguments.createMap();
-          audioQualityPayload.putString(PROP_ID, audioQuality.getId());
-          audioQualityPayload.putInt(PROP_UID, audioQuality.getUid());
-          audioQualityPayload.putString(PROP_CODECS, audioQuality.getCodecs());
-          audioQualityPayload.putString(PROP_NAME, audioQuality.getName());
-          audioQualityPayload.putDouble(PROP_BANDWIDTH, audioQuality.getBandwidth());
-          audioQualityPayload.putDouble(PROP_AUDIO_SAMPLING_RATE, audioQuality.getAudioSamplingRate());
-          qualities.pushMap(audioQualityPayload);
-        }
-      }
-      audioTrackPayload.putArray(PROP_QUALITIES, qualities);
-
-      final QualityList<AudioQuality> targetQualityList = audioTrack.getTargetQualities();
-      WritableArray targetQualities = Arguments.createArray();
-      if (targetQualityList != null) {
-        for (int j = 0; j < targetQualityList.length(); j++) {
-          final AudioQuality quality = targetQualityList.getItem(j);
-          WritableMap audioQualityPayload = Arguments.createMap();
-          audioQualityPayload.putInt(PROP_UID, quality.getUid());
-          targetQualities.pushMap(audioQualityPayload);
-        }
-      }
-
-      final AudioQuality activeQuality = audioTrack.getActiveQuality();
-      if (activeQuality != null) {
-        audioTrackPayload.putInt(PROP_ACTIVE_QUALITY, activeQuality.getUid());
-      }
-
-      final AudioQuality targetQuality = audioTrack.getTargetQuality();
-      if (targetQuality != null) {
-        audioTrackPayload.putInt(PROP_TARGET_QUALITY, targetQuality.getUid());
-      }
-
-      audioTracks.pushMap(audioTrackPayload);
+      audioTracks.pushMap(fromAudioTrack(audioTrackList.getItem(i)));
     }
     return audioTracks;
+  }
+
+  static public WritableMap fromVideoQuality(@NonNull final VideoQuality quality) {
+    WritableMap videoQualityPayload = Arguments.createMap();
+    videoQualityPayload.putString(PROP_ID, quality.getId());
+    videoQualityPayload.putInt(PROP_UID, quality.getUid());
+    videoQualityPayload.putString(PROP_CODECS, quality.getCodecs());
+    videoQualityPayload.putString(PROP_NAME, quality.getName());
+    videoQualityPayload.putDouble(PROP_BANDWIDTH, quality.getBandwidth());
+    videoQualityPayload.putDouble(PROP_WIDTH, quality.getWidth());
+    videoQualityPayload.putDouble(PROP_HEIGHT, quality.getHeight());
+    videoQualityPayload.putDouble(PROP_FRAMERATE, quality.getFrameRate());
+    return videoQualityPayload;
+  }
+
+  static public WritableMap fromVideoTrack(@NonNull final MediaTrack<VideoQuality> videoTrack) {
+    WritableMap videoTrackPayload = Arguments.createMap();
+    videoTrackPayload.putString(PROP_ID, videoTrack.getId());
+    videoTrackPayload.putInt(PROP_UID, videoTrack.getUid());
+    videoTrackPayload.putString(PROP_KIND, videoTrack.getKind());
+    videoTrackPayload.putString(PROP_LABEL, videoTrack.getLabel());
+    videoTrackPayload.putString(PROP_LANGUAGE, videoTrack.getLanguage());
+
+    final QualityList<VideoQuality> qualityList = videoTrack.getQualities();
+    WritableArray qualities = Arguments.createArray();
+
+    if (qualityList != null) {
+      // Sort qualities according to (height, bandwidth)
+      final QualityListAdapter<VideoQuality> sortedQualityList = new QualityListAdapter<>(qualityList);
+      sortedQualityList.sort(
+        (o, t1) ->
+          (o.getHeight() == t1.getHeight()) ?
+            Long.compare(t1.getBandwidth(), o.getBandwidth()) : Integer.compare(t1.getHeight(), o.getHeight())
+      );
+
+      for (final VideoQuality quality : sortedQualityList) {
+        qualities.pushMap(fromVideoQuality(quality));
+      }
+    }
+    videoTrackPayload.putArray(PROP_QUALITIES, qualities);
+
+    final QualityList<VideoQuality> targetQualityList = videoTrack.getTargetQualities();
+    WritableArray targetQualities = Arguments.createArray();
+    if (targetQualityList != null) {
+      for (int j = 0; j < targetQualityList.length(); j++) {
+        final VideoQuality quality = targetQualityList.getItem(j);
+        WritableMap videoQualityPayload = Arguments.createMap();
+        videoQualityPayload.putInt(PROP_UID, quality.getUid());
+        targetQualities.pushMap(videoQualityPayload);
+      }
+    }
+
+    final VideoQuality activeQuality = videoTrack.getActiveQuality();
+    if (activeQuality != null) {
+      videoTrackPayload.putInt(PROP_ACTIVE_QUALITY, activeQuality.getUid());
+    }
+
+    final VideoQuality targetQuality = videoTrack.getTargetQuality();
+    if (targetQuality != null) {
+      videoTrackPayload.putInt(PROP_TARGET_QUALITY, targetQuality.getUid());
+    }
+    return videoTrackPayload;
   }
 
   @NonNull
   static public WritableArray fromVideoTrackList(@NonNull final MediaTrackList<VideoQuality> videoTrackList) {
     WritableArray videoTracks = Arguments.createArray();
     for (int i = 0; i < videoTrackList.length(); i++) {
-      final MediaTrack<VideoQuality> videoTrack = videoTrackList.getItem(i);
-      WritableMap videoTrackPayload = Arguments.createMap();
-      videoTrackPayload.putString(PROP_ID, videoTrack.getId());
-      videoTrackPayload.putInt(PROP_UID, videoTrack.getUid());
-      videoTrackPayload.putString(PROP_KIND, videoTrack.getKind());
-      videoTrackPayload.putString(PROP_LABEL, videoTrack.getLabel());
-      videoTrackPayload.putString(PROP_LANGUAGE, videoTrack.getLanguage());
-
-      final QualityList<VideoQuality> qualityList = videoTrack.getQualities();
-      WritableArray qualities = Arguments.createArray();
-
-      if (qualityList != null) {
-        // Sort qualities according to (height, bandwidth)
-        final QualityListAdapter<VideoQuality> sortedQualityList = new QualityListAdapter<>(qualityList);
-        sortedQualityList.sort(
-          (o, t1) ->
-            (o.getHeight() == t1.getHeight()) ?
-              Long.compare(t1.getBandwidth(), o.getBandwidth()) : Integer.compare(t1.getHeight(), o.getHeight())
-        );
-
-        for (final VideoQuality quality : sortedQualityList) {
-          WritableMap videoQualityPayload = Arguments.createMap();
-          videoQualityPayload.putString(PROP_ID, quality.getId());
-          videoQualityPayload.putInt(PROP_UID, quality.getUid());
-          videoQualityPayload.putString(PROP_CODECS, quality.getCodecs());
-          videoQualityPayload.putString(PROP_NAME, quality.getName());
-          videoQualityPayload.putDouble(PROP_BANDWIDTH, quality.getBandwidth());
-          videoQualityPayload.putDouble(PROP_WIDTH, quality.getWidth());
-          videoQualityPayload.putDouble(PROP_HEIGHT, quality.getHeight());
-          videoQualityPayload.putDouble(PROP_FRAMERATE, quality.getFrameRate());
-          qualities.pushMap(videoQualityPayload);
-        }
-      }
-      videoTrackPayload.putArray(PROP_QUALITIES, qualities);
-
-      final QualityList<VideoQuality> targetQualityList = videoTrack.getTargetQualities();
-      WritableArray targetQualities = Arguments.createArray();
-      if (targetQualityList != null) {
-        for (int j = 0; j < targetQualityList.length(); j++) {
-          final VideoQuality quality = targetQualityList.getItem(j);
-          WritableMap videoQualityPayload = Arguments.createMap();
-          videoQualityPayload.putInt(PROP_UID, quality.getUid());
-          targetQualities.pushMap(videoQualityPayload);
-        }
-      }
-
-      final VideoQuality activeQuality = videoTrack.getActiveQuality();
-      if (activeQuality != null) {
-        videoTrackPayload.putInt(PROP_ACTIVE_QUALITY, activeQuality.getUid());
-      }
-
-      final VideoQuality targetQuality = videoTrack.getTargetQuality();
-      if (targetQuality != null) {
-        videoTrackPayload.putInt(PROP_TARGET_QUALITY, targetQuality.getUid());
-      }
-
-      videoTracks.pushMap(videoTrackPayload);
+      videoTracks.pushMap(fromVideoTrack(videoTrackList.getItem(i)));
     }
     return videoTracks;
   }

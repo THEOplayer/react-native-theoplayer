@@ -1,8 +1,15 @@
 import React, { PureComponent } from 'react';
 
-import type { AdEvent, AdsAPI, PlayerError, TextTrack, THEOplayerViewProps, TimeRange } from 'react-native-theoplayer';
-import { AdEventNames, TextTrackEventType, THEOplayerViewComponent, TrackListEventType } from 'react-native-theoplayer';
-import type { Event, TextTrackCue as NativeTextTrackCue } from 'theoplayer';
+import type { AdEvent, AdsAPI, MediaTrack, PlayerError, TextTrack, THEOplayerViewProps, TimeRange } from 'react-native-theoplayer';
+import {
+  AdEventNames,
+  MediaTrackEventType,
+  MediaTrackType,
+  TextTrackEventType,
+  THEOplayerViewComponent,
+  TrackListEventType,
+} from 'react-native-theoplayer';
+import type { Event, TextTrackCue as NativeTextTrackCue, TrackChangeEvent } from 'theoplayer';
 
 import type {
   AddTrackEvent,
@@ -23,7 +30,7 @@ interface THEOplayerRCTViewState {
 
 export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplayerRCTViewState> implements THEOplayerViewComponent {
   private _player: THEOplayer.ChromelessPlayer | null = null;
-  private _adsApi: THEOplayerWebAdsAPI;
+  private readonly _adsApi: THEOplayerWebAdsAPI;
 
   private static initialState: THEOplayerRCTViewState = {
     isBuffering: false,
@@ -206,6 +213,19 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
     }
   };
 
+  private onActiveQualityChanged = (trackType: MediaTrackType, track: NativeMediaTrack) => () => {
+    const { onMediaTrackEvent } = this.props;
+    if (onMediaTrackEvent) {
+      const quality = track.activeQuality;
+      onMediaTrackEvent({
+        type: MediaTrackEventType.ActiveQualityChanged,
+        trackType,
+        trackUid: track.uid,
+        qualities: quality ? [quality] : undefined,
+      });
+    }
+  };
+
   private addEventListeners() {
     const player = this._player;
     if (!player) {
@@ -369,6 +389,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
         });
       }
     });
+
     player.presentation.addEventListener('presentationmodechange', (event: PresentationModeChangeEvent) => {
       const { presentationMode } = event;
       const { onFullscreenPlayerDidPresent, onFullscreenPlayerDidDismiss } = this.props;
@@ -382,32 +403,51 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
         }
       }
     });
+
     player.textTracks.addEventListener('addtrack', (event: AddTrackEvent) => {
-      const { onTextTrackListEvent } = this.props;
       const track = event.track as NativeTextTrack;
       track.addEventListener('addcue', this.onAddTextTrackCue(track));
       track.addEventListener('removecue', this.onRemoveTextTrackCue(track));
-
-      if (onTextTrackListEvent) {
-        onTextTrackListEvent({
-          type: TrackListEventType.AddTrack,
-          track: track as TextTrack,
-        });
-      }
+      this.dispatchTextTrackListEvent(TrackListEventType.AddTrack, track as TextTrack);
     });
+
     player.textTracks.addEventListener('removetrack', (event: RemoveTrackEvent) => {
-      const { onTextTrackListEvent } = this.props;
       const track = event.track as NativeTextTrack;
       track.removeEventListener('addcue', this.onAddTextTrackCue(track));
       track.removeEventListener('removecue', this.onRemoveTextTrackCue(track));
-
-      if (onTextTrackListEvent) {
-        onTextTrackListEvent({
-          type: TrackListEventType.RemoveTrack,
-          track: event.track as unknown as TextTrack,
-        });
-      }
+      this.dispatchTextTrackListEvent(TrackListEventType.RemoveTrack, track as NativeTextTrack as TextTrack);
     });
+
+    player.textTracks.addEventListener('change', (event: TrackChangeEvent) => {
+      this.dispatchTextTrackListEvent(TrackListEventType.ChangeTrack, event.track as NativeTextTrack as TextTrack);
+    });
+
+    [MediaTrackType.Audio, MediaTrackType.Video].forEach((trackType) => {
+      const mediaTracks = trackType === MediaTrackType.Audio ? player.audioTracks : player.videoTracks;
+      mediaTracks.addEventListener('addtrack', (event: AddTrackEvent) => {
+        const track = event.track as NativeMediaTrack;
+        track.addEventListener('activequalitychanged', this.onActiveQualityChanged(trackType, track));
+        this.dispatchMediaTrackListEvent(TrackListEventType.AddTrack, trackType, track as MediaTrack);
+      });
+    });
+
+    [MediaTrackType.Audio, MediaTrackType.Video].forEach((trackType) => {
+      const mediaTracks = trackType === MediaTrackType.Audio ? player.audioTracks : player.videoTracks;
+      mediaTracks.addEventListener('removetrack', (event: RemoveTrackEvent) => {
+        const track = event.track as NativeMediaTrack;
+        track.removeEventListener('activequalitychanged', this.onActiveQualityChanged(trackType, track));
+        this.dispatchMediaTrackListEvent(TrackListEventType.RemoveTrack, trackType, track as MediaTrack);
+      });
+    });
+
+    [MediaTrackType.Audio, MediaTrackType.Video].forEach((trackType) => {
+      const mediaTracks = trackType === MediaTrackType.Audio ? player.audioTracks : player.videoTracks;
+      mediaTracks.addEventListener('change', (event: TrackChangeEvent) => {
+        const track = event.track as NativeMediaTrack;
+        this.dispatchMediaTrackListEvent(TrackListEventType.ChangeTrack, trackType, track as MediaTrack);
+      });
+    });
+
     player.ads?.addEventListener(AdEventNames, (event) => {
       const { onAdEvent } = this.props;
       if (onAdEvent) {
@@ -415,6 +455,27 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
       }
     });
   }
+
+  private dispatchTextTrackListEvent = (type: TrackListEventType, track: TextTrack) => {
+    const { onTextTrackListEvent } = this.props;
+    if (onTextTrackListEvent) {
+      onTextTrackListEvent({
+        type,
+        track,
+      });
+    }
+  };
+
+  private dispatchMediaTrackListEvent = (type: TrackListEventType, trackType: MediaTrackType, track: MediaTrack) => {
+    const { onMediaTrackListEvent } = this.props;
+    if (onMediaTrackListEvent) {
+      onMediaTrackListEvent({
+        type,
+        trackType,
+        track: track as MediaTrack,
+      });
+    }
+  };
 
   public render(): JSX.Element {
     const { config } = this.props;

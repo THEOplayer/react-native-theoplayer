@@ -42,19 +42,31 @@ import com.theoplayer.android.api.event.player.SeekedEvent;
 import com.theoplayer.android.api.event.player.SeekingEvent;
 import com.theoplayer.android.api.event.player.SegmentNotFoundEvent;
 import com.theoplayer.android.api.event.player.TimeUpdateEvent;
+import com.theoplayer.android.api.event.track.mediatrack.audio.ActiveQualityChangedEvent;
+import com.theoplayer.android.api.event.track.mediatrack.audio.AudioTrackEventTypes;
+import com.theoplayer.android.api.event.track.mediatrack.audio.QualityChangedEvent;
+import com.theoplayer.android.api.event.track.mediatrack.audio.list.AudioTrackListEventTypes;
+import com.theoplayer.android.api.event.track.mediatrack.video.VideoTrackEventTypes;
+import com.theoplayer.android.api.event.track.mediatrack.video.list.VideoTrackListEventTypes;
 import com.theoplayer.android.api.event.track.texttrack.AddCueEvent;
 import com.theoplayer.android.api.event.track.texttrack.RemoveCueEvent;
 import com.theoplayer.android.api.event.track.texttrack.TextTrackEventTypes;
 import com.theoplayer.android.api.event.track.texttrack.list.AddTrackEvent;
 import com.theoplayer.android.api.event.track.texttrack.list.RemoveTrackEvent;
 import com.theoplayer.android.api.event.track.texttrack.list.TextTrackListEventTypes;
+import com.theoplayer.android.api.event.track.texttrack.list.TrackListChangeEvent;
 import com.theoplayer.android.api.player.Player;
 import com.theoplayer.android.api.player.track.mediatrack.MediaTrack;
+import com.theoplayer.android.api.player.track.mediatrack.MediaTrackList;
 import com.theoplayer.android.api.player.track.mediatrack.quality.AudioQuality;
+import com.theoplayer.android.api.player.track.mediatrack.quality.Quality;
 import com.theoplayer.android.api.player.track.mediatrack.quality.VideoQuality;
 import com.theoplayer.android.api.player.track.texttrack.TextTrack;
+import com.theoplayer.track.MediaTrackEventType;
+import com.theoplayer.track.MediaTrackType;
 import com.theoplayer.track.TextTrackCueEventType;
 import com.theoplayer.track.TrackEventType;
+import com.theoplayer.track.TrackListInfo;
 import com.theoplayer.util.TypeUtils;
 
 import java.lang.annotation.Retention;
@@ -84,6 +96,8 @@ public class VideoEventEmitter {
   private static final String EVENT_SEGMENTNOTFOUND = "onNativeSegmentNotFound";
   private static final String EVENT_TEXTTRACK_LIST_EVENT = "onNativeTextTrackListEvent";
   private static final String EVENT_TEXTTRACK_EVENT = "onNativeTextTrackEvent";
+  private static final String EVENT_MEDIATRACK_LIST_EVENT = "onNativeMediaTrackListEvent";
+  private static final String EVENT_MEDIATRACK_EVENT = "onNativeMediaTrackEvent";
   private static final String EVENT_AD_EVENT = "onNativeAdEvent";
   private static final String EVENT_FULLSCREEN_WILL_PRESENT = "onNativeFullscreenPlayerWillPresent";
   private static final String EVENT_FULLSCREEN_DID_PRESENT = "onNativeFullscreenPlayerDidPresent";
@@ -111,6 +125,8 @@ public class VideoEventEmitter {
     EVENT_SEGMENTNOTFOUND,
     EVENT_TEXTTRACK_LIST_EVENT,
     EVENT_TEXTTRACK_EVENT,
+    EVENT_MEDIATRACK_LIST_EVENT,
+    EVENT_MEDIATRACK_EVENT,
     EVENT_AD_EVENT,
     EVENT_FULLSCREEN_WILL_PRESENT,
     EVENT_FULLSCREEN_DID_PRESENT,
@@ -138,6 +154,8 @@ public class VideoEventEmitter {
     EVENT_SEGMENTNOTFOUND,
     EVENT_TEXTTRACK_LIST_EVENT,
     EVENT_TEXTTRACK_EVENT,
+    EVENT_MEDIATRACK_LIST_EVENT,
+    EVENT_MEDIATRACK_EVENT,
     EVENT_AD_EVENT,
     EVENT_FULLSCREEN_WILL_PRESENT,
     EVENT_FULLSCREEN_DID_PRESENT,
@@ -167,13 +185,17 @@ public class VideoEventEmitter {
   private static final String EVENT_PROP_SEGMENTSTARTTIME = "segmentStartTime";
   private static final String EVENT_PROP_TRACK = "track";
   private static final String EVENT_PROP_TRACK_UID = "trackUid";
+  private static final String EVENT_PROP_TRACK_TYPE = "trackType";
   private static final String EVENT_PROP_CUE = "cue";
   private static final String EVENT_PROP_TYPE = "type";
+  private static final String EVENT_PROP_QUALITIES = "qualities";
 
   private final RCTEventEmitter eventEmitter;
   private int viewId = View.NO_ID;
   private final HashMap<EventType, EventListener> playerListeners = new HashMap<>();
   private final HashMap<EventType, EventListener> textTrackListeners = new HashMap<>();
+  private final HashMap<EventType, EventListener> audioTrackListeners = new HashMap<>();
+  private final HashMap<EventType, EventListener> videoTrackListeners = new HashMap<>();
   private final ReactTHEOplayerView playerView;
 
   private AdEventAdapter adEventAdapter;
@@ -204,6 +226,13 @@ public class VideoEventEmitter {
 
     textTrackListeners.put(TextTrackListEventTypes.ADDTRACK, (EventListener<AddTrackEvent>) this::onTextTrackAdd);
     textTrackListeners.put(TextTrackListEventTypes.REMOVETRACK, (EventListener<RemoveTrackEvent>) this::onTextTrackRemove);
+    textTrackListeners.put(TextTrackListEventTypes.TRACKLISTCHANGE, (EventListener<TrackListChangeEvent>) this::onTextTrackChange);
+    audioTrackListeners.put(AudioTrackListEventTypes.ADDTRACK, (EventListener<com.theoplayer.android.api.event.track.mediatrack.audio.list.AddTrackEvent>) this::onAudioTrackAdd);
+    audioTrackListeners.put(AudioTrackListEventTypes.REMOVETRACK, (EventListener<com.theoplayer.android.api.event.track.mediatrack.audio.list.RemoveTrackEvent>) this::onAudioTrackRemove);
+    audioTrackListeners.put(AudioTrackListEventTypes.TRACKLISTCHANGE, (EventListener<com.theoplayer.android.api.event.track.mediatrack.audio.list.TrackListChangeEvent>) this::onAudioTrackChange);
+    videoTrackListeners.put(VideoTrackListEventTypes.ADDTRACK, (EventListener<com.theoplayer.android.api.event.track.mediatrack.video.list.AddTrackEvent>) this::onVideoTrackAdd);
+    videoTrackListeners.put(VideoTrackListEventTypes.REMOVETRACK, (EventListener<com.theoplayer.android.api.event.track.mediatrack.video.list.RemoveTrackEvent>) this::onVideoTrackRemove);
+    videoTrackListeners.put(VideoTrackListEventTypes.TRACKLISTCHANGE, (EventListener<com.theoplayer.android.api.event.track.mediatrack.video.list.TrackListChangeEvent>) this::onVideoTrackChange);
   }
 
   public void setViewId(int viewId) {
@@ -345,24 +374,33 @@ public class VideoEventEmitter {
     receiveEvent(EVENT_SEGMENTNOTFOUND, payload);
   }
 
-  private void onTextTrackAdd(@NonNull AddTrackEvent event) {
+  private void dispatchTextTrackEvent(TrackEventType eventType, TextTrack textTrack) {
     WritableMap payload = Arguments.createMap();
-    TextTrack textTrack = event.getTrack();
     payload.putMap(EVENT_PROP_TRACK, playerView.getTextTrackInfo(textTrack));
-    payload.putInt(EVENT_PROP_TYPE, TrackEventType.ADD_TRACK.type);
-    textTrack.addEventListener(TextTrackEventTypes.ADDCUE, this::onTextTrackAddCue);
-    textTrack.addEventListener(TextTrackEventTypes.REMOVECUE, this::onTextTrackRemoveCue);
+    payload.putInt(EVENT_PROP_TYPE, eventType.type);
+    switch (eventType) {
+      case ADD_TRACK:
+        textTrack.addEventListener(TextTrackEventTypes.ADDCUE, this::onTextTrackAddCue);
+        textTrack.addEventListener(TextTrackEventTypes.REMOVECUE, this::onTextTrackRemoveCue);
+        break;
+      case REMOVE_TRACK:
+        textTrack.removeEventListener(TextTrackEventTypes.ADDCUE, this::onTextTrackAddCue);
+        textTrack.removeEventListener(TextTrackEventTypes.REMOVECUE, this::onTextTrackRemoveCue);
+        break;
+    }
     receiveEvent(EVENT_TEXTTRACK_LIST_EVENT, payload);
   }
 
+  private void onTextTrackAdd(@NonNull AddTrackEvent event) {
+    dispatchTextTrackEvent(TrackEventType.ADD_TRACK, event.getTrack());
+  }
+
   private void onTextTrackRemove(@NonNull RemoveTrackEvent event) {
-    WritableMap payload = Arguments.createMap();
-    TextTrack textTrack = event.getTrack();
-    payload.putMap(EVENT_PROP_TRACK, playerView.getTextTrackInfo(textTrack));
-    payload.putInt(EVENT_PROP_TYPE, TrackEventType.REMOVE_TRACK.type);
-    textTrack.removeEventListener(TextTrackEventTypes.ADDCUE, this::onTextTrackAddCue);
-    textTrack.removeEventListener(TextTrackEventTypes.REMOVECUE, this::onTextTrackRemoveCue);
-    receiveEvent(EVENT_TEXTTRACK_LIST_EVENT, payload);
+    dispatchTextTrackEvent(TrackEventType.REMOVE_TRACK, event.getTrack());
+  }
+
+  private void onTextTrackChange(@NonNull TrackListChangeEvent event) {
+    dispatchTextTrackEvent(TrackEventType.CHANGE_TRACK, event.getTrack());
   }
 
   private void onTextTrackAddCue(@NonNull AddCueEvent event) {
@@ -379,6 +417,84 @@ public class VideoEventEmitter {
     payload.putInt(EVENT_PROP_TYPE, TextTrackCueEventType.REMOVE_CUE.type);
     payload.putMap(EVENT_PROP_CUE, playerView.getTextTrackCueInfo(event.getCue()));
     receiveEvent(EVENT_TEXTTRACK_EVENT, payload);
+  }
+
+  private MediaTrack<AudioQuality> activeAudioTrack() {
+    return playerView.getPlayer() != null ? activeTrack(playerView.getPlayer().getAudioTracks()) : null;
+  }
+
+  private MediaTrack<VideoQuality> activeVideoTrack() {
+    return playerView.getPlayer() != null ? activeTrack(playerView.getPlayer().getVideoTracks()) : null;
+  }
+
+  private <T extends Quality> MediaTrack<T> activeTrack(final MediaTrackList<T> tracks) {
+    for (int i = 0; i < tracks.length(); i++) {
+      MediaTrack<T> track = tracks.getItem(i);
+      if (track.isEnabled()) {
+        return track;
+      }
+    }
+    return null;
+  }
+
+  private void onActiveQualityChanged(@NonNull QualityChangedEvent event) {
+    Quality quality = event.getQuality();
+    MediaTrackType trackType = quality instanceof AudioQuality ? MediaTrackType.AUDIO : MediaTrackType.VIDEO;
+    WritableMap payload = Arguments.createMap();
+    payload.putInt(EVENT_PROP_TYPE, MediaTrackEventType.ACTIVE_QUALITY_CHANGED.type);
+    payload.putInt(EVENT_PROP_TRACK_TYPE, trackType.type);
+    MediaTrack<? extends Quality> activeTrack = (trackType == MediaTrackType.AUDIO) ? activeAudioTrack() : activeVideoTrack();
+    if (activeTrack != null) {
+      payload.putInt(EVENT_PROP_TRACK_UID, activeTrack.getUid());
+    }
+    WritableArray qualities = Arguments.createArray();
+    qualities.pushMap(TrackListInfo.fromQuality(quality));
+    payload.putArray(EVENT_PROP_QUALITIES, qualities);
+    receiveEvent(EVENT_MEDIATRACK_EVENT, payload);
+  }
+
+  private <Q extends Quality> void dispatchMediaTrackEvent(TrackEventType eventType, MediaTrackType trackType, MediaTrack<Q> track) {
+    WritableMap payload = Arguments.createMap();
+    payload.putInt(EVENT_PROP_TYPE, eventType.type);
+    payload.putInt(EVENT_PROP_TRACK_TYPE, trackType.type);
+    payload.putMap(EVENT_PROP_TRACK, TrackListInfo.fromMediaTrack(track, trackType));
+    EventType<QualityChangedEvent<Q, ActiveQualityChangedEvent>> qualityChangedEventType =
+      (EventType<QualityChangedEvent<Q, ActiveQualityChangedEvent>>) (trackType == MediaTrackType.AUDIO ?
+        AudioTrackEventTypes.ACTIVEQUALITYCHANGEDEVENT : VideoTrackEventTypes.ACTIVEQUALITYCHANGEDEVENT);
+
+    switch (eventType) {
+      case ADD_TRACK:
+        track.addEventListener(qualityChangedEventType, this::onActiveQualityChanged);
+        break;
+      case REMOVE_TRACK:
+        track.removeEventListener(qualityChangedEventType, this::onActiveQualityChanged);
+        break;
+    }
+    receiveEvent(EVENT_MEDIATRACK_LIST_EVENT, payload);
+  }
+
+  private void onAudioTrackAdd(@NonNull com.theoplayer.android.api.event.track.mediatrack.audio.list.AddTrackEvent event) {
+    dispatchMediaTrackEvent(TrackEventType.ADD_TRACK, MediaTrackType.AUDIO, event.getTrack());
+  }
+
+  private void onVideoTrackAdd(@NonNull com.theoplayer.android.api.event.track.mediatrack.video.list.AddTrackEvent event) {
+    dispatchMediaTrackEvent(TrackEventType.ADD_TRACK, MediaTrackType.VIDEO, event.getTrack());
+  }
+
+  private void onAudioTrackRemove(@NonNull com.theoplayer.android.api.event.track.mediatrack.audio.list.RemoveTrackEvent event) {
+    dispatchMediaTrackEvent(TrackEventType.REMOVE_TRACK, MediaTrackType.AUDIO, event.getTrack());
+  }
+
+  private void onVideoTrackRemove(@NonNull com.theoplayer.android.api.event.track.mediatrack.video.list.RemoveTrackEvent event) {
+    dispatchMediaTrackEvent(TrackEventType.REMOVE_TRACK, MediaTrackType.VIDEO, event.getTrack());
+  }
+
+  private void onAudioTrackChange(@NonNull com.theoplayer.android.api.event.track.mediatrack.audio.list.TrackListChangeEvent event) {
+    dispatchMediaTrackEvent(TrackEventType.CHANGE_TRACK, MediaTrackType.AUDIO, event.getTrack());
+  }
+
+  private void onVideoTrackChange(@NonNull com.theoplayer.android.api.event.track.mediatrack.video.list.TrackListChangeEvent event) {
+    dispatchMediaTrackEvent(TrackEventType.CHANGE_TRACK, MediaTrackType.VIDEO, event.getTrack());
   }
 
   public void onFullscreenWillPresent() {
@@ -418,6 +534,16 @@ public class VideoEventEmitter {
       player.getTextTracks().addEventListener(entry.getKey(), entry.getValue());
     }
 
+    // Attach audio track listeners
+    for (Map.Entry<EventType, EventListener> entry : audioTrackListeners.entrySet()) {
+      player.getAudioTracks().addEventListener(entry.getKey(), entry.getValue());
+    }
+
+    // Attach video track listeners
+    for (Map.Entry<EventType, EventListener> entry : videoTrackListeners.entrySet()) {
+      player.getVideoTracks().addEventListener(entry.getKey(), entry.getValue());
+    }
+
     // Attach AdStateHolder
     if (BuildConfig.EXTENSION_ADS) {
       adEventAdapter = new AdEventAdapter(playerView.getAdsApi(), payload -> receiveEvent(EVENT_AD_EVENT, payload));
@@ -433,6 +559,16 @@ public class VideoEventEmitter {
     // Remove text track listeners
     for (Map.Entry<EventType, EventListener> entry : textTrackListeners.entrySet()) {
       player.getTextTracks().removeEventListener(entry.getKey(), entry.getValue());
+    }
+
+    // Remove audio track listeners
+    for (Map.Entry<EventType, EventListener> entry : audioTrackListeners.entrySet()) {
+      player.getAudioTracks().removeEventListener(entry.getKey(), entry.getValue());
+    }
+
+    // Remove video track listeners
+    for (Map.Entry<EventType, EventListener> entry : videoTrackListeners.entrySet()) {
+      player.getVideoTracks().removeEventListener(entry.getKey(), entry.getValue());
     }
 
     if (adEventAdapter != null) {

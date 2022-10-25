@@ -15,6 +15,8 @@ import type {
   TextTrackEvent,
   AdEvent,
   AdsAPI,
+  MediaTrackEvent,
+  MediaTrackListEvent,
 } from 'react-native-theoplayer';
 
 import styles from './THEOplayerView.style';
@@ -45,6 +47,8 @@ interface THEOplayerRCTViewProps extends THEOplayerViewProps {
   onNativeSegmentNotFound: (event: NativeSyntheticEvent<SegmentNotFoundEvent>) => void;
   onNativeTextTrackListEvent: (event: NativeSyntheticEvent<TextTrackListEvent>) => void;
   onNativeTextTrackEvent: (event: NativeSyntheticEvent<TextTrackEvent>) => void;
+  onNativeMediaTrackListEvent: (event: NativeSyntheticEvent<MediaTrackListEvent>) => void;
+  onNativeMediaTrackEvent: (event: NativeSyntheticEvent<MediaTrackEvent>) => void;
   onNativeAdEvent: (event: NativeSyntheticEvent<AdEvent>) => void;
   onNativeFullscreenPlayerWillPresent?: () => void;
   onNativeFullscreenPlayerDidPresent?: () => void;
@@ -260,6 +264,18 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
     }
   };
 
+  private _onMediaTrackListEvent = (event: NativeSyntheticEvent<MediaTrackListEvent>) => {
+    if (this.props.onMediaTrackListEvent) {
+      this.props.onMediaTrackListEvent(event.nativeEvent);
+    }
+  };
+
+  private _onMediaTrackEvent = (event: NativeSyntheticEvent<MediaTrackEvent>) => {
+    if (this.props.onMediaTrackEvent) {
+      this.props.onMediaTrackEvent(event.nativeEvent);
+    }
+  };
+
   private _onAdEvent = (event: NativeSyntheticEvent<AdEvent>) => {
     if (this.props.onAdEvent) {
       this.props.onAdEvent(event.nativeEvent);
@@ -327,6 +343,8 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
           onNativeSegmentNotFound={this._onSegmentNotFound}
           onNativeTextTrackListEvent={this._onTextTrackListEvent}
           onNativeTextTrackEvent={this._onTextTrackEvent}
+          onNativeMediaTrackListEvent={this._onMediaTrackListEvent}
+          onNativeMediaTrackEvent={this._onMediaTrackEvent}
           onNativeAdEvent={this._onAdEvent}
           onNativeFullscreenPlayerWillPresent={this._onFullscreenPlayerWillPresent}
           onNativeFullscreenPlayerDidPresent={this._onFullscreenPlayerDidPresent}

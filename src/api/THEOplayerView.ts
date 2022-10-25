@@ -9,11 +9,11 @@ import type {
   ProgressEvent,
   SegmentNotFoundEvent,
 } from './event/PlayerEvent';
-import type { TextTrackEvent, TextTrackListEvent } from './event/TrackEvent';
+import type { MediaTrackEvent, MediaTrackListEvent, TextTrackEvent, TextTrackListEvent } from './event/TrackEvent';
 import type { PlayerConfiguration } from './config/PlayerConfiguration';
 import type { ABRConfiguration } from './abr/ABRConfiguration';
-import type { AdEvent } from "./event/AdEvent";
-import type { AdsAPI } from "./ads/AdsAPI";
+import type { AdEvent } from './event/AdEvent';
+import type { AdsAPI } from './ads/AdsAPI';
 
 export interface THEOplayerViewProps {
   /**
@@ -224,6 +224,16 @@ export interface THEOplayerViewProps {
    * Invoked when a text track event occurs.
    */
   onTextTrackEvent?: (event: TextTrackEvent) => void;
+
+  /**
+   * Invoked when a media track list event occurs.
+   */
+  onMediaTrackListEvent?: (event: MediaTrackListEvent) => void;
+
+  /**
+   * Invoked when a media track event occurs.
+   */
+  onMediaTrackEvent?: (event: MediaTrackEvent) => void;
 
   /**
    * Invoked when an ad event occurs.
