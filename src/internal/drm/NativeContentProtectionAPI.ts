@@ -35,6 +35,9 @@ interface CertificateRequestEvent extends ContentProtectionEvent, CertificateReq
 interface CertificateResponseEvent extends ContentProtectionEvent, CertificateResponse {}
 interface LicenseRequestEvent extends ContentProtectionEvent, LicenseRequest {}
 interface LicenseResponseEvent extends ContentProtectionEvent, LicenseResponse {}
+interface ExtractFaiplayContentIdEvent extends ContentProtectionEvent {
+  skdUrl: string;
+}
 
 export class NativeContentProtectionAPI implements ContentProtectionAPI {
   private emitter: NativeEventEmitter;
@@ -79,7 +82,7 @@ export class NativeContentProtectionAPI implements ContentProtectionAPI {
       this.currentIntegration = {
         integrationId,
         keySystemId,
-        integration: factory.build({ // TODO: extract drmConfiguration from drmConfig string
+        integration: factory.build({ // TODO: extract drmConfiguration from drmConfig base64 encoded string
           integration: "",
         })
       }
@@ -96,7 +99,7 @@ export class NativeContentProtectionAPI implements ContentProtectionAPI {
     const { requestId, integrationId, keySystemId } = event;
     const integration = this.getIntegration(integrationId, keySystemId)
     if (integration?.onCertificateRequest) {
-      //const result = await integration.onCertificateRequest(event);
+      // const result = await integration.onCertificateRequest(event);
       const requestString = 'Base64 encoded request string'; // TODO: base64 encoding of result request
       NativeModules.ContentProtectionModule.onCertificateRequestProcessed({
         requestId,
@@ -107,7 +110,7 @@ export class NativeContentProtectionAPI implements ContentProtectionAPI {
     }
   };
 
-  private onCertificateResponse = (event: CertificateResponseEvent) => {
+  private onCertificateResponse = async (event: CertificateResponseEvent) => {
     console.log('ContentProtectionAPI - received onCertificateResponse', event);
     const { requestId, integrationId, keySystemId } = event;
     const integration = this.getIntegration(integrationId, keySystemId)
@@ -123,7 +126,7 @@ export class NativeContentProtectionAPI implements ContentProtectionAPI {
     }
   };
 
-  private onLicenseRequest = (event: LicenseRequestEvent) => {
+  private onLicenseRequest = async (event: LicenseRequestEvent) => {
     console.log('ContentProtectionAPI - received onLicenseRequest', event);
     const { requestId, integrationId, keySystemId } = event;
     const integration = this.getIntegration(integrationId, keySystemId)
@@ -139,7 +142,7 @@ export class NativeContentProtectionAPI implements ContentProtectionAPI {
     }
   };
 
-  private onLicenseResponse = (event: LicenseResponseEvent) => {
+  private onLicenseResponse = async (event: LicenseResponseEvent) => {
     console.log('ContentProtectionAPI - received onLicenseResponse', event);
     const { requestId, integrationId, keySystemId } = event;
     const integration = this.getIntegration(integrationId, keySystemId)
@@ -155,7 +158,18 @@ export class NativeContentProtectionAPI implements ContentProtectionAPI {
     }
   };
 
-  private onExtractFairplayContentId = (event: ContentProtectionEvent) => {
+  private onExtractFairplayContentId = async (event: ExtractFaiplayContentIdEvent) => {
     console.log('ContentProtectionAPI - received onExtractFairplayContentId', event);
+    const { requestId, integrationId, keySystemId, skdUrl } = event;
+    const integration = this.getIntegration(integrationId, keySystemId)
+    if (integration?.extractFairplayContentId) {
+      const contentId = await integration.extractFairplayContentId(skdUrl);
+      NativeModules.ContentProtectionModule.onExtractFairplayContentIdProcessed({
+        requestId,
+        contentId,
+      });
+    } else {
+      console.error(`No integration for ${integrationId} - ${keySystemId} available.`);
+    }
   };
 }
