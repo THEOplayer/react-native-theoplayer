@@ -8,6 +8,7 @@
 
 #import <React/RCTViewManager.h>
 #import <React/RCTBridgeModule.h>
+#import <React/RCTEventEmitter.h>
 
 // View Manager
 @interface RCT_EXTERN_MODULE(THEOplayerRCTViewManager, RCTViewManager)
@@ -92,5 +93,14 @@ RCT_EXTERN_METHOD(daiStreamTimeForContentTime:(nonnull NSNumber *)node
                   time:(nonnull NSNumber *)timeValue
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
+// ContentProtectionModule
+@interface RCT_EXTERN_REMAP_MODULE(ContentProtectionModule, THEOplayerRCTContentProtectionIntegrationsAPI, RCTEventEmitter)
+
+RCT_EXTERN_METHOD(onBuildProcessed:(NSDictionary)result)
+RCT_EXTERN_METHOD(onCertificateRequestProcessed:(NSDictionary)result)
+RCT_EXTERN_METHOD(onCertificateResponseProcessed:(NSDictionary)result)
+RCT_EXTERN_METHOD(onLicenseRequestProcessed:(NSDictionary)result)
+RCT_EXTERN_METHOD(onLicenseResponseProcessed:(NSDictionary)result)
+RCT_EXTERN_METHOD(onExtractFairplayContentIdProcessed:(NSDictionary)result)
 
 @end
