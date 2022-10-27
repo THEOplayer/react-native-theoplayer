@@ -193,10 +193,6 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
       Log.d(TAG, "onDetachedFromWindow");
     }
     super.onDetachedFromWindow();
-    /* We want to be able to continue playing audio when switching tabs.
-     * Leave this here in case it causes issues.
-     */
-    // stopPlayback();
   }
 
   private void initializePlayer() {
@@ -246,20 +242,13 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
     if (BuildConfig.LOG_VIEW_EVENTS) {
       Log.d(TAG, "onHostDestroy");
     }
-    stopPlayback();
-    if (playerView != null) {
-      playerView.onDestroy();
-    }
+    cleanUpResources();
   }
 
   public void cleanUpResources() {
     if (BuildConfig.LOG_VIEW_EVENTS) {
       Log.d(TAG, "cleanUpResources");
     }
-    stopPlayback();
-  }
-
-  private void stopPlayback() {
     releasePlayer();
   }
 
@@ -269,6 +258,11 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
       player.stop();
       player = null;
     }
+
+    if (playerView != null) {
+      playerView.onDestroy();
+    }
+
     reactContext.removeLifecycleEventListener(this);
   }
 
