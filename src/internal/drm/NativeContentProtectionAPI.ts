@@ -77,15 +77,20 @@ export class NativeContentProtectionAPI implements ContentProtectionAPI {
         integrationId,
         keySystemId,
         integration: factory.build({
-          // TODO: extract drmConfiguration from drmConfig base64 encoded string
+          // TODO: extract drmConfiguration from drmConfig
           integration: '',
         }),
       };
       NativeModules.ContentProtectionModule.onBuildProcessed({
         requestId,
+        resultString: 'success',
       });
     } else {
       console.error(`No factory for ${integrationId} - ${keySystemId}  has been registered.`);
+      NativeModules.ContentProtectionModule.onBuildProcessed({
+        requestId,
+        resultString: 'failed',
+      });
     }
   };
 
@@ -94,14 +99,18 @@ export class NativeContentProtectionAPI implements ContentProtectionAPI {
     const { requestId, integrationId, keySystemId } = event;
     const integration = this.getIntegration(integrationId, keySystemId);
     if (integration?.onCertificateRequest) {
-      // const result = await integration.onCertificateRequest(event);
-      const requestString = 'Base64 encoded request string'; // TODO: base64 encoding of result request
+      //const result = await integration.onCertificateRequest(event);
+      const resultString = 'Base64 encoded string'; // TODO: base64 encoding of result
       NativeModules.ContentProtectionModule.onCertificateRequestProcessed({
         requestId,
-        requestString,
+        resultString,
       });
     } else {
-      console.error(`No integration for ${integrationId} - ${keySystemId} available.`);
+      const resultString = 'Base64 encoded string'; // TODO: base64 encoding of original
+      NativeModules.ContentProtectionModule.onCertificateRequestProcessed({
+        requestId,
+        resultString,
+      });
     }
   };
 
@@ -111,13 +120,17 @@ export class NativeContentProtectionAPI implements ContentProtectionAPI {
     const integration = this.getIntegration(integrationId, keySystemId);
     if (integration?.onCertificateResponse) {
       //const result = await integration.onCertificateResponse(event);
-      const responseString = 'Base64 encoded response string'; // TODO: base64 encoding of result response
+      const resultString = 'Base64 encoded string'; // TODO: base64 encoding of result
       NativeModules.ContentProtectionModule.onCertificateResponseProcessed({
         requestId,
-        responseString,
+        resultString,
       });
     } else {
-      console.error(`No integration for ${integrationId} - ${keySystemId} available.`);
+      const resultString = 'Base64 encoded string'; // TODO: base64 encoding of original
+      NativeModules.ContentProtectionModule.onCertificateResponseProcessed({
+        requestId,
+        resultString,
+      });
     }
   };
 
@@ -127,13 +140,17 @@ export class NativeContentProtectionAPI implements ContentProtectionAPI {
     const integration = this.getIntegration(integrationId, keySystemId);
     if (integration?.onLicenseRequest) {
       //const result = await integration.onLicenseRequest(event);
-      const requestString = 'Base64 encoded request string'; // TODO: base64 encoding of result request
-      NativeModules.ContentProtectionModule.onLicenseRequestProcessed({
+      const resultString = 'Base64 encoded string'; // TODO: base64 encoding of result
+      NativeModules.ContentProtectionModule.onCertificateResponseProcessed({
         requestId,
-        requestString,
+        resultString,
       });
     } else {
-      console.error(`No integration for ${integrationId} - ${keySystemId} available.`);
+      const resultString = 'Base64 encoded string'; // TODO: base64 encoding of original
+      NativeModules.ContentProtectionModule.onCertificateResponseProcessed({
+        requestId,
+        resultString,
+      });
     }
   };
 
@@ -143,13 +160,17 @@ export class NativeContentProtectionAPI implements ContentProtectionAPI {
     const integration = this.getIntegration(integrationId, keySystemId);
     if (integration?.onLicenseResponse) {
       //const result = await integration.onLicenseResponse(event);
-      const responseString = 'Base64 encoded response string'; // TODO: base64 encoding of result response
-      NativeModules.ContentProtectionModule.onLicenseResponseProcessed({
+      const resultString = 'Base64 encoded string'; // TODO: base64 encoding of result
+      NativeModules.ContentProtectionModule.onCertificateResponseProcessed({
         requestId,
-        responseString,
+        resultString,
       });
     } else {
-      console.error(`No integration for ${integrationId} - ${keySystemId} available.`);
+      const resultString = 'Base64 encoded string'; // TODO: base64 encoding of original
+      NativeModules.ContentProtectionModule.onCertificateResponseProcessed({
+        requestId,
+        resultString,
+      });
     }
   };
 
@@ -158,13 +179,17 @@ export class NativeContentProtectionAPI implements ContentProtectionAPI {
     const { requestId, integrationId, keySystemId, skdUrl } = event;
     const integration = this.getIntegration(integrationId, keySystemId);
     if (integration?.extractFairplayContentId) {
-      const contentId = await integration.extractFairplayContentId(skdUrl);
+      const resultString = await integration.extractFairplayContentId(skdUrl);
       NativeModules.ContentProtectionModule.onExtractFairplayContentIdProcessed({
         requestId,
-        contentId,
+        resultString,
       });
     } else {
-      console.error(`No integration for ${integrationId} - ${keySystemId} available.`);
+      const resultString = skdUrl;
+      NativeModules.ContentProtectionModule.onExtractFairplayContentIdProcessed({
+        requestId,
+        resultString,
+      });
     }
   };
 }
