@@ -15,12 +15,12 @@ let CPI_TAG: String = "[ContentProtectionIntegrtionAPI] "
 @objc(THEOplayerRCTContentProtectionAPI)
 class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
     
-    private var buildIntegrationCompletions: [String:() -> Void] = [:]
-    private var certificateRequestCompletions: [String:(CertificateRequest?) -> Void] = [:]
-    private var certificateResponseCompletions: [String:(CertificateResponse?) -> Void] = [:]
-    private var licenseRequestCompletions: [String:(LicenseRequest?) -> Void] = [:]
-    private var licenseResponseCompletions: [String:(LicenseResponse?) -> Void] = [:]
-    private var extractedFairplayContentIdCompletions: [String:(String?) -> Void] = [:]
+    private var buildIntegrationCompletions: [String:(Bool) -> Void] = [:]
+    private var certificateRequestCompletions: [String:(Data?, Error?) -> Void] = [:]
+    private var certificateResponseCompletions: [String:(Data?, Error?) -> Void] = [:]
+    private var licenseRequestCompletions: [String:(Data?, Error?) -> Void] = [:]
+    private var licenseResponseCompletions: [String:(Data?, Error?) -> Void] = [:]
+    private var extractedFairplayContentIdCompletions: [String:(String?, Error?) -> Void] = [:]
     
     override static func moduleName() -> String! {
         return "ContentProtectionModule"
@@ -41,7 +41,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
     }
     
     // MARK: Module actions
-    func handleBuildIntegration(integrationId: String, keySystemId: String, drmConfig: DRMConfiguration, completion: @escaping () -> Void) {
+    func handleBuildIntegration(integrationId: String, keySystemId: String, drmConfig: DRMConfiguration, completion: @escaping (Bool) -> Void) {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "handleBuildIntegration.") }
         let requestId = UUID().uuidString
         self.buildIntegrationCompletions[requestId] = completion
@@ -52,7 +52,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
         ])
     }
     
-    func handleCertificateRequest(integrationId: String, keySystemId: String, certificateRequest: CertificateRequest, completion: @escaping (CertificateRequest?) -> Void) {
+    func handleCertificateRequest(integrationId: String, keySystemId: String, certificateRequest: CertificateRequest, completion: @escaping (Data?, Error?) -> Void) {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "handleCertificateRequest.") }
         let requestId = UUID().uuidString
         self.certificateRequestCompletions[requestId] = completion
@@ -63,7 +63,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
         ])
     }
     
-    func handleCertificateResponse(integrationId: String, keySystemId: String, certificateResponse: CertificateResponse, completion: @escaping (CertificateResponse?) -> Void) {
+    func handleCertificateResponse(integrationId: String, keySystemId: String, certificateResponse: CertificateResponse, completion: @escaping (Data?, Error?) -> Void) {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "handleCertificateResponse.") }
         let requestId = UUID().uuidString
         self.certificateResponseCompletions[requestId] = completion
@@ -74,7 +74,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
         ])
     }
     
-    func handleLicenseRequest(integrationId: String, keySystemId: String, licenseRequest: LicenseRequest, completion: @escaping (LicenseRequest?) -> Void) {
+    func handleLicenseRequest(integrationId: String, keySystemId: String, licenseRequest: LicenseRequest, completion: @escaping (Data?, Error?) -> Void) {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "handleLicenseRequest.") }
         let requestId = UUID().uuidString
         self.licenseRequestCompletions[requestId] = completion
@@ -85,7 +85,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
         ])
     }
     
-    func handleLicenseResponse(integrationId: String, keySystemId: String, licenseResponse: LicenseResponse, completion: @escaping (LicenseResponse?) -> Void) {
+    func handleLicenseResponse(integrationId: String, keySystemId: String, licenseResponse: LicenseResponse, completion: @escaping (Data?, Error?) -> Void) {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "handleLicenseResponse.") }
         let requestId = UUID().uuidString
         self.licenseResponseCompletions[requestId] = completion
@@ -96,7 +96,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
         ])
     }
     
-    func handleExtractFairplayContentId(integrationId: String, keySystemId: String, skdUrl: String, completion: @escaping (String?) -> Void) {
+    func handleExtractFairplayContentId(integrationId: String, keySystemId: String, skdUrl: String, completion: @escaping (String?, Error?) -> Void) {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "handleLicenseResponse.") }
         let requestId = UUID().uuidString
         self.extractedFairplayContentIdCompletions[requestId] = completion
