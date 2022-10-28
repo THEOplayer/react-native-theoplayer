@@ -131,8 +131,11 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
     func onBuildProcessed(result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print("[NATIVE] onBuildProcessed.") }
         if let requestId = result["requestId"] as? String,
+           let resultString = result["resultString"] as? String,
            let completion = self.buildIntegrationCompletions.removeValue(forKey: requestId) {
-            completion()
+            completion(resultString == "success")
+        } else {
+            // TODO: handle issues
         }
     }
     
@@ -140,9 +143,12 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
     func onCertificateRequestProcessed(result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onCertificateRequestProcessed.") }
         if let requestId = result["requestId"] as? String,
+           let certificateDataBase64String = result["resultString"] as? String,
            let completion = self.certificateRequestCompletions.removeValue(forKey: requestId) {
-            let certificateRequest = CertificateRequest(url: "", method: "", headers: [:], body: nil)
-            completion(certificateRequest)
+            let certificateData = Data(base64Encoded: certificateDataBase64String)
+            completion(certificateData, nil)
+        } else {
+            // TODO: handle issues
         }
     }
     
@@ -150,10 +156,12 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
     func onCertificateResponseProcessed(result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onCertificateResponseProcessed.") }
         if let requestId = result["requestId"] as? String,
+           let certificateDataBase64String = result["resultString"] as? String,
            let completion = self.certificateResponseCompletions.removeValue(forKey: requestId) {
-            let certificateRequest = CertificateRequest(url: "", method: "", headers: [:], body: nil)
-            let certificateResponse = CertificateResponse(certificateRequest: certificateRequest, url: "", status: 200, statusText: "", headers: [:], body: Data())
-            completion(certificateResponse)
+            let certificateData = Data(base64Encoded: certificateDataBase64String)
+            completion(certificateData, nil)
+        } else {
+            // TODO: handle issues
         }
     }
     
@@ -161,9 +169,12 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
     func onLicenseRequestProcessed(result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onLicenseRequestProcessed.") }
         if let requestId = result["requestId"] as? String,
+           let licenseDataBase64String = result["resultString"] as? String,
            let completion = self.licenseRequestCompletions.removeValue(forKey: requestId) {
-            let licenseRequest = LicenseRequest(url: "", method: "", headers: [:], body: nil)
-            completion(licenseRequest)
+            let licenseData = Data(base64Encoded: licenseDataBase64String)
+            completion(licenseData, nil)
+        } else {
+            // TODO: handle issues
         }
     }
     
@@ -171,10 +182,12 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
     func onLicenseResponseProcessed(result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onLicenseResponseProcessed.") }
         if let requestId = result["requestId"] as? String,
+           let licenseDataBase64String = result["resultString"] as? String,
            let completion = self.licenseResponseCompletions.removeValue(forKey: requestId) {
-            let licenseRequest = LicenseRequest(url: "", method: "", headers: [:], body: nil)
-            let licenseResponse = LicenseResponse(licenseRequest: licenseRequest, url: "", status: 200, statusText: "", headers: [:], body: Data())
-            completion(licenseResponse)
+            let licenseData = Data(base64Encoded: licenseDataBase64String)
+            completion(licenseData, nil)
+        } else {
+            // TODO: handle issues
         }
     }
     
@@ -182,9 +195,11 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
     func onExtractFairplayContentIdProcessed(result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onExtractFairplayContentIdProcessed.") }
         if let requestId = result["requestId"] as? String,
-           let contentId = result["contentId"] as? String,
+           let contentId = result["resultString"] as? String,
            let completion = self.extractedFairplayContentIdCompletions.removeValue(forKey: requestId) {
-            completion(contentId)
+            completion(contentId, nil)
+        } else {
+            // TODO: handle issues
         }
     }
     
