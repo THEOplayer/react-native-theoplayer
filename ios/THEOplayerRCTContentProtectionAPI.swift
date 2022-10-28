@@ -116,6 +116,15 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
     @objc(registerContentProtectionIntegration:keySystemId:)
     func registerContentProtectionIntegration(integrationId: String, keySystemId: String) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "registerContentProtectionIntegration for \(integrationId) - \(keySystemId)") }
+        // Create a proxy factory
+        let integrationFactory = THEOplayerRCTProxyContentProtectionIntegrationFactory(contentProtectionAPI: self,
+                                                                                       integrationId: integrationId,
+                                                                                       keySystemId: keySystemId)
+        // Register that factory on the THEOplayerSDK:
+        let keySystem = self.keySystemFromString(keySystemId)
+        THEOplayerSDK.THEOplayer.registerContentProtectionIntegration(integrationId: integrationId,
+                                                                      keySystem: keySystem,
+                                                                      integrationFactory: integrationFactory)
     }
     
     @objc(onBuildProcessed:)
@@ -176,6 +185,20 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
            let contentId = result["contentId"] as? String,
            let completion = self.extractedFairplayContentIdCompletions.removeValue(forKey: requestId) {
             completion(contentId)
+        }
+    }
+    
+    // MARK: Helpers
+    private func keySystemFromString(_ keySystemIdString: String) -> THEOplayerSDK.KeySystemId {
+        switch keySystemIdString.lowercased() {
+        case "fairplay":
+            return .FAIRPLAY
+        case "widevine":
+            return .WIDEVINE
+        case "playready":
+            return .PLAYREADY
+        default:
+            return .FAIRPLAY // fallback to fairplay on iOS...
         }
     }
 }
