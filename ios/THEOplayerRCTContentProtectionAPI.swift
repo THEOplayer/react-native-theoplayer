@@ -108,6 +108,10 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
     }
     
     // MARK: Incoming JS Notifications
+    @objc(registerContentProtectionIntegration:keySystemId:)
+    func registerContentProtectionIntegration(integrationId: String, keySystemId: String) -> Void {
+        if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "registerContentProtectionIntegration for \(integrationId) - \(keySystemId)") }
+    }
     
     @objc(onBuildProcessed:)
     func onBuildProcessed(result: NSDictionary) -> Void {
