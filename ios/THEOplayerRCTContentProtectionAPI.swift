@@ -110,32 +110,63 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
     // MARK: Incoming JS Notifications
     
     @objc(onBuildProcessed:)
-    func onBuildProcessed(srcDict: NSDictionary) -> Void {
+    func onBuildProcessed(result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print("[NATIVE] onBuildProcessed.") }
+        if let requestId = result["requestId"] as? String,
+           let completion = self.buildIntegrationCompletions.removeValue(forKey: requestId) {
+            completion()
+        }
     }
     
     @objc(onCertificateRequestProcessed:)
-    func onCertificateRequestProcessed(srcDict: NSDictionary) -> Void {
-        if DEBUG_CONTENT_PROTECTION_API { print("[NATIVE] onCertificateRequestProcessed.") }
+    func onCertificateRequestProcessed(result: NSDictionary) -> Void {
+        if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onCertificateRequestProcessed.") }
+        if let requestId = result["requestId"] as? String,
+           let completion = self.certificateRequestCompletions.removeValue(forKey: requestId) {
+            let certificateRequest = CertificateRequest(url: "", method: "", headers: [:], body: nil)
+            completion(certificateRequest)
+        }
     }
     
     @objc(onCertificateResponseProcessed:)
-    func onCertificateResponseProcessed(srcDict: NSDictionary) -> Void {
-        if DEBUG_CONTENT_PROTECTION_API { print("[NATIVE] onCertificateResponseProcessed.") }
+    func onCertificateResponseProcessed(result: NSDictionary) -> Void {
+        if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onCertificateResponseProcessed.") }
+        if let requestId = result["requestId"] as? String,
+           let completion = self.certificateResponseCompletions.removeValue(forKey: requestId) {
+            let certificateRequest = CertificateRequest(url: "", method: "", headers: [:], body: nil)
+            let certificateResponse = CertificateResponse(certificateRequest: certificateRequest, url: "", status: 200, statusText: "", headers: [:], body: Data())
+            completion(certificateResponse)
+        }
     }
     
     @objc(onLicenseRequestProcessed:)
-    func onLicenseRequestProcessed(srcDict: NSDictionary) -> Void {
-        if DEBUG_CONTENT_PROTECTION_API { print("[NATIVE] onLicenseRequestProcessed.") }
+    func onLicenseRequestProcessed(result: NSDictionary) -> Void {
+        if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onLicenseRequestProcessed.") }
+        if let requestId = result["requestId"] as? String,
+           let completion = self.licenseRequestCompletions.removeValue(forKey: requestId) {
+            let licenseRequest = LicenseRequest(url: "", method: "", headers: [:], body: nil)
+            completion(licenseRequest)
+        }
     }
     
     @objc(onLicenseResponseProcessed:)
-    func onLicenseResponseProcessed(srcDict: NSDictionary) -> Void {
-        if DEBUG_CONTENT_PROTECTION_API { print("[NATIVE] onLicenseResponseProcessed.") }
+    func onLicenseResponseProcessed(result: NSDictionary) -> Void {
+        if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onLicenseResponseProcessed.") }
+        if let requestId = result["requestId"] as? String,
+           let completion = self.licenseResponseCompletions.removeValue(forKey: requestId) {
+            let licenseRequest = LicenseRequest(url: "", method: "", headers: [:], body: nil)
+            let licenseResponse = LicenseResponse(licenseRequest: licenseRequest, url: "", status: 200, statusText: "", headers: [:], body: Data())
+            completion(licenseResponse)
+        }
     }
     
     @objc(onExtractFairplayContentIdProcessed:)
-    func onExtractFairplayContentIdProcessed(srcDict: NSDictionary) -> Void {
-        if DEBUG_CONTENT_PROTECTION_API { print("[NATIVE] onExtractFairplayContentIdProcessed.") }
+    func onExtractFairplayContentIdProcessed(result: NSDictionary) -> Void {
+        if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onExtractFairplayContentIdProcessed.") }
+        if let requestId = result["requestId"] as? String,
+           let contentId = result["contentId"] as? String,
+           let completion = self.extractedFairplayContentIdCompletions.removeValue(forKey: requestId) {
+            completion(contentId)
+        }
     }
 }
