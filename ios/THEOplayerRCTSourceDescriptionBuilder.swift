@@ -271,7 +271,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
                 case DRM_INTEGRATION_ID_EZDRM: return try JSONDecoder().decode(EzdrmDRMConfiguration.self, from: data)
                 case DRM_INTEGRATION_ID_KEYOS: return try JSONDecoder().decode(KeyOSDRMConfiguration.self, from: data)
                 case DRM_INTEGRATION_ID_VERIMATRIX: return try JSONDecoder().decode(VerimatrixDRMConfiguration.self, from: data)
-                default: print("[NATIVE] \(integration): unsupported drm integration")
+                default: return try JSONDecoder().decode(MultiplatformDRMConfiguration.self, from: data)
                 }
             } else {
                 print("[NATIVE] integration type not specified... trying default drm integration")
