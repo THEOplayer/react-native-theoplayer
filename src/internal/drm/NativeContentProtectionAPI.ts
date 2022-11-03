@@ -1,4 +1,4 @@
-import type { CertificateRequest, CertificateResponse, ContentProtectionAPI, LicenseRequest } from 'react-native-theoplayer';
+import type { CertificateRequest, CertificateResponse, ContentProtectionAPI, DRMConfiguration, LicenseRequest } from 'react-native-theoplayer';
 import type { KeySystemId } from 'react-native-theoplayer';
 import type { ContentProtectionIntegrationFactory } from 'react-native-theoplayer';
 import { NativeEventEmitter, NativeModules } from 'react-native';
@@ -21,7 +21,7 @@ interface WrappedContentProtectionIntegration {
 }
 
 interface BuildEvent extends NativeContentProtectionEvent {
-  drmConfig: string;
+  drmConfig: DRMConfiguration;
 }
 
 interface CertificateRequestEvent extends NativeContentProtectionEvent, CertificateRequest {}
@@ -67,15 +67,13 @@ export class NativeContentProtectionAPI implements ContentProtectionAPI {
 
   private onBuildIntegrationRequest = (event: BuildEvent) => {
     const { requestId, integrationId, keySystemId, drmConfig } = event;
+    console.log('ContentProtectionModule', `onBuildIntegrationRequest ${integrationId} ${keySystemId}`);
     const factory = this.getFactory(integrationId, keySystemId);
     if (factory) {
       this.currentIntegration = {
         integrationId,
         keySystemId,
-        integration: factory.build({
-          // TODO: extract drmConfiguration from drmConfig
-          integration: '',
-        }),
+        integration: factory.build(drmConfig),
       };
       NativeModules.ContentProtectionModule.onBuildProcessed({ requestId, resultString: 'success' });
     } else {

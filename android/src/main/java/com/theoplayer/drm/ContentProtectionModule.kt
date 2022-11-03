@@ -6,25 +6,17 @@ import android.util.Base64
 import android.util.Log
 import com.facebook.react.bridge.*
 import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter
-import com.google.gson.Gson
 import com.theoplayer.android.api.THEOplayerGlobal
 import com.theoplayer.android.api.contentprotection.*
 import com.theoplayer.android.api.source.drm.DRMConfiguration
+import com.theoplayer.drm.ContentProtectionAdapter.fromDRMConfiguration
 
-const val PROP_INTEGRATION_ID: String = "integrationId"
-const val PROP_KEYSYSTEM_ID: String = "keySystemId"
-const val PROP_REQUEST_ID: String = "requestId"
-const val PROP_URL: String = "url"
-const val PROP_METHOD: String = "method"
-const val PROP_HEADERS: String = "headers"
-const val PROP_BASE64_BODY: String = "base64body"
+const val TAG = "ContentProtectionModule"
 
 class ContentProtectionModule(private val context: ReactApplicationContext): ReactContextBaseJavaModule(context) {
   private val handler = Handler(Looper.getMainLooper())
 
   private var requestId: Int = 0
-
-  private var gson = Gson()
 
   private val requestQueue: HashMap<String, (result: ReadableMap) -> Unit> = HashMap()
 
@@ -42,86 +34,98 @@ class ContentProtectionModule(private val context: ReactApplicationContext): Rea
           .registerContentProtectionIntegration(integrationId, keySystemId, factory)
       }
     } else {
-      Log.e(name, "Invalid keySystemId $keySystemIdStr")
+      Log.e(TAG, "Invalid keySystemId $keySystemIdStr")
     }
   }
 
   @ReactMethod
-  fun onBuildProcessed(data: ReadableMap) {
-    val requestId = data.getString(PROP_REQUEST_ID)
+  fun onBuildProcessed(payload: ReadableMap) {
+    receive("onBuildProcessed", payload)
   }
 
   @ReactMethod
-  fun onCertificateRequestProcessed(data: ReadableMap) {
-    val requestId = data.getString(PROP_REQUEST_ID)
+  fun onCertificateRequestProcessed(payload: ReadableMap) {
+    receive("onCertificateRequestProcessed", payload)
   }
 
   @ReactMethod
-  fun onCertificateResponseProcessed(data: ReadableMap) {
-    val requestId = data.getString(PROP_REQUEST_ID)
+  fun onCertificateResponseProcessed(payload: ReadableMap) {
+    receive("onCertificateResponseProcessed", payload)
   }
 
   @ReactMethod
-  fun onLicenseRequestProcessed(data: ReadableMap) {
-    val requestId = data.getString(PROP_REQUEST_ID)
-    val response = requestQueue.remove(requestId)
-    if (response != null) {
-      response(data)
-    } else {
-      // TODO: error
-    }
+  fun onLicenseRequestProcessed(payload: ReadableMap) {
+    receive("onLicenseRequestProcessed", payload)
   }
 
   @ReactMethod
-  fun onLicenseResponseProcessed(data: ReadableMap) {
-    val requestId = data.getString(PROP_REQUEST_ID)
+  fun onLicenseResponseProcessed(payload: ReadableMap) {
+    receive("onLicenseResponseProcessed", payload)
   }
 
   fun onBuild(integrationId: String, keySystemId: KeySystemId, config: DRMConfiguration?) {
-    val params = createBridgeData(integrationId, keySystemId)
-    params.putString("drmConfig", "TODO")
-    emit("onBuildIntegration", params)
+    val payload = createBridgeData(integrationId, keySystemId)
+    if (config != null) {
+      payload.putMap(PROP_DRM_CONFIG, fromDRMConfiguration(config))
+    }
+    val requestId = createRequestId()
+    payload.putString(PROP_REQUEST_ID, requestId)
+    requestQueue[requestId] = { result ->
+      // ignore
+    }
+    emit("onBuildIntegration", payload)
   }
 
   fun onCertificateRequest(integrationId: String, keySystemId: KeySystemId, request: Request, callback: CertificateRequestCallback) {
-    val data = createBridgeData(integrationId, keySystemId)
+    val payload = ContentProtectionAdapter.fromRequest(integrationId, keySystemId, request)
     val requestId = createRequestId()
-    data.putString(PROP_REQUEST_ID, requestId)
-    emit("onCertificateRequest", data)
+    payload.putString(PROP_REQUEST_ID, requestId)
+    requestQueue[requestId] = { result ->
+      // Override properties from modified request
+      request.url = result.getString(PROP_URL)!!
+      request.method = RequestMethodAdapter.fromString(result.getString(PROP_METHOD))
+      request.headers = result.getMap(PROP_HEADERS)?.toHashMap() as HashMap<String, String>
+      request.body = Base64.decode(result.getString(PROP_BASE64_BODY), Base64.DEFAULT)
+      callback.request(request)
+    }
+    emit("onCertificateRequest", payload)
   }
 
   fun onCertificateResponse(integrationId: String, keySystemId: KeySystemId, response: Response, callback: CertificateResponseCallback) {
-    val data = createBridgeData(integrationId, keySystemId)
+    val payload = ContentProtectionAdapter.fromResponse(integrationId, keySystemId, response)
     val requestId = createRequestId()
-    data.putString(PROP_REQUEST_ID, requestId)
-    emit("onCertificateResponse", data)
+    payload.putString(PROP_REQUEST_ID, requestId)
+    requestQueue[requestId] = { result ->
+      val body = Base64.decode(result.getString(PROP_BASE64_BODY), Base64.DEFAULT)
+      callback.respond(body)
+    }
+    emit("onCertificateResponse", payload)
   }
 
   fun onLicenseRequest(integrationId: String, keySystemId: KeySystemId, request: Request, callback: LicenseRequestCallback) {
-    val data = createBridgeData(integrationId, keySystemId)
+    val payload = ContentProtectionAdapter.fromRequest(integrationId, keySystemId, request)
     val requestId = createRequestId()
-    data.putString(PROP_REQUEST_ID, requestId)
-    data.putString(PROP_URL, request.url)
-    data.putString(PROP_METHOD, RequestMethodAdapter.toString(request.method))
-    val headers = Arguments.createMap()
-    request.headers.entries.forEach { entry ->
-      headers.putString(entry.key, entry.value)
-    }
-    data.putMap(PROP_HEADERS, headers)
-    data.putString(PROP_BASE64_BODY, Base64.encodeToString(request.body, Base64.DEFAULT))
-    requestQueue[requestId] = { modifiedRequest ->
+    payload.putString(PROP_REQUEST_ID, requestId)
+    requestQueue[requestId] = { result ->
       // Override properties from modified request
-      request.url = modifiedRequest.getString(PROP_URL)!!
-      request.method = RequestMethodAdapter.fromString(modifiedRequest.getString(PROP_METHOD))
-      request.headers = modifiedRequest.getMap(PROP_HEADERS)?.toHashMap() as HashMap<String, String>
+      request.url = result.getString(PROP_URL)!!
+      request.method = RequestMethodAdapter.fromString(result.getString(PROP_METHOD))
+      request.headers = result.getMap(PROP_HEADERS)?.toHashMap() as HashMap<String, String>
+      request.body = Base64.decode(result.getString(PROP_BASE64_BODY), Base64.DEFAULT)
       callback.request(request)
     }
-    emit("onLicenseRequest", data)
+    emit("onLicenseRequest", payload)
   }
 
   fun onLicenseResponse(integrationId: String, keySystemId: KeySystemId, response: Response, callback: LicenseResponseCallback) {
-    val params = createBridgeData(integrationId, keySystemId)
-    emit("onLicenseResponse", params)
+    val payload = ContentProtectionAdapter.fromResponse(integrationId, keySystemId, response)
+    val requestId = createRequestId()
+    payload.putString(PROP_REQUEST_ID, requestId)
+    requestQueue[requestId] = { result ->
+      val body = Base64.decode(result.getString(PROP_BASE64_BODY), Base64.DEFAULT)
+      callback.respond(body)
+    }
+    emit("onLicenseResponse", payload)
   }
 
   @ReactMethod
@@ -133,9 +137,21 @@ class ContentProtectionModule(private val context: ReactApplicationContext): Rea
   }
 
   private fun emit(eventName: String, data: WritableMap) {
+    Log.d(TAG, "emit $eventName")
     context
       .getJSModule(RCTDeviceEventEmitter::class.java)
       .emit(eventName, data)
+  }
+
+  private fun receive(eventName: String, payload: ReadableMap) {
+    val requestId = payload.getString(PROP_REQUEST_ID)
+    Log.d(TAG, "receive $eventName $requestId")
+    val response = requestQueue.remove(requestId)
+    if (response != null) {
+      response(payload)
+    } else {
+      Log.e(TAG, "receive $eventName failed");
+    }
   }
 
   private fun createRequestId(): String {
