@@ -116,7 +116,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
     
     // MARK: Incoming JS Notifications
     @objc(registerContentProtectionIntegration:keySystemId:)
-    func registerContentProtectionIntegration(integrationId: String, keySystemId: String) -> Void {
+    func registerContentProtectionIntegration(_ integrationId: String, keySystemId: String) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "registerContentProtectionIntegration for \(integrationId) - \(keySystemId)") }
         // Create a proxy factory
         let integrationFactory = THEOplayerRCTProxyContentProtectionIntegrationFactory(contentProtectionAPI: self,
@@ -130,7 +130,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
     }
     
     @objc(onBuildProcessed:)
-    func onBuildProcessed(result: NSDictionary) -> Void {
+    func onBuildProcessed(_ result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print("[NATIVE] onBuildProcessed.") }
         if let requestId = result["requestId"] as? String,
            let resultString = result["resultString"] as? String,
@@ -142,7 +142,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
     }
     
     @objc(onCertificateRequestProcessed:)
-    func onCertificateRequestProcessed(result: NSDictionary) -> Void {
+    func onCertificateRequestProcessed(_ result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onCertificateRequestProcessed.") }
         if let requestId = result["requestId"] as? String,
            let certificateDataBase64String = result["resultString"] as? String,
@@ -155,7 +155,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
     }
     
     @objc(onCertificateResponseProcessed:)
-    func onCertificateResponseProcessed(result: NSDictionary) -> Void {
+    func onCertificateResponseProcessed(_ result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onCertificateResponseProcessed.") }
         if let requestId = result["requestId"] as? String,
            let certificateDataBase64String = result["resultString"] as? String,
@@ -168,7 +168,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
     }
     
     @objc(onLicenseRequestProcessed:)
-    func onLicenseRequestProcessed(result: NSDictionary) -> Void {
+    func onLicenseRequestProcessed(_ result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onLicenseRequestProcessed.") }
         if let requestId = result["requestId"] as? String,
            let licenseDataBase64String = result["resultString"] as? String,
@@ -181,7 +181,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
     }
     
     @objc(onLicenseResponseProcessed:)
-    func onLicenseResponseProcessed(result: NSDictionary) -> Void {
+    func onLicenseResponseProcessed(_ result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onLicenseResponseProcessed.") }
         if let requestId = result["requestId"] as? String,
            let licenseDataBase64String = result["resultString"] as? String,
@@ -194,7 +194,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
     }
     
     @objc(onExtractFairplayContentIdProcessed:)
-    func onExtractFairplayContentIdProcessed(result: NSDictionary) -> Void {
+    func onExtractFairplayContentIdProcessed(_ result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onExtractFairplayContentIdProcessed.") }
         if let skdUrl = result["skdUrl"] as? String,
            let contentId = result["contentId"] as? String {
