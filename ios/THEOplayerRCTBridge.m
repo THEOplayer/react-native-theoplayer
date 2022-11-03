@@ -102,6 +102,7 @@ RCT_EXTERN_METHOD(onCertificateResponseProcessed:(NSDictionary)result)
 RCT_EXTERN_METHOD(onLicenseRequestProcessed:(NSDictionary)result)
 RCT_EXTERN_METHOD(onLicenseResponseProcessed:(NSDictionary)result)
 RCT_EXTERN_METHOD(onExtractFairplayContentIdProcessed:(NSDictionary)result)
-RCT_EXTERN_METHOD(registerContentProtectionIntegration:(nonnull NSString *)integrationId:(nonnull NSString *)keySystemId)
+RCT_EXTERN_METHOD(registerContentProtectionIntegration:(nonnull NSString *)integrationId
+                  keySystemId:(nonnull NSString *)keySystemId)
 
 @end
