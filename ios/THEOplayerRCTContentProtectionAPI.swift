@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import THEOplayerSDK
 
-let CPI_TAG: String = "[ContentProtectionIntegrtionAPI] "
+let CPI_TAG: String = "[ContentProtectionIntegrationAPI] "
 
 @objc(THEOplayerRCTContentProtectionAPI)
 class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
@@ -31,7 +31,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
     }
     
     override func supportedEvents() -> [String]! {
-        return ["onBuildIntegrationRequest",
+        return ["onBuildIntegration",
                 "onCertificateRequest",
                 "onCertificateResponse",
                 "onLicenseRequest",
@@ -45,7 +45,6 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "handleBuildIntegration.") }
         let requestId = UUID().uuidString
         self.buildIntegrationCompletions[requestId] = completion
-        self.sendEvent(withName: "onBuildIntegrationRequest", body: [
             requestId: requestId,
             integrationId: integrationId,
             keySystemId: keySystemId
