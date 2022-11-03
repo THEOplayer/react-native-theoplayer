@@ -176,19 +176,19 @@ export class NativeContentProtectionAPI implements ContentProtectionAPI {
 
   private onExtractFairplayContentId = async (event: ExtractFaiplayContentIdEvent) => {
     console.log('ContentProtectionAPI - received onExtractFairplayContentId', event);
-    const { requestId, integrationId, keySystemId, skdUrl } = event;
+    const { integrationId, keySystemId, skdUrl } = event;
     const integration = this.getIntegration(integrationId, keySystemId);
     if (integration?.extractFairplayContentId) {
-      const resultString = await integration.extractFairplayContentId(skdUrl);
+      const contentId = await integration.extractFairplayContentId(skdUrl);
       NativeModules.ContentProtectionModule.onExtractFairplayContentIdProcessed({
-        requestId,
-        resultString,
+        skdUrl,
+        contentId,
       });
     } else {
-      const resultString = skdUrl;
+      const contentId = skdUrl;
       NativeModules.ContentProtectionModule.onExtractFairplayContentIdProcessed({
-        requestId,
-        resultString,
+        skdUrl,
+        contentId,
       });
     }
   };
