@@ -45,9 +45,10 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "handleBuildIntegration.") }
         let requestId = UUID().uuidString
         self.buildIntegrationCompletions[requestId] = completion
-            requestId: requestId,
-            integrationId: integrationId,
-            keySystemId: keySystemId
+        self.sendEvent(withName: "onBuildIntegration", body: [
+            "requestId": requestId,
+            "integrationId": integrationId,
+            "keySystemId": keySystemId
         ])
     }
     
@@ -56,9 +57,9 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
         let requestId = UUID().uuidString
         self.certificateRequestCompletions[requestId] = completion
         self.sendEvent(withName: "onCertificateRequest", body: [
-            requestId: requestId,
-            integrationId: integrationId,
-            keySystemId: keySystemId
+            "requestId": requestId,
+            "integrationId": integrationId,
+            "keySystemId": keySystemId
             // TODO: aggregate request
         ])
     }
@@ -68,9 +69,9 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
         let requestId = UUID().uuidString
         self.certificateResponseCompletions[requestId] = completion
         self.sendEvent(withName: "onCertificateResponse", body: [
-            requestId: requestId,
-            integrationId: integrationId,
-            keySystemId: keySystemId
+            "requestId": requestId,
+            "integrationId": integrationId,
+            "keySystemId": keySystemId
             // TODO: aggregate response
         ])
     }
@@ -80,9 +81,9 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
         if let skdUrl = licenseRequest.fairplaySkdUrl {
             if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "prefetch Fairplay contentId.") }
             self.sendEvent(withName: "onExtractFairplayContentId", body: [
-                integrationId: integrationId,
-                keySystemId: keySystemId,
-                skdUrl: skdUrl
+                "integrationId": integrationId,
+                "keySystemId": keySystemId,
+                "skdUrl": skdUrl
             ])
         }
         
@@ -90,9 +91,9 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
         let requestId = UUID().uuidString
         self.licenseRequestCompletions[requestId] = completion
         self.sendEvent(withName: "onLicenseRequest", body: [
-            requestId: requestId,
-            integrationId: integrationId,
-            keySystemId: keySystemId
+            "requestId": requestId,
+            "integrationId": integrationId,
+            "keySystemId": keySystemId
             // TODO: aggregate request
         ])
     }
@@ -102,9 +103,9 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
         let requestId = UUID().uuidString
         self.licenseResponseCompletions[requestId] = completion
         self.sendEvent(withName: "onLicenseResponse", body: [
-            requestId: requestId,
-            integrationId: integrationId,
-            keySystemId: keySystemId
+            "requestId": requestId,
+            "integrationId": integrationId,
+            "keySystemId": keySystemId
             // TODO: aggregate response
         ])
     }
