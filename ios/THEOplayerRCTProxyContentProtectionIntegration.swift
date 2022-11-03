@@ -93,10 +93,6 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
     }
     
     func extractFairplayContentId(skdUrl: String) -> String {
-        self.contentProtectionAPI?.handleExtractFairplayContentId(integrationId: self.integrationId, keySystemId: self.keySystemId, skdUrl: skdUrl) { contentId, error in
-            // TODO: This is not sync...
-        }
-        return skdUrl
+        return self.contentProtectionAPI?.handleExtractFairplayContentId(integrationId: self.integrationId, keySystemId: self.keySystemId, skdUrl: skdUrl) ?? skdUrl
     }
-    
 }

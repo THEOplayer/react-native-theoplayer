@@ -20,7 +20,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
     private var certificateResponseCompletions: [String:(Data?, Error?) -> Void] = [:]
     private var licenseRequestCompletions: [String:(Data?, Error?) -> Void] = [:]
     private var licenseResponseCompletions: [String:(Data?, Error?) -> Void] = [:]
-    private var extractedFairplayContentIdCompletions: [String:(String?, Error?) -> Void] = [:]
+    private var extractedFairplayContentIds: [String:String] = [:]                          // [skdUrl : contentId]
     
     override static func moduleName() -> String! {
         return "ContentProtectionModule"
@@ -77,6 +77,16 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
     }
     
     func handleLicenseRequest(integrationId: String, keySystemId: String, licenseRequest: LicenseRequest, completion: @escaping (Data?, Error?) -> Void) {
+        // prefetch contentId for Fairplay asynchronously
+        if let skdUrl = licenseRequest.fairplaySkdUrl {
+            if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "prefetch Fairplay contentId.") }
+            self.sendEvent(withName: "onExtractFairplayContentId", body: [
+                integrationId: integrationId,
+                keySystemId: keySystemId,
+                skdUrl: skdUrl
+            ])
+        }
+        
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "handleLicenseRequest.") }
         let requestId = UUID().uuidString
         self.licenseRequestCompletions[requestId] = completion
@@ -100,16 +110,9 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
         ])
     }
     
-    func handleExtractFairplayContentId(integrationId: String, keySystemId: String, skdUrl: String, completion: @escaping (String?, Error?) -> Void) {
-        if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "handleLicenseResponse.") }
-        let requestId = UUID().uuidString
-        self.extractedFairplayContentIdCompletions[requestId] = completion
-        self.sendEvent(withName: "onExtractFairplayContentId", body: [
-            requestId: requestId,
-            integrationId: integrationId,
-            keySystemId: keySystemId,
-            skdUrl: skdUrl
-        ])
+    func handleExtractFairplayContentId(integrationId: String, keySystemId: String, skdUrl: String) -> String {
+        if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "handleExtractFairplayContentId.") }
+        return self.extractedFairplayContentIds[skdUrl] ?? skdUrl
     }
     
     // MARK: Incoming JS Notifications
@@ -194,10 +197,9 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
     @objc(onExtractFairplayContentIdProcessed:)
     func onExtractFairplayContentIdProcessed(result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onExtractFairplayContentIdProcessed.") }
-        if let requestId = result["requestId"] as? String,
-           let contentId = result["resultString"] as? String,
-           let completion = self.extractedFairplayContentIdCompletions.removeValue(forKey: requestId) {
-            completion(contentId, nil)
+        if let skdUrl = result["skdUrl"] as? String,
+           let contentId = result["contentId"] as? String {
+            self.extractedFairplayContentIds[skdUrl] = contentId
         } else {
             // TODO: handle issues
         }
