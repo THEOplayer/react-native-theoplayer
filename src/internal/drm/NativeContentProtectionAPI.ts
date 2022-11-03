@@ -1,8 +1,12 @@
-import type { CertificateRequest, CertificateResponse, ContentProtectionAPI, LicenseRequest, LicenseResponse } from 'react-native-theoplayer';
+import type { CertificateRequest, CertificateResponse, ContentProtectionAPI, LicenseRequest } from 'react-native-theoplayer';
 import type { KeySystemId } from 'react-native-theoplayer';
 import type { ContentProtectionIntegrationFactory } from 'react-native-theoplayer';
 import { NativeEventEmitter, NativeModules } from 'react-native';
 import type { ContentProtectionIntegration } from 'react-native-theoplayer';
+import type { NativeContentProtectionEvent } from './NativeContentProtectionEvent';
+import type { NativeLicenseRequest } from './NativeLicenseRequest';
+import { fromNativeLicenseRequest, toNativeLicenseRequest } from './NativeLicenseRequest';
+import { fromNativeLicenseResponse, NativeLicenseResponse, toNativeLicenseResponseResult } from './NativeLicenseResponse';
 
 interface WrappedContentProtectionIntegrationFactory {
   integrationId: string;
@@ -16,20 +20,14 @@ interface WrappedContentProtectionIntegration {
   integration: ContentProtectionIntegration;
 }
 
-interface ContentProtectionEvent {
-  requestId: string;
-  integrationId: string;
-  keySystemId: string;
-}
-
-interface BuildEvent extends ContentProtectionEvent {
+interface BuildEvent extends NativeContentProtectionEvent {
   drmConfig: string;
 }
-interface CertificateRequestEvent extends ContentProtectionEvent, CertificateRequest {}
-interface CertificateResponseEvent extends ContentProtectionEvent, CertificateResponse {}
-interface LicenseRequestEvent extends ContentProtectionEvent, LicenseRequest {}
-interface LicenseResponseEvent extends ContentProtectionEvent, LicenseResponse {}
-interface ExtractFaiplayContentIdEvent extends ContentProtectionEvent {
+
+interface CertificateRequestEvent extends NativeContentProtectionEvent, CertificateRequest {}
+interface CertificateResponseEvent extends NativeContentProtectionEvent, CertificateResponse {}
+
+interface ExtractFaiplayContentIdEvent extends NativeContentProtectionEvent {
   skdUrl: string;
 }
 
@@ -68,11 +66,9 @@ export class NativeContentProtectionAPI implements ContentProtectionAPI {
   }
 
   private onBuildIntegrationRequest = (event: BuildEvent) => {
-    console.log('ContentProtectionAPI - received onBuildIntegrationRequest', event);
     const { requestId, integrationId, keySystemId, drmConfig } = event;
     const factory = this.getFactory(integrationId, keySystemId);
     if (factory) {
-      console.log('onBuildIntegrationRequest: ', requestId, integrationId, keySystemId, drmConfig);
       this.currentIntegration = {
         integrationId,
         keySystemId,
@@ -81,12 +77,8 @@ export class NativeContentProtectionAPI implements ContentProtectionAPI {
           integration: '',
         }),
       };
-      NativeModules.ContentProtectionModule.onBuildProcessed({
-        requestId,
-        resultString: 'success',
-      });
+      NativeModules.ContentProtectionModule.onBuildProcessed({ requestId, resultString: 'success' });
     } else {
-      console.error(`No factory for ${integrationId} - ${keySystemId}  has been registered.`);
       NativeModules.ContentProtectionModule.onBuildProcessed({
         requestId,
         resultString: 'failed',
@@ -95,7 +87,6 @@ export class NativeContentProtectionAPI implements ContentProtectionAPI {
   };
 
   private onCertificateRequest = async (event: CertificateRequestEvent) => {
-    console.log('ContentProtectionAPI - received onCertificateRequest: ', event);
     const { requestId, integrationId, keySystemId } = event;
     const integration = this.getIntegration(integrationId, keySystemId);
     if (integration?.onCertificateRequest) {
@@ -115,7 +106,6 @@ export class NativeContentProtectionAPI implements ContentProtectionAPI {
   };
 
   private onCertificateResponse = async (event: CertificateResponseEvent) => {
-    console.log('ContentProtectionAPI - received onCertificateResponse', event);
     const { requestId, integrationId, keySystemId } = event;
     const integration = this.getIntegration(integrationId, keySystemId);
     if (integration?.onCertificateResponse) {
@@ -134,43 +124,30 @@ export class NativeContentProtectionAPI implements ContentProtectionAPI {
     }
   };
 
-  private onLicenseRequest = async (event: LicenseRequestEvent) => {
-    console.log('ContentProtectionAPI - received onLicenseRequest', event);
-    const { requestId, integrationId, keySystemId } = event;
+  private onLicenseRequest = async (request: NativeLicenseRequest) => {
+    const { requestId, integrationId, keySystemId } = request;
     const integration = this.getIntegration(integrationId, keySystemId);
+    // Optionally let the custom integration modify the request.
     if (integration?.onLicenseRequest) {
-      //const result = await integration.onLicenseRequest(event);
-      const resultString = 'Base64 encoded string'; // TODO: base64 encoding of result
-      NativeModules.ContentProtectionModule.onCertificateResponseProcessed({
-        requestId,
-        resultString,
-      });
+      const modifiedRequest = await integration.onLicenseRequest(fromNativeLicenseRequest(request));
+      // TODO: we also want to support BufferSource results
+      const modifiedNativeRequest = toNativeLicenseRequest(requestId, integrationId, keySystemId, modifiedRequest as LicenseRequest);
+      NativeModules.ContentProtectionModule.onLicenseRequestProcessed(modifiedNativeRequest);
     } else {
-      const resultString = 'Base64 encoded string'; // TODO: base64 encoding of original
-      NativeModules.ContentProtectionModule.onCertificateResponseProcessed({
-        requestId,
-        resultString,
-      });
+      NativeModules.ContentProtectionModule.onLicenseRequestProcessed(request);
     }
   };
 
-  private onLicenseResponse = async (event: LicenseResponseEvent) => {
-    console.log('ContentProtectionAPI - received onLicenseResponse', event);
-    const { requestId, integrationId, keySystemId } = event;
+  private onLicenseResponse = async (response: NativeLicenseResponse) => {
+    const { requestId, integrationId, keySystemId } = response;
     const integration = this.getIntegration(integrationId, keySystemId);
     if (integration?.onLicenseResponse) {
-      //const result = await integration.onLicenseResponse(event);
-      const resultString = 'Base64 encoded string'; // TODO: base64 encoding of result
-      NativeModules.ContentProtectionModule.onCertificateResponseProcessed({
-        requestId,
-        resultString,
-      });
+      const responseResult = await integration.onLicenseResponse(fromNativeLicenseResponse(response));
+      // TODO: we also want to support ArrayBufferView results
+      const modifiedNativeResponse = toNativeLicenseResponseResult(requestId, integrationId, keySystemId, responseResult as ArrayBuffer);
+      NativeModules.ContentProtectionModule.onLicenseResponseProcessed(modifiedNativeResponse);
     } else {
-      const resultString = 'Base64 encoded string'; // TODO: base64 encoding of original
-      NativeModules.ContentProtectionModule.onCertificateResponseProcessed({
-        requestId,
-        resultString,
-      });
+      NativeModules.ContentProtectionModule.onLicenseResponseProcessed(response);
     }
   };
 

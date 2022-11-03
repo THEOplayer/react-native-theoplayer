@@ -3,31 +3,31 @@ package com.theoplayer.drm
 import com.theoplayer.android.api.contentprotection.*
 import com.theoplayer.android.api.source.drm.DRMConfiguration
 
-class CustomContentProtectionIntegration(
+class ProxyContentProtectionIntegration(
   private val integrationId: String,
   private val keySystemId: KeySystemId,
   config: DRMConfiguration?,
-  private val bridge: ContentProtectionBridge
+  private val module: ContentProtectionModule
 ) :
   ContentProtectionIntegration() {
 
   init {
-    bridge.onBuild(integrationId, keySystemId, config)
+    module.onBuild(integrationId, keySystemId, config)
   }
 
   override fun onCertificateRequest(request: Request, callback: CertificateRequestCallback) {
-    bridge.onCertificateRequest(request, callback)
+    module.onCertificateRequest(integrationId, keySystemId, request, callback)
   }
 
   override fun onCertificateResponse(response: Response, callback: CertificateResponseCallback) {
-    bridge.onCertificateResponse(response, callback)
+    module.onCertificateResponse(integrationId, keySystemId, response, callback)
   }
 
-  override fun onLicenseRequest(request: Request?, callback: LicenseRequestCallback) {
-    bridge.onLicenseRequest(request, callback)
+  override fun onLicenseRequest(request: Request, callback: LicenseRequestCallback) {
+    module.onLicenseRequest(integrationId, keySystemId, request, callback)
   }
 
   override fun onLicenseResponse(response: Response, callback: LicenseResponseCallback) {
-    bridge.onLicenseResponse(response, callback)
+    module.onLicenseResponse(integrationId, keySystemId, response, callback)
   }
 }

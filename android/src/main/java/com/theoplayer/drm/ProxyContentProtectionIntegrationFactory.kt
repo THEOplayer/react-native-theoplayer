@@ -5,15 +5,15 @@ import com.theoplayer.android.api.contentprotection.ContentProtectionIntegration
 import com.theoplayer.android.api.contentprotection.KeySystemId
 import com.theoplayer.android.api.source.drm.DRMConfiguration
 
-class CustomContentProtectionIntegrationFactory(
+class ProxyContentProtectionIntegrationFactory(
   private val integrationId: String,
   private val keySystemId: KeySystemId,
-  private val bridge: ContentProtectionBridge
+  private val module: ContentProtectionModule
 ) :
   ContentProtectionIntegrationFactory {
   override fun build(
     config: DRMConfiguration?
   ): ContentProtectionIntegration {
-    return CustomContentProtectionIntegration(integrationId, keySystemId, config, bridge)
+    return ProxyContentProtectionIntegration(integrationId, keySystemId, config, module)
   }
 }

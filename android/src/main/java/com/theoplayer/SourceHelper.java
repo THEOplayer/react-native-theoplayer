@@ -22,6 +22,7 @@ import com.theoplayer.android.api.source.addescription.AdDescription;
 import com.theoplayer.android.api.source.addescription.GoogleImaAdDescription;
 import com.theoplayer.android.api.source.drm.DRMConfiguration;
 import com.theoplayer.android.api.source.drm.DRMIntegrationId;
+import com.theoplayer.android.api.source.drm.KeySystemConfiguration;
 import com.theoplayer.android.api.source.drm.preintegration.AxinomDRMConfiguration;
 import com.theoplayer.android.api.source.drm.preintegration.AzureDRMConfiguration;
 import com.theoplayer.android.api.source.drm.preintegration.ConaxDRMConfiguration;
@@ -235,7 +236,11 @@ public class SourceHelper {
               Log.e(TAG, "ContentProtection integration not supported: " + integration);
           }
         } else {
-          tsBuilder.drm(gson.fromJson(jsonTypedSource.get(PROP_CONTENT_PROTECTION).toString(), DRMConfiguration.class));
+          DRMConfiguration customConfig = new DRMConfiguration.Builder()
+              .widevine(gson.fromJson(contentProtection.optString("widevine"), KeySystemConfiguration.class))
+            .customIntegrationId(integration)
+            .build();
+          tsBuilder.drm(customConfig);
         }
       }
       return tsBuilder.build();
