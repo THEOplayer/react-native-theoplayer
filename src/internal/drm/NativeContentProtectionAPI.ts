@@ -24,11 +24,8 @@ interface BuildEvent extends NativeContentProtectionEvent {
   drmConfig: DRMConfiguration;
 }
 
-interface CertificateRequestEvent extends NativeContentProtectionEvent, CertificateRequest {}
-interface CertificateResponseEvent extends NativeContentProtectionEvent, CertificateResponse {}
-
 interface ExtractFaiplayContentIdEvent extends NativeContentProtectionEvent {
-  skdUrl: string;
+  fairplaySkdUrl: string;
 }
 
 export class NativeContentProtectionAPI implements ContentProtectionAPI {
@@ -151,18 +148,18 @@ export class NativeContentProtectionAPI implements ContentProtectionAPI {
 
   private onExtractFairplayContentId = async (event: ExtractFaiplayContentIdEvent) => {
     console.log('ContentProtectionAPI - received onExtractFairplayContentId', event);
-    const { integrationId, keySystemId, skdUrl } = event;
+    const { integrationId, keySystemId, fairplaySkdUrl } = event;
     const integration = this.getIntegration(integrationId, keySystemId);
     if (integration?.extractFairplayContentId) {
-      const contentId = await integration.extractFairplayContentId(skdUrl);
+      const contentId = await integration.extractFairplayContentId(fairplaySkdUrl);
       NativeModules.ContentProtectionModule.onExtractFairplayContentIdProcessed({
-        skdUrl,
+        fairplaySkdUrl,
         contentId,
       });
     } else {
-      const contentId = skdUrl;
+      const contentId = fairplaySkdUrl;
       NativeModules.ContentProtectionModule.onExtractFairplayContentIdProcessed({
-        skdUrl,
+        fairplaySkdUrl,
         contentId,
       });
     }
