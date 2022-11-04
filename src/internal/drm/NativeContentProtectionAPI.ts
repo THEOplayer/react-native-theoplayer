@@ -7,6 +7,9 @@ import type { NativeContentProtectionEvent } from './NativeContentProtectionEven
 import type { NativeLicenseRequest } from './NativeLicenseRequest';
 import { fromNativeLicenseRequest, toNativeLicenseRequest } from './NativeLicenseRequest';
 import { fromNativeLicenseResponse, NativeLicenseResponse, toNativeLicenseResponseResult } from './NativeLicenseResponse';
+import type { NativeCertificateRequest } from './NativeCertificateRequest';
+import { fromNativeCertificateRequest, toNativeCertificateRequest } from './NativeCertificateRequest';
+import { fromNativeCertificateResponse, NativeCertificateResponse, toNativeCertificateResponseResult } from './NativeCertificateResponse';
 
 interface WrappedContentProtectionIntegrationFactory {
   integrationId: string;
@@ -81,41 +84,29 @@ export class NativeContentProtectionAPI implements ContentProtectionAPI {
     }
   };
 
-  private onCertificateRequest = async (event: CertificateRequestEvent) => {
-    const { requestId, integrationId, keySystemId } = event;
+  private onCertificateRequest = async (request: NativeCertificateRequest) => {
+    const { requestId, integrationId, keySystemId } = request;
     const integration = this.getIntegration(integrationId, keySystemId);
     if (integration?.onCertificateRequest) {
-      //const result = await integration.onCertificateRequest(event);
-      const resultString = 'Base64 encoded string'; // TODO: base64 encoding of result
-      NativeModules.ContentProtectionModule.onCertificateRequestProcessed({
-        requestId,
-        resultString,
-      });
+      const modifiedRequest = await integration.onCertificateRequest(fromNativeCertificateRequest(request));
+      // TODO: we also want to support BufferSource results
+      const modifiedNativeRequest = toNativeCertificateRequest(requestId, integrationId, keySystemId, modifiedRequest as CertificateRequest);
+      NativeModules.ContentProtectionModule.onCertificateRequestProcessed(modifiedNativeRequest);
     } else {
-      const resultString = 'Base64 encoded string'; // TODO: base64 encoding of original
-      NativeModules.ContentProtectionModule.onCertificateRequestProcessed({
-        requestId,
-        resultString,
-      });
+      NativeModules.ContentProtectionModule.onCertificateRequestProcessed(request);
     }
   };
 
-  private onCertificateResponse = async (event: CertificateResponseEvent) => {
-    const { requestId, integrationId, keySystemId } = event;
+  private onCertificateResponse = async (response: NativeCertificateResponse) => {
+    const { requestId, integrationId, keySystemId } = response;
     const integration = this.getIntegration(integrationId, keySystemId);
     if (integration?.onCertificateResponse) {
-      //const result = await integration.onCertificateResponse(event);
-      const resultString = 'Base64 encoded string'; // TODO: base64 encoding of result
-      NativeModules.ContentProtectionModule.onCertificateResponseProcessed({
-        requestId,
-        resultString,
-      });
+      const responseResult = await integration.onCertificateResponse(fromNativeCertificateResponse(response));
+      // TODO: we also want to support ArrayBufferView results
+      const modifiedNativeResponse = toNativeCertificateResponseResult(requestId, integrationId, keySystemId, responseResult as ArrayBuffer);
+      NativeModules.ContentProtectionModule.onCertificateResponseProcessed(modifiedNativeResponse);
     } else {
-      const resultString = 'Base64 encoded string'; // TODO: base64 encoding of original
-      NativeModules.ContentProtectionModule.onCertificateResponseProcessed({
-        requestId,
-        resultString,
-      });
+      NativeModules.ContentProtectionModule.onCertificateResponseProcessed(response);
     }
   };
 
