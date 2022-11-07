@@ -26,7 +26,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
     private var certificateResponseCompletions: [String:(Data?, Error?) -> Void] = [:]
     private var licenseRequestCompletions: [String:(LicenseRequest?, Error?) -> Void] = [:]
     private var licenseResponseCompletions: [String:(Data?, Error?) -> Void] = [:]
-    private var extractedFairplayContentIds: [String:String] = [:]                          // [skdUrl : contentId]
+    private var extractFairplayCompletions: [String:(String, Error?) -> Void] = [:]
     
     override static func moduleName() -> String! {
         return "ContentProtectionModule"
@@ -81,16 +81,6 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
     }
     
     func handleLicenseRequest(integrationId: String, keySystemId: String, licenseRequest: LicenseRequest, completion: @escaping (LicenseRequest?, Error?) -> Void) {
-        // prefetch contentId for Fairplay asynchronously
-        if let skdUrl = licenseRequest.fairplaySkdUrl {
-            if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "prefetch Fairplay contentId.") }
-            self.sendEvent(withName: "onExtractFairplayContentId", body: [
-                CPI_EVENT_PROP_INTEGRATION_ID: integrationId,
-                CPI_EVENT_PROP_KEYSYSTEM_ID: keySystemId,
-                CPI_EVENT_PROP_FAIRPLAY_SKD_URL: skdUrl
-            ])
-        }
-        
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "handleLicenseRequest.") }
         let requestId = UUID().uuidString
         self.licenseRequestCompletions[requestId] = completion
@@ -112,10 +102,16 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
                                                                                                licenseResponse: licenseResponse))
     }
     
-    func handleExtractFairplayContentId(integrationId: String, keySystemId: String, skdUrl: String) -> String {
+    func handleExtractFairplayContentId(integrationId: String, keySystemId: String, skdUrl: String, completion: @escaping (String, Error?) -> Void) {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "handleExtractFairplayContentId.") }
-        let contentId = self.extractedFairplayContentIds.removeValue(forKey: skdUrl) ?? skdUrl
-        return contentId
+        let requestId = UUID().uuidString
+        self.extractFairplayCompletions[requestId] = completion
+        self.sendEvent(withName: "onExtractFairplayContentId", body: [
+            CPI_EVENT_PROP_INTEGRATION_ID: integrationId,
+            CPI_EVENT_PROP_KEYSYSTEM_ID: keySystemId,
+            CPI_EVENT_PROP_REQUEST_ID: requestId,
+            CPI_EVENT_PROP_FAIRPLAY_SKD_URL: skdUrl
+        ])
     }
     
     // MARK: Incoming JS Notifications
@@ -135,13 +131,13 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
     
     @objc(onBuildProcessed:)
     func onBuildProcessed(_ result: NSDictionary) -> Void {
-        if DEBUG_CONTENT_PROTECTION_API { print("[NATIVE] onBuildProcessed.") }
+        if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onBuildProcessed.") }
         if let requestId = result["requestId"] as? String,
            let resultString = result["resultString"] as? String,
            let completion = self.buildIntegrationCompletions.removeValue(forKey: requestId) {
             completion(resultString == "success")
         } else {
-            // TODO: handle issues
+            print(CPI_TAG, "Failed to process buildIntegration result")
         }
     }
     
@@ -152,16 +148,18 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
            let completion = self.certificateRequestCompletions.removeValue(forKey: requestId),
            let url = result["url"] as? String,
            let method = result["method"] as? String,
-           let headers = result["headers"] as? [String:String],
-           let base64body = result["base64body"] as? String {
-            let bodyData = Data(base64Encoded: base64body)
+           let headers = result["headers"] as? [String:String] {
+            var bodyData: Data?
+            if let base64body = result["base64body"] as? String {
+                bodyData = Data(base64Encoded: base64body)
+            }
             let certificateRequest = CertificateRequest(url: url,
                                                         method: method,
                                                         headers: headers,
                                                         body: bodyData)
             completion(certificateRequest, nil)
         } else {
-            // TODO: handle issues
+            print(CPI_TAG, "Failed to process certificateResult result")
         }
     }
     
@@ -169,12 +167,14 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
     func onCertificateResponseProcessed(_ result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onCertificateResponseProcessed.") }
         if let requestId = result["requestId"] as? String,
-           let base64body = result["base64body"] as? String,
            let completion = self.certificateResponseCompletions.removeValue(forKey: requestId) {
-            let bodyData = Data(base64Encoded: base64body)
+            var bodyData = Data()
+            if let base64body = result["base64body"] as? String {
+                bodyData = Data(base64Encoded: base64body) ?? Data()
+            }
             completion(bodyData, nil)
         } else {
-            // TODO: handle issues
+            print(CPI_TAG, "Failed to process certificateResponse result")
         }
     }
     
@@ -185,16 +185,21 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
            let completion = self.licenseRequestCompletions.removeValue(forKey: requestId),
            let url = result["url"] as? String,
            let method = result["method"] as? String,
-           let headers = result["headers"] as? [String:String],
-           let base64body = result["base64body"] as? String {
-            let bodyData = Data(base64Encoded: base64body)
+           let headers = result["headers"] as? [String:String] {
+            var bodyData: Data?
+            if let base64body = result["base64body"] as? String {
+                bodyData = Data(base64Encoded: base64body)
+            }
+            let fairplaySkdUrl = result["fairplaySkdUrl"] as? String
             let licenseRequest = LicenseRequest(url: url,
-                                                        method: method,
-                                                        headers: headers,
-                                                        body: bodyData)
+                                                method: method,
+                                                headers: headers,
+                                                body: bodyData,
+                                                fairplaySkdUrl: fairplaySkdUrl,
+                                                useCredentials: false)
             completion(licenseRequest, nil)
         } else {
-            // TODO: handle issues
+            print(CPI_TAG, "Failed to process licenseRequest result")
         }
     }
     
@@ -202,23 +207,26 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
     func onLicenseResponseProcessed(_ result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onLicenseResponseProcessed.") }
         if let requestId = result["requestId"] as? String,
-           let base64body = result["base64body"] as? String,
            let completion = self.licenseResponseCompletions.removeValue(forKey: requestId) {
-            let bodyData = Data(base64Encoded: base64body)
+            var bodyData = Data()
+            if let base64body = result["base64body"] as? String {
+                bodyData = Data(base64Encoded: base64body) ?? Data()
+            }
             completion(bodyData, nil)
         } else {
-            // TODO: handle issues
+            print(CPI_TAG, "Failed to process licenseResponse result")
         }
     }
     
     @objc(onExtractFairplayContentIdProcessed:)
     func onExtractFairplayContentIdProcessed(_ result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onExtractFairplayContentIdProcessed.") }
-        if let skdUrl = result["skdUrl"] as? String,
-           let contentId = result["contentId"] as? String {
-            self.extractedFairplayContentIds[skdUrl] = contentId
+        if let requestId = result["requestId"] as? String,
+           let contentId = result["contentId"] as? String,
+           let completion = self.extractFairplayCompletions.removeValue(forKey: requestId) {
+            completion(contentId, nil)
         } else {
-            // TODO: handle issues
+            print(CPI_TAG, "Failed to process extracted contentId result")
         }
     }
     

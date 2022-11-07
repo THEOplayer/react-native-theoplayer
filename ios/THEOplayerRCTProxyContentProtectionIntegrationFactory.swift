@@ -23,7 +23,7 @@ class THEOplayerRCTProxyContentProtectionIntegrationFactory: THEOplayerSDK.Conte
     }
     
     func build(configuration: THEOplayerSDK.DRMConfiguration) -> ContentProtectionIntegration {
-        if DEBUG_CONTENT_PROTECTION_API { print(PROXY_FACTORY_TAG, "Building proxy ContentProtectionIntegration for \(self.integrationId) - \(self.keySystemId).") }
+        if DEBUG_CONTENT_PROTECTION_API { print(PROXY_FACTORY_TAG, "Building proxy ContentProtectionIntegration for \(self.integrationId ?? "") - \(self.keySystemId ?? "").") }
         return THEOplayerRCTProxyContentProtectionIntegration(contentProtectionAPI: self.contentProtectionAPI,
                                                               integrationId: self.integrationId,
                                                               keySystemId: self.keySystemId,
