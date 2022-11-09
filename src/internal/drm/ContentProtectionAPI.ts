@@ -1,4 +1,4 @@
-import type { CertificateRequest, CertificateResponse, ContentProtectionAPI, DRMConfiguration, LicenseRequest } from 'react-native-theoplayer';
+import type { CertificateRequest, ContentProtectionAPI, DRMConfiguration, LicenseRequest } from 'react-native-theoplayer';
 import type { KeySystemId } from 'react-native-theoplayer';
 import type { ContentProtectionIntegrationFactory } from 'react-native-theoplayer';
 import { NativeEventEmitter, NativeModules } from 'react-native';
@@ -157,4 +157,4 @@ export class NativeContentProtectionAPI implements ContentProtectionAPI {
   };
 }
 
-export const ContentProtectionIntegrationsAPI = new NativeContentProtectionAPI();
+export const ContentProtectionIntegrationAPI = new NativeContentProtectionAPI();

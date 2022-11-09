@@ -1,3 +1,3 @@
 export * from './api/barrel';
 export { THEOplayerView } from './internal/THEOplayerView';
-export { ContentProtectionIntegrationsAPI } from './internal/drm/NativeContentProtectionAPI';
+export { ContentProtectionIntegrationAPI } from './internal/drm/ContentProtectionAPI';
