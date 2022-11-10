@@ -44,11 +44,10 @@ class THEOplayerRCTContentProtectionAggregator {
             aggregatedDrmConfig[DRM_PROP_FAIRPLAY] = THEOplayerRCTContentProtectionAggregator.aggregateKeySystemConfiguration(keySystemConfig: fairplayDrmConfig.fairplay)
         }
         aggregatedData[DRM_PROP_DRM_CONFIG] = aggregatedDrmConfig
-        
         return aggregatedData
     }
     
-    class func aggregateCertificateRequest(integrationId: String, keySystemId: String, requestId: String, certificateRequest: THEOplayerSDK.CertificateRequest) -> [String:Any] {
+    class func aggregateCertificateRequest(integrationId: String, keySystemId: String, requestId: String, certificateRequest: THEOplayerSDK.Request) -> [String:Any] {
         var aggregatedData: [String:Any] = THEOplayerRCTContentProtectionAggregator.bridgeData(integrationId: integrationId, keySystemId: keySystemId, requestId: requestId)
         aggregatedData[DRM_PROP_URL] = certificateRequest.url
         aggregatedData[DRM_PROP_METHOD] = certificateRequest.method
@@ -59,46 +58,42 @@ class THEOplayerRCTContentProtectionAggregator {
         return aggregatedData
     }
     
-    class func aggregateCertificateResponse(integrationId: String, keySystemId: String, requestId: String, certificateResponse: THEOplayerSDK.CertificateResponse) -> [String:Any] {
+    class func aggregateCertificateResponse(integrationId: String, keySystemId: String, requestId: String, certificateResponse: THEOplayerSDK.Response) -> [String:Any] {
         var aggregatedData: [String:Any] = THEOplayerRCTContentProtectionAggregator.bridgeData(integrationId: integrationId, keySystemId: keySystemId, requestId: requestId)
         aggregatedData[DRM_PROP_URL] = certificateResponse.url
         aggregatedData[DRM_PROP_STATUS] = certificateResponse.status
         aggregatedData[DRM_PROP_STATUS_TEXT] = certificateResponse.statusText
         aggregatedData[DRM_PROP_HEADERS] = certificateResponse.headers
-        if let request = certificateResponse.request as? THEOplayerSDK.CertificateRequest {
-            aggregatedData[DRM_PROP_REQUEST] = THEOplayerRCTContentProtectionAggregator.aggregateCertificateRequest(integrationId:integrationId,
-                                                                                                                    keySystemId:keySystemId,
-                                                                                                                    requestId: requestId,
-                                                                                                                    certificateRequest: request)
-        }
+        aggregatedData[DRM_PROP_REQUEST] = THEOplayerRCTContentProtectionAggregator.aggregateCertificateRequest(integrationId:integrationId,
+                                                                                                                keySystemId:keySystemId,
+                                                                                                                requestId: requestId,
+                                                                                                                certificateRequest: certificateResponse.request)
         aggregatedData[DRM_PROP_BASE64_BODY] = certificateResponse.body.base64EncodedString()
         return aggregatedData
     }
     
-    class func aggregateLicenseRequest(integrationId: String, keySystemId: String, requestId: String, licenseRequest: THEOplayerSDK.LicenseRequest) -> [String:Any] {
+    class func aggregateLicenseRequest(integrationId: String, keySystemId: String, requestId: String, licenseRequest: THEOplayerSDK.Request) -> [String:Any] {
         var aggregatedData: [String:Any] = THEOplayerRCTContentProtectionAggregator.bridgeData(integrationId: integrationId, keySystemId: keySystemId, requestId: requestId)
         aggregatedData[DRM_PROP_URL] = licenseRequest.url
         aggregatedData[DRM_PROP_METHOD] = licenseRequest.method
         aggregatedData[DRM_PROP_HEADERS] = licenseRequest.headers
-        aggregatedData[DRM_PROP_FAIRPLAY_SKD_URL] = licenseRequest.fairplaySkdUrl
+        aggregatedData[DRM_PROP_FAIRPLAY_SKD_URL] = (licenseRequest as? THEOplayerSDK.LicenseRequest)?.fairplaySkdUrl ?? ""
         if let body = licenseRequest.body {
             aggregatedData[DRM_PROP_BASE64_BODY] = body.base64EncodedString()
         }
         return aggregatedData
     }
     
-    class func aggregateLicenseResponse(integrationId: String, keySystemId: String, requestId: String, licenseResponse: THEOplayerSDK.LicenseResponse) -> [String:Any] {
+    class func aggregateLicenseResponse(integrationId: String, keySystemId: String, requestId: String, licenseResponse: THEOplayerSDK.Response) -> [String:Any] {
         var aggregatedData: [String:Any] = THEOplayerRCTContentProtectionAggregator.bridgeData(integrationId: integrationId, keySystemId: keySystemId, requestId: requestId)
         aggregatedData[DRM_PROP_URL] = licenseResponse.url
         aggregatedData[DRM_PROP_STATUS] = licenseResponse.status
         aggregatedData[DRM_PROP_STATUS_TEXT] = licenseResponse.statusText
         aggregatedData[DRM_PROP_HEADERS] = licenseResponse.headers
-        if let request = licenseResponse.request as? THEOplayerSDK.LicenseRequest {
-            aggregatedData[DRM_PROP_REQUEST] = THEOplayerRCTContentProtectionAggregator.aggregateLicenseRequest(integrationId:integrationId,
-                                                                                                                keySystemId:keySystemId,
-                                                                                                                requestId: requestId,
-                                                                                                                licenseRequest: request)
-        }
+        aggregatedData[DRM_PROP_REQUEST] = THEOplayerRCTContentProtectionAggregator.aggregateLicenseRequest(integrationId:integrationId,
+                                                                                                            keySystemId:keySystemId,
+                                                                                                            requestId: requestId,
+                                                                                                            licenseRequest: licenseResponse.request)
         aggregatedData[DRM_PROP_BASE64_BODY] = licenseResponse.body.base64EncodedString()
         return aggregatedData
     }
