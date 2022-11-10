@@ -16,6 +16,7 @@ public class ReactTHEOplayerViewManager extends ViewGroupManager<ReactTHEOplayer
   public static final String REACT_CLASS = "THEOplayerRCTView";
 
   private static final String PROP_CONFIG = "config";
+  private static final String PROP_ABR_CONFIG = "abrConfig";
   private static final String PROP_SRC = "src";
   private static final String PROP_SEEK = "seek";
   private static final String PROP_PAUSED = "paused";
@@ -48,6 +49,11 @@ public class ReactTHEOplayerViewManager extends ViewGroupManager<ReactTHEOplayer
   @ReactProp(name = PROP_CONFIG)
   public void setConfig(final ReactTHEOplayerView videoView, @Nullable ReadableMap config) {
     videoView.initialize(config);
+  }
+
+  @ReactProp(name = PROP_ABR_CONFIG)
+  public void setABRConfig(final ReactTHEOplayerView videoView, @Nullable ReadableMap config) {
+    videoView.setABRConfig(config);
   }
 
   @ReactProp(name = PROP_SRC)

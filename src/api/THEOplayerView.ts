@@ -12,12 +12,21 @@ import type {
 import type { TextTrackEvent, TextTrackListEvent } from './event/TrackEvent';
 import type { HostComponent } from 'react-native';
 import type { PlayerConfiguration } from './config/PlayerConfiguration';
+import type { ABRConfiguration } from './abr/ABRConfiguration';
 
 export interface THEOplayerViewProps {
   /**
    * The player configuration with THEOplayer license.
    */
   config?: PlayerConfiguration;
+
+  /**
+   * The player's adaptive bitrate (ABR) configuration.
+   *
+   * @remarks
+   * <br/> - This property is supported on Android & Web platforms only.
+   */
+  abrConfig?: ABRConfiguration;
 
   /**
    * A source description that determines the current media resource.
@@ -177,7 +186,7 @@ export interface THEOplayerViewProps {
   onSeeking?: () => void;
 
   /**
-   * Invoked when a seek operation completed and the current playback position has changed
+   * Invoked when a seek operation completed and the current playback position has changed.
    */
   onSeeked?: () => void;
 
@@ -188,7 +197,7 @@ export interface THEOplayerViewProps {
   onEnded?: () => void;
 
   /**
-   * Invoked when the current playback position changed.
+   * Invoked each time the current playback position changed.
    */
   onTimeUpdate?: (event: TimeUpdateEvent) => void;
 

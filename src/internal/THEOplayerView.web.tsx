@@ -34,7 +34,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
   }
 
   componentDidMount() {
-    const { config, source } = this.props;
+    const { config, source, abrConfig } = this.props;
     const element = document.querySelector('.theoplayer-container') as HTMLElement;
     if (config?.chromeless === true || config?.chromeless === undefined) {
       this._player = new THEOplayer.ChromelessPlayer(element, {
@@ -50,6 +50,8 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
         },
       });
     }
+
+    Object.assign(this._player.abr, abrConfig);
     this._player.prepareWithUserAction();
     this._player.source = source;
     this.addEventListeners();
