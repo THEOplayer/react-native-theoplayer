@@ -31,7 +31,7 @@ interface ExtractFaiplayContentIdEvent extends NativeContentProtectionEvent {
   fairplaySkdUrl: string;
 }
 
-export class NativeContentProtectionAPI implements ContentProtectionAPI {
+export class NativeContentProtectionRegistry implements ContentProtectionAPI {
   private emitter: NativeEventEmitter;
   private registeredFactories: WrappedContentProtectionIntegrationFactory[] = [];
   private currentIntegration: WrappedContentProtectionIntegration | undefined = undefined;
@@ -86,6 +86,7 @@ export class NativeContentProtectionAPI implements ContentProtectionAPI {
 
   private onCertificateRequest = async (request: NativeCertificateRequest) => {
     const { requestId, integrationId, keySystemId } = request;
+    console.log('ContentProtectionModule', `onCertificateRequest ${integrationId} ${keySystemId}`);
     const integration = this.getIntegration(integrationId, keySystemId);
     if (integration?.onCertificateRequest) {
       const modifiedRequest = await integration.onCertificateRequest(fromNativeCertificateRequest(request));
@@ -99,6 +100,7 @@ export class NativeContentProtectionAPI implements ContentProtectionAPI {
 
   private onCertificateResponse = async (response: NativeCertificateResponse) => {
     const { requestId, integrationId, keySystemId } = response;
+    console.log('ContentProtectionModule', `onCertificateResponse ${integrationId} ${keySystemId}`);
     const integration = this.getIntegration(integrationId, keySystemId);
     if (integration?.onCertificateResponse) {
       const responseResult = await integration.onCertificateResponse(fromNativeCertificateResponse(response));
@@ -112,6 +114,7 @@ export class NativeContentProtectionAPI implements ContentProtectionAPI {
 
   private onLicenseRequest = async (request: NativeLicenseRequest) => {
     const { requestId, integrationId, keySystemId } = request;
+    console.log('ContentProtectionModule', `onLicenseRequest ${integrationId} ${keySystemId}`);
     const integration = this.getIntegration(integrationId, keySystemId);
     // Optionally let the custom integration modify the request.
     if (integration?.onLicenseRequest) {
@@ -126,6 +129,7 @@ export class NativeContentProtectionAPI implements ContentProtectionAPI {
 
   private onLicenseResponse = async (response: NativeLicenseResponse) => {
     const { requestId, integrationId, keySystemId } = response;
+    console.log('ContentProtectionModule', `onLicenseResponse ${integrationId} ${keySystemId}`);
     const integration = this.getIntegration(integrationId, keySystemId);
     if (integration?.onLicenseResponse) {
       const responseResult = await integration.onLicenseResponse(fromNativeLicenseResponse(response));
@@ -138,8 +142,8 @@ export class NativeContentProtectionAPI implements ContentProtectionAPI {
   };
 
   private onExtractFairplayContentId = async (event: ExtractFaiplayContentIdEvent) => {
-    console.log('ContentProtectionAPI - received onExtractFairplayContentId', event);
     const { integrationId, keySystemId, fairplaySkdUrl, requestId } = event;
+    console.log('ContentProtectionModule', `onExtractFairplayContentId ${integrationId} ${keySystemId}`);
     const integration = this.getIntegration(integrationId, keySystemId);
     if (integration?.extractFairplayContentId) {
       const contentId = await integration.extractFairplayContentId(fairplaySkdUrl);
@@ -157,4 +161,4 @@ export class NativeContentProtectionAPI implements ContentProtectionAPI {
   };
 }
 
-export const ContentProtectionIntegrationAPI = new NativeContentProtectionAPI();
+export const ContentProtectionRegistry = new NativeContentProtectionRegistry();

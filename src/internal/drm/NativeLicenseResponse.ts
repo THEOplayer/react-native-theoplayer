@@ -1,8 +1,8 @@
 import type { NativeContentProtectionEvent } from './NativeContentProtectionEvent';
-import { base64StringToUint8Array_, uint8ArrayToBase64String_ } from '../utils/Base64Utils';
 import type { LicenseResponse } from 'react-native-theoplayer';
 import type { NativeLicenseRequest } from './NativeLicenseRequest';
 import { fromNativeLicenseRequest } from './NativeLicenseRequest';
+import { fromBase64StringToUint8Array, fromUint8ArrayToBase64String } from 'react-native-theoplayer';
 
 export interface NativeLicenseResponse extends NativeContentProtectionEvent {
   url: string;
@@ -18,15 +18,15 @@ export interface NativeLicenseResponseResult extends NativeContentProtectionEven
 }
 
 export function fromNativeLicenseResponse(response: NativeLicenseResponse): LicenseResponse {
-  const { url, status, statusText, headers, base64body } = response;
-  const body = base64body ? base64StringToUint8Array_(base64body) : new Uint8Array();
+  const { url, status, statusText, headers, base64body, request } = response;
+  const body = base64body ? fromBase64StringToUint8Array(base64body) : new Uint8Array();
   return {
     url,
     status,
     statusText,
     headers,
     body,
-    request: fromNativeLicenseRequest(response.request),
+    request: fromNativeLicenseRequest(request),
   };
 }
 
@@ -40,6 +40,6 @@ export function toNativeLicenseResponseResult(
     requestId,
     integrationId,
     keySystemId,
-    base64body: response ? uint8ArrayToBase64String_(new Uint8Array(response)) : '',
+    base64body: response ? fromUint8ArrayToBase64String(new Uint8Array(response)) : '',
   };
 }

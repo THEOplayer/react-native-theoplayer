@@ -1,6 +1,6 @@
 import type { NativeContentProtectionEvent } from './NativeContentProtectionEvent';
-import { base64StringToUint8Array_, uint8ArrayToBase64String_ } from '../utils/Base64Utils';
 import type { LicenseRequest } from 'react-native-theoplayer';
+import { fromBase64StringToUint8Array, fromUint8ArrayToBase64String } from 'react-native-theoplayer';
 
 export interface NativeLicenseRequest extends NativeContentProtectionEvent {
   url: string;
@@ -13,7 +13,7 @@ export interface NativeLicenseRequest extends NativeContentProtectionEvent {
 
 export function fromNativeLicenseRequest(request: NativeLicenseRequest): LicenseRequest {
   const { url, method, headers, useCredentials, base64body, fairplaySkdUrl } = request;
-  const body = base64body ? base64StringToUint8Array_(base64body) : null;
+  const body = base64body ? fromBase64StringToUint8Array(base64body) : null;
   return {
     url,
     method,
@@ -33,7 +33,7 @@ export function toNativeLicenseRequest(requestId: string, integrationId: string,
     method: request.method,
     headers: request.headers,
     useCredentials: request.useCredentials,
-    base64body: request.body ? uint8ArrayToBase64String_(request.body) : null,
+    base64body: request.body ? fromUint8ArrayToBase64String(request.body) : null,
     fairplaySkdUrl: request.fairplaySkdUrl,
   };
 }

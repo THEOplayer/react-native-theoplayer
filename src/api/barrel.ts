@@ -7,4 +7,5 @@ export * from './drm/barrel';
 export * from './source/barrel';
 export * from './timeranges/barrel';
 export * from './track/barrel';
+export * from './utils/barrel';
 export * from './THEOplayerView';

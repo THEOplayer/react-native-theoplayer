@@ -1,8 +1,8 @@
 import type { NativeContentProtectionEvent } from './NativeContentProtectionEvent';
-import { base64StringToUint8Array_, uint8ArrayToBase64String_ } from '../utils/Base64Utils';
 import type { CertificateResponse } from 'react-native-theoplayer';
 import type { NativeCertificateRequest } from './NativeCertificateRequest';
 import { fromNativeCertificateRequest } from './NativeCertificateRequest';
+import { fromBase64StringToUint8Array, fromUint8ArrayToBase64String } from 'react-native-theoplayer';
 
 export interface NativeCertificateResponse extends NativeContentProtectionEvent {
   url: string;
@@ -18,15 +18,15 @@ export interface NativeCertificateResponseResult extends NativeContentProtection
 }
 
 export function fromNativeCertificateResponse(response: NativeCertificateResponse): CertificateResponse {
-  const { url, status, statusText, headers, base64body } = response;
-  const body = base64body ? base64StringToUint8Array_(base64body) : new Uint8Array();
+  const { url, status, statusText, headers, base64body, request } = response;
+  const body = base64body ? fromBase64StringToUint8Array(base64body) : new Uint8Array();
   return {
     url,
     status,
     statusText,
     headers,
     body,
-    request: fromNativeCertificateRequest(response.request),
+    request: fromNativeCertificateRequest(request),
   };
 }
 
@@ -40,6 +40,6 @@ export function toNativeCertificateResponseResult(
     requestId,
     integrationId,
     keySystemId,
-    base64body: response ? uint8ArrayToBase64String_(new Uint8Array(response)) : '',
+    base64body: response ? fromUint8ArrayToBase64String(new Uint8Array(response)) : '',
   };
 }
