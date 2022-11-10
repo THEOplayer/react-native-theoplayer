@@ -186,7 +186,7 @@ export interface THEOplayerViewProps {
   onSeeking?: () => void;
 
   /**
-   * Invoked when a seek operation completed and the current playback position has changed
+   * Invoked when a seek operation completed and the current playback position has changed.
    */
   onSeeked?: () => void;
 
@@ -197,7 +197,7 @@ export interface THEOplayerViewProps {
   onEnded?: () => void;
 
   /**
-   * Invoked when the current playback position changed.
+   * Invoked each time the current playback position changed.
    */
   onTimeUpdate?: (event: TimeUpdateEvent) => void;
 

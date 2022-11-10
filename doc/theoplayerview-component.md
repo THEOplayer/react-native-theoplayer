@@ -22,49 +22,50 @@ THEOplayer React Native SDK uses HTML5/ Tizen/ webOS SDK, Android/ Fire TV SDK, 
 
 ### Properties
 
-```typescript
-import { THEOplayerView } from 'react-native-theoplayer';
+The `THEOplayerView` component supports the following list of properties.
 
-function Player() {
-  // ...
-  return <THEOplayerView
-    config,
-    source,
-    paused,
-    playbackRate,
-    volume,
-    muted,
-    fullscreen,
-    selectedTextTrack,
-    selectedVideoTrack,
-    selectedAudioTrack,
-    style,
-    onFullscreenPlayerWillPresent,
-    onFullscreenPlayerDidPresent,
-    onFullscreenPlayerWillDismiss,
-    onFullscreenPlayerDidDismiss,
-    onBufferingStateChange,
-    onSourceChange,
-    onLoadStart,
-    onLoadedMetadata,
-    onLoadedData,
-    onReadyStateChange,
-    onError,
-    onProgress,
-    onPlay,
-    onPlaying,
-    onPause,
-    onSeeking,
-    onSeeked,
-    onEnded,
-    onTimeUpdate,
-    onDurationChange,
-    onSegmentNotFound,
-    onTextTrackListEvent,
-    onTextTrackEvent
-  />;
-}
-```
+| Property             | Description                                                                                          | Platforms     |
+|----------------------|------------------------------------------------------------------------------------------------------|---------------|
+| `config`             | The player configuration containing the THEOplayer license and other player-setup related properties | All           |
+| `abrConfig`          | The player's adaptive bitrate (ABR) configuration.                                                   | Android & Web |
+| `source`             | A source description that determines the current media resource.                                     | All           |
+| `paused`             | Used to set the player's paused state.                                                               | All           |
+| `playbackRate`       | Used to set the playback rate of the media.                                                          | All           |
+| `volume`             | Used to set the volume of the audio.                                                                 | All           |
+| `muted`              | Determines whether audio is muted.                                                                   | All           |
+| `fullscreen`         | Determines whether the player is currently playing in fullscreen.                                    | All           |
+| `selectedTextTrack`  | Used to set the current selected text track by passing its `uid`, or `null` to select none.          | All           |
+| `selectedVideoTrack` | Used to set the current selected video track by passing its `uid`, or `null` to select none.         | All           |
+| `selectedAudioTrack` | Used to set the current selected audio track by passing its `uid`, or `null` to select none.         | All           |
+| `style`              | The style applied to the player view.                                                                | All           |
+
+In addition, this set of properties accept callbacks that listen for player events.
+
+| Property                        | Invoked                                                                                                                    | Platforms |
+|---------------------------------|----------------------------------------------------------------------------------------------------------------------------|-----------|
+| `onFullscreenPlayerWillPresent` | Before the player goes to fullscreen.                                                                                      | All       |
+| `onFullscreenPlayerDidPresent`  | After the player went to fullscreen.                                                                                       | All       |
+| `onFullscreenPlayerWillDismiss` | Before the player returns from fullscreen.                                                                                 | All       |
+| `onFullscreenPlayerDidDismiss`  | After the player returned from fullscreen.                                                                                 | All       |
+| `onBufferingStateChange`        | When the player's buffering state has changed.                                                                             | All       |
+| `onSourceChange`                | When the player receives a new source description.                                                                         | All       |
+| `onLoadStart`                   | When the player starts loading the manifest.                                                                               | All       |
+| `onLoadedMetadata`              | When the player has determined the duration and dimensions of the media resource, and the text and media tracks are ready. | All       |
+| `onLoadedData`                  | When the player can render the media data at the current playback position for the first time.                             | All       |
+| `onReadyStateChange`            | When the player's readyState has changed.                                                                                  | All       |
+| `onError`                       | When an error occurs.                                                                                                      | All       |
+| `onProgress`                    | Each time the player has loaded media data.                                                                                | All       |
+| `onPlay`                        | When the player's internal paused state changes to `false`.                                                                | All       |
+| `onPlaying`                     | When playback is ready to start after having been paused or delayed due to lack of media data.                             | All       |
+| `onPause`                       | When the player's internal paused state changes to `true`.                                                                 | All       |
+| `onSeeking`                     | When a seek operation starts and the player is seeking a new position.                                                     | All       |
+| `onSeeked`                      | When a seek operation completed and the current playback position has changed.                                             | All       |
+| `onEnded`                       | When playback has stopped because the end of the media was reached or because no further data is available.                | All       |
+| `onTimeUpdate`                  | Each time the current playback position changed.                                                                           | All       |
+| `onDurationChange`              | When the player's duration attribute has been updated.                                                                     | All       |
+| `onSegmentNotFound`             | When a segment can not be found.                                                                                           | All       |
+| `onTextTrackListEvent`          | When a text track list event occurs.                                                                                       | All       |
+| `onTextTrackEvent`              | When a text track event occurs.                                                                                            | All       |
 
 ### Configuration
 
@@ -91,6 +92,17 @@ const license = Platform.select(
 
 If no license is provided, only sources hosted on the `theoplayer.com` domain can be played. On Web platforms,
 CORS rules applied on `theoplayer.com` will also prohibit playing sources from this domain.
+
+#### Adaptive Bitrate (ABR) configuration
+
+On Android and Web platforms, the `abrConfig` property affects the ABR configuration of the player.
+
+| Property             | Description                                                                                                                                      | Platforms     |
+|----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
+| strategy             | The adaptive bitrate strategy of the first segment, either `performance`, `quality` or `bandwidth`. The default value is `bandwidth`.            | Android & Web |
+| targetBuffer         | The amount which the player should buffer ahead of the current playback position, in seconds. The default value is 20 seconds.                   | Android & Web |
+| bufferLookbackWindow | The amount of data which the player should keep in its buffer before the current playback position, in seconds. The default value is 30 seconds. | Web           |
+| maxBufferLength      | The maximum length of the player's buffer, in seconds.                                                                                           | Web           |
 
 ### Chromeless vs. Chromefull
 
