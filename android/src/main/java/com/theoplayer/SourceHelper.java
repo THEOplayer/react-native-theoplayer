@@ -1,8 +1,5 @@
 package com.theoplayer;
 
-import android.text.TextUtils;
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -21,17 +18,6 @@ import com.theoplayer.android.api.source.TypedSource;
 import com.theoplayer.android.api.source.addescription.AdDescription;
 import com.theoplayer.android.api.source.addescription.GoogleImaAdDescription;
 import com.theoplayer.android.api.source.drm.DRMConfiguration;
-import com.theoplayer.android.api.source.drm.DRMIntegrationId;
-import com.theoplayer.android.api.source.drm.KeySystemConfiguration;
-import com.theoplayer.android.api.source.drm.preintegration.AxinomDRMConfiguration;
-import com.theoplayer.android.api.source.drm.preintegration.AzureDRMConfiguration;
-import com.theoplayer.android.api.source.drm.preintegration.ConaxDRMConfiguration;
-import com.theoplayer.android.api.source.drm.preintegration.DRMTodayConfiguration;
-import com.theoplayer.android.api.source.drm.preintegration.IrdetoConfiguration;
-import com.theoplayer.android.api.source.drm.preintegration.KeyOSDRMConfiguration;
-import com.theoplayer.android.api.source.drm.preintegration.TitaniumDRMConfiguration;
-import com.theoplayer.android.api.source.drm.preintegration.VudrmDRMConfiguration;
-import com.theoplayer.android.api.source.drm.preintegration.XstreamConfiguration;
 import com.theoplayer.android.api.source.hls.HlsPlaybackConfiguration;
 import com.theoplayer.android.api.source.ssai.SsaiIntegration;
 import com.theoplayer.android.api.source.ssai.YoSpaceDescription;
