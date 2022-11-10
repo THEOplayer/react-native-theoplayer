@@ -19,6 +19,7 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.ThemedReactContext;
+import com.theoplayer.abr.ABRConfigurationAdapter;
 import com.theoplayer.android.api.THEOplayerConfig;
 import com.theoplayer.android.api.THEOplayerView;
 import com.theoplayer.android.api.ads.ima.GoogleImaIntegration;
@@ -54,7 +55,7 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
   private THEOplayerView playerView;
 
   private Player player;
-
+  private ReadableMap abrConfig;
   private boolean paused;
   private boolean muted = false;
   private boolean fullscreen = false;
@@ -200,6 +201,7 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
     new Handler().postDelayed(() -> {
       if (player == null) {
         player = playerView.getPlayer();
+        ABRConfigurationAdapter.INSTANCE.applyABRConfigurationFromProps(player, abrConfig);
         eventEmitter.attachListeners(player);
         player.setMuted(this.muted);
         player.setVolume(this.volume);
@@ -264,6 +266,11 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
     }
 
     reactContext.removeLifecycleEventListener(this);
+  }
+
+  public void setABRConfig(@Nullable ReadableMap abrConfigProps) {
+    abrConfig = abrConfigProps;
+    ABRConfigurationAdapter.INSTANCE.applyABRConfigurationFromProps(player, abrConfig);
   }
 
   public void setSource(@Nullable final SourceDescription sourceDescription) {
