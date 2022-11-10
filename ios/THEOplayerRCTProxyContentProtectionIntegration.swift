@@ -17,11 +17,13 @@ enum ProxyIntegrationError: Error {
 }
 
 let PROXY_INTEGRATION_TAG: String = "[ProxyContentProtectionIntegration]"
+let BRIDGE_TIMEOUT = 10.0
 
 class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProtectionIntegration {
     private weak var contentProtectionAPI: THEOplayerRCTContentProtectionAPI?
     private var integrationId: String!
     private var keySystemId: String!
+    private var buildIntegrationSemaphore = DispatchSemaphore(value: 0)
     private var contentIdExtractionSemaphore = DispatchSemaphore(value: 0)
     
     init(contentProtectionAPI: THEOplayerRCTContentProtectionAPI?, integrationId: String, keySystemId: String, drmConfig: THEOplayerSDK.DRMConfiguration) {
@@ -34,7 +36,9 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
             } else {
                 print(PROXY_INTEGRATION_TAG, "WARNING: Failed to create a THEOplayer ContentProtectionIntegration for \(integrationId) - \(keySystemId)")
             }
+            self.buildIntegrationSemaphore.signal()
         })
+        _ = self.buildIntegrationSemaphore.wait(timeout: .now() + BRIDGE_TIMEOUT)
     }
     
     func onCertificateRequest(request: CertificateRequest, callback: CertificateRequestCallback) {
@@ -113,7 +117,7 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
         }
         // TODO: make extractFairplayContentId async on THEOplayer SDK
         // FOR NOW: We temporarily block (topped to max 5 sec) the flow to retrieve the extracted contentId asynchronously.
-        _ = self.contentIdExtractionSemaphore.wait(timeout: .now() + 5.0)
+        _ = self.contentIdExtractionSemaphore.wait(timeout: .now() + BRIDGE_TIMEOUT)
         return extractedContentId
     }
 }
