@@ -191,7 +191,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
            let headers = result["headers"] as? [String:String] {
             var bodyData: Data?
             if let base64body = result["base64body"] as? String {
-                bodyData = Data(base64Encoded: base64body)
+                bodyData = Data(base64Encoded: base64body, options: .ignoreUnknownCharacters)
             }
             let certificateRequest = CertificateRequest(url: url,
                                                         method: method,
@@ -211,7 +211,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
            let completion = self.certificateResponseCompletions.removeValue(forKey: requestId) {
             var bodyData = Data()
             if let base64body = result["base64body"] as? String {
-                bodyData = Data(base64Encoded: base64body) ?? Data()
+                bodyData = Data(base64Encoded: base64body, options: .ignoreUnknownCharacters) ?? Data()
             }
             self.invalidateRequestWithId(requestId)
             completion(bodyData, nil)
@@ -230,7 +230,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
            let headers = result["headers"] as? [String:String] {
             var bodyData: Data?
             if let base64body = result["base64body"] as? String {
-                bodyData = Data(base64Encoded: base64body)
+                bodyData = Data(base64Encoded: base64body, options: .ignoreUnknownCharacters)
             }
             let fairplaySkdUrl = result["fairplaySkdUrl"] as? String
             let licenseRequest = LicenseRequest(url: url,
@@ -253,7 +253,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
            let completion = self.licenseResponseCompletions.removeValue(forKey: requestId) {
             var bodyData = Data()
             if let base64body = result["base64body"] as? String {
-                bodyData = Data(base64Encoded: base64body) ?? Data()
+                bodyData = Data(base64Encoded: base64body, options: .ignoreUnknownCharacters) ?? Data()
             }
             self.invalidateRequestWithId(requestId)
             completion(bodyData, nil)
