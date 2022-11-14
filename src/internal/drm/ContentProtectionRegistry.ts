@@ -4,12 +4,11 @@ import type { ContentProtectionIntegrationFactory } from 'react-native-theoplaye
 import { NativeEventEmitter, NativeModules } from 'react-native';
 import type { ContentProtectionIntegration } from 'react-native-theoplayer';
 import type { NativeContentProtectionEvent } from './NativeContentProtectionEvent';
-import type { NativeLicenseRequest } from './NativeLicenseRequest';
-import { fromNativeLicenseRequest, toNativeLicenseRequest } from './NativeLicenseRequest';
+import { fromNativeLicenseRequest, NativeLicenseRequest, toNativeLicenseRequest } from './NativeLicenseRequest';
 import { fromNativeLicenseResponse, NativeLicenseResponse, toNativeLicenseResponseResult } from './NativeLicenseResponse';
-import type { NativeCertificateRequest } from './NativeCertificateRequest';
-import { fromNativeCertificateRequest, toNativeCertificateRequest } from './NativeCertificateRequest';
+import { fromNativeCertificateRequest, NativeCertificateRequest, toNativeCertificateRequest } from './NativeCertificateRequest';
 import { fromNativeCertificateResponse, NativeCertificateResponse, toNativeCertificateResponseResult } from './NativeCertificateResponse';
+import { isBufferSource } from '../utils/TypeUtils';
 
 interface WrappedContentProtectionIntegrationFactory {
   integrationId: string;
@@ -89,12 +88,17 @@ export class NativeContentProtectionRegistry implements ContentProtectionAPI {
     console.log('ContentProtectionModule', `onCertificateRequest ${integrationId} ${keySystemId}`);
     const integration = this.getIntegration(integrationId, keySystemId);
     if (integration?.onCertificateRequest) {
-      const modifiedRequest = await integration.onCertificateRequest(fromNativeCertificateRequest(request));
-      // TODO: we also want to support BufferSource results
-      const modifiedNativeRequest = toNativeCertificateRequest(requestId, integrationId, keySystemId, modifiedRequest as CertificateRequest);
-      NativeModules.ContentProtectionModule.onCertificateRequestProcessed(modifiedNativeRequest);
+      const result = await integration.onCertificateRequest(fromNativeCertificateRequest(request));
+      // TODO: we also want to support ArrayBufferView results
+      if (isBufferSource(result)) {
+        const nativeResponse = toNativeCertificateResponseResult(requestId, integrationId, keySystemId, result as ArrayBuffer);
+        NativeModules.ContentProtectionModule.onCertificateRequestProcessedAsCertificate(nativeResponse);
+      } else if (result as CertificateRequest) {
+        const modifiedNativeRequest = toNativeCertificateRequest(requestId, integrationId, keySystemId, result as CertificateRequest);
+        NativeModules.ContentProtectionModule.onCertificateRequestProcessedAsRequest(modifiedNativeRequest);
+      }
     } else {
-      NativeModules.ContentProtectionModule.onCertificateRequestProcessed(request);
+      NativeModules.ContentProtectionModule.onCertificateRequestProcessedAsRequest(request);
     }
   };
 
@@ -118,12 +122,17 @@ export class NativeContentProtectionRegistry implements ContentProtectionAPI {
     const integration = this.getIntegration(integrationId, keySystemId);
     // Optionally let the custom integration modify the request.
     if (integration?.onLicenseRequest) {
-      const modifiedRequest = await integration.onLicenseRequest(fromNativeLicenseRequest(request));
-      // TODO: we also want to support BufferSource results
-      const modifiedNativeRequest = toNativeLicenseRequest(requestId, integrationId, keySystemId, modifiedRequest as LicenseRequest);
-      NativeModules.ContentProtectionModule.onLicenseRequestProcessed(modifiedNativeRequest);
+      const result = await integration.onLicenseRequest(fromNativeLicenseRequest(request));
+      // TODO: we also want to support ArrayBufferView results
+      if (isBufferSource(result)) {
+        const nativeResponse = toNativeLicenseResponseResult(requestId, integrationId, keySystemId, result as ArrayBuffer);
+        NativeModules.ContentProtectionModule.onLicenseRequestProcessedAsLicense(nativeResponse);
+      } else if (result as LicenseRequest) {
+        const modifiedNativeRequest = toNativeLicenseRequest(requestId, integrationId, keySystemId, result as LicenseRequest);
+        NativeModules.ContentProtectionModule.onLicenseRequestProcessedAsRequest(modifiedNativeRequest);
+      }
     } else {
-      NativeModules.ContentProtectionModule.onLicenseRequestProcessed(request);
+      NativeModules.ContentProtectionModule.onLicenseRequestProcessedAsRequest(request);
     }
   };
 
