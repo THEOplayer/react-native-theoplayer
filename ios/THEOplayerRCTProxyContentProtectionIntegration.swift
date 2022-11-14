@@ -43,13 +43,13 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
     
     func onCertificateRequest(request: CertificateRequest, callback: CertificateRequestCallback) {
         if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "THEOplayer triggered an onCertificateRequest") }
-        self.contentProtectionAPI?.handleCertificateRequest(integrationId: self.integrationId, keySystemId: self.keySystemId, certificateRequest: request) { certificateRequest, error in
+        self.contentProtectionAPI?.handleCertificateRequest(integrationId: self.integrationId, keySystemId: self.keySystemId, certificateRequest: request) { certificateData, error in
             if let error = error {
                 callback.error(error: error)
                 return
             }
-            if let request = certificateRequest {
-                callback.request(request: request)
+            if let data = certificateData {
+                callback.respond(certificate: data)
             } else {
                 callback.error(error: ProxyIntegrationError.certificateRequestHandlingFailed)
             }
@@ -73,13 +73,13 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
     
     func onLicenseRequest(request: LicenseRequest, callback: LicenseRequestCallback) {
         if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "THEOplayer triggered an onLicenseRequest") }
-        self.contentProtectionAPI?.handleLicenseRequest(integrationId: self.integrationId, keySystemId: self.keySystemId, licenseRequest: request) { licenseRequest, error in
+        self.contentProtectionAPI?.handleLicenseRequest(integrationId: self.integrationId, keySystemId: self.keySystemId, licenseRequest: request) { licenseData, error in
             if let error = error {
                 callback.error(error: error)
                 return
             }
-            if let request = licenseRequest {
-                callback.request(request: request)
+            if let data = licenseData {
+                callback.respond(license: data)
             } else {
                 callback.error(error: ProxyIntegrationError.licenseRequestHandlingFailed)
             }

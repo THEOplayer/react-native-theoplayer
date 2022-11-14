@@ -23,9 +23,9 @@ let BRIDGE_REQUEST_TIMEOUT = 10.0
 class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
     
     private var buildIntegrationCompletions: [String:(Bool) -> Void] = [:]                              // [requestId : completion]
-    private var certificateRequestCompletions: [String:(CertificateRequest?, Error?) -> Void] = [:]     // [requestId : completion]
+    private var certificateRequestCompletions: [String:(Data?, Error?) -> Void] = [:]                   // [requestId : completion]
     private var certificateResponseCompletions: [String:(Data?, Error?) -> Void] = [:]                  // [requestId : completion]
-    private var licenseRequestCompletions: [String:(LicenseRequest?, Error?) -> Void] = [:]             // [requestId : completion]
+    private var licenseRequestCompletions: [String:(Data?, Error?) -> Void] = [:]                       // [requestId : completion]
     private var licenseResponseCompletions: [String:(Data?, Error?) -> Void] = [:]                      // [requestId : completion]
     private var extractFairplayCompletions: [String:(String, Error?) -> Void] = [:]                     // [requestId : completion]
     private var requestTimers: [String:Timer] = [:]                                                     // [requestId : Timer]
@@ -77,7 +77,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
         })
     }
     
-    func handleCertificateRequest(integrationId: String, keySystemId: String, certificateRequest: CertificateRequest, completion: @escaping (CertificateRequest?, Error?) -> Void) {
+    func handleCertificateRequest(integrationId: String, keySystemId: String, certificateRequest: CertificateRequest, completion: @escaping (Data?, Error?) -> Void) {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "handleCertificateRequest.") }
         let requestId = UUID().uuidString
         self.certificateRequestCompletions[requestId] = completion
@@ -107,7 +107,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
         })
     }
     
-    func handleLicenseRequest(integrationId: String, keySystemId: String, licenseRequest: LicenseRequest, completion: @escaping (LicenseRequest?, Error?) -> Void) {
+    func handleLicenseRequest(integrationId: String, keySystemId: String, licenseRequest: LicenseRequest, completion: @escaping (Data?, Error?) -> Void) {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "handleLicenseRequest.") }
         let requestId = UUID().uuidString
         self.licenseRequestCompletions[requestId] = completion
@@ -181,26 +181,45 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
         }
     }
     
-    @objc(onCertificateRequestProcessed:)
-    func onCertificateRequestProcessed(_ result: NSDictionary) -> Void {
-        if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onCertificateRequestProcessed.") }
+    @objc(onCertificateRequestProcessedAsRequest:)
+    func onCertificateRequestProcessedAsRequest(_ result: NSDictionary) -> Void {
+        if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onCertificateRequestProcessedAsRequest.") }
         if let requestId = result["requestId"] as? String,
            let completion = self.certificateRequestCompletions.removeValue(forKey: requestId),
-           let url = result["url"] as? String,
+           let urlString = result["url"] as? String,
+           let url = URL(string: urlString),
            let method = result["method"] as? String,
            let headers = result["headers"] as? [String:String] {
             var bodyData: Data?
             if let base64body = result["base64body"] as? String {
                 bodyData = Data(base64Encoded: base64body, options: .ignoreUnknownCharacters)
             }
-            let certificateRequest = CertificateRequest(url: url,
-                                                        method: method,
-                                                        headers: headers,
-                                                        body: bodyData)
             self.invalidateRequestWithId(requestId)
-            completion(certificateRequest, nil)
+            THEOplayerRCTNetworkUtils.shared.requestFromUrl(url: url, method: method, body: bodyData, headers: headers) { data, statusCode, error in
+                if statusCode >= 400 {
+                    print("Certificate request failure: statusCode = \(statusCode)")
+                } else {
+                    completion(data, error)
+                }
+            }
         } else {
-            print(CPI_TAG, "Failed to process certificateResult result")
+            print(CPI_TAG, "Failed to process certificate request as request")
+        }
+    }
+    
+    @objc(onCertificateRequestProcessedAsCertificate:)
+    func onCertificateRequestProcessedAsCertificate(_ result: NSDictionary) -> Void {
+        if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onCertificateRequestProcessedAsCertificate.") }
+        if let requestId = result["requestId"] as? String,
+           let completion = self.certificateRequestCompletions.removeValue(forKey: requestId) {
+            var bodyData = Data()
+            if let base64body = result["base64body"] as? String {
+                bodyData = Data(base64Encoded: base64body, options: .ignoreUnknownCharacters) ?? Data()
+            }
+            self.invalidateRequestWithId(requestId)
+            completion(bodyData, nil)
+        } else {
+            print(CPI_TAG, "Failed to process certificate request as certificate")
         }
     }
     
@@ -216,33 +235,49 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
             self.invalidateRequestWithId(requestId)
             completion(bodyData, nil)
         } else {
-            print(CPI_TAG, "Failed to process certificateResponse result")
+            print(CPI_TAG, "Failed to process certificate response")
         }
     }
     
-    @objc(onLicenseRequestProcessed:)
-    func onLicenseRequestProcessed(_ result: NSDictionary) -> Void {
-        if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onLicenseRequestProcessed.") }
+    @objc(onLicenseRequestProcessedAsRequest:)
+    func onLicenseRequestProcessedAsRequest(_ result: NSDictionary) -> Void {
+        if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onLicenseRequestProcessedAsRequest.") }
         if let requestId = result["requestId"] as? String,
            let completion = self.licenseRequestCompletions.removeValue(forKey: requestId),
-           let url = result["url"] as? String,
+           let urlString = result["url"] as? String,
+           let url = URL(string: urlString),
            let method = result["method"] as? String,
            let headers = result["headers"] as? [String:String] {
             var bodyData: Data?
             if let base64body = result["base64body"] as? String {
                 bodyData = Data(base64Encoded: base64body, options: .ignoreUnknownCharacters)
             }
-            let fairplaySkdUrl = result["fairplaySkdUrl"] as? String
-            let licenseRequest = LicenseRequest(url: url,
-                                                method: method,
-                                                headers: headers,
-                                                body: bodyData,
-                                                fairplaySkdUrl: fairplaySkdUrl,
-                                                useCredentials: false)
             self.invalidateRequestWithId(requestId)
-            completion(licenseRequest, nil)
+            THEOplayerRCTNetworkUtils.shared.requestFromUrl(url: url, method: method, body: bodyData, headers: headers) { data, statusCode, error in
+                if statusCode >= 400 {
+                    print(CPI_TAG, "License request failure: statusCode = \(statusCode)")
+                } else {
+                    completion(data, error)
+                }
+            }
         } else {
-            print(CPI_TAG, "Failed to process licenseRequest result")
+            print(CPI_TAG, "Failed to process license request as request")
+        }
+    }
+    
+    @objc(onLicenseRequestProcessedAsLicense:)
+    func onLicenseRequestProcessedAsLicense(_ result: NSDictionary) -> Void {
+        if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onLicenseRequestProcessedAsLicense.") }
+        if let requestId = result["requestId"] as? String,
+           let completion = self.licenseRequestCompletions.removeValue(forKey: requestId) {
+            var bodyData = Data()
+            if let base64body = result["base64body"] as? String {
+                bodyData = Data(base64Encoded: base64body, options: .ignoreUnknownCharacters) ?? Data()
+            }
+            self.invalidateRequestWithId(requestId)
+            completion(bodyData, nil)
+        } else {
+            print(CPI_TAG, "Failed to process license request as license")
         }
     }
     
@@ -258,7 +293,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
             self.invalidateRequestWithId(requestId)
             completion(bodyData, nil)
         } else {
-            print(CPI_TAG, "Failed to process licenseResponse result")
+            print(CPI_TAG, "Failed to process license response")
         }
     }
     

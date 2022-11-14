@@ -97,9 +97,11 @@ RCT_EXTERN_METHOD(daiStreamTimeForContentTime:(nonnull NSNumber *)node
 @interface RCT_EXTERN_REMAP_MODULE(ContentProtectionModule, THEOplayerRCTContentProtectionAPI, RCTEventEmitter)
 
 RCT_EXTERN_METHOD(onBuildProcessed:(NSDictionary)result)
-RCT_EXTERN_METHOD(onCertificateRequestProcessed:(NSDictionary)result)
+RCT_EXTERN_METHOD(onCertificateRequestProcessedAsRequest:(NSDictionary)result)
+RCT_EXTERN_METHOD(onCertificateRequestProcessedAsCertificate:(NSDictionary)result)
 RCT_EXTERN_METHOD(onCertificateResponseProcessed:(NSDictionary)result)
-RCT_EXTERN_METHOD(onLicenseRequestProcessed:(NSDictionary)result)
+RCT_EXTERN_METHOD(onLicenseRequestProcessedAsRequest:(NSDictionary)result)
+RCT_EXTERN_METHOD(onLicenseRequestProcessedAsLicense:(NSDictionary)result)
 RCT_EXTERN_METHOD(onLicenseResponseProcessed:(NSDictionary)result)
 RCT_EXTERN_METHOD(onExtractFairplayContentIdProcessed:(NSDictionary)result)
 RCT_EXTERN_METHOD(registerContentProtectionIntegration:(nonnull NSString *)integrationId
