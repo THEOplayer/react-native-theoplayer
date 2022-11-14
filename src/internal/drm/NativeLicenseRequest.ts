@@ -32,7 +32,7 @@ export function toNativeLicenseRequest(requestId: string, integrationId: string,
     url: request.url,
     method: request.method,
     headers: request.headers,
-    useCredentials: request.useCredentials,
+    useCredentials: request.useCredentials ?? false,
     base64body: request.body ? fromUint8ArrayToBase64String(request.body) : null,
     fairplaySkdUrl: request.fairplaySkdUrl,
   };
