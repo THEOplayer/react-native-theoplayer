@@ -77,7 +77,7 @@ object ContentProtectionAdapter {
     return DRMConfiguration.Builder().apply {
       this.customIntegrationId(integration)
       this.widevine(gson.fromJson(jsonConfig.optString("widevine"), KeySystemConfiguration::class.java))
-      this.playready(gson.fromJson(jsonConfig.optString("widevine"), KeySystemConfiguration::class.java))
+      this.playready(gson.fromJson(jsonConfig.optString("playready"), KeySystemConfiguration::class.java))
       this.integrationParameters(
         gson.fromJson<Map<String, Any>>(
           jsonConfig.getJSONObject("integrationParameters").toString(),
