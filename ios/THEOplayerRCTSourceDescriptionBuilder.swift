@@ -12,6 +12,7 @@ let SD_PROP_SRC: String = "src"
 let SD_PROP_TYPE: String = "type"
 let SD_PROP_SSAI: String = "ssai"
 let SD_PROP_INTEGRATION: String = "integration"
+let SD_PROP_INTEGRATION_PARAMETERS: String = "integrationParameters"
 let SD_PROP_AVAILABILITY_TYPE: String = "availabilityType"
 let SD_PROP_AUTH_TOKEN: String = "authToken"
 let SD_PROP_STREAM_ACTIVITY_MONITOR_ID: String = "streamActivityMonitorID"
@@ -27,6 +28,13 @@ let SD_PROP_LABEL: String = "label"
 let SD_PROP_KIND: String = "kind"
 let SD_PROP_FORMAT: String = "format"
 let SD_PROP_CONTENT_PROTECTION: String = "contentProtection"
+let SD_PROP_FAIRPLAY: String = "fairplay"
+let SD_PROP_WIDEVINE: String = "widevine"
+let SD_PROP_CERTIFICATE: String = "certificate"
+let SD_PROP_CERTIFICATE_URL: String = "certificateURL"
+let SD_PROP_LICENSE_URL: String = "licenseAcquisitionURL"
+let SD_PROP_HEADERS: String = "headers"
+let SD_PROP_LICENSE_TYPE: String = "licenseType"
 
 let EXTENSION_HLS: String = ".m3u8"
 let EXTENSION_MP4: String = ".mp4"
@@ -41,7 +49,7 @@ let DRM_INTEGRATION_ID_KEYOS = "keyos"
 let DRM_INTEGRATION_ID_VERIMATRIX = "verimatrix"
 
 class THEOplayerRCTSourceDescriptionBuilder {
-    
+
     /**
      Builds a THEOplayer SourceDescription that can be passed as a source for the THEOplayer.
      - returns: a THEOplayer TypedSource. In case of SSAI we  support GoogleDAITypedSource with GoogleDAIVodConfiguration or GoogleDAILiveConfiguration
@@ -51,7 +59,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
         guard let sourcesData = sourceData[SD_PROP_SOURCES] else {
             return nil
         }
-        
+
         var typedSources: [TypedSource] = []
         // case: array of source objects
         if let sourcesDataArray = sourcesData as? [[String:Any]] {
@@ -77,10 +85,10 @@ class THEOplayerRCTSourceDescriptionBuilder {
                 return nil
             }
         }
-        
+
         // 2. extract 'poster'
         let poster = sourceData[SD_PROP_POSTER] as? String
-        
+
         // 3. extract 'textTracks'
         var textTrackDescriptions: [TextTrackDescription]?
         if let textTracksDataArray = sourceData[SD_PROP_TEXTTRACKS] as? [[String:Any]] {
@@ -95,12 +103,12 @@ class THEOplayerRCTSourceDescriptionBuilder {
                     return nil
                 }
             }
-            
+
         }
-        
+
         // 4. extract Google IMA "ads"
         var adsDescriptions: [AdDescription]?
-        
+
 #if ADS && GOOGLE_IMA
         if let ads = sourceData[SD_PROP_ADS] {
             adsDescriptions = []
@@ -130,7 +138,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
             }
         }
 #endif
-        
+
         // 5. construct and return SourceDescription
         return SourceDescription(sources: typedSources,
                                  textTracks: textTrackDescriptions,
@@ -138,9 +146,9 @@ class THEOplayerRCTSourceDescriptionBuilder {
                                  poster: poster,
                                  metadata: nil)     // TODO
     }
-    
+
     // MARK: Private build methods
-    
+
     /**
      Creates a THEOplayer TypedSource. This requires a source property for non SSAI strreams (either as a string or as an object contiaining a src property). For SSAI streams the TypeSource can be created from the ssai property.
      - returns: a THEOplayer TypedSource. In case of SSAI we  support GoogleDAITypedSource with GoogleDAIVodConfiguration or GoogleDAILiveConfiguration
@@ -152,14 +160,15 @@ class THEOplayerRCTSourceDescriptionBuilder {
             // check for a contentProtection
             var contentProtection: MultiplatformDRMConfiguration?
             if let contentProtectionData = typedSourceData[SD_PROP_CONTENT_PROTECTION] as? [String:Any] {
-                contentProtection = THEOplayerRCTSourceDescriptionBuilder.buildContentProtection(contentProtectionData)
+                let sanitisedContentProtectionData = THEOplayerRCTSourceDescriptionBuilder.sanitiseContentProtectionData(contentProtectionData)
+                contentProtection = THEOplayerRCTSourceDescriptionBuilder.buildContentProtection(sanitisedContentProtectionData)
             }
-            
+
             return TypedSource(src: src,
                                type: type,
                                drm: contentProtection)
         }
-        
+
 #if ADS && GOOGLE_DAI
         // check for alternative Google DAI SSAI
         if let ssaiData = typedSourceData[SD_PROP_SSAI] as? [String:Any] {
@@ -210,7 +219,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
         }
         return nil
     }
-    
+
     /**
      Creates a THEOplayer TextTrackDescription. This requires a textTracks property in the RN source description.
      - returns: a THEOplayer TextTrackDescription
@@ -231,7 +240,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
         }
         return nil
     }
-    
+
 #if ADS && GOOGLE_IMA
     /**
      Creates a THEOplayer GoogleImaAdDescription. This requires an ads property in the RN source description.
@@ -258,7 +267,76 @@ class THEOplayerRCTSourceDescriptionBuilder {
         return nil
     }
 #endif
-    
+
+	  /**
+     Updates the contentProtectionData to a valid iOS SDK contentProtectionData, flattening out cross SDK differences
+     - returns: a THEOplayer valid contentProtection data map
+     */
+    private static func sanitiseContentProtectionData(_ contentProtectionData: [String:Any]) -> [String:Any] {
+        var sanitisedContentProtectionData: [String:Any] = [:]
+        // integration
+        let sanitisedIntegration = contentProtectionData[SD_PROP_INTEGRATION] as? String
+        sanitisedContentProtectionData[SD_PROP_INTEGRATION] = sanitisedIntegration
+        // integrationParameters
+        let sanitisedIntegrationParameters = contentProtectionData[SD_PROP_INTEGRATION_PARAMETERS] as? [String:Any]
+        sanitisedContentProtectionData[SD_PROP_INTEGRATION_PARAMETERS] = sanitisedIntegrationParameters
+        // headers
+        if let headers = contentProtectionData[SD_PROP_HEADERS] as? [String:String] {
+            sanitisedContentProtectionData[SD_PROP_HEADERS] = headers
+        }
+        // fairplay
+        if let fairplayData = contentProtectionData[SD_PROP_FAIRPLAY] as? [String:Any] {
+            var sanitisedFairplayData: [String:Any] = [:]
+            // certificateUrl
+            if let certificateUrl = fairplayData[SD_PROP_CERTIFICATE_URL] as? String {
+                sanitisedFairplayData[SD_PROP_CERTIFICATE_URL] = certificateUrl
+            }
+            // convert certifiate into certificteUrl with marker prefix (also supported by THEOplayer Web SDK
+            if let certificate = fairplayData[SD_PROP_CERTIFICATE] as? String {
+                sanitisedFairplayData[SD_PROP_CERTIFICATE_URL] = "\(CERTIFICATE_MARKER)\(certificate)"
+            }
+            // licenseAcquisitionURL
+            if let licenseAcquisitionURL = fairplayData[SD_PROP_LICENSE_URL] as? String {
+                sanitisedFairplayData[SD_PROP_LICENSE_URL] = licenseAcquisitionURL
+            }
+            // headers
+            if let headers = fairplayData[SD_PROP_HEADERS] as? [String:String] {
+                sanitisedFairplayData[SD_PROP_HEADERS] = headers
+            }
+            // licenseType
+            if let licenseType = fairplayData[SD_PROP_LICENSE_TYPE] as? String {
+                sanitisedFairplayData[SD_PROP_LICENSE_TYPE] = licenseType
+            }
+            sanitisedContentProtectionData[SD_PROP_FAIRPLAY] = sanitisedFairplayData
+        }
+        // widevine
+        if let widevineData = contentProtectionData[SD_PROP_WIDEVINE] as? [String:Any] {
+            var sanitisedWidevineData: [String:Any] = [:]
+            // certificateUrl
+            if let certificateUrl = widevineData[SD_PROP_CERTIFICATE_URL] as? String {
+                sanitisedWidevineData[SD_PROP_CERTIFICATE_URL] = certificateUrl
+            }
+            // convert certifiate into certificteUrl with marker prefix (also supported by THEOplayer Web SDK
+            if let certificate = widevineData[SD_PROP_CERTIFICATE] as? String {
+                sanitisedWidevineData[SD_PROP_CERTIFICATE_URL] = "\(CERTIFICATE_MARKER)\(certificate)"
+            }
+            // licenseAcquisitionURL
+            if let licenseAcquisitionURL = widevineData[SD_PROP_LICENSE_URL] as? String {
+                sanitisedWidevineData[SD_PROP_LICENSE_URL] = licenseAcquisitionURL
+            }
+            // headers
+            if let headers = widevineData[SD_PROP_HEADERS] as? [String:String] {
+                sanitisedWidevineData[SD_PROP_HEADERS] = headers
+            }
+            // licenseType
+            if let licenseType = widevineData[SD_PROP_LICENSE_TYPE] as? String {
+                sanitisedWidevineData[SD_PROP_LICENSE_TYPE] = licenseType
+            }
+            sanitisedContentProtectionData[SD_PROP_WIDEVINE] = sanitisedWidevineData
+        }
+        return sanitisedContentProtectionData
+    }
+
     /**
      Creates a THEOplayer DRMConfiguration. This requires a contentProtection property in the RN source description.
      - returns: a THEOplayer DRMConfiguration
@@ -282,10 +360,10 @@ class THEOplayerRCTSourceDescriptionBuilder {
         }
         return nil
     }
-    
-    
+
+
     // MARK: Helper methods
-    
+
     private static func extractMimeType(_ src: String) -> String {
         if src.suffix(5) == EXTENSION_HLS {
             return MIMETYPE_HLS
@@ -296,12 +374,12 @@ class THEOplayerRCTSourceDescriptionBuilder {
         }
         return MIMETYPE_HLS
     }
-    
+
     private static func extractTextTrackKind(_ kindString: String?) -> THEOplayerSDK.TextTrackKind {
         guard let kind = kindString else {
             return THEOplayerSDK.TextTrackKind.none
         }
-        
+
         switch kind {
         case "subtitles": return THEOplayerSDK.TextTrackKind.subtitles
         case "captions": return THEOplayerSDK.TextTrackKind.captions
@@ -309,15 +387,15 @@ class THEOplayerRCTSourceDescriptionBuilder {
         case "chapters": return THEOplayerSDK.TextTrackKind.chapters
         case "metadata": return THEOplayerSDK.TextTrackKind.metadata
         default: return THEOplayerSDK.TextTrackKind.none
-            
+
         }
     }
-    
+
     private static func extractTextTrackFormat(_ formatString: String?) -> THEOplayerSDK.TextTrackFormat {
         guard let format = formatString else {
             return THEOplayerSDK.TextTrackFormat.none
         }
-        
+
         if format == "webvtt" {
             return THEOplayerSDK.TextTrackFormat.WebVTT
         } else {
