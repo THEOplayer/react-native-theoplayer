@@ -16,6 +16,7 @@ enum ProxyIntegrationError: Error {
     case extractFairplayContentIdFailed
 }
 
+let CERTIFICATE_MARKER: String = "https://certificatemarker/"
 let PROXY_INTEGRATION_TAG: String = "[ProxyContentProtectionIntegration]"
 let BRIDGE_TIMEOUT = 10.0
 
@@ -25,11 +26,13 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
     private var keySystemId: String!
     private var buildIntegrationSemaphore = DispatchSemaphore(value: 0)
     private var contentIdExtractionSemaphore = DispatchSemaphore(value: 0)
+    private var drmConfig: THEOplayerSDK.DRMConfiguration
     
     init(contentProtectionAPI: THEOplayerRCTContentProtectionAPI?, integrationId: String, keySystemId: String, drmConfig: THEOplayerSDK.DRMConfiguration) {
         self.contentProtectionAPI = contentProtectionAPI
         self.integrationId = integrationId
         self.keySystemId = keySystemId
+        self.drmConfig = drmConfig
         self.contentProtectionAPI?.handleBuildIntegration(integrationId: integrationId, keySystemId: keySystemId, drmConfig: drmConfig, completion: { success in
             if success {
                 print(PROXY_INTEGRATION_TAG, "Successfully created a THEOplayer ContentProtectionIntegration for \(integrationId) - \(keySystemId)")
@@ -43,15 +46,19 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
     
     func onCertificateRequest(request: CertificateRequest, callback: CertificateRequestCallback) {
         if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "THEOplayer triggered an onCertificateRequest") }
-        self.contentProtectionAPI?.handleCertificateRequest(integrationId: self.integrationId, keySystemId: self.keySystemId, certificateRequest: request) { certificateData, error in
-            if let error = error {
-                callback.error(error: error)
-                return
-            }
-            if let data = certificateData {
-                callback.respond(certificate: data)
-            } else {
-                callback.error(error: ProxyIntegrationError.certificateRequestHandlingFailed)
+        let processedLocally = self.handleCertificateRequestLocally(drmConfig: drmConfig, callback: callback)
+        if !processedLocally {
+            if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "Handling certificate request through content protection integration.") }
+            self.contentProtectionAPI?.handleCertificateRequest(integrationId: self.integrationId, keySystemId: self.keySystemId, certificateRequest: request) { certificateData, error in
+                if let error = error {
+                    callback.error(error: error)
+                    return
+                }
+                if let data = certificateData {
+                    callback.respond(certificate: data)
+                } else {
+                    callback.error(error: ProxyIntegrationError.certificateRequestHandlingFailed)
+                }
             }
         }
     }
@@ -119,5 +126,30 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
         // FOR NOW: We temporarily block (topped to max 5 sec) the flow to retrieve the extracted contentId asynchronously.
         _ = self.contentIdExtractionSemaphore.wait(timeout: .now() + BRIDGE_TIMEOUT)
         return extractedContentId
+    }
+    
+    // MARK: local certificate handling
+    private func handleCertificateRequestLocally(drmConfig: THEOplayerSDK.DRMConfiguration, callback: CertificateRequestCallback) -> Bool {
+        if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "Checking for certificate in drmConfiguration...") }
+        var fairplayConfig: THEOplayerSDK.KeySystemConfiguration?
+        if let multiDrmConfigCollection = drmConfig as? THEOplayerSDK.MultiplatformDRMConfiguration {
+            let keySystemConfigurations: THEOplayerSDK.KeySystemConfigurationCollection = multiDrmConfigCollection.keySystemConfigurations
+            fairplayConfig = keySystemConfigurations.fairplay
+        } else if let fairplayDrmConfig = drmConfig as? THEOplayerSDK.FairPlayDRMConfiguration {
+            fairplayConfig = fairplayDrmConfig.fairplay
+        }
+
+        if let fairplay = fairplayConfig,
+           let certificateUrl = fairplay.certificateURL?.absoluteString,
+           certificateUrl.hasPrefix(CERTIFICATE_MARKER) {
+            let certificateBase64 = String(certificateUrl.suffix(from: CERTIFICATE_MARKER.endIndex))
+            if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "Using provided base64 certificate: \(certificateBase64)") }
+            if let certificateData = Data(base64Encoded: certificateBase64, options: .ignoreUnknownCharacters) {
+                callback.respond(certificate: certificateData)
+                return true
+            }
+        }
+        
+        return false
     }
 }
