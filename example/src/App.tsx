@@ -4,6 +4,8 @@ import { VideoPlayer } from './components/videoplayer/VideoPlayer';
 import type { PlayerConfiguration } from 'react-native-theoplayer';
 import { EzdrmFairplayContentProtectionIntegrationFactory } from './drm/ezDrm/EzDrmFairplayContentProtectionIntegrationFactory';
 import { ContentProtectionRegistry } from 'react-native-theoplayer';
+import { TitaniumFairplayContentProtectionIntegrationFactory } from './drm/titaniumDrm/TitaniumFairplayContentProtectionIntegrationFactory';
+import { TitaniumWidevineContentProtectionIntegrationFactory } from './drm/titaniumDrm/TitaniumWidevineContentProtectionIntegrationFactory';
 
 const playerConfig: PlayerConfiguration = {
   // Get your THEOplayer license from https://portal.theoplayer.com/
@@ -20,6 +22,16 @@ const playerConfig: PlayerConfiguration = {
 };
 
 ContentProtectionRegistry.registerContentProtectionIntegration('ezdrmCustom', 'fairplay', new EzdrmFairplayContentProtectionIntegrationFactory());
+ContentProtectionRegistry.registerContentProtectionIntegration(
+  'titaniumdrmCustom',
+  'fairplay',
+  new TitaniumFairplayContentProtectionIntegrationFactory(),
+);
+ContentProtectionRegistry.registerContentProtectionIntegration(
+  'titaniumdrmCustom',
+  'widevine',
+  new TitaniumWidevineContentProtectionIntegrationFactory(),
+);
 
 export default function App() {
   return <VideoPlayer config={playerConfig} />;
