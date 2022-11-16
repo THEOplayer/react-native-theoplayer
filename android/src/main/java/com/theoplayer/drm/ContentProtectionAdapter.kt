@@ -75,15 +75,19 @@ object ContentProtectionAdapter {
 
     // Custom integration through connector
     return DRMConfiguration.Builder().apply {
-      this.customIntegrationId(integration)
+      if (!TextUtils.isEmpty(integration)) {
+        this.customIntegrationId(integration)
+      }
       this.widevine(gson.fromJson(jsonConfig.optString("widevine"), KeySystemConfiguration::class.java))
       this.playready(gson.fromJson(jsonConfig.optString("playready"), KeySystemConfiguration::class.java))
-      this.integrationParameters(
-        gson.fromJson<Map<String, Any>>(
-          jsonConfig.getJSONObject("integrationParameters").toString(),
-          MutableMap::class.java
+      if (jsonConfig.has(PROP_INTEGRATION_PARAMETERS)) {
+        this.integrationParameters(
+          gson.fromJson<Map<String, Any>>(
+            jsonConfig.getJSONObject(PROP_INTEGRATION_PARAMETERS).toString(),
+            MutableMap::class.java
+          )
         )
-      )
+      }
     }.build()
   }
 
