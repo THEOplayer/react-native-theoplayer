@@ -14,13 +14,26 @@ import com.theoplayer.android.api.error.THEOplayerException
 import com.theoplayer.android.api.source.drm.DRMConfiguration
 import com.theoplayer.drm.ContentProtectionAdapter.fromDRMConfiguration
 
-const val TAG = "ContentProtectionModule"
-
 data class BridgeRequest(
   val onResult: HashMap<String, (result: ReadableMap) -> Unit>,
   val onError: (exception: THEOplayerException) -> Unit,
   val onTimeout: Runnable
 )
+
+private const val TAG = "ContentProtectionModule"
+
+private const val EVENT_CERTIFICATE_REQUEST = "onCertificateRequest"
+private const val EVENT_CERTIFICATE_REQUEST_PROCESSED_AS_REQUEST = "onCertificateRequestProcessedAsRequest"
+private const val EVENT_CERTIFICATE_REQUEST_PROCESSED_AS_CERTIFICATE = "onCertificateRequestProcessedAsCertificate"
+private const val EVENT_CERTIFICATE_RESPONSE = "onCertificateResponse"
+private const val EVENT_CERTIFICATE_RESPONSE_PROCESSED = "onCertificateResponseProcessed"
+private const val EVENT_BUILD_INTEGRATION = "onBuildIntegration"
+private const val EVENT_BUILD_PROCESSED = "onBuildProcessed"
+private const val EVENT_LICENSE_REQUEST = "onLicenseRequest"
+private const val EVENT_LICENSE_REQUEST_PROCESSED_AS_REQUEST = "onLicenseRequestProcessedAsRequest"
+private const val EVENT_LICENSE_REQUEST_PROCESSED_AS_LICENSE = "onLicenseRequestProcessedAsLicense"
+private const val EVENT_LICENSE_RESPONSE = "onLicenseResponse"
+private const val EVENT_LICENSE_RESPONSE_PROCESSED = "onLicenseResponseProcessed"
 
 class ContentProtectionModule(private val context: ReactApplicationContext) :
   ReactContextBaseJavaModule(context) {
@@ -36,7 +49,7 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
   private val requestQueue: HashMap<String, BridgeRequest> = HashMap()
 
   override fun getName(): String {
-    return "ContentProtectionModule"
+    return TAG
   }
 
   @ReactMethod
@@ -55,37 +68,37 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
 
   @ReactMethod
   fun onBuildProcessed(payload: ReadableMap) {
-    receive("onBuildProcessed", payload)
+    receive(EVENT_BUILD_PROCESSED, payload)
   }
 
   @ReactMethod
   fun onCertificateRequestProcessedAsCertificate(payload: ReadableMap) {
-    receive("onCertificateRequestProcessedAsCertificate", payload)
+    receive(EVENT_CERTIFICATE_REQUEST_PROCESSED_AS_CERTIFICATE, payload)
   }
 
   @ReactMethod
   fun onCertificateRequestProcessedAsRequest(payload: ReadableMap) {
-    receive("onCertificateRequestProcessedAsRequest", payload)
+    receive(EVENT_CERTIFICATE_REQUEST_PROCESSED_AS_REQUEST, payload)
   }
 
   @ReactMethod
   fun onCertificateResponseProcessed(payload: ReadableMap) {
-    receive("onCertificateResponseProcessed", payload)
+    receive(EVENT_CERTIFICATE_RESPONSE_PROCESSED, payload)
   }
 
   @ReactMethod
   fun onLicenseRequestProcessedAsLicense(payload: ReadableMap) {
-    receive("onLicenseRequestProcessedAsLicense", payload)
+    receive(EVENT_LICENSE_REQUEST_PROCESSED_AS_LICENSE, payload)
   }
 
   @ReactMethod
   fun onLicenseRequestProcessedAsRequest(payload: ReadableMap) {
-    receive("onLicenseRequestProcessedAsRequest", payload)
+    receive(EVENT_LICENSE_REQUEST_PROCESSED_AS_REQUEST, payload)
   }
 
   @ReactMethod
   fun onLicenseResponseProcessed(payload: ReadableMap) {
-    receive("onLicenseResponseProcessed", payload)
+    receive(EVENT_LICENSE_RESPONSE_PROCESSED, payload)
   }
 
   fun onBuild(integrationId: String, keySystemId: KeySystemId, config: DRMConfiguration?) {
@@ -93,7 +106,8 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
     if (config != null) {
       payload.putMap(PROP_DRM_CONFIG, fromDRMConfiguration(config))
     }
-    emit("onBuildIntegration", payload,
+    emit(
+      EVENT_BUILD_INTEGRATION, payload,
       onResult = hashMapOf(),
       onError = {}
     )
@@ -106,10 +120,11 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
     callback: CertificateRequestCallback
   ) {
     val payload = ContentProtectionAdapter.fromRequest(integrationId, keySystemId, request)
-    emit("onCertificateRequest", payload,
+    emit(
+      EVENT_CERTIFICATE_REQUEST, payload,
       onResult = hashMapOf(
         // Pass modified request
-        "onCertificateRequestProcessedAsRequest" to { result ->
+        EVENT_CERTIFICATE_REQUEST_PROCESSED_AS_REQUEST to { result ->
           request.url = result.getString(PROP_URL)!!
           request.method = RequestMethodAdapter.fromString(result.getString(PROP_METHOD))
           request.headers = result.getMap(PROP_HEADERS)?.toHashMap() as HashMap<String, String>
@@ -117,7 +132,7 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
           callback.request(request)
         },
         // Pass response
-        "onCertificateRequestProcessedAsCertificate" to { result ->
+        EVENT_CERTIFICATE_REQUEST_PROCESSED_AS_CERTIFICATE to { result ->
           callback.respond(Base64.decode(result.getString(PROP_BASE64_BODY), Base64.DEFAULT))
         }
       ),
@@ -132,9 +147,10 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
     callback: CertificateResponseCallback
   ) {
     val payload = ContentProtectionAdapter.fromResponse(integrationId, keySystemId, response)
-    emit("onCertificateResponse", payload,
+    emit(
+      EVENT_CERTIFICATE_RESPONSE, payload,
       onResult = hashMapOf(
-        "onCertificateResponseProcessed" to { result ->
+        EVENT_CERTIFICATE_RESPONSE_PROCESSED to { result ->
           val body = Base64.decode(result.getString(PROP_BASE64_BODY), Base64.DEFAULT)
           callback.respond(body)
         },
@@ -150,10 +166,11 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
     callback: LicenseRequestCallback
   ) {
     val payload = ContentProtectionAdapter.fromRequest(integrationId, keySystemId, request)
-    emit("onLicenseRequest", payload,
+    emit(
+      EVENT_LICENSE_REQUEST, payload,
       onResult = hashMapOf(
         // Pass modified request
-        "onLicenseRequestProcessedAsRequest" to { result ->
+        EVENT_LICENSE_REQUEST_PROCESSED_AS_REQUEST to { result ->
           request.url = result.getString(PROP_URL)!!
           request.method = RequestMethodAdapter.fromString(result.getString(PROP_METHOD))
           request.headers = result.getMap(PROP_HEADERS)?.toHashMap() as HashMap<String, String>
@@ -161,7 +178,7 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
           callback.request(request)
         },
         // Pass license response
-        "onLicenseRequestProcessedAsLicense" to { result ->
+        EVENT_LICENSE_REQUEST_PROCESSED_AS_LICENSE to { result ->
           callback.respond(Base64.decode(result.getString(PROP_BASE64_BODY), Base64.DEFAULT))
         }
       ),
@@ -176,10 +193,11 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
     callback: LicenseResponseCallback
   ) {
     val payload = ContentProtectionAdapter.fromResponse(integrationId, keySystemId, response)
-    emit("onLicenseResponse", payload,
+    emit(
+      EVENT_LICENSE_RESPONSE, payload,
       onResult = hashMapOf(
         // Pass response
-        "onLicenseResponseProcessed" to { result ->
+        EVENT_LICENSE_RESPONSE_PROCESSED to { result ->
           val body = Base64.decode(result.getString(PROP_BASE64_BODY), Base64.DEFAULT)
           callback.respond(body)
         }
@@ -232,7 +250,7 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
         onEventResult(payload)
       } else {
         request.onError(
-          THEOplayerException(ErrorCode.CONTENT_PROTECTION_ERROR, "Unknown birdge event: $eventName.")
+          THEOplayerException(ErrorCode.CONTENT_PROTECTION_ERROR, "Unknown bridge event: $eventName.")
         )
       }
     }
