@@ -7,6 +7,8 @@ import { ContentProtectionRegistry } from 'react-native-theoplayer';
 import { TitaniumFairplayContentProtectionIntegrationFactory } from './drm/titaniumDrm/TitaniumFairplayContentProtectionIntegrationFactory';
 import { TitaniumWidevineContentProtectionIntegrationFactory } from './drm/titaniumDrm/TitaniumWidevineContentProtectionIntegrationFactory';
 import { TitaniumPlayReadyContentProtectionIntegrationFactory } from './drm/titaniumDrm/TitaniumPlayReadyContentProtectionIntegrationFactory';
+import { VerimatrixCoreDrmWidevineContentProtectionIntegrationFactory } from './drm/verimatrixCoreDrm/VerimatrixCoreDrmWidevineContentProtectionIntegrationFactory';
+import { VerimatrixCoreDrmFairplayContentProtectionIntegrationFactory } from './drm/verimatrixCoreDrm/VerimatrixCoreDrmFairplayContentProtectionIntegrationFactory';
 
 const playerConfig: PlayerConfiguration = {
   // Get your THEOplayer license from https://portal.theoplayer.com/
@@ -23,23 +25,30 @@ const playerConfig: PlayerConfiguration = {
 };
 
 ContentProtectionRegistry.registerContentProtectionIntegration('ezdrmCustom', 'fairplay', new EzdrmFairplayContentProtectionIntegrationFactory());
-
 ContentProtectionRegistry.registerContentProtectionIntegration(
   'titaniumdrmCustom',
   'fairplay',
   new TitaniumFairplayContentProtectionIntegrationFactory(),
 );
-
 ContentProtectionRegistry.registerContentProtectionIntegration(
   'titaniumdrmCustom',
   'widevine',
   new TitaniumWidevineContentProtectionIntegrationFactory(),
 );
-
 ContentProtectionRegistry.registerContentProtectionIntegration(
   'titaniumdrmCustom',
   'playready',
   new TitaniumPlayReadyContentProtectionIntegrationFactory(),
+);
+ContentProtectionRegistry.registerContentProtectionIntegration(
+  'verimatrixcoredrmCustom',
+  'widevine',
+  new VerimatrixCoreDrmWidevineContentProtectionIntegrationFactory(),
+);
+ContentProtectionRegistry.registerContentProtectionIntegration(
+  'verimatrixcoredrmCustom',
+  'fairplay',
+  new VerimatrixCoreDrmFairplayContentProtectionIntegrationFactory(),
 );
 
 export default function App() {
