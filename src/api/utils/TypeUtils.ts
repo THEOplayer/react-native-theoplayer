@@ -4,10 +4,16 @@ import { Buffer } from 'buffer';
 export function fromObjectToBase64String(obj: { [key: string]: any }): string {
   return fromStringToBase64String(JSON.stringify(obj));
 }
+export function fromObjectToUint8Array(obj: { [key: string]: any }): Uint8Array {
+  return fromStringToUint8Array(JSON.stringify(obj));
+}
 
 // from string
 export function fromStringToBase64String(str: string): string {
   return Buffer.from(str, 'utf8').toString('base64');
+}
+export function fromStringToUint8Array(str: string): Uint8Array {
+  return Buffer.from(str, 'utf8');
 }
 
 // from base64 string
