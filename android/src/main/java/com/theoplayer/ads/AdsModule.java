@@ -57,6 +57,18 @@ public class AdsModule extends ReactContextBaseJavaModule {
     });
   }
 
+  // List of currently playing ads.
+  @ReactMethod
+  public void currentAds(Integer tag, Promise promise) {
+    viewResolver.resolveViewByTag(tag, view -> {
+      if (view == null) {
+        promise.resolve(Arguments.createMap());
+      } else {
+        promise.resolve(AdInfo.fromAds(view.getAdsApi().getCurrentAds()));
+      }
+    });
+  }
+
   // List of ad breaks which still need to be played.
   @ReactMethod
   public void scheduledAdBreaks(Integer tag, Promise promise) {

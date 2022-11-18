@@ -54,6 +54,14 @@ public class AdInfo {
     return fromAd(ad, true);
   }
 
+  public static WritableArray fromAds(final List<Ad> ads) {
+    WritableArray payload = Arguments.createArray();
+    for (final Ad ad: ads) {
+      payload.pushMap(fromAd(ad, true));
+    }
+    return payload;
+  }
+
   private static WritableMap fromAd(final Ad ad, boolean includeAdBreak) {
     WritableMap adPayload = Arguments.createMap();
     adPayload.putString(PROP_AD_INTEGRATION, ad.getIntegration() != null ? ad.getIntegration().getType() : "");

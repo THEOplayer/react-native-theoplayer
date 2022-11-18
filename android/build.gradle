@@ -97,7 +97,7 @@ repositories {
 dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"  // From node_modules
-  implementation "com.theoplayer.theoplayer-sdk-android:ads-wrapper:4.2.0"
+  implementation "com.theoplayer.theoplayer-sdk-android:ads-wrapper:4.3.0"
 
   def THEOplayerVersion = safeExtGet('THEOplayer_sdk', '+')
 
