@@ -63,4 +63,6 @@ and discussed in the next section. Finally, an overview of features, limitations
 - [The THEOplayerView component](./doc/theoplayerview-component.md)
 - [The example application with React Native UI](./doc/example-app.md)
 - [Features](./doc/features.md)
+- Knowledge Base
+  - [Advertisements](./doc/ads.md)
 - [Limitations and known issues](./doc/limitations.md)
