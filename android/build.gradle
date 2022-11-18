@@ -114,16 +114,13 @@ dependencies {
     compileOnly "com.theoplayer.theoplayer-sdk-android:unified-ads-ima:${THEOplayerVersion}"
   }
 
-  // NOTE: remove stub once DAI extension module is available on Maven (v4.3)
-  implementation "com.theoplayer.theoplayer-sdk-android:dai-stub:4.2.0"
+  // NOTE: The DAI extension module is available on Maven as of SDK v4.3.0
   if (enabledGoogleDAI) {
-    println('ENABLE THEOplayer DAI extension.')
-//    implementation "com.theoplayer.theoplayer-sdk-android:unified-ads:${THEOplayerVersion}"
-//    implementation "com.theoplayer.theoplayer-sdk-android:unified-ads-dai:${THEOplayerVersion}"
+    implementation "com.theoplayer.theoplayer-sdk-android:unified-ads:${THEOplayerVersion}"
+    implementation "com.theoplayer.theoplayer-sdk-android:unified-ads-dai:${THEOplayerVersion}"
   } else {
-    println('DISABLE THEOplayer DAI extension.')
-//    compileOnly "com.theoplayer.theoplayer-sdk-android:unified-ads:${THEOplayerVersion}"
-//    compileOnly "com.theoplayer.theoplayer-sdk-android:unified-ads-dai:${THEOplayerVersion}"
+    compileOnly "com.theoplayer.theoplayer-sdk-android:unified-ads:${THEOplayerVersion}"
+    compileOnly "com.theoplayer.theoplayer-sdk-android:unified-ads-dai:${THEOplayerVersion}"
   }
 
   if (enabledCast) {
