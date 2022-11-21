@@ -1,6 +1,6 @@
 export interface VerimatrixCoreIntegrationParameters {
   /**
-   * The drm token name.
+   * The drm token.
    *
    */
   drmToken?: string;
