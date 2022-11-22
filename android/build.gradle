@@ -24,7 +24,6 @@ def enabledGoogleIMA = safeExtGet("THEOplayer_extensionGoogleIMA", 'false').toBo
 def enabledGoogleDAI = safeExtGet("THEOplayer_extensionGoogleDAI", 'false').toBoolean()
 def enabledAds = enabledGoogleIMA || enabledGoogleDAI
 def enabledCast = safeExtGet("THEOplayer_extensionCast", 'false').toBoolean()
-def enabledMediaTailor = safeExtGet("THEOplayer_extensionMediaTailor", 'false').toBoolean()
 
 android {
   compileSdkVersion safeExtGet('THEOplayer_compileSdkVersion', 31)
@@ -52,7 +51,6 @@ android {
     buildConfigField "boolean", "EXTENSION_GOOGLE_DAI", "${enabledGoogleDAI}"
     buildConfigField "boolean", "EXTENSION_ADS", "${enabledAds}"
     buildConfigField "boolean", "EXTENSION_CAST", "${enabledCast}"
-    buildConfigField "boolean", "EXTENSION_MEDIATAILOR", "${enabledMediaTailor}"
   }
 
   buildTypes {
@@ -97,6 +95,7 @@ repositories {
 dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"  // From node_modules
+  implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
   implementation "com.theoplayer.theoplayer-sdk-android:ads-wrapper:4.3.0"
 
   def THEOplayerVersion = safeExtGet('THEOplayer_sdk', '+')
@@ -116,9 +115,11 @@ dependencies {
 
   // NOTE: The DAI extension module is available on Maven as of SDK v4.3.0
   if (enabledGoogleDAI) {
+    println('ENABLE THEOplayer DAI extension.')
     implementation "com.theoplayer.theoplayer-sdk-android:unified-ads:${THEOplayerVersion}"
     implementation "com.theoplayer.theoplayer-sdk-android:unified-ads-dai:${THEOplayerVersion}"
   } else {
+    println('DISABLE THEOplayer DAI extension.')
     compileOnly "com.theoplayer.theoplayer-sdk-android:unified-ads:${THEOplayerVersion}"
     compileOnly "com.theoplayer.theoplayer-sdk-android:unified-ads-dai:${THEOplayerVersion}"
   }
