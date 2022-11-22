@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringDef;
 
 import com.facebook.react.bridge.Arguments;
@@ -28,12 +29,14 @@ import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
+import com.theoplayer.ads.AdEventAdapter;
 import com.theoplayer.android.api.error.THEOplayerException;
 import com.theoplayer.android.api.event.EventListener;
 import com.theoplayer.android.api.event.EventType;
 import com.theoplayer.android.api.event.player.DurationChangeEvent;
 import com.theoplayer.android.api.event.player.ErrorEvent;
 import com.theoplayer.android.api.event.player.LoadedMetadataEvent;
+import com.theoplayer.android.api.event.player.PauseEvent;
 import com.theoplayer.android.api.event.player.ReadyStateChangeEvent;
 import com.theoplayer.android.api.event.player.SeekedEvent;
 import com.theoplayer.android.api.event.player.SeekingEvent;
@@ -60,7 +63,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-class VideoEventEmitter {
+@SuppressWarnings({"rawtypes", "unchecked"})
+public class VideoEventEmitter {
 
   private static final String EVENT_SOURCECHANGE = "onNativeSourceChange";
   private static final String EVENT_LOADSTART = "onNativeLoadStart";
@@ -80,6 +84,7 @@ class VideoEventEmitter {
   private static final String EVENT_SEGMENTNOTFOUND = "onNativeSegmentNotFound";
   private static final String EVENT_TEXTTRACK_LIST_EVENT = "onNativeTextTrackListEvent";
   private static final String EVENT_TEXTTRACK_EVENT = "onNativeTextTrackEvent";
+  private static final String EVENT_AD_EVENT = "onNativeAdEvent";
   private static final String EVENT_FULLSCREEN_WILL_PRESENT = "onNativeFullscreenPlayerWillPresent";
   private static final String EVENT_FULLSCREEN_DID_PRESENT = "onNativeFullscreenPlayerDidPresent";
   private static final String EVENT_FULLSCREEN_WILL_DISMISS = "onNativeFullscreenPlayerWillDismiss";
@@ -106,6 +111,7 @@ class VideoEventEmitter {
     EVENT_SEGMENTNOTFOUND,
     EVENT_TEXTTRACK_LIST_EVENT,
     EVENT_TEXTTRACK_EVENT,
+    EVENT_AD_EVENT,
     EVENT_FULLSCREEN_WILL_PRESENT,
     EVENT_FULLSCREEN_DID_PRESENT,
     EVENT_FULLSCREEN_WILL_DISMISS,
@@ -132,12 +138,13 @@ class VideoEventEmitter {
     EVENT_SEGMENTNOTFOUND,
     EVENT_TEXTTRACK_LIST_EVENT,
     EVENT_TEXTTRACK_EVENT,
+    EVENT_AD_EVENT,
     EVENT_FULLSCREEN_WILL_PRESENT,
     EVENT_FULLSCREEN_DID_PRESENT,
     EVENT_FULLSCREEN_WILL_DISMISS,
     EVENT_FULLSCREEN_DID_DISMISS
   })
-  @interface VideoEvents {
+  public @interface VideoEvents {
   }
 
   private static final String EVENT_PROP_CURRENT_TIME = "currentTime";
@@ -167,9 +174,9 @@ class VideoEventEmitter {
   private int viewId = View.NO_ID;
   private final HashMap<EventType, EventListener> playerListeners = new HashMap<>();
   private final HashMap<EventType, EventListener> textTrackListeners = new HashMap<>();
-
   private final ReactTHEOplayerView playerView;
 
+  private AdEventAdapter adEventAdapter;
   private long lastTimeUpdate = 0;
   private double lastCurrentTime = 0.0;
 
@@ -192,7 +199,7 @@ class VideoEventEmitter {
     playerListeners.put(PROGRESS, event -> onProgress());
     playerListeners.put(TIMEUPDATE, (EventListener<TimeUpdateEvent>) this::onTimeUpdate);
     playerListeners.put(DURATIONCHANGE, (EventListener<DurationChangeEvent>) this::onDurationChange);
-    playerListeners.put(PAUSE, event -> receiveEvent(EVENT_PAUSE, null));
+    playerListeners.put(PAUSE, (EventListener<PauseEvent>) this::onPause);
     playerListeners.put(SEGMENTNOTFOUND, (EventListener<SegmentNotFoundEvent>) this::onSegmentNotFound);
 
     textTrackListeners.put(TextTrackListEventTypes.ADDTRACK, (EventListener<AddTrackEvent>) this::onTextTrackAdd);
@@ -201,6 +208,19 @@ class VideoEventEmitter {
 
   public void setViewId(int viewId) {
     this.viewId = viewId;
+  }
+
+  public void emitError(@NonNull THEOplayerException exception) {
+    emitError(exception.getCode().name(), exception.getMessage());
+  }
+
+  public void emitError(@NonNull String code, @Nullable String message) {
+    WritableMap error = Arguments.createMap();
+    error.putString(EVENT_PROP_ERROR_CODE, code);
+    error.putString(EVENT_PROP_ERROR_MESSAGE, message != null ? message : "");
+    WritableMap payload = Arguments.createMap();
+    payload.putMap(EVENT_PROP_ERROR, error);
+    receiveEvent(EVENT_ERROR, payload);
   }
 
   private void onLoadedMetadata(final LoadedMetadataEvent event) {
@@ -256,6 +276,14 @@ class VideoEventEmitter {
       (timeUpdateRate == TimeUpdateRate.LIMITED_THREE_HZ && dt < 333);
   }
 
+  private void onPause(@NonNull final PauseEvent event) {
+    Player player = playerView.getPlayer();
+    // Do not forward the pause event in case the content player is paused because the ad player starts.
+    if (player != null && !playerView.getAdsApi().isPlaying()) {
+      receiveEvent(EVENT_PAUSE, null);
+    }
+  }
+
   private void onTimeUpdate(@NonNull final TimeUpdateEvent event) {
     final long now = System.currentTimeMillis();
     final double currentTime = event.getCurrentTime();
@@ -289,13 +317,7 @@ class VideoEventEmitter {
   }
 
   private void onError(@NonNull final ErrorEvent event) {
-    WritableMap error = Arguments.createMap();
-    final THEOplayerException exception = event.getErrorObject();
-    error.putString(EVENT_PROP_ERROR_CODE, exception.getCode().name());
-    error.putString(EVENT_PROP_ERROR_MESSAGE, exception.getMessage());
-    WritableMap payload = Arguments.createMap();
-    payload.putMap(EVENT_PROP_ERROR, error);
-    receiveEvent(EVENT_ERROR, payload);
+    emitError(event.getErrorObject());
   }
 
   private void onProgress() {
@@ -395,6 +417,11 @@ class VideoEventEmitter {
     for (Map.Entry<EventType, EventListener> entry : textTrackListeners.entrySet()) {
       player.getTextTracks().addEventListener(entry.getKey(), entry.getValue());
     }
+
+    // Attach AdStateHolder
+    if (BuildConfig.EXTENSION_ADS) {
+      adEventAdapter = new AdEventAdapter(playerView.getAdsApi(), payload -> receiveEvent(EVENT_AD_EVENT, payload));
+    }
   }
 
   public void removeListeners(@NonNull Player player) {
@@ -406,6 +433,10 @@ class VideoEventEmitter {
     // Remove text track listeners
     for (Map.Entry<EventType, EventListener> entry : textTrackListeners.entrySet()) {
       player.getTextTracks().removeEventListener(entry.getKey(), entry.getValue());
+    }
+
+    if (adEventAdapter != null) {
+      adEventAdapter.destroy();
     }
   }
 }

@@ -19,11 +19,19 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.ThemedReactContext;
+import com.google.ads.interactivemedia.v3.api.AdsRenderingSettings;
+import com.google.ads.interactivemedia.v3.api.ImaSdkFactory;
+import com.theoplayer.android.api.ads.dai.GoogleDaiIntegration;
+import com.theoplayer.android.api.ads.dai.GoogleDaiIntegrationFactory;
 import com.theoplayer.abr.ABRConfigurationAdapter;
 import com.theoplayer.android.api.THEOplayerConfig;
 import com.theoplayer.android.api.THEOplayerView;
 import com.theoplayer.android.api.ads.ima.GoogleImaIntegration;
 import com.theoplayer.android.api.ads.ima.GoogleImaIntegrationFactory;
+import com.theoplayer.android.api.ads.wrapper.AdsApiWrapper;
+import com.theoplayer.android.api.cast.CastIntegration;
+import com.theoplayer.android.api.cast.CastIntegrationFactory;
+import com.theoplayer.android.api.error.THEOplayerException;
 import com.theoplayer.android.api.player.Player;
 import com.theoplayer.android.api.player.RequestCallback;
 import com.theoplayer.android.api.player.track.mediatrack.MediaTrack;
@@ -41,6 +49,8 @@ import com.theoplayer.track.QualityListFilter;
 import com.theoplayer.track.TrackListInfo;
 import com.theoplayer.util.TypeUtils;
 
+import java.util.Collections;
+
 @SuppressLint("ViewConstructor")
 public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventListener {
 
@@ -53,6 +63,12 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
   private final ThemedReactContext reactContext;
 
   private THEOplayerView playerView;
+
+  private GoogleDaiIntegration daiIntegration;
+
+  private GoogleImaIntegration imaIntegration;
+
+  private final AdsApiWrapper adsApi;
 
   private Player player;
   private ReadableMap abrConfig;
@@ -70,10 +86,16 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
     this.reactContext = context;
     this.eventEmitter = new VideoEventEmitter(context, this);
     reactContext.addLifecycleEventListener(this);
+    adsApi = new AdsApiWrapper();
   }
 
   public void initialize(@Nullable ReadableMap configProps) {
     createViews(PlayerConfigHelper.fromProps(configProps));
+  }
+
+  @Nullable
+  public GoogleDaiIntegration getDaiIntegration() {
+    return daiIntegration;
   }
 
   @NonNull
@@ -170,13 +192,43 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
     playerView.setLayoutParams(layoutParams);
 
     addView(playerView, 0, layoutParams);
-    addIntegrations(playerView);
+    addIntegrations(playerView, playerConfig);
   }
 
-  private void addIntegrations(@NonNull final THEOplayerView playerView) {
-    GoogleImaIntegration googleImaIntegration = GoogleImaIntegrationFactory.createGoogleImaIntegration(playerView);
-    playerView.getPlayer().addIntegration(googleImaIntegration);
-    // Add other future integrations here.
+  private void addIntegrations(@NonNull final THEOplayerView playerView, @NonNull THEOplayerConfig playerConfig) {
+    try {
+      if (BuildConfig.EXTENSION_GOOGLE_IMA) {
+        imaIntegration = GoogleImaIntegrationFactory.createGoogleImaIntegration(playerView);
+        imaIntegration.setAdsRenderingSettings(createRenderSettings(playerConfig));
+        playerView.getPlayer().addIntegration(imaIntegration);
+      }
+    } catch (Exception ignore) {
+    }
+    try {
+      if (BuildConfig.EXTENSION_GOOGLE_DAI) {
+        daiIntegration = GoogleDaiIntegrationFactory.createGoogleDaiIntegration(playerView);
+        daiIntegration.setAdsRenderingSettings(createRenderSettings(playerConfig));
+        playerView.getPlayer().addIntegration(daiIntegration);
+      }
+    } catch (Exception ignore) {
+    }
+    try {
+      if (BuildConfig.EXTENSION_CAST) {
+        CastIntegration castIntegration = CastIntegrationFactory.createCastIntegration(playerView);
+        playerView.getPlayer().addIntegration(castIntegration);
+      }
+      // Add other future integrations here.
+    } catch (Exception ignore) {
+    }
+  }
+
+  private AdsRenderingSettings createRenderSettings(@NonNull THEOplayerConfig playerConfig) {
+    AdsRenderingSettings renderingSettings = ImaSdkFactory.getInstance().createAdsRenderingSettings();
+    if (playerConfig.getAds() != null && !playerConfig.getAds().isShowCountdown()) {
+      renderingSettings.setUiElements(Collections.emptySet());
+      renderingSettings.setDisableUi(true);
+    }
+    return renderingSettings;
   }
 
   @Override
@@ -202,21 +254,35 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
       if (player == null) {
         player = playerView.getPlayer();
         ABRConfigurationAdapter.INSTANCE.applyABRConfigurationFromProps(player, abrConfig);
+        if (BuildConfig.EXTENSION_ADS) {
+          adsApi.initialize(player, imaIntegration, daiIntegration);
+        }
         eventEmitter.attachListeners(player);
-        player.setMuted(this.muted);
-        player.setVolume(this.volume);
-        player.setPlaybackRate(this.playbackRate);
-        player.setSource(this.sourceDescription);
+        player.setMuted(muted);
+        player.setVolume(volume);
+        player.setPlaybackRate(playbackRate);
+
+        setSource(sourceDescription);
 
         if (!this.paused) {
           player.play();
         }
 
-        if (this.seekTime != TIME_UNSET) {
-          seekTo(this.seekTime);
+        if (seekTime != TIME_UNSET) {
+          seekTo(seekTime);
         }
       }
     }, 1);
+  }
+
+  @Nullable
+  public Player getPlayer() {
+    return player;
+  }
+
+  @NonNull
+  public AdsApiWrapper getAdsApi() {
+    return adsApi;
   }
 
   @Override
@@ -257,6 +323,11 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
   private void releasePlayer() {
     if (player != null) {
       eventEmitter.removeListeners(player);
+
+      if (adsApi != null) {
+        adsApi.destroy();
+      }
+
       player.stop();
       player = null;
     }
@@ -268,6 +339,15 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
     reactContext.removeLifecycleEventListener(this);
   }
 
+  public void setSource(@Nullable final ReadableMap source) {
+    try {
+      setSource(new SourceHelper().parseSourceFromJS(source));
+    } catch (THEOplayerException exception) {
+      Log.e(TAG, exception.getMessage());
+      eventEmitter.emitError(exception);
+    }
+  }
+
   public void setABRConfig(@Nullable ReadableMap abrConfigProps) {
     abrConfig = abrConfigProps;
     ABRConfigurationAdapter.INSTANCE.applyABRConfigurationFromProps(player, abrConfig);
@@ -275,6 +355,9 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
 
   public void setSource(@Nullable final SourceDescription sourceDescription) {
     this.sourceDescription = sourceDescription;
+    if (adsApi != null) {
+      adsApi.setSource(sourceDescription);
+    }
     if (player != null && sourceDescription != null) {
       player.setSource(sourceDescription);
     }
@@ -286,7 +369,7 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
       final boolean playerIsPaused = player.isPaused();
       if (!paused && playerIsPaused) {
         player.play();
-      } else if (paused && !playerIsPaused) {
+      } else if (paused && (!playerIsPaused || adsApi.isPlaying())) {
         player.pause();
       }
     }

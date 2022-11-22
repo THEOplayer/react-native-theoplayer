@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { findNodeHandle, StyleSheet, requireNativeComponent, View, UIManager, Platform, NativeSyntheticEvent } from 'react-native';
+import { findNodeHandle, StyleSheet, requireNativeComponent, View, UIManager, Platform, NativeSyntheticEvent, HostComponent } from 'react-native';
 import type {
   DurationChangeEvent,
   ErrorEvent,
@@ -13,10 +13,13 @@ import type {
   SegmentNotFoundEvent,
   TextTrackListEvent,
   TextTrackEvent,
+  AdEvent,
+  AdsAPI,
 } from 'react-native-theoplayer';
 
 import styles from './THEOplayerView.style';
 import type { SourceDescription } from 'react-native-theoplayer';
+import { THEOplayerNativeAdsAPI } from './ads/THEOplayerNativeAdsAPI';
 import { decodeNanInf } from './utils/TypeUtils';
 
 interface THEOplayerRCTViewProps extends THEOplayerViewProps {
@@ -42,6 +45,7 @@ interface THEOplayerRCTViewProps extends THEOplayerViewProps {
   onNativeSegmentNotFound: (event: NativeSyntheticEvent<SegmentNotFoundEvent>) => void;
   onNativeTextTrackListEvent: (event: NativeSyntheticEvent<TextTrackListEvent>) => void;
   onNativeTextTrackEvent: (event: NativeSyntheticEvent<TextTrackEvent>) => void;
+  onNativeAdEvent: (event: NativeSyntheticEvent<AdEvent>) => void;
   onNativeFullscreenPlayerWillPresent?: () => void;
   onNativeFullscreenPlayerDidPresent?: () => void;
   onNativeFullscreenPlayerWillDismiss?: () => void;
@@ -53,12 +57,13 @@ interface THEOplayerRCTViewState {
   error?: PlayerError;
 }
 
-interface THEOplayerViewNativeComponent extends THEOplayerViewComponent {
+interface THEOplayerViewNativeComponent extends THEOplayerViewComponent, HostComponent<THEOplayerViewProps> {
   setNativeProps: (props: Partial<THEOplayerRCTViewProps>) => void;
 }
 
-export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplayerRCTViewState> {
+export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplayerRCTViewState> implements THEOplayerViewComponent {
   private readonly _root: React.RefObject<THEOplayerViewNativeComponent>;
+  private readonly _adsApi: THEOplayerNativeAdsAPI;
 
   private static initialState: THEOplayerRCTViewState = {
     isBuffering: false,
@@ -69,6 +74,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
     super(props);
     this._root = React.createRef();
     this.state = THEOplayerView.initialState;
+    this._adsApi = new THEOplayerNativeAdsAPI(this);
   }
 
   componentWillUnmount() {
@@ -90,6 +96,14 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
       throw new Error('Specified time is not a number');
     }
     this.setNativeProps({ seek: time });
+  }
+
+  public get nativeHandle(): number | null {
+    return findNodeHandle(this._root.current);
+  }
+
+  public get ads(): AdsAPI {
+    return this._adsApi;
   }
 
   private reset() {
@@ -173,6 +187,9 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
   };
 
   private _onPlaying = () => {
+    // potentially notify change in buffering state
+    this.maybeChangeBufferingState(false);
+
     if (this.props.onPlaying) {
       this.props.onPlaying();
     }
@@ -243,6 +260,12 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
     }
   };
 
+  private _onAdEvent = (event: NativeSyntheticEvent<AdEvent>) => {
+    if (this.props.onAdEvent) {
+      this.props.onAdEvent(event.nativeEvent);
+    }
+  };
+
   private _onFullscreenPlayerWillPresent = () => {
     if (this.props.onFullscreenPlayerWillPresent) {
       this.props.onFullscreenPlayerWillPresent();
@@ -304,6 +327,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
           onNativeSegmentNotFound={this._onSegmentNotFound}
           onNativeTextTrackListEvent={this._onTextTrackListEvent}
           onNativeTextTrackEvent={this._onTextTrackEvent}
+          onNativeAdEvent={this._onAdEvent}
           onNativeFullscreenPlayerWillPresent={this._onFullscreenPlayerWillPresent}
           onNativeFullscreenPlayerDidPresent={this._onFullscreenPlayerDidPresent}
           onNativeFullscreenPlayerWillDismiss={this._onFullscreenPlayerWillDismiss}

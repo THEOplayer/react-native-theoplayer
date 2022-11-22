@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 
-import type { PlayerError, TextTrack, THEOplayerViewProps, TimeRange } from 'react-native-theoplayer';
-import { TextTrackEventType, TrackListEventType } from 'react-native-theoplayer';
+import type { AdEvent, AdsAPI, PlayerError, TextTrack, THEOplayerViewProps, TimeRange } from 'react-native-theoplayer';
+import { AdEventNames, TextTrackEventType, THEOplayerViewComponent, TrackListEventType } from 'react-native-theoplayer';
 import type { Event, TextTrackCue as NativeTextTrackCue } from 'theoplayer';
 
 import type {
@@ -14,14 +14,16 @@ import type {
 } from 'theoplayer';
 import * as THEOplayer from 'theoplayer';
 import { findNativeQualitiesByUid, fromNativeCue, fromNativeMediaTrack, fromNativeTextTrack } from './web/TrackUtils';
+import { THEOplayerWebAdsAPI } from './ads/THEOplayerWebAdsAPI';
 
 interface THEOplayerRCTViewState {
   isBuffering: boolean;
   error?: PlayerError;
 }
 
-export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplayerRCTViewState> {
+export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplayerRCTViewState> implements THEOplayerViewComponent {
   private _player: THEOplayer.ChromelessPlayer | null = null;
+  private _adsApi: THEOplayerWebAdsAPI;
 
   private static initialState: THEOplayerRCTViewState = {
     isBuffering: false,
@@ -31,6 +33,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
   constructor(props: THEOplayerViewProps) {
     super(props);
     this.state = THEOplayerView.initialState;
+    this._adsApi = new THEOplayerWebAdsAPI(this);
   }
 
   componentDidMount() {
@@ -70,6 +73,14 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
     if (this._player) {
       this._player.currentTime = time / 1e3;
     }
+  }
+
+  public get ads(): AdsAPI {
+    return this._adsApi;
+  }
+
+  public get nativePlayer(): THEOplayer.ChromelessPlayer | null {
+    return this._player;
   }
 
   private reset() {
@@ -284,6 +295,9 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
     });
 
     player.addEventListener('playing', () => {
+      // potentially notify change in buffering state
+      this.maybeChangeBufferingState(false);
+
       const { onPlaying } = this.props;
       if (onPlaying) {
         onPlaying();
@@ -392,6 +406,12 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
           type: TrackListEventType.RemoveTrack,
           track: event.track as unknown as TextTrack,
         });
+      }
+    });
+    player.ads?.addEventListener(AdEventNames, (event) => {
+      const { onAdEvent } = this.props;
+      if (onAdEvent) {
+        onAdEvent(event as AdEvent);
       }
     });
   }

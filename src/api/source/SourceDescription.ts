@@ -10,6 +10,7 @@ import type { DashPlaybackConfiguration } from './dash/DashPlaybackConfiguration
 import type { DRMConfiguration } from './drm/DRMConfiguration';
 import type { HlsPlaybackConfiguration } from './hls/HlsPlaybackConfiguration';
 import type { AdDescription } from './ads/Ads';
+import type { ServerSideAdInsertionConfiguration } from "./ads/ssai/ServerSideAdInsertionConfiguration";
 
 export type Source = TypedSource;
 
@@ -289,4 +290,12 @@ export interface TypedSource extends BaseSource {
    * <br/> - Available since v2.15.0.
    */
   contentProtection?: DRMConfiguration;
+
+  /**
+   * The Server-side Ad Insertion parameters for the media resource.
+   *
+   * @remarks
+   * <br/> - Available since v2.12.0.
+   */
+  ssai?: ServerSideAdInsertionConfiguration;
 }

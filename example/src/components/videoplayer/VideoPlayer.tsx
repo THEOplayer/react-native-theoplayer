@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import {
   addTextTrack,
   addTextTrackCue,
+  AdEvent,
   DurationChangeEvent,
   ErrorEvent,
   findTextTrackByUid,
@@ -163,6 +164,11 @@ export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerStat
     }
   };
 
+  private onAdEvent = (data: AdEvent) => {
+    const { type, ad } = data;
+    console.log(TAG, 'onAdEvent', type, ad);
+  };
+
   private onProgress = (data: ProgressEvent) => {
     const { seekable } = data;
     console.log(TAG, 'progress', seekable);
@@ -287,6 +293,7 @@ export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerStat
           onDurationChange={this.onDurationChange}
           onTextTrackListEvent={this.onTextTrackListEvent}
           onTextTrackEvent={this.onTextTrackEvent}
+          onAdEvent={this.onAdEvent}
         />
 
         {/* Use React-Native UI if a native chromeless (without UI) player is requested. */}

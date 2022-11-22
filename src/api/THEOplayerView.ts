@@ -10,9 +10,10 @@ import type {
   SegmentNotFoundEvent,
 } from './event/PlayerEvent';
 import type { TextTrackEvent, TextTrackListEvent } from './event/TrackEvent';
-import type { HostComponent } from 'react-native';
 import type { PlayerConfiguration } from './config/PlayerConfiguration';
 import type { ABRConfiguration } from './abr/ABRConfiguration';
+import type { AdEvent } from "./event/AdEvent";
+import type { AdsAPI } from "./ads/AdsAPI";
 
 export interface THEOplayerViewProps {
   /**
@@ -223,13 +224,23 @@ export interface THEOplayerViewProps {
    * Invoked when a text track event occurs.
    */
   onTextTrackEvent?: (event: TextTrackEvent) => void;
+
+  /**
+   * Invoked when an ad event occurs.
+   */
+  onAdEvent?: (event: AdEvent) => void;
 }
 
-export interface THEOplayerViewComponent extends HostComponent<THEOplayerViewProps> {
+export interface THEOplayerViewComponent {
   /**
    * Seek to a new position.
    *
    * @param seekTime - new time, in milliseconds.
    */
   seek: (seekTime: number) => void;
+
+  /**
+   * The API for advertisements.
+   */
+  ads: AdsAPI;
 }

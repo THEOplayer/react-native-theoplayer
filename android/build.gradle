@@ -19,43 +19,46 @@ def safeExtGet(prop, fallback) {
   rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
 }
 
-def TimeUpdateRate = "com.theoplayer.TimeUpdateRate"
+// Extensions
+def enabledGoogleIMA = safeExtGet("THEOplayer_extensionGoogleIMA", 'false').toBoolean()
+def enabledGoogleDAI = safeExtGet("THEOplayer_extensionGoogleDAI", 'false').toBoolean()
+def enabledAds = enabledGoogleIMA || enabledGoogleDAI
+def enabledCast = safeExtGet("THEOplayer_extensionCast", 'false').toBoolean()
 
 android {
   compileSdkVersion safeExtGet('THEOplayer_compileSdkVersion', 31)
+
   defaultConfig {
     minSdkVersion safeExtGet('THEOplayer_minSdkVersion', 21)
     targetSdkVersion safeExtGet('THEOplayer_targetSdkVersion', 31)
     versionCode 1
     versionName "1.0"
+
+    // Optionally limit timeUpdate rate. Possible values:
+    // - "com.theoplayer.TimeUpdateRate.UNLIMITED"
+    // - "com.theoplayer.TimeUpdateRate.LIMITED_ONE_HZ"
+    // - "com.theoplayer.TimeUpdateRate.LIMITED_TWO_HZ"
+    // - "com.theoplayer.TimeUpdateRate.LIMITED_THREE_HZ"
+    def TimeUpdateRate = "com.theoplayer.TimeUpdateRate"
+    buildConfigField TimeUpdateRate, "TIMEUPDATE_RATE", safeExtGet('THEOplayer_timeUpdateRate', "${TimeUpdateRate}.UNLIMITED")
+
+    // Optionally log events to logcat
+    buildConfigField "boolean", "LOG_PLAYER_EVENTS", "${safeExtGet('THEOplayer_logPlayerEvents', 'false')}"
+    buildConfigField "boolean", "LOG_VIEW_EVENTS", "${safeExtGet('THEOplayer_logViewEvents', 'false')}"
+
+    // Extension buildConfig fields
+    buildConfigField "boolean", "EXTENSION_GOOGLE_IMA", "${enabledGoogleIMA}"
+    buildConfigField "boolean", "EXTENSION_GOOGLE_DAI", "${enabledGoogleDAI}"
+    buildConfigField "boolean", "EXTENSION_ADS", "${enabledAds}"
+    buildConfigField "boolean", "EXTENSION_CAST", "${enabledCast}"
   }
 
   buildTypes {
     debug {
-      // Optionally limit timeUpdate rate. Possible values:
-      // - "com.theoplayer.TimeUpdateRate.UNLIMITED"
-      // - "com.theoplayer.TimeUpdateRate.LIMITED_ONE_HZ"
-      // - "com.theoplayer.TimeUpdateRate.LIMITED_TWO_HZ"
-      // - "com.theoplayer.TimeUpdateRate.LIMITED_THREE_HZ"
-      buildConfigField TimeUpdateRate, "TIMEUPDATE_RATE", safeExtGet('THEOplayer_timeUpdateRate', "${TimeUpdateRate}.UNLIMITED")
-
-      // Optionally log events to logcat
-      buildConfigField "boolean", "LOG_PLAYER_EVENTS", safeExtGet('THEOplayer_logPlayerEvents', "false")
-      buildConfigField "boolean", "LOG_VIEW_EVENTS", safeExtGet('THEOplayer_logViewEvents', "false")
+      minifyEnabled false
     }
     release {
       minifyEnabled false
-
-      // Optionally limit timeUpdate rate, which could improve performance. Possible values:
-      // - "com.theoplayer.TimeUpdateRate.UNLIMITED"
-      // - "com.theoplayer.TimeUpdateRate.LIMITED_ONE_HZ"
-      // - "com.theoplayer.TimeUpdateRate.LIMITED_TWO_HZ"
-      // - "com.theoplayer.TimeUpdateRate.LIMITED_THREE_HZ"
-      buildConfigField TimeUpdateRate, "TIMEUPDATE_RATE", safeExtGet('THEOplayer_timeUpdateRate', "${TimeUpdateRate}.UNLIMITED")
-
-      // Optionally log events to logcat
-      buildConfigField "boolean", "LOG_PLAYER_EVENTS", safeExtGet('THEOplayer_logPlayerEvents', "false")
-      buildConfigField "boolean", "LOG_VIEW_EVENTS", safeExtGet('THEOplayer_logViewEvents', "false")
     }
   }
   lintOptions {
@@ -71,6 +74,12 @@ android {
   }
 }
 
+rootProject.allprojects {
+  repositories {
+    maven { url("$rootDir/../node_modules/react-native-theoplayer/android/local") }
+  }
+}
+
 repositories {
   mavenLocal()
   maven {
@@ -79,13 +88,47 @@ repositories {
   }
   google()
   mavenCentral()
+  maven { url("local") }
   maven { url 'https://jitpack.io' }
 }
 
 dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"  // From node_modules
-  implementation "com.theoplayer.theoplayer-sdk-android:unified:${safeExtGet('THEOplayer_sdk', '+')}"
-  implementation "com.theoplayer.theoplayer-sdk-android:unified-ads:${safeExtGet('THEOplayer_sdk', '+')}"
-  implementation "com.theoplayer.theoplayer-sdk-android:unified-ads-ima:${safeExtGet('THEOplayer_sdk', '+')}"
+  implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
+  implementation "com.theoplayer.theoplayer-sdk-android:ads-wrapper:4.3.0"
+
+  def THEOplayerVersion = safeExtGet('THEOplayer_sdk', '+')
+
+  println("Using THEOplayer v${THEOplayerVersion}")
+  implementation "com.theoplayer.theoplayer-sdk-android:unified:${THEOplayerVersion}"
+
+  if (enabledGoogleIMA) {
+    println('ENABLE THEOplayer IMA extension.')
+    implementation "com.theoplayer.theoplayer-sdk-android:unified-ads:${THEOplayerVersion}"
+    implementation "com.theoplayer.theoplayer-sdk-android:unified-ads-ima:${THEOplayerVersion}"
+  } else {
+    println('DISABLE THEOplayer IMA extension.')
+    compileOnly "com.theoplayer.theoplayer-sdk-android:unified-ads:${THEOplayerVersion}"
+    compileOnly "com.theoplayer.theoplayer-sdk-android:unified-ads-ima:${THEOplayerVersion}"
+  }
+
+  // NOTE: The DAI extension module is available on Maven as of SDK v4.3.0
+  if (enabledGoogleDAI) {
+    println('ENABLE THEOplayer DAI extension.')
+    implementation "com.theoplayer.theoplayer-sdk-android:unified-ads:${THEOplayerVersion}"
+    implementation "com.theoplayer.theoplayer-sdk-android:unified-ads-dai:${THEOplayerVersion}"
+  } else {
+    println('DISABLE THEOplayer DAI extension.')
+    compileOnly "com.theoplayer.theoplayer-sdk-android:unified-ads:${THEOplayerVersion}"
+    compileOnly "com.theoplayer.theoplayer-sdk-android:unified-ads-dai:${THEOplayerVersion}"
+  }
+
+  if (enabledCast) {
+    println('ENABLE THEOplayer cast extension.')
+    implementation "com.theoplayer.theoplayer-sdk-android:unified-cast:${THEOplayerVersion}"
+  } else {
+    println('DISABLE THEOplayer cast extension.')
+    compileOnly "com.theoplayer.theoplayer-sdk-android:unified-cast:${THEOplayerVersion}"
+  }
 }

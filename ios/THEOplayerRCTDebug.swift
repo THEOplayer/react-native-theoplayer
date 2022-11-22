@@ -17,3 +17,6 @@ let DEBUG_PROP_UPDATES = DEBUG && true
 
 // Debug flag to monitor correct SourceDescription buildup
 let DEBUG_SOURCE_DESCRIPTION_BUIDER = DEBUG && true
+
+// Debug flag to monitor ads API usage
+let DEBUG_ADS_API = DEBUG && true

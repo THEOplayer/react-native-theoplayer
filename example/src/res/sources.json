@@ -84,7 +84,7 @@
     }
   },
   {
-    "name": "DASH - VOD - Clear - IMA PreRoll ad",
+    "name": "DASH - CSAI - Google IMA pre-roll",
     "os": [
       "android",
       "web"
@@ -99,22 +99,58 @@
       "ads": [
         {
           "integration": "google-ima",
-          "sources": "https://cdn.theoplayer.com/demos/ads/vast/dfp-preroll-no-skip.xml"
+          "sources": {
+            "src": "https://cdn.theoplayer.com/demos/ads/vast/dfp-preroll-no-skip.xml"
+          }
         }
       ]
     }
   },
   {
-    "name": "HLS - VOD - Clear - Elephant's dream",
+    "name": "DASH - CSAI - Google IMA mid-roll VAST",
     "os": [
-      "ios",
+      "android",
       "web"
     ],
     "source": {
-      "sources": {
-        "src": "https://cdn.theoplayer.com/video/elephants-dream/playlist.m3u8",
-        "type": "application/x-mpegurl"
-      }
+      "sources": [
+        {
+          "src": "https://contentserver.prudentgiraffe.com/videos/dash/webvtt-embedded-in-isobmff/Manifest.mpd",
+          "type": "application/dash+xml"
+        }
+      ],
+      "ads": [
+        {
+          "integration": "google-ima",
+          "sources": {
+            "src": "https://contentserver.prudentgiraffe.com/ads/vast-skippable.xml"
+          },
+          "timeOffset": 10
+        }
+      ]
+    }
+  },
+  {
+    "name": "DASH - CSAI - Google IMA mid-roll VMAP",
+    "os": [
+      "android",
+      "web"
+    ],
+    "source": {
+      "sources": [
+        {
+          "src": "https://contentserver.prudentgiraffe.com/videos/dash/webvtt-embedded-in-isobmff/Manifest.mpd",
+          "type": "application/dash+xml"
+        }
+      ],
+      "ads": [
+        {
+          "integration": "google-ima",
+          "sources": {
+            "src": "https://contentserver.prudentgiraffe.com/ads/double-midroll-mergeable-adbreak.xml"
+          }
+        }
+      ]
     }
   },
   {
@@ -132,17 +168,99 @@
     }
   },
   {
-    "name": "HLS - VOD - AES128 - Big Buck Bunny",
+    "name": "HLS - CSAI - Google IMA pre-roll",
     "os": [
       "ios",
-      "android"
+      "web"
+    ],
+    "source": {
+      "sources": [
+        {
+          "src": "https://cdn.theoplayer.com/video/elephants-dream/playlistCorrectionENG.m3u8",
+          "type": "application/x-mpegurl"
+        }
+      ],
+      "ads": [
+        {
+          "integration": "google-ima",
+          "sources": "https://cdn.theoplayer.com/demos/ads/vast/dfp-preroll-no-skip.xml"
+        }
+      ]
+    }
+  },
+  {
+    "name": "HLS - CSAI - Google IMA mid-roll VAST",
+    "os": [
+      "ios",
+      "web"
+    ],
+    "source": {
+      "sources": [
+        {
+          "src": "https://cdn.theoplayer.com/video/elephants-dream/playlistCorrectionENG.m3u8",
+          "type": "application/x-mpegurl"
+        }
+      ],
+      "ads": [
+        {
+          "integration": "google-ima",
+          "sources": {
+            "src": "https://contentserver.prudentgiraffe.com/ads/vast-skippable.xml"
+          },
+          "timeOffset": 10
+        }
+      ]
+    }
+  },
+  {
+    "name": "DASH - SSAI - Google DAI",
+    "os": [
+      "android",
+      "web"
     ],
     "source": {
       "sources": {
-        "src": "https://cdn.theoplayer.com/video/big_buck_bunny_encrypted/stream-800/index.m3u8",
-        "type": "application/x-mpegurl"
-      },
-      "poster": "https://cdn.theoplayer.com/video/big_buck_bunny/poster.jpg"
+        "type": "application/dash+xml",
+        "ssai": {
+          "integration": "google-dai",
+          "availabilityType": "vod",
+          "contentSourceID": "2474148",
+          "videoID": "bbb-clear"
+        }
+      }
+    }
+  },
+  {
+    "name": "HLS - SSAI - Google DAI - VOD",
+    "os": [
+      "ios",
+      "web"
+    ],
+    "source": {
+      "sources": {
+        "ssai": {
+          "integration": "google-dai",
+          "availabilityType": "vod",
+          "contentSourceID": "2528370",
+          "videoID": "tears-of-steel"
+        }
+      }
+    }
+  },
+  {
+    "name": "HLS - SSAI - Google DAI - LIVE",
+    "os": [
+      "ios",
+      "web"
+    ],
+    "source": {
+      "sources": {
+        "ssai": {
+          "integration": "google-dai",
+          "availabilityType": "live",
+          "assetKey": "sN_IYUG8STe1ZzhIIE_ksA"
+        }
+      }
     }
   },
   {
@@ -169,16 +287,22 @@
     }
   },
   {
-    "name": "HLS - VOD - Clear - Star Wars Docu",
+    "name": "HLS - VOD - ezDRM - Drop",
     "os": [
-      "ios"
+      "ios",
+      "web"
     ],
     "source": {
       "sources": {
-        "src": "https://cdn.theoplayer.com/video/star_wars_episode_vii-the_force_awakens_official_comic-con_2015_reel_(2015)/index.m3u8",
-        "type": "application/x-mpegurl"
-      },
-      "poster": "https://cdn.theoplayer.com/video/star_wars_episode_vii-the_force_awakens_official_comic-con_2015_reel_(2015)/poster.jpg"
+        "src": "https://fps.ezdrm.com/demo/video/ezdrm.m3u8",
+        "contentProtection": {
+          "fairplay": {
+            "certificateURL": "https://fps.ezdrm.com/demo/video/eleisure.cer",
+            "licenseAcquisitionURL": "https://fps.ezdrm.com/api/licenses/09cc0377-6dd4-40cb-b09d-b582236e70fe"
+          },
+          "integration": "ezdrm"
+        }
+      }
     }
   },
   {

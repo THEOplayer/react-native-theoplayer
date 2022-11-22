@@ -9,7 +9,11 @@ import androidx.annotation.Nullable;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.google.gson.Gson;
+import com.theoplayer.android.api.error.ErrorCode;
+import com.theoplayer.android.api.error.THEOplayerException;
+import com.theoplayer.android.api.event.ads.AdIntegrationKind;
 import com.theoplayer.android.api.player.track.texttrack.TextTrackKind;
+import com.theoplayer.android.api.source.GoogleDaiTypedSource;
 import com.theoplayer.android.api.source.SourceDescription;
 import com.theoplayer.android.api.source.SourceType;
 import com.theoplayer.android.api.source.TextTrackDescription;
@@ -28,6 +32,10 @@ import com.theoplayer.android.api.source.drm.preintegration.TitaniumDRMConfigura
 import com.theoplayer.android.api.source.drm.preintegration.VudrmDRMConfiguration;
 import com.theoplayer.android.api.source.drm.preintegration.XstreamConfiguration;
 import com.theoplayer.android.api.source.hls.HlsPlaybackConfiguration;
+import com.theoplayer.android.api.source.ssai.SsaiIntegration;
+import com.theoplayer.android.api.source.ssai.YoSpaceDescription;
+import com.theoplayer.android.api.source.ssai.dai.GoogleDaiLiveConfiguration;
+import com.theoplayer.android.api.source.ssai.dai.GoogleDaiVodConfiguration;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,10 +58,30 @@ public class SourceHelper {
   private static final String PROP_HLS_DATERANGE = "hlsDateRange";
   private static final String PROP_HLS_PLAYBACK_CONFIG = "hls";
   private static final String PROP_TIME_SERVER = "timeServer";
+  public static final String PROP_SSAI = "ssai";
+  public static final String PROP_TYPE = "type";
+  public static final String PROP_SRC = "src";
+  public static final String PROP_SOURCES = "sources";
+  public static final String PROP_DEFAULT = "default";
+  public static final String PROP_LABEL = "label";
+  public static final String PROP_KIND = "kind";
+  public static final String PROP_TIME_OFFSET = "timeOffset";
+  public static final String PROP_INTEGRATION = "integration";
+  public static final String PROP_TEXT_TRACKS = "textTracks";
+  public static final String PROP_POSTER = "poster";
+  public static final String PROP_ADS = "ads";
+  public static final String PROP_AVAILABILITY_TYPE = "availabilityType";
+
+  private static final String ERROR_DAI_NOT_ENABLED = "Google DAI support not enabled.";
+  private static final String ERROR_UNSUPPORTED_SSAI_INTEGRATION = "Unsupported SSAI integration";
+  private static final String ERROR_MISSING_SSAI_INTEGRATION = "Missing SSAI integration";
+  private static final String ERROR_IMA_NOT_ENABLED = "Google IMA support not enabled.";
+  private static final String ERROR_UNSUPPORTED_CSAI_INTEGRATION = "Unsupported CSAI integration";
+  private static final String ERROR_MISSING_CSAI_INTEGRATION = "Missing CSAI integration";
 
   private final Gson gson = new Gson();
 
-  public SourceDescription parseSourceFromJS(ReadableMap source) {
+  public SourceDescription parseSourceFromJS(ReadableMap source) throws THEOplayerException {
       HashMap<String, Object> hashmap = eliminateReadables(source);
       try {
         String json = gson.toJson(hashmap);
@@ -63,7 +91,7 @@ public class SourceHelper {
         ArrayList<TypedSource> typedSources = new ArrayList<>();
 
         // sources can be an array or single object
-        JSONArray jsonSources = jsonSourceObject.optJSONArray("sources");
+        JSONArray jsonSources = jsonSourceObject.optJSONArray(PROP_SOURCES);
         if (jsonSources != null) {
           for (int i = 0 ; i < jsonSources.length(); i++) {
             TypedSource typedSource = parseTypedSource((JSONObject)jsonSources.get(i));
@@ -72,32 +100,29 @@ public class SourceHelper {
             }
           }
         } else {
-          TypedSource typedSource = parseTypedSource(jsonSourceObject.getJSONObject("sources"));
+          TypedSource typedSource = parseTypedSource(jsonSourceObject.getJSONObject(PROP_SOURCES));
           if (typedSource != null) {
             typedSources.add(typedSource);
           }
         }
 
         // poster
-        String poster = jsonSourceObject.optString("poster");
+        String poster = jsonSourceObject.optString(PROP_POSTER);
 
         // ads
-        JSONArray jsonAds = jsonSourceObject.optJSONArray("ads");
+        JSONArray jsonAds = jsonSourceObject.optJSONArray(PROP_ADS);
         ArrayList<AdDescription> ads = new ArrayList<>();
         if (jsonAds != null) {
           for (int i = 0 ; i < jsonAds.length(); i++) {
             JSONObject jsonAdDescription = (JSONObject) jsonAds.get(i);
 
             // Currently only ima-ads are supported.
-            GoogleImaAdDescription ad = parseImaAdFromJS(jsonAdDescription);
-            if (ad != null) {
-              ads.add(ad);
-            }
+            ads.add(parseAdFromJS(jsonAdDescription));
           }
         }
 
         // Side-loaded text tracks
-        JSONArray textTracks = jsonSourceObject.optJSONArray("textTracks");
+        JSONArray textTracks = jsonSourceObject.optJSONArray(PROP_TEXT_TRACKS);
         ArrayList<TextTrackDescription> sideLoadedTextTracks = new ArrayList<>();
         if (textTracks != null) {
           for (int i = 0 ; i < textTracks.length(); i++) {
@@ -119,11 +144,47 @@ public class SourceHelper {
   }
 
   @Nullable
-  private TypedSource parseTypedSource(@NonNull final JSONObject jsonTypedSource) {
+  private TypedSource parseTypedSource(@NonNull final JSONObject jsonTypedSource) throws THEOplayerException {
     try {
+      TypedSource.Builder tsBuilder = TypedSource.Builder.typedSource();
       SourceType sourceType = parseSourceType(jsonTypedSource);
-      String src = jsonTypedSource.getString("src");
-      TypedSource.Builder tsBuilder = TypedSource.Builder.typedSource().src(src);
+
+      if (jsonTypedSource.has(PROP_SSAI)) {
+        final JSONObject ssaiJson = jsonTypedSource.getJSONObject(PROP_SSAI);
+
+        // Check for valid SsaiIntegration
+        final String ssaiIntegrationStr = ssaiJson.optString(PROP_INTEGRATION);
+        if (!TextUtils.isEmpty(ssaiIntegrationStr)) {
+          SsaiIntegration ssaiIntegration = SsaiIntegration.from(ssaiIntegrationStr);
+          if (ssaiIntegration == null) {
+            throw new THEOplayerException(ErrorCode.AD_ERROR, ERROR_UNSUPPORTED_SSAI_INTEGRATION + ": " + ssaiIntegrationStr);
+          }
+          switch (ssaiIntegration) {
+            case GOOGLE_DAI:
+              if (!BuildConfig.EXTENSION_GOOGLE_DAI) {
+                throw new THEOplayerException(ErrorCode.AD_ERROR, ERROR_DAI_NOT_ENABLED);
+              }
+              if (ssaiJson.optString(PROP_AVAILABILITY_TYPE).equals("vod")) {
+                tsBuilder = new GoogleDaiTypedSource.Builder(gson.fromJson(ssaiJson.toString(), GoogleDaiVodConfiguration.class));
+              } else {
+                tsBuilder = new GoogleDaiTypedSource.Builder(gson.fromJson(ssaiJson.toString(), GoogleDaiLiveConfiguration.class));
+              }
+              // Prefer DASH if not SSAI type specified
+              if (sourceType == null) {
+                tsBuilder.type(SourceType.DASH);
+              }
+              break;
+            case YOSPACE:
+              tsBuilder.ssai(gson.fromJson(ssaiJson.toString(), YoSpaceDescription.class));
+              break;
+            default:
+              throw new THEOplayerException(ErrorCode.AD_ERROR, ERROR_UNSUPPORTED_SSAI_INTEGRATION + ": " + ssaiIntegrationStr);
+          }
+        } else {
+          throw new THEOplayerException(ErrorCode.AD_ERROR, ERROR_MISSING_SSAI_INTEGRATION);
+        }
+      }
+      tsBuilder.src(jsonTypedSource.optString(PROP_SRC));
       if (sourceType != null) {
         tsBuilder.type(sourceType);
       }
@@ -189,7 +250,7 @@ public class SourceHelper {
   }
 
   private static SourceType parseSourceType(@NonNull final JSONObject jsonTypedSource) {
-    String type = jsonTypedSource.optString("type");
+    String type = jsonTypedSource.optString(PROP_TYPE);
     if (!type.isEmpty()) {
       if ("application/dash+xml".equals(type)) {
         return SourceType.DASH;
@@ -211,7 +272,7 @@ public class SourceHelper {
       }
     } else {
       // No type given, check for known extension.
-      String src = jsonTypedSource.optString("src");
+      String src = jsonTypedSource.optString(PROP_SRC);
       if (src.endsWith(".mpd")) {
         return SourceType.DASH;
       }
@@ -229,22 +290,64 @@ public class SourceHelper {
   }
 
   @Nullable
-  private static GoogleImaAdDescription parseImaAdFromJS(JSONObject jsonAdDescription) throws JSONException {
-    if (jsonAdDescription.optString("integration").equals("google-ima")) {
-      return GoogleImaAdDescription.Builder.googleImaAdDescription()
-        .source(jsonAdDescription.optString("sources"))
-        .timeOffset(jsonAdDescription.optString("timeOffset"))
-        .build();
+  public AdDescription parseAdFromJS(ReadableMap map) throws THEOplayerException {
+    HashMap<String, Object> hashmap = eliminateReadables(map);
+    try {
+      JSONObject jsonAdDescription = new JSONObject(gson.toJson(hashmap));
+      return parseAdFromJS(jsonAdDescription);
+    } catch(JSONException e) {
+      e.printStackTrace();
+      return null;
     }
-    return null;
+  }
+
+  @NonNull
+  public static AdDescription parseAdFromJS(JSONObject jsonAdDescription) throws JSONException, THEOplayerException {
+    final String integrationKindStr = jsonAdDescription.optString(PROP_INTEGRATION);
+    if (!TextUtils.isEmpty(integrationKindStr)) {
+      AdIntegrationKind integrationKind = AdIntegrationKind.from(integrationKindStr);
+      switch (integrationKind) {
+        // Currently only IMA is supported.
+        case GOOGLE_IMA:
+          return parseImaAdFromJS(jsonAdDescription);
+        case DEFAULT:
+        case THEO:
+        case FREEWHEEL:
+        case SPOTX:
+        default: {
+          throw new THEOplayerException(ErrorCode.AD_ERROR, ERROR_UNSUPPORTED_CSAI_INTEGRATION + ": " + integrationKindStr);
+        }
+      }
+    } else {
+      throw new THEOplayerException(ErrorCode.AD_ERROR, ERROR_MISSING_CSAI_INTEGRATION + ": " + integrationKindStr);
+    }
+  }
+
+  @NonNull
+  private static GoogleImaAdDescription parseImaAdFromJS(JSONObject jsonAdDescription) throws THEOplayerException {
+    if (!BuildConfig.EXTENSION_GOOGLE_IMA) {
+      throw new THEOplayerException(ErrorCode.AD_ERROR, ERROR_IMA_NOT_ENABLED);
+    }
+    String source;
+    // Property `sources` is of type string | AdSource.
+    JSONObject sourceObj = jsonAdDescription.optJSONObject(PROP_SOURCES);
+    if (sourceObj != null) {
+      source = sourceObj.optString(PROP_SRC);
+    } else {
+      source = jsonAdDescription.optString(PROP_SOURCES);
+    }
+    return GoogleImaAdDescription.Builder.googleImaAdDescription()
+      .source(source)
+      .timeOffset(jsonAdDescription.optString(PROP_TIME_OFFSET))
+      .build();
   }
 
   private static TextTrackDescription parseTextTrackFromJS(JSONObject jsonTextTrack) throws JSONException {
     TextTrackDescription.Builder builder = TextTrackDescription.Builder.textTrackDescription()
-      .isDefault(jsonTextTrack.optBoolean("default"))
-      .src(jsonTextTrack.optString("src"))
-      .label(jsonTextTrack.optString("label"))
-      .kind(parseTextTrackKind(jsonTextTrack.optString("kind")));
+      .isDefault(jsonTextTrack.optBoolean(PROP_DEFAULT))
+      .src(jsonTextTrack.optString(PROP_SRC))
+      .label(jsonTextTrack.optString(PROP_LABEL))
+      .kind(parseTextTrackKind(jsonTextTrack.optString(PROP_KIND)));
     return builder.build();
   }
 
@@ -263,10 +366,7 @@ public class SourceHelper {
   }
 
   /**
-   * Eliminate all the Readable* classes from the map
-   *
-   * @param readableMap
-   * @return
+   * Eliminate all the Readable* classes from the map.
    */
   protected static HashMap<String, Object> eliminateReadables(ReadableMap readableMap) {
     HashMap<String, Object> hashMap = readableMap.toHashMap();
@@ -285,10 +385,7 @@ public class SourceHelper {
   }
 
   /**
-   * Eliminate all the Readable* classes from the array
-   *
-   * @param readableArray
-   * @return
+   * Eliminate all the Readable* classes from the array.
    */
   protected static ArrayList<Object> eliminateReadables(ReadableArray readableArray) {
     ArrayList<Object> arrayList = readableArray.toArrayList();

@@ -182,13 +182,11 @@ android {
     }
 
     packagingOptions {
-      exclude 'META-INF/kotlin-stdlib.kotlin_module'
-      exclude 'META-INF/annotation-experimental_release.kotlin_module'
+      exclude 'META-INF/*.kotlin_module'
     }
 }
 
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
 

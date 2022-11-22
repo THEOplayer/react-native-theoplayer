@@ -7,7 +7,9 @@
 //
 
 #import <React/RCTViewManager.h>
+#import <React/RCTBridgeModule.h>
 
+// View Manager
 @interface RCT_EXTERN_MODULE(THEOplayerRCTViewManager, RCTViewManager)
 
 RCT_EXPORT_VIEW_PROPERTY(src, NSDictionary);
@@ -40,9 +42,55 @@ RCT_EXPORT_VIEW_PROPERTY(onNativeFullscreenPlayerWillPresent, RCTDirectEventBloc
 RCT_EXPORT_VIEW_PROPERTY(onNativeFullscreenPlayerDidPresent, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeFullscreenPlayerWillDismiss, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeFullscreenPlayerDidDismiss, RCTDirectEventBlock);
+
 RCT_EXPORT_VIEW_PROPERTY(onNativeTextTrackListEvent, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeTextTrackEvent, RCTDirectEventBlock);
 
+RCT_EXPORT_VIEW_PROPERTY(onNativeAdEvent, RCTDirectEventBlock);
+
 RCT_EXTERN_METHOD(destroy:(nonnull NSNumber *)node);
+
+@end
+
+// Ads Module
+@interface RCT_EXTERN_REMAP_MODULE(AdsModule, THEOplayerRCTAdsAPI, NSObject)
+
+RCT_EXTERN_METHOD(skip:(nonnull NSNumber *)node)
+
+RCT_EXTERN_METHOD(playing:(nonnull NSNumber *)node
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(currentAdBreak:(nonnull NSNumber *)node
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(currentAds:(nonnull NSNumber *)node
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(scheduledAdBreaks:(nonnull NSNumber *)node
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(schedule:(nonnull NSNumber *)node
+                  ad: NSDictionary)
+
+RCT_EXTERN_METHOD(daiSnapback:(nonnull NSNumber *)node
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(daiSetSnapback:(nonnull NSNumber *)node
+                  enabled:(BOOL)enabled)
+
+RCT_EXTERN_METHOD(daiContentTimeForStreamTime:(nonnull NSNumber *)node
+                  time:(nonnull NSNumber *)timeValue
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(daiStreamTimeForContentTime:(nonnull NSNumber *)node
+                  time:(nonnull NSNumber *)timeValue
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
 
 @end

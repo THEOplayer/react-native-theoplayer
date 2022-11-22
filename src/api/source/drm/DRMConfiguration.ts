@@ -92,34 +92,6 @@ export interface KeySystemConfiguration {
    * The certificate for the key system. This can be either an ArrayBuffer or Uint8Array containing the raw certificate bytes or a base64-encoded variant of this.
    */
   certificate?: string;
-
-  /**
-   * Process the certificate's request.
-   *
-   * @deprecated Please use {@link registerContentProtectionIntegration} and {@link ContentProtectionIntegration.onCertificateRequest} instead.
-   */
-  certificateRequestProcessor?: DRMProcessor;
-
-  /**
-   * Process the certificate's response.
-   *
-   * @deprecated Please use {@link registerContentProtectionIntegration} and {@link ContentProtectionIntegration.onCertificateResponse} instead.
-   */
-  certificateResponseProcessor?: DRMProcessor;
-
-  /**
-   * Process the license's request.
-   *
-   * @deprecated Please use {@link registerContentProtectionIntegration} and {@link ContentProtectionIntegration.onLicenseRequest} instead.
-   */
-  licenseRequestProcessor?: DRMProcessor;
-
-  /**
-   * Process the license's response.
-   *
-   * @deprecated Please use {@link registerContentProtectionIntegration} and {@link ContentProtectionIntegration.onLicenseResponse} instead.
-   */
-  licenseResponseProcessor?: DRMProcessor;
 }
 
 /**

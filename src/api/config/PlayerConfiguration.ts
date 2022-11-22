@@ -1,4 +1,11 @@
+import type { AdsConfiguration } from "../ads/AdsConfiguration";
+
 export interface PlayerConfiguration {
+  /**
+   * The ads configuration for the player.
+   */
+  ads?: AdsConfiguration;
+
   /**
    * The license for the player
    */
