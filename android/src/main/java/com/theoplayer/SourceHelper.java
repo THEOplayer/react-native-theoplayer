@@ -1,5 +1,7 @@
 package com.theoplayer;
 
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -37,8 +39,6 @@ import java.util.Map;
  * Source parsing helper class, because we don't support GSON object deserialization currently
  */
 public class SourceHelper {
-
-  private static final String TAG = "SourceHelper";
 
   private static final String PROP_CONTENT_PROTECTION = "contentProtection";
   private static final String PROP_LIVE_OFFSET = "liveOffset";
