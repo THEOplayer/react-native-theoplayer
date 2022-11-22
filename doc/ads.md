@@ -39,9 +39,7 @@ THEOplayer_extensionGoogleIMA = true
 <summary>iOS/tvOS</summary>
 
 To enable Google IMA for the iOS/tvOS platforms, a dependency to the THEOplayer SDK
-that includes the IMA library needs to be added.
-
-...
+that includes the IMA library needs to be added. See [Custom iOS framework](./custom-ios-framework.md) for more details.
 
 </details>
 
@@ -109,9 +107,7 @@ Note that DAI support for Android is available as of SDK version 4.3.0.
 <summary>iOS/tvOS</summary>
 
 To enable Google DAI for the iOS/tvOS platforms, a dependency to the THEOplayer SDK
-that includes the DAI library needs to be added.
-
-...
+that includes the DAI library needs to be added. See [Custom iOS framework](./custom-ios-framework.md) for more details.
 
 </details>
 

@@ -65,4 +65,5 @@ and discussed in the next section. Finally, an overview of features, limitations
 - [Features](./doc/features.md)
 - Knowledge Base
   - [Advertisements](./doc/ads.md)
+  - [Custom iOS framework](./doc/custom-ios-framework.md)
 - [Limitations and known issues](./doc/limitations.md)
