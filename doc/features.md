@@ -9,7 +9,7 @@ please reach out to us for support.
 |---------------------------------------------------|:--------------------------------:|:---------------:|:---------------:|
 | DASH (mp4)                                        |          as of v3.6.1*           |        V        |                 |
 | DASH (fmp4)                                       |                V                 |        V        |                 |
-| HLS (ts)                                          |          as of v3.6.1*          |                 |        V        |
+| HLS (ts)                                          |          as of v3.6.1*           |        V        |        V        |
 | HLS (fmp4)                                        |                V                 |        V        |        V        |
 | plain MP4                                         |          as of v3.6.1*           |        V        |        V        |
 | MP3                               		              |          as of v3.6.1*           |        V        |        V        |
@@ -26,7 +26,7 @@ please reach out to us for support.
 | Chromefull (default SDK UI)                       |                                  |        V        |        V        |
 | Fullscreen                                        |                V                 | with default UI | with default UI |
 | Preview thumbnails                                |                V                 |        V        |  as of v3.6.0*  |
-| Airplay                                           |               N/A                |       N/A       | with default UI |
+| Airplay                                           |               N/A                |     Safari      | with default UI |
 
 (*) This refers to the underlying platform's THEOplayer SDK.
 
