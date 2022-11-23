@@ -156,16 +156,20 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
     // MARK: Incoming JS Notifications
     @objc(registerContentProtectionIntegration:keySystemId:)
     func registerContentProtectionIntegration(_ integrationId: String, keySystemId: String) -> Void {
-        if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "registerContentProtectionIntegration for \(integrationId) - \(keySystemId)") }
-        // Create a proxy factory
-        let integrationFactory = THEOplayerRCTProxyContentProtectionIntegrationFactory(contentProtectionAPI: self,
-                                                                                       integrationId: integrationId,
-                                                                                       keySystemId: keySystemId)
-        // Register that factory on the THEOplayerSDK:
-        let keySystem = self.keySystemFromString(keySystemId)
-        THEOplayerSDK.THEOplayer.registerContentProtectionIntegration(integrationId: integrationId,
-                                                                      keySystem: keySystem,
-                                                                      integrationFactory: integrationFactory)
+        if keySystemId == "fairplay" {
+            if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "Registering ContentProtectionIntegration for \(integrationId) - \(keySystemId)") }
+            // Create a proxy factory
+            let integrationFactory = THEOplayerRCTProxyContentProtectionIntegrationFactory(contentProtectionAPI: self,
+                                                                                           integrationId: integrationId,
+                                                                                           keySystemId: keySystemId)
+            // Register that factory on the THEOplayerSDK:
+            let keySystem = self.keySystemFromString(keySystemId)
+            THEOplayerSDK.THEOplayer.registerContentProtectionIntegration(integrationId: integrationId,
+                                                                          keySystem: keySystem,
+                                                                          integrationFactory: integrationFactory)
+        } else {
+            if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "Prevented registering ContentProtectionIntegration for \(integrationId) - \(keySystemId)") }
+        }
     }
     
     @objc(onBuildProcessed:)
@@ -196,9 +200,12 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
             }
             self.invalidateRequestWithId(requestId)
             THEOplayerRCTNetworkUtils.shared.requestFromUrl(url: url, method: method, body: bodyData, headers: headers) { data, statusCode, error in
-                if statusCode >= 400 {
+                if let responseError = error {
+                    print(CPI_TAG, "Certificate request failure: error = \(responseError.localizedDescription)")
+                } else if statusCode >= 400 {
                     print("Certificate request failure: statusCode = \(statusCode)")
                 } else {
+                    if DEBUG_CONTENT_PROTECTION_API {print(CPI_TAG, "Certificate request success: statusCode = \(statusCode)") }
                     completion(data, error)
                 }
             }
@@ -254,9 +261,12 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
             }
             self.invalidateRequestWithId(requestId)
             THEOplayerRCTNetworkUtils.shared.requestFromUrl(url: url, method: method, body: bodyData, headers: headers) { data, statusCode, error in
-                if statusCode >= 400 {
+                if let responseError = error {
+                    print(CPI_TAG, "License request failure: error = \(responseError.localizedDescription)")
+                } else if statusCode >= 400 {
                     print(CPI_TAG, "License request failure: statusCode = \(statusCode)")
                 } else {
+                    if DEBUG_CONTENT_PROTECTION_API {print(CPI_TAG, "License request success: statusCode = \(statusCode)") }
                     completion(data, error)
                 }
             }
