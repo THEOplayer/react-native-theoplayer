@@ -135,13 +135,6 @@ export interface PlayReadyKeySystemConfiguration extends KeySystemConfiguration 
 export type WidevineKeySystemConfiguration = KeySystemConfiguration;
 
 /**
- * A function which processes DRM data.
- *
- * @public
- */
-export type DRMProcessor = (arrayBuffer: ArrayBuffer) => ArrayBuffer;
-
-/**
  * Describes the ClearKey key system configuration.
  *
  * @public

@@ -66,4 +66,5 @@ and discussed in the next section. Finally, an overview of features, limitations
 - Knowledge Base
   - [Advertisements](./doc/ads.md)
   - [Custom iOS framework](./doc/custom-ios-framework.md)
+  - [Digital Rights Management (DRM)](./doc/drm.md)
 - [Limitations and known issues](./doc/limitations.md)
