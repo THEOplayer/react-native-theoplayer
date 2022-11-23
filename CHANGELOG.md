@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.7.0]
+
+### Added
+
+- Support for content protection integration (DRM connectors).
+- Support for subscribing to ad events.
+- Support for Google DAI ads.
+- Support for Google IMA ads.
+- Support for ABR configuration on Android and Web.
+- Support for video quality selection on Android and Web.
+
+### Fixed
+
+- Fixed an issue where the player would not be correctly released when destroying the view on Android.
+- Fixed a warning during debugging when a stream would have duration INF or NaN.
+- Fixed an issue in the example app where it would not be possible to select a specific text track.
+- Fixed conflicting npm dependencies in the example app.
+
 ## [1.6.1]
 
 ### Added
