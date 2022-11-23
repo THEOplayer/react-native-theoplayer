@@ -93,6 +93,9 @@ RCT_EXTERN_METHOD(daiStreamTimeForContentTime:(nonnull NSNumber *)node
                   time:(nonnull NSNumber *)timeValue
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
+
+@end
+
 // ContentProtectionModule
 @interface RCT_EXTERN_REMAP_MODULE(ContentProtectionModule, THEOplayerRCTContentProtectionAPI, RCTEventEmitter)
 
