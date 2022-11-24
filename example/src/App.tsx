@@ -9,6 +9,7 @@ import { TitaniumWidevineContentProtectionIntegrationFactory } from './drm/titan
 import { TitaniumPlayReadyContentProtectionIntegrationFactory } from './drm/titaniumDrm/TitaniumPlayReadyContentProtectionIntegrationFactory';
 import { VerimatrixCoreDrmWidevineContentProtectionIntegrationFactory } from './drm/verimatrixCoreDrm/VerimatrixCoreDrmWidevineContentProtectionIntegrationFactory';
 import { VerimatrixCoreDrmFairplayContentProtectionIntegrationFactory } from './drm/verimatrixCoreDrm/VerimatrixCoreDrmFairplayContentProtectionIntegrationFactory';
+import { VerimatrixCoreDrmPlayReadyContentProtectionIntegrationFactory } from './drm/verimatrixCoreDrm/VerimatrixCoreDrmPlayReadyContentProtectionIntegrationFactory';
 
 const playerConfig: PlayerConfiguration = {
   // Get your THEOplayer license from https://portal.theoplayer.com/
@@ -44,6 +45,11 @@ ContentProtectionRegistry.registerContentProtectionIntegration(
   'verimatrixcoredrmCustom',
   'widevine',
   new VerimatrixCoreDrmWidevineContentProtectionIntegrationFactory(),
+);
+ContentProtectionRegistry.registerContentProtectionIntegration(
+  'verimatrixcoredrmCustom',
+  'playready',
+  new VerimatrixCoreDrmPlayReadyContentProtectionIntegrationFactory(),
 );
 ContentProtectionRegistry.registerContentProtectionIntegration(
   'verimatrixcoredrmCustom',
