@@ -3,7 +3,6 @@ import type { VerimatrixCoreDrmConfiguration } from './VerimatrixCoreDrmConfigur
 import { fromBase64StringToUint8Array, fromObjectToUint8Array, fromUint8ArrayToBase64String, fromUint8ArrayToObject } from 'react-native-theoplayer';
 
 export class VerimatrixCoreDrmFairplayContentProtectionIntegration implements ContentProtectionIntegration {
-  static readonly DEFAULT_CERTIFICATE_URL = 'insert default certificate url here';
   static readonly DEFAULT_LICENSE_URL = 'insert default license url here';
 
   private readonly contentProtectionConfiguration: VerimatrixCoreDrmConfiguration;
