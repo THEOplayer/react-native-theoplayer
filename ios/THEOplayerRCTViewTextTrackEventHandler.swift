@@ -3,11 +3,6 @@
 import Foundation
 import THEOplayerSDK
 
-let ADD_TRACK: Int = 0
-let REMOVE_TRACK: Int = 1
-let ADD_CUE: Int = 0
-let REMOVE_CUE: Int = 1
-
 class THEOplayerRCTViewTextTrackEventHandler {
     // MARK: Members
     private weak var player: THEOplayer?
@@ -54,7 +49,7 @@ class THEOplayerRCTViewTextTrackEventHandler {
                 // trigger tracklist event
                 forwardedTextTrackListEvent([
                     "track" : THEOplayerRCTMetadataAggregator.aggregatedTextTrackInfo(textTrack: textTrack),
-                    "type" : ADD_TRACK
+                    "type" : TrackEventType.ADD_TRACK
                 ])
                 // start listening for cue events on this track and keep listener for later removal
                 welf.addCueListeners[textTrack.uid] = textTrack.addEventListener(type: TextTrackEventTypes.ADD_CUE, listener: welf.addCueListener(_:))
@@ -74,7 +69,7 @@ class THEOplayerRCTViewTextTrackEventHandler {
                 // trigger tracklist event
                 forwardedTextTrackListEvent([
                     "track" : THEOplayerRCTMetadataAggregator.aggregatedTextTrackInfo(textTrack: textTrack),
-                    "type" : REMOVE_TRACK
+                    "type" : TrackEventType.REMOVE_TRACK
                 ])
                 // stop listening for cue events on this track
                 if let addCueListener = welf.addCueListeners[textTrack.uid],
@@ -114,7 +109,7 @@ class THEOplayerRCTViewTextTrackEventHandler {
             if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received ADD_CUE event from textTrack: trackUid = \(textTrack.uid), cueUid = \(event.cue.uid)") }
             forwardedTextTrackEvent([
                 "trackUid" : textTrack.uid,
-                "type": ADD_CUE,
+                "type": TrackCueEventType.ADD_CUE,
                 "cue": THEOplayerRCTMetadataAggregator.aggregatedTextTrackCueInfo(textTrackCue: event.cue)
             ])
         }
@@ -126,7 +121,7 @@ class THEOplayerRCTViewTextTrackEventHandler {
             if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received REMOVE_CUE event from textTrack: trackUid = \(textTrack.uid), cueUid = \(event.cue.uid)") }
             forwardedTextTrackEvent([
                 "trackUid" : textTrack.uid,
-                "type": REMOVE_CUE,
+                "type": TrackCueEventType.REMOVE_CUE,
                 "cue": THEOplayerRCTMetadataAggregator.aggregatedTextTrackCueInfo(textTrackCue: event.cue)
             ])
         }
