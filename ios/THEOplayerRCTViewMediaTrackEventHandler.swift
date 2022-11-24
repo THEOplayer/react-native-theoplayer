@@ -9,7 +9,7 @@ class THEOplayerRCTViewMediaTrackEventHandler {
         
     // MARK: Events
     var onNativeMediaTrackListEvent: RCTDirectEventBlock?
-    var onNativeMediaTrackEvent: RCTDirectEventBlock?
+    var onNativeMediaTrackEvent: RCTDirectEventBlock?       // currently not in use on iOS THEOplayerSDK
    
     // MARK: mediaTrackList Listeners
     private var audioAddTrackListener: EventListener?
