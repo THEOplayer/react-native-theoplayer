@@ -14,6 +14,7 @@ class THEOplayerRCTViewTextTrackEventHandler {
     // MARK: textTrackList Listeners
     private var addTrackListener: EventListener?
     private var removeTrackListener: EventListener?
+    private var changeTrackListener: EventListener?
     
     // MARK: textTrack listeners (attached dynamically to new texttracks)
     private var addCueListeners: [Int:EventListener] = [:]
@@ -82,6 +83,21 @@ class THEOplayerRCTViewTextTrackEventHandler {
             }
         }
         if DEBUG_EVENTHANDLER { print("[NATIVE] RemoveTrack listener attached to THEOplayer textTrack list") }
+        
+        // CHANGE
+        self.changeTrackListener = player.textTracks.addEventListener(type: TextTrackListEventTypes.CHANGE) { [weak self] event in
+            guard let welf = self else { return }
+            if let forwardedTextTrackListEvent = welf.onNativeTextTrackListEvent,
+               let textTrack = event.track as? TextTrack {
+                if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received CHANGE event from THEOplayer textTrack list: trackUid = \(textTrack.uid)") }
+                // trigger tracklist event
+                forwardedTextTrackListEvent([
+                    "track" : THEOplayerRCTMetadataAggregator.aggregatedTextTrackInfo(textTrack: textTrack),
+                    "type" : TrackListEventType.CHANGE_TRACK
+                ])
+            }
+        }
+        if DEBUG_EVENTHANDLER { print("[NATIVE] ChangeTrack listener attached to THEOplayer textTrack list") }
     }
     
     private func dettachListeners() {
@@ -99,6 +115,12 @@ class THEOplayerRCTViewTextTrackEventHandler {
         if let removeTrackListener = self.removeTrackListener {
             player.textTracks.removeEventListener(type: TextTrackListEventTypes.REMOVE_TRACK, listener: removeTrackListener)
             if DEBUG_EVENTHANDLER { print("[NATIVE] RemoveTrack listener dettached from THEOplayer textTrack list") }
+        }
+        
+        // CHANGE
+        if let changeTrackListener = self.changeTrackListener {
+            player.textTracks.removeEventListener(type: TextTrackListEventTypes.CHANGE, listener: changeTrackListener)
+            if DEBUG_EVENTHANDLER { print("[NATIVE] ChangeTrack listener dettached from THEOplayer textTrack list") }
         }
     }
     
