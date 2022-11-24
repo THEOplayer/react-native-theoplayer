@@ -1,6 +1,11 @@
 // THEOplayerRCTTrackEventTypes.swift
 
-enum TrackEventType: Int {
+enum MediaTrackType: Int {
+    case AUDIO = 0
+    case VIDEO = 1
+}
+
+enum TrackListEventType: Int {
     case ADD_TRACK = 0
     case REMOVE_TRACK = 1
     case CHANGE_TRACK = 2
