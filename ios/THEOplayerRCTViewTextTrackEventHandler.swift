@@ -50,7 +50,7 @@ class THEOplayerRCTViewTextTrackEventHandler {
                 // trigger tracklist event
                 forwardedTextTrackListEvent([
                     "track" : THEOplayerRCTMetadataAggregator.aggregatedTextTrackInfo(textTrack: textTrack),
-                    "type" : TrackListEventType.ADD_TRACK
+                    "type" : TrackListEventType.ADD_TRACK.rawValue
                 ])
                 // start listening for cue events on this track and keep listener for later removal
                 welf.addCueListeners[textTrack.uid] = textTrack.addEventListener(type: TextTrackEventTypes.ADD_CUE, listener: welf.addCueListener(_:))
@@ -70,7 +70,7 @@ class THEOplayerRCTViewTextTrackEventHandler {
                 // trigger tracklist event
                 forwardedTextTrackListEvent([
                     "track" : THEOplayerRCTMetadataAggregator.aggregatedTextTrackInfo(textTrack: textTrack),
-                    "type" : TrackListEventType.REMOVE_TRACK
+                    "type" : TrackListEventType.REMOVE_TRACK.rawValue
                 ])
                 // stop listening for cue events on this track
                 if let addCueListener = welf.addCueListeners[textTrack.uid],
@@ -93,7 +93,7 @@ class THEOplayerRCTViewTextTrackEventHandler {
                 // trigger tracklist event
                 forwardedTextTrackListEvent([
                     "track" : THEOplayerRCTMetadataAggregator.aggregatedTextTrackInfo(textTrack: textTrack),
-                    "type" : TrackListEventType.CHANGE_TRACK
+                    "type" : TrackListEventType.CHANGE_TRACK.rawValue
                 ])
             }
         }

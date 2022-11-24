@@ -53,8 +53,8 @@ class THEOplayerRCTViewMediaTrackEventHandler {
                 // trigger tracklist event
                 forwardedMediaTrackListEvent([
                     "track" : THEOplayerRCTMetadataAggregator.aggregatedAudioTrackInfo(audioTrack: audioTrack),
-                    "type" : TrackListEventType.ADD_TRACK,
-                    "trackType": MediaTrackType.AUDIO
+                    "type" : TrackListEventType.ADD_TRACK.rawValue,
+                    "trackType": MediaTrackType.AUDIO.rawValue
                 ])
             }
         }
@@ -69,8 +69,8 @@ class THEOplayerRCTViewMediaTrackEventHandler {
                 // trigger tracklist event
                 forwardedMediaTrackListEvent([
                     "track" : THEOplayerRCTMetadataAggregator.aggregatedAudioTrackInfo(audioTrack: audioTrack),
-                    "type" : TrackListEventType.REMOVE_TRACK,
-                    "trackType": MediaTrackType.AUDIO
+                    "type" : TrackListEventType.REMOVE_TRACK.rawValue,
+                    "trackType": MediaTrackType.AUDIO.rawValue
                 ])
             }
         }
@@ -85,8 +85,8 @@ class THEOplayerRCTViewMediaTrackEventHandler {
                 // trigger tracklist event
                 forwardedMediaTrackListEvent([
                     "track" : THEOplayerRCTMetadataAggregator.aggregatedAudioTrackInfo(audioTrack: audioTrack),
-                    "type" : TrackListEventType.CHANGE_TRACK,
-                    "trackType": MediaTrackType.AUDIO
+                    "type" : TrackListEventType.CHANGE_TRACK.rawValue,
+                    "trackType": MediaTrackType.AUDIO.rawValue
                 ])
             }
         }
@@ -101,8 +101,8 @@ class THEOplayerRCTViewMediaTrackEventHandler {
                 // trigger tracklist event
                 forwardedMediaTrackListEvent([
                     "track" : THEOplayerRCTMetadataAggregator.aggregatedVideoTrackInfo(videoTrack: videoTrack),
-                    "type" : TrackListEventType.ADD_TRACK,
-                    "trackType": MediaTrackType.VIDEO
+                    "type" : TrackListEventType.ADD_TRACK.rawValue,
+                    "trackType": MediaTrackType.VIDEO.rawValue
                 ])
             }
         }
@@ -117,8 +117,8 @@ class THEOplayerRCTViewMediaTrackEventHandler {
                 // trigger tracklist event
                 forwardedMediaTrackListEvent([
                     "track" : THEOplayerRCTMetadataAggregator.aggregatedVideoTrackInfo(videoTrack: videoTrack),
-                    "type" : TrackListEventType.REMOVE_TRACK,
-                    "trackType": MediaTrackType.VIDEO
+                    "type" : TrackListEventType.REMOVE_TRACK.rawValue,
+                    "trackType": MediaTrackType.VIDEO.rawValue
                 ])
             }
         }
@@ -133,8 +133,8 @@ class THEOplayerRCTViewMediaTrackEventHandler {
                 // trigger tracklist event
                 forwardedMediaTrackListEvent([
                     "track" : THEOplayerRCTMetadataAggregator.aggregatedVideoTrackInfo(videoTrack: videoTrack),
-                    "type" : TrackListEventType.CHANGE_TRACK,
-                    "trackType": MediaTrackType.VIDEO
+                    "type" : TrackListEventType.CHANGE_TRACK.rawValue,
+                    "trackType": MediaTrackType.VIDEO.rawValue
                 ])
             }
         }
