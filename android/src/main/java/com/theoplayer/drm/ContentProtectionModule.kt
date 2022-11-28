@@ -56,6 +56,10 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
   fun registerContentProtectionIntegration(integrationId: String, keySystemIdStr: String) {
     val keySystemId = KeySystemAdapter.fromString(keySystemIdStr)
     if (keySystemId != null) {
+      // We only support Widevine currently.
+      if (keySystemId != KeySystemId.WIDEVINE) {
+        return
+      }
       handler.post {
         val factory = ProxyContentProtectionIntegrationFactory(integrationId, keySystemId, this)
         THEOplayerGlobal.getSharedInstance(context.applicationContext)
