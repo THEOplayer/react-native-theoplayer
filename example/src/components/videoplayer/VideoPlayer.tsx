@@ -8,6 +8,10 @@ import {
   findTextTrackByUid,
   LoadedMetadataEvent,
   MediaTrack,
+  MediaTrackEvent,
+  MediaTrackEventType,
+  MediaTrackListEvent,
+  MediaTrackType,
   PlayerConfiguration,
   PlayerError,
   ProgressEvent,
@@ -137,13 +141,12 @@ export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerStat
     switch (data.type) {
       case TrackListEventType.AddTrack:
         this.setState({ textTracks: addTextTrack(textTracks, track) });
-        console.log(TAG, 'Added text track', track.uid);
         break;
       case TrackListEventType.RemoveTrack:
         this.setState({ textTracks: removeTextTrack(textTracks, track) });
-        console.log(TAG, 'Removed text track', track.uid);
         break;
     }
+    console.log(TAG, `onTextTrackListEvent: ${stringFromTextTrackListEvent(data.type)} track`, track.uid);
   };
 
   private onTextTrackEvent = (data: TextTrackEvent) => {
@@ -162,6 +165,24 @@ export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerStat
         removeTextTrackCue(track, cue);
         break;
     }
+  };
+
+  private onMediaTrackListEvent = (data: MediaTrackListEvent) => {
+    const { type, track, trackType } = data;
+    const trackTypeStr = trackType === MediaTrackType.Video ? 'video' : 'audio';
+    console.log(TAG, `onMediaTrackListEvent: ${stringFromTextTrackListEvent(type)} for ${trackTypeStr} track`, track.uid);
+  };
+
+  private onMediaTrackEvent = (data: MediaTrackEvent) => {
+    const { trackType, trackUid } = data;
+    let typeStr;
+    const trackTypeStr = trackType === MediaTrackType.Video ? 'video' : 'audio';
+    switch (data.type) {
+      case MediaTrackEventType.ActiveQualityChanged:
+        typeStr = 'ActiveQualityChanged';
+        break;
+    }
+    console.log(TAG, `onMediaTrackEvent: ${typeStr} ${trackTypeStr} track`, trackUid, data.qualities);
   };
 
   private onAdEvent = (data: AdEvent) => {
@@ -293,6 +314,8 @@ export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerStat
           onDurationChange={this.onDurationChange}
           onTextTrackListEvent={this.onTextTrackListEvent}
           onTextTrackEvent={this.onTextTrackEvent}
+          onMediaTrackListEvent={this.onMediaTrackListEvent}
+          onMediaTrackEvent={this.onMediaTrackEvent}
           onAdEvent={this.onAdEvent}
         />
 
@@ -333,5 +356,16 @@ export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerStat
         )}
       </View>
     );
+  }
+}
+
+function stringFromTextTrackListEvent(type: TrackListEventType): string {
+  switch (type) {
+    case TrackListEventType.AddTrack:
+      return 'AddTrack';
+    case TrackListEventType.RemoveTrack:
+      return 'RemoveTrack';
+    case TrackListEventType.ChangeTrack:
+      return 'ChangeTrack';
   }
 }

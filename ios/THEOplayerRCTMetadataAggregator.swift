@@ -43,6 +43,7 @@ class THEOplayerRCTMetadataAggregator {
         ]
     }
 
+    // MARK: TEXTTRACKS
     class func aggregatedTextTrackListInfo(textTracks: TextTrackList) -> [[String:Any]] {
         var textTrackEntries:[[String:Any]] = []
         guard textTracks.count > 0 else {
@@ -76,58 +77,6 @@ class THEOplayerRCTMetadataAggregator {
         return entry
     }
     
-    class func aggregatedTextTrackCueInfo(textTrackCue: TextTrackCue) -> [String:Any] {
-        var entry: [String:Any] = [:]
-        entry[PROP_ID] = textTrackCue.id
-        entry[PROP_UID] = textTrackCue.uid
-        entry[PROP_STARTTIME] = (textTrackCue.startTime ?? 0) * 1000
-        entry[PROP_ENDTIME] = (textTrackCue.endTime ?? 0) * 1000
-        entry[PROP_CUE_CONTENT] = textTrackCue.contentString
-        return entry
-    }
-
-    private class func aggregatedAudioTrackListInfo(audioTracks: AudioTrackList) -> [[String:Any]] {
-        var audioTrackEntries:[[String:Any]] = []
-        guard audioTracks.count > 0 else {
-            return audioTrackEntries
-        }
-        for i in 0...audioTracks.count-1 {
-            let audioTrack: MediaTrack = audioTracks.get(i)
-            var entry: [String:Any] = [:]
-            entry[PROP_ID] = audioTrack.id
-            entry[PROP_UID] = audioTrack.uid
-            entry[PROP_KIND] = audioTrack.kind
-            entry[PROP_LANGUAGE] = audioTrack.language
-            entry[PROP_LABEL] = audioTrack.label
-            entry[PROP_QUALITIES] = []          // empty: qualities are not being exposed on iOS
-            //entry[PROP_ACTIVE_QUALITY] =      // undefined: qualities are not being exposed on iOS
-            //entry[PROP_TARGET_QUALITY] =      // undefined: qualities are not being exposed on iOS
-            audioTrackEntries.append(entry)
-        }
-        return audioTrackEntries
-    }
-
-    private class func aggregatedVideoTrackListInfo(videoTracks: VideoTrackList) -> [[String:Any]] {
-        var videoTrackEntries:[[String:Any]] = []
-        guard videoTracks.count > 0 else {
-            return videoTrackEntries
-        }
-        for i in 0...videoTracks.count-1 {
-            let videoTrack: MediaTrack = videoTracks.get(i)
-            var entry: [String:Any] = [:]
-            entry[PROP_ID] = videoTrack.id
-            entry[PROP_UID] = videoTrack.uid
-            entry[PROP_KIND] = videoTrack.kind
-            entry[PROP_LANGUAGE] = videoTrack.language
-            entry[PROP_LABEL] = videoTrack.label
-            entry[PROP_QUALITIES] = []          // empty: qualities are not being exposed on iOS
-            //entry[PROP_ACTIVE_QUALITY] =      // undefined: qualities are not being exposed on iOS
-            //entry[PROP_TARGET_QUALITY] =      // undefined: qualities are not being exposed on iOS
-            videoTrackEntries.append(entry)
-        }
-        return videoTrackEntries
-    }
-
     private class func selectedTextTrack(textTracks: TextTrackList) -> Int {
         guard textTracks.count > 0 else {
             return 0
@@ -140,7 +89,45 @@ class THEOplayerRCTMetadataAggregator {
         }
         return 0
     }
+    
+    // MARK: TEXTTRACK CUES
+    class func aggregatedTextTrackCueInfo(textTrackCue: TextTrackCue) -> [String:Any] {
+        var entry: [String:Any] = [:]
+        entry[PROP_ID] = textTrackCue.id
+        entry[PROP_UID] = textTrackCue.uid
+        entry[PROP_STARTTIME] = (textTrackCue.startTime ?? 0) * 1000
+        entry[PROP_ENDTIME] = (textTrackCue.endTime ?? 0) * 1000
+        entry[PROP_CUE_CONTENT] = textTrackCue.contentString
+        return entry
+    }
 
+    // MARK: AUDIOTRACKS
+    private class func aggregatedAudioTrackListInfo(audioTracks: AudioTrackList) -> [[String:Any]] {
+        var audioTrackEntries:[[String:Any]] = []
+        guard audioTracks.count > 0 else {
+            return audioTrackEntries
+        }
+        for i in 0...audioTracks.count-1 {
+            if let audioTrack: AudioTrack = audioTracks.get(i) as? AudioTrack {
+                audioTrackEntries.append(THEOplayerRCTMetadataAggregator.aggregatedAudioTrackInfo(audioTrack: audioTrack))
+            }
+        }
+        return audioTrackEntries
+    }
+    
+    class func aggregatedAudioTrackInfo(audioTrack: AudioTrack) -> [String:Any] {
+        var entry: [String:Any] = [:]
+        entry[PROP_ID] = audioTrack.id
+        entry[PROP_UID] = audioTrack.uid
+        entry[PROP_KIND] = audioTrack.kind
+        entry[PROP_LANGUAGE] = audioTrack.language
+        entry[PROP_LABEL] = audioTrack.label
+        entry[PROP_QUALITIES] = []          // empty: qualities are not being exposed on iOS
+        //entry[PROP_ACTIVE_QUALITY] =      // undefined: qualities are not being exposed on iOS
+        //entry[PROP_TARGET_QUALITY] =      // undefined: qualities are not being exposed on iOS
+        return entry
+    }
+    
     private class func selectedAudioTrack(audioTracks: AudioTrackList) -> Int {
         guard audioTracks.count > 0 else {
             return 0
@@ -152,6 +139,33 @@ class THEOplayerRCTMetadataAggregator {
             }
         }
         return 0
+    }
+
+    // MARK: VIDEOTRACKS
+    private class func aggregatedVideoTrackListInfo(videoTracks: VideoTrackList) -> [[String:Any]] {
+        var videoTrackEntries:[[String:Any]] = []
+        guard videoTracks.count > 0 else {
+            return videoTrackEntries
+        }
+        for i in 0...videoTracks.count-1 {
+            if let videoTrack: VideoTrack = videoTracks.get(i) as? VideoTrack {
+                videoTrackEntries.append(THEOplayerRCTMetadataAggregator.aggregatedVideoTrackInfo(videoTrack: videoTrack))
+            }
+        }
+        return videoTrackEntries
+    }
+    
+    class func aggregatedVideoTrackInfo(videoTrack: VideoTrack) -> [String:Any] {
+        var entry: [String:Any] = [:]
+        entry[PROP_ID] = videoTrack.id
+        entry[PROP_UID] = videoTrack.uid
+        entry[PROP_KIND] = videoTrack.kind
+        entry[PROP_LANGUAGE] = videoTrack.language
+        entry[PROP_LABEL] = videoTrack.label
+        entry[PROP_QUALITIES] = []          // empty: qualities are not being exposed on iOS
+        //entry[PROP_ACTIVE_QUALITY] =      // undefined: qualities are not being exposed on iOS
+        //entry[PROP_TARGET_QUALITY] =      // undefined: qualities are not being exposed on iOS
+        return entry
     }
 
     private class func selectedVideoTrack(videoTracks: VideoTrackList) -> Int {

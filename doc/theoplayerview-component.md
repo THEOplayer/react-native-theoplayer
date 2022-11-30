@@ -41,31 +41,35 @@ The `THEOplayerView` component supports the following list of properties.
 
 In addition, this set of properties accept callbacks that listen for player events.
 
-| Property                        | Invoked                                                                                                                    | Platforms |
-|---------------------------------|----------------------------------------------------------------------------------------------------------------------------|-----------|
-| `onFullscreenPlayerWillPresent` | Before the player goes to fullscreen.                                                                                      | All       |
-| `onFullscreenPlayerDidPresent`  | After the player went to fullscreen.                                                                                       | All       |
-| `onFullscreenPlayerWillDismiss` | Before the player returns from fullscreen.                                                                                 | All       |
-| `onFullscreenPlayerDidDismiss`  | After the player returned from fullscreen.                                                                                 | All       |
-| `onBufferingStateChange`        | When the player's buffering state has changed.                                                                             | All       |
-| `onSourceChange`                | When the player receives a new source description.                                                                         | All       |
-| `onLoadStart`                   | When the player starts loading the manifest.                                                                               | All       |
-| `onLoadedMetadata`              | When the player has determined the duration and dimensions of the media resource, and the text and media tracks are ready. | All       |
-| `onLoadedData`                  | When the player can render the media data at the current playback position for the first time.                             | All       |
-| `onReadyStateChange`            | When the player's readyState has changed.                                                                                  | All       |
-| `onError`                       | When an error occurs.                                                                                                      | All       |
-| `onProgress`                    | Each time the player has loaded media data.                                                                                | All       |
-| `onPlay`                        | When the player's internal paused state changes to `false`.                                                                | All       |
-| `onPlaying`                     | When playback is ready to start after having been paused or delayed due to lack of media data.                             | All       |
-| `onPause`                       | When the player's internal paused state changes to `true`.                                                                 | All       |
-| `onSeeking`                     | When a seek operation starts and the player is seeking a new position.                                                     | All       |
-| `onSeeked`                      | When a seek operation completed and the current playback position has changed.                                             | All       |
-| `onEnded`                       | When playback has stopped because the end of the media was reached or because no further data is available.                | All       |
-| `onTimeUpdate`                  | Each time the current playback position changed.                                                                           | All       |
-| `onDurationChange`              | When the player's duration attribute has been updated.                                                                     | All       |
-| `onSegmentNotFound`             | When a segment can not be found.                                                                                           | All       |
-| `onTextTrackListEvent`          | When a text track list event occurs.                                                                                       | All       |
-| `onTextTrackEvent`              | When a text track event occurs.                                                                                            | All       |
+| Property                        | Invoked                                                                                                                    | Platforms     |
+|---------------------------------|----------------------------------------------------------------------------------------------------------------------------|---------------|
+| `onFullscreenPlayerWillPresent` | Before the player goes to fullscreen.                                                                                      | All           |
+| `onFullscreenPlayerDidPresent`  | After the player went to fullscreen.                                                                                       | All           |
+| `onFullscreenPlayerWillDismiss` | Before the player returns from fullscreen.                                                                                 | All           |
+| `onFullscreenPlayerDidDismiss`  | After the player returned from fullscreen.                                                                                 | All           |
+| `onBufferingStateChange`        | When the player's buffering state has changed.                                                                             | All           |
+| `onSourceChange`                | When the player receives a new source description.                                                                         | All           |
+| `onLoadStart`                   | When the player starts loading the manifest.                                                                               | All           |
+| `onLoadedMetadata`              | When the player has determined the duration and dimensions of the media resource, and the text and media tracks are ready. | All           |
+| `onLoadedData`                  | When the player can render the media data at the current playback position for the first time.                             | All           |
+| `onReadyStateChange`            | When the player's readyState has changed.                                                                                  | All           |
+| `onError`                       | When an error occurs.                                                                                                      | All           |
+| `onProgress`                    | Each time the player has loaded media data.                                                                                | All           |
+| `onPlay`                        | When the player's internal paused state changes to `false`.                                                                | All           |
+| `onPlaying`                     | When playback is ready to start after having been paused or delayed due to lack of media data.                             | All           |
+| `onPause`                       | When the player's internal paused state changes to `true`.                                                                 | All           |
+| `onSeeking`                     | When a seek operation starts and the player is seeking a new position.                                                     | All           |
+| `onSeeked`                      | When a seek operation completed and the current playback position has changed.                                             | All           |
+| `onEnded`                       | When playback has stopped because the end of the media was reached or because no further data is available.                | All           |
+| `onTimeUpdate`                  | Each time the current playback position changed.                                                                           | All           |
+| `onDurationChange`              | When the player's duration attribute has been updated.                                                                     | All           |
+| `onSegmentNotFound`             | When a segment can not be found.                                                                                           | All           |
+| `onTextTrackListEvent`          | When a text track list event occurs.                                                                                       | All           |
+| `onTextTrackEvent`              | When a text track event occurs.                                                                                            | All           |
+| `onMediaTrackListEvent`         | When a media track list event occurs.                                                                                      | All           |
+| `onMediaTrackEvent`             | When a media track event occurs. (*)                                                                                          | Android & Web |
+
+(*) Media quality change event. Not available on iOS systems.
 
 ### Configuration
 
@@ -162,8 +166,9 @@ The text tracks and media tracks available in the stream are provided once the
   };
 ```
 
-The `onTextTrackListEvent` callback can be used to dynamically listen to text tracks that are being added or removed.
-Similarly, for text track cues, the `onTextTrackEvent` callback provides knowledge on cues being added or removed.
+The `onTextTrackListEvent` callback can be used to dynamically listen to text tracks that are being added, removed or changed. Similarly, for text track cues, the `onTextTrackEvent` callback provides knowledge on cues being added or removed. 
+
+The `onMediaTrackListEvent` callback is available to listen to audio and video tracks (being added, removed or changed). On Android and Web, media tracks trigger the `onMediaTrackEvent` callback with information on quality changes. This information is not available on iOS systems.
 
 ### Preview thumbnails
 

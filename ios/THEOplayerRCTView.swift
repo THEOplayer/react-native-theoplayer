@@ -9,6 +9,7 @@ class THEOplayerRCTView: UIView {
     private var player: THEOplayer?
     private var mainEventHandler: THEOplayerRCTViewMainEventHandler
     private var textTrackEventHandler: THEOplayerRCTViewTextTrackEventHandler
+    private var mediaTrackEventHandler: THEOplayerRCTViewMediaTrackEventHandler
     private var adEventHandler: THEOplayerRCTViewAdEventHandler
     
     // MARK: Bridged props
@@ -34,6 +35,7 @@ class THEOplayerRCTView: UIView {
         // create event handlers to maintain event props
         self.mainEventHandler = THEOplayerRCTViewMainEventHandler()
         self.textTrackEventHandler = THEOplayerRCTViewTextTrackEventHandler()
+        self.mediaTrackEventHandler = THEOplayerRCTViewMediaTrackEventHandler()
         self.adEventHandler = THEOplayerRCTViewAdEventHandler()
         
         super.init(frame: .zero)
@@ -42,6 +44,7 @@ class THEOplayerRCTView: UIView {
     func destroy() {
         self.mainEventHandler.destroy()
         self.textTrackEventHandler.destroy()
+        self.mediaTrackEventHandler.destroy()
         self.adEventHandler.destroy()
         self.player?.destroy()
         self.player = nil
@@ -106,6 +109,7 @@ class THEOplayerRCTView: UIView {
                 // couple player instance to event handlers
                 self.mainEventHandler.setPlayer(player)
                 self.textTrackEventHandler.setPlayer(player)
+                self.mediaTrackEventHandler.setPlayer(player)
                 self.adEventHandler.setPlayer(player)
                 // couple player instance to view
                 player.addAsSubview(of: self)
@@ -473,6 +477,20 @@ class THEOplayerRCTView: UIView {
     func setOnNativeTextTrackEvent(nativeTextTrackEvent: @escaping RCTDirectEventBlock) {
         self.textTrackEventHandler.onNativeTextTrackEvent = nativeTextTrackEvent
         if DEBUG_PROP_UPDATES  { print("[NATIVE] nativeTextTrackEvent prop set.") }
+    }
+    
+    // MARK: - Listener based MEDIATRACK event bridging
+    
+    @objc(setOnNativeMediaTrackListEvent:)
+    func setOnNativeMediaTrackListEvent(nativeMediaTrackListEvent: @escaping RCTDirectEventBlock) {
+        self.mediaTrackEventHandler.onNativeMediaTrackListEvent = nativeMediaTrackListEvent
+        if DEBUG_PROP_UPDATES  { print("[NATIVE] nativeMediaTrackListEvent prop set.") }
+    }
+    
+    @objc(setOnNativeMediaTrackEvent:)
+    func setOnNativeMediaTrackEvent(nativeMediaTrackEvent: @escaping RCTDirectEventBlock) {
+        self.mediaTrackEventHandler.onNativeMediaTrackEvent = nativeMediaTrackEvent
+        if DEBUG_PROP_UPDATES  { print("[NATIVE] nativeMediaTrackEvent prop set.") }
     }
     
     // MARK: - Listener based AD event bridging
