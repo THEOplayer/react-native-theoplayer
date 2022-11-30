@@ -4,7 +4,9 @@ import { VideoPlayer } from './components/videoplayer/VideoPlayer';
 import type { PlayerConfiguration } from 'react-native-theoplayer';
 
 const playerConfig: PlayerConfiguration = {
-  license: undefined, // Get your THEOplayer license from https://portal.theoplayer.com/
+  // Get your THEOplayer license from https://portal.theoplayer.com/
+  // Without a license, only demo sources hosted on '*.theoplayer.com' domains can be played.
+  license: undefined,
   chromeless: true,
   cast: {
     chromecast: {
