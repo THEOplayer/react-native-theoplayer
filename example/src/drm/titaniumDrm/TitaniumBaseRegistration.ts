@@ -1,10 +1,10 @@
 import { isDeviceBasedTitaniumDRMConfiguration, isTokenBasedTitaniumDRMConfiguration } from './TitaniumUtils';
 import type { DeviceBasedTitaniumIntegrationParameters } from './TitaniumIntegrationParameters';
 import type { TitaniumDrmConfiguration } from './TitaniumDrmConfiguration';
-import type { ContentProtectionError } from 'theoplayer';
-import { ErrorCode } from 'theoplayer';
 import { getDeviceType, getManufacturerSync, getModel, getReadableVersion, getSystemName, getSystemVersion } from 'react-native-device-info';
 import { fromObjectToBase64String } from 'react-native-theoplayer';
+
+const CONTENT_PROTECTION_CONFIGURATION_INVALID = 7003;
 
 export interface TitaniumDeviceAuthorizationData {
   LatensRegistration: TitaniumLatensRegistration;
@@ -99,10 +99,7 @@ export function getTitaniumDeviceAuthorizationData(
   };
 }
 
-export function createErrorForMalformedDeviceInfoConfiguration(
-  configuration: TitaniumDrmConfiguration,
-  cdmType: TitaniumCDMType,
-): ContentProtectionError {
+export function createErrorForMalformedDeviceInfoConfiguration(configuration: TitaniumDrmConfiguration, cdmType: TitaniumCDMType) {
   let message = `Invalid Titanium ${cdmType} DRM configuration.`;
   if (!configuration.integrationParameters.accountName) {
     message = `Invalid Titanium ${cdmType} DRM configuration, accountName is not set.`;
@@ -112,20 +109,20 @@ export function createErrorForMalformedDeviceInfoConfiguration(
     message = `Invalid Titanium ${cdmType} DRM configuration, portalId is not set.`;
   }
   throw {
-    code: ErrorCode.CONTENT_PROTECTION_CONFIGURATION_INVALID,
+    code: CONTENT_PROTECTION_CONFIGURATION_INVALID,
     message: message,
-  } as ContentProtectionError;
+  };
 }
 
-export function createErrorForMalformedTokenConfiguration(configuration: TitaniumDrmConfiguration, cdmType: TitaniumCDMType): ContentProtectionError {
+export function createErrorForMalformedTokenConfiguration(configuration: TitaniumDrmConfiguration, cdmType: TitaniumCDMType) {
   let message = `Invalid Titanium ${cdmType} DRM configuration.`;
   if (!configuration.integrationParameters.authToken) {
     message = `Invalid Titanium ${cdmType} DRM configuration, authToken is not set.`;
   }
   throw {
-    code: ErrorCode.CONTENT_PROTECTION_CONFIGURATION_INVALID,
+    code: CONTENT_PROTECTION_CONFIGURATION_INVALID,
     message: message,
-  } as ContentProtectionError;
+  };
 }
 
 export function createTitaniumAuthHeader(configuration: TitaniumDrmConfiguration, cdmType: TitaniumCDMType): string {
