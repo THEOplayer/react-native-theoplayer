@@ -57,7 +57,7 @@ class CastEventAdapter(private val castApi: Cast, private val emitter: Emitter) 
         null -> ""
       }
     )
-    errorPayload.putString(EVENT_PROP_ERROR_DESCRIPTION, error.description);
+    errorPayload.putString(EVENT_PROP_ERROR_DESCRIPTION, error.description)
     return errorPayload
   }
 
