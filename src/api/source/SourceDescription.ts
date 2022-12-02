@@ -10,6 +10,7 @@ import type { DashPlaybackConfiguration } from './dash/DashPlaybackConfiguration
 import type { DRMConfiguration } from './drm/DRMConfiguration';
 import type { HlsPlaybackConfiguration } from './hls/HlsPlaybackConfiguration';
 import type { AdDescription } from './ads/Ads';
+import type { MetadataDescription } from './metadata/MetadataDescription';
 import type { ServerSideAdInsertionConfiguration } from "./ads/ssai/ServerSideAdInsertionConfiguration";
 
 export type Source = TypedSource;
@@ -79,6 +80,13 @@ export interface SourceConfiguration {
    * <br/> - All sources will use the time server. Alternatively, for one source use {@link BaseSource.timeServer}.
    */
   timeServer?: string;
+
+  /**
+   * Describes the metadata of a source.
+   *
+   * @public
+   */
+  metadata?: MetadataDescription;
 }
 
 /**
