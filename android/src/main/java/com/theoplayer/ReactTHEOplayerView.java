@@ -383,9 +383,23 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
     if (player != null) {
       final boolean playerIsPaused = player.isPaused();
       if (!paused && playerIsPaused) {
-        player.play();
+        applyPaused(false);
       } else if (paused && (!playerIsPaused || adsApi.isPlaying())) {
+        applyPaused(true);
+      } else {
+        // The player's paused state is out-of-sync, this shouldn't happen.
+        Log.w(TAG, "paused stated out-of-sync");
+        applyPaused(paused);
+      }
+    }
+  }
+
+  private void applyPaused(boolean paused) {
+    if (player != null) {
+      if (paused) {
         player.pause();
+      } else {
+        player.play();
       }
     }
   }
