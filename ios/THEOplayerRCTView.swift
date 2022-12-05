@@ -17,9 +17,6 @@ class THEOplayerRCTView: UIView {
     private var license: String?
     private var licenseUrl: String?
     private var chromeless: Bool = true
-    private var adSUIEnabled: Bool = true
-    private var adPreloadType: THEOplayerSDK.AdPreloadType = THEOplayerSDK.AdPreloadType.MIDROLL_AND_POSTROLL
-    private var googleImaUsesNativeIma: Bool = true
     private var config: THEOplayerConfiguration?
     private var paused: Bool = false
     private var muted: Bool = true
@@ -29,6 +26,13 @@ class THEOplayerRCTView: UIView {
     private var selectedAudioTrackUid: Int = 0
     private var seek: Double? = nil                  // in msec
     private var fullscreen: Bool = false
+    
+#if ADS && (GOOGLE_IMA || GOOGLE_DAI)
+    private var adSUIEnabled: Bool = true
+    private var adPreloadType: THEOplayerSDK.AdPreloadType = THEOplayerSDK.AdPreloadType.MIDROLL_AND_POSTROLL
+    private var googleImaUsesNativeIma: Bool = true
+#endif
+    
     
     // MARK: - Initialisation / view setup
     init() {
@@ -165,6 +169,7 @@ class THEOplayerRCTView: UIView {
         self.license = configDict["license"] as? String
         self.licenseUrl = configDict["licenseUrl"] as? String
         self.chromeless = configDict["chromeless"] as? Bool ?? true
+#if ADS && (GOOGLE_IMA || GOOGLE_DAI)
         if let adsConfig = configDict["ads"] as? NSDictionary {
             self.adSUIEnabled = adsConfig["uiEnabled"] as? Bool ?? true
             if let adPreloadType = adsConfig["preload"] as? String {
@@ -174,6 +179,7 @@ class THEOplayerRCTView: UIView {
                 self.googleImaUsesNativeIma = googleImaConfiguration["useNativeIma"] as? Bool ?? true
             }
         }
+#endif
         if DEBUG_PROP_UPDATES  { print("[NATIVE] config prop updated.") }
     }
     
