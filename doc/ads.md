@@ -27,7 +27,7 @@ First enable Google IMA support, which requires a different approach on each pla
 <summary>Android/AndroidTV</summary>
 
 The Android SDK is modular-based, so enabling Google IMA is limited to including
-the ima extension in gradle by enabling this flag in your `gradle.properties`:
+the ima extension in gradle by setting this flag in your `gradle.properties`:
 
 ```
 # Enable THEOplayer Extensions (default: disabled)
