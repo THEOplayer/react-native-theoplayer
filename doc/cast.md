@@ -101,6 +101,33 @@ useEffect(() => {
 The [example app](./example-app.md) uses strategy `auto` so the player will automatically
 send its source description when a session is created.
 
+#### Providing metadata
+
+The `metadata` object, as part of the source configuration, is used to send additional information
+to the receiver. Common fields include `poster`, `title`, `subtitle`, `album` and `artist`.
+
+```json
+{
+  "sources": [
+    {
+      "src": "https://cdn.theoplayer.com/video/dash/bbb_30fps/bbb_with_multiple_tiled_thumbnails.mpd",
+      "type": "application/dash+xml"
+    }
+  ],
+  "poster": "https://cdn.theoplayer.com/video/big_buck_bunny/poster.jpg",
+  "metadata": {
+    "title": "Big Buck Bunny",
+    "subtitle": "a Peach Open Movie Project",
+    "album": "React-Native THEOplayer demos",
+    "artist": "THEOplayer"
+  }
+}
+```
+
+| ![Chromecast](./chromecast.png) |
+|---------------------------------|
+| Casting a stream with metadata. |
+
 ### Airplay
 
 TODO
