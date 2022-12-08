@@ -273,25 +273,15 @@ class THEOplayerRCTSourceDescriptionBuilder {
      - returns: a THEOplayer valid contentProtection data map
      */
     private static func sanitiseContentProtectionData(_ contentProtectionData: [String:Any]) -> [String:Any] {
-        var sanitisedContentProtectionData: [String:Any] = [:]
-        // integration
-        let sanitisedIntegration = contentProtectionData[SD_PROP_INTEGRATION] as? String
-        sanitisedContentProtectionData[SD_PROP_INTEGRATION] = sanitisedIntegration
-        // integrationParameters
-        let sanitisedIntegrationParameters = contentProtectionData[SD_PROP_INTEGRATION_PARAMETERS] as? [String:Any]
-        sanitisedContentProtectionData[SD_PROP_INTEGRATION_PARAMETERS] = sanitisedIntegrationParameters
-        // headers
-        if let headers = contentProtectionData[SD_PROP_HEADERS] as? [String:String] {
-            sanitisedContentProtectionData[SD_PROP_HEADERS] = headers
-        }
-        // fairplay
+        var sanitisedContentProtectionData: [String:Any] = contentProtectionData
+        // fairplay update
         if let fairplayData = contentProtectionData[SD_PROP_FAIRPLAY] as? [String:Any] {
             var sanitisedFairplayData: [String:Any] = [:]
             // certificateUrl
             if let certificateUrl = fairplayData[SD_PROP_CERTIFICATE_URL] as? String {
                 sanitisedFairplayData[SD_PROP_CERTIFICATE_URL] = certificateUrl
             }
-            // convert certifiate into certificteUrl with marker prefix (also supported by THEOplayer Web SDK
+            // convert certificate into certificateUrl with marker prefix (also supported by THEOplayer Web SDK)
             if let certificate = fairplayData[SD_PROP_CERTIFICATE] as? String {
                 sanitisedFairplayData[SD_PROP_CERTIFICATE_URL] = "\(CERTIFICATE_MARKER)\(certificate)"
             }
@@ -309,14 +299,14 @@ class THEOplayerRCTSourceDescriptionBuilder {
             }
             sanitisedContentProtectionData[SD_PROP_FAIRPLAY] = sanitisedFairplayData
         }
-        // widevine
+        // widevine update
         if let widevineData = contentProtectionData[SD_PROP_WIDEVINE] as? [String:Any] {
             var sanitisedWidevineData: [String:Any] = [:]
             // certificateUrl
             if let certificateUrl = widevineData[SD_PROP_CERTIFICATE_URL] as? String {
                 sanitisedWidevineData[SD_PROP_CERTIFICATE_URL] = certificateUrl
             }
-            // convert certifiate into certificteUrl with marker prefix (also supported by THEOplayer Web SDK
+            // convert certificate into certificateUrl with marker prefix (also supported by THEOplayer Web SDK)
             if let certificate = widevineData[SD_PROP_CERTIFICATE] as? String {
                 sanitisedWidevineData[SD_PROP_CERTIFICATE_URL] = "\(CERTIFICATE_MARKER)\(certificate)"
             }
