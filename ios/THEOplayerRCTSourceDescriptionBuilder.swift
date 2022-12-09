@@ -169,7 +169,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
                                drm: contentProtection)
         }
 
-#if ADS && GOOGLE_DAI
+#if os(iOS) && ADS && GOOGLE_DAI
         // check for alternative Google DAI SSAI
         if let ssaiData = typedSourceData[SD_PROP_SSAI] as? [String:Any] {
             if let integration = ssaiData[SD_PROP_INTEGRATION] as? String,

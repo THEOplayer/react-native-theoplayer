@@ -27,12 +27,11 @@ class THEOplayerRCTView: UIView {
     private var seek: Double? = nil                  // in msec
     private var fullscreen: Bool = false
     
-#if ADS && (GOOGLE_IMA || GOOGLE_DAI)
+#if os(iOS) && ADS && (GOOGLE_IMA || GOOGLE_DAI)
     private var adSUIEnabled: Bool = true
-    private var adPreloadType: THEOplayerSDK.AdPreloadType = THEOplayerSDK.AdPreloadType.MIDROLL_AND_POSTROLL
     private var googleImaUsesNativeIma: Bool = true
+    private var adPreloadType: AdPreloadType = .MIDROLL_AND_POSTROLL
 #endif
-    
     
     // MARK: - Initialisation / view setup
     init() {
@@ -126,6 +125,7 @@ class THEOplayerRCTView: UIView {
         if DEBUG_THEOPLAYER_INTERACTION { print("[NATIVE] 'lazy' init THEOplayer instance") }
 #if os(tvOS)
         self.player = THEOplayer(configuration: THEOplayerConfiguration(chromeless: self.chromeless,
+                                                                        ads: self.initAdsConfiguration(),
                                                                         license: self.license,
                                                                         licenseUrl: self.licenseUrl,
                                                                         pip: nil))
@@ -140,19 +140,20 @@ class THEOplayerRCTView: UIView {
                                                                         licenseUrl: self.licenseUrl))
 #endif
     }
-    
+
     private func initAdsConfiguration() -> AdsConfiguration? {
-#if ADS && (GOOGLE_IMA || GOOGLE_DAI)
+#if os(iOS) && ADS && (GOOGLE_IMA || GOOGLE_DAI)
         let googleIMAConfiguration = GoogleIMAConfiguration()
         googleIMAConfiguration.useNativeIma = self.googleImaUsesNativeIma
         googleIMAConfiguration.disableUI = !self.adSUIEnabled
         return AdsConfiguration(showCountdown: self.adSUIEnabled,
                                 preload: self.adPreloadType,
                                 googleImaConfiguration: googleIMAConfiguration)
+#elseif os(tvOS) && ADS && GOOGLE_IMA
+        return AdsConfiguration()
 #else
         return nil
 #endif
-        
     }
     
     private func syncPlayerSrc() {
@@ -169,7 +170,7 @@ class THEOplayerRCTView: UIView {
         self.license = configDict["license"] as? String
         self.licenseUrl = configDict["licenseUrl"] as? String
         self.chromeless = configDict["chromeless"] as? Bool ?? true
-#if ADS && (GOOGLE_IMA || GOOGLE_DAI)
+#if os(iOS) && ADS && (GOOGLE_IMA || GOOGLE_DAI)
         if let adsConfig = configDict["ads"] as? NSDictionary {
             self.adSUIEnabled = adsConfig["uiEnabled"] as? Bool ?? true
             if let adPreloadType = adsConfig["preload"] as? String {

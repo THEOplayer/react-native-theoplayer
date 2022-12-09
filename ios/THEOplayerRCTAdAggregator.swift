@@ -58,7 +58,11 @@ class THEOplayerRCTAdAggregator {
            let adBreak = ad.adBreak {
             adData[PROP_AD_BREAK] = THEOplayerRCTAdAggregator.aggregateAdBreak(adBreak: adBreak)
         }
+        
+#if os(iOS)
         adData[PROP_AD_COMPANIONS] = THEOplayerRCTAdAggregator.aggregateCompanionAds(companionAds: ad.companions)
+#endif
+        
         adData[PROP_AD_UNIVERSAL_AD_IDS] = []
         
         // Add additional properties for Linear Ads
@@ -69,11 +73,13 @@ class THEOplayerRCTAdAggregator {
         }
         
         // Add additional properties for NonLinear Ads
+#if os(iOS)
         if let nonLinearAd = ad as? NonLinearAd {
             if let adClickThrough = nonLinearAd.clickThrough {
                 adData[PROP_AD_CLICK_THROUGH] = adClickThrough
             }
         }
+#endif
 
         // Add additional properties for GoogleIma Ads
         if let googleImaAd = ad as? GoogleImaAd {
