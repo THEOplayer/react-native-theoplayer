@@ -64,6 +64,7 @@ and discussed in the next section. Finally, an overview of features, limitations
 - [The example application with React Native UI](./doc/example-app.md)
 - [Features](./doc/features.md)
 - Knowledge Base
+  - [Adaptive Bitrate (ABR)](./doc/abr.md)
   - [Advertisements](./doc/ads.md)
   - [Custom iOS framework](./doc/custom-ios-framework.md)
   - [Digital Rights Management (DRM)](./doc/drm.md)
