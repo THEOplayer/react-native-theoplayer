@@ -30,7 +30,7 @@ class THEOplayerRCTView: UIView {
 #if os(iOS) && ADS && (GOOGLE_IMA || GOOGLE_DAI)
     private var adSUIEnabled: Bool = true
     private var googleImaUsesNativeIma: Bool = true
-    private var adPreloadType: AdPreloadType = .MIDROLL_AND_POSTROLL
+    private var adPreloadType: THEOplayerSDK.AdPreloadType = .MIDROLL_AND_POSTROLL
 #endif
     
     // MARK: - Initialisation / view setup
