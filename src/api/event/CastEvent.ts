@@ -1,45 +1,39 @@
-import type { CastState, ChromecastError } from 'react-native-theoplayer';
+import type { CastState, ChromecastError, PlayerEventType } from 'react-native-theoplayer';
+import type { Event } from './Event';
 
-export const CastEventNames = [
+export enum CastEventType {
   /**
    * Dispatched when the ChromeCast state was changed.
    */
-  'chromecaststatechange',
+  CHROMECAST_STATE_CHANGE = 'chromecaststatechange',
 
   /**
    * Dispatched when the Airplay state was changed.
    */
-  'airplaystatechange',
+  AIRPLAY_STATE_CHANGE = 'airplaystatechange',
 
   /**
    * Dispatched when an error occurred when using Chromecast.
    */
-  'chromecasterror',
-] as const;
-
-export type CastEventType = typeof CastEventNames[number];
-
-export interface CastEvent {
-  /**
-   * Type of ad event.
-   */
-  readonly type: CastEventType;
+  CHROMECAST_ERROR = 'chromecasterror',
 }
 
-export interface ChromecastChangeEvent extends CastEvent {
-  readonly type: 'chromecaststatechange';
+export type CastEvent = ChromecastChangeEvent | AirplayStateChangeEvent | ChromecastErrorEvent;
+
+export interface ChromecastChangeEvent extends Event<PlayerEventType.CAST_EVENT> {
+  readonly subType: CastEventType.CHROMECAST_STATE_CHANGE;
 
   readonly state: CastState;
 }
 
-export interface AirplayStateChangeEvent extends CastEvent {
-  readonly type: 'airplaystatechange';
+export interface AirplayStateChangeEvent extends Event<PlayerEventType.CAST_EVENT> {
+  readonly subType: CastEventType.AIRPLAY_STATE_CHANGE;
 
   readonly state: CastState;
 }
 
-export interface ChromecastErrorEvent extends CastEvent {
-  readonly type: 'chromecasterror';
+export interface ChromecastErrorEvent extends Event<PlayerEventType.CAST_EVENT> {
+  readonly subType: CastEventType.CHROMECAST_ERROR;
 
   readonly error: ChromecastError;
 }

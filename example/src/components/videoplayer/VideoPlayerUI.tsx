@@ -1,15 +1,49 @@
 import React, { PureComponent } from 'react';
-import { filterThumbnailTracks } from 'react-native-theoplayer';
+import {
+  addTextTrack,
+  addTextTrackCue,
+  AdEvent,
+  AirplayStateChangeEvent,
+  BufferingChangeEvent,
+  CastEvent,
+  CastEventType,
+  ChromecastChangeEvent,
+  ChromecastErrorEvent,
+  DurationChangeEvent,
+  ErrorEvent,
+  filterThumbnailTracks,
+  findTextTrackByUid,
+  LoadedMetadataEvent,
+  MediaTrackEvent,
+  MediaTrackEventType,
+  MediaTrackListEvent,
+  MediaTrackType,
+  PlayerEventType,
+  ProgressEvent,
+  removeTextTrack,
+  removeTextTrackCue,
+  TextTrackEvent,
+  TextTrackEventType,
+  TextTrackListEvent,
+  TimeUpdateEvent,
+  TrackListEventType,
+} from 'react-native-theoplayer';
 
 import { Image, Platform, Text, TouchableOpacity, View } from 'react-native';
 import { SeekBar } from '../seekbar/SeekBar';
 import styles from './VideoPlayerUI.style';
 import { DelayedActivityIndicator } from '../delayedactivityindicator/DelayedActivityIndicator';
-import { FullScreenIcon, FullScreenExitIcon, PlayButton, MutedIcon, UnMutedIcon, AirplayIcon } from '../../res/images';
+import { AirplayIcon, FullScreenExitIcon, FullScreenIcon, MutedIcon, PlayButton, UnMutedIcon } from '../../res/images';
 import { ActionButton } from '../actionbutton/ActionButton';
 import { TimeLabel } from '../timelabel/TimeLabel';
-import type { VideoPlayerUIProps } from './VideoPlayerUIProps';
-import { THUMBNAIL_MODE, THUMBNAIL_SIZE, ENABLE_QUALITY_MENU, ENABLE_CAST_BUTTON } from './VideoPlayerUIProps';
+import {
+  ENABLE_CAST_BUTTON,
+  ENABLE_QUALITY_MENU,
+  THUMBNAIL_MODE,
+  THUMBNAIL_SIZE,
+  VideoPlayerUIProps,
+  VideoPlayerUIState,
+} from './VideoPlayerUIProps';
 import { ThumbnailView } from '../thumbnail/ThumbnailView';
 import type { SeekBarPosition } from '../seekbar/SeekBarPosition';
 import { VideoQualityMenu } from './VideoQualityMenu';
@@ -18,48 +52,293 @@ import { TextTrackMenu } from './TextTrackMenu';
 import { SourceMenu } from './SourceMenu';
 import { CastButton } from 'react-native-google-cast';
 
-export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
+const TAG = 'VideoPlayerUI';
+
+export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayerUIState> {
+  private static initialState: VideoPlayerUIState = {
+    srcIndex: 0,
+    playbackRate: 1,
+    volume: 1,
+    muted: false,
+    duration: Number.NaN,
+    currentTime: 0.0,
+    seekable: [],
+    paused: true,
+    fullscreen: false,
+    showLoadingIndicator: false,
+    textTracks: [],
+    videoTracks: [],
+    audioTracks: [],
+    selectedTextTrack: undefined,
+    selectedVideoTrack: undefined,
+    targetVideoQuality: undefined,
+    selectedAudioTrack: undefined,
+    error: undefined,
+    message: undefined,
+    airplayIsConnected: false,
+    chromecastIsConnected: false,
+  };
+
   constructor(props: VideoPlayerUIProps) {
     super(props);
+    this.state = VideoPlayerUI.initialState;
+    this.addPlayerEventListeners();
+    this.props.player.source = this.props.sources[this.state.srcIndex].source;
   }
 
+  private addPlayerEventListeners() {
+    const { player } = this.props;
+    player.addEventListener(PlayerEventType.SOURCE_CHANGE, console.log);
+    player.addEventListener(PlayerEventType.LOADED_DATA, console.log);
+    player.addEventListener(PlayerEventType.READYSTATE_CHANGE, console.log);
+    player.addEventListener(PlayerEventType.PLAY, this.onPlay);
+    player.addEventListener(PlayerEventType.PLAYING, console.log);
+    player.addEventListener(PlayerEventType.SEEKING, console.log);
+    player.addEventListener(PlayerEventType.SEEKED, console.log);
+    player.addEventListener(PlayerEventType.ENDED, console.log);
+    player.addEventListener(PlayerEventType.LOAD_START, this.onLoadStart);
+    player.addEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
+    player.addEventListener(PlayerEventType.PAUSE, this.onPause);
+    player.addEventListener(PlayerEventType.TIME_UPDATE, this.onTimeUpdate);
+    player.addEventListener(PlayerEventType.DURATION_CHANGE, this.onDurationChange);
+    player.addEventListener(PlayerEventType.TEXT_TRACK_LIST, this.onTextTrackListEvent);
+    player.addEventListener(PlayerEventType.TEXT_TRACK, this.onTextTrackEvent);
+    player.addEventListener(PlayerEventType.MEDIA_TRACK_LIST, this.onMediaTrackListEvent);
+    player.addEventListener(PlayerEventType.MEDIA_TRACK, this.onMediaTrackEvent);
+    player.addEventListener(PlayerEventType.AD_EVENT, this.onAdEvent);
+    player.addEventListener(PlayerEventType.CAST_EVENT, this.onCastEvent);
+    player.addEventListener(PlayerEventType.PROGRESS, this.onProgress);
+    player.addEventListener(PlayerEventType.ERROR, this.onError);
+    player.addEventListener(PlayerEventType.BUFFERING_CHANGE, this.onBufferingStateChange);
+  }
+
+  private onLoadStart = () => {
+    console.log(TAG, 'loadstart');
+    this.setState({ error: undefined });
+  };
+
+  private onLoadedMetadata = (event: LoadedMetadataEvent) => {
+    // console.log(TAG, 'loadedmetadata', JSON.stringify(data));
+    this.setState({
+      duration: event.duration,
+      textTracks: event.textTracks,
+      audioTracks: event.audioTracks,
+      videoTracks: event.videoTracks,
+      selectedTextTrack: event.selectedTextTrack,
+      selectedVideoTrack: event.selectedVideoTrack,
+      selectedAudioTrack: event.selectedAudioTrack,
+    });
+  };
+
+  private onPlay = () => {
+    console.log(TAG, 'play');
+    this.setState({ paused: false });
+  };
+
+  private onPause = () => {
+    console.log(TAG, 'pause');
+    this.setState({ paused: true });
+  };
+
+  private onTimeUpdate = (event: TimeUpdateEvent) => {
+    const { currentTime, currentProgramDateTime } = event;
+    console.log(TAG, 'timeupdate', currentTime, currentProgramDateTime);
+    this.setState({ currentTime });
+  };
+
+  private onDurationChange = (event: DurationChangeEvent) => {
+    const { duration } = event;
+    console.log(TAG, 'durationchange', duration);
+    this.setState({ duration });
+  };
+
+  private onTextTrackListEvent = (event: TextTrackListEvent) => {
+    const { textTracks } = this.state;
+    const { track } = event;
+    switch (event.subType) {
+      case TrackListEventType.ADD_TRACK:
+        this.setState({ textTracks: addTextTrack(textTracks, track) });
+        break;
+      case TrackListEventType.REMOVE_TRACK:
+        this.setState({ textTracks: removeTextTrack(textTracks, track) });
+        break;
+    }
+    console.log(TAG, `onTextTrackListEvent: ${stringFromTextTrackListEvent(event.subType)} track`, track.uid);
+  };
+
+  private onTextTrackEvent = (event: TextTrackEvent) => {
+    const { textTracks } = this.state;
+    const { trackUid, cue } = event;
+    const track = findTextTrackByUid(textTracks, trackUid);
+    if (!track) {
+      console.warn(TAG, 'onTextTrackCueEvent - Unknown track:', trackUid);
+      return;
+    }
+    switch (event.subType) {
+      case TextTrackEventType.ADD_CUE:
+        addTextTrackCue(track, cue);
+        break;
+      case TextTrackEventType.REMOVE_CUE:
+        removeTextTrackCue(track, cue);
+        break;
+    }
+  };
+
+  private onMediaTrackListEvent = (event: MediaTrackListEvent) => {
+    const { subType, track, trackType } = event;
+    console.log(TAG, `onMediaTrackListEvent: ${stringFromTextTrackListEvent(subType)} for ${trackType} track`, track.uid);
+  };
+
+  private onMediaTrackEvent = (event: MediaTrackEvent) => {
+    const { trackType, trackUid } = event;
+    let typeStr;
+    const trackTypeStr = trackType === MediaTrackType.VIDEO ? 'video' : 'audio';
+    switch (event.subType) {
+      case MediaTrackEventType.ACTIVE_QUALITY_CHANGED:
+        typeStr = 'ActiveQualityChanged';
+        break;
+    }
+    console.log(TAG, `onMediaTrackEvent: ${typeStr} ${trackTypeStr} track`, trackUid, event.qualities);
+  };
+
+  private onAdEvent = (event: AdEvent) => {
+    const { type, ad } = event;
+    console.log(TAG, 'onAdEvent', type, ad);
+  };
+
+  private onCastStateChangeEvent = (event: ChromecastChangeEvent | AirplayStateChangeEvent) => {
+    const stateEvent = event;
+    let message = undefined;
+    const castTarget = event.subType === CastEventType.CHROMECAST_STATE_CHANGE ? 'chromecast' : 'airplay';
+    switch (stateEvent.state) {
+      case 'connecting':
+        message = `Connecting to ${castTarget} ...`;
+        break;
+      case 'connected':
+        message = `Connected to ${castTarget} ...`;
+        break;
+    }
+    this.setState({
+      message,
+      airplayIsConnected: castTarget === 'airplay' && (stateEvent.state === 'connecting' || stateEvent.state === 'connected'),
+      chromecastIsConnected: castTarget === 'chromecast' && (stateEvent.state === 'connecting' || stateEvent.state === 'connected'),
+    });
+  };
+
+  private onChromecastErrorEvent = (event: ChromecastErrorEvent) => {
+    this.setState({
+      error: {
+        errorCode: event.error.errorCode,
+        errorMessage: event.error.description,
+      },
+    });
+  };
+
+  private onCastEvent = (event: CastEvent) => {
+    console.log(TAG, 'onCastEvent', event);
+    if (event.subType == CastEventType.CHROMECAST_STATE_CHANGE || event.subType == CastEventType.AIRPLAY_STATE_CHANGE) {
+      this.onCastStateChangeEvent(event);
+    } else {
+      this.onChromecastErrorEvent(event);
+    }
+  };
+
+  private onProgress = (event: ProgressEvent) => {
+    const { seekable } = event;
+    console.log(TAG, 'progress', seekable);
+    this.setState({ seekable });
+  };
+
+  private onError = (event: ErrorEvent) => {
+    const { error } = event;
+    this.setState({ error });
+  };
+
+  private onBufferingStateChange = (event: BufferingChangeEvent) => {
+    this.setState({ showLoadingIndicator: event.isBuffering });
+  };
+
   private onSeek = (time: number) => {
-    const { onSeek } = this.props;
-    if (onSeek) {
-      onSeek(time);
+    console.log(TAG, 'Seeking to', time);
+    if (!isNaN(time)) {
+      this.props.player.currentTime = time;
+    }
+  };
+
+  private onSelectTextTrack = (uid: number | undefined) => {
+    const { player } = this.props;
+    player.selectedTextTrack = uid;
+    this.setState({ selectedTextTrack: uid });
+  };
+
+  private onSelectAudioTrack = (uid: number | undefined) => {
+    const { player } = this.props;
+    player.selectedAudioTrack = uid;
+    this.setState({ selectedAudioTrack: uid });
+  };
+
+  private onSelectTargetVideoQuality = (uid: number | number[] | undefined) => {
+    const { player } = this.props;
+    player.targetVideoQuality = uid;
+    this.setState({ targetVideoQuality: uid });
+  };
+
+  private onSelectSource = (srcIndex: number) => {
+    const { player, sources } = this.props;
+    const { airplayIsConnected, chromecastIsConnected } = this.state;
+    this.setState({
+      ...VideoPlayerUI.initialState,
+      srcIndex,
+      paused: true,
+      airplayIsConnected,
+      chromecastIsConnected,
+    });
+    player.source = sources[srcIndex].source;
+  };
+
+  private toggleAirplay = () => {
+    const { player } = this.props;
+    if (Platform.OS === 'ios' && !Platform.isTV) {
+      player.cast.airplay?.state().then((airplayCastState) => {
+        const inConnection = airplayCastState === 'connected' || airplayCastState === 'connecting';
+        if (inConnection) {
+          player.cast.airplay?.stop();
+        } else {
+          player.cast.airplay?.start();
+        }
+      });
     }
   };
 
   private togglePlayPause = () => {
-    const { paused, onSetPlayPause } = this.props;
-    if (onSetPlayPause) {
-      onSetPlayPause(!paused);
+    const { player } = this.props;
+    const { paused } = this.state;
+    if (paused) {
+      player.play();
+    } else {
+      player.pause();
     }
+    // this.setState({ paused: !paused });
   };
 
   private toggleFullScreen = () => {
-    const { fullscreen, onSetFullScreen } = this.props;
-    if (onSetFullScreen) {
-      onSetFullScreen(!fullscreen);
-    }
+    const { player } = this.props;
+    console.log(TAG, 'toggle fullscreen');
+    const newFullscreen = !player.fullscreen;
+    player.fullscreen = newFullscreen;
+    this.setState({ fullscreen: newFullscreen });
   };
 
   private toggleMuted = () => {
-    const { muted, onSetMuted } = this.props;
-    if (onSetMuted) {
-      onSetMuted(!muted);
-    }
-  };
+    const { player } = this.props;
+    const newMuted = !player.muted;
 
-  private toggleAirplay = () => {
-    const { onAirplayToggled } = this.props;
-    if (onAirplayToggled) {
-      onAirplayToggled();
-    }
+    player.muted = newMuted;
+    this.setState({ muted: newMuted });
   };
 
   private renderThumbnailCarousel = (seekBarPosition: SeekBarPosition) => {
-    const { textTracks } = this.props;
+    const { textTracks } = this.state;
     const thumbnailTrack = filterThumbnailTracks(textTracks);
     if (!thumbnailTrack) {
       return;
@@ -82,7 +361,7 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
   };
 
   private renderSingleThumbnail = (seekBarPosition: SeekBarPosition) => {
-    const { textTracks } = this.props;
+    const { textTracks } = this.state;
     const thumbnailTrack = filterThumbnailTracks(textTracks);
     if (!thumbnailTrack) {
       return;
@@ -106,16 +385,16 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
   };
 
   render() {
+    const { style, sources } = this.props;
+
     const {
-      style,
-      sources,
       srcIndex,
       error,
       message,
       paused,
       muted,
-      airplayConnected,
-      chromecastConnected,
+      airplayIsConnected,
+      chromecastIsConnected,
       fullscreen,
       showLoadingIndicator,
       duration,
@@ -125,14 +404,10 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
       selectedTextTrack,
       videoTracks,
       selectedVideoTrack,
-      targetVideoTrackQuality,
+      targetVideoQuality,
       audioTracks,
       selectedAudioTrack,
-      onSelectSource,
-      onSelectTargetVideoQuality,
-      onSelectAudioTrack,
-      onSelectTextTrack,
-    } = this.props;
+    } = this.state;
 
     return (
       <View style={[styles.container, style]}>
@@ -144,11 +419,11 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
             {/*Airplay button*/}
             {Platform.OS === 'ios' && (
               <TouchableOpacity style={styles.castButton} onPress={this.toggleAirplay}>
-                <Image style={[styles.castIcon, { tintColor: airplayConnected ? '#ffc50f' : 'white' }]} source={AirplayIcon} />
+                <Image style={[styles.castIcon, { tintColor: airplayIsConnected ? '#ffc50f' : 'white' }]} source={AirplayIcon} />
               </TouchableOpacity>
             )}
             {/*Chromecast button*/}
-            {ENABLE_CAST_BUTTON && <CastButton style={styles.castButton} tintColor={chromecastConnected ? '#ffc50f' : 'white'} />}
+            {ENABLE_CAST_BUTTON && <CastButton style={styles.castButton} tintColor={chromecastIsConnected ? '#ffc50f' : 'white'} />}
           </View>
         )}
 
@@ -200,23 +475,23 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
             <View style={{ flexGrow: 1 }} />
 
             {/*TextTrack menu */}
-            <TextTrackMenu textTracks={textTracks} selectedTextTrack={selectedTextTrack} onSelectTextTrack={onSelectTextTrack} />
+            <TextTrackMenu textTracks={textTracks} selectedTextTrack={selectedTextTrack} onSelectTextTrack={this.onSelectTextTrack} />
 
             {/*AudioTrack menu */}
-            <AudioTrackMenu audioTracks={audioTracks} selectedAudioTrack={selectedAudioTrack} onSelectAudioTrack={onSelectAudioTrack} />
+            <AudioTrackMenu audioTracks={audioTracks} selectedAudioTrack={selectedAudioTrack} onSelectAudioTrack={this.onSelectAudioTrack} />
 
             {/*Video quality menu. Note: quality selection is not available on iOS */}
             {ENABLE_QUALITY_MENU && (
               <VideoQualityMenu
                 videoTracks={videoTracks}
                 selectedVideoTrack={selectedVideoTrack}
-                targetVideoTrackQuality={targetVideoTrackQuality}
-                onSelectTargetVideoQuality={onSelectTargetVideoQuality}
+                targetVideoTrackQuality={targetVideoQuality}
+                onSelectTargetVideoQuality={this.onSelectTargetVideoQuality}
               />
             )}
 
             {/*Source menu */}
-            <SourceMenu sources={sources} selectedSourceIndex={srcIndex} onSelectSource={onSelectSource} />
+            <SourceMenu sources={sources} selectedSourceIndex={srcIndex} onSelectSource={this.onSelectSource} />
 
             {/*Fullscreen*/}
             {!Platform.isTV && (
@@ -226,5 +501,16 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
         </View>
       </View>
     );
+  }
+}
+
+function stringFromTextTrackListEvent(type: TrackListEventType): string {
+  switch (type) {
+    case TrackListEventType.ADD_TRACK:
+      return 'AddTrack';
+    case TrackListEventType.REMOVE_TRACK:
+      return 'RemoveTrack';
+    case TrackListEventType.CHANGE_TRACK:
+      return 'ChangeTrack';
   }
 }

@@ -1,11 +1,12 @@
-import type { MediaTrack, PlayerError, TextTrack } from 'react-native-theoplayer';
+import type { MediaTrack, PlayerError, PlayerEventType, TextTrack } from 'react-native-theoplayer';
 import type { TimeRange } from '../timeranges/TimeRange';
+import type { Event } from './Event';
 
-export interface ErrorEvent {
+export interface ErrorEvent extends Event<PlayerEventType.ERROR> {
   error: PlayerError;
 }
 
-export interface LoadedMetadataEvent {
+export interface LoadedMetadataEvent extends Event<PlayerEventType.LOADED_METADATA> {
   textTracks: TextTrack[];
   audioTracks: MediaTrack[];
   videoTracks: MediaTrack[];
@@ -15,7 +16,7 @@ export interface LoadedMetadataEvent {
   selectedAudioTrack: number | undefined;
 }
 
-export interface TimeUpdateEvent {
+export interface TimeUpdateEvent extends Event<PlayerEventType.TIME_UPDATE> {
   /**
    * The player's current time, in msecs.
    */
@@ -27,28 +28,28 @@ export interface TimeUpdateEvent {
   readonly currentProgramDateTime?: number;
 }
 
-export interface DurationChangeEvent {
+export interface DurationChangeEvent extends Event<PlayerEventType.DURATION_CHANGE> {
   /**
    * The player's new duration, in msecs.
    */
   readonly duration: number;
 }
 
-export interface ReadyStateChangeEvent {
+export interface ReadyStateChangeEvent extends Event<PlayerEventType.READYSTATE_CHANGE> {
   /**
    * The player's new ready state.
    */
   readonly readyState: number;
 }
 
-export interface ProgressEvent {
+export interface ProgressEvent extends Event<PlayerEventType.PROGRESS> {
   /**
    * The ranges of the media resource that are seekable by the player.
    */
   readonly seekable: TimeRange[];
 }
 
-export interface SegmentNotFoundEvent {
+export interface SegmentNotFoundEvent extends Event<PlayerEventType.SEGMENT_NOT_FOUND> {
   /**
    * Start time of the segment.
    */
@@ -63,4 +64,19 @@ export interface SegmentNotFoundEvent {
    * Number of times the segment was retried.
    */
   readonly retryCount: number;
+}
+
+export enum FullscreenActionType {
+  PLAYER_WILL_PRESENT,
+  PLAYER_DID_PRESENT,
+  PLAYER_WILL_DISMISS,
+  PLAYER_DID_DISMISS,
+}
+
+export interface FullscreenEvent extends Event<PlayerEventType.FULLSCREEN> {
+  fullscreenAction: FullscreenActionType;
+}
+
+export interface BufferingChangeEvent extends Event<PlayerEventType.BUFFERING_CHANGE> {
+  isBuffering: boolean;
 }
