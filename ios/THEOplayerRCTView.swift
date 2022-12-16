@@ -18,8 +18,8 @@ class THEOplayerRCTView: UIView {
     private var licenseUrl: String?
     private var chromeless: Bool = true
     private var config: THEOplayerConfiguration?
-    private var paused: Bool = false
-    private var muted: Bool = true
+    private var paused: Bool = true
+    private var muted: Bool = false
     private var playbackRate: Double = 1.0
     private var selectedTextTrackUid: Int = 0
     private var selectedVideoTrackUid: Int = 0
