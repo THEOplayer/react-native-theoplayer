@@ -1,10 +1,11 @@
-import type { Ad, AdBreak } from 'react-native-theoplayer';
+import type { Ad, AdBreak, PlayerEventType } from 'react-native-theoplayer';
+import type { Event } from './Event';
 
-export interface AdEvent {
+export interface AdEvent extends Event<PlayerEventType.AD_EVENT> {
   /**
    * Type of ad event.
    */
-  type: AdEventType;
+  subType: AdEventType;
 
   /**
    * The ad or adbreak for which the event was dispatched.
@@ -12,106 +13,99 @@ export interface AdEvent {
   ad: Ad | AdBreak;
 }
 
-export const AdEventNames = [
+export enum AdEventType {
   /**
    * Dispatched when an ad break is added.
    */
-  'addadbreak',
+  ADD_AD_BREAK = 'addadbreak',
 
   /**
    * Dispatched when an ad break is removed.
    */
-  'removeadbreak',
+  REMOVE_AD_BREAK = 'removeadbreak',
 
   /**
    * Dispatched when an ad is loaded.
    */
-  'adloaded',
+  AD_LOADED = 'adloaded',
 
   /**
    * Dispatched when an ad break begins.
    */
-  'adbreakbegin',
+  AD_BREAK_BEGIN = 'adbreakbegin',
 
   /**
    * Dispatched when an ad break ends.
    */
-  'adbreakend',
+  AD_BREAK_END = 'adbreakend',
 
   /**
    * Dispatched when an ad break changes.
    */
-  'adbreakchange',
+  AD_BREAK_CHANGE = 'adbreakchange',
 
   /**
    * Dispatched when an ad break is updated.
    */
-  'updateadbreak',
+  UPDATE_AD_BREAK = 'updateadbreak',
 
   /**
    * Dispatched when an ad is added.
    */
-  'addad',
+  ADD_AD = 'addad',
 
   /**
    * Dispatched when an ad begins.
    */
-  'adbegin',
+  AD_BEGIN = 'adbegin',
 
   /**
    * Dispatched when an ad ends.
    */
-  'adend',
+  AD_END = 'adend',
 
   /**
    * Dispatched when an ad is updated.
    */
-  'updatead',
-
-  /**
-   * Dispatched when an ad is loaded.
-   */
-  'adloaded',
+  UPDATE_AD = 'updatead',
 
   /**
    * Dispatched when an ad reaches the first quartile.
    */
-  'adfirstquartile',
+  AD_FIRST_QUARTILE = 'adfirstquartile',
 
   /**
    * Dispatched when an ad reaches the mid point.
    */
-  'admidpoint',
+  AD_MIDPOINT = 'admidpoint',
 
   /**
    * Dispatched when an ad reaches the third quartile.
    */
-  'adthirdquartile',
+  AD_THIRD_QUARTILE = 'adthirdquartile',
 
   /**
    * Dispatched when an ad is skipped.
    */
-  'adskip',
+  AD_SKIP = 'adskip',
 
   /**
    * Dispatched when an ad counts as an impression.
    */
-  'adimpression',
+  AD_IMPRESSION = 'adimpression',
 
   /**
    * Dispatched when an ad error occurs.
    */
-  'aderror',
+  AD_ERROR = 'aderror',
 
   /**
    * Dispatched when an ads list is loaded.
    */
-  'admetadata',
+  AD_METADATA = 'admetadata',
 
   /**
    * Dispatched when the ad has stalled playback to buffer.
    */
-  'adbuffering'
-] as const;
-
-export type AdEventType = typeof AdEventNames[number];
+  AD_BUFFERING = 'adbuffering',
+}

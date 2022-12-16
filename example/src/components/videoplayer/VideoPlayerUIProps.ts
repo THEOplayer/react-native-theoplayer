@@ -1,5 +1,5 @@
 import type { Source } from '../../utils/source/Source';
-import type { MediaTrack, PlayerError, TextTrack, TimeRange } from 'react-native-theoplayer';
+import type { MediaTrack, PlayerError, TextTrack, THEOplayerInternal, TimeRange } from 'react-native-theoplayer';
 import type { StyleProp, ViewStyle } from 'react-native';
 import { Dimensions, Platform } from 'react-native';
 
@@ -18,12 +18,15 @@ export const ENABLE_CAST_BUTTON = Platform.OS !== 'web';
 
 export interface VideoPlayerUIProps {
   sources: Source[];
+  style?: StyleProp<ViewStyle>;
+  player: THEOplayerInternal;
+}
+
+export interface VideoPlayerUIState {
   srcIndex: number;
   playbackRate: number;
   volume: number;
   muted: boolean;
-  airplayConnected: boolean;
-  chromecastConnected: boolean;
   duration: number;
   seekable: TimeRange[];
   currentTime: number;
@@ -35,23 +38,10 @@ export interface VideoPlayerUIProps {
   audioTracks: MediaTrack[];
   selectedTextTrack: number | undefined;
   selectedVideoTrack: number | undefined;
-  targetVideoTrackQuality: number | number[] | undefined;
+  targetVideoQuality: number | number[] | undefined;
   selectedAudioTrack: number | undefined;
-  message?: string;
   error: PlayerError | undefined;
-
-  onSetPlayPause?: (pause: boolean) => void;
-  onSeek?: (time: number) => void;
-  onSelectSource?: (index: number) => void;
-  onSelectTextTrack?: (uid: number | undefined) => void;
-  onSelectAudioTrack?: (uid: number | undefined) => void;
-  onSelectVideoTrack?: (uid: number | undefined) => void;
-  onSelectTargetVideoQuality?: (uid: number | number[] | undefined) => void;
-  onSetFullScreen?: (fullscreen: boolean) => void;
-  onSetMuted?: (muted: boolean) => void;
-  onSetPlaybackRate?: (playbackRate: number) => void;
-  onSetVolume?: (volume: number) => void;
-  onAirplayToggled?: () => void;
-
-  style?: StyleProp<ViewStyle>;
+  message: string | undefined;
+  airplayIsConnected: boolean;
+  chromecastIsConnected: boolean;
 }

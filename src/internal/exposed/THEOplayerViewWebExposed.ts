@@ -1,0 +1,173 @@
+import { DefaultEventDispatcher } from '../event/DefaultEventDispatcher';
+import type { AdsAPI, CastAPI, PlayerEventMap, THEOplayerInternal } from 'react-native-theoplayer';
+import { FullscreenActionType } from 'react-native-theoplayer';
+import { THEOplayerWebAdsAPI } from '../ads/THEOplayerWebAdsAPI';
+import { THEOplayerWebCastAPI } from '../cast/THEOplayerWebCastApi';
+import type * as THEOplayer from 'theoplayer';
+import type { MediaTrack, TextTrack } from 'theoplayer';
+import { findNativeQualitiesByUid } from '../web/TrackUtils';
+import type { ABRConfiguration, SourceDescription } from 'src/api/barrel';
+import { DefaultFullscreenEvent } from '../event/PlayerEvents';
+import { WebEventForwarder } from './WebEventForwarder';
+
+export class THEOplayerViewWebExposed extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayerInternal {
+  private readonly _player: THEOplayer.ChromelessPlayer;
+  private readonly _adsApi: THEOplayerWebAdsAPI;
+  private readonly _castApi: THEOplayerWebCastAPI;
+  private readonly _eventForwarder: WebEventForwarder;
+
+  private _isFullscreen = false;
+  private _targetVideoQuality: number | number[] | undefined = undefined;
+
+  constructor(player: THEOplayer.ChromelessPlayer) {
+    super();
+    this._player = player;
+    this._adsApi = new THEOplayerWebAdsAPI(this._player);
+    this._castApi = new THEOplayerWebCastAPI(this._player);
+    this._eventForwarder = new WebEventForwarder(this._player, this);
+  }
+
+  get abr(): ABRConfiguration | undefined {
+    return this._player.abr;
+  }
+
+  get source(): SourceDescription | undefined {
+    return this._player.source as SourceDescription;
+  }
+
+  set source(source: SourceDescription | undefined) {
+    this._player.source = source;
+  }
+
+  play(): void {
+    this._player.play();
+  }
+
+  pause(): void {
+    this._player.pause();
+  }
+
+  get paused(): boolean {
+    return this._player.paused;
+  }
+
+  get autoplay(): boolean {
+    return this._player.autoplay;
+  }
+
+  set autoplay(autoplay: boolean) {
+    this._player.autoplay = autoplay;
+  }
+
+  get playbackRate(): number {
+    return this._player.playbackRate;
+  }
+
+  set playbackRate(playbackRate: number) {
+    this._player.playbackRate = playbackRate;
+  }
+
+  get volume(): number {
+    return this._player.volume;
+  }
+
+  set volume(volume: number) {
+    this._player.volume = volume;
+  }
+
+  get muted(): boolean {
+    return this._player.muted;
+  }
+
+  set muted(muted: boolean) {
+    this._player.muted = muted;
+  }
+
+  get fullscreen(): boolean {
+    return this._isFullscreen;
+  }
+
+  set fullscreen(fullscreen: boolean) {
+    const appContainer = document.getElementById('app');
+    if (fullscreen) {
+      this.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_WILL_PRESENT));
+      appContainer?.requestFullscreen().then();
+    } else {
+      this.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_WILL_DISMISS));
+      document.exitFullscreen().then();
+    }
+  }
+
+  get selectedTextTrack(): number | undefined {
+    return this._player.textTracks.find((textTrack: TextTrack) => {
+      return textTrack.mode === 'showing';
+    })?.uid;
+  }
+
+  set selectedTextTrack(selectedTextTrack: number | undefined) {
+    this._player.textTracks.forEach((textTrack: TextTrack) => {
+      textTrack.mode = textTrack.uid === selectedTextTrack ? 'showing' : 'disabled';
+    });
+  }
+
+  get selectedVideoTrack(): number | undefined {
+    return this._player.videoTracks.find((videoTrack: MediaTrack) => {
+      return videoTrack.enabled;
+    })?.uid;
+  }
+
+  set selectedVideoTrack(selectedVideoTrack: number | undefined) {
+    this._player.videoTracks.forEach((videoTrack: MediaTrack) => {
+      videoTrack.enabled = videoTrack.uid === selectedVideoTrack;
+    });
+  }
+
+  get selectedAudioTrack(): number | undefined {
+    return this._player.audioTracks.find((audioTrack: MediaTrack) => {
+      return audioTrack.enabled;
+    })?.uid;
+  }
+
+  set selectedAudioTrack(selectedAudioTrack: number | undefined) {
+    this._player.audioTracks.forEach((audioTrack: MediaTrack) => {
+      audioTrack.enabled = audioTrack.uid === selectedAudioTrack;
+    });
+  }
+
+  get targetVideoQuality(): number | number[] | undefined {
+    return this._targetVideoQuality;
+  }
+
+  set targetVideoQuality(targetVideoQuality: number | number[] | undefined) {
+    const videoTrack = this._player.videoTracks.find((videoTrack: MediaTrack) => videoTrack.uid === this.selectedVideoTrack);
+    if (videoTrack) {
+      videoTrack.targetQuality = findNativeQualitiesByUid(videoTrack, targetVideoQuality);
+    }
+    this._targetVideoQuality = targetVideoQuality;
+  }
+
+  get currentTime(): number {
+    return this._player.currentTime;
+  }
+
+  set currentTime(currentTime: number) {
+    if (isNaN(currentTime)) {
+      throw new Error('Specified time is not a number');
+    }
+    if (this._player) {
+      this._player.currentTime = currentTime / 1e3;
+    }
+  }
+
+  public get ads(): AdsAPI {
+    return this._adsApi;
+  }
+
+  public get cast(): CastAPI {
+    return this._castApi;
+  }
+
+  destroy(): void {
+    this._eventForwarder.unload();
+  }
+}
