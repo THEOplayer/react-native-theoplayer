@@ -29,9 +29,7 @@ class THEOplayerRCTViewCastEventHandler {
     // MARK: - destruction
     func destroy() {
         // dettach listeners
-#if CHROMECAST
         self.dettachListeners()
-#endif
     }
     
     // MARK: - player setup / breakdown
@@ -39,9 +37,7 @@ class THEOplayerRCTViewCastEventHandler {
         self.player = player;
         
         // attach listeners
-#if CHROMECAST
         self.attachListeners()
-#endif
     }
     
     // MARK: - attach/dettach Listeners
@@ -49,7 +45,8 @@ class THEOplayerRCTViewCastEventHandler {
         guard let player = self.player else {
             return
         }
-
+        
+#if CHROMECAST
         // CHROMECAST STATE_CHANGE
         self.chromecastStateChangeListener = player.cast?.chromecast?.addEventListener(type: ChromecastEventTypes.STATE_CHANGE) { [weak self] event in
             if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received Chromecast STATE_CHANGE event from THEOplayer cast.chromecast") }
@@ -79,7 +76,9 @@ class THEOplayerRCTViewCastEventHandler {
             }
         }
         if DEBUG_EVENTHANDLER { print("[NATIVE] Chromecast Error listener attached to THEOplayer cast.chromecast") }
+#endif
         
+#if AIRPLAY
         // AIRPLAY STATE_CHANGE
         self.airplayStateChangeListener = player.cast?.airPlay?.addEventListener(type: AirPlayEventTypes.STATE_CHANGE) { [weak self] event in
             if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received Airplay STATE_CHANGE event from THEOplayer cast.airplay") }
@@ -93,23 +92,29 @@ class THEOplayerRCTViewCastEventHandler {
             }
         }
         if DEBUG_EVENTHANDLER { print("[NATIVE] Airplay StateChange listener attached to THEOplayer cast.airplay") }
+#endif
     }
+
     
     private func dettachListeners() {
         guard let player = self.player else {
             return
         }
-        
+
+#if CHROMECAST
         // CHROMECAST STATE_CHANGE
         if let chromecastStateChangeListener = self.chromecastStateChangeListener {
             player.cast?.chromecast?.removeEventListener(type: ChromecastEventTypes.STATE_CHANGE, listener: chromecastStateChangeListener)
             if DEBUG_EVENTHANDLER { print("[NATIVE] Chromecast StateChange listener dettached from THEOplayer cast.chromecast") }
         }
+#endif
         
+#if AIRPLAY
         // AIRPLAY STATE_CHANGE
         if let airplayStateChangeListener = self.airplayStateChangeListener {
             player.cast?.airPlay?.removeEventListener(type: AirPlayEventTypes.STATE_CHANGE, listener: airplayStateChangeListener)
             if DEBUG_EVENTHANDLER { print("[NATIVE] Airplay StateChange listener dettached from THEOplayer cast.airplay") }
         }
+#endif
     }
 }

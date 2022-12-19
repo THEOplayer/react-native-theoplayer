@@ -1,11 +1,11 @@
 import React, { PureComponent } from 'react';
 import { filterThumbnailTracks } from 'react-native-theoplayer';
 
-import {Image, Platform, Text, TouchableOpacity, View} from 'react-native';
+import { Image, Platform, Text, TouchableOpacity, View } from 'react-native';
 import { SeekBar } from '../seekbar/SeekBar';
 import styles from './VideoPlayerUI.style';
 import { DelayedActivityIndicator } from '../delayedactivityindicator/DelayedActivityIndicator';
-import {FullScreenIcon, FullScreenExitIcon, PlayButton, MutedIcon, UnMutedIcon, AirplayIcon} from '../../res/images';
+import { FullScreenIcon, FullScreenExitIcon, PlayButton, MutedIcon, UnMutedIcon, AirplayIcon } from '../../res/images';
 import { ActionButton } from '../actionbutton/ActionButton';
 import { TimeLabel } from '../timelabel/TimeLabel';
 import type { VideoPlayerUIProps } from './VideoPlayerUIProps';
@@ -139,19 +139,18 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
         {/*Background*/}
         <View style={styles.background} />
 
-        <View style={styles.topContainer}>
-          {/*Airplay button*/}
-          {Platform.OS === 'ios' && !Platform.isTV && (
-            <TouchableOpacity style={styles.castButton} onPress={this.toggleAirplay} >
-              <Image style={[styles.castIcon, {tintColor: airplayConnected ? '#ffc50f' : 'white'} ]} source={AirplayIcon} />
-            </TouchableOpacity>
-          )}
-          {/*Chromecast button*/}
-          <CastButton
-            style={styles.castButton}
-            tintColor={chromecastConnected ? '#ffc50f' : 'white'}
-          />
-        </View>
+        {!Platform.isTV && (
+          <View style={styles.topContainer}>
+            {/*Airplay button*/}
+            {Platform.OS === 'ios' && (
+              <TouchableOpacity style={styles.castButton} onPress={this.toggleAirplay}>
+                <Image style={[styles.castIcon, { tintColor: airplayConnected ? '#ffc50f' : 'white' }]} source={AirplayIcon} />
+              </TouchableOpacity>
+            )}
+            {/*Chromecast button*/}
+            <CastButton style={styles.castButton} tintColor={chromecastConnected ? '#ffc50f' : 'white'} />
+          </View>
+        )}
 
         {showLoadingIndicator && !paused && (
           <View style={styles.fullScreenCenter}>

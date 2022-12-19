@@ -32,12 +32,14 @@ class THEOplayerRCTView: UIView {
     private var seek: Double? = nil                  // in msec
     private var fullscreen: Bool = false
     private var chromecastReceiverApplicationId: String?
+#if os(iOS)
     private var castStrategy: THEOplayerSDK.CastStrategy = THEOplayerSDK.CastStrategy.manual
+#endif
     
 #if os(iOS) && ADS && (GOOGLE_IMA || GOOGLE_DAI)
     private var adSUIEnabled: Bool = true
     private var googleImaUsesNativeIma: Bool = true
-    private var adPreloadType: AdPreloadType = .MIDROLL_AND_POSTROLL
+    private var adPreloadType: THEOplayerSDK.AdPreloadType = .MIDROLL_AND_POSTROLL
 #endif
     
     // MARK: - Initialisation / view setup
@@ -70,13 +72,15 @@ class THEOplayerRCTView: UIView {
         }
         return player.ads
     }
-    
+  
+#if os(iOS)
     func cast() -> Cast? {
         guard let player = self.player else {
             return nil
         }
         return player.cast
     }
+#endif
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("[NATIVE] init(coder:) has not been implemented")
@@ -118,7 +122,11 @@ class THEOplayerRCTView: UIView {
             return
         }
         
+#if os(iOS)
         let isCasting = self.player?.cast?.casting ?? false // TO FIX: remove 'isCasting' workaround
+#else
+        let isCasting = false
+#endif
         if !isCasting || self.player == nil {
             self.player?.destroy()
             self.player = nil
@@ -176,7 +184,8 @@ class THEOplayerRCTView: UIView {
         return nil
 #endif
     }
-    
+
+#if os(iOS)
     private func initCastConfiguration() -> CastConfiguration? {
 #if CHROMECAST
         // Set the correct chromecast receiver application id
@@ -186,12 +195,13 @@ class THEOplayerRCTView: UIView {
         }
 #endif
 #if CHROMECAST || AIRPLAY
-        // prepre the config
+        // prepare the config
         return CastConfiguration(strategy: self.castStrategy)
 #else
         return nil
 #endif
     }
+#endif
     
     private func syncPlayerSrc() {
         // set sourceDescription on player
@@ -218,6 +228,7 @@ class THEOplayerRCTView: UIView {
             }
         }
 #endif
+#if os(iOS)
         if let castConfig = configDict["cast"] as? NSDictionary {
             if let castStrategy = castConfig["strategy"] as? String {
                 switch castStrategy {
@@ -236,6 +247,7 @@ class THEOplayerRCTView: UIView {
                 self.chromecastReceiverApplicationId = castReceiverApplicationId
             }
         }
+#endif
         if DEBUG_PROP_UPDATES  { print("[NATIVE] config prop updated.") }
     }
     
