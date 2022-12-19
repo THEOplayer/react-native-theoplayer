@@ -107,6 +107,10 @@ class THEOplayerRCTViewCastEventHandler {
             player.cast?.chromecast?.removeEventListener(type: ChromecastEventTypes.STATE_CHANGE, listener: chromecastStateChangeListener)
             if DEBUG_EVENTHANDLER { print("[NATIVE] Chromecast StateChange listener dettached from THEOplayer cast.chromecast") }
         }
+        if let chromecastErrorListener = self.chromecastErrorListener {
+            player.cast?.chromecast?.removeEventListener(type: ChromecastEventTypes.ERROR, listener: chromecastErrorListener)
+            if DEBUG_EVENTHANDLER { print("[NATIVE] Chromecast Error listener dettached from THEOplayer cast.chromecast") }
+        }
 #endif
         
 #if AIRPLAY
