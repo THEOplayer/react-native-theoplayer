@@ -96,6 +96,7 @@ export class THEOplayerViewWebExposed extends DefaultEventDispatcher<PlayerEvent
       this.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_WILL_DISMISS));
       document.exitFullscreen().then();
     }
+    this._isFullscreen = fullscreen;
   }
 
   get selectedTextTrack(): number | undefined {

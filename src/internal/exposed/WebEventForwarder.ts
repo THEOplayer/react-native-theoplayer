@@ -62,9 +62,9 @@ export class WebEventForwarder {
     this._player.addEventListener('loadedmetadata', this.onLoadedMetadata);
     this._player.addEventListener('error', this.onError);
     this._player.addEventListener('progress', this.onProgress);
-    this._player.addEventListener('play', () => this.onPlay);
-    this._player.addEventListener('playing', () => this.onPlaying());
-    this._player.addEventListener('pause', () => this.onPause);
+    this._player.addEventListener('play', this.onPlay);
+    this._player.addEventListener('playing', this.onPlaying);
+    this._player.addEventListener('pause', this.onPause);
     this._player.addEventListener('seeking', this.onSeeking);
     this._player.addEventListener('seeked', this.onSeeked);
     this._player.addEventListener('ended', this.onEnded);
@@ -100,9 +100,9 @@ export class WebEventForwarder {
     this._player.removeEventListener('loadedmetadata', this.onLoadedMetadata);
     this._player.removeEventListener('error', this.onError);
     this._player.removeEventListener('progress', this.onProgress);
-    this._player.removeEventListener('play', () => this.onPlay);
-    this._player.removeEventListener('playing', () => this.onPlaying());
-    this._player.removeEventListener('pause', () => this.onPause);
+    this._player.removeEventListener('play', this.onPlay);
+    this._player.removeEventListener('playing', this.onPlaying);
+    this._player.removeEventListener('pause', this.onPause);
     this._player.removeEventListener('seeking', this.onSeeking);
     this._player.removeEventListener('seeked', this.onSeeked);
     this._player.removeEventListener('ended', this.onEnded);
@@ -292,6 +292,7 @@ export class WebEventForwarder {
   private maybeChangeBufferingState(isBuffering: boolean) {
     const newIsBuffering = isBuffering && !this._player.errorObject && !this._player.paused;
     if (newIsBuffering !== this._isBuffering) {
+      this._isBuffering = newIsBuffering;
       this._facade.dispatchEvent(new DefaultBufferingChangeEvent(newIsBuffering));
     }
   }
