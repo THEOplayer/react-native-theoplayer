@@ -115,7 +115,13 @@ export class THEOplayerViewExposed extends DefaultEventDispatcher<PlayerEventMap
     this._view.setState({ source });
   }
 
-  targetVideoQuality: number | number[] | undefined;
+  get targetVideoQuality(): number | number[] | undefined {
+    return this._view.state.targetVideoQuality;
+  }
+
+  set targetVideoQuality(target: number | number[] | undefined) {
+    this._view.setState({ targetVideoQuality: target });
+  }
 
   get volume(): number {
     return this._view.state.volume ?? 1; // TODO
