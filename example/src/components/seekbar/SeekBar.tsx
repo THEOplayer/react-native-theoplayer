@@ -13,20 +13,47 @@ import {
 } from 'react-native';
 import styles from './SeekBar.style';
 import {
-  SeekBarProps,
-  SKIP_FORWARD_MSEC_DEFAULT,
-  SKIP_BACKWARD_MSEC_DEFAULT,
   SEEK_TIMER_DELAY_MSEC,
+  SeekBarProps,
+  SKIP_BACKWARD_MSEC_DEFAULT,
+  SKIP_FORWARD_MSEC_DEFAULT,
   TIMEUPDATES_AFTER_SEEKING,
 } from './SeekBarProps';
 import type { SeekBarPosition } from './SeekBarPosition';
+import {
+  addTextTrack,
+  addTextTrackCue,
+  DurationChangeEvent,
+  filterThumbnailTracks,
+  findTextTrackByUid,
+  LoadedMetadataEvent,
+  PlayerEventType,
+  ProgressEvent,
+  removeTextTrack,
+  removeTextTrackCue,
+  TextTrack,
+  TextTrackEvent,
+  TextTrackEventType,
+  TextTrackListEvent,
+  THEOplayerInternal,
+  TimeRange,
+  TimeUpdateEvent,
+  TrackListEventType,
+} from 'react-native-theoplayer';
+import { ThumbnailView } from '../thumbnail/ThumbnailView';
+import { THUMBNAIL_SIZE } from '../videoplayer/VideoPlayerUIProps';
+import videoPlayerStyles from '../videoplayer/VideoPlayerUI.style';
+import { PlayerContext } from '../util/Context';
 
 interface SeekBarState {
   focused: boolean;
   isScrubbing: boolean;
   waitForTimeUpdates: number;
   seekTime: number;
-  lastUpdateTime: number;
+  seekable: TimeRange[];
+  duration: number;
+  currentTime: number;
+  textTracks: TextTrack[];
 }
 
 /**
@@ -47,13 +74,36 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
   private _seekPanResponder!: PanResponderInstance;
   private _seekTimer: NodeJS.Timeout | null = null;
 
+  private static initialState: SeekBarState = {
+    textTracks: [],
+    focused: false,
+    waitForTimeUpdates: 0,
+    seekTime: 0,
+    isScrubbing: false,
+    currentTime: 0.0,
+    duration: 0,
+    seekable: [],
+  };
+
   constructor(props: SeekBarProps) {
     super(props);
-    this.state = { focused: false, waitForTimeUpdates: 0, seekTime: 0, isScrubbing: false, lastUpdateTime: 0 };
+    this.state = SeekBar.initialState;
     if (!Platform.isTV) {
       this.initSeekPanResponder();
     }
   }
+
+  private onSeek = (time: number) => {
+    const player = this.context;
+    if (!isNaN(time)) {
+      player.currentTime = time;
+    }
+  };
+
+  private onProgress = (event: ProgressEvent) => {
+    const { seekable } = event;
+    this.setState({ seekable });
+  };
 
   private initSeekPanResponder() {
     this._seekPanResponder = PanResponder.create({
@@ -116,7 +166,8 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
   }
 
   private onSeekingPositionChanged = (seekTime: number) => {
-    const { onScrubbingPositionChanged, currentTime: prevTime } = this.props;
+    const { onScrubbingPositionChanged } = this.props;
+    const { currentTime: prevTime } = this.state;
 
     // clamp seekTime within seekable range.
     const clampedSeekTime = Math.max(this.seekableStart, Math.min(this.duration, seekTime));
@@ -139,24 +190,21 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
   };
 
   private notifyDelayedSeek(seekTime: number) {
-    const { onSeek } = this.props;
-    if (onSeek) {
-      onSeek(seekTime);
-      this.setState({ isScrubbing: false, waitForTimeUpdates: TIMEUPDATES_AFTER_SEEKING });
-    }
+    this.onSeek(seekTime);
+    this.setState({ isScrubbing: false, waitForTimeUpdates: TIMEUPDATES_AFTER_SEEKING });
   }
 
   private seekForward() {
-    const { isScrubbing, seekTime } = this.state;
-    const { currentTime, skipForwardMsec } = this.props;
+    const { isScrubbing, seekTime, currentTime } = this.state;
+    const { skipForwardMsec } = this.props;
     const skip = skipForwardMsec ?? SKIP_FORWARD_MSEC_DEFAULT;
     const newSeekTime = isScrubbing ? seekTime + skip : currentTime + skip;
     this.onSeekingPositionChanged(newSeekTime);
   }
 
   private seekBackward() {
-    const { isScrubbing, seekTime } = this.state;
-    const { currentTime, skipBackwardMsec } = this.props;
+    const { isScrubbing, seekTime, currentTime } = this.state;
+    const { skipBackwardMsec } = this.props;
     const skip = skipBackwardMsec ?? SKIP_BACKWARD_MSEC_DEFAULT;
     const newSeekTime = isScrubbing ? seekTime - skip : currentTime - skip;
     this.onSeekingPositionChanged(newSeekTime);
@@ -166,23 +214,32 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
     if (Platform.isTV) {
       this.enableTVEventHandler();
     }
+    const player = this.context as THEOplayerInternal;
+    player.addEventListener(PlayerEventType.PROGRESS, this.onProgress);
+    player.addEventListener(PlayerEventType.TIME_UPDATE, this.onTimeUpdate);
+    player.addEventListener(PlayerEventType.TEXT_TRACK_LIST, this.onTextTrackListEvent);
+    player.addEventListener(PlayerEventType.TEXT_TRACK, this.onTextTrackEvent);
+    player.addEventListener(PlayerEventType.DURATION_CHANGE, this.onDurationChange);
+    player.addEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
   }
 
   componentWillUnmount() {
     if (Platform.isTV) {
       this.disableTVEventHandler();
     }
+    const player = this.context as THEOplayerInternal;
+    player.removeEventListener(PlayerEventType.PROGRESS, this.onProgress);
+    player.removeEventListener(PlayerEventType.TIME_UPDATE, this.onTimeUpdate);
+    player.removeEventListener(PlayerEventType.TEXT_TRACK_LIST, this.onTextTrackListEvent);
+    player.removeEventListener(PlayerEventType.TEXT_TRACK, this.onTextTrackEvent);
+    player.removeEventListener(PlayerEventType.DURATION_CHANGE, this.onDurationChange);
+    player.removeEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
   }
 
-  componentDidUpdate(prevProps: Readonly<SeekBarProps>, prevState: Readonly<SeekBarState>) {
+  componentDidUpdate(_: Readonly<SeekBarProps>, prevState: Readonly<SeekBarState>) {
     const { isScrubbing: wasScrubbing } = prevState;
-    const { isScrubbing, waitForTimeUpdates } = this.state;
-    const { onStartScrubbing, onStopScrubbing, currentTime } = this.props;
-    const { currentTime: prevTime } = prevProps;
-
-    if (waitForTimeUpdates > 0 && currentTime !== prevTime) {
-      this.setState({ waitForTimeUpdates: waitForTimeUpdates - 1 });
-    }
+    const { isScrubbing } = this.state;
+    const { onStartScrubbing, onStopScrubbing } = this.props;
 
     if (!isScrubbing && wasScrubbing && onStartScrubbing) {
       onStartScrubbing();
@@ -203,18 +260,18 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
   };
 
   private get seekableStart(): number {
-    const { seekable } = this.props;
+    const { seekable } = this.state;
     return seekable.length > 0 ? seekable[0].start : 0;
   }
 
   private get duration(): number {
-    const { seekable, duration } = this.props;
+    const { seekable, duration } = this.state;
     const validDuration = isNaN(duration) ? 0 : duration;
     return seekable.length > 0 ? seekable[seekable.length - 1].end - seekable[0].start : validDuration;
   }
 
   private get currentProgress(): number {
-    const { currentTime } = this.props;
+    const { currentTime } = this.state;
     const { waitForTimeUpdates, isScrubbing, seekTime } = this.state;
     // use seekTime while waiting for time updates
     if (isScrubbing || waitForTimeUpdates > 0) {
@@ -249,8 +306,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
   };
 
   onTouchScrubber = (event: GestureResponderEvent) => {
-    const { currentTime } = this.props;
-    const { isScrubbing, seekTime } = this.state;
+    const { isScrubbing, seekTime, currentTime } = this.state;
     const offsetX = Platform.select({
       default: event.nativeEvent.locationX,
       web: (event.nativeEvent as unknown as PointerEvent).offsetX,
@@ -274,10 +330,67 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
   };
 
   onDotPress = () => {
-    const { onDotPress } = this.props;
-    if (onDotPress) {
-      onDotPress();
+    // On TV platforms we use the progress dot to play/pause
+    const player = this.context as THEOplayerInternal;
+    if (player.paused) {
+      player.play();
+    } else {
+      player.pause();
     }
+  };
+
+  private onTextTrackListEvent = (event: TextTrackListEvent) => {
+    const { textTracks } = this.state;
+    const { track } = event;
+    switch (event.subType) {
+      case TrackListEventType.ADD_TRACK:
+        this.setState({ textTracks: addTextTrack(textTracks, track) });
+        break;
+      case TrackListEventType.REMOVE_TRACK:
+        this.setState({ textTracks: removeTextTrack(textTracks, track) });
+        break;
+    }
+  };
+
+  private onTextTrackEvent = (event: TextTrackEvent) => {
+    const { textTracks } = this.state;
+    const { trackUid, cue } = event;
+    const track = findTextTrackByUid(textTracks, trackUid);
+    if (!track) {
+      console.warn('onTextTrackCueEvent - Unknown track:', trackUid);
+      return;
+    }
+    switch (event.subType) {
+      case TextTrackEventType.ADD_CUE:
+        addTextTrackCue(track, cue);
+        break;
+      case TextTrackEventType.REMOVE_CUE:
+        removeTextTrackCue(track, cue);
+        break;
+    }
+  };
+
+  private onTimeUpdate = (event: TimeUpdateEvent) => {
+    const { currentTime } = event;
+    const { currentTime: prevTime, waitForTimeUpdates } = this.state;
+
+    if (waitForTimeUpdates > 0 && currentTime !== prevTime) {
+      this.setState({ waitForTimeUpdates: waitForTimeUpdates - 1 });
+    }
+
+    this.setState({ currentTime });
+  };
+
+  private onLoadedMetadata = (event: LoadedMetadataEvent) => {
+    this.setState({
+      duration: event.duration,
+      textTracks: event.textTracks,
+    });
+  };
+
+  private onDurationChange = (event: DurationChangeEvent) => {
+    const { duration } = event;
+    this.setState({ duration });
   };
 
   render() {
@@ -285,11 +398,11 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
     const flexCompleted = currentProgressPercentage * 100;
     const flexRemaining = (1 - currentProgressPercentage) * 100;
     const { focused } = this.state;
-    const { style, progressDotStyle, renderTopComponent, renderBottomComponent } = this.props;
+    const { style, progressDotStyle, thumbnailMode } = this.props;
 
     return (
       <View style={{ flex: 1, flexDirection: 'column' }}>
-        {renderTopComponent && renderTopComponent(this.seekBarPosition)}
+        {thumbnailMode === 'carousel' ? this.renderThumbnailCarousel(this.seekBarPosition) : this.renderSingleThumbnail(this.seekBarPosition)}
 
         <View style={[styles.container, style]}>
           {Platform.isTV && (
@@ -329,8 +442,57 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
           )}
         </View>
 
-        {renderBottomComponent && renderBottomComponent(this.seekBarPosition)}
+        {/* TODO: render bot component? {renderBottomComponent && renderBottomComponent(this.seekBarPosition)}*/}
       </View>
     );
   }
+
+  private renderThumbnailCarousel = (seekBarPosition: SeekBarPosition) => {
+    const { textTracks } = this.state;
+    const thumbnailTrack = filterThumbnailTracks(textTracks);
+    if (!thumbnailTrack) {
+      return;
+    }
+    return (
+      <ThumbnailView
+        visible={seekBarPosition.isScrubbing}
+        containerStyle={videoPlayerStyles.thumbnailContainerCarousel}
+        thumbnailStyleCurrent={videoPlayerStyles.thumbnailCurrentCarousel}
+        thumbnailStyleCarousel={videoPlayerStyles.thumbnailCarousel}
+        thumbnailTrack={thumbnailTrack}
+        time={seekBarPosition.currentProgress}
+        duration={seekBarPosition.duration}
+        size={THUMBNAIL_SIZE}
+        carouselCount={2}
+        // Optionally scale down the thumbnails when further from currentTime.
+        // carouselThumbnailScale={(index: number) => 1.0 - Math.abs(index) * 0.15}
+      />
+    );
+  };
+
+  private renderSingleThumbnail = (seekBarPosition: SeekBarPosition) => {
+    const { textTracks } = this.state;
+    const thumbnailTrack = filterThumbnailTracks(textTracks);
+    if (!thumbnailTrack) {
+      return;
+    }
+    return (
+      <ThumbnailView
+        visible={seekBarPosition.isScrubbing}
+        containerStyle={videoPlayerStyles.thumbnailContainerSingle}
+        thumbnailStyleCurrent={videoPlayerStyles.thumbnailCurrentSingle}
+        thumbnailTrack={thumbnailTrack}
+        duration={seekBarPosition.duration}
+        time={seekBarPosition.currentProgress}
+        size={THUMBNAIL_SIZE}
+        showTimeLabel={false}
+        offset={Math.min(
+          seekBarPosition.seekBarWidth - THUMBNAIL_SIZE,
+          Math.max(0, seekBarPosition.currentProgressPercentage * seekBarPosition.seekBarWidth - 0.5 * THUMBNAIL_SIZE),
+        )}
+      />
+    );
+  };
 }
+
+SeekBar.contextType = PlayerContext;

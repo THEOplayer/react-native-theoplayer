@@ -1,7 +1,7 @@
 import { ActivityIndicator, ActivityIndicatorProps } from 'react-native';
 import React, { useEffect, useState } from 'react';
 
-interface DelayedActivityIndicatorProps extends ActivityIndicatorProps {
+export interface DelayedActivityIndicatorProps extends ActivityIndicatorProps {
   delay?: number;
 }
 

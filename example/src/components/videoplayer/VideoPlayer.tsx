@@ -1,34 +1,39 @@
-import React, { useCallback, useState } from 'react';
+import React, { PureComponent } from 'react';
 import { PlayerConfiguration, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
-import ALL_SOURCES from '../../res/sources.json';
 
-import { Platform, View } from 'react-native';
+import { View } from 'react-native';
 import styles from './VideoPlayer.style';
 import { VideoPlayerUI } from './VideoPlayerUI';
-import type { Source } from '../../utils/source/Source';
-
-const SOURCES = ALL_SOURCES.filter((source) => source.os.indexOf(Platform.OS) >= 0);
 
 export interface VideoPlayerProps {
   config?: PlayerConfiguration;
 }
 
-export function VideoPlayer(props: VideoPlayerProps) {
-  const [player, setPlayer] = useState<THEOplayer | null>();
-  const onPlayerReady = useCallback(
-    (player: THEOplayer) => {
-      setPlayer(player);
-    },
-    [player],
-  );
+interface VideoPlayerState {
+  player: THEOplayer | undefined;
+}
 
-  const chromeless = props.config?.chromeless ?? false;
+export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerState> {
+  constructor(props: VideoPlayerProps) {
+    super(props);
+    this.state = { player: undefined };
+  }
 
-  return (
-    <View style={styles.container}>
-      <THEOplayerView config={props.config} style={styles.fullScreen} onPlayerReady={onPlayerReady} />
+  private onPlayerReady = (player: THEOplayer) => {
+    this.setState({ player });
+  };
 
-      {chromeless && player && <VideoPlayerUI sources={SOURCES as Source[]} player={player} />}
-    </View>
-  );
+  render() {
+    const { config } = this.props;
+    const { player } = this.state;
+    const chromeless = config?.chromeless ?? false;
+
+    return (
+      <View style={styles.container}>
+        <THEOplayerView config={config} style={styles.fullScreen} onPlayerReady={this.onPlayerReady} />
+
+        {chromeless && player && <VideoPlayerUI player={player} />}
+      </View>
+    );
+  }
 }
