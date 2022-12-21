@@ -1,6 +1,6 @@
 import type { ImageSourcePropType, ImageStyle, StyleProp, TextStyle, ViewStyle } from 'react-native';
 import React, { useState } from 'react';
-import { ActionButton } from '../actionbutton/ActionButton';
+import { ActionButton } from '../../button/actionbutton/ActionButton';
 import { ModalMenu } from '../modalmenu/ModalMenu';
 import { MenuRow } from '../modalmenu/MenuRow';
 import type { MenuItem } from '../modalmenu/MenuItem';
@@ -37,6 +37,7 @@ export const MenuButton = (props: MenuButtonProps) => {
           setModalVisible(true);
         }}
         style={style}
+        touchable={true}
       />
 
       {modalVisible && (

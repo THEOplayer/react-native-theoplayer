@@ -1,41 +1,79 @@
 import { StyleProp, Text, TextStyle } from 'react-native';
-import React from 'react';
+import React, { PureComponent } from 'react';
 import styles from './TimeLabel.style';
+import { DurationChangeEvent, PlayerEventType, THEOplayerInternal, TimeUpdateEvent } from 'react-native-theoplayer';
+import { PlayerContext } from '../util/Context';
 
 export interface TimeLabelProps {
-  currentTime: number;
-  duration: number;
-  isLive: boolean;
   showDuration: boolean;
   style?: StyleProp<TextStyle>;
 }
+
+export interface TimeLabelState {
+  currentTime: number;
+  duration: number;
+}
+
 const LIVE_LABEL = 'LIVE';
 
-export const TimeLabel = (props: TimeLabelProps) => {
-  const { currentTime, duration, isLive, style, showDuration } = props;
+export class TimeLabel extends PureComponent<TimeLabelProps, TimeLabelState> {
+  private static initialState: TimeLabelState = {
+    currentTime: 0.0,
+    duration: 0,
+  };
 
-  // An unknown duration is reported as NaN.
-  if (isNaN(duration)) {
-    return <></>;
+  constructor(props: TimeLabelProps) {
+    super(props);
+    this.state = TimeLabel.initialState;
   }
 
-  // Live streams report an Infinity duration.
-  if (isLive || !isFinite(duration)) {
-    return <Text style={[styles.timeLabel, style]}>{LIVE_LABEL}</Text>;
+  componentDidMount() {
+    const player = this.context as THEOplayerInternal;
+    player.addEventListener(PlayerEventType.TIME_UPDATE, this.onTimeUpdate);
+    player.addEventListener(PlayerEventType.DURATION_CHANGE, this.onDurationChange);
   }
 
-  try {
-    const renderHours = duration >= 3600 * 1e3;
-    const s = renderHours ? 11 : 14;
-    const currentTimeLabel = new Date(currentTime).toISOString().substring(s, 19);
-    const durationLabel = new Date(duration).toISOString().substring(s, 19);
-    const label = showDuration ? `${currentTimeLabel} / ${durationLabel}` : currentTimeLabel;
-    return <Text style={[styles.timeLabel, style]}>{label}</Text>;
-  } catch (ignore) {
-    return <></>;
+  componentWillUnmount() {
+    const player = this.context as THEOplayerInternal;
+    player.removeEventListener(PlayerEventType.TIME_UPDATE, this.onTimeUpdate);
+    player.removeEventListener(PlayerEventType.DURATION_CHANGE, this.onDurationChange);
   }
-};
 
-TimeLabel.defaultProps = {
-  showDuration: true,
-};
+  private onTimeUpdate = (event: TimeUpdateEvent) => {
+    const { currentTime } = event;
+    this.setState({ currentTime });
+  };
+
+  private onDurationChange = (event: DurationChangeEvent) => {
+    const { duration } = event;
+    this.setState({ duration });
+  };
+
+  render() {
+    const { currentTime, duration } = this.state;
+    const { style, showDuration } = this.props;
+
+    // An unknown duration is reported as NaN.
+    if (isNaN(duration)) {
+      return <></>;
+    }
+
+    // Live streams report an Infinity duration.
+    if (!isFinite(duration)) {
+      return <Text style={[styles.timeLabel, style]}>{LIVE_LABEL}</Text>;
+    }
+
+    try {
+      const renderHours = duration >= 3600 * 1e3;
+      const s = renderHours ? 11 : 14;
+      const currentTimeLabel = new Date(currentTime).toISOString().substring(s, 19);
+      const durationLabel = new Date(duration).toISOString().substring(s, 19);
+      const label = showDuration ? `${currentTimeLabel} / ${durationLabel}` : currentTimeLabel;
+      return <Text style={[styles.timeLabel, style]}>{label}</Text>;
+    } catch (ignore) {
+      return <></>;
+    }
+  }
+}
+
+TimeLabel.contextType = PlayerContext;
