@@ -32,10 +32,10 @@ class THEOplayerRCTView: UIView {
     private var seek: Double? = nil                  // in msec
     private var fullscreen: Bool = false
     private var chromecastReceiverApplicationId: String?
-#if os(iOS)
+    
+#if os(iOS) && (CHROMECAST || AIRPLAY)
     private var castStrategy: THEOplayerSDK.CastStrategy = THEOplayerSDK.CastStrategy.manual
 #endif
-    
 #if os(iOS) && ADS && (GOOGLE_IMA || GOOGLE_DAI)
     private var adSUIEnabled: Bool = true
     private var googleImaUsesNativeIma: Bool = true
@@ -73,7 +73,7 @@ class THEOplayerRCTView: UIView {
         return player.ads
     }
   
-#if os(iOS)
+#if os(iOS) && (CHROMECAST || AIRPLAY)
     func cast() -> Cast? {
         guard let player = self.player else {
             return nil
@@ -122,11 +122,11 @@ class THEOplayerRCTView: UIView {
             return
         }
         
-#if os(iOS)
-        let isCasting = self.player?.cast?.casting ?? false // TO FIX: remove 'isCasting' workaround
-#else
-        let isCasting = false
+        var isCasting = false
+#if os(iOS) && (CHROMECAST || AIRPLAY)
+        isCasting = self.player?.cast?.casting ?? false // TO FIX: remove 'isCasting' workaround
 #endif
+        
         if !isCasting || self.player == nil {
             self.player?.destroy()
             self.player = nil
@@ -243,7 +243,7 @@ class THEOplayerRCTView: UIView {
             }
         }
 #endif
-#if os(iOS)
+#if os(iOS) && (CHROMECAST || AIRPLAY)
         if let castConfig = configDict["cast"] as? NSDictionary {
             if let castStrategy = castConfig["strategy"] as? String {
                 switch castStrategy {

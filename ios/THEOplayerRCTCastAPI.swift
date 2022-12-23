@@ -34,7 +34,7 @@ class THEOplayerRCTCastAPI: NSObject, RCTBridgeModule {
     
     // MARK: CHROMECAST AND AIRPLAY
     
-#if CHROMECAST || AIRPLAY
+#if os(iOS) && (CHROMECAST || AIRPLAY)
     
     @objc(casting:resolver:rejecter:)
     func casting(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
@@ -63,7 +63,7 @@ class THEOplayerRCTCastAPI: NSObject, RCTBridgeModule {
     
     // MARK: CHROMECAST SPECIFIC
 
-#if CHROMECAST
+#if os(iOS) && CHROMECAST
     
     @objc(chromecastCasting:resolver:rejecter:)
     func chromecastCasting(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
@@ -189,7 +189,7 @@ class THEOplayerRCTCastAPI: NSObject, RCTBridgeModule {
     
     // MARK: AIRPLAY SPECIFIC
 
-#if AIRPLAY
+#if os(iOS) && AIRPLAY
     
     @objc(airplayCasting:resolver:rejecter:)
     func airplayCasting(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
