@@ -172,12 +172,17 @@ class THEOplayerRCTView: UIView {
 
     private func initAdsConfiguration() -> AdsConfiguration? {
 #if os(iOS) && ADS && (GOOGLE_IMA || GOOGLE_DAI)
-        let googleIMAConfiguration = GoogleIMAConfiguration()
-        googleIMAConfiguration.useNativeIma = self.googleImaUsesNativeIma
-        googleIMAConfiguration.disableUI = !self.adSUIEnabled
+        let googleIMAAdsConfiguration = GoogleIMAAdsConfiguration()
+        googleIMAAdsConfiguration.useNativeIma = self.googleImaUsesNativeIma
+        googleIMAAdsConfiguration.disableUI = !self.adSUIEnabled
+        let daiBuilder = GoogleDAIAdsConfigurationBuilder()
+        daiBuilder.disableUI = !self.adSUIEnabled
+        daiBuilder.enableBackgroundPlayback = true
+        let googleDaiAdsConfiguration = daiBuilder.build()
         return AdsConfiguration(showCountdown: self.adSUIEnabled,
                                 preload: self.adPreloadType,
-                                googleImaConfiguration: googleIMAConfiguration)
+                                googleIma: googleIMAAdsConfiguration,
+                                googleDai: googleDaiAdsConfiguration)
 #elseif os(tvOS) && ADS && GOOGLE_IMA
         return AdsConfiguration()
 #else
