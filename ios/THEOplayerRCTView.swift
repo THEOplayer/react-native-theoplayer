@@ -172,6 +172,7 @@ class THEOplayerRCTView: UIView {
 
     private func initAdsConfiguration() -> AdsConfiguration? {
 #if os(iOS) && ADS && (GOOGLE_IMA || GOOGLE_DAI)
+        // NOTE: GoogleIMAAdsConfiguration, GoogleDAIAdsConfigurationBuilder, GoogleDAIAdsConfigurationBuilder require iOS SDK 4.5.1 or higher
         let googleIMAAdsConfiguration = GoogleIMAAdsConfiguration()
         googleIMAAdsConfiguration.useNativeIma = self.googleImaUsesNativeIma
         googleIMAAdsConfiguration.disableUI = !self.adSUIEnabled
@@ -183,6 +184,15 @@ class THEOplayerRCTView: UIView {
                                 preload: self.adPreloadType,
                                 googleIma: googleIMAAdsConfiguration,
                                 googleDai: googleDaiAdsConfiguration)
+        
+        // For lower iOS SDK versions replace the above with:
+        /*let googleIMAConfiguration = GoogleIMAConfiguration()
+        googleIMAConfiguration.useNativeIma = self.googleImaUsesNativeIma
+        googleIMAConfiguration.disableUI = !self.adSUIEnabled
+        return AdsConfiguration(showCountdown: self.adSUIEnabled,
+                                preload: self.adPreloadType,
+                                googleImaConfiguration: googleIMAConfiguration)*/
+        
 #elseif os(tvOS) && ADS && GOOGLE_IMA
         return AdsConfiguration()
 #else
