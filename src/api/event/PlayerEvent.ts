@@ -42,6 +42,13 @@ export interface ReadyStateChangeEvent extends Event<PlayerEventType.READYSTATE_
   readonly readyState: number;
 }
 
+export interface VolumeChangeEvent extends Event<PlayerEventType.VOLUME_CHANGE> {
+  /**
+   * The player's new volume.
+   */
+  readonly volume: number;
+}
+
 export interface ProgressEvent extends Event<PlayerEventType.PROGRESS> {
   /**
    * The ranges of the media resource that are seekable by the player.

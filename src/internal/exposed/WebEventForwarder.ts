@@ -12,6 +12,7 @@ import type {
   TextTrackCue as NativeTextTrackCue,
   TimeUpdateEvent as NativeTimeUpdateEvent,
   TrackChangeEvent,
+  VolumeChangeEvent as NativeVolumeChangeEvent,
 } from 'theoplayer';
 import type { AdEvent, MediaTrack, TextTrack, TimeRange } from 'react-native-theoplayer';
 import {
@@ -40,6 +41,7 @@ import {
   DefaultTextTrackEvent,
   DefaultTextTrackListEvent,
   DefaultTimeupdateEvent,
+  DefaultVolumeChangeEvent,
 } from '../event/PlayerEvents';
 import { fromNativeCue, fromNativeMediaTrack, fromNativeTextTrack } from '../web/TrackUtils';
 
@@ -72,6 +74,7 @@ export class WebEventForwarder {
     this._player.addEventListener('timeupdate', this.onTimeUpdate);
     this._player.addEventListener('durationchange', this.onDurationChange);
     this._player.addEventListener('segmentnotfound', this.onSegmentNotFound);
+    this._player.addEventListener('volumechange', this.onVolumeChangeEvent);
     this._player.presentation.addEventListener('presentationmodechange', this.onPresentationModeChange);
 
     this._player.textTracks.addEventListener('addtrack', this.onAddTextTrack);
@@ -110,6 +113,7 @@ export class WebEventForwarder {
     this._player.removeEventListener('timeupdate', this.onTimeUpdate);
     this._player.removeEventListener('durationchange', this.onDurationChange);
     this._player.removeEventListener('segmentnotfound', this.onSegmentNotFound);
+    this._player.removeEventListener('volumechange', this.onVolumeChangeEvent);
     this._player.presentation.removeEventListener('presentationmodechange', this.onPresentationModeChange);
 
     this._player.textTracks.removeEventListener('addtrack', this.onAddTextTrack);
@@ -215,6 +219,10 @@ export class WebEventForwarder {
 
   private readonly onSegmentNotFound = () => {
     this._facade.dispatchEvent(new DefaultSegmentNotFoundEvent(0, 'Segment not found', -1));
+  };
+
+  private readonly onVolumeChangeEvent = (event: NativeVolumeChangeEvent) => {
+    this._facade.dispatchEvent(new DefaultVolumeChangeEvent(event.volume));
   };
 
   private readonly onPresentationModeChange = (event: PresentationModeChangeEvent) => {

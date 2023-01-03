@@ -9,6 +9,7 @@ import type {
   ReadyStateChangeEvent,
   SegmentNotFoundEvent,
   TimeUpdateEvent,
+  VolumeChangeEvent,
 } from '../event/PlayerEvent';
 import type { MediaTrackEvent, MediaTrackListEvent, TextTrackEvent, TextTrackListEvent } from '../event/TrackEvent';
 import type { AdEvent } from '../event/AdEvent';
@@ -39,6 +40,7 @@ export enum PlayerEventType {
   MEDIA_TRACK = 'mediatrack',
   AD_EVENT = 'adevent',
   CAST_EVENT = 'castevent',
+  VOLUME_CHANGE = 'volumechange',
 }
 
 /**
@@ -66,6 +68,11 @@ export interface PlayerEventMap {
    * Invoked when the player's readyState has changed.
    */
   [PlayerEventType.READYSTATE_CHANGE]: ReadyStateChangeEvent;
+
+  /**
+   * Invoked when the player's volume changes.
+   */
+  [PlayerEventType.VOLUME_CHANGE]: VolumeChangeEvent;
 
   /**
    * Invoked when an error occurs.

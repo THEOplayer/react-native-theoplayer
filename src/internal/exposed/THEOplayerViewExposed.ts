@@ -12,6 +12,7 @@ import type {
 import { PlayerEventType } from 'react-native-theoplayer';
 import { THEOplayerNativeAdsAPI } from '../ads/THEOplayerNativeAdsAPI';
 import { THEOplayerNativeCastAPI } from '../cast/THEOplayerNativeCastApi';
+import { DefaultVolumeChangeEvent } from '../event/PlayerEvents';
 
 export class THEOplayerViewExposed extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayerInternal {
   private readonly _view: THEOplayerView;
@@ -76,6 +77,7 @@ export class THEOplayerViewExposed extends DefaultEventDispatcher<PlayerEventMap
 
   set muted(muted: boolean) {
     this._view.setState({ muted });
+    this.dispatchEvent(new DefaultVolumeChangeEvent(this.volume));
   }
 
   get paused(): boolean {
@@ -136,6 +138,7 @@ export class THEOplayerViewExposed extends DefaultEventDispatcher<PlayerEventMap
 
   set volume(volume: number) {
     this._view.setState({ volume });
+    this.dispatchEvent(new DefaultVolumeChangeEvent(volume));
   }
 
   pause(): void {
