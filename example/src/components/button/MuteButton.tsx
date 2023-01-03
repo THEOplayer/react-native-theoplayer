@@ -1,18 +1,48 @@
 import { MutedIcon, UnMutedIcon } from '../../res/images';
 import styles from '../videoplayer/VideoPlayerUI.style';
 import { ActionButton } from './actionbutton/ActionButton';
-import React, { useContext, useState } from 'react';
+import React, { PureComponent } from 'react';
 import { PlayerContext } from '../util/Context';
+import { PlayerEventType, THEOplayerInternal, VolumeChangeEvent } from 'react-native-theoplayer';
+import { Platform } from 'react-native';
 
-export const MuteButton = () => {
-  const player = useContext(PlayerContext);
-  const [muted, setMuted] = useState(player.muted);
+interface MuteButtonState {
+  muted: boolean;
+}
 
-  const toggleMuted = () => {
-    const newMuted = !player.muted;
-    player.muted = newMuted;
-    setMuted(newMuted);
+export class MuteButton extends PureComponent<unknown, MuteButtonState> {
+  constructor(props: unknown) {
+    super(props);
+    this.state = { muted: false };
+  }
+
+  componentDidMount() {
+    const player = this.context as THEOplayerInternal;
+    player.addEventListener(PlayerEventType.VOLUME_CHANGE, this.onVolumeChange);
+  }
+
+  componentWillUnmount() {
+    const player = this.context as THEOplayerInternal;
+    player.removeEventListener(PlayerEventType.VOLUME_CHANGE, this.onVolumeChange);
+  }
+
+  private onVolumeChange = (_: VolumeChangeEvent) => {
+    const player = this.context as THEOplayerInternal;
+    this.setState({ muted: player.muted });
   };
 
-  return <ActionButton icon={muted ? MutedIcon : UnMutedIcon} onPress={toggleMuted} iconStyle={styles.menuIcon} touchable={true} />;
-};
+  private toggleMuted = () => {
+    const player = this.context as THEOplayerInternal;
+    player.muted = !player.muted;
+  };
+
+  render() {
+    const { muted } = this.state;
+    if (Platform.isTV) {
+      return <></>;
+    }
+    return <ActionButton icon={muted ? MutedIcon : UnMutedIcon} onPress={this.toggleMuted} iconStyle={styles.menuIcon} touchable={true} />;
+  }
+}
+
+MuteButton.contextType = PlayerContext;
