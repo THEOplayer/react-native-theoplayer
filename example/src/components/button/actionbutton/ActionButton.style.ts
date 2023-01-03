@@ -4,8 +4,8 @@ const DEFAULT_SIZE = 25;
 
 export default StyleSheet.create({
   container: {
-    marginLeft: 15,
-    marginVertical: 10,
+    marginHorizontal: 5,
+    marginVertical: 5,
     alignSelf: 'center',
   },
   image: {
