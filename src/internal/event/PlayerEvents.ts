@@ -35,6 +35,7 @@ import {
   TimeRange,
   TimeUpdateEvent,
   TrackListEventType,
+  VolumeChangeEvent,
 } from 'react-native-theoplayer';
 
 export class DefaultFullscreenEvent extends BaseEvent<PlayerEventType.FULLSCREEN> implements FullscreenEvent {
@@ -66,6 +67,12 @@ export class DefaultLoadedMetadataEvent extends BaseEvent<PlayerEventType.LOADED
 export class DefaultReadyStateChangeEvent extends BaseEvent<PlayerEventType.READYSTATE_CHANGE> implements ReadyStateChangeEvent {
   constructor(public readyState: number) {
     super(PlayerEventType.READYSTATE_CHANGE);
+  }
+}
+
+export class DefaultVolumeChangeEvent extends BaseEvent<PlayerEventType.VOLUME_CHANGE> implements VolumeChangeEvent {
+  constructor(public volume: number) {
+    super(PlayerEventType.VOLUME_CHANGE);
   }
 }
 
