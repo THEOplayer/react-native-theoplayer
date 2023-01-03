@@ -17,8 +17,18 @@ import {
   TrackListEventType,
 } from 'react-native-theoplayer';
 import { getTrackLabel } from './TrackUtils';
-import { stringFromTextTrackListEvent } from '../videoplayer/VideoPlayerUI';
 import { PlayerContext } from '../util/Context';
+
+function stringFromTextTrackListEvent(type: TrackListEventType): string {
+  switch (type) {
+    case TrackListEventType.ADD_TRACK:
+      return 'AddTrack';
+    case TrackListEventType.REMOVE_TRACK:
+      return 'RemoveTrack';
+    case TrackListEventType.CHANGE_TRACK:
+      return 'ChangeTrack';
+  }
+}
 
 export interface TextTrackMenuState {
   textTracks: TextTrack[];

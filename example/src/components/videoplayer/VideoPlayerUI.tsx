@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { PlayerEventType, TrackListEventType } from 'react-native-theoplayer';
+import { PlayerEventType } from 'react-native-theoplayer';
 
 import { View } from 'react-native';
 import { SeekBar } from '../seekbar/SeekBar';
@@ -105,16 +105,5 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
         </View>
       </PlayerContext.Provider>
     );
-  }
-}
-
-export function stringFromTextTrackListEvent(type: TrackListEventType): string {
-  switch (type) {
-    case TrackListEventType.ADD_TRACK:
-      return 'AddTrack';
-    case TrackListEventType.REMOVE_TRACK:
-      return 'RemoveTrack';
-    case TrackListEventType.CHANGE_TRACK:
-      return 'ChangeTrack';
   }
 }
