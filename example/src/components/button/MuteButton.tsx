@@ -11,7 +11,6 @@ export const MuteButton = () => {
   const toggleMuted = () => {
     const newMuted = !player.muted;
     player.muted = newMuted;
-    console.log('newMuted', newMuted);
     setMuted(newMuted);
   };
 
