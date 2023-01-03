@@ -5,6 +5,7 @@ import type { CastEvent, THEOplayerInternal } from 'react-native-theoplayer';
 import { CastEventType, PlayerEventType } from 'react-native-theoplayer';
 import { ENABLE_CAST_BUTTON } from '../videoplayer/VideoPlayerUIProps';
 import { PlayerContext } from '../util/Context';
+import { Platform } from 'react-native';
 
 interface ChromecastButtonState {
   connected: boolean;
@@ -41,7 +42,7 @@ export class ChromecastButton extends PureComponent<unknown, ChromecastButtonSta
 
   render() {
     const { connected } = this.state;
-    if (!ENABLE_CAST_BUTTON) {
+    if (!ENABLE_CAST_BUTTON || Platform.isTV) {
       return <></>;
     }
     return <GoogleCastButton style={styles.castButton} tintColor={connected ? '#ffc50f' : 'white'} />;
