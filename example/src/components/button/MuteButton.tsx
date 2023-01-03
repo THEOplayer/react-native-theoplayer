@@ -14,13 +14,5 @@ export const MuteButton = () => {
     setMuted(newMuted);
   };
 
-  return (
-    <ActionButton
-      style={{ marginLeft: 0 }}
-      icon={muted ? MutedIcon : UnMutedIcon}
-      onPress={toggleMuted}
-      iconStyle={styles.menuIcon}
-      touchable={true}
-    />
-  );
+  return <ActionButton icon={muted ? MutedIcon : UnMutedIcon} onPress={toggleMuted} iconStyle={styles.menuIcon} touchable={true} />;
 };

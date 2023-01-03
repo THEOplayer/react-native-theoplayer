@@ -4,6 +4,7 @@ import { ActionButton } from '../../button/actionbutton/ActionButton';
 import { ModalMenu } from '../modalmenu/ModalMenu';
 import { MenuRow } from '../modalmenu/MenuRow';
 import type { MenuItem } from '../modalmenu/MenuItem';
+import styles from '../../videoplayer/VideoPlayerUI.style';
 
 export interface MenuButtonProps {
   title: string;
@@ -20,7 +21,7 @@ export interface MenuButtonProps {
 }
 
 export const MenuButton = (props: MenuButtonProps) => {
-  const { icon, title, data, keyExtractor, onItemSelected, selectedItem, modalStyle, iconStyle, modalTitleStyle, style, minimumItems } = props;
+  const { icon, title, data, keyExtractor, onItemSelected, selectedItem, modalStyle, modalTitleStyle, style, minimumItems } = props;
   const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   // Don't show the menu if it has less items than the preset minimum.
@@ -32,7 +33,7 @@ export const MenuButton = (props: MenuButtonProps) => {
     <>
       <ActionButton
         icon={icon}
-        iconStyle={iconStyle}
+        iconStyle={styles.menuIcon}
         onPress={() => {
           setModalVisible(true);
         }}
