@@ -54,13 +54,13 @@ export class AirplayButton extends PureComponent<unknown, AirplayButtonState> {
 
   render() {
     const { connected } = this.state;
+    if (Platform.OS !== 'ios' || Platform.isTV) {
+      return <></>;
+    }
     return (
-      Platform.OS === 'ios' &&
-      !Platform.isTV && (
-        <TouchableOpacity style={styles.castButton} onPress={this.onUIAirplayToggled}>
-          <Image style={[styles.castIcon, { tintColor: connected ? '#ffc50f' : 'white' }]} source={AirplayIcon} />
-        </TouchableOpacity>
-      )
+      <TouchableOpacity style={styles.castButton} onPress={this.onUIAirplayToggled}>
+        <Image style={[styles.castIcon, { tintColor: connected ? '#ffc50f' : 'white' }]} source={AirplayIcon} />
+      </TouchableOpacity>
     );
   }
 }
