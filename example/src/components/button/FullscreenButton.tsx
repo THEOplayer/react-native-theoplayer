@@ -40,7 +40,6 @@ export class FullscreenButton extends PureComponent<unknown, FullscreenButtonSta
 
   private toggleFullScreen = () => {
     const player = this.context as THEOplayerInternal;
-    console.log('toggle fullscreen');
     player.fullscreen = !player.fullscreen;
   };
 
