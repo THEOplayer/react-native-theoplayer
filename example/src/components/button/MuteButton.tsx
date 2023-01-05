@@ -1,10 +1,10 @@
 import { MutedIcon, UnMutedIcon } from '../../res/images';
-import styles from '../videoplayer/VideoPlayerUI.style';
 import { ActionButton } from './actionbutton/ActionButton';
 import React, { PureComponent } from 'react';
 import { PlayerContext } from '../util/Context';
 import { PlayerEventType, THEOplayerInternal, VolumeChangeEvent } from 'react-native-theoplayer';
 import { Platform } from 'react-native';
+import { controlBarStyle } from '../controlbar/ControlBar';
 
 interface MuteButtonState {
   muted: boolean;
@@ -41,7 +41,7 @@ export class MuteButton extends PureComponent<unknown, MuteButtonState> {
     if (Platform.isTV) {
       return <></>;
     }
-    return <ActionButton icon={muted ? MutedIcon : UnMutedIcon} onPress={this.toggleMuted} iconStyle={styles.menuIcon} touchable={true} />;
+    return <ActionButton icon={muted ? MutedIcon : UnMutedIcon} onPress={this.toggleMuted} iconStyle={controlBarStyle.menuIcon} touchable={true} />;
   }
 }
 

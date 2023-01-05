@@ -10,6 +10,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'black',
+    overflow: 'hidden',
   },
   fullScreen: {
     position: 'absolute',

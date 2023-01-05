@@ -2,10 +2,10 @@ import React, { PureComponent } from 'react';
 import type { FullscreenEvent, THEOplayerInternal } from 'react-native-theoplayer';
 import { FullscreenActionType, PlayerEventType } from 'react-native-theoplayer';
 import { Platform } from 'react-native';
-import styles from '../videoplayer/VideoPlayerUI.style';
 import { FullScreenExitIcon, FullScreenIcon } from '../../res/images';
 import { ActionButton } from './actionbutton/ActionButton';
 import { PlayerContext } from '../util/Context';
+import { controlBarStyle } from '../controlbar/ControlBar';
 
 interface FullscreenButtonState {
   fullscreen: boolean;
@@ -48,7 +48,9 @@ export class FullscreenButton extends PureComponent<unknown, FullscreenButtonSta
     if (Platform.isTV) {
       return <></>;
     }
-    return <ActionButton icon={fullscreen ? FullScreenExitIcon : FullScreenIcon} onPress={this.toggleFullScreen} iconStyle={styles.menuIcon} />;
+    return (
+      <ActionButton icon={fullscreen ? FullScreenExitIcon : FullScreenIcon} onPress={this.toggleFullScreen} iconStyle={controlBarStyle.menuIcon} />
+    );
   }
 }
 

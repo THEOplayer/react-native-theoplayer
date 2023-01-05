@@ -35,14 +35,14 @@ export default StyleSheet.create({
   controlsContainer: {
     position: 'absolute',
     bottom: 0,
-    left: 20,
-    right: 20,
+    left: 0,
+    right: 0,
     padding: 10,
     paddingBottom: 20,
     zIndex: 1,
   },
   topContainer: {
-    margin: 20,
+    height: 30,
     flexDirection: 'row',
     justifyContent: 'flex-end',
     zIndex: 1,
@@ -69,14 +69,9 @@ export default StyleSheet.create({
     color: 'white',
     backgroundColor: 'black',
   },
-  playButton: {
-    width: 90,
-    height: 90,
-    tintColor: '#ffc50f',
-  },
-  menuIcon: {
-    width: 30,
-    height: 30,
+  bigPlayButton: {
+    width: 48,
+    height: 48,
   },
   timeLabel: {
     marginLeft: 20,
@@ -99,15 +94,5 @@ export default StyleSheet.create({
   },
   thumbnailCarousel: {
     margin: 4,
-  },
-  castButton: {
-    width: 24,
-    height: 24,
-    tintColor: 'white',
-    marginRight : 15
-  },
-  castIcon: {
-    width: 24,
-    height: 24,
   },
 });
