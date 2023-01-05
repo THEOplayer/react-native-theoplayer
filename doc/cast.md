@@ -2,7 +2,7 @@
 
 ### Overview
 
-The basics of both Chromecast and Airplay are well-described on
+The basics of both Chromecast and Airplay are well-described in
 THEOplayer's [Knowledge Base](https://docs.theoplayer.com/how-to-guides/03-cast/01-chromecast/00-introduction.md).
 The `react-native-theoplayer` package has support for both.
 
@@ -183,7 +183,18 @@ to the receiver. Common fields include `poster`, `title`, `subtitle`, `album` an
 
 ### Airplay
 
-TODO
+For iOS and Web Safari, also Airplay is supported. Similar to chromecast, you can listen to or check the airplay cast state and use the player's Airplay API to either start or join an Airplay session. When implementing a simple airplay button you can toggle Airplay using:
+```typescript
+this.video.cast.airplay?.state().then((airplayCastState) => {
+	const inConnection = airplayCastState === 'connected' || airplayCastState === 'connecting'
+	if (inConnection) {
+		this.video.cast.airplay?.stop()
+	} else {
+		this.video.cast.airplay?.start()
+	}
+})
+```  
+
 
 ### Cast API
 
