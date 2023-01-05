@@ -4,7 +4,7 @@ import { ActionButton } from '../../button/actionbutton/ActionButton';
 import { ModalMenu } from '../modalmenu/ModalMenu';
 import { MenuRow } from '../modalmenu/MenuRow';
 import type { MenuItem } from '../modalmenu/MenuItem';
-import styles from '../../videoplayer/VideoPlayerUI.style';
+import { controlBarStyle } from '../../controlbar/ControlBar';
 
 export interface MenuButtonProps {
   title: string;
@@ -33,7 +33,7 @@ export const MenuButton = (props: MenuButtonProps) => {
     <>
       <ActionButton
         icon={icon}
-        iconStyle={styles.menuIcon}
+        iconStyle={controlBarStyle.menuIcon}
         onPress={() => {
           setModalVisible(true);
         }}

@@ -1,15 +1,11 @@
 import React, { PureComponent } from 'react';
 import { PlayerEventType } from 'react-native-theoplayer';
-
-import { View } from 'react-native';
 import { SeekBar } from '../seekbar/SeekBar';
 import styles from './VideoPlayerUI.style';
 import { THUMBNAIL_MODE, VideoPlayerUIProps } from './VideoPlayerUIProps';
 import { AirplayButton } from '../button/AirplayButton';
 import { ChromecastButton } from '../button/ChromecastButton';
-import { TopControlBar } from '../controlbar/TopControlBar';
-import { CenteredDelayedActivityIndicator } from '../delayedactivityindicator/CenteredDelayedActivityIndicator';
-import { BigPlayButton } from '../button/BigPlayButton';
+import { ControlBar, SplitControlBar } from '../controlbar/ControlBar';
 import { TimeLabel } from '../timelabel/TimeLabel';
 import { FullscreenButton } from '../button/FullscreenButton';
 import { TextTrackMenu } from '../menu/TextTrackMenu';
@@ -17,9 +13,13 @@ import { AudioTrackMenu } from '../menu/AudioTrackMenu';
 import { VideoQualityMenu } from '../menu/VideoQualityMenu';
 import { SourceMenu } from '../menu/SourceMenu';
 import { MuteButton } from '../button/MuteButton';
-import { ErrorDisplay } from '../view/ErrorDisplay';
-import { CastMessage } from '../view/CastMessage';
 import { PlayerContext } from '../util/Context';
+import { SlotView } from '../slots/SlotView';
+import { PlayButton } from '../button/PlayButton';
+import { BigPlayButton } from '../button/BigPlayButton';
+import { CastMessage } from '../view/CastMessage';
+import { CenteredDelayedActivityIndicator } from '../delayedactivityindicator/CenteredDelayedActivityIndicator';
+import { ErrorDisplay } from '../view/ErrorDisplay';
 
 export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
   constructor(props: VideoPlayerUIProps) {
@@ -63,46 +63,50 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
 
     return (
       <PlayerContext.Provider value={player}>
-        <View style={[styles.container, style]}>
-          {/*Background*/}
-          <View style={styles.background} />
+        <SlotView
+          style={style}
+          top={
+            <ControlBar>
+              <AirplayButton />
+              <ChromecastButton />
+            </ControlBar>
+          }
+          center={
+            <>
+              <BigPlayButton />
+              <CenteredDelayedActivityIndicator />
+            </>
+          }
+          bottom={
+            <>
+              <CastMessage />
+              <ControlBar>
+                <SeekBar thumbnailMode={THUMBNAIL_MODE} />
+              </ControlBar>
 
-          <TopControlBar>
-            <AirplayButton />
-            <ChromecastButton />
-          </TopControlBar>
-
-          <CenteredDelayedActivityIndicator />
-
-          <BigPlayButton />
-
+              <SplitControlBar
+                left={
+                  <>
+                    <PlayButton />
+                    <MuteButton />
+                    <TimeLabel showDuration={true} style={styles.timeLabel} />
+                  </>
+                }
+                right={
+                  <>
+                    <TextTrackMenu />
+                    <AudioTrackMenu />
+                    {/*Note: quality selection is not available on iOS */}
+                    <VideoQualityMenu />
+                    <SourceMenu />
+                    <FullscreenButton />
+                  </>
+                }
+              />
+            </>
+          }>
           <ErrorDisplay />
-
-          <View style={styles.controlsContainer}>
-            <CastMessage />
-
-            <SeekBar thumbnailMode={THUMBNAIL_MODE} />
-
-            <View style={styles.bottomControlsContainer}>
-              <MuteButton />
-              <TimeLabel showDuration={true} style={styles.timeLabel} />
-
-              {/*Spacer*/}
-              <View style={{ flexGrow: 1 }} />
-
-              <TextTrackMenu />
-
-              <AudioTrackMenu />
-
-              {/*Note: quality selection is not available on iOS */}
-              <VideoQualityMenu />
-
-              <SourceMenu />
-
-              <FullscreenButton />
-            </View>
-          </View>
-        </View>
+        </SlotView>
       </PlayerContext.Provider>
     );
   }
