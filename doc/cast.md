@@ -54,8 +54,33 @@ THEOplayer_extensionCast = true
 <details>
 <summary>iOS</summary>
 
+##### iOS: Custom THEOplayer build
 To enable Chromecast for the iOS platform, a dependency to the THEOplayer SDK
 that includes the Google Cast library needs to be added. See [Custom iOS framework](./custom-ios-framework.md) for more details.
+
+##### iOS: Network discovery
+Specify NSBonjourServices in your Info.plist to allow local network discovery to succeed on iOS 14. You will need to add both _googlecast._tcp and _[your-app-id]._googlecast._tcp as services for device discovery to work properly. 
+
+Update your applications info.plist with the following example NSBonjourServices definition, replacing "ABCD1234" with your appID.
+```xml
+<key>NSBonjourServices</key>
+<array>
+  <string>_googlecast._tcp</string>
+  <string>_ABCD1234._googlecast._tcp</string>
+</array>
+```
+
+##### iOS: Cast Discovery Permission
+We also recommend that you customize the message shown in the Local Network prompt by adding an app-specific permission string in your app's Info.plist file for the NSLocalNetworkUsageDescription such as to describe Cast discovery and other discovery services.
+
+```xml
+<key>NSLocalNetworkUsageDescription</key>
+<string>${PRODUCT_NAME} uses the local network to discover Cast-enabled devices on your WiFi
+network.</string>
+```
+
+##### iOS: Early CastContext setup
+When using react-native-google-cast to render the CastButton, their documentation suggest to setup the CastContext as soon as possible. We noticed that waiting to prepare this context to a later point in time (i.e. till the AppId is bridged from RN) fails to display that CastButton. To prevent this follow the [instructions](https://react-native-google-cast.github.io/docs/getting-started/setup#ios) (or check our example application) to setup the GCKCastContext in the AppDelegate.
 
 </details>
 
