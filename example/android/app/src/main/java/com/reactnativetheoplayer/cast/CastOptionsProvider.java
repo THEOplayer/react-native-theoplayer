@@ -12,7 +12,7 @@ import java.util.List;
 
 public class CastOptionsProvider implements OptionsProvider {
 
-    public static String DEFAULT_APP_ID = "1ADD53F3";
+    public static String DEFAULT_APP_ID = "CC1AD845";
 
     @NonNull
     @Override
