@@ -18,7 +18,7 @@ To enable Chromecast we recommend using the
 [`react-native-google-cast`](https://github.com/react-native-google-cast/react-native-google-cast)
 package, which comes with native support for both iOS and Android. It is fully-featured and provides the possibility to manage
 devices and sessions, send a source description and listen for cast events.
-Most importantly, it includes a `<CastButton>` component that can added to the app's UI, as demonstrated in the [example app](example-app.md).
+Most importantly, it includes a `<CastButton>` component that can be added to the app's UI, as demonstrated in the [example app](example-app.md).
 This button represents a native media route button that shows the connection state and opens a
 device dialog when tapped.
 
@@ -30,7 +30,9 @@ device dialog when tapped.
 ```
 
 The THEOplayer SDK is able to send a source description to a receiver and route all cast events through its
-API, so we will not need `react-native-google-cast`'s functionality for that.
+API. It is possible to use `react-native-google-cast`'s functionality for this as well, but this would require some
+extra steps, such as communicating a source description and listening for cast events.
+For the rest of this document we assume that THEOplayer handles this logic.
 
 The [installation instructions](https://react-native-google-cast.github.io/docs/getting-started/installation)
 for `react-native-google-cast` also cover the steps to enable support for Chromecast in your app.
@@ -57,22 +59,48 @@ that includes the Google Cast library needs to be added. See [Custom iOS framewo
 
 </details>
 
+<details>
+<summary>Web</summary>
+
+The `react-native-google-cast` package has no support for Web yet. If the THEOplayer Web SDK's default UI is used
+however, the cast button will be included here and there is no need to install `react-native-google-cast`.
+
+The web page hosting the player just needs to load the Google cast sender module:
+
+```html
+<script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
+```
+
+</details>
+
 #### THEOplayerView configuration
 
-In the configuration of a `THEOplayerView` component you can optionally override the
-receiver's appID, which is already set natively through `CastOptionsProvider` on Android
-and `AppDelegate` on iOS:
+In the configuration of a `THEOplayerView` component you can set the
+receiver's appID. This only makes sense on a Web platform, as for mobile platforms this value
+is already set natively through `CastOptionsProvider` on Android and `AppDelegate` on iOS:
 
 ```javascript
 const playerConfig: PlayerConfiguration = {
   cast: {
     chromecast: {
-      appID: '<receiverAppID'
+      appID: '<receiverAppID>'
     },
     strategy: 'auto'
   }
 }
 ```
+
+The [example app](./example-app.md) sets appID to `'CC1AD845'`, which refers to Google's default V3 receiver.
+This receiver implementation will know how to play the manifest/playlist URL sent by THEOplayer, but it does not
+have knowledge on how to handle any additional information from the source description provided through the
+`MediaInfo.customData` [field](https://developers.google.com/android/reference/com/google/android/gms/cast/MediaInfo.Builder#public-mediainfo.builder-setcustomdata-jsonobject-customdata).
+As a consequence, to enable playback of for example DRM-protected streams or ads, a custom receiver needs to
+be created that also handles these parts of the source description.
+
+We refer to our [sample-google-cast-v3-receiver](https://github.com/THEOplayer/samples-google-cast-v3-receiver/)
+repository for an example on how to interpret a THEOplayer source description and handle a custom DRM flow.
+
+#### Cast strategy
 
 The `strategy` property indicates the *join strategy* that will be used when starting/joining sessions:
 
