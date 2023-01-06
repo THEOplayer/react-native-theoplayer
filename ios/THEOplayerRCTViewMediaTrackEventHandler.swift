@@ -52,7 +52,7 @@ class THEOplayerRCTViewMediaTrackEventHandler {
                 if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received ADD_TRACK event from THEOplayer audioTrack list: trackUid = \(audioTrack.uid)") }
                 // trigger tracklist event
                 forwardedMediaTrackListEvent([
-                    "track" : THEOplayerRCTMetadataAggregator.aggregatedAudioTrackInfo(audioTrack: audioTrack),
+                    "track" : THEOplayerRCTTrackMetadataAggregator.aggregatedAudioTrackInfo(audioTrack: audioTrack),
                     "type" : TrackListEventType.ADD_TRACK.rawValue,
                     "trackType": MediaTrackType.AUDIO.rawValue
                 ])
@@ -68,7 +68,7 @@ class THEOplayerRCTViewMediaTrackEventHandler {
                 if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received REMOVE_TRACK event from THEOplayer audioTrack list: trackUid = \(audioTrack.uid)") }
                 // trigger tracklist event
                 forwardedMediaTrackListEvent([
-                    "track" : THEOplayerRCTMetadataAggregator.aggregatedAudioTrackInfo(audioTrack: audioTrack),
+                    "track" : THEOplayerRCTTrackMetadataAggregator.aggregatedAudioTrackInfo(audioTrack: audioTrack),
                     "type" : TrackListEventType.REMOVE_TRACK.rawValue,
                     "trackType": MediaTrackType.AUDIO.rawValue
                 ])
@@ -84,7 +84,7 @@ class THEOplayerRCTViewMediaTrackEventHandler {
                 if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received CHANGE event from THEOplayer audioTrack list: trackUid = \(audioTrack.uid)") }
                 // trigger tracklist event
                 forwardedMediaTrackListEvent([
-                    "track" : THEOplayerRCTMetadataAggregator.aggregatedAudioTrackInfo(audioTrack: audioTrack),
+                    "track" : THEOplayerRCTTrackMetadataAggregator.aggregatedAudioTrackInfo(audioTrack: audioTrack),
                     "type" : TrackListEventType.CHANGE_TRACK.rawValue,
                     "trackType": MediaTrackType.AUDIO.rawValue
                 ])
@@ -100,7 +100,7 @@ class THEOplayerRCTViewMediaTrackEventHandler {
                 if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received ADD_TRACK event from THEOplayer videoTrack list: trackUid = \(videoTrack.uid)") }
                 // trigger tracklist event
                 forwardedMediaTrackListEvent([
-                    "track" : THEOplayerRCTMetadataAggregator.aggregatedVideoTrackInfo(videoTrack: videoTrack),
+                    "track" : THEOplayerRCTTrackMetadataAggregator.aggregatedVideoTrackInfo(videoTrack: videoTrack),
                     "type" : TrackListEventType.ADD_TRACK.rawValue,
                     "trackType": MediaTrackType.VIDEO.rawValue
                 ])
@@ -116,7 +116,7 @@ class THEOplayerRCTViewMediaTrackEventHandler {
                 if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received REMOVE_TRACK event from THEOplayer videoTrack list: trackUid = \(videoTrack.uid)") }
                 // trigger tracklist event
                 forwardedMediaTrackListEvent([
-                    "track" : THEOplayerRCTMetadataAggregator.aggregatedVideoTrackInfo(videoTrack: videoTrack),
+                    "track" : THEOplayerRCTTrackMetadataAggregator.aggregatedVideoTrackInfo(videoTrack: videoTrack),
                     "type" : TrackListEventType.REMOVE_TRACK.rawValue,
                     "trackType": MediaTrackType.VIDEO.rawValue
                 ])
@@ -132,7 +132,7 @@ class THEOplayerRCTViewMediaTrackEventHandler {
                 if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received CHANGE event from THEOplayer videoTrack list: trackUid = \(videoTrack.uid)") }
                 // trigger tracklist event
                 forwardedMediaTrackListEvent([
-                    "track" : THEOplayerRCTMetadataAggregator.aggregatedVideoTrackInfo(videoTrack: videoTrack),
+                    "track" : THEOplayerRCTTrackMetadataAggregator.aggregatedVideoTrackInfo(videoTrack: videoTrack),
                     "type" : TrackListEventType.CHANGE_TRACK.rawValue,
                     "trackType": MediaTrackType.VIDEO.rawValue
                 ])
