@@ -13,25 +13,12 @@ import {
 } from 'react-native';
 import type {
   ABRConfiguration,
-  AdEvent,
   AdsAPI,
   CastAPI,
-  CastEvent,
-  DurationChangeEvent,
-  ErrorEvent,
-  LoadedMetadataEvent,
-  MediaTrackEvent,
-  MediaTrackListEvent,
   PlayerConfiguration,
   PlayerError,
-  ProgressEvent,
-  ReadyStateChangeEvent,
-  SegmentNotFoundEvent,
   SourceDescription,
-  TextTrackEvent,
-  TextTrackListEvent,
   THEOplayerViewProps,
-  TimeUpdateEvent,
 } from 'react-native-theoplayer';
 import { CastEventType, FullscreenActionType, PlayerEventType } from 'react-native-theoplayer';
 
@@ -91,33 +78,6 @@ export interface LegacyTHEOplayerViewProps {
   targetVideoQuality?: number | number[] | undefined;
   selectedAudioTrack?: number | undefined;
   style?: StyleProp<ViewStyle>;
-  onFullscreenPlayerWillPresent?: () => void;
-  onFullscreenPlayerDidPresent?: () => void;
-  onFullscreenPlayerWillDismiss?: () => void;
-  onFullscreenPlayerDidDismiss?: () => void;
-  onBufferingStateChange?: (isBuffering: boolean) => void;
-  onSourceChange?: () => void;
-  onLoadStart?: () => void;
-  onLoadedMetadata?: (event: LoadedMetadataEvent) => void;
-  onLoadedData?: () => void;
-  onReadyStateChange?: (event: ReadyStateChangeEvent) => void;
-  onError?: (event: ErrorEvent) => void;
-  onProgress?: (event: ProgressEvent) => void;
-  onPlay?: () => void;
-  onPlaying?: () => void;
-  onPause?: () => void;
-  onSeeking?: () => void;
-  onSeeked?: () => void;
-  onEnded?: () => void;
-  onTimeUpdate?: (event: TimeUpdateEvent) => void;
-  onDurationChange?: (event: DurationChangeEvent) => void;
-  onSegmentNotFound?: (event: SegmentNotFoundEvent) => void;
-  onTextTrackListEvent?: (event: TextTrackListEvent) => void;
-  onTextTrackEvent?: (event: TextTrackEvent) => void;
-  onMediaTrackListEvent?: (event: MediaTrackListEvent) => void;
-  onMediaTrackEvent?: (event: MediaTrackEvent) => void;
-  onAdEvent?: (event: AdEvent) => void;
-  onCastEvent?: (event: CastEvent) => void;
 }
 
 interface THEOplayerRCTViewProps extends LegacyTHEOplayerViewProps {
