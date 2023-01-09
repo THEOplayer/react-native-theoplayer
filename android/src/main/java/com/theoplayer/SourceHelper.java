@@ -1,6 +1,7 @@
 package com.theoplayer;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +22,8 @@ import com.theoplayer.android.api.source.addescription.AdDescription;
 import com.theoplayer.android.api.source.addescription.GoogleImaAdDescription;
 import com.theoplayer.android.api.source.drm.DRMConfiguration;
 import com.theoplayer.android.api.source.hls.HlsPlaybackConfiguration;
+import com.theoplayer.android.api.source.metadata.ChromecastMetadataImage;
+import com.theoplayer.android.api.source.metadata.MetadataDescription;
 import com.theoplayer.android.api.source.ssai.SsaiIntegration;
 import com.theoplayer.android.api.source.ssai.YoSpaceDescription;
 import com.theoplayer.android.api.source.ssai.dai.GoogleDaiLiveConfiguration;
@@ -33,6 +36,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,11 +45,14 @@ import java.util.Map;
  */
 public class SourceHelper {
 
+  private static final String TAG = "SourceHelper";
+
   private static final String PROP_CONTENT_PROTECTION = "contentProtection";
   private static final String PROP_LIVE_OFFSET = "liveOffset";
   private static final String PROP_HLS_DATERANGE = "hlsDateRange";
   private static final String PROP_HLS_PLAYBACK_CONFIG = "hls";
   private static final String PROP_TIME_SERVER = "timeServer";
+  private static final String PROP_METADATA = "metadata";
   public static final String PROP_SSAI = "ssai";
   public static final String PROP_TYPE = "type";
   public static final String PROP_SRC = "src";
@@ -96,6 +104,13 @@ public class SourceHelper {
         // poster
         String poster = jsonSourceObject.optString(PROP_POSTER);
 
+        // metadata
+        MetadataDescription metadataDescription = null;
+        JSONObject jsonMetadata = jsonSourceObject.optJSONObject(PROP_METADATA);
+        if (jsonMetadata != null) {
+          metadataDescription = parseMetadataDescription(jsonMetadata);
+        }
+
         // ads
         JSONArray jsonAds = jsonSourceObject.optJSONArray(PROP_ADS);
         ArrayList<AdDescription> ads = new ArrayList<>();
@@ -117,16 +132,17 @@ public class SourceHelper {
             sideLoadedTextTracks.add(parseTextTrackFromJS(jsonTextTrack));
           }
         }
-
-        return SourceDescription.Builder.sourceDescription(typedSources.toArray(new TypedSource[]{}))
+        SourceDescription.Builder builder = SourceDescription.Builder.sourceDescription(typedSources.toArray(new TypedSource[]{}))
           .poster(poster)
           .ads(ads.toArray(new AdDescription[]{}))
-          .textTracks(sideLoadedTextTracks.toArray(new TextTrackDescription[]{}))
-          .build();
+          .textTracks(sideLoadedTextTracks.toArray(new TextTrackDescription[]{}));
+        if (metadataDescription != null) {
+          builder.metadata(metadataDescription);
+        }
+        return builder.build();
       } catch (JSONException e) {
         e.printStackTrace();
       }
-
       return null;
   }
 
@@ -317,6 +333,38 @@ public class SourceHelper {
       case "descriptions": return TextTrackKind.DESCRIPTIONS;
     }
     return null;
+  }
+
+  private static MetadataDescription parseMetadataDescription(JSONObject metadataDescription) {
+    HashMap<String, Object> metadata = new HashMap<>();
+    Iterator<String> keys = metadataDescription.keys();
+    while (keys.hasNext()) {
+      String key = keys.next();
+      try {
+        if (key.equals("images")) {
+          metadata.put(key, parseMetadataImages(metadataDescription.getJSONArray(key)));
+        } else {
+          metadata.put(key, metadataDescription.get(key));
+        }
+      } catch (JSONException e) {
+        Log.w(TAG, "Failed to parse metadata key " + key);
+      }
+    }
+    return new MetadataDescription(metadata);
+  }
+
+  private static List<ChromecastMetadataImage> parseMetadataImages(JSONArray metadataImages) throws JSONException {
+    List<ChromecastMetadataImage> imageList = new ArrayList<>();
+    for (int i = 0; i < metadataImages.length(); i++) {
+      imageList.add(parseMetadataImage(metadataImages.getJSONObject(i)));
+    }
+    return imageList;
+  }
+
+  private static ChromecastMetadataImage parseMetadataImage(JSONObject metadataImage) throws JSONException {
+    final Integer width = metadataImage.has("width") ? metadataImage.getInt("width") : null;
+    final Integer height = metadataImage.has("height") ? metadataImage.getInt("height") : null;
+    return new ChromecastMetadataImage(metadataImage.optString("src"), width, height);
   }
 
   /**

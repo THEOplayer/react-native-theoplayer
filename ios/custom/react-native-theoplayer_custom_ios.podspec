@@ -32,5 +32,6 @@ Pod::Spec.new do |s|
 
   	### Add external dependencies
   	s.ios.dependency "GoogleAds-IMA-iOS-SDK"
+	s.ios.dependency "google-cast-sdk-dynamic-xcframework-no-bluetooth"
 	
 end

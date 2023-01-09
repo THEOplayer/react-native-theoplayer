@@ -29,6 +29,7 @@ import com.theoplayer.android.api.THEOplayerView;
 import com.theoplayer.android.api.ads.ima.GoogleImaIntegration;
 import com.theoplayer.android.api.ads.ima.GoogleImaIntegrationFactory;
 import com.theoplayer.android.api.ads.wrapper.AdsApiWrapper;
+import com.theoplayer.android.api.cast.Cast;
 import com.theoplayer.android.api.cast.CastIntegration;
 import com.theoplayer.android.api.cast.CastIntegrationFactory;
 import com.theoplayer.android.api.error.THEOplayerException;
@@ -68,6 +69,8 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
 
   private GoogleImaIntegration imaIntegration;
 
+  private CastIntegration castIntegration;
+
   private final AdsApiWrapper adsApi;
 
   private Player player;
@@ -90,12 +93,22 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
   }
 
   public void initialize(@Nullable ReadableMap configProps) {
-    createViews(PlayerConfigHelper.fromProps(configProps));
+    createViews(new PlayerConfigAdapter().fromProps(configProps));
   }
 
   @Nullable
   public GoogleDaiIntegration getDaiIntegration() {
     return daiIntegration;
+  }
+
+  @Nullable
+  public CastIntegration getCastIntegration() {
+    return castIntegration;
+  }
+
+  @Nullable
+  public Cast getCastApi() {
+    return playerView != null ? playerView.getCast() : null;
   }
 
   @NonNull
@@ -214,7 +227,7 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
     }
     try {
       if (BuildConfig.EXTENSION_CAST) {
-        CastIntegration castIntegration = CastIntegrationFactory.createCastIntegration(playerView);
+        castIntegration = CastIntegrationFactory.createCastIntegration(playerView);
         playerView.getPlayer().addIntegration(castIntegration);
       }
       // Add other future integrations here.
@@ -284,6 +297,8 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
   public AdsApiWrapper getAdsApi() {
     return adsApi;
   }
+
+
 
   @Override
   public void onHostResume() {
@@ -368,9 +383,23 @@ public class ReactTHEOplayerView extends FrameLayout implements LifecycleEventLi
     if (player != null) {
       final boolean playerIsPaused = player.isPaused();
       if (!paused && playerIsPaused) {
-        player.play();
+        applyPaused(false);
       } else if (paused && (!playerIsPaused || adsApi.isPlaying())) {
+        applyPaused(true);
+      } else {
+        // The player's paused state is out-of-sync, this shouldn't happen.
+        Log.w(TAG, "paused stated out-of-sync");
+        applyPaused(paused);
+      }
+    }
+  }
+
+  private void applyPaused(boolean paused) {
+    if (player != null) {
+      if (paused) {
         player.pause();
+      } else {
+        player.play();
       }
     }
   }

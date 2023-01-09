@@ -17,11 +17,14 @@ import type {
   AdsAPI,
   MediaTrackEvent,
   MediaTrackListEvent,
+  CastAPI,
+  CastEvent,
 } from 'react-native-theoplayer';
 
 import styles from './THEOplayerView.style';
 import type { SourceDescription } from 'react-native-theoplayer';
 import { THEOplayerNativeAdsAPI } from './ads/THEOplayerNativeAdsAPI';
+import { THEOplayerNativeCastAPI } from './cast/THEOplayerNativeCastApi';
 import { decodeNanInf } from './utils/TypeUtils';
 
 interface THEOplayerRCTViewProps extends THEOplayerViewProps {
@@ -50,6 +53,7 @@ interface THEOplayerRCTViewProps extends THEOplayerViewProps {
   onNativeMediaTrackListEvent: (event: NativeSyntheticEvent<MediaTrackListEvent>) => void;
   onNativeMediaTrackEvent: (event: NativeSyntheticEvent<MediaTrackEvent>) => void;
   onNativeAdEvent: (event: NativeSyntheticEvent<AdEvent>) => void;
+  onNativeCastEvent: (event: NativeSyntheticEvent<CastEvent>) => void;
   onNativeFullscreenPlayerWillPresent?: () => void;
   onNativeFullscreenPlayerDidPresent?: () => void;
   onNativeFullscreenPlayerWillDismiss?: () => void;
@@ -68,6 +72,7 @@ interface THEOplayerViewNativeComponent extends THEOplayerViewComponent, HostCom
 export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplayerRCTViewState> implements THEOplayerViewComponent {
   private readonly _root: React.RefObject<THEOplayerViewNativeComponent>;
   private readonly _adsApi: THEOplayerNativeAdsAPI;
+  private readonly _castApi: THEOplayerNativeCastAPI;
 
   private static initialState: THEOplayerRCTViewState = {
     isBuffering: false,
@@ -79,6 +84,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
     this._root = React.createRef();
     this.state = THEOplayerView.initialState;
     this._adsApi = new THEOplayerNativeAdsAPI(this);
+    this._castApi = new THEOplayerNativeCastAPI(this);
   }
 
   componentWillUnmount() {
@@ -108,6 +114,10 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
 
   public get ads(): AdsAPI {
     return this._adsApi;
+  }
+
+  public get cast(): CastAPI {
+    return this._castApi;
   }
 
   private reset() {
@@ -282,6 +292,12 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
     }
   };
 
+  private _onCastEvent = (event: NativeSyntheticEvent<CastEvent>) => {
+    if (this.props.onCastEvent) {
+      this.props.onCastEvent(event.nativeEvent);
+    }
+  };
+
   private _onFullscreenPlayerWillPresent = () => {
     if (this.props.onFullscreenPlayerWillPresent) {
       this.props.onFullscreenPlayerWillPresent();
@@ -346,6 +362,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
           onNativeMediaTrackListEvent={this._onMediaTrackListEvent}
           onNativeMediaTrackEvent={this._onMediaTrackEvent}
           onNativeAdEvent={this._onAdEvent}
+          onNativeCastEvent={this._onCastEvent}
           onNativeFullscreenPlayerWillPresent={this._onFullscreenPlayerWillPresent}
           onNativeFullscreenPlayerDidPresent={this._onFullscreenPlayerDidPresent}
           onNativeFullscreenPlayerWillDismiss={this._onFullscreenPlayerWillDismiss}

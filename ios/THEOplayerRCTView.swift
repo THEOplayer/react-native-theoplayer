@@ -3,6 +3,10 @@
 import Foundation
 import UIKit
 import THEOplayerSDK
+
+#if CHROMECAST
+import GoogleCast
+#endif
  
 class THEOplayerRCTView: UIView {
     // MARK: Members
@@ -11,6 +15,7 @@ class THEOplayerRCTView: UIView {
     private var textTrackEventHandler: THEOplayerRCTViewTextTrackEventHandler
     private var mediaTrackEventHandler: THEOplayerRCTViewMediaTrackEventHandler
     private var adEventHandler: THEOplayerRCTViewAdEventHandler
+    private var castEventHandler: THEOplayerRCTViewCastEventHandler
     
     // MARK: Bridged props
     private var src: SourceDescription?
@@ -26,6 +31,10 @@ class THEOplayerRCTView: UIView {
     private var selectedAudioTrackUid: Int = 0
     private var seek: Double? = nil                  // in msec
     private var fullscreen: Bool = false
+    private var chromecastReceiverApplicationId: String?
+#if os(iOS)
+    private var castStrategy: THEOplayerSDK.CastStrategy = THEOplayerSDK.CastStrategy.manual
+#endif
     
 #if os(iOS) && ADS && (GOOGLE_IMA || GOOGLE_DAI)
     private var adSUIEnabled: Bool = true
@@ -40,6 +49,7 @@ class THEOplayerRCTView: UIView {
         self.textTrackEventHandler = THEOplayerRCTViewTextTrackEventHandler()
         self.mediaTrackEventHandler = THEOplayerRCTViewMediaTrackEventHandler()
         self.adEventHandler = THEOplayerRCTViewAdEventHandler()
+        self.castEventHandler = THEOplayerRCTViewCastEventHandler()
         
         super.init(frame: .zero)
     }
@@ -49,6 +59,8 @@ class THEOplayerRCTView: UIView {
         self.textTrackEventHandler.destroy()
         self.mediaTrackEventHandler.destroy()
         self.adEventHandler.destroy()
+        self.castEventHandler.destroy()
+        
         self.player?.destroy()
         self.player = nil
         if DEBUG_THEOPLAYER_INTERACTION { print("[NATIVE] THEOplayer instance destroyed.") }
@@ -60,6 +72,15 @@ class THEOplayerRCTView: UIView {
         }
         return player.ads
     }
+  
+#if os(iOS)
+    func cast() -> Cast? {
+        guard let player = self.player else {
+            return nil
+        }
+        return player.cast
+    }
+#endif
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("[NATIVE] init(coder:) has not been implemented")
@@ -101,22 +122,29 @@ class THEOplayerRCTView: UIView {
             return
         }
         
-        // reset player for new source
-        if self.player != nil {
+#if os(iOS)
+        let isCasting = self.player?.cast?.casting ?? false // TO FIX: remove 'isCasting' workaround
+#else
+        let isCasting = false
+#endif
+        if !isCasting || self.player == nil {
             self.player?.destroy()
             self.player = nil
-        }
-        DispatchQueue.main.async {
-            self.initPlayer()
-            if let player = self.player {
-                // couple player instance to event handlers
-                self.mainEventHandler.setPlayer(player)
-                self.textTrackEventHandler.setPlayer(player)
-                self.mediaTrackEventHandler.setPlayer(player)
-                self.adEventHandler.setPlayer(player)
-                // couple player instance to view
-                player.addAsSubview(of: self)
+            DispatchQueue.main.async {
+                self.initPlayer()
+                if let player = self.player {
+                    // couple player instance to event handlers
+                    self.mainEventHandler.setPlayer(player)
+                    self.textTrackEventHandler.setPlayer(player)
+					self.mediaTrackEventHandler.setPlayer(player)
+                    self.adEventHandler.setPlayer(player)
+                    self.castEventHandler.setPlayer(player)
+                    // couple player instance to view
+                    player.addAsSubview(of: self)
+                }
+                self.syncAllPlayerProps()
             }
+        } else {
             self.syncAllPlayerProps()
         }
     }
@@ -136,6 +164,7 @@ class THEOplayerRCTView: UIView {
                                                                         cssPaths: cssPaths,
                                                                         pip: nil,
                                                                         ads: self.initAdsConfiguration(),
+                                                                        cast: self.initCastConfiguration(),
                                                                         license: self.license,
                                                                         licenseUrl: self.licenseUrl))
 #endif
@@ -155,6 +184,24 @@ class THEOplayerRCTView: UIView {
         return nil
 #endif
     }
+
+#if os(iOS)
+    private func initCastConfiguration() -> CastConfiguration? {
+#if CHROMECAST
+        // Set the correct chromecast receiver application id
+        if let castReceiverApplicationId = self.chromecastReceiverApplicationId {
+            let options = GCKCastOptions(discoveryCriteria: GCKDiscoveryCriteria(applicationID: castReceiverApplicationId))
+            GCKCastContext.setSharedInstanceWith(options)
+        }
+#endif
+#if CHROMECAST || AIRPLAY
+        // prepare the config
+        return CastConfiguration(strategy: self.castStrategy)
+#else
+        return nil
+#endif
+    }
+#endif
     
     private func syncPlayerSrc() {
         // set sourceDescription on player
@@ -178,6 +225,26 @@ class THEOplayerRCTView: UIView {
             }
             if let googleImaConfiguration = adsConfig["googleImaConfiguration"] as? NSDictionary {
                 self.googleImaUsesNativeIma = googleImaConfiguration["useNativeIma"] as? Bool ?? true
+            }
+        }
+#endif
+#if os(iOS)
+        if let castConfig = configDict["cast"] as? NSDictionary {
+            if let castStrategy = castConfig["strategy"] as? String {
+                switch castStrategy {
+                case "auto":
+                    self.castStrategy = THEOplayerSDK.CastStrategy.auto
+                case "manual":
+                    self.castStrategy = THEOplayerSDK.CastStrategy.manual
+                case "disabled":
+                    self.castStrategy = THEOplayerSDK.CastStrategy.disabled
+                default :
+                    self.castStrategy = THEOplayerSDK.CastStrategy.manual
+                }
+            }
+            if let chromecastConfig = castConfig["chromecast"] as? NSDictionary,
+                let castReceiverApplicationId = chromecastConfig["appID"] as? String {
+                self.chromecastReceiverApplicationId = castReceiverApplicationId
             }
         }
 #endif
@@ -506,5 +573,13 @@ class THEOplayerRCTView: UIView {
     func setOnNativeAdEvent(nativeAdEvent: @escaping RCTDirectEventBlock) {
         self.adEventHandler.onNativeAdEvent = nativeAdEvent
         if DEBUG_PROP_UPDATES  { print("[NATIVE] nativeAdEvent prop set.") }
+    }
+    
+    // MARK: - Listener based CAST event bridging
+    
+    @objc(setOnNativeCastEvent:)
+    func setOnNativeCastEvent(nativeCastEvent: @escaping RCTDirectEventBlock) {
+        self.castEventHandler.onNativeCastEvent = nativeCastEvent
+        if DEBUG_PROP_UPDATES  { print("[NATIVE] nativeCastEvent prop set.") }
     }
 }

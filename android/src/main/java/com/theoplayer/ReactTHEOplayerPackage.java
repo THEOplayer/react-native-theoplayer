@@ -8,6 +8,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
 import com.theoplayer.ads.AdsModule;
 import com.theoplayer.drm.ContentProtectionModule;
+import com.theoplayer.cast.CastModule;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,6 +22,7 @@ public class ReactTHEOplayerPackage implements ReactPackage {
       List<NativeModule> modules = new ArrayList<>();
       modules.add(new AdsModule(reactContext));
       modules.add(new ContentProtectionModule(reactContext));
+      modules.add(new CastModule(reactContext));
       return modules;
     }
 

@@ -242,7 +242,7 @@ class THEOplayerRCTViewMainEventHandler {
         self.loadedMetadataListener = player.addEventListener(type: PlayerEventTypes.LOADED_META_DATA) { [weak self] event in
             if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received LOADED_META_DATA event from THEOplayer") }
             if let forwardedLoadedMetadataEvent = self?.onNativeLoadedMetadata {
-                let metadata = THEOplayerRCTMetadataAggregator.aggregateMetadata(player: player)
+                let metadata = THEOplayerRCTTrackMetadataAggregator.aggregateTrackMetadata(player: player)
                 print(metadata)
                 forwardedLoadedMetadataEvent(metadata)
             }

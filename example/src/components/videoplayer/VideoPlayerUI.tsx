@@ -1,21 +1,22 @@
 import React, { PureComponent } from 'react';
 import { filterThumbnailTracks } from 'react-native-theoplayer';
 
-import { Platform, Text, View } from 'react-native';
+import { Image, Platform, Text, TouchableOpacity, View } from 'react-native';
 import { SeekBar } from '../seekbar/SeekBar';
 import styles from './VideoPlayerUI.style';
 import { DelayedActivityIndicator } from '../delayedactivityindicator/DelayedActivityIndicator';
-import { FullScreenIcon, FullScreenExitIcon, PlayButton, MutedIcon, UnMutedIcon } from '../../res/images';
+import { FullScreenIcon, FullScreenExitIcon, PlayButton, MutedIcon, UnMutedIcon, AirplayIcon } from '../../res/images';
 import { ActionButton } from '../actionbutton/ActionButton';
 import { TimeLabel } from '../timelabel/TimeLabel';
 import type { VideoPlayerUIProps } from './VideoPlayerUIProps';
-import { THUMBNAIL_MODE, THUMBNAIL_SIZE, ENABLE_QUALITY_MENU } from './VideoPlayerUIProps';
+import { THUMBNAIL_MODE, THUMBNAIL_SIZE, ENABLE_QUALITY_MENU, ENABLE_CAST_BUTTON } from './VideoPlayerUIProps';
 import { ThumbnailView } from '../thumbnail/ThumbnailView';
 import type { SeekBarPosition } from '../seekbar/SeekBarPosition';
 import { VideoQualityMenu } from './VideoQualityMenu';
 import { AudioTrackMenu } from './AudioTrackMenu';
 import { TextTrackMenu } from './TextTrackMenu';
 import { SourceMenu } from './SourceMenu';
+import { CastButton } from 'react-native-google-cast';
 
 export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
   constructor(props: VideoPlayerUIProps) {
@@ -47,6 +48,13 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
     const { muted, onSetMuted } = this.props;
     if (onSetMuted) {
       onSetMuted(!muted);
+    }
+  };
+
+  private toggleAirplay = () => {
+    const { onAirplayToggled } = this.props;
+    if (onAirplayToggled) {
+      onAirplayToggled();
     }
   };
 
@@ -103,8 +111,11 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
       sources,
       srcIndex,
       error,
+      message,
       paused,
       muted,
+      airplayConnected,
+      chromecastConnected,
       fullscreen,
       showLoadingIndicator,
       duration,
@@ -128,13 +139,26 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
         {/*Background*/}
         <View style={styles.background} />
 
+        {!Platform.isTV && (
+          <View style={styles.topContainer}>
+            {/*Airplay button*/}
+            {Platform.OS === 'ios' && (
+              <TouchableOpacity style={styles.castButton} onPress={this.toggleAirplay}>
+                <Image style={[styles.castIcon, { tintColor: airplayConnected ? '#ffc50f' : 'white' }]} source={AirplayIcon} />
+              </TouchableOpacity>
+            )}
+            {/*Chromecast button*/}
+            <CastButton style={styles.castButton} tintColor={chromecastConnected ? '#ffc50f' : 'white'} />
+          </View>
+        )}
+
         {showLoadingIndicator && !paused && (
           <View style={styles.fullScreenCenter}>
             <DelayedActivityIndicator size="large" color="#ffc50f" />
           </View>
         )}
 
-        {!error && (
+        {ENABLE_CAST_BUTTON && !error && (
           <ActionButton
             touchable={!Platform.isTV}
             icon={paused ? PlayButton : null}
@@ -146,13 +170,15 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
 
         {error && (
           <View style={styles.errorContainer}>
-            <Text style={styles.error}>
+            <Text style={styles.message}>
               {error.errorCode} - {error.errorMessage}
             </Text>
           </View>
         )}
 
         <View style={styles.controlsContainer}>
+          {message && <Text style={styles.message}>{message}</Text>}
+
           <SeekBar
             // On TV platforms we use the progress dot to play/pause
             onDotPress={this.togglePlayPause}

@@ -14,6 +14,8 @@ import type { PlayerConfiguration } from './config/PlayerConfiguration';
 import type { ABRConfiguration } from './abr/ABRConfiguration';
 import type { AdEvent } from './event/AdEvent';
 import type { AdsAPI } from './ads/AdsAPI';
+import type { CastAPI } from './cast/CastAPI';
+import type { CastEvent } from './event/CastEvent';
 
 export interface THEOplayerViewProps {
   /**
@@ -239,6 +241,11 @@ export interface THEOplayerViewProps {
    * Invoked when an ad event occurs.
    */
   onAdEvent?: (event: AdEvent) => void;
+
+  /**
+   * Invoked when a cast event occurs, either for Chromecast or Airplay.
+   */
+  onCastEvent?: (event: CastEvent) => void;
 }
 
 export interface THEOplayerViewComponent {
@@ -253,4 +260,9 @@ export interface THEOplayerViewComponent {
    * The API for advertisements.
    */
   ads: AdsAPI;
+
+  /**
+   * The API for casting devices.
+   */
+  cast: CastAPI;
 }

@@ -26,19 +26,19 @@ let PROP_CUES: String = "cues"
 let PROP_CUE_CONTENT: String = "content"
 let PROP_SRC: String = "src"
 
-class THEOplayerRCTMetadataAggregator {
+class THEOplayerRCTTrackMetadataAggregator {
 
-    class func aggregateMetadata(player: THEOplayer) -> [String:Any] {
+    class func aggregateTrackMetadata(player: THEOplayer) -> [String:Any] {
         let textTracks: TextTrackList = player.textTracks
         let audioTracks: AudioTrackList = player.audioTracks
         let videoTracks: VideoTrackList = player.videoTracks
         return [
-            EVENT_PROP_TEXT_TRACKS : THEOplayerRCTMetadataAggregator.aggregatedTextTrackListInfo(textTracks: textTracks),
-            EVENT_PROP_AUDIO_TRACKS : THEOplayerRCTMetadataAggregator.aggregatedAudioTrackListInfo(audioTracks: audioTracks),
-            EVENT_PROP_VIDEO_TRACKS : THEOplayerRCTMetadataAggregator.aggregatedVideoTrackListInfo(videoTracks: videoTracks),
-            EVENT_PROP_SELECTED_TEXT_TRACK: THEOplayerRCTMetadataAggregator.selectedTextTrack(textTracks: textTracks),
-            EVENT_PROP_SELECTED_AUDIO_TRACK: THEOplayerRCTMetadataAggregator.selectedAudioTrack(audioTracks: audioTracks),
-            EVENT_PROP_SELECTED_VIDEO_TRACK: THEOplayerRCTMetadataAggregator.selectedVideoTrack(videoTracks: videoTracks),
+            EVENT_PROP_TEXT_TRACKS : THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackListInfo(textTracks: textTracks),
+            EVENT_PROP_AUDIO_TRACKS : THEOplayerRCTTrackMetadataAggregator.aggregatedAudioTrackListInfo(audioTracks: audioTracks),
+            EVENT_PROP_VIDEO_TRACKS : THEOplayerRCTTrackMetadataAggregator.aggregatedVideoTrackListInfo(videoTracks: videoTracks),
+            EVENT_PROP_SELECTED_TEXT_TRACK: THEOplayerRCTTrackMetadataAggregator.selectedTextTrack(textTracks: textTracks),
+            EVENT_PROP_SELECTED_AUDIO_TRACK: THEOplayerRCTTrackMetadataAggregator.selectedAudioTrack(audioTracks: audioTracks),
+            EVENT_PROP_SELECTED_VIDEO_TRACK: THEOplayerRCTTrackMetadataAggregator.selectedVideoTrack(videoTracks: videoTracks),
             EVENT_PROP_DURATION: THEOplayerRCTTypeUtils.encodeInfNan((player.duration ?? Double.nan) * 1000)
         ]
     }
@@ -51,7 +51,7 @@ class THEOplayerRCTMetadataAggregator {
         }
         for i in 0...textTracks.count-1 {
             let textTrack: TextTrack = textTracks.get(i)
-            textTrackEntries.append(THEOplayerRCTMetadataAggregator.aggregatedTextTrackInfo(textTrack: textTrack))
+            textTrackEntries.append(THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackInfo(textTrack: textTrack))
         }
         return textTrackEntries
     }
@@ -70,7 +70,7 @@ class THEOplayerRCTMetadataAggregator {
         if !textTrack.cues.isEmpty {
             var cueList: [[String:Any]] = []
             for cue in textTrack.cues {
-                cueList.append(THEOplayerRCTMetadataAggregator.aggregatedTextTrackCueInfo(textTrackCue: cue))
+                cueList.append(THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackCueInfo(textTrackCue: cue))
             }
             entry[PROP_CUES] = cueList
         }
@@ -109,7 +109,7 @@ class THEOplayerRCTMetadataAggregator {
         }
         for i in 0...audioTracks.count-1 {
             if let audioTrack: AudioTrack = audioTracks.get(i) as? AudioTrack {
-                audioTrackEntries.append(THEOplayerRCTMetadataAggregator.aggregatedAudioTrackInfo(audioTrack: audioTrack))
+                audioTrackEntries.append(THEOplayerRCTTrackMetadataAggregator.aggregatedAudioTrackInfo(audioTrack: audioTrack))
             }
         }
         return audioTrackEntries
@@ -149,7 +149,7 @@ class THEOplayerRCTMetadataAggregator {
         }
         for i in 0...videoTracks.count-1 {
             if let videoTrack: VideoTrack = videoTracks.get(i) as? VideoTrack {
-                videoTrackEntries.append(THEOplayerRCTMetadataAggregator.aggregatedVideoTrackInfo(videoTrack: videoTrack))
+                videoTrackEntries.append(THEOplayerRCTTrackMetadataAggregator.aggregatedVideoTrackInfo(videoTrack: videoTrack))
             }
         }
         return videoTrackEntries

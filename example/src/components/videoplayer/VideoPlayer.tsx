@@ -3,6 +3,10 @@ import {
   addTextTrack,
   addTextTrackCue,
   AdEvent,
+  AirplayStateChangeEvent,
+  CastEvent,
+  ChromecastChangeEvent,
+  ChromecastErrorEvent,
   DurationChangeEvent,
   ErrorEvent,
   findTextTrackByUid,
@@ -61,6 +65,9 @@ interface VideoPlayerState {
   targetVideoQuality: number | number[] | undefined;
   selectedAudioTrack: number | undefined;
   error: PlayerError | undefined;
+  message: string | undefined;
+  airplayIsConnected: boolean;
+  chromecastIsConnected: boolean;
 }
 
 export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerState> {
@@ -83,6 +90,9 @@ export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerStat
     targetVideoQuality: undefined,
     selectedAudioTrack: undefined,
     error: undefined,
+    message: undefined,
+    airplayIsConnected: false,
+    chromecastIsConnected: false
   };
 
   private video!: THEOplayerView;
@@ -190,6 +200,43 @@ export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerStat
     console.log(TAG, 'onAdEvent', type, ad);
   };
 
+  private onCastStateChangeEvent = (data: ChromecastChangeEvent | AirplayStateChangeEvent) => {
+    const stateEvent = data;
+    let message = undefined;
+    const castTarget = data.type === 'chromecaststatechange' ? 'chromecast' : 'airplay';
+    switch (stateEvent.state) {
+      case 'connecting':
+        message = `Connecting to ${castTarget} ...`;
+        break;
+      case 'connected':
+        message = `Connected to ${castTarget} ...`;
+        break;
+    }
+    this.setState({
+      message,
+      airplayIsConnected: castTarget === 'airplay' && (stateEvent.state === 'connecting' || stateEvent.state === 'connected'),
+      chromecastIsConnected: castTarget === 'chromecast' && (stateEvent.state === 'connecting' || stateEvent.state === 'connected')
+    });
+  };
+
+  private onChromecastErrorEvent = (data: ChromecastErrorEvent) => {
+    this.setState({
+      error: {
+        errorCode: data.error.errorCode,
+        errorMessage: data.error.description,
+      },
+    });
+  };
+
+  private onCastEvent = (data: CastEvent) => {
+    console.log(TAG, 'onCastEvent', data);
+    if (['chromecaststatechange', 'airplaystatechange'].includes(data.type)) {
+      this.onCastStateChangeEvent(data as ChromecastChangeEvent | AirplayStateChangeEvent);
+    } else if (data.type === 'chromecasterror') {
+      this.onChromecastErrorEvent(data as ChromecastErrorEvent);
+    }
+  };
+
   private onProgress = (data: ProgressEvent) => {
     const { seekable } = data;
     console.log(TAG, 'progress', seekable);
@@ -233,7 +280,14 @@ export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerStat
   };
 
   private onUISelectSource = (srcIndex: number) => {
-    this.setState({ ...VideoPlayer.initialState, srcIndex, paused: true });
+    const { airplayIsConnected, chromecastIsConnected } = this.state;
+    this.setState({
+      ...VideoPlayer.initialState,
+      srcIndex,
+      paused: true,
+      airplayIsConnected,
+      chromecastIsConnected
+    });
   };
 
   private onUISetFullscreen = (fullscreen: boolean) => {
@@ -252,10 +306,24 @@ export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerStat
     this.setState({ volume });
   };
 
+  private onUIAirplayToggled = () => {
+    if (Platform.OS === 'ios' && !Platform.isTV) {
+      this.video.cast.airplay?.state().then((airplayCastState) => {
+        const inConnection = airplayCastState === 'connected' || airplayCastState === 'connecting'
+        if (inConnection) {
+          this.video.cast.airplay?.stop()
+        } else {
+          this.video.cast.airplay?.start()
+        }
+      })
+    }
+  };
+
   render() {
     const {
       srcIndex,
       error,
+      message,
       playbackRate,
       paused,
       volume,
@@ -272,6 +340,8 @@ export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerStat
       targetVideoQuality,
       audioTracks,
       selectedAudioTrack,
+      airplayIsConnected,
+      chromecastIsConnected,
     } = this.state;
 
     const { config } = this.props;
@@ -317,6 +387,7 @@ export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerStat
           onMediaTrackListEvent={this.onMediaTrackListEvent}
           onMediaTrackEvent={this.onMediaTrackEvent}
           onAdEvent={this.onAdEvent}
+          onCastEvent={this.onCastEvent}
         />
 
         {/* Use React-Native UI if a native chromeless (without UI) player is requested. */}
@@ -327,6 +398,8 @@ export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerStat
             playbackRate={playbackRate}
             volume={volume}
             muted={muted}
+            airplayConnected={airplayIsConnected}
+            chromecastConnected={chromecastIsConnected}
             duration={duration}
             seekable={seekable}
             currentTime={currentTime}
@@ -341,6 +414,7 @@ export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerStat
             targetVideoTrackQuality={targetVideoQuality}
             selectedAudioTrack={selectedAudioTrack}
             error={error}
+            message={message}
             onSetPlayPause={this.onUISetPlayPause}
             onSeek={this.seek}
             onSelectSource={this.onUISelectSource}
@@ -352,6 +426,7 @@ export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerStat
             onSetMuted={this.onUISetMuted}
             onSetPlaybackRate={this.onUISetPlaybackRate}
             onSetVolume={this.onUISetVolume}
+            onAirplayToggled={this.onUIAirplayToggled}
           />
         )}
       </View>

@@ -1,10 +1,16 @@
-import type { AdsConfiguration } from "../ads/AdsConfiguration";
+import type { AdsConfiguration } from '../ads/AdsConfiguration';
+import type { CastConfiguration } from '../cast/CastConfiguration';
 
 export interface PlayerConfiguration {
   /**
    * The ads configuration for the player.
    */
   ads?: AdsConfiguration;
+
+  /**
+   * The cast configuration for the player.
+   */
+  cast?: CastConfiguration;
 
   /**
    * The license for the player

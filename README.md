@@ -66,6 +66,7 @@ and discussed in the next section. Finally, an overview of features, limitations
 - Knowledge Base
   - [Adaptive Bitrate (ABR)](./doc/abr.md)
   - [Advertisements](./doc/ads.md)
+  - [Casting with Chromecast and Airplay](./doc/cast.md)
   - [Custom iOS framework](./doc/custom-ios-framework.md)
   - [Digital Rights Management (DRM)](./doc/drm.md)
 - [Limitations and known issues](./doc/limitations.md)

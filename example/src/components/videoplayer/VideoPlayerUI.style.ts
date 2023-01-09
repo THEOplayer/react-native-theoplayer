@@ -41,6 +41,12 @@ export default StyleSheet.create({
     paddingBottom: 20,
     zIndex: 1,
   },
+  topContainer: {
+    margin: 20,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    zIndex: 1,
+  },
   bottomControlsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -54,13 +60,14 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  error: {
+  message: {
     textAlignVertical: 'center',
     textAlign: 'center',
     fontSize: 16,
     paddingLeft: 50,
     paddingRight: 50,
     color: 'white',
+    backgroundColor: 'black',
   },
   playButton: {
     width: 90,
@@ -92,5 +99,15 @@ export default StyleSheet.create({
   },
   thumbnailCarousel: {
     margin: 4,
+  },
+  castButton: {
+    width: 24,
+    height: 24,
+    tintColor: 'white',
+    marginRight : 15
+  },
+  castIcon: {
+    width: 24,
+    height: 24,
   },
 });
