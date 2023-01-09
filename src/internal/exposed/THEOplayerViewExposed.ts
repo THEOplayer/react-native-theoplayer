@@ -7,7 +7,9 @@ import type {
   SourceDescription,
   THEOplayerInternal,
   THEOplayerView,
+  TimeUpdateEvent,
 } from 'react-native-theoplayer';
+import { PlayerEventType } from 'react-native-theoplayer';
 import { THEOplayerNativeAdsAPI } from '../ads/THEOplayerNativeAdsAPI';
 import { THEOplayerNativeCastAPI } from '../cast/THEOplayerNativeCastApi';
 
@@ -17,6 +19,7 @@ export class THEOplayerViewExposed extends DefaultEventDispatcher<PlayerEventMap
   private readonly _castApi: THEOplayerNativeCastAPI;
 
   private _autoplay: boolean;
+  private _currentTime = 0;
 
   constructor(view: THEOplayerView) {
     super();
@@ -24,7 +27,12 @@ export class THEOplayerViewExposed extends DefaultEventDispatcher<PlayerEventMap
     this._adsApi = new THEOplayerNativeAdsAPI(this._view);
     this._castApi = new THEOplayerNativeCastAPI(this._view);
     this._autoplay = false;
+    this.addEventListener(PlayerEventType.TIME_UPDATE, this.onTimeupdate);
   }
+
+  private onTimeupdate = (event: TimeUpdateEvent) => {
+    this._currentTime = event.currentTime;
+  };
 
   get abr(): ABRConfiguration | undefined {
     return this._view.state.abrConfig;
@@ -47,8 +55,7 @@ export class THEOplayerViewExposed extends DefaultEventDispatcher<PlayerEventMap
   }
 
   get currentTime(): number {
-    return 0;
-    // return this._view.state.currentTime; // TODO
+    return this._currentTime;
   }
 
   set currentTime(currentTime: number) {
