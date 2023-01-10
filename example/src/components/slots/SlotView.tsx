@@ -38,6 +38,7 @@ const slotViewStyle = StyleSheet.create({
 
 interface SlotViewState {
   fadeAnim: Animated.Value;
+  controlsEnabled: boolean;
 }
 
 export class SlotView extends PureComponent<React.PropsWithChildren<SlotViewProps>, SlotViewState> {
@@ -47,6 +48,7 @@ export class SlotView extends PureComponent<React.PropsWithChildren<SlotViewProp
     super(props);
     this.state = {
       fadeAnim: new Animated.Value(1),
+      controlsEnabled: true,
     };
   }
 
@@ -65,8 +67,9 @@ export class SlotView extends PureComponent<React.PropsWithChildren<SlotViewProp
       // TODO fade effects for TV UI.
       return;
     }
-    this.resetFadeOutTimeout();
     const { fadeAnim } = this.state;
+    this.enableControls();
+    this.resetFadeOutTimeout();
     Animated.timing(fadeAnim, {
       useNativeDriver: true,
       toValue: 1,
@@ -94,17 +97,26 @@ export class SlotView extends PureComponent<React.PropsWithChildren<SlotViewProp
       useNativeDriver: true,
       toValue: 0,
       duration: 1000,
-    }).start();
+    }).start(this.disableControls);
+  };
+
+  private enableControls = () => {
+    this.setState({ controlsEnabled: true });
+  };
+
+  private disableControls = () => {
+    this.setState({ controlsEnabled: false });
   };
 
   render() {
     const { style, top, center, bottom, children } = this.props;
+    const { fadeAnim, controlsEnabled } = this.state;
     return (
       <>
         <TouchableOpacity style={slotViewStyle.container} onPress={this.fadeIn} activeOpacity={0}></TouchableOpacity>
         {/* The Animated.View is for showing and hiding the UI*/}
-        <Animated.View style={[slotViewStyle.container, { opacity: this.state.fadeAnim }]}>
-          <View style={[slotViewStyle.container, style]} onTouchStart={this.fadeIn}>
+        <Animated.View style={[slotViewStyle.container, { opacity: fadeAnim, display: controlsEnabled ? 'flex' : 'none' }]}>
+          <View style={[slotViewStyle.container, style]}>
             <View style={slotViewStyle.topSlot}>{top}</View>
             <View style={slotViewStyle.centerSlot}>{center}</View>
             <View style={slotViewStyle.bottomSlot}>{bottom}</View>
