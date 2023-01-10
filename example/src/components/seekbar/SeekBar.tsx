@@ -402,7 +402,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
     const { style, progressDotStyle, thumbnailMode } = this.props;
 
     return (
-      <View style={{ flex: 1, flexDirection: 'column', paddingHorizontal: 15 }}>
+      <View style={{ flex: 1, flexDirection: 'column', paddingHorizontal: 10 }}>
         {/* TODO {thumbnailMode === 'carousel' ? this.renderThumbnailCarousel(this.seekBarPosition) : this.renderSingleThumbnail(this.seekBarPosition)}*/}
 
         <View style={[styles.container, style]}>

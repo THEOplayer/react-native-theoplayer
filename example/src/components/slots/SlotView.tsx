@@ -3,6 +3,7 @@ import { Animated, Platform, StyleProp, StyleSheet, TouchableOpacity, View, View
 import { PlayerContext } from '../util/Context';
 import type { THEOplayerInternal } from 'react-native-theoplayer';
 import { PlayerEventType } from 'react-native-theoplayer';
+import { BUTTON_SIZE } from '../controlbar/ControlBar';
 
 interface SlotViewProps {
   style?: StyleProp<ViewStyle>;

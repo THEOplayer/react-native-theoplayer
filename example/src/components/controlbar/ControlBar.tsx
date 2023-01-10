@@ -10,7 +10,8 @@ interface ControlBarProps {
   right?: ReactNode;
 }
 
-export const BUTTON_SIZE = 48;
+export const BUTTON_SIZE = 40;
+export const CENTER_BUTTON_SIZE = 48;
 
 export const controlBarStyle = StyleSheet.create({
   bar: {
@@ -33,8 +34,6 @@ export const controlBarStyle = StyleSheet.create({
     height: BUTTON_SIZE,
   },
   container: {
-    marginHorizontal: 5,
-    marginVertical: 5,
     alignSelf: 'center',
   },
   image: {
@@ -44,8 +43,8 @@ export const controlBarStyle = StyleSheet.create({
     tintColor: 'white',
   },
   centerControls: {
-    width: BUTTON_SIZE * 1.5,
-    height: BUTTON_SIZE * 1.5,
+    width: CENTER_BUTTON_SIZE,
+    height: CENTER_BUTTON_SIZE,
   },
 });
 
