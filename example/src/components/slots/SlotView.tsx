@@ -30,7 +30,9 @@ const slotViewStyle = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
   },
-  centerSlot: {},
+  centerSlot: {
+    transform: [{ translateY: BUTTON_SIZE / 2 }],
+  },
   bottomSlot: {
     paddingBottom: 10,
     paddingLeft: 10,
@@ -123,7 +125,8 @@ export class SlotView extends PureComponent<React.PropsWithChildren<SlotViewProp
           {/* The UI control bars*/}
           <View style={[slotViewStyle.container, style]} onTouchStart={this.fadeIn}>
             <View style={slotViewStyle.topSlot}>{top}</View>
-            <View style={slotViewStyle.centerSlot}>{center}</View>
+            {/* The center controls*/}
+            <View style={[slotViewStyle.centerSlot]}>{center}</View>
             <View style={slotViewStyle.bottomSlot}>{bottom}</View>
             {children}
           </View>
