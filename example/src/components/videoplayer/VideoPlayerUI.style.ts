@@ -69,10 +69,6 @@ export default StyleSheet.create({
     color: 'white',
     backgroundColor: 'black',
   },
-  bigPlayButton: {
-    width: 48,
-    height: 48,
-  },
   timeLabel: {
     marginLeft: 20,
     height: 20,

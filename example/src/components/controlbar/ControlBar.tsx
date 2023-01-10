@@ -10,28 +10,42 @@ interface ControlBarProps {
   right?: ReactNode;
 }
 
-const controlBarHeight = 35;
+export const BUTTON_SIZE = 48;
 
 export const controlBarStyle = StyleSheet.create({
   bar: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
     zIndex: 1,
-    height: controlBarHeight,
+    height: BUTTON_SIZE,
   },
   menuIcon: {
-    width: 30,
-    height: 30,
-    margin: 5,
+    width: BUTTON_SIZE,
+    height: BUTTON_SIZE,
   },
   castButton: {
-    width: 30,
-    height: 30,
+    width: BUTTON_SIZE,
+    height: BUTTON_SIZE,
     tintColor: 'white',
   },
   castIcon: {
-    width: 30,
-    height: 30,
+    width: BUTTON_SIZE,
+    height: BUTTON_SIZE,
+  },
+  container: {
+    marginHorizontal: 5,
+    marginVertical: 5,
+    alignSelf: 'center',
+  },
+  image: {
+    resizeMode: 'contain',
+    width: BUTTON_SIZE,
+    height: BUTTON_SIZE,
+    tintColor: 'white',
+  },
+  centerControls: {
+    width: BUTTON_SIZE * 1.5,
+    height: BUTTON_SIZE * 1.5,
   },
 });
 

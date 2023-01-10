@@ -1,4 +1,3 @@
-import { ListIcon } from '../../res/images';
 import { MenuItem } from './modalmenu/MenuItem';
 import { MenuButton } from './menubutton/MenuButton';
 import React, { PureComponent } from 'react';
@@ -7,6 +6,7 @@ import type { THEOplayerInternal } from 'react-native-theoplayer';
 import { Platform } from 'react-native';
 import ALL_SOURCES from '../../res/sources.json';
 import { PlayerContext } from '../util/Context';
+import { ListSvg } from '../button/svg/ListSvg';
 
 export interface SourceMenuState {
   sources: Source[];
@@ -48,7 +48,7 @@ export class SourceMenu extends PureComponent<unknown, SourceMenuState> {
     return (
       <MenuButton
         title={'Source'}
-        icon={ListIcon}
+        svg={<ListSvg />}
         data={sources.map((source) => new MenuItem(source.name))}
         onItemSelected={this.onSelectSource}
         selectedItem={selectedSourceIndex}

@@ -1,5 +1,5 @@
 import type { ImageSourcePropType, ImageStyle, StyleProp, TextStyle, ViewStyle } from 'react-native';
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { ActionButton } from '../../button/actionbutton/ActionButton';
 import { ModalMenu } from '../modalmenu/ModalMenu';
 import { MenuRow } from '../modalmenu/MenuRow';
@@ -8,7 +8,8 @@ import { controlBarStyle } from '../../controlbar/ControlBar';
 
 export interface MenuButtonProps {
   title: string;
-  icon: ImageSourcePropType;
+  icon?: ImageSourcePropType;
+  svg?: ReactNode;
   keyExtractor?: (index: number) => string;
   data: MenuItem[];
   minimumItems: number;
@@ -21,7 +22,7 @@ export interface MenuButtonProps {
 }
 
 export const MenuButton = (props: MenuButtonProps) => {
-  const { icon, title, data, keyExtractor, onItemSelected, selectedItem, modalStyle, modalTitleStyle, style, minimumItems } = props;
+  const { icon, svg, title, data, keyExtractor, onItemSelected, selectedItem, modalStyle, modalTitleStyle, style, minimumItems } = props;
   const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   // Don't show the menu if it has less items than the preset minimum.
@@ -32,6 +33,7 @@ export const MenuButton = (props: MenuButtonProps) => {
   return (
     <>
       <ActionButton
+        svg={svg}
         icon={icon}
         iconStyle={controlBarStyle.menuIcon}
         onPress={() => {
