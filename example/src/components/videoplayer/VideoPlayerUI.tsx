@@ -15,7 +15,6 @@ import { SourceMenu } from '../menu/SourceMenu';
 import { MuteButton } from '../button/MuteButton';
 import { PlayerContext } from '../util/Context';
 import { SlotView } from '../slots/SlotView';
-import { PlayButton } from '../button/PlayButton';
 import { BigPlayButton } from '../button/BigPlayButton';
 import { CastMessage } from '../view/CastMessage';
 import { CenteredDelayedActivityIndicator } from '../delayedactivityindicator/CenteredDelayedActivityIndicator';
@@ -87,7 +86,6 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
               <SplitControlBar
                 left={
                   <>
-                    <PlayButton />
                     <MuteButton />
                     <TimeLabel showDuration={true} style={styles.timeLabel} />
                   </>
