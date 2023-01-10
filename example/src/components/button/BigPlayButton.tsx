@@ -1,7 +1,7 @@
 import React from 'react';
-import styles from '../videoplayer/VideoPlayerUI.style';
 import { PlayButton } from './PlayButton';
+import { controlBarStyle } from '../controlbar/ControlBar';
 
 export const BigPlayButton = () => {
-  return <PlayButton style={styles.bigPlayButton} />;
+  return <PlayButton style={controlBarStyle.centerControls} />;
 };

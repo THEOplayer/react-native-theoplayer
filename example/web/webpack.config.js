@@ -85,6 +85,7 @@ module.exports = {
   resolve: {
     extensions: ['.web.js', '.web.ts', '.web.tsx', '.js', '.ts', '.tsx'],
     alias: {
+      'react-native-svg': 'react-native-svg-web',
       'react-native$': 'react-native-web',
       'react-native-url-polyfill': 'url-polyfill',
       'react-native-google-cast': path.resolve(stubDirectory, 'CastButtonStub'),
