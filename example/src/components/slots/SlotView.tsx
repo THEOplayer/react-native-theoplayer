@@ -121,7 +121,7 @@ export class SlotView extends PureComponent<React.PropsWithChildren<SlotViewProp
           {/* The UI background */}
           <View style={[slotViewStyle.container, slotViewStyle.background]} />
           {/* The UI control bars*/}
-          <View style={[slotViewStyle.container, style]}>
+          <View style={[slotViewStyle.container, style]} onTouchStart={this.fadeIn}>
             <View style={slotViewStyle.topSlot}>{top}</View>
             <View style={slotViewStyle.centerSlot}>{center}</View>
             <View style={slotViewStyle.bottomSlot}>{bottom}</View>
