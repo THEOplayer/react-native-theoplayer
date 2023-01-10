@@ -22,6 +22,9 @@ const slotViewStyle = StyleSheet.create({
     justifyContent: 'space-between',
     zIndex: 1,
   },
+  background: {
+    backgroundColor: '#00000066',
+  },
   topSlot: {
     paddingTop: 10,
     paddingLeft: 10,
@@ -29,7 +32,6 @@ const slotViewStyle = StyleSheet.create({
   },
   centerSlot: {},
   bottomSlot: {
-    backgroundColor: '#00000066',
     paddingBottom: 10,
     paddingLeft: 10,
     paddingRight: 10,
@@ -116,6 +118,9 @@ export class SlotView extends PureComponent<React.PropsWithChildren<SlotViewProp
         <TouchableOpacity style={slotViewStyle.container} onPress={this.fadeIn} activeOpacity={0}></TouchableOpacity>
         {/* The Animated.View is for showing and hiding the UI*/}
         <Animated.View style={[slotViewStyle.container, { opacity: fadeAnim, display: controlsEnabled ? 'flex' : 'none' }]}>
+          {/* The UI background */}
+          <View style={[slotViewStyle.container, slotViewStyle.background]} />
+          {/* The UI control bars*/}
           <View style={[slotViewStyle.container, style]}>
             <View style={slotViewStyle.topSlot}>{top}</View>
             <View style={slotViewStyle.centerSlot}>{center}</View>
