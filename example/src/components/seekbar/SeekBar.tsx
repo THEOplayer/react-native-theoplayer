@@ -417,7 +417,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
               onBlur={this.onBlur}
               onPress={this.onDotPress}
               onLayout={this.measureScrubber}>
-              <View style={[styles.innerProgressCompleted, { flex: flexCompleted, backgroundColor: focused ? '#ffc50f' : '#ffc50faa' }]} />
+              <View style={[styles.innerProgressCompleted, { flex: flexCompleted, backgroundColor: focused ? '#ffc50f' : 'white' }]} />
               {focused && <View style={[styles.progressDot, progressDotStyle]} />}
               <View style={[styles.innerProgressRemaining, { flex: flexRemaining }]} />
             </TouchableOpacity>
@@ -425,7 +425,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
 
           {!Platform.isTV && (
             <View style={styles.progress}>
-              <View style={[styles.innerProgressCompleted, { flex: flexCompleted, backgroundColor: '#ffc50f' }]} />
+              <View style={[styles.innerProgressCompleted, { flex: flexCompleted }]} />
               <View
                 style={[styles.progressDot, { zIndex: 1 }, progressDotStyle]}
                 hitSlop={styles.progressHitSlop}
