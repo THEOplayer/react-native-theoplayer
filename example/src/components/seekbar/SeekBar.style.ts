@@ -15,10 +15,11 @@ export default StyleSheet.create({
     overflow: 'visible',
   },
   innerProgressCompleted: {
-    height: 10,
+    height: 6,
+    backgroundColor: 'white',
   },
   innerProgressRemaining: {
-    height: 10,
+    height: 6,
     backgroundColor: '#2C2C2C',
   },
   touchable: {
@@ -33,7 +34,7 @@ export default StyleSheet.create({
     height: 20,
     marginLeft: -8,
     borderRadius: 10,
-    backgroundColor: '#ffc50f',
+    backgroundColor: 'white',
   },
   progressHitSlop: {
     top: 20,
