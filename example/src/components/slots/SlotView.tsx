@@ -1,9 +1,9 @@
 import React, { PureComponent, ReactNode } from 'react';
-import { Animated, Platform, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { Animated, Platform, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { PlayerContext } from '../util/Context';
 import type { THEOplayerInternal } from 'react-native-theoplayer';
 import { PlayerEventType } from 'react-native-theoplayer';
-import { BUTTON_SIZE } from '../controlbar/ControlBar';
+import { PlayerStyleContext, VideoPlayerStyle } from '../style/VideoPlayerStyle';
 
 interface SlotViewProps {
   style?: StyleProp<ViewStyle>;
@@ -11,35 +11,6 @@ interface SlotViewProps {
   center?: ReactNode;
   bottom?: ReactNode;
 }
-
-const slotViewStyle = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    zIndex: 1,
-  },
-  background: {
-    backgroundColor: '#00000066',
-  },
-  topSlot: {
-    paddingTop: 10,
-    paddingLeft: 10,
-    paddingRight: 10,
-  },
-  centerSlot: {
-    transform: [{ translateY: BUTTON_SIZE / 2 }],
-  },
-  bottomSlot: {
-    paddingBottom: 10,
-    paddingLeft: 10,
-    paddingRight: 10,
-  },
-});
 
 interface SlotViewState {
   fadeAnim: Animated.Value;
@@ -117,22 +88,26 @@ export class SlotView extends PureComponent<React.PropsWithChildren<SlotViewProp
     const { style, top, center, bottom, children } = this.props;
     const { fadeAnim, controlsEnabled } = this.state;
     return (
-      <>
-        <TouchableOpacity style={slotViewStyle.container} onPress={this.fadeIn} activeOpacity={0}></TouchableOpacity>
-        {/* The Animated.View is for showing and hiding the UI*/}
-        <Animated.View style={[slotViewStyle.container, { opacity: fadeAnim, display: controlsEnabled ? 'flex' : 'none' }]}>
-          {/* The UI background */}
-          <View style={[slotViewStyle.container, slotViewStyle.background]} />
-          {/* The UI control bars*/}
-          <View style={[slotViewStyle.container, style]} onTouchStart={this.fadeIn}>
-            <View style={slotViewStyle.topSlot}>{top}</View>
-            {/* The center controls*/}
-            <View style={[slotViewStyle.centerSlot]}>{center}</View>
-            <View style={slotViewStyle.bottomSlot}>{bottom}</View>
-            {children}
-          </View>
-        </Animated.View>
-      </>
+      <PlayerStyleContext.Consumer>
+        {(styleContext: VideoPlayerStyle) => (
+          <>
+            <TouchableOpacity style={styleContext.containerSlotView} onPress={this.fadeIn} activeOpacity={0}></TouchableOpacity>
+            {/* The Animated.View is for showing and hiding the UI*/}
+            <Animated.View style={[styleContext.containerSlotView, { opacity: fadeAnim, display: controlsEnabled ? 'flex' : 'none' }]}>
+              {/* The UI background */}
+              <View style={[styleContext.containerSlotView, styleContext.backgroundSlotView]} />
+              {/* The UI control bars*/}
+              <View style={[styleContext.containerSlotView, style]} onTouchStart={this.fadeIn}>
+                <View style={styleContext.topSlot}>{top}</View>
+                {/* The center controls*/}
+                <View style={[styleContext.centerSlot]}>{center}</View>
+                <View style={styleContext.bottomSlot}>{bottom}</View>
+                {children}
+              </View>
+            </Animated.View>
+          </>
+        )}
+      </PlayerStyleContext.Consumer>
     );
   }
 }

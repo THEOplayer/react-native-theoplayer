@@ -1,6 +1,6 @@
-import { Modal, StyleProp, View, ViewStyle, TextStyle, Text, ViewProps, Platform, TouchableOpacity } from 'react-native';
+import { Modal, Platform, StyleProp, Text, TextStyle, TouchableOpacity, View, ViewProps, ViewStyle } from 'react-native';
 import React from 'react';
-import styles from './ModalMenu.style';
+import { PlayerStyleContext, VideoPlayerStyle } from '../../style/VideoPlayerStyle';
 
 export interface ModalMenuProps extends ViewProps {
   title?: string;
@@ -16,40 +16,44 @@ export const ModalMenu = (props: ModalMenuProps) => {
   return (
     <>
       {visible && (
-        <Modal
-          animationType="fade"
-          supportedOrientations={['portrait', 'landscape']}
-          transparent={true}
-          visible={visible}
-          onRequestClose={() => {
-            if (onRequestClose) {
-              onRequestClose();
-            }
-          }}>
-          {!Platform.isTV && (
-            <TouchableOpacity
-              style={styles.container}
-              onPress={() => {
+        <PlayerStyleContext.Consumer>
+          {(styleContext: VideoPlayerStyle) => (
+            <Modal
+              animationType="fade"
+              supportedOrientations={['portrait', 'landscape']}
+              transparent={true}
+              visible={visible}
+              onRequestClose={() => {
                 if (onRequestClose) {
                   onRequestClose();
                 }
               }}>
-              <View style={[styles.modal, style]}>
-                {title && <Text style={[styles.title, titleStyle, { color: 'black', backgroundColor: '#ffc50f' }]}>{title}</Text>}
-                <View style={styles.rowContainer}>{children}</View>
-              </View>
-            </TouchableOpacity>
-          )}
+              {!Platform.isTV && (
+                <TouchableOpacity
+                  style={styleContext.containerModalMenu}
+                  onPress={() => {
+                    if (onRequestClose) {
+                      onRequestClose();
+                    }
+                  }}>
+                  <View style={[styleContext.modal, style]}>
+                    {title && <Text style={[styleContext.title, titleStyle, { color: 'black', backgroundColor: '#ffc50f' }]}>{title}</Text>}
+                    <View style={styleContext.rowContainer}>{children}</View>
+                  </View>
+                </TouchableOpacity>
+              )}
 
-          {Platform.isTV && (
-            <View style={styles.container}>
-              <View style={[styles.modal, style]}>
-                {title && <Text style={[styles.title, titleStyle, { color: 'black', backgroundColor: '#ffc50f' }]}>{title}</Text>}
-                <View style={styles.rowContainer}>{children}</View>
-              </View>
-            </View>
+              {Platform.isTV && (
+                <View style={styleContext.containerModalMenu}>
+                  <View style={[styleContext.modal, style]}>
+                    {title && <Text style={[styleContext.title, titleStyle, { color: 'black', backgroundColor: '#ffc50f' }]}>{title}</Text>}
+                    <View style={styleContext.rowContainer}>{children}</View>
+                  </View>
+                </View>
+              )}
+            </Modal>
           )}
-        </Modal>
+        </PlayerStyleContext.Consumer>
       )}
     </>
   );

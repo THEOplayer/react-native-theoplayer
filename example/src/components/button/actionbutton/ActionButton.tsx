@@ -1,7 +1,7 @@
 import { Image, ImageSourcePropType, ImageStyle, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 import React, { ReactNode, useState } from 'react';
-import { controlBarStyle } from '../../controlbar/ControlBar';
 import { defaultSvgStyle, SvgContext } from '../svg/SvgUtils';
+import { PlayerStyleContext, VideoPlayerStyle } from '../../style/VideoPlayerStyle';
 
 export interface ActionButtonProps {
   icon?: ImageSourcePropType;
@@ -23,33 +23,35 @@ export const ActionButton = (props: ActionButtonProps) => {
     return <View style={style}>{svg}</View>;
   }
 
-  const imageStyle = [controlBarStyle.image, iconFocusStyle];
-
   return (
-    <TouchableOpacity
-      activeOpacity={1.0}
-      style={controlBarStyle.container}
-      tvParallaxProperties={{ enabled: false }}
-      onPress={() => {
-        const { onPress } = props;
-        if (onPress) {
-          onPress();
-        }
-      }}
-      onFocus={() => {
-        setFocused(true);
-      }}
-      onBlur={() => {
-        setFocused(false);
-      }}>
-      {/* Give priority to SVG over image sources.*/}
-      {svg && (
-        <SvgContext.Provider value={{ ...defaultSvgStyle, fill: tintColor, height: '100%', width: '100%' }}>
-          <View style={imageStyle}>{svg}</View>
-        </SvgContext.Provider>
+    <PlayerStyleContext.Consumer>
+      {(styleContext: VideoPlayerStyle) => (
+        <TouchableOpacity
+          activeOpacity={1.0}
+          style={styleContext.controlBarContainer}
+          tvParallaxProperties={{ enabled: false }}
+          onPress={() => {
+            const { onPress } = props;
+            if (onPress) {
+              onPress();
+            }
+          }}
+          onFocus={() => {
+            setFocused(true);
+          }}
+          onBlur={() => {
+            setFocused(false);
+          }}>
+          {/* Give priority to SVG over image sources.*/}
+          {svg && (
+            <SvgContext.Provider value={{ ...defaultSvgStyle, fill: tintColor, height: '100%', width: '100%' }}>
+              <View style={[styleContext.controlBarButtonImage, iconFocusStyle]}>{svg}</View>
+            </SvgContext.Provider>
+          )}
+          {svg === undefined && icon && <Image style={[styleContext.controlBarButtonImage, iconFocusStyle]} source={icon} />}
+        </TouchableOpacity>
       )}
-      {svg === undefined && icon && <Image style={imageStyle} source={icon} />}
-    </TouchableOpacity>
+    </PlayerStyleContext.Consumer>
   );
 };
 

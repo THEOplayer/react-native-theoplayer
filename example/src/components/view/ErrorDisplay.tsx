@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
 import { CastEvent, CastEventType, ErrorEvent, PlayerError, PlayerEventType, THEOplayerInternal } from 'react-native-theoplayer';
 import { Text, View } from 'react-native';
-import styles from '../videoplayer/VideoPlayerUI.style';
 import { PlayerContext } from '../util/Context';
+import { PlayerStyleContext, VideoPlayerStyle } from '../style/VideoPlayerStyle';
 
 interface ErrorDisplayState {
   error: PlayerError | undefined;
@@ -55,11 +55,15 @@ export class ErrorDisplay extends PureComponent<unknown, ErrorDisplayState> {
     }
 
     return (
-      <View style={styles.errorContainer}>
-        <Text style={styles.message}>
-          {error.errorCode} - {error.errorMessage}
-        </Text>
-      </View>
+      <PlayerStyleContext.Consumer>
+        {(styleContext: VideoPlayerStyle) => (
+          <View style={styleContext.errorContainer}>
+            <Text style={styleContext.message}>
+              {error.errorCode} - {error.errorMessage}
+            </Text>
+          </View>
+        )}
+      </PlayerStyleContext.Consumer>
     );
   }
 }

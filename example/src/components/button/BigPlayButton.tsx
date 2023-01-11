@@ -1,7 +1,11 @@
 import React from 'react';
 import { PlayButton } from './PlayButton';
-import { controlBarStyle } from '../controlbar/ControlBar';
+import { PlayerStyleContext, VideoPlayerStyle } from '../style/VideoPlayerStyle';
 
 export const BigPlayButton = () => {
-  return <PlayButton style={controlBarStyle.centerControls} />;
+  return (
+    <PlayerStyleContext.Consumer>
+      {(styleContext: VideoPlayerStyle) => <PlayButton style={styleContext.centerControlBarButton} />}
+    </PlayerStyleContext.Consumer>
+  );
 };

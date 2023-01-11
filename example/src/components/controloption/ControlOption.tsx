@@ -1,6 +1,6 @@
 import { StyleProp, TouchableOpacity, Text, TextStyle } from 'react-native';
 import React, { useState } from 'react';
-import styles from './ControlOption.style';
+import { defaultPlayerStyle } from '../style/VideoPlayerStyle';
 
 export interface ControlOptionProps {
   onPress?: () => void;
@@ -15,7 +15,7 @@ export const ControlOption = (props: ControlOptionProps) => {
 
   return (
     <TouchableOpacity
-      style={styles.container}
+      style={defaultPlayerStyle.container}
       activeOpacity={1.0}
       tvParallaxProperties={{ enabled: false }}
       onPress={() => {
