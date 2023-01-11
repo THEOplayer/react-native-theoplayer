@@ -2,9 +2,9 @@ import React, { PureComponent } from 'react';
 import type { DelayedActivityIndicatorProps } from './DelayedActivityIndicator';
 import { DelayedActivityIndicator } from './DelayedActivityIndicator';
 import { View } from 'react-native';
-import styles from '../videoplayer/VideoPlayerUI.style';
 import { BufferingChangeEvent, PlayerEventType, THEOplayerInternal } from 'react-native-theoplayer';
 import { PlayerContext } from '../util/Context';
+import { PlayerStyleContext, VideoPlayerStyle } from '../style/VideoPlayerStyle';
 
 interface CenteredDelayedActivityIndicatorState {
   showing: boolean;
@@ -41,9 +41,13 @@ export class CenteredDelayedActivityIndicator extends PureComponent<DelayedActiv
     return (
       showing &&
       !player.paused && (
-        <View style={styles.fullScreenCenter}>
-          <DelayedActivityIndicator size="large" color="#ffc50f" delay={delay} />
-        </View>
+        <PlayerStyleContext.Consumer>
+          {(styleContext: VideoPlayerStyle) => (
+            <View style={styleContext.fullScreenCenter}>
+              <DelayedActivityIndicator size="large" color="#ffc50f" delay={delay} />
+            </View>
+          )}
+        </PlayerStyleContext.Consumer>
       )
     );
   }

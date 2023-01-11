@@ -3,7 +3,7 @@ import { Image, Platform, TouchableOpacity } from 'react-native';
 import { AirplayIcon } from '../../res/images';
 import { CastEvent, CastEventType, PlayerEventType, THEOplayerInternal } from 'react-native-theoplayer';
 import { PlayerContext } from '../util/Context';
-import { controlBarStyle } from '../controlbar/ControlBar';
+import { VideoPlayerStyle, PlayerStyleContext } from '../style/VideoPlayerStyle';
 
 interface AirplayButtonState {
   connected: boolean;
@@ -58,9 +58,13 @@ export class AirplayButton extends PureComponent<unknown, AirplayButtonState> {
       return <></>;
     }
     return (
-      <TouchableOpacity style={controlBarStyle.castButton} onPress={this.onUIAirplayToggled}>
-        <Image style={[controlBarStyle.castIcon, { tintColor: connected ? '#ffc50f' : 'white' }]} source={AirplayIcon} />
-      </TouchableOpacity>
+      <PlayerStyleContext.Consumer>
+        {(styleContext: VideoPlayerStyle) => (
+          <TouchableOpacity style={styleContext.castButton} onPress={this.onUIAirplayToggled}>
+            <Image style={[styleContext.controlBarImage, { tintColor: connected ? '#ffc50f' : 'white' }]} source={AirplayIcon} />
+          </TouchableOpacity>
+        )}
+      </PlayerStyleContext.Consumer>
     );
   }
 }

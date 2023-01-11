@@ -3,9 +3,9 @@ import React, { PureComponent } from 'react';
 import { PlayerContext } from '../util/Context';
 import { PlayerEventType, THEOplayerInternal, VolumeChangeEvent } from 'react-native-theoplayer';
 import { Platform } from 'react-native';
-import { controlBarStyle } from '../controlbar/ControlBar';
 import { VolumeOffSvg } from './svg/VolumeOffSvg';
 import { VolumeUpSvg } from './svg/VolumeUpSvg';
+import { PlayerStyleContext, VideoPlayerStyle } from '../style/VideoPlayerStyle';
 
 interface MuteButtonState {
   muted: boolean;
@@ -43,12 +43,16 @@ export class MuteButton extends PureComponent<unknown, MuteButtonState> {
       return <></>;
     }
     return (
-      <ActionButton
-        svg={muted ? <VolumeOffSvg /> : <VolumeUpSvg />}
-        onPress={this.toggleMuted}
-        iconStyle={controlBarStyle.menuIcon}
-        touchable={true}
-      />
+      <PlayerStyleContext.Consumer>
+        {(styleContext: VideoPlayerStyle) => (
+          <ActionButton
+            svg={muted ? <VolumeOffSvg /> : <VolumeUpSvg />}
+            onPress={this.toggleMuted}
+            iconStyle={styleContext.controlBarImage}
+            touchable={true}
+          />
+        )}
+      </PlayerStyleContext.Consumer>
     );
   }
 }

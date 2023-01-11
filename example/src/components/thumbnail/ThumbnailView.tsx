@@ -1,13 +1,13 @@
 import React, { PureComponent } from 'react';
 import { Image, View } from 'react-native';
 import type { TextTrackCue } from 'react-native-theoplayer';
+import { isThumbnailTrack } from 'react-native-theoplayer';
 import type { ThumbnailViewProps } from './ThumbnailViewProps';
 import type { Thumbnail } from './Thumbnail';
 import { isTileMapThumbnail } from './Thumbnail';
 import { URL as URLPolyfill } from 'react-native-url-polyfill';
-import { isThumbnailTrack } from 'react-native-theoplayer';
-import styles from './ThumbnailView.style';
 import { TimeLabel } from '../timelabel/TimeLabel';
+import { PlayerStyleContext, VideoPlayerStyle } from '../style/VideoPlayerStyle';
 
 const SPRITE_REGEX = /^([^#]*)#xywh=(\d+),(\d+),(\d+),(\d+)\s*$/;
 const TAG = 'ThumbnailView';
@@ -125,7 +125,11 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
   private renderPlaceHolderThumbnail = (index: number) => {
     const { size, thumbnailStyleCurrent, thumbnailStyleCarousel } = this.props;
     const style = index === 0 ? thumbnailStyleCurrent : thumbnailStyleCarousel;
-    return <View key={`th${index}`} style={[styles.thumbnail, { width: size, height: 1 }, style]} />;
+    return (
+      <PlayerStyleContext.Consumer>
+        {(styleContext: VideoPlayerStyle) => <View key={`th${index}`} style={[styleContext.thumbnail, { width: size, height: 1 }, style]} />}
+      </PlayerStyleContext.Consumer>
+    );
   };
 
   private renderThumbnail = (thumbnail: Thumbnail, index: number) => {
@@ -137,33 +141,41 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
     if (isTileMapThumbnail(thumbnail)) {
       const ratio = thumbnail.tileWidth == 0 ? 0 : (scale * size) / thumbnail.tileWidth;
       return (
-        <View key={`th${index}`} style={[styles.thumbnail, { width: scale * renderWidth, height: scale * renderHeight }, style]}>
-          <Image
-            resizeMode={'cover'}
-            style={{
-              position: 'absolute',
-              top: -ratio * thumbnail.tileY,
-              left: -ratio * thumbnail.tileX,
-              width: ratio * imageWidth,
-              height: ratio * imageHeight,
-            }}
-            source={{ uri: thumbnail.url }}
-            onError={this.onImageLoadError}
-            onLoad={this.onTileImageLoad(thumbnail)}
-          />
-        </View>
+        <PlayerStyleContext.Consumer>
+          {(styleContext: VideoPlayerStyle) => (
+            <View key={`th${index}`} style={[styleContext.thumbnail, { width: scale * renderWidth, height: scale * renderHeight }, style]}>
+              <Image
+                resizeMode={'cover'}
+                style={{
+                  position: 'absolute',
+                  top: -ratio * thumbnail.tileY,
+                  left: -ratio * thumbnail.tileX,
+                  width: ratio * imageWidth,
+                  height: ratio * imageHeight,
+                }}
+                source={{ uri: thumbnail.url }}
+                onError={this.onImageLoadError}
+                onLoad={this.onTileImageLoad(thumbnail)}
+              />
+            </View>
+          )}
+        </PlayerStyleContext.Consumer>
       );
     } else {
       return (
-        <View key={`th${index}`} style={[styles.thumbnail, { width: scale * renderWidth, height: scale * renderHeight }, style]}>
-          <Image
-            resizeMode={'contain'}
-            style={{ width: scale * size, height: scale * renderHeight }}
-            source={{ uri: thumbnail.url }}
-            onError={this.onImageLoadError}
-            onLoad={this.onImageLoad(thumbnail)}
-          />
-        </View>
+        <PlayerStyleContext.Consumer>
+          {(styleContext: VideoPlayerStyle) => (
+            <View key={`th${index}`} style={[styleContext.thumbnail, { width: scale * renderWidth, height: scale * renderHeight }, style]}>
+              <Image
+                resizeMode={'contain'}
+                style={{ width: scale * size, height: scale * renderHeight }}
+                source={{ uri: thumbnail.url }}
+                onError={this.onImageLoadError}
+                onLoad={this.onImageLoad(thumbnail)}
+              />
+            </View>
+          )}
+        </PlayerStyleContext.Consumer>
       );
     }
   };
@@ -193,18 +205,28 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
     const current = this.getThumbnailImageForCue(thumbnailTrack.cues[nowCueIndex]);
     const { renderHeight } = this.state;
     return (
-      <View style={{ flexDirection: 'column' }}>
-        {showTimeLabel && (
-          <TimeLabel style={[styles.timeLabel, timeLabelStyle]} currentTime={time} duration={duration} showDuration={false} isLive={false} />
+      <PlayerStyleContext.Consumer>
+        {(styleContext: VideoPlayerStyle) => (
+          <View style={{ flexDirection: 'column' }}>
+            {showTimeLabel && (
+              <TimeLabel
+                style={[styleContext.timeLabel, timeLabelStyle]}
+                currentTime={time}
+                duration={duration}
+                showDuration={false}
+                isLive={false}
+              />
+            )}
+            <View style={[styleContext.containerThumbnail, { height: renderHeight, marginLeft: offset ?? 0 }, containerStyle]}>
+              {[...before, current, ...after].map((thumbnail, index) => {
+                return thumbnail
+                  ? this.renderThumbnail(thumbnail, carouselThumbCount - index)
+                  : this.renderPlaceHolderThumbnail(carouselThumbCount - index);
+              })}
+            </View>
+          </View>
         )}
-        <View style={[styles.container, { height: renderHeight, marginLeft: offset ?? 0 }, containerStyle]}>
-          {[...before, current, ...after].map((thumbnail, index) => {
-            return thumbnail
-              ? this.renderThumbnail(thumbnail, carouselThumbCount - index)
-              : this.renderPlaceHolderThumbnail(carouselThumbCount - index);
-          })}
-        </View>
-      </View>
+      </PlayerStyleContext.Consumer>
     );
   }
 }

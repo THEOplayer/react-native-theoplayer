@@ -1,8 +1,7 @@
 import React, { PureComponent } from 'react';
-import { PlayerEventType } from 'react-native-theoplayer';
+import { PlayerEventType, THEOplayerInternal } from 'react-native-theoplayer';
 import { SeekBar } from '../seekbar/SeekBar';
-import styles from './VideoPlayerUI.style';
-import { THUMBNAIL_MODE, VideoPlayerUIProps } from './VideoPlayerUIProps';
+import { THUMBNAIL_MODE } from './VideoPlayerUIProps';
 import { AirplayButton } from '../button/AirplayButton';
 import { ChromecastButton } from '../button/ChromecastButton';
 import { ControlBar, SplitControlBar } from '../controlbar/ControlBar';
@@ -19,6 +18,12 @@ import { BigPlayButton } from '../button/BigPlayButton';
 import { CastMessage } from '../view/CastMessage';
 import { CenteredDelayedActivityIndicator } from '../delayedactivityindicator/CenteredDelayedActivityIndicator';
 import { ErrorDisplay } from '../view/ErrorDisplay';
+import { defaultPlayerStyle, PlayerStyleContext, VideoPlayerStyle } from '../style/VideoPlayerStyle';
+
+export interface VideoPlayerUIProps {
+  style?: Partial<VideoPlayerStyle>;
+  player: THEOplayerInternal;
+}
 
 export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
   constructor(props: VideoPlayerUIProps) {
@@ -62,49 +67,50 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
 
     return (
       <PlayerContext.Provider value={player}>
-        <SlotView
-          style={style}
-          top={
-            <ControlBar>
-              <AirplayButton />
-              <ChromecastButton />
-            </ControlBar>
-          }
-          center={
-            <>
-              <BigPlayButton />
-              <CenteredDelayedActivityIndicator />
-            </>
-          }
-          bottom={
-            <>
-              <CastMessage />
+        <PlayerStyleContext.Provider value={{ ...defaultPlayerStyle, ...style }}>
+          <SlotView
+            top={
               <ControlBar>
-                <SeekBar thumbnailMode={THUMBNAIL_MODE} />
+                <AirplayButton />
+                <ChromecastButton />
               </ControlBar>
+            }
+            center={
+              <>
+                <BigPlayButton />
+                <CenteredDelayedActivityIndicator />
+              </>
+            }
+            bottom={
+              <>
+                <CastMessage />
+                <ControlBar>
+                  <SeekBar thumbnailMode={THUMBNAIL_MODE} />
+                </ControlBar>
 
-              <SplitControlBar
-                left={
-                  <>
-                    <MuteButton />
-                    <TimeLabel showDuration={true} style={styles.timeLabel} />
-                  </>
-                }
-                right={
-                  <>
-                    <TextTrackMenu />
-                    <AudioTrackMenu />
-                    {/*Note: quality selection is not available on iOS */}
-                    <VideoQualityMenu />
-                    <SourceMenu />
-                    <FullscreenButton />
-                  </>
-                }
-              />
-            </>
-          }>
-          <ErrorDisplay />
-        </SlotView>
+                <SplitControlBar
+                  left={
+                    <>
+                      <MuteButton />
+                      <TimeLabel showDuration={true} style={defaultPlayerStyle.timeLabel} />
+                    </>
+                  }
+                  right={
+                    <>
+                      <TextTrackMenu />
+                      <AudioTrackMenu />
+                      {/*Note: quality selection is not available on iOS */}
+                      <VideoQualityMenu />
+                      <SourceMenu />
+                      <FullscreenButton />
+                    </>
+                  }
+                />
+              </>
+            }>
+            <ErrorDisplay />
+          </SlotView>
+        </PlayerStyleContext.Provider>
       </PlayerContext.Provider>
     );
   }

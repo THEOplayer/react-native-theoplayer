@@ -1,8 +1,7 @@
 import React, { PureComponent } from 'react';
 import { PlayerConfiguration, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
 
-import { View } from 'react-native';
-import styles from './VideoPlayer.style';
+import { StyleSheet, View } from 'react-native';
 import { VideoPlayerUI } from './VideoPlayerUI';
 
 export interface VideoPlayerProps {
@@ -12,6 +11,24 @@ export interface VideoPlayerProps {
 interface VideoPlayerState {
   player: THEOplayer | undefined;
 }
+
+const videoPlayerStyle = StyleSheet.create({
+  container: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    overflow: 'hidden',
+  },
+  fullScreen: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  },
+});
 
 export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerState> {
   constructor(props: VideoPlayerProps) {
@@ -29,8 +46,8 @@ export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerStat
     const chromeless = config?.chromeless ?? false;
 
     return (
-      <View style={styles.container}>
-        <THEOplayerView config={config} style={styles.fullScreen} onPlayerReady={this.onPlayerReady} />
+      <View style={videoPlayerStyle.container}>
+        <THEOplayerView config={config} style={videoPlayerStyle.fullScreen} onPlayerReady={this.onPlayerReady} />
 
         {chromeless && player && <VideoPlayerUI player={player} />}
       </View>

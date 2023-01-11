@@ -4,7 +4,7 @@ import { ActionButton } from '../../button/actionbutton/ActionButton';
 import { ModalMenu } from '../modalmenu/ModalMenu';
 import { MenuRow } from '../modalmenu/MenuRow';
 import type { MenuItem } from '../modalmenu/MenuItem';
-import { controlBarStyle } from '../../controlbar/ControlBar';
+import { PlayerStyleContext, VideoPlayerStyle } from '../../style/VideoPlayerStyle';
 
 export interface MenuButtonProps {
   title: string;
@@ -32,16 +32,20 @@ export const MenuButton = (props: MenuButtonProps) => {
 
   return (
     <>
-      <ActionButton
-        svg={svg}
-        icon={icon}
-        iconStyle={controlBarStyle.menuIcon}
-        onPress={() => {
-          setModalVisible(true);
-        }}
-        style={style}
-        touchable={true}
-      />
+      <PlayerStyleContext.Consumer>
+        {(styleContext: VideoPlayerStyle) => (
+          <ActionButton
+            svg={svg}
+            icon={icon}
+            iconStyle={styleContext.controlBarButtonImage}
+            onPress={() => {
+              setModalVisible(true);
+            }}
+            style={style}
+            touchable={true}
+          />
+        )}
+      </PlayerStyleContext.Consumer>
 
       {modalVisible && (
         <ModalMenu

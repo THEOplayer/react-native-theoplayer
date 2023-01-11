@@ -11,7 +11,6 @@ import {
   TVEventHandler,
   View,
 } from 'react-native';
-import styles from './SeekBar.style';
 import {
   SEEK_TIMER_DELAY_MSEC,
   SeekBarProps,
@@ -42,8 +41,8 @@ import {
 } from 'react-native-theoplayer';
 import { ThumbnailView } from '../thumbnail/ThumbnailView';
 import { THUMBNAIL_SIZE } from '../videoplayer/VideoPlayerUIProps';
-import videoPlayerStyles from '../videoplayer/VideoPlayerUI.style';
 import { PlayerContext } from '../util/Context';
+import { PlayerStyleContext, VideoPlayerStyle } from '../style/VideoPlayerStyle';
 
 interface SeekBarState {
   focused: boolean;
@@ -402,49 +401,53 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
     const { style, progressDotStyle, thumbnailMode } = this.props;
 
     return (
-      <View style={{ flex: 1, flexDirection: 'column', paddingHorizontal: 10 }}>
-        {/* TODO {thumbnailMode === 'carousel' ? this.renderThumbnailCarousel(this.seekBarPosition) : this.renderSingleThumbnail(this.seekBarPosition)}*/}
+      <PlayerStyleContext.Consumer>
+        {(styleContext: VideoPlayerStyle) => (
+          <View style={{ flex: 1, flexDirection: 'column', paddingHorizontal: 10 }}>
+            {/* TODO {thumbnailMode === 'carousel' ? this.renderThumbnailCarousel(this.seekBarPosition) : this.renderSingleThumbnail(this.seekBarPosition)}*/}
 
-        <View style={[styles.container, style]}>
-          {Platform.isTV && (
-            <TouchableOpacity
-              ref={this.setScrubberArea}
-              hasTVPreferredFocus={true}
-              tvParallaxProperties={{ enabled: false }}
-              activeOpacity={1.0}
-              style={styles.progress}
-              onFocus={this.onFocus}
-              onBlur={this.onBlur}
-              onPress={this.onDotPress}
-              onLayout={this.measureScrubber}>
-              <View style={[styles.innerProgressCompleted, { flex: flexCompleted, backgroundColor: focused ? '#ffc50f' : 'white' }]} />
-              {focused && <View style={[styles.progressDot, progressDotStyle]} />}
-              <View style={[styles.innerProgressRemaining, { flex: flexRemaining }]} />
-            </TouchableOpacity>
-          )}
+            <View style={[styleContext.containerSeekBar, style]}>
+              {Platform.isTV && (
+                <TouchableOpacity
+                  ref={this.setScrubberArea}
+                  hasTVPreferredFocus={true}
+                  tvParallaxProperties={{ enabled: false }}
+                  activeOpacity={1.0}
+                  style={styleContext.progress}
+                  onFocus={this.onFocus}
+                  onBlur={this.onBlur}
+                  onPress={this.onDotPress}
+                  onLayout={this.measureScrubber}>
+                  <View style={[styleContext.innerProgressCompleted, { flex: flexCompleted, backgroundColor: focused ? '#ffc50f' : 'white' }]} />
+                  {focused && <View style={[styleContext.progressDot, progressDotStyle]} />}
+                  <View style={[styleContext.innerProgressRemaining, { flex: flexRemaining }]} />
+                </TouchableOpacity>
+              )}
 
-          {!Platform.isTV && (
-            <View style={styles.progress}>
-              <View style={[styles.innerProgressCompleted, { flex: flexCompleted }]} />
-              <View
-                style={[styles.progressDot, { zIndex: 1 }, progressDotStyle]}
-                hitSlop={styles.progressHitSlop}
-                {...this._seekPanResponder.panHandlers}
-              />
-              <View style={[styles.innerProgressRemaining, { flex: flexRemaining }]} />
-              <TouchableOpacity
-                ref={this.setScrubberArea}
-                style={styles.touchable}
-                hitSlop={styles.progressHitSlop}
-                onPress={this.onTouchScrubber}
-                onLayout={this.measureScrubber}
-              />
+              {!Platform.isTV && (
+                <View style={styleContext.progress}>
+                  <View style={[styleContext.innerProgressCompleted, { flex: flexCompleted }]} />
+                  <View
+                    style={[styleContext.progressDot, { zIndex: 1 }, progressDotStyle]}
+                    hitSlop={styleContext.progressHitSlop}
+                    {...this._seekPanResponder.panHandlers}
+                  />
+                  <View style={[styleContext.innerProgressRemaining, { flex: flexRemaining }]} />
+                  <TouchableOpacity
+                    ref={this.setScrubberArea}
+                    style={styleContext.touchable}
+                    hitSlop={styleContext.progressHitSlop}
+                    onPress={this.onTouchScrubber}
+                    onLayout={this.measureScrubber}
+                  />
+                </View>
+              )}
             </View>
-          )}
-        </View>
 
-        {/* TODO: render bot component? {renderBottomComponent && renderBottomComponent(this.seekBarPosition)}*/}
-      </View>
+            {/* TODO: render bot component? {renderBottomComponent && renderBottomComponent(this.seekBarPosition)}*/}
+          </View>
+        )}
+      </PlayerStyleContext.Consumer>
     );
   }
 
@@ -455,19 +458,23 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
       return;
     }
     return (
-      <ThumbnailView
-        visible={seekBarPosition.isScrubbing}
-        containerStyle={videoPlayerStyles.thumbnailContainerCarousel}
-        thumbnailStyleCurrent={videoPlayerStyles.thumbnailCurrentCarousel}
-        thumbnailStyleCarousel={videoPlayerStyles.thumbnailCarousel}
-        thumbnailTrack={thumbnailTrack}
-        time={seekBarPosition.currentProgress}
-        duration={seekBarPosition.duration}
-        size={THUMBNAIL_SIZE}
-        carouselCount={2}
-        // Optionally scale down the thumbnails when further from currentTime.
-        // carouselThumbnailScale={(index: number) => 1.0 - Math.abs(index) * 0.15}
-      />
+      <PlayerStyleContext.Consumer>
+        {(styleContext: VideoPlayerStyle) => (
+          <ThumbnailView
+            visible={seekBarPosition.isScrubbing}
+            containerStyle={styleContext.thumbnailContainerCarousel}
+            thumbnailStyleCurrent={styleContext.thumbnailCurrentCarousel}
+            thumbnailStyleCarousel={styleContext.thumbnailCarousel}
+            thumbnailTrack={thumbnailTrack}
+            time={seekBarPosition.currentProgress}
+            duration={seekBarPosition.duration}
+            size={THUMBNAIL_SIZE}
+            carouselCount={2}
+            // Optionally scale down the thumbnails when further from currentTime.
+            // carouselThumbnailScale={(index: number) => 1.0 - Math.abs(index) * 0.15}
+          />
+        )}
+      </PlayerStyleContext.Consumer>
     );
   };
 
@@ -478,20 +485,24 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
       return;
     }
     return (
-      <ThumbnailView
-        visible={seekBarPosition.isScrubbing}
-        containerStyle={videoPlayerStyles.thumbnailContainerSingle}
-        thumbnailStyleCurrent={videoPlayerStyles.thumbnailCurrentSingle}
-        thumbnailTrack={thumbnailTrack}
-        duration={seekBarPosition.duration}
-        time={seekBarPosition.currentProgress}
-        size={THUMBNAIL_SIZE}
-        showTimeLabel={false}
-        offset={Math.min(
-          seekBarPosition.seekBarWidth - THUMBNAIL_SIZE,
-          Math.max(0, seekBarPosition.currentProgressPercentage * seekBarPosition.seekBarWidth - 0.5 * THUMBNAIL_SIZE),
+      <PlayerStyleContext.Consumer>
+        {(styleContext: VideoPlayerStyle) => (
+          <ThumbnailView
+            visible={seekBarPosition.isScrubbing}
+            containerStyle={styleContext.thumbnailContainerSingle}
+            thumbnailStyleCurrent={styleContext.thumbnailCurrentSingle}
+            thumbnailTrack={thumbnailTrack}
+            duration={seekBarPosition.duration}
+            time={seekBarPosition.currentProgress}
+            size={THUMBNAIL_SIZE}
+            showTimeLabel={false}
+            offset={Math.min(
+              seekBarPosition.seekBarWidth - THUMBNAIL_SIZE,
+              Math.max(0, seekBarPosition.currentProgressPercentage * seekBarPosition.seekBarWidth - 0.5 * THUMBNAIL_SIZE),
+            )}
+          />
         )}
-      />
+      </PlayerStyleContext.Consumer>
     );
   };
 }

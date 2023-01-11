@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
 import { CastEvent, CastEventType, PlayerEventType, THEOplayerInternal } from 'react-native-theoplayer';
 import { Text } from 'react-native';
-import styles from '../videoplayer/VideoPlayerUI.style';
 import { PlayerContext } from '../util/Context';
+import { PlayerStyleContext, VideoPlayerStyle } from '../style/VideoPlayerStyle';
 
 interface CastMessageState {
   message: string | undefined;
@@ -51,7 +51,11 @@ export class CastMessage extends PureComponent<unknown, CastMessageState> {
       return <></>;
     }
 
-    return <Text style={styles.message}>{message}</Text>;
+    return (
+      <PlayerStyleContext.Consumer>
+        {(styleContext: VideoPlayerStyle) => <Text style={styleContext.message}>{message}</Text>}
+      </PlayerStyleContext.Consumer>
+    );
   }
 }
 

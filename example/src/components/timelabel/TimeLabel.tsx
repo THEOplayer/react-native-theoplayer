@@ -1,8 +1,9 @@
 import { StyleProp, Text, TextStyle } from 'react-native';
 import React, { PureComponent } from 'react';
-import styles from './TimeLabel.style';
 import { DurationChangeEvent, PlayerEventType, THEOplayerInternal, TimeUpdateEvent } from 'react-native-theoplayer';
 import { PlayerContext } from '../util/Context';
+import type { VideoPlayerStyle } from '../style/VideoPlayerStyle';
+import { PlayerStyleContext } from '../style/VideoPlayerStyle';
 
 export interface TimeLabelProps {
   showDuration: boolean;
@@ -60,7 +61,11 @@ export class TimeLabel extends PureComponent<TimeLabelProps, TimeLabelState> {
 
     // Live streams report an Infinity duration.
     if (!isFinite(duration)) {
-      return <Text style={[styles.timeLabel, style]}>{LIVE_LABEL}</Text>;
+      return (
+        <PlayerStyleContext.Consumer>
+          {(styleContext: VideoPlayerStyle) => <Text style={[styleContext.timeLabel2, style]}>{LIVE_LABEL}</Text>}
+        </PlayerStyleContext.Consumer>
+      );
     }
 
     try {
@@ -69,7 +74,11 @@ export class TimeLabel extends PureComponent<TimeLabelProps, TimeLabelState> {
       const currentTimeLabel = new Date(currentTime).toISOString().substring(s, 19);
       const durationLabel = new Date(duration).toISOString().substring(s, 19);
       const label = showDuration ? `${currentTimeLabel} / ${durationLabel}` : currentTimeLabel;
-      return <Text style={[styles.timeLabel, style]}>{label}</Text>;
+      return (
+        <PlayerStyleContext.Consumer>
+          {(styleContext: VideoPlayerStyle) => <Text style={[styleContext.timeLabel2, style]}>{label}</Text>}
+        </PlayerStyleContext.Consumer>
+      );
     } catch (ignore) {
       return <></>;
     }

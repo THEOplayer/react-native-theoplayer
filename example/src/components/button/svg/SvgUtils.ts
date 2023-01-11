@@ -5,4 +5,4 @@ export const defaultSvgStyle: SvgProps = {
   fill: 'white',
 };
 
-export const SvgContext = React.createContext<SvgProps>({ fill: 'white' });
+export const SvgContext = React.createContext<SvgProps>(defaultSvgStyle);

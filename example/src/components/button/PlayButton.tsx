@@ -3,9 +3,9 @@ import { Platform, StyleProp, ViewStyle } from 'react-native';
 import React, { PureComponent } from 'react';
 import { PlayerEventType, THEOplayerInternal } from 'react-native-theoplayer';
 import { PlayerContext } from '../util/Context';
-import { controlBarStyle } from '../controlbar/ControlBar';
 import { PlayButtonSvg } from './svg/PlayButtonSvg';
 import { PauseButtonSvg } from './svg/PauseButtonSvg';
+import { PlayerStyleContext, VideoPlayerStyle } from '../style/VideoPlayerStyle';
 
 interface PlayButtonProps {
   style?: StyleProp<ViewStyle>;
@@ -76,14 +76,18 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
     }
 
     return (
-      <ActionButton
-        style={controlBarStyle.castButton}
-        touchable={!Platform.isTV}
-        svg={paused ? <PlayButtonSvg /> : <PauseButtonSvg />}
-        // @ts-ignore
-        iconStyle={[style]}
-        onPress={this.togglePlayPause}
-      />
+      <PlayerStyleContext.Consumer>
+        {(styleContext: VideoPlayerStyle) => (
+          <ActionButton
+            style={styleContext.controlBarButton}
+            touchable={!Platform.isTV}
+            svg={paused ? <PlayButtonSvg /> : <PauseButtonSvg />}
+            // @ts-ignore
+            iconStyle={[style]}
+            onPress={this.togglePlayPause}
+          />
+        )}
+      </PlayerStyleContext.Consumer>
     );
   }
 }
