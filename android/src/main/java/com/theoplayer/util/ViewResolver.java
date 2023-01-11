@@ -2,7 +2,6 @@ package com.theoplayer.util;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.view.View;
 
 import androidx.annotation.Nullable;
 
@@ -13,7 +12,7 @@ import com.theoplayer.ReactTHEOplayerView;
 public class ViewResolver {
   private UIManagerModule uiManager;
 
-  private Handler handler = new Handler(Looper.getMainLooper());
+  private final Handler handler = new Handler(Looper.getMainLooper());
 
   private final ReactApplicationContext reactContext;
 
@@ -35,8 +34,7 @@ public class ViewResolver {
     if (uiManager == null) {
       callback.onResolved(null);
     }
-    handler.post(() -> {
-      callback.onResolved((ReactTHEOplayerView)uiManager.resolveView(tag));
-    });
+    //noinspection ConstantConditions
+    handler.post(() -> callback.onResolved((ReactTHEOplayerView)uiManager.resolveView(tag)));
   }
 }

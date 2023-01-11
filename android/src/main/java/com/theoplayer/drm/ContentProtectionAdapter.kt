@@ -15,6 +15,8 @@ import com.theoplayer.android.api.source.drm.KeySystemConfiguration
 import com.theoplayer.android.api.source.drm.preintegration.*
 import org.json.JSONObject
 
+private const val TAG = "ContentProtection"
+
 const val PROP_INTEGRATION: String = "integration"
 const val PROP_INTEGRATION_ID: String = "integrationId"
 const val PROP_INTEGRATION_PARAMETERS: String = "integrationParameters"
@@ -33,8 +35,6 @@ const val PROP_LA_URL: String = "licenseAcquisitionURL"
 const val PROP_USE_CREDENTIALS: String = "useCredentials"
 
 object ContentProtectionAdapter {
-
-  const val TAG = "ContentProtection"
 
   private fun createBridgeData(integrationId: String, keySystemId: KeySystemId): WritableMap {
     return Arguments.createMap().apply {
