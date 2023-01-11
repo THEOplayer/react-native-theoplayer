@@ -1,5 +1,5 @@
 import React, { PureComponent, ReactNode } from 'react';
-import { Animated, Platform, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { Animated, Platform, StyleProp, View, ViewStyle } from 'react-native';
 import { PlayerContext } from '../util/Context';
 import type { THEOplayerInternal } from 'react-native-theoplayer';
 import { PlayerEventType } from 'react-native-theoplayer';
@@ -18,7 +18,7 @@ interface SlotViewState {
 }
 
 export class SlotView extends PureComponent<React.PropsWithChildren<SlotViewProps>, SlotViewState> {
-  private currentTimeout: number | undefined = undefined;
+  private currentFadeOutTimeout: number | undefined = undefined;
 
   constructor(props: SlotViewProps) {
     super(props);
@@ -44,8 +44,8 @@ export class SlotView extends PureComponent<React.PropsWithChildren<SlotViewProp
       return;
     }
     const { fadeAnim } = this.state;
-    this.enableControls();
     this.resetFadeOutTimeout();
+    this.enableControls();
     Animated.timing(fadeAnim, {
       useNativeDriver: true,
       toValue: 1,
@@ -58,12 +58,13 @@ export class SlotView extends PureComponent<React.PropsWithChildren<SlotViewProp
       // TODO fade effects for TV UI.
       return;
     }
-    clearTimeout(this.currentTimeout);
+    clearTimeout(this.currentFadeOutTimeout);
     //@ts-ignore
-    this.currentTimeout = setTimeout(this.fadeOut, 2000);
+    this.currentFadeOutTimeout = setTimeout(this.fadeOut, 2000);
   };
 
   private fadeOut = () => {
+    this.currentFadeOutTimeout = undefined;
     if (this.context.paused) {
       // Player is paused, don't hide the UI.
       return;
@@ -81,7 +82,9 @@ export class SlotView extends PureComponent<React.PropsWithChildren<SlotViewProp
   };
 
   private disableControls = () => {
-    this.setState({ controlsEnabled: false });
+    if (!this.currentFadeOutTimeout) {
+      this.setState({ controlsEnabled: false });
+    }
   };
 
   render() {
@@ -91,13 +94,15 @@ export class SlotView extends PureComponent<React.PropsWithChildren<SlotViewProp
       <PlayerStyleContext.Consumer>
         {(styleContext: VideoPlayerStyle) => (
           <>
-            <TouchableOpacity style={styleContext.containerSlotView} onPress={this.fadeIn} activeOpacity={0}></TouchableOpacity>
+            <View style={styleContext.containerSlotView} onTouchStart={this.fadeIn}></View>
             {/* The Animated.View is for showing and hiding the UI*/}
-            <Animated.View style={[styleContext.containerSlotView, { opacity: fadeAnim, display: controlsEnabled ? 'flex' : 'none' }]}>
+            <Animated.View
+              style={[styleContext.containerSlotView, { opacity: fadeAnim, display: controlsEnabled ? 'flex' : 'none' }]}
+              onTouchStart={this.fadeIn}>
               {/* The UI background */}
               <View style={[styleContext.containerSlotView, styleContext.backgroundSlotView]} />
               {/* The UI control bars*/}
-              <View style={[styleContext.containerSlotView, style]} onTouchStart={this.fadeIn}>
+              <View style={[styleContext.containerSlotView, style]}>
                 <View style={styleContext.topSlot}>{top}</View>
                 {/* The center controls*/}
                 <View style={[styleContext.centerSlot]}>{center}</View>
