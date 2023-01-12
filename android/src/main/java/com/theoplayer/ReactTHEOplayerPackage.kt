@@ -9,15 +9,15 @@ import com.theoplayer.drm.ContentProtectionModule
 import com.theoplayer.cast.CastModule
 
 class ReactTHEOplayerPackage : ReactPackage {
-    override fun createNativeModules(reactContext: ReactApplicationContext): List<NativeModule> {
-      return listOf(
-        AdsModule(reactContext),
-        ContentProtectionModule(reactContext),
-        CastModule(reactContext)
-      )
-    }
+  override fun createNativeModules(reactContext: ReactApplicationContext): List<NativeModule> {
+    return listOf(
+      AdsModule(reactContext),
+      ContentProtectionModule(reactContext),
+      CastModule(reactContext)
+    )
+  }
 
-    override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {
-        return listOf<ViewManager<*, *>>(ReactTHEOplayerViewManager())
-    }
+  override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {
+    return listOf<ViewManager<*, *>>(ReactTHEOplayerViewManager())
+  }
 }

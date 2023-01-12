@@ -9,11 +9,9 @@ class ProxyContentProtectionIntegrationFactory(
   private val integrationId: String,
   private val keySystemId: KeySystemId,
   private val module: ContentProtectionModule
-) :
-  ContentProtectionIntegrationFactory {
-  override fun build(
-    config: DRMConfiguration?
-  ): ContentProtectionIntegration {
+) : ContentProtectionIntegrationFactory {
+
+  override fun build(config: DRMConfiguration?): ContentProtectionIntegration {
     return ProxyContentProtectionIntegration(integrationId, keySystemId, config, module)
   }
 }
