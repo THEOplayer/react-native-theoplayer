@@ -4,9 +4,9 @@ import android.util.Log
 import android.view.View
 import androidx.annotation.StringDef
 import com.facebook.react.bridge.Arguments
-import com.facebook.react.bridge.ReactContext
+import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.WritableMap
-import com.facebook.react.uimanager.events.RCTEventEmitter
+import com.facebook.react.uimanager.events.ReactEventEmitter
 import com.theoplayer.ads.AdEventAdapter
 import com.theoplayer.ads.AdEventAdapter.AdEventEmitter
 import com.theoplayer.android.api.error.THEOplayerException
@@ -95,7 +95,7 @@ private const val EVENT_PROP_QUALITIES = "qualities"
 
 @Suppress("UNCHECKED_CAST")
 class PlayerEventEmitter internal constructor(
-  reactContext: ReactContext,
+  reactContext: ReactApplicationContext,
   playerView: ReactTHEOplayerView
 ) {
   @Retention(AnnotationRetention.SOURCE)
@@ -162,7 +162,7 @@ class PlayerEventEmitter internal constructor(
     )
   }
 
-  private val eventEmitter: RCTEventEmitter
+  private val eventEmitter: ReactEventEmitter
   private var viewId = View.NO_ID
   private val playerListeners = HashMap<EventType<*>, EventListener<*>>()
   private val textTrackListeners = HashMap<EventType<*>, EventListener<*>>()
@@ -176,7 +176,7 @@ class PlayerEventEmitter internal constructor(
   private var lastCurrentTime = 0.0
 
   init {
-    eventEmitter = reactContext.getJSModule(RCTEventEmitter::class.java)
+    eventEmitter = ReactEventEmitter(reactContext)
     this.playerView = playerView
 
     // Create listeners

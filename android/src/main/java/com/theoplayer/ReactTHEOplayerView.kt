@@ -44,7 +44,7 @@ private const val TIME_UNSET = Long.MIN_VALUE + 1
 class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
   FrameLayout(reactContext), LifecycleEventListener {
 
-  private val eventEmitter: PlayerEventEmitter = PlayerEventEmitter(reactContext, this)
+  private val eventEmitter: PlayerEventEmitter = PlayerEventEmitter(reactContext.reactApplicationContext, this)
   private var playerView: THEOplayerView? = null
   private var abrConfig: ReadableMap? = null
   private var paused = false
