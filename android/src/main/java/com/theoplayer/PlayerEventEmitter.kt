@@ -36,12 +36,7 @@ import com.theoplayer.android.api.player.track.mediatrack.quality.VideoQuality
 import com.theoplayer.android.api.player.track.texttrack.TextTrack
 import com.theoplayer.android.api.timerange.TimeRanges
 import com.theoplayer.cast.CastEventAdapter
-import com.theoplayer.track.MediaTrackEventType
-import com.theoplayer.track.MediaTrackType
-import com.theoplayer.track.TextTrackCueEventType
-import com.theoplayer.track.TrackEventType
-import com.theoplayer.track.TrackListAdapter.fromMediaTrack
-import com.theoplayer.track.TrackListAdapter.fromQuality
+import com.theoplayer.track.*
 import com.theoplayer.util.TypeUtils.encodeInfNan
 import kotlin.math.floor
 
@@ -88,6 +83,7 @@ class PlayerEventEmitter internal constructor(
   private val audioTrackListeners = HashMap<EventType<*>, EventListener<*>>()
   private val videoTrackListeners = HashMap<EventType<*>, EventListener<*>>()
   private val playerView: ReactTHEOplayerView
+  private val trackListAdapter = TrackListAdapter()
   private var adEventAdapter: AdEventAdapter? = null
   private var castEventAdapter: CastEventAdapter? = null
   private var lastTimeUpdate: Long = 0
@@ -396,7 +392,7 @@ class PlayerEventEmitter internal constructor(
       payload.putInt(EVENT_PROP_TRACK_UID, activeTrack.uid)
     }
     val qualities = Arguments.createArray()
-    qualities.pushMap(fromQuality(quality))
+    qualities.pushMap(trackListAdapter.fromQuality(quality))
     payload.putArray(EVENT_PROP_QUALITIES, qualities)
     receiveEvent(EVENT_MEDIATRACK_EVENT, payload)
   }
@@ -409,7 +405,7 @@ class PlayerEventEmitter internal constructor(
     val payload = Arguments.createMap()
     payload.putInt(EVENT_PROP_TYPE, eventType.type)
     payload.putInt(EVENT_PROP_TRACK_TYPE, trackType.type)
-    payload.putMap(EVENT_PROP_TRACK, fromMediaTrack(track, trackType))
+    payload.putMap(EVENT_PROP_TRACK, trackListAdapter.fromMediaTrack(track, trackType))
     val qualityChangedEventType =
       (if (trackType === MediaTrackType.AUDIO)
         AudioTrackEventTypes.ACTIVEQUALITYCHANGEDEVENT

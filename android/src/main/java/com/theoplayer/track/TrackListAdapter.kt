@@ -36,7 +36,7 @@ private const val PROP_ENDTIME = "endTime"
 private const val PROP_CUES = "cues"
 private const val PROP_CUE_CONTENT = "content"
 
-object TrackListAdapter {
+class TrackListAdapter {
 
   fun fromTextTrackList(textTrackList: TextTrackList): WritableArray {
     val textTracks = Arguments.createArray()

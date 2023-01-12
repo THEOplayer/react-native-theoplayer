@@ -7,11 +7,6 @@ import android.os.Looper
 import android.util.Log
 import android.widget.FrameLayout
 import com.facebook.react.bridge.*
-import com.theoplayer.track.TrackListAdapter.fromTextTrackList
-import com.theoplayer.track.TrackListAdapter.fromTextTrack
-import com.theoplayer.track.TrackListAdapter.fromTextTrackCue
-import com.theoplayer.track.TrackListAdapter.fromAudioTrackList
-import com.theoplayer.track.TrackListAdapter.fromVideoTrackList
 import com.theoplayer.util.TypeUtils.encodeInfNan
 import com.theoplayer.android.api.ads.ima.GoogleImaIntegrationFactory.createGoogleImaIntegration
 import com.theoplayer.android.api.ads.dai.GoogleDaiIntegrationFactory.createGoogleDaiIntegration
@@ -40,6 +35,7 @@ import com.theoplayer.android.api.cast.Cast
 import com.theoplayer.android.api.player.track.mediatrack.MediaTrack
 import com.theoplayer.android.api.timerange.TimeRanges
 import com.theoplayer.track.QualityListFilter
+import com.theoplayer.track.TrackListAdapter
 import java.lang.Exception
 
 private const val TAG = "ReactTHEOplayerView"
@@ -60,6 +56,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
   private var seekTime = TIME_UNSET.toDouble()
   private var sourceDescription: SourceDescription? = null
   private val mainHandler = Handler(Looper.getMainLooper())
+  private val trackListAdapter = TrackListAdapter()
 
   var daiIntegration: GoogleDaiIntegration? = null
   var imaIntegration: GoogleImaIntegration? = null
@@ -77,7 +74,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
 
   val textTrackInfo: WritableArray
     get() = if (player != null) {
-      fromTextTrackList(player!!.textTracks)
+      trackListAdapter.fromTextTrackList(player!!.textTracks)
     } else Arguments.createArray()
 
   fun initialize(configProps: ReadableMap?) {
@@ -86,24 +83,24 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
 
   fun getTextTrackInfo(track: TextTrack): WritableMap {
     return if (player != null) {
-      fromTextTrack(track)
+      trackListAdapter.fromTextTrack(track)
     } else Arguments.createMap()
   }
 
   fun getTextTrackCueInfo(cue: TextTrackCue): WritableMap {
     return if (player != null) {
-      fromTextTrackCue(cue)
+      trackListAdapter.fromTextTrackCue(cue)
     } else Arguments.createMap()
   }
 
   val audioTrackInfo: WritableArray
     get() = if (player != null) {
-      fromAudioTrackList(player!!.audioTracks)
+      trackListAdapter.fromAudioTrackList(player!!.audioTracks)
     } else Arguments.createArray()
 
   val videoTrackInfo: WritableArray
     get() = if (player != null) {
-      fromVideoTrackList(player!!.videoTracks)
+      trackListAdapter.fromVideoTrackList(player!!.videoTracks)
     } else Arguments.createArray()
 
   val duration: Double
