@@ -11,7 +11,6 @@ import com.theoplayer.util.TypeUtils.encodeInfNan
 import com.theoplayer.android.api.ads.ima.GoogleImaIntegrationFactory.createGoogleImaIntegration
 import com.theoplayer.android.api.ads.dai.GoogleDaiIntegrationFactory.createGoogleDaiIntegration
 import com.theoplayer.android.api.cast.CastIntegrationFactory.createCastIntegration
-import com.theoplayer.abr.ABRConfigurationAdapter.applyABRConfigurationFromProps
 import com.facebook.react.uimanager.ThemedReactContext
 import com.theoplayer.android.api.THEOplayerView
 import com.theoplayer.android.api.ads.dai.GoogleDaiIntegration
@@ -26,6 +25,7 @@ import com.theoplayer.android.api.player.RequestCallback
 import com.theoplayer.android.api.THEOplayerConfig
 import com.google.ads.interactivemedia.v3.api.AdsRenderingSettings
 import com.google.ads.interactivemedia.v3.api.ImaSdkFactory
+import com.theoplayer.abr.ABRConfigurationAdapter
 import com.theoplayer.source.SourceAdapter
 import com.theoplayer.android.api.error.THEOplayerException
 import com.theoplayer.android.api.player.track.texttrack.TextTrackMode
@@ -78,7 +78,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
     } else Arguments.createArray()
 
   fun initialize(configProps: ReadableMap?) {
-    createViews(PlayerConfigAdapter().fromProps(configProps))
+    createViews(PlayerConfigAdapter.fromProps(configProps))
   }
 
   fun getTextTrackInfo(track: TextTrack): WritableMap {
@@ -206,7 +206,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
     mainHandler.postDelayed({
       if (player == null) {
         player = playerView!!.player
-        applyABRConfigurationFromProps(player, abrConfig)
+        ABRConfigurationAdapter.applyABRConfigurationFromProps(player, abrConfig)
         if (BuildConfig.EXTENSION_ADS) {
           adsApi.initialize(player!!, imaIntegration, daiIntegration)
         }
@@ -275,7 +275,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
 
   fun setABRConfig(abrConfigProps: ReadableMap?) {
     abrConfig = abrConfigProps
-    applyABRConfigurationFromProps(player, abrConfig)
+    ABRConfigurationAdapter.applyABRConfigurationFromProps(player, abrConfig)
   }
 
   fun setSource(sourceDescription: SourceDescription?) {

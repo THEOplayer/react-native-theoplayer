@@ -2,7 +2,6 @@ package com.theoplayer.source
 
 import android.text.TextUtils
 import android.util.Log
-import com.theoplayer.drm.ContentProtectionAdapter.drmConfigurationFromJson
 import com.google.gson.Gson
 import com.theoplayer.android.api.error.THEOplayerException
 import com.facebook.react.bridge.ReadableMap
@@ -25,6 +24,7 @@ import com.theoplayer.android.api.source.metadata.ChromecastMetadataImage
 import com.facebook.react.bridge.ReadableArray
 import com.theoplayer.BuildConfig
 import com.theoplayer.android.api.error.ErrorCode
+import com.theoplayer.drm.ContentProtectionAdapter
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -201,7 +201,7 @@ class SourceAdapter {
         tsBuilder.timeServer(jsonTypedSource.getString(PROP_TIME_SERVER))
       }
       if (jsonTypedSource.has(PROP_CONTENT_PROTECTION)) {
-        val drmConfig = drmConfigurationFromJson(
+        val drmConfig = ContentProtectionAdapter.drmConfigurationFromJson(
           jsonTypedSource.getJSONObject(PROP_CONTENT_PROTECTION)
         )
         if (drmConfig != null) {

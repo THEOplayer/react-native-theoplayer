@@ -24,7 +24,7 @@ private const val PROP_CAST_STRATEGY = "strategy"
 private const val PROP_CHROMECAST_CONFIG = "chromecast"
 private const val PROP_CHROMECAST_APPID = "appID"
 
-class PlayerConfigAdapter {
+object PlayerConfigAdapter {
 
   fun fromProps(configProps: ReadableMap?): THEOplayerConfig {
     val configBuilder = THEOplayerConfig.Builder()

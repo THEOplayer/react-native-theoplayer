@@ -4,9 +4,6 @@ package com.theoplayer.ads
 
 import android.util.Log
 import com.facebook.react.bridge.*
-import com.theoplayer.ads.AdAdapter.fromAdBreak
-import com.theoplayer.ads.AdAdapter.fromAds
-import com.theoplayer.ads.AdAdapter.fromAdBreaks
 import com.theoplayer.source.SourceAdapter
 import com.theoplayer.util.ViewResolver
 import com.theoplayer.ReactTHEOplayerView
@@ -47,7 +44,7 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
       if (view == null) {
         promise.resolve(Arguments.createMap())
       } else {
-        promise.resolve(fromAdBreak(view.adsApi.currentAdBreak))
+        promise.resolve(AdAdapter.fromAdBreak(view.adsApi.currentAdBreak))
       }
     }
   }
@@ -59,7 +56,7 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
       if (view == null) {
         promise.resolve(Arguments.createMap())
       } else {
-        promise.resolve(fromAds(view.adsApi.currentAds))
+        promise.resolve(AdAdapter.fromAds(view.adsApi.currentAds))
       }
     }
   }
@@ -71,7 +68,7 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
       if (view == null) {
         promise.resolve(Arguments.createMap())
       } else {
-        promise.resolve(fromAdBreaks(view.adsApi.scheduledAdBreaks))
+        promise.resolve(AdAdapter.fromAdBreaks(view.adsApi.scheduledAdBreaks))
       }
     }
   }
