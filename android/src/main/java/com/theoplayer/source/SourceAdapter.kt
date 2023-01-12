@@ -118,11 +118,10 @@ class SourceAdapter {
           sideLoadedTextTracks.add(parseTextTrackFromJS(jsonTextTrack))
         }
       }
-      val builder =
-        SourceDescription.Builder.sourceDescription(*typedSources.toArray(arrayOf<TypedSource>()))
-          .poster(poster)
-          .ads(*ads.toArray(arrayOf<AdDescription>()))
-          .textTracks(*sideLoadedTextTracks.toArray(arrayOf<TextTrackDescription>()))
+      val builder = SourceDescription.Builder(*typedSources.toTypedArray())
+        .poster(poster)
+        .ads(*ads.toTypedArray())
+        .textTracks(*sideLoadedTextTracks.toTypedArray())
       if (metadataDescription != null) {
         builder.metadata(metadataDescription)
       }
@@ -136,7 +135,7 @@ class SourceAdapter {
   @Throws(THEOplayerException::class)
   private fun parseTypedSource(jsonTypedSource: JSONObject): TypedSource? {
     try {
-      var tsBuilder = TypedSource.Builder.typedSource()
+      var tsBuilder = TypedSource.Builder(jsonTypedSource.optString(PROP_SRC))
       val sourceType = parseSourceType(jsonTypedSource)
       if (jsonTypedSource.has(PROP_SSAI)) {
         val ssaiJson = jsonTypedSource.getJSONObject(PROP_SSAI)
@@ -180,7 +179,6 @@ class SourceAdapter {
           throw THEOplayerException(ErrorCode.AD_ERROR, ERROR_MISSING_SSAI_INTEGRATION)
         }
       }
-      tsBuilder.src(jsonTypedSource.optString(PROP_SRC))
       if (sourceType != null) {
         tsBuilder.type(sourceType)
       }
@@ -310,17 +308,15 @@ class SourceAdapter {
     } else {
       jsonAdDescription.optString(PROP_SOURCES)
     }
-    return GoogleImaAdDescription.Builder.googleImaAdDescription()
-      .source(source)
+    return GoogleImaAdDescription.Builder(source)
       .timeOffset(jsonAdDescription.optString(PROP_TIME_OFFSET))
       .build()
   }
 
   @Throws(JSONException::class)
   private fun parseTextTrackFromJS(jsonTextTrack: JSONObject): TextTrackDescription {
-    val builder = TextTrackDescription.Builder.textTrackDescription()
+    val builder = TextTrackDescription.Builder(jsonTextTrack.optString(PROP_SRC))
       .isDefault(jsonTextTrack.optBoolean(PROP_DEFAULT))
-      .src(jsonTextTrack.optString(PROP_SRC))
       .label(jsonTextTrack.optString(PROP_LABEL))
       .kind(parseTextTrackKind(jsonTextTrack.optString(PROP_KIND))!!)
     return builder.build()

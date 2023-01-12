@@ -65,7 +65,7 @@ object PlayerConfigAdapter {
       configProps.getMap(PROP_GOOGLE_IMA_CONFIGURATION)
     )
     if (googleImaConfiguration != null) {
-      builder.googleImaConfiguration(googleImaConfiguration)
+      builder.googleIma(googleImaConfiguration)
     }
     return builder.build()
   }
@@ -108,9 +108,7 @@ object PlayerConfigAdapter {
       null
     } else GoogleImaConfiguration.Builder()
       .useNativeIma(
-        configProps.hasKey(PROP_USE_NATIVE_IMA) && configProps.getBoolean(
-          PROP_USE_NATIVE_IMA
-        )
+        configProps.hasKey(PROP_USE_NATIVE_IMA) && configProps.getBoolean(PROP_USE_NATIVE_IMA)
       )
       .build()
   }

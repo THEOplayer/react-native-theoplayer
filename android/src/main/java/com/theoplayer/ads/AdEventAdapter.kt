@@ -37,18 +37,22 @@ class AdEventAdapter(private val adsApi: AdsApiWrapper, eventEmitter: AdEventEmi
 
   init {
     eventListener = object : AdEventListener {
-      override fun <E : AdEvent<*>?> onAdEvent(eventType: EventType<E>?, ad: Ad?) {
+      override fun <E : AdEvent<*>?> onAdEvent(type: EventType<E>?, ad: Ad?) {
         val payload = Arguments.createMap()
-        payload.putString(EVENT_PROP_TYPE, mapAdType(eventType))
+        if (type != null) {
+          payload.putString(EVENT_PROP_TYPE, mapAdType(type))
+        }
         if (ad != null) {
           payload.putMap(EVENT_PROP_AD, AdAdapter.fromAd(ad))
         }
         eventEmitter.emit(payload)
       }
 
-      override fun <E : AdEvent<*>?> onAdBreakEvent(eventType: EventType<E>?, adBreak: AdBreak?) {
+      override fun <E : AdEvent<*>?> onAdBreakEvent(type: EventType<E>?, adBreak: AdBreak?) {
         val payload = Arguments.createMap()
-        payload.putString(EVENT_PROP_TYPE, mapAdType(eventType))
+        if (type != null) {
+          payload.putString(EVENT_PROP_TYPE, mapAdType(type))
+        }
         if (adBreak != null) {
           payload.putMap(EVENT_PROP_AD, AdAdapter.fromAdBreak(adBreak))
         }
@@ -60,8 +64,8 @@ class AdEventAdapter(private val adsApi: AdsApiWrapper, eventEmitter: AdEventEmi
     }
   }
 
-  private fun mapAdType(eventType: EventType<*>?): String {
-    return when (eventType as GoogleImaAdEventType?) {
+  private fun mapAdType(eventType: EventType<*>): String {
+    return when (eventType as GoogleImaAdEventType) {
       GoogleImaAdEventType.LOADED -> "adloaded"
       GoogleImaAdEventType.STARTED -> "adbegin"
       GoogleImaAdEventType.FIRST_QUARTILE -> "adfirstquartile"
@@ -74,7 +78,7 @@ class AdEventAdapter(private val adsApi: AdsApiWrapper, eventEmitter: AdEventEmi
       GoogleImaAdEventType.AD_BREAK_STARTED -> "adbreakbegin"
       GoogleImaAdEventType.AD_BREAK_ENDED -> "adbreakend"
       GoogleImaAdEventType.AD_BREAK_FETCH_ERROR -> "aderror"
-      else -> eventType!!.getName().lowercase(Locale.getDefault())
+      else -> eventType.getName().lowercase(Locale.getDefault())
     }
   }
 

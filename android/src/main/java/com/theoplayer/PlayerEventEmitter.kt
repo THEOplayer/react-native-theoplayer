@@ -34,11 +34,64 @@ import com.theoplayer.android.api.player.track.mediatrack.quality.AudioQuality
 import com.theoplayer.android.api.player.track.mediatrack.quality.Quality
 import com.theoplayer.android.api.player.track.mediatrack.quality.VideoQuality
 import com.theoplayer.android.api.player.track.texttrack.TextTrack
-import com.theoplayer.android.api.timerange.TimeRanges
 import com.theoplayer.cast.CastEventAdapter
 import com.theoplayer.track.*
 import com.theoplayer.util.TypeUtils.encodeInfNan
 import kotlin.math.floor
+
+private val TAG = PlayerEventEmitter::class.java.name
+
+private const val EVENT_SOURCECHANGE = "onNativeSourceChange"
+private const val EVENT_LOADSTART = "onNativeLoadStart"
+private const val EVENT_LOADEDMETADATA = "onNativeLoadedMetadata"
+private const val EVENT_LOADEDDATA = "onNativeLoadedData"
+private const val EVENT_PLAY = "onNativePlay"
+private const val EVENT_PLAYING = "onNativePlaying"
+private const val EVENT_PAUSE = "onNativePause"
+private const val EVENT_ERROR = "onNativeError"
+private const val EVENT_PROGRESS = "onNativeProgress"
+private const val EVENT_SEEKING = "onNativeSeeking"
+private const val EVENT_SEEKED = "onNativeSeeked"
+private const val EVENT_ENDED = "onNativeEnded"
+private const val EVENT_READYSTATECHANGE = "onNativeReadyStateChange"
+private const val EVENT_TIMEUPDATE = "onNativeTimeUpdate"
+private const val EVENT_DURATIONCHANGE = "onNativeDurationChange"
+private const val EVENT_SEGMENTNOTFOUND = "onNativeSegmentNotFound"
+private const val EVENT_TEXTTRACK_LIST_EVENT = "onNativeTextTrackListEvent"
+private const val EVENT_TEXTTRACK_EVENT = "onNativeTextTrackEvent"
+private const val EVENT_MEDIATRACK_LIST_EVENT = "onNativeMediaTrackListEvent"
+private const val EVENT_MEDIATRACK_EVENT = "onNativeMediaTrackEvent"
+private const val EVENT_AD_EVENT = "onNativeAdEvent"
+private const val EVENT_FULLSCREEN_WILL_PRESENT = "onNativeFullscreenPlayerWillPresent"
+private const val EVENT_FULLSCREEN_DID_PRESENT = "onNativeFullscreenPlayerDidPresent"
+private const val EVENT_FULLSCREEN_WILL_DISMISS = "onNativeFullscreenPlayerWillDismiss"
+private const val EVENT_FULLSCREEN_DID_DISMISS = "onNativeFullscreenPlayerDidDismiss"
+private const val EVENT_CAST_EVENT = "onNativeCastEvent"
+
+private const val EVENT_PROP_CURRENT_TIME = "currentTime"
+private const val EVENT_PROP_CURRENT_PROGRAM_DATE_TIME = "currentProgramDateTime"
+private const val EVENT_PROP_DURATION = "duration"
+private const val EVENT_PROP_READYSTATE = "readyState"
+private const val EVENT_PROP_ERROR = "error"
+private const val EVENT_PROP_ERROR_CODE = "errorCode"
+private const val EVENT_PROP_ERROR_MESSAGE = "errorMessage"
+private const val EVENT_PROP_TEXT_TRACKS = "textTracks"
+private const val EVENT_PROP_AUDIO_TRACKS = "audioTracks"
+private const val EVENT_PROP_VIDEO_TRACKS = "videoTracks"
+private const val EVENT_PROP_SELECTED_TEXT_TRACK = "selectedTextTrack"
+private const val EVENT_PROP_SELECTED_AUDIO_TRACK = "selectedAudioTrack"
+private const val EVENT_PROP_SELECTED_VIDEO_TRACK = "selectedVideoTrack"
+private const val EVENT_PROP_SEEKABLE = "seekable"
+private const val EVENT_PROP_START = "start"
+private const val EVENT_PROP_END = "end"
+private const val EVENT_PROP_RETRYCOUNT = "retryCount"
+private const val EVENT_PROP_SEGMENTSTARTTIME = "segmentStartTime"
+private const val EVENT_PROP_TRACK = "track"
+private const val EVENT_PROP_TRACK_UID = "trackUid"
+private const val EVENT_PROP_TRACK_TYPE = "trackType"
+private const val EVENT_PROP_CUE = "cue"
+private const val EVENT_PROP_TYPE = "type"
+private const val EVENT_PROP_QUALITIES = "qualities"
 
 @Suppress("UNCHECKED_CAST")
 class PlayerEventEmitter internal constructor(
@@ -75,6 +128,39 @@ class PlayerEventEmitter internal constructor(
     EVENT_CAST_EVENT
   )
   annotation class VideoEvents
+
+  companion object {
+
+    @JvmField
+    val Events = arrayOf(
+      EVENT_SOURCECHANGE,
+      EVENT_LOADSTART,
+      EVENT_LOADEDMETADATA,
+      EVENT_LOADEDDATA,
+      EVENT_PLAY,
+      EVENT_PLAYING,
+      EVENT_PAUSE,
+      EVENT_ERROR,
+      EVENT_PROGRESS,
+      EVENT_SEEKING,
+      EVENT_SEEKED,
+      EVENT_ENDED,
+      EVENT_READYSTATECHANGE,
+      EVENT_TIMEUPDATE,
+      EVENT_DURATIONCHANGE,
+      EVENT_SEGMENTNOTFOUND,
+      EVENT_TEXTTRACK_LIST_EVENT,
+      EVENT_TEXTTRACK_EVENT,
+      EVENT_MEDIATRACK_LIST_EVENT,
+      EVENT_MEDIATRACK_EVENT,
+      EVENT_AD_EVENT,
+      EVENT_FULLSCREEN_WILL_PRESENT,
+      EVENT_FULLSCREEN_DID_PRESENT,
+      EVENT_FULLSCREEN_WILL_DISMISS,
+      EVENT_FULLSCREEN_DID_DISMISS,
+      EVENT_CAST_EVENT
+    )
+  }
 
   private val eventEmitter: RCTEventEmitter
   private var viewId = View.NO_ID
@@ -278,20 +364,19 @@ class PlayerEventEmitter internal constructor(
   }
 
   private fun onProgress() {
-    playerView.getSeekableRange { timeRanges: TimeRanges? ->
-      val payload = Arguments.createMap()
-      if (timeRanges != null) {
-        val seekable = Arguments.createArray()
-        for (i in 0 until timeRanges.length()) {
-          val range = Arguments.createMap()
-          range.putDouble(EVENT_PROP_START, 1e03 * timeRanges.getStart(i))
-          range.putDouble(EVENT_PROP_END, 1e03 * timeRanges.getEnd(i))
-          seekable.pushMap(range)
-        }
-        payload.putArray(EVENT_PROP_SEEKABLE, seekable)
+    val timeRanges = playerView.getSeekableRange()
+    val payload = Arguments.createMap()
+    if (timeRanges != null) {
+      val seekable = Arguments.createArray()
+      for (i in 0 until timeRanges.length()) {
+        val range = Arguments.createMap()
+        range.putDouble(EVENT_PROP_START, 1e03 * timeRanges.getStart(i))
+        range.putDouble(EVENT_PROP_END, 1e03 * timeRanges.getEnd(i))
+        seekable.pushMap(range)
       }
-      receiveEvent(EVENT_PROGRESS, payload)
+      payload.putArray(EVENT_PROP_SEEKABLE, seekable)
     }
+    receiveEvent(EVENT_PROGRESS, payload)
   }
 
   private fun onSegmentNotFound(event: SegmentNotFoundEvent) {
@@ -557,95 +642,7 @@ class PlayerEventEmitter internal constructor(
         value as EventListener<TrackListEvent<*, *>>
       )
     }
-    if (castEventAdapter != null) {
-      castEventAdapter!!.destroy()
-    }
-    if (adEventAdapter != null) {
-      adEventAdapter!!.destroy()
-    }
-  }
-
-  companion object {
-    private const val EVENT_SOURCECHANGE = "onNativeSourceChange"
-    private const val EVENT_LOADSTART = "onNativeLoadStart"
-    private const val EVENT_LOADEDMETADATA = "onNativeLoadedMetadata"
-    private const val EVENT_LOADEDDATA = "onNativeLoadedData"
-    private const val EVENT_PLAY = "onNativePlay"
-    private const val EVENT_PLAYING = "onNativePlaying"
-    private const val EVENT_PAUSE = "onNativePause"
-    private const val EVENT_ERROR = "onNativeError"
-    private const val EVENT_PROGRESS = "onNativeProgress"
-    private const val EVENT_SEEKING = "onNativeSeeking"
-    private const val EVENT_SEEKED = "onNativeSeeked"
-    private const val EVENT_ENDED = "onNativeEnded"
-    private const val EVENT_READYSTATECHANGE = "onNativeReadyStateChange"
-    private const val EVENT_TIMEUPDATE = "onNativeTimeUpdate"
-    private const val EVENT_DURATIONCHANGE = "onNativeDurationChange"
-    private const val EVENT_SEGMENTNOTFOUND = "onNativeSegmentNotFound"
-    private const val EVENT_TEXTTRACK_LIST_EVENT = "onNativeTextTrackListEvent"
-    private const val EVENT_TEXTTRACK_EVENT = "onNativeTextTrackEvent"
-    private const val EVENT_MEDIATRACK_LIST_EVENT = "onNativeMediaTrackListEvent"
-    private const val EVENT_MEDIATRACK_EVENT = "onNativeMediaTrackEvent"
-    private const val EVENT_AD_EVENT = "onNativeAdEvent"
-    private const val EVENT_FULLSCREEN_WILL_PRESENT = "onNativeFullscreenPlayerWillPresent"
-    private const val EVENT_FULLSCREEN_DID_PRESENT = "onNativeFullscreenPlayerDidPresent"
-    private const val EVENT_FULLSCREEN_WILL_DISMISS = "onNativeFullscreenPlayerWillDismiss"
-    private const val EVENT_FULLSCREEN_DID_DISMISS = "onNativeFullscreenPlayerDidDismiss"
-    private const val EVENT_CAST_EVENT = "onNativeCastEvent"
-    private val TAG = PlayerEventEmitter::class.java.name
-
-    @JvmField
-    val Events = arrayOf(
-      EVENT_SOURCECHANGE,
-      EVENT_LOADSTART,
-      EVENT_LOADEDMETADATA,
-      EVENT_LOADEDDATA,
-      EVENT_PLAY,
-      EVENT_PLAYING,
-      EVENT_PAUSE,
-      EVENT_ERROR,
-      EVENT_PROGRESS,
-      EVENT_SEEKING,
-      EVENT_SEEKED,
-      EVENT_ENDED,
-      EVENT_READYSTATECHANGE,
-      EVENT_TIMEUPDATE,
-      EVENT_DURATIONCHANGE,
-      EVENT_SEGMENTNOTFOUND,
-      EVENT_TEXTTRACK_LIST_EVENT,
-      EVENT_TEXTTRACK_EVENT,
-      EVENT_MEDIATRACK_LIST_EVENT,
-      EVENT_MEDIATRACK_EVENT,
-      EVENT_AD_EVENT,
-      EVENT_FULLSCREEN_WILL_PRESENT,
-      EVENT_FULLSCREEN_DID_PRESENT,
-      EVENT_FULLSCREEN_WILL_DISMISS,
-      EVENT_FULLSCREEN_DID_DISMISS,
-      EVENT_CAST_EVENT
-    )
-    private const val EVENT_PROP_CURRENT_TIME = "currentTime"
-    private const val EVENT_PROP_CURRENT_PROGRAM_DATE_TIME = "currentProgramDateTime"
-    private const val EVENT_PROP_DURATION = "duration"
-    private const val EVENT_PROP_READYSTATE = "readyState"
-    private const val EVENT_PROP_ERROR = "error"
-    private const val EVENT_PROP_ERROR_CODE = "errorCode"
-    private const val EVENT_PROP_ERROR_MESSAGE = "errorMessage"
-    private const val EVENT_PROP_TEXT_TRACKS = "textTracks"
-    private const val EVENT_PROP_AUDIO_TRACKS = "audioTracks"
-    private const val EVENT_PROP_VIDEO_TRACKS = "videoTracks"
-    private const val EVENT_PROP_SELECTED_TEXT_TRACK = "selectedTextTrack"
-    private const val EVENT_PROP_SELECTED_AUDIO_TRACK = "selectedAudioTrack"
-    private const val EVENT_PROP_SELECTED_VIDEO_TRACK = "selectedVideoTrack"
-    private const val EVENT_PROP_SEEKABLE = "seekable"
-    private const val EVENT_PROP_START = "start"
-    private const val EVENT_PROP_END = "end"
-    private const val EVENT_PROP_RETRYCOUNT = "retryCount"
-    private const val EVENT_PROP_SEGMENTSTARTTIME = "segmentStartTime"
-    private const val EVENT_PROP_TRACK = "track"
-    private const val EVENT_PROP_TRACK_UID = "trackUid"
-    private const val EVENT_PROP_TRACK_TYPE = "trackType"
-    private const val EVENT_PROP_CUE = "cue"
-    private const val EVENT_PROP_TYPE = "type"
-    private const val EVENT_PROP_QUALITIES = "qualities"
+    castEventAdapter?.destroy()
+    adEventAdapter?.destroy()
   }
 }

@@ -21,7 +21,6 @@ import com.theoplayer.android.api.player.Player
 import com.theoplayer.android.api.source.SourceDescription
 import com.theoplayer.android.api.player.track.texttrack.TextTrack
 import com.theoplayer.android.api.player.track.texttrack.cue.TextTrackCue
-import com.theoplayer.android.api.player.RequestCallback
 import com.theoplayer.android.api.THEOplayerConfig
 import com.google.ads.interactivemedia.v3.api.AdsRenderingSettings
 import com.google.ads.interactivemedia.v3.api.ImaSdkFactory
@@ -106,12 +105,8 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
   val duration: Double
     get() = encodeInfNan(if (player != null) 1e03 * player!!.duration else Double.NaN)
 
-  fun getSeekableRange(callback: RequestCallback<TimeRanges?>) {
-    if (player != null) {
-      player!!.requestSeekable(callback)
-    } else {
-      callback.handleResult(null)
-    }
+  fun getSeekableRange() : TimeRanges? {
+    return player?.seekable
   }
 
   override fun setId(id: Int) {
@@ -406,7 +401,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
   }
 
   fun setTargetVideoQualities(uids: ReadableArray) {
-    val currentVideoTrack = selectedVideoTrack as MediaTrack<VideoQuality>?
+    @Suppress("UNCHECKED_CAST") val currentVideoTrack = selectedVideoTrack as MediaTrack<VideoQuality>?
     if (currentVideoTrack != null) {
       if (uids.size() == 0) {
         // Reset target qualities when passing empty list.
@@ -422,7 +417,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
   @SuppressLint("ObsoleteSdkInt")
   fun setFullscreen(fullscreen: Boolean) {
     if (fullscreen == this.fullscreen) {
-      return  // Avoid generating events when nothing is changing
+      return
     }
     this.fullscreen = fullscreen
     val activity = reactContext.currentActivity ?: return
