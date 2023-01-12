@@ -143,7 +143,9 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
       return (
         <PlayerStyleContext.Consumer>
           {(styleContext: VideoPlayerStyle) => (
-            <View key={`th${index}`} style={[styleContext.thumbnail, { width: scale * renderWidth, height: scale * renderHeight }, style]}>
+            <View
+              key={`th${index}`}
+              style={[styleContext.videoPlayer.thumbnail, { width: scale * renderWidth, height: scale * renderHeight }, style]}>
               <Image
                 resizeMode={'cover'}
                 style={{
@@ -165,7 +167,9 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
       return (
         <PlayerStyleContext.Consumer>
           {(styleContext: VideoPlayerStyle) => (
-            <View key={`th${index}`} style={[styleContext.thumbnail, { width: scale * renderWidth, height: scale * renderHeight }, style]}>
+            <View
+              key={`th${index}`}
+              style={[styleContext.videoPlayer.thumbnail, { width: scale * renderWidth, height: scale * renderHeight }, style]}>
               <Image
                 resizeMode={'contain'}
                 style={{ width: scale * size, height: scale * renderHeight }}
@@ -210,14 +214,14 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
           <View style={{ flexDirection: 'column' }}>
             {showTimeLabel && (
               <TimeLabel
-                style={[styleContext.timeLabel, timeLabelStyle]}
+                style={[styleContext.videoPlayer.timeLabel, timeLabelStyle]}
                 currentTime={time}
                 duration={duration}
                 showDuration={false}
                 isLive={false}
               />
             )}
-            <View style={[styleContext.containerThumbnail, { height: renderHeight, marginLeft: offset ?? 0 }, containerStyle]}>
+            <View style={[styleContext.videoPlayer.containerThumbnail, { height: renderHeight, marginLeft: offset ?? 0 }, containerStyle]}>
               {[...before, current, ...after].map((thumbnail, index) => {
                 return thumbnail
                   ? this.renderThumbnail(thumbnail, carouselThumbCount - index)

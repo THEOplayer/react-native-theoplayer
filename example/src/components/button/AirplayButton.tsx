@@ -60,8 +60,8 @@ export class AirplayButton extends PureComponent<unknown, AirplayButtonState> {
     return (
       <PlayerStyleContext.Consumer>
         {(styleContext: VideoPlayerStyle) => (
-          <TouchableOpacity style={styleContext.castButton} onPress={this.onUIAirplayToggled}>
-            <Image style={[styleContext.controlBarImage, { tintColor: connected ? '#ffc50f' : 'white' }]} source={AirplayIcon} />
+          <TouchableOpacity style={styleContext.controlBar.castButton} onPress={this.onUIAirplayToggled}>
+            <Image style={[styleContext.controlBar.controlBarImage, { tintColor: connected ? '#ffc50f' : 'white' }]} source={AirplayIcon} />
           </TouchableOpacity>
         )}
       </PlayerStyleContext.Consumer>

@@ -53,7 +53,7 @@ export class CastMessage extends PureComponent<unknown, CastMessageState> {
 
     return (
       <PlayerStyleContext.Consumer>
-        {(styleContext: VideoPlayerStyle) => <Text style={styleContext.message}>{message}</Text>}
+        {(styleContext: VideoPlayerStyle) => <Text style={styleContext.videoPlayer.message}>{message}</Text>}
       </PlayerStyleContext.Consumer>
     );
   }
