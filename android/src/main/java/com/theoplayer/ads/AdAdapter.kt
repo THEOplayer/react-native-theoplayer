@@ -47,7 +47,6 @@ object AdAdapter {
     return fromAd(ad, true)
   }
 
-  @JvmStatic
   fun fromAds(ads: List<Ad>): WritableArray {
     val payload = Arguments.createArray()
     for (ad in ads) {
@@ -114,7 +113,6 @@ object AdAdapter {
     return adPayload
   }
 
-  @JvmStatic
   fun fromAdBreak(adbreak: AdBreak?): WritableMap {
     val adbreakPayload = Arguments.createMap()
     if (adbreak == null) {
@@ -138,7 +136,6 @@ object AdAdapter {
     return adbreakPayload
   }
 
-  @JvmStatic
   fun fromAdBreaks(adbreaks: List<AdBreak?>): WritableArray {
     val payload = Arguments.createArray()
     for (adbreak in adbreaks) {
