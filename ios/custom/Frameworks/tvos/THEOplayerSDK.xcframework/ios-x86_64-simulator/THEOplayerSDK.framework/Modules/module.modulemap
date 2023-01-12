@@ -1,0 +1,11 @@
+framework module THEOplayerSDK {
+  umbrella header "THEOplayerSDK.h"
+
+  export *
+  module * { export * }
+}
+
+module THEOplayerSDK.Swift {
+    header "THEOplayerSDK-Swift.h"
+    requires objc
+}
