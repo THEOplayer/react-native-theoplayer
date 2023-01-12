@@ -37,7 +37,7 @@ export const MenuButton = (props: MenuButtonProps) => {
           <ActionButton
             svg={svg}
             icon={icon}
-            iconStyle={styleContext.controlBarButtonImage}
+            iconStyle={styleContext.controlBar.controlBarButtonImage}
             onPress={() => {
               setModalVisible(true);
             }}

@@ -30,24 +30,24 @@ export const ModalMenu = (props: ModalMenuProps) => {
               }}>
               {!Platform.isTV && (
                 <TouchableOpacity
-                  style={styleContext.containerModalMenu}
+                  style={styleContext.modalMenu.containerModalMenu}
                   onPress={() => {
                     if (onRequestClose) {
                       onRequestClose();
                     }
                   }}>
-                  <View style={[styleContext.modal, style]}>
-                    {title && <Text style={[styleContext.title, titleStyle, { color: 'black', backgroundColor: '#ffc50f' }]}>{title}</Text>}
-                    <View style={styleContext.rowContainer}>{children}</View>
+                  <View style={[styleContext.modalMenu.modal, style]}>
+                    {title && <Text style={[styleContext.modalMenu.title, titleStyle, { color: 'black', backgroundColor: '#ffc50f' }]}>{title}</Text>}
+                    <View style={styleContext.modalMenu.rowContainer}>{children}</View>
                   </View>
                 </TouchableOpacity>
               )}
 
               {Platform.isTV && (
-                <View style={styleContext.containerModalMenu}>
-                  <View style={[styleContext.modal, style]}>
-                    {title && <Text style={[styleContext.title, titleStyle, { color: 'black', backgroundColor: '#ffc50f' }]}>{title}</Text>}
-                    <View style={styleContext.rowContainer}>{children}</View>
+                <View style={styleContext.modalMenu.containerModalMenu}>
+                  <View style={[styleContext.modalMenu.modal, style]}>
+                    {title && <Text style={[styleContext.modalMenu.title, titleStyle, { color: 'black', backgroundColor: '#ffc50f' }]}>{title}</Text>}
+                    <View style={styleContext.modalMenu.rowContainer}>{children}</View>
                   </View>
                 </View>
               )}

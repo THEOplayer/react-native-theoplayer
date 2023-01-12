@@ -92,7 +92,7 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
                   left={
                     <>
                       <MuteButton />
-                      <TimeLabel showDuration={true} style={defaultPlayerStyle.timeLabel} />
+                      <TimeLabel showDuration={true} style={defaultPlayerStyle.videoPlayer.timeLabel} />
                     </>
                   }
                   right={

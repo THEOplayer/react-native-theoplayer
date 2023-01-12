@@ -16,7 +16,7 @@ export const SplitControlBar = (props: ControlBarProps) => {
   return (
     <PlayerStyleContext.Consumer>
       {(styleContext: VideoPlayerStyle) => (
-        <View style={[styleContext.controlBar, style]}>
+        <View style={[styleContext.controlBar.controlBar, style]}>
           {left}
           <View style={{ flexGrow: 1 }} />
           {right}
@@ -30,7 +30,7 @@ export const ControlBar = (props: React.PropsWithChildren<ControlBarProps>) => {
   const { style, children } = props;
   return (
     <PlayerStyleContext.Consumer>
-      {(styleContext: VideoPlayerStyle) => <View style={[styleContext.controlBar, style]}>{children}</View>}
+      {(styleContext: VideoPlayerStyle) => <View style={[styleContext.controlBar.controlBar, style]}>{children}</View>}
     </PlayerStyleContext.Consumer>
   );
 };
