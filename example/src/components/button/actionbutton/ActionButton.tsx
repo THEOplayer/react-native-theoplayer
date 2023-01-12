@@ -1,4 +1,4 @@
-import { Image, ImageSourcePropType, ImageStyle, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { Image, ImageSourcePropType, ImageStyle, Platform, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 import React, { ReactNode, useState } from 'react';
 import { defaultSvgStyle, SvgContext } from '../svg/SvgUtils';
 import { PlayerStyleContext, VideoPlayerStyle } from '../../style/VideoPlayerStyle';
@@ -16,7 +16,7 @@ export const ActionButton = (props: ActionButtonProps) => {
   const { icon, style, iconStyle, touchable, svg } = props;
   const [focused, setFocused] = useState<boolean>(false);
 
-  const tintColor = focused ? '#ffc50f' : 'white';
+  const tintColor = focused && Platform.isTV ? '#ffc50f' : 'white';
   const iconFocusStyle = [{ tintColor }, iconStyle];
 
   if (!touchable) {
