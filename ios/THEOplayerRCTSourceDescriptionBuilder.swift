@@ -288,6 +288,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
      */
     static func buildMetaDataDescription(_ metadataData: [String:Any]) -> MetadataDescription? {
         // first extract explicit casting metadata:
+#if os(iOS)
         var images: [ChromecastMetadataImage]?
         if let metadataImagesArrayData = metadataData[SD_PROP_METADATA_IMAGES] as? [[String:Any]] {
             images = THEOplayerRCTSourceDescriptionBuilder.buildChromecastMetaDataImagesArray(metadataImagesArrayData)
@@ -308,8 +309,13 @@ class THEOplayerRCTSourceDescriptionBuilder {
                                              subtitle: subtitle,
                                              type: type,
                                              metadataKeys: metadataKeys)
+#else
+        let title = metadataData[SD_PROP_METADATA_TITLE] as? String
+        return MetadataDescription(metadataKeys: metadataData, title: title)
+#endif
     }
     
+#if os(iOS)
     static func buildChromecastMetadataType(_ metadataType: String?) -> ChromecastMetadataType {
         guard let typeString = metadataType else {
             return ChromecastMetadataType.GENERIC
@@ -342,6 +348,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
         }
         return nil
     }
+#endif
 
 	  /**
      Updates the contentProtectionData to a valid iOS SDK contentProtectionData, flattening out cross SDK differences
