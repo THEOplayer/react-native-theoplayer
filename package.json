@@ -111,6 +111,6 @@
   },
   "dependencies": {
     "buffer": "^6.0.3",
-    "theoplayer": "^3.4.0"
+    "theoplayer": "^4.6.0"
   }
 }

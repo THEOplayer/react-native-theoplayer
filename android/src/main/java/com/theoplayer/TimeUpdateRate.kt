@@ -1,6 +1,6 @@
-package com.theoplayer;
+package com.theoplayer
 
-public enum TimeUpdateRate {
+enum class TimeUpdateRate {
   UNLIMITED,
   LIMITED_ONE_HZ,
   LIMITED_TWO_HZ,

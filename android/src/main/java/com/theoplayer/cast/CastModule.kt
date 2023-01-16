@@ -9,7 +9,7 @@ import com.facebook.react.bridge.Promise
 import com.theoplayer.ReactTHEOplayerView
 import com.theoplayer.android.api.cast.chromecast.PlayerCastState
 
-class CastModule(context: ReactApplicationContext?) : ReactContextBaseJavaModule(context) {
+class CastModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(context) {
   private val viewResolver: ViewResolver = ViewResolver(context)
 
   override fun getName(): String {
@@ -17,19 +17,19 @@ class CastModule(context: ReactApplicationContext?) : ReactContextBaseJavaModule
   }
 
   @ReactMethod
-  fun casting(tag: Int?, promise: Promise) {
+  fun casting(tag: Int, promise: Promise) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       promise.resolve(view?.castIntegration?.isCasting() ?: false)
     }
   }
 
   @ReactMethod
-  fun chromecastCasting(tag: Int?, promise: Promise) {
+  fun chromecastCasting(tag: Int, promise: Promise) {
     casting(tag, promise)
   }
 
   @ReactMethod
-  fun chromecastState(tag: Int?, promise: Promise) {
+  fun chromecastState(tag: Int, promise: Promise) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       promise.resolve(castStateToString(view?.castIntegration?.getState() ?: PlayerCastState.UNAVAILABLE))
     }
@@ -46,28 +46,28 @@ class CastModule(context: ReactApplicationContext?) : ReactContextBaseJavaModule
   }
 
   @ReactMethod
-  fun chromecastStart(tag: Int?) {
+  fun chromecastStart(tag: Int) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.castIntegration?.start()
     }
   }
 
   @ReactMethod
-  fun chromecastStop(tag: Int?) {
+  fun chromecastStop(tag: Int) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.castIntegration?.stop()
     }
   }
 
   @ReactMethod
-  fun chromecastJoin(tag: Int?) {
+  fun chromecastJoin(tag: Int) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.castIntegration?.join()
     }
   }
 
   @ReactMethod
-  fun chromecastLeave(tag: Int?) {
+  fun chromecastLeave(tag: Int) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.castIntegration?.leave()
     }

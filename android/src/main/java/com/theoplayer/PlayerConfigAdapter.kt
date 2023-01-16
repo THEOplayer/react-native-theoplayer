@@ -10,21 +10,21 @@ import com.theoplayer.android.api.ads.GoogleImaConfiguration
 import com.theoplayer.android.api.cast.CastStrategy
 import com.google.android.gms.cast.framework.CastContext
 
-const val TAG = "PlayerConfigAdapter"
-const val PROP_ADS_CONFIGURATION = "ads"
-const val PROP_LICENSE = "license"
-const val PROP_LICENSE_URL = "licenseUrl"
-const val PROP_CHROMELESS = "chromeless"
-const val PROP_PRELOAD = "preload"
-const val PROP_UI_ENABLED = "uiEnabled"
-const val PROP_GOOGLE_IMA_CONFIGURATION = "googleImaConfiguration"
-const val PROP_USE_NATIVE_IMA = "useNativeIma"
-const val PROP_CAST_CONFIGURATION = "cast"
-const val PROP_CAST_STRATEGY = "strategy"
-const val PROP_CHROMECAST_CONFIG = "chromecast"
-const val PROP_CHROMECAST_APPID = "appID"
+private const val TAG = "PlayerConfigAdapter"
+private const val PROP_ADS_CONFIGURATION = "ads"
+private const val PROP_LICENSE = "license"
+private const val PROP_LICENSE_URL = "licenseUrl"
+private const val PROP_CHROMELESS = "chromeless"
+private const val PROP_PRELOAD = "preload"
+private const val PROP_UI_ENABLED = "uiEnabled"
+private const val PROP_GOOGLE_IMA_CONFIGURATION = "googleImaConfiguration"
+private const val PROP_USE_NATIVE_IMA = "useNativeIma"
+private const val PROP_CAST_CONFIGURATION = "cast"
+private const val PROP_CAST_STRATEGY = "strategy"
+private const val PROP_CHROMECAST_CONFIG = "chromecast"
+private const val PROP_CHROMECAST_APPID = "appID"
 
-class PlayerConfigAdapter {
+object PlayerConfigAdapter {
 
   fun fromProps(configProps: ReadableMap?): THEOplayerConfig {
     val configBuilder = THEOplayerConfig.Builder()
@@ -65,7 +65,7 @@ class PlayerConfigAdapter {
       configProps.getMap(PROP_GOOGLE_IMA_CONFIGURATION)
     )
     if (googleImaConfiguration != null) {
-      builder.googleImaConfiguration(googleImaConfiguration)
+      builder.googleIma(googleImaConfiguration)
     }
     return builder.build()
   }
@@ -108,9 +108,7 @@ class PlayerConfigAdapter {
       null
     } else GoogleImaConfiguration.Builder()
       .useNativeIma(
-        configProps.hasKey(PROP_USE_NATIVE_IMA) && configProps.getBoolean(
-          PROP_USE_NATIVE_IMA
-        )
+        configProps.hasKey(PROP_USE_NATIVE_IMA) && configProps.getBoolean(PROP_USE_NATIVE_IMA)
       )
       .build()
   }
