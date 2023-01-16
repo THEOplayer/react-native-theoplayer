@@ -48,7 +48,7 @@ export class MuteButton extends PureComponent<unknown, MuteButtonState> {
           <ActionButton
             svg={muted ? <VolumeOffSvg /> : <VolumeUpSvg />}
             onPress={this.toggleMuted}
-            iconStyle={styleContext.controlBar.controlBarImage}
+            iconStyle={styleContext.controlBar.buttonIcon}
             touchable={true}
           />
         )}

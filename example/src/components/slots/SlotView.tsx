@@ -94,15 +94,15 @@ export class SlotView extends PureComponent<React.PropsWithChildren<SlotViewProp
       <PlayerStyleContext.Consumer>
         {(styleContext: VideoPlayerStyle) => (
           <>
-            <View style={styleContext.slotView.containerSlotView} onTouchStart={this.fadeIn}></View>
+            <View style={styleContext.slotView.container} onTouchStart={this.fadeIn}></View>
             {/* The Animated.View is for showing and hiding the UI*/}
             <Animated.View
-              style={[styleContext.slotView.containerSlotView, { opacity: fadeAnim, display: controlsEnabled ? 'flex' : 'none' }]}
+              style={[styleContext.slotView.container, { opacity: fadeAnim, display: controlsEnabled ? 'flex' : 'none' }]}
               onTouchStart={this.fadeIn}>
               {/* The UI background */}
-              <View style={[styleContext.slotView.containerSlotView, styleContext.slotView.backgroundSlotView]} />
+              <View style={[styleContext.slotView.container, styleContext.slotView.background]} />
               {/* The UI control bars*/}
-              <View style={[styleContext.slotView.containerSlotView, style]}>
+              <View style={[styleContext.slotView.container, style]}>
                 <View style={styleContext.slotView.topSlot}>{top}</View>
                 {/* The center controls*/}
                 <View style={[styleContext.slotView.centerSlot]}>{center}</View>

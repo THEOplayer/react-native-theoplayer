@@ -55,7 +55,7 @@ export class FullscreenButton extends PureComponent<unknown, FullscreenButtonSta
           <ActionButton
             svg={fullscreen ? <FullScreenExitSvg /> : <FullScreenEnterSvg />}
             onPress={this.toggleFullScreen}
-            iconStyle={styleContext.controlBar.controlBarImage}
+            iconStyle={styleContext.controlBar.buttonIcon}
           />
         )}
       </PlayerStyleContext.Consumer>

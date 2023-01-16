@@ -214,7 +214,7 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
           <View style={{ flexDirection: 'column' }}>
             {showTimeLabel && (
               <TimeLabel
-                style={[styleContext.videoPlayer.timeLabel, timeLabelStyle]}
+                style={[styleContext.videoPlayer.timeLabelContainer, timeLabelStyle]}
                 currentTime={time}
                 duration={duration}
                 showDuration={false}

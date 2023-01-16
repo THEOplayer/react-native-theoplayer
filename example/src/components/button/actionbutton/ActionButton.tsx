@@ -1,6 +1,6 @@
 import { Image, ImageSourcePropType, ImageStyle, Platform, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 import React, { ReactNode, useState } from 'react';
-import { defaultSvgStyle, SvgContext } from '../svg/SvgUtils';
+import { SvgContext } from '../svg/SvgUtils';
 import { PlayerStyleContext, VideoPlayerStyle } from '../../style/VideoPlayerStyle';
 
 export interface ActionButtonProps {
@@ -16,8 +16,7 @@ export const ActionButton = (props: ActionButtonProps) => {
   const { icon, style, iconStyle, touchable, svg } = props;
   const [focused, setFocused] = useState<boolean>(false);
 
-  const tintColor = focused && Platform.isTV ? '#ffc50f' : 'white';
-  const iconFocusStyle = [{ tintColor }, iconStyle];
+  const shouldChangeTintColor = focused && Platform.isTV;
 
   if (!touchable) {
     return <View style={style}>{svg}</View>;
@@ -28,7 +27,7 @@ export const ActionButton = (props: ActionButtonProps) => {
       {(styleContext: VideoPlayerStyle) => (
         <TouchableOpacity
           activeOpacity={1.0}
-          style={styleContext.controlBarContainer}
+          style={styleContext.controlBar.buttonContainer}
           tvParallaxProperties={{ enabled: false }}
           onPress={() => {
             const { onPress } = props;
@@ -44,11 +43,25 @@ export const ActionButton = (props: ActionButtonProps) => {
           }}>
           {/* Give priority to SVG over image sources.*/}
           {svg && (
-            <SvgContext.Provider value={{ ...defaultSvgStyle, fill: tintColor, height: '100%', width: '100%' }}>
-              <View style={[styleContext.controlBarButtonImage, iconFocusStyle]}>{svg}</View>
+            <SvgContext.Provider
+              value={{
+                fill: shouldChangeTintColor ? styleContext.colors.accent : styleContext.colors.primary,
+                height: '100%',
+                width: '100%',
+              }}>
+              <View style={[styleContext.controlBar.buttonIcon, iconStyle]}>{svg}</View>
             </SvgContext.Provider>
           )}
-          {svg === undefined && icon && <Image style={[styleContext.controlBarButtonImage, iconFocusStyle]} source={icon} />}
+          {svg === undefined && icon && (
+            <Image
+              style={[
+                styleContext.controlBar.buttonIcon,
+                iconStyle,
+                { tintColor: shouldChangeTintColor ? styleContext.colors.accent : styleContext.colors.primary },
+              ]}
+              source={icon}
+            />
+          )}
         </TouchableOpacity>
       )}
     </PlayerStyleContext.Consumer>

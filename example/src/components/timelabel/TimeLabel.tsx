@@ -63,7 +63,9 @@ export class TimeLabel extends PureComponent<TimeLabelProps, TimeLabelState> {
     if (!isFinite(duration)) {
       return (
         <PlayerStyleContext.Consumer>
-          {(styleContext: VideoPlayerStyle) => <Text style={[styleContext.videoPlayer.timeLabel2, style]}>{LIVE_LABEL}</Text>}
+          {(styleContext: VideoPlayerStyle) => (
+            <Text style={[styleContext.videoPlayer.timeLabel, { color: styleContext.colors.text }, style]}>{LIVE_LABEL}</Text>
+          )}
         </PlayerStyleContext.Consumer>
       );
     }
@@ -76,7 +78,9 @@ export class TimeLabel extends PureComponent<TimeLabelProps, TimeLabelState> {
       const label = showDuration ? `${currentTimeLabel} / ${durationLabel}` : currentTimeLabel;
       return (
         <PlayerStyleContext.Consumer>
-          {(styleContext: VideoPlayerStyle) => <Text style={[styleContext.videoPlayer.timeLabel2, style]}>{label}</Text>}
+          {(styleContext: VideoPlayerStyle) => (
+            <Text style={[styleContext.videoPlayer.timeLabel, { color: styleContext.colors.text }, style]}>{label}</Text>
+          )}
         </PlayerStyleContext.Consumer>
       );
     } catch (ignore) {
