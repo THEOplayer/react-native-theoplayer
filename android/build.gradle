@@ -74,7 +74,7 @@ android {
 
 rootProject.allprojects {
   repositories {
-    maven { url("$rootDir/../node_modules/react-native-theoplayer/android/local") }
+    maven { url("$rootDir/../node_modules/@wouterds/react-native-theoplayer/android/local") }
   }
 }
 
