@@ -19,12 +19,12 @@ export class AudioTrackMenu extends PureComponent<unknown, AudioQualityMenuState
   }
 
   componentDidMount() {
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     player.addEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
   }
 
   componentWillUnmount() {
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     player.removeEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
   }
 
@@ -38,7 +38,7 @@ export class AudioTrackMenu extends PureComponent<unknown, AudioQualityMenuState
   private selectAudioTrack = (index: number) => {
     const { audioTracks } = this.state;
     if (audioTracks && index >= 0 && index < audioTracks.length) {
-      const player = this.context as THEOplayerInternal;
+      const player = this.context.player as THEOplayerInternal;
       const uid = audioTracks[index].uid;
       player.selectedAudioTrack = uid;
       this.setState({ selectedAudioTrack: uid });

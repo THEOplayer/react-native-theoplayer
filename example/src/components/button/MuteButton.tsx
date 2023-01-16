@@ -1,11 +1,10 @@
 import { ActionButton } from './actionbutton/ActionButton';
 import React, { PureComponent } from 'react';
-import { PlayerContext } from '../util/Context';
+import { PlayerContext, PlayerWithStyle } from '../util/Context';
 import { PlayerEventType, THEOplayerInternal, VolumeChangeEvent } from 'react-native-theoplayer';
 import { Platform } from 'react-native';
 import { VolumeOffSvg } from './svg/VolumeOffSvg';
 import { VolumeUpSvg } from './svg/VolumeUpSvg';
-import { PlayerStyleContext, VideoPlayerStyle } from '../style/VideoPlayerStyle';
 
 interface MuteButtonState {
   muted: boolean;
@@ -18,22 +17,22 @@ export class MuteButton extends PureComponent<unknown, MuteButtonState> {
   }
 
   componentDidMount() {
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     player.addEventListener(PlayerEventType.VOLUME_CHANGE, this.onVolumeChange);
   }
 
   componentWillUnmount() {
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     player.removeEventListener(PlayerEventType.VOLUME_CHANGE, this.onVolumeChange);
   }
 
   private onVolumeChange = (_: VolumeChangeEvent) => {
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     this.setState({ muted: player.muted });
   };
 
   private toggleMuted = () => {
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     player.muted = !player.muted;
   };
 
@@ -43,16 +42,16 @@ export class MuteButton extends PureComponent<unknown, MuteButtonState> {
       return <></>;
     }
     return (
-      <PlayerStyleContext.Consumer>
-        {(styleContext: VideoPlayerStyle) => (
+      <PlayerContext.Consumer>
+        {(context: PlayerWithStyle) => (
           <ActionButton
             svg={muted ? <VolumeOffSvg /> : <VolumeUpSvg />}
             onPress={this.toggleMuted}
-            iconStyle={styleContext.controlBar.buttonIcon}
+            iconStyle={context.style.controlBar.buttonIcon}
             touchable={true}
           />
         )}
-      </PlayerStyleContext.Consumer>
+      </PlayerContext.Consumer>
     );
   }
 }

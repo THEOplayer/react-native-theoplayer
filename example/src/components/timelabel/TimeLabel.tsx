@@ -1,9 +1,7 @@
 import { StyleProp, Text, TextStyle } from 'react-native';
 import React, { PureComponent } from 'react';
 import { DurationChangeEvent, PlayerEventType, THEOplayerInternal, TimeUpdateEvent } from 'react-native-theoplayer';
-import { PlayerContext } from '../util/Context';
-import type { VideoPlayerStyle } from '../style/VideoPlayerStyle';
-import { PlayerStyleContext } from '../style/VideoPlayerStyle';
+import { PlayerContext, PlayerWithStyle } from '../util/Context';
 
 export interface TimeLabelProps {
   showDuration: boolean;
@@ -29,13 +27,13 @@ export class TimeLabel extends PureComponent<TimeLabelProps, TimeLabelState> {
   }
 
   componentDidMount() {
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     player.addEventListener(PlayerEventType.TIME_UPDATE, this.onTimeUpdate);
     player.addEventListener(PlayerEventType.DURATION_CHANGE, this.onDurationChange);
   }
 
   componentWillUnmount() {
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     player.removeEventListener(PlayerEventType.TIME_UPDATE, this.onTimeUpdate);
     player.removeEventListener(PlayerEventType.DURATION_CHANGE, this.onDurationChange);
   }
@@ -62,11 +60,11 @@ export class TimeLabel extends PureComponent<TimeLabelProps, TimeLabelState> {
     // Live streams report an Infinity duration.
     if (!isFinite(duration)) {
       return (
-        <PlayerStyleContext.Consumer>
-          {(styleContext: VideoPlayerStyle) => (
-            <Text style={[styleContext.videoPlayer.timeLabel, { color: styleContext.colors.text }, style]}>{LIVE_LABEL}</Text>
+        <PlayerContext.Consumer>
+          {(context: PlayerWithStyle) => (
+            <Text style={[context.style.videoPlayer.timeLabel, { color: context.style.colors.text }, style]}>{LIVE_LABEL}</Text>
           )}
-        </PlayerStyleContext.Consumer>
+        </PlayerContext.Consumer>
       );
     }
 
@@ -77,11 +75,11 @@ export class TimeLabel extends PureComponent<TimeLabelProps, TimeLabelState> {
       const durationLabel = new Date(duration).toISOString().substring(s, 19);
       const label = showDuration ? `${currentTimeLabel} / ${durationLabel}` : currentTimeLabel;
       return (
-        <PlayerStyleContext.Consumer>
-          {(styleContext: VideoPlayerStyle) => (
-            <Text style={[styleContext.videoPlayer.timeLabel, { color: styleContext.colors.text }, style]}>{label}</Text>
+        <PlayerContext.Consumer>
+          {(context: PlayerWithStyle) => (
+            <Text style={[context.style.videoPlayer.timeLabel, { color: context.style.colors.text }, style]}>{label}</Text>
           )}
-        </PlayerStyleContext.Consumer>
+        </PlayerContext.Consumer>
       );
     } catch (ignore) {
       return <></>;

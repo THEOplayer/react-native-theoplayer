@@ -1,9 +1,8 @@
 import React, { PureComponent, ReactNode } from 'react';
 import { Animated, Platform, StyleProp, View, ViewStyle } from 'react-native';
-import { PlayerContext } from '../util/Context';
+import { PlayerContext, PlayerWithStyle } from '../util/Context';
 import type { THEOplayerInternal } from 'react-native-theoplayer';
 import { PlayerEventType } from 'react-native-theoplayer';
-import { PlayerStyleContext, VideoPlayerStyle } from '../style/VideoPlayerStyle';
 
 interface SlotViewProps {
   style?: StyleProp<ViewStyle>;
@@ -29,12 +28,12 @@ export class SlotView extends PureComponent<React.PropsWithChildren<SlotViewProp
   }
 
   componentDidMount() {
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     player.addEventListener(PlayerEventType.PLAY, this.resetFadeOutTimeout);
   }
 
   componentWillUnmount() {
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     player.addEventListener(PlayerEventType.PLAY, this.resetFadeOutTimeout);
   }
 
@@ -65,7 +64,7 @@ export class SlotView extends PureComponent<React.PropsWithChildren<SlotViewProp
 
   private fadeOut = () => {
     this.currentFadeOutTimeout = undefined;
-    if (this.context.paused) {
+    if (this.context.player.paused) {
       // Player is paused, don't hide the UI.
       return;
     }
@@ -91,28 +90,28 @@ export class SlotView extends PureComponent<React.PropsWithChildren<SlotViewProp
     const { style, top, center, bottom, children } = this.props;
     const { fadeAnim, controlsEnabled } = this.state;
     return (
-      <PlayerStyleContext.Consumer>
-        {(styleContext: VideoPlayerStyle) => (
+      <PlayerContext.Consumer>
+        {(context: PlayerWithStyle) => (
           <>
-            <View style={styleContext.slotView.container} onTouchStart={this.fadeIn}></View>
+            <View style={context.style.slotView.container} onTouchStart={this.fadeIn}></View>
             {/* The Animated.View is for showing and hiding the UI*/}
             <Animated.View
-              style={[styleContext.slotView.container, { opacity: fadeAnim, display: controlsEnabled ? 'flex' : 'none' }]}
+              style={[context.style.slotView.container, { opacity: fadeAnim, display: controlsEnabled ? 'flex' : 'none' }]}
               onTouchStart={this.fadeIn}>
               {/* The UI background */}
-              <View style={[styleContext.slotView.container, styleContext.slotView.background]} />
+              <View style={[context.style.slotView.container, context.style.slotView.background]} />
               {/* The UI control bars*/}
-              <View style={[styleContext.slotView.container, style]}>
-                <View style={styleContext.slotView.topSlot}>{top}</View>
+              <View style={[context.style.slotView.container, style]}>
+                <View style={context.style.slotView.topSlot}>{top}</View>
                 {/* The center controls*/}
-                <View style={[styleContext.slotView.centerSlot]}>{center}</View>
-                <View style={styleContext.slotView.bottomSlot}>{bottom}</View>
+                <View style={[context.style.slotView.centerSlot]}>{center}</View>
+                <View style={context.style.slotView.bottomSlot}>{bottom}</View>
                 {children}
               </View>
             </Animated.View>
           </>
         )}
-      </PlayerStyleContext.Consumer>
+      </PlayerContext.Consumer>
     );
   }
 }

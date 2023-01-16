@@ -46,12 +46,12 @@ export class VideoQualityMenu extends PureComponent<unknown, VideoQualityMenuSta
   }
 
   componentDidMount() {
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     player.addEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
   }
 
   componentWillUnmount() {
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     player.removeEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
   }
 
@@ -77,7 +77,7 @@ export class VideoQualityMenu extends PureComponent<unknown, VideoQualityMenuSta
       uid = qualities[qualityIndex].uid;
       console.log('found index', uid);
     }
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     player.targetVideoQuality = uid;
     this.setState({ targetVideoTrackQuality: uid });
   };

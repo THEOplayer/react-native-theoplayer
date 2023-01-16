@@ -1,7 +1,7 @@
 import { Image, ImageSourcePropType, ImageStyle, Platform, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 import React, { ReactNode, useState } from 'react';
 import { SvgContext } from '../svg/SvgUtils';
-import { PlayerStyleContext, VideoPlayerStyle } from '../../style/VideoPlayerStyle';
+import { PlayerContext, PlayerWithStyle } from '../../util/Context';
 
 export interface ActionButtonProps {
   icon?: ImageSourcePropType;
@@ -23,11 +23,11 @@ export const ActionButton = (props: ActionButtonProps) => {
   }
 
   return (
-    <PlayerStyleContext.Consumer>
-      {(styleContext: VideoPlayerStyle) => (
+    <PlayerContext.Consumer>
+      {(context: PlayerWithStyle) => (
         <TouchableOpacity
           activeOpacity={1.0}
-          style={styleContext.controlBar.buttonContainer}
+          style={context.style.controlBar.buttonContainer}
           tvParallaxProperties={{ enabled: false }}
           onPress={() => {
             const { onPress } = props;
@@ -45,26 +45,26 @@ export const ActionButton = (props: ActionButtonProps) => {
           {svg && (
             <SvgContext.Provider
               value={{
-                fill: shouldChangeTintColor ? styleContext.colors.accent : styleContext.colors.primary,
+                fill: shouldChangeTintColor ? context.style.colors.accent : context.style.colors.primary,
                 height: '100%',
                 width: '100%',
               }}>
-              <View style={[styleContext.controlBar.buttonIcon, iconStyle]}>{svg}</View>
+              <View style={[context.style.controlBar.buttonIcon, iconStyle]}>{svg}</View>
             </SvgContext.Provider>
           )}
           {svg === undefined && icon && (
             <Image
               style={[
-                styleContext.controlBar.buttonIcon,
+                context.style.controlBar.buttonIcon,
                 iconStyle,
-                { tintColor: shouldChangeTintColor ? styleContext.colors.accent : styleContext.colors.primary },
+                { tintColor: shouldChangeTintColor ? context.style.colors.accent : context.style.colors.primary },
               ]}
               source={icon}
             />
           )}
         </TouchableOpacity>
       )}
-    </PlayerStyleContext.Consumer>
+    </PlayerContext.Consumer>
   );
 };
 

@@ -1,11 +1,11 @@
 import React from 'react';
 import { PlayButton } from './PlayButton';
-import { PlayerStyleContext, VideoPlayerStyle } from '../style/VideoPlayerStyle';
+import { PlayerContext, PlayerWithStyle } from '../util/Context';
 
 export const BigPlayButton = () => {
   return (
-    <PlayerStyleContext.Consumer>
-      {(styleContext: VideoPlayerStyle) => <PlayButton style={styleContext.controlBar.buttonIconCenterControls} />}
-    </PlayerStyleContext.Consumer>
+    <PlayerContext.Consumer>
+      {(context: PlayerWithStyle) => <PlayButton style={context.style.controlBar.buttonIconCenterControls} />}
+    </PlayerContext.Consumer>
   );
 };

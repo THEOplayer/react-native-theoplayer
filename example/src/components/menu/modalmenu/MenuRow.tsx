@@ -1,7 +1,7 @@
 import { Text, TouchableOpacity } from 'react-native';
 import React from 'react';
 import type { MenuItem } from './MenuItem';
-import { PlayerStyleContext, VideoPlayerStyle } from '../../style/VideoPlayerStyle';
+import { PlayerContext, PlayerWithStyle } from '../../util/Context';
 
 export interface MenuRowProps {
   onSelected?: () => void;
@@ -21,11 +21,13 @@ export const MenuRow = (props: MenuRowProps) => {
           onSelected();
         }
       }}>
-      <PlayerStyleContext.Consumer>
-        {(styleContext: VideoPlayerStyle) => (
-          <Text style={{ color: selected ? styleContext.colors.accent : styleContext.colors.primary, fontSize: 16, marginVertical: 5 }}>{label}</Text>
+      <PlayerContext.Consumer>
+        {(context: PlayerWithStyle) => (
+          <Text style={{ color: selected ? context.style.colors.accent : context.style.colors.primary, fontSize: 16, marginVertical: 5 }}>
+            {label}
+          </Text>
         )}
-      </PlayerStyleContext.Consumer>
+      </PlayerContext.Consumer>
     </TouchableOpacity>
   );
 };

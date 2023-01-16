@@ -7,7 +7,7 @@ import type { Thumbnail } from './Thumbnail';
 import { isTileMapThumbnail } from './Thumbnail';
 import { URL as URLPolyfill } from 'react-native-url-polyfill';
 import { TimeLabel } from '../timelabel/TimeLabel';
-import { PlayerStyleContext, VideoPlayerStyle } from '../style/VideoPlayerStyle';
+import { PlayerContext, PlayerWithStyle } from '../util/Context';
 
 const SPRITE_REGEX = /^([^#]*)#xywh=(\d+),(\d+),(\d+),(\d+)\s*$/;
 const TAG = 'ThumbnailView';
@@ -126,9 +126,9 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
     const { size, thumbnailStyleCurrent, thumbnailStyleCarousel } = this.props;
     const style = index === 0 ? thumbnailStyleCurrent : thumbnailStyleCarousel;
     return (
-      <PlayerStyleContext.Consumer>
-        {(styleContext: VideoPlayerStyle) => <View key={`th${index}`} style={[styleContext.thumbnail, { width: size, height: 1 }, style]} />}
-      </PlayerStyleContext.Consumer>
+      <PlayerContext.Consumer>
+        {(context: PlayerWithStyle) => <View key={`th${index}`} style={[context.style.videoPlayer.thumbnail, { width: size, height: 1 }, style]} />}
+      </PlayerContext.Consumer>
     );
   };
 
@@ -141,11 +141,11 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
     if (isTileMapThumbnail(thumbnail)) {
       const ratio = thumbnail.tileWidth == 0 ? 0 : (scale * size) / thumbnail.tileWidth;
       return (
-        <PlayerStyleContext.Consumer>
-          {(styleContext: VideoPlayerStyle) => (
+        <PlayerContext.Consumer>
+          {(context: PlayerWithStyle) => (
             <View
               key={`th${index}`}
-              style={[styleContext.videoPlayer.thumbnail, { width: scale * renderWidth, height: scale * renderHeight }, style]}>
+              style={[context.style.videoPlayer.thumbnail, { width: scale * renderWidth, height: scale * renderHeight }, style]}>
               <Image
                 resizeMode={'cover'}
                 style={{
@@ -161,15 +161,15 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
               />
             </View>
           )}
-        </PlayerStyleContext.Consumer>
+        </PlayerContext.Consumer>
       );
     } else {
       return (
-        <PlayerStyleContext.Consumer>
-          {(styleContext: VideoPlayerStyle) => (
+        <PlayerContext.Consumer>
+          {(context: PlayerWithStyle) => (
             <View
               key={`th${index}`}
-              style={[styleContext.videoPlayer.thumbnail, { width: scale * renderWidth, height: scale * renderHeight }, style]}>
+              style={[context.style.videoPlayer.thumbnail, { width: scale * renderWidth, height: scale * renderHeight }, style]}>
               <Image
                 resizeMode={'contain'}
                 style={{ width: scale * size, height: scale * renderHeight }}
@@ -179,7 +179,7 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
               />
             </View>
           )}
-        </PlayerStyleContext.Consumer>
+        </PlayerContext.Consumer>
       );
     }
   };
@@ -209,19 +209,19 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
     const current = this.getThumbnailImageForCue(thumbnailTrack.cues[nowCueIndex]);
     const { renderHeight } = this.state;
     return (
-      <PlayerStyleContext.Consumer>
-        {(styleContext: VideoPlayerStyle) => (
+      <PlayerContext.Consumer>
+        {(context: PlayerWithStyle) => (
           <View style={{ flexDirection: 'column' }}>
             {showTimeLabel && (
               <TimeLabel
-                style={[styleContext.videoPlayer.timeLabelContainer, timeLabelStyle]}
+                style={[context.style.videoPlayer.timeLabelContainer, timeLabelStyle]}
                 currentTime={time}
                 duration={duration}
                 showDuration={false}
                 isLive={false}
               />
             )}
-            <View style={[styleContext.videoPlayer.containerThumbnail, { height: renderHeight, marginLeft: offset ?? 0 }, containerStyle]}>
+            <View style={[context.style.videoPlayer.containerThumbnail, { height: renderHeight, marginLeft: offset ?? 0 }, containerStyle]}>
               {[...before, current, ...after].map((thumbnail, index) => {
                 return thumbnail
                   ? this.renderThumbnail(thumbnail, carouselThumbCount - index)
@@ -230,7 +230,7 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
             </View>
           </View>
         )}
-      </PlayerStyleContext.Consumer>
+      </PlayerContext.Consumer>
     );
   }
 }

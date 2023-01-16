@@ -1,8 +1,7 @@
 import React, { PureComponent } from 'react';
 import { CastEvent, CastEventType, ErrorEvent, PlayerError, PlayerEventType, THEOplayerInternal } from 'react-native-theoplayer';
 import { Text, View } from 'react-native';
-import { PlayerContext } from '../util/Context';
-import { PlayerStyleContext, VideoPlayerStyle } from '../style/VideoPlayerStyle';
+import { PlayerContext, PlayerWithStyle } from '../util/Context';
 
 interface ErrorDisplayState {
   error: PlayerError | undefined;
@@ -15,14 +14,14 @@ export class ErrorDisplay extends PureComponent<unknown, ErrorDisplayState> {
   }
 
   componentDidMount() {
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     player.addEventListener(PlayerEventType.LOAD_START, this.onLoadStart);
     player.addEventListener(PlayerEventType.ERROR, this.onError);
     player.addEventListener(PlayerEventType.CAST_EVENT, this.onCastEvent);
   }
 
   componentWillUnmount() {
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     player.removeEventListener(PlayerEventType.LOAD_START, this.onLoadStart);
     player.removeEventListener(PlayerEventType.ERROR, this.onError);
     player.removeEventListener(PlayerEventType.CAST_EVENT, this.onCastEvent);
@@ -55,16 +54,16 @@ export class ErrorDisplay extends PureComponent<unknown, ErrorDisplayState> {
     }
 
     return (
-      <PlayerStyleContext.Consumer>
-        {(styleContext: VideoPlayerStyle) => (
-          <View style={styleContext.videoPlayer.errorContainer}>
+      <PlayerContext.Consumer>
+        {(context: PlayerWithStyle) => (
+          <View style={context.style.videoPlayer.errorContainer}>
             <Text
-              style={[styleContext.videoPlayer.message, { color: styleContext.colors.text, backgroundColor: styleContext.colors.textBackground }]}>
+              style={[context.style.videoPlayer.message, { color: context.style.colors.text, backgroundColor: context.style.colors.textBackground }]}>
               {error.errorCode} - {error.errorMessage}
             </Text>
           </View>
         )}
-      </PlayerStyleContext.Consumer>
+      </PlayerContext.Consumer>
     );
   }
 }
