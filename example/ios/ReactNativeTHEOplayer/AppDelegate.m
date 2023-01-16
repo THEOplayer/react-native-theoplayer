@@ -35,7 +35,7 @@
   [self.window makeKeyAndVisible];
   
 // uncomment for react-native-google-cast
-//  NSString *receiverAppID = @"CC1AD845"; // default THEOplayer v3 receiver
+// NSString *receiverAppID = @"CC1AD845"; // default receiver
 //  GCKDiscoveryCriteria *criteria = [[GCKDiscoveryCriteria alloc] initWithApplicationID:receiverAppID];
 //  GCKCastOptions* options = [[GCKCastOptions alloc] initWithDiscoveryCriteria:criteria];
 //  options.startDiscoveryAfterFirstTapOnCastButton = false;
