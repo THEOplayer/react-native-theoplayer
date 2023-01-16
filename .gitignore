@@ -67,3 +67,4 @@ example/**/*.aar
 ios/custom/Frameworks/ios/*.xcframework
 ios/custom/Frameworks/candidates
 ios/custom/Frameworks/**/*.zip
+ios/custom/Frameworks/integrations
