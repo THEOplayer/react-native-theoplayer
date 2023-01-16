@@ -3,8 +3,7 @@ import type { DelayedActivityIndicatorProps } from './DelayedActivityIndicator';
 import { DelayedActivityIndicator } from './DelayedActivityIndicator';
 import { View } from 'react-native';
 import { BufferingChangeEvent, PlayerEventType, THEOplayerInternal } from 'react-native-theoplayer';
-import { PlayerContext } from '../util/Context';
-import { PlayerStyleContext, VideoPlayerStyle } from '../style/VideoPlayerStyle';
+import { PlayerContext, PlayerWithStyle } from '../util/Context';
 
 interface CenteredDelayedActivityIndicatorState {
   showing: boolean;
@@ -21,12 +20,12 @@ export class CenteredDelayedActivityIndicator extends PureComponent<DelayedActiv
   }
 
   componentDidMount() {
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     player.addEventListener(PlayerEventType.BUFFERING_CHANGE, this.onBufferingStateChange);
   }
 
   componentWillUnmount() {
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     player.removeEventListener(PlayerEventType.BUFFERING_CHANGE, this.onBufferingStateChange);
   }
 
@@ -37,17 +36,17 @@ export class CenteredDelayedActivityIndicator extends PureComponent<DelayedActiv
   render() {
     const { delay } = this.props;
     const { showing } = this.state;
-    const player = this.context;
+    const player = this.context.player as THEOplayerInternal;
     return (
       showing &&
       !player.paused && (
-        <PlayerStyleContext.Consumer>
-          {(styleContext: VideoPlayerStyle) => (
-            <View style={styleContext.videoPlayer.fullScreenCenter}>
+        <PlayerContext.Consumer>
+          {(context: PlayerWithStyle) => (
+            <View style={context.style.videoPlayer.fullScreenCenter}>
               <DelayedActivityIndicator size="large" color="#ffc50f" delay={delay} />
             </View>
           )}
-        </PlayerStyleContext.Consumer>
+        </PlayerContext.Consumer>
       )
     );
   }

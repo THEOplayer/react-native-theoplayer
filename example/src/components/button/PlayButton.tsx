@@ -2,10 +2,9 @@ import { ActionButton } from './actionbutton/ActionButton';
 import { Platform, StyleProp, ViewStyle } from 'react-native';
 import React, { PureComponent } from 'react';
 import { PlayerEventType, THEOplayerInternal } from 'react-native-theoplayer';
-import { PlayerContext } from '../util/Context';
+import { PlayerContext, PlayerWithStyle } from '../util/Context';
 import { PlayButtonSvg } from './svg/PlayButtonSvg';
 import { PauseButtonSvg } from './svg/PauseButtonSvg';
-import { PlayerStyleContext, VideoPlayerStyle } from '../style/VideoPlayerStyle';
 
 interface PlayButtonProps {
   style?: StyleProp<ViewStyle>;
@@ -26,7 +25,7 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
   }
 
   componentDidMount() {
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     player.addEventListener(PlayerEventType.PLAY, this.onPlay);
     player.addEventListener(PlayerEventType.PLAYING, this.onPlay);
     player.addEventListener(PlayerEventType.PAUSE, this.onPause);
@@ -35,7 +34,7 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
   }
 
   componentWillUnmount() {
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     player.removeEventListener(PlayerEventType.PLAY, this.onPlay);
     player.removeEventListener(PlayerEventType.PLAYING, this.onPlay);
     player.removeEventListener(PlayerEventType.PAUSE, this.onPause);
@@ -60,7 +59,7 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
   };
 
   private togglePlayPause = () => {
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     if (player.paused) {
       player.play();
     } else {
@@ -76,10 +75,10 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
     }
 
     return (
-      <PlayerStyleContext.Consumer>
-        {(styleContext: VideoPlayerStyle) => (
+      <PlayerContext.Consumer>
+        {(context: PlayerWithStyle) => (
           <ActionButton
-            style={styleContext.controlBar.buttonIcon}
+            style={context.style.controlBar.buttonIcon}
             touchable={!Platform.isTV}
             svg={paused ? <PlayButtonSvg /> : <PauseButtonSvg />}
             // @ts-ignore
@@ -87,7 +86,7 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
             onPress={this.togglePlayPause}
           />
         )}
-      </PlayerStyleContext.Consumer>
+      </PlayerContext.Consumer>
     );
   }
 }

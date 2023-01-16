@@ -1,5 +1,4 @@
 import type { ImageStyle, Insets, TextStyle, ViewStyle } from 'react-native';
-import React from 'react';
 
 export interface ColorTheme {
   primary: string;
@@ -279,5 +278,3 @@ export const defaultPlayerStyle: VideoPlayerStyle = {
     },
   },
 };
-
-export const PlayerStyleContext = React.createContext<VideoPlayerStyle>(defaultPlayerStyle);

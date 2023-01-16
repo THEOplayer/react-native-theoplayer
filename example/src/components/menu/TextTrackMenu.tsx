@@ -52,14 +52,14 @@ export class TextTrackMenu extends PureComponent<unknown, TextTrackMenuState> {
   }
 
   componentDidMount() {
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     player.addEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
     player.addEventListener(PlayerEventType.TEXT_TRACK_LIST, this.onTextTrackListEvent);
     player.addEventListener(PlayerEventType.TEXT_TRACK, this.onTextTrackEvent);
   }
 
   componentWillUnmount() {
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     player.removeEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
     player.removeEventListener(PlayerEventType.TEXT_TRACK_LIST, this.onTextTrackListEvent);
     player.removeEventListener(PlayerEventType.TEXT_TRACK, this.onTextTrackEvent);
@@ -105,7 +105,7 @@ export class TextTrackMenu extends PureComponent<unknown, TextTrackMenuState> {
 
   private onSelectTextTrack = (index: number) => {
     const { textTracks } = this.state;
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     const uid = textTracks && index >= 0 && index < textTracks.length ? textTracks[index].uid : undefined;
     player.selectedTextTrack = uid;
     console.log('selected', uid);

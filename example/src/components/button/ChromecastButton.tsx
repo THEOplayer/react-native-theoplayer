@@ -3,9 +3,8 @@ import { CastButton as GoogleCastButton } from 'react-native-google-cast';
 import type { CastEvent, THEOplayerInternal } from 'react-native-theoplayer';
 import { CastEventType, PlayerEventType } from 'react-native-theoplayer';
 import { ENABLE_CAST_BUTTON } from '../videoplayer/VideoPlayerUIProps';
-import { PlayerContext } from '../util/Context';
+import { PlayerContext, PlayerWithStyle } from '../util/Context';
 import { Platform } from 'react-native';
-import { PlayerStyleContext, VideoPlayerStyle } from '../style/VideoPlayerStyle';
 
 interface ChromecastButtonState {
   connected: boolean;
@@ -22,12 +21,12 @@ export class ChromecastButton extends PureComponent<unknown, ChromecastButtonSta
   }
 
   componentDidMount() {
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     player.addEventListener(PlayerEventType.CAST_EVENT, this.onCastStateChangeEvent);
   }
 
   componentWillUnmount() {
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     player.removeEventListener(PlayerEventType.CAST_EVENT, this.onCastStateChangeEvent);
   }
 
@@ -46,14 +45,14 @@ export class ChromecastButton extends PureComponent<unknown, ChromecastButtonSta
       return <></>;
     }
     return (
-      <PlayerStyleContext.Consumer>
-        {(styleContext: VideoPlayerStyle) => (
+      <PlayerContext.Consumer>
+        {(context: PlayerWithStyle) => (
           <GoogleCastButton
-            style={styleContext.controlBar.buttonIcon}
-            tintColor={connected ? styleContext.colors.accent : styleContext.colors.primary}
+            style={context.style.controlBar.buttonIcon}
+            tintColor={connected ? context.style.colors.accent : context.style.colors.primary}
           />
         )}
-      </PlayerStyleContext.Consumer>
+      </PlayerContext.Consumer>
     );
   }
 }

@@ -2,8 +2,7 @@ import React, { PureComponent, useContext } from 'react';
 import { Image, Platform, TouchableOpacity } from 'react-native';
 import { AirplayIcon } from '../../res/images';
 import { CastEvent, CastEventType, PlayerEventType, THEOplayerInternal } from 'react-native-theoplayer';
-import { PlayerContext } from '../util/Context';
-import { PlayerStyleContext, VideoPlayerStyle } from '../style/VideoPlayerStyle';
+import { PlayerContext, PlayerWithStyle } from '../util/Context';
 
 interface AirplayButtonState {
   connected: boolean;
@@ -20,12 +19,12 @@ export class AirplayButton extends PureComponent<unknown, AirplayButtonState> {
   }
 
   componentDidMount() {
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     player.addEventListener(PlayerEventType.CAST_EVENT, this.onCastStateChangeEvent);
   }
 
   componentWillUnmount() {
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     player.removeEventListener(PlayerEventType.CAST_EVENT, this.onCastStateChangeEvent);
   }
 
@@ -58,16 +57,16 @@ export class AirplayButton extends PureComponent<unknown, AirplayButtonState> {
       return <></>;
     }
     return (
-      <PlayerStyleContext.Consumer>
-        {(styleContext: VideoPlayerStyle) => (
-          <TouchableOpacity style={styleContext.controlBar.buttonIcon} onPress={this.onUIAirplayToggled}>
+      <PlayerContext.Consumer>
+        {(context: PlayerWithStyle) => (
+          <TouchableOpacity style={context.style.controlBar.buttonIcon} onPress={this.onUIAirplayToggled}>
             <Image
-              style={[styleContext.controlBar.buttonIcon, { tintColor: connected ? styleContext.colors.accent : styleContext.colors.primary }]}
+              style={[context.style.controlBar.buttonIcon, { tintColor: connected ? context.style.colors.accent : context.style.colors.primary }]}
               source={AirplayIcon}
             />
           </TouchableOpacity>
         )}
-      </PlayerStyleContext.Consumer>
+      </PlayerContext.Consumer>
     );
   }
 }

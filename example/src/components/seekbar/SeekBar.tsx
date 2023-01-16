@@ -41,8 +41,7 @@ import {
 } from 'react-native-theoplayer';
 import { ThumbnailView } from '../thumbnail/ThumbnailView';
 import { THUMBNAIL_SIZE } from '../videoplayer/VideoPlayerUIProps';
-import { PlayerContext } from '../util/Context';
-import { PlayerStyleContext, VideoPlayerStyle } from '../style/VideoPlayerStyle';
+import { PlayerContext, PlayerWithStyle } from '../util/Context';
 
 interface SeekBarState {
   focused: boolean;
@@ -93,7 +92,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
   }
 
   private onSeek = (time: number) => {
-    const player = this.context;
+    const player = this.context.player as THEOplayerInternal;
     if (!isNaN(time)) {
       player.currentTime = time;
     }
@@ -213,7 +212,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
     if (Platform.isTV) {
       this.enableTVEventHandler();
     }
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     player.addEventListener(PlayerEventType.PROGRESS, this.onProgress);
     player.addEventListener(PlayerEventType.TIME_UPDATE, this.onTimeUpdate);
     player.addEventListener(PlayerEventType.TEXT_TRACK_LIST, this.onTextTrackListEvent);
@@ -226,7 +225,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
     if (Platform.isTV) {
       this.disableTVEventHandler();
     }
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     player.removeEventListener(PlayerEventType.PROGRESS, this.onProgress);
     player.removeEventListener(PlayerEventType.TIME_UPDATE, this.onTimeUpdate);
     player.removeEventListener(PlayerEventType.TEXT_TRACK_LIST, this.onTextTrackListEvent);
@@ -330,7 +329,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
 
   onDotPress = () => {
     // On TV platforms we use the progress dot to play/pause
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     if (player.paused) {
       player.play();
     } else {
@@ -401,49 +400,49 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
     const { style, progressDotStyle, thumbnailMode } = this.props;
 
     return (
-      <PlayerStyleContext.Consumer>
-        {(styleContext: VideoPlayerStyle) => (
+      <PlayerContext.Consumer>
+        {(context: PlayerWithStyle) => (
           <View style={{ flex: 1, flexDirection: 'column', paddingHorizontal: 10 }}>
             {/* TODO {thumbnailMode === 'carousel' ? this.renderThumbnailCarousel(this.seekBarPosition) : this.renderSingleThumbnail(this.seekBarPosition)}*/}
 
-            <View style={[styleContext.seekBar.container, style]}>
+            <View style={[context.style.seekBar.container, style]}>
               {Platform.isTV && (
                 <TouchableOpacity
                   ref={this.setScrubberArea}
                   hasTVPreferredFocus={true}
                   tvParallaxProperties={{ enabled: false }}
                   activeOpacity={1.0}
-                  style={styleContext.seekBar.progress}
+                  style={context.style.seekBar.progress}
                   onFocus={this.onFocus}
                   onBlur={this.onBlur}
                   onPress={this.onDotPress}
                   onLayout={this.measureScrubber}>
                   <View
                     style={[
-                      styleContext.seekBar.innerProgressCompleted,
-                      { flex: flexCompleted, backgroundColor: focused ? styleContext.colors.accent : styleContext.colors.primary },
+                      context.style.seekBar.innerProgressCompleted,
+                      { flex: flexCompleted, backgroundColor: focused ? context.style.colors.accent : context.style.colors.primary },
                     ]}
                   />
-                  {focused && <View style={[styleContext.seekBar.progressDot, progressDotStyle]} />}
-                  <View style={[styleContext.seekBar.innerProgressRemaining, { flex: flexRemaining }]} />
+                  {focused && <View style={[context.style.seekBar.progressDot, progressDotStyle]} />}
+                  <View style={[context.style.seekBar.innerProgressRemaining, { flex: flexRemaining }]} />
                 </TouchableOpacity>
               )}
 
               {!Platform.isTV && (
-                <View style={styleContext.seekBar.progress}>
+                <View style={context.style.seekBar.progress}>
                   <View
-                    style={[styleContext.seekBar.innerProgressCompleted, { flex: flexCompleted, backgroundColor: styleContext.colors.primary }]}
+                    style={[context.style.seekBar.innerProgressCompleted, { flex: flexCompleted, backgroundColor: context.style.colors.primary }]}
                   />
                   <View
-                    style={[styleContext.seekBar.progressDot, { zIndex: 1, backgroundColor: styleContext.colors.primary }, progressDotStyle]}
-                    hitSlop={styleContext.seekBar.progressHitSlop}
+                    style={[context.style.seekBar.progressDot, { zIndex: 1, backgroundColor: context.style.colors.primary }, progressDotStyle]}
+                    hitSlop={context.style.seekBar.progressHitSlop}
                     {...this._seekPanResponder.panHandlers}
                   />
-                  <View style={[styleContext.seekBar.innerProgressRemaining, { flex: flexRemaining }]} />
+                  <View style={[context.style.seekBar.innerProgressRemaining, { flex: flexRemaining }]} />
                   <TouchableOpacity
                     ref={this.setScrubberArea}
-                    style={styleContext.seekBar.touchable}
-                    hitSlop={styleContext.seekBar.progressHitSlop}
+                    style={context.style.seekBar.touchable}
+                    hitSlop={context.style.seekBar.progressHitSlop}
                     onPress={this.onTouchScrubber}
                     onLayout={this.measureScrubber}
                   />
@@ -454,7 +453,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
             {/* TODO: render bot component? {renderBottomComponent && renderBottomComponent(this.seekBarPosition)}*/}
           </View>
         )}
-      </PlayerStyleContext.Consumer>
+      </PlayerContext.Consumer>
     );
   }
 
@@ -465,13 +464,13 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
       return;
     }
     return (
-      <PlayerStyleContext.Consumer>
-        {(styleContext: VideoPlayerStyle) => (
+      <PlayerContext.Consumer>
+        {(context: PlayerWithStyle) => (
           <ThumbnailView
             visible={seekBarPosition.isScrubbing}
-            containerStyle={styleContext.videoPlayer.thumbnailContainerCarousel}
-            thumbnailStyleCurrent={styleContext.videoPlayer.thumbnailCurrentCarousel}
-            thumbnailStyleCarousel={styleContext.videoPlayer.thumbnailCarousel}
+            containerStyle={context.style.videoPlayer.thumbnailContainerCarousel}
+            thumbnailStyleCurrent={context.style.videoPlayer.thumbnailCurrentCarousel}
+            thumbnailStyleCarousel={context.style.videoPlayer.thumbnailCarousel}
             thumbnailTrack={thumbnailTrack}
             time={seekBarPosition.currentProgress}
             duration={seekBarPosition.duration}
@@ -481,7 +480,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
             // carouselThumbnailScale={(index: number) => 1.0 - Math.abs(index) * 0.15}
           />
         )}
-      </PlayerStyleContext.Consumer>
+      </PlayerContext.Consumer>
     );
   };
 
@@ -492,12 +491,12 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
       return;
     }
     return (
-      <PlayerStyleContext.Consumer>
-        {(styleContext: VideoPlayerStyle) => (
+      <PlayerContext.Consumer>
+        {(styleContext: PlayerWithStyle) => (
           <ThumbnailView
             visible={seekBarPosition.isScrubbing}
-            containerStyle={styleContext.videoPlayer.thumbnailContainerSingle}
-            thumbnailStyleCurrent={styleContext.videoPlayer.thumbnailCurrentSingle}
+            containerStyle={styleContext.style.videoPlayer.thumbnailContainerSingle}
+            thumbnailStyleCurrent={styleContext.style.videoPlayer.thumbnailCurrentSingle}
             thumbnailTrack={thumbnailTrack}
             duration={seekBarPosition.duration}
             time={seekBarPosition.currentProgress}
@@ -509,7 +508,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
             )}
           />
         )}
-      </PlayerStyleContext.Consumer>
+      </PlayerContext.Consumer>
     );
   };
 }

@@ -3,10 +3,9 @@ import type { FullscreenEvent, THEOplayerInternal } from 'react-native-theoplaye
 import { FullscreenActionType, PlayerEventType } from 'react-native-theoplayer';
 import { Platform } from 'react-native';
 import { ActionButton } from './actionbutton/ActionButton';
-import { PlayerContext } from '../util/Context';
+import { PlayerContext, PlayerWithStyle } from '../util/Context';
 import { FullScreenExitSvg } from './svg/FullScreenExitSvg';
 import { FullScreenEnterSvg } from './svg/FullScreenEnterSvg';
-import { PlayerStyleContext, VideoPlayerStyle } from '../style/VideoPlayerStyle';
 
 interface FullscreenButtonState {
   fullscreen: boolean;
@@ -19,12 +18,12 @@ export class FullscreenButton extends PureComponent<unknown, FullscreenButtonSta
   }
 
   componentDidMount() {
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     player.addEventListener(PlayerEventType.FULLSCREEN, this.onFullscreenEvent);
   }
 
   componentWillUnmount() {
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     player.removeEventListener(PlayerEventType.FULLSCREEN, this.onFullscreenEvent);
   }
 
@@ -40,7 +39,7 @@ export class FullscreenButton extends PureComponent<unknown, FullscreenButtonSta
   };
 
   private toggleFullScreen = () => {
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     player.fullscreen = !player.fullscreen;
   };
 
@@ -50,15 +49,15 @@ export class FullscreenButton extends PureComponent<unknown, FullscreenButtonSta
       return <></>;
     }
     return (
-      <PlayerStyleContext.Consumer>
-        {(styleContext: VideoPlayerStyle) => (
+      <PlayerContext.Consumer>
+        {(context: PlayerWithStyle) => (
           <ActionButton
             svg={fullscreen ? <FullScreenExitSvg /> : <FullScreenEnterSvg />}
             onPress={this.toggleFullScreen}
-            iconStyle={styleContext.controlBar.buttonIcon}
+            iconStyle={context.style.controlBar.buttonIcon}
           />
         )}
-      </PlayerStyleContext.Consumer>
+      </PlayerContext.Consumer>
     );
   }
 }

@@ -28,13 +28,13 @@ export class SourceMenu extends PureComponent<unknown, SourceMenuState> {
 
   componentDidMount() {
     const { sources, selectedSourceIndex } = this.state;
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     player.source = sources[selectedSourceIndex].source;
   }
 
   private onSelectSource = (selectedSourceIndex: number) => {
     const { sources } = this.state;
-    const player = this.context as THEOplayerInternal;
+    const player = this.context.player as THEOplayerInternal;
     player.source = sources[selectedSourceIndex].source;
     this.setState({ selectedSourceIndex });
   };
