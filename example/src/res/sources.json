@@ -180,6 +180,7 @@
         "album": "React-Native THEOplayer demos",
         "displayIconUri": "https://cdn.theoplayer.com/video/adultswim/poster.jpg",
         "artist": "THEOplayer",
+        "type": "tv-show",
         "images": [
           {
             "src": "https://cdn.theoplayer.com/video/adultswim/poster.jpg",
