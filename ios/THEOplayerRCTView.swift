@@ -202,13 +202,6 @@ class THEOplayerRCTView: UIView {
 
 #if os(iOS)
     private func initCastConfiguration() -> CastConfiguration? {
-#if CHROMECAST
-        // Set the correct chromecast receiver application id
-        if let castReceiverApplicationId = self.chromecastReceiverApplicationId {
-            let options = GCKCastOptions(discoveryCriteria: GCKDiscoveryCriteria(applicationID: castReceiverApplicationId))
-            GCKCastContext.setSharedInstanceWith(options)
-        }
-#endif
 #if CHROMECAST || AIRPLAY
         // prepare the config
         return CastConfiguration(strategy: self.castStrategy)
