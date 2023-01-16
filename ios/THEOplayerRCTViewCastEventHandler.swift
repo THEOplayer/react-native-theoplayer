@@ -78,7 +78,7 @@ class THEOplayerRCTViewCastEventHandler {
         if DEBUG_EVENTHANDLER { print("[NATIVE] Chromecast Error listener attached to THEOplayer cast.chromecast") }
 #endif
         
-#if os(iOS) && AIRPLAY
+#if os(iOS)
         // AIRPLAY STATE_CHANGE
         self.airplayStateChangeListener = player.cast?.airPlay?.addEventListener(type: AirPlayEventTypes.STATE_CHANGE) { [weak self] event in
             if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received Airplay STATE_CHANGE event from THEOplayer cast.airplay") }
@@ -113,7 +113,7 @@ class THEOplayerRCTViewCastEventHandler {
         }
 #endif
         
-#if os(iOS) && AIRPLAY
+#if os(iOS)
         // AIRPLAY STATE_CHANGE
         if let airplayStateChangeListener = self.airplayStateChangeListener {
             player.cast?.airPlay?.removeEventListener(type: AirPlayEventTypes.STATE_CHANGE, listener: airplayStateChangeListener)

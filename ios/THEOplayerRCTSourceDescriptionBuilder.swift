@@ -220,7 +220,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
                         }
                         return nil
                     }
-                    // when valid, create a GoolgeDAITypedSource from the GoogleDAIConfiguration
+                    // when valid, create a GoogleDAITypedSource from the GoogleDAIConfiguration
                     if let config = googleDaiConfig {
                         return GoogleDAITypedSource(ssai: config)
                     }
@@ -301,7 +301,6 @@ class THEOplayerRCTSourceDescriptionBuilder {
         let metadataKeys = metadataData.filter { metadataElement in
             !(metadataElement.key == SD_PROP_TYPE || metadataElement.key == SD_PROP_METADATA_IMAGES)
         }
-        
         return ChromecastMetadataDescription(images: images,
                                              releaseDate: releaseDate,
                                              releaseYear: releaseYear,

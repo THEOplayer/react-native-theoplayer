@@ -34,7 +34,7 @@ class THEOplayerRCTCastAPI: NSObject, RCTBridgeModule {
     
     // MARK: CHROMECAST AND AIRPLAY
     
-#if os(iOS) && (CHROMECAST || AIRPLAY)
+#if os(iOS)
     
     @objc(casting:resolver:rejecter:)
     func casting(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
@@ -64,7 +64,6 @@ class THEOplayerRCTCastAPI: NSObject, RCTBridgeModule {
     // MARK: CHROMECAST SPECIFIC
 
 #if os(iOS) && CHROMECAST
-    
     @objc(chromecastCasting:resolver:rejecter:)
     func chromecastCasting(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         DispatchQueue.main.async {
@@ -150,7 +149,7 @@ class THEOplayerRCTCastAPI: NSObject, RCTBridgeModule {
     }
     
 #else
-    
+
     @objc(chromecastCasting:resolver:rejecter:)
     func chromecastCasting(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if DEBUG_CAST_API { print(ERROR_MESSAGE_CHROMECAST_UNSUPPORTED_FEATURE) }
@@ -189,7 +188,7 @@ class THEOplayerRCTCastAPI: NSObject, RCTBridgeModule {
     
     // MARK: AIRPLAY SPECIFIC
 
-#if os(iOS) && AIRPLAY
+#if os(iOS)
     
     @objc(airplayCasting:resolver:rejecter:)
     func airplayCasting(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
