@@ -6,9 +6,7 @@
 
 We're using the pre-release version to update our patched version and keep track of the upstream version.
 
-E.g. we're working on v1.7.2, we will use version `1.7.2-0` and incrementally increase the `-0` with the patches we do.
-
-If they release a new version upstream we will merge it in our patched branch `git merge v1.8.0`* and release a new version starting from 0 again as `1.8.0-0`.
+E.g. we're working on v1.7.2, we will use version `1.7.2-0` and incrementally increase the `-0` with the patches we do. If they release a new version upstream we will merge it in our patched branch `git merge v1.8.0`* and release a new version starting from 0 again as `1.8.0-0`.
 
 \* to be able to merge tags from upstream you will need to add upstream to your remotes
 ```
