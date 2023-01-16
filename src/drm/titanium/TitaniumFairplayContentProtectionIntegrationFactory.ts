@@ -1,4 +1,4 @@
-import {
+import type {
   ContentProtectionIntegration,
   ContentProtectionIntegrationFactory,
 } from '@wouterds/react-native-theoplayer';
