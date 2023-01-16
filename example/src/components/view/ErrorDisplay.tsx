@@ -58,7 +58,8 @@ export class ErrorDisplay extends PureComponent<unknown, ErrorDisplayState> {
       <PlayerStyleContext.Consumer>
         {(styleContext: VideoPlayerStyle) => (
           <View style={styleContext.videoPlayer.errorContainer}>
-            <Text style={styleContext.videoPlayer.message}>
+            <Text
+              style={[styleContext.videoPlayer.message, { color: styleContext.colors.text, backgroundColor: styleContext.colors.textBackground }]}>
               {error.errorCode} - {error.errorMessage}
             </Text>
           </View>

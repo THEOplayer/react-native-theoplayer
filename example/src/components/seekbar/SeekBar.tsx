@@ -406,7 +406,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
           <View style={{ flex: 1, flexDirection: 'column', paddingHorizontal: 10 }}>
             {/* TODO {thumbnailMode === 'carousel' ? this.renderThumbnailCarousel(this.seekBarPosition) : this.renderSingleThumbnail(this.seekBarPosition)}*/}
 
-            <View style={[styleContext.seekBar.containerSeekBar, style]}>
+            <View style={[styleContext.seekBar.container, style]}>
               {Platform.isTV && (
                 <TouchableOpacity
                   ref={this.setScrubberArea}
@@ -419,7 +419,10 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
                   onPress={this.onDotPress}
                   onLayout={this.measureScrubber}>
                   <View
-                    style={[styleContext.seekBar.innerProgressCompleted, { flex: flexCompleted, backgroundColor: focused ? '#ffc50f' : 'white' }]}
+                    style={[
+                      styleContext.seekBar.innerProgressCompleted,
+                      { flex: flexCompleted, backgroundColor: focused ? styleContext.colors.accent : styleContext.colors.primary },
+                    ]}
                   />
                   {focused && <View style={[styleContext.seekBar.progressDot, progressDotStyle]} />}
                   <View style={[styleContext.seekBar.innerProgressRemaining, { flex: flexRemaining }]} />
@@ -428,9 +431,11 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
 
               {!Platform.isTV && (
                 <View style={styleContext.seekBar.progress}>
-                  <View style={[styleContext.seekBar.innerProgressCompleted, { flex: flexCompleted }]} />
                   <View
-                    style={[styleContext.seekBar.progressDot, { zIndex: 1 }, progressDotStyle]}
+                    style={[styleContext.seekBar.innerProgressCompleted, { flex: flexCompleted, backgroundColor: styleContext.colors.primary }]}
+                  />
+                  <View
+                    style={[styleContext.seekBar.progressDot, { zIndex: 1, backgroundColor: styleContext.colors.primary }, progressDotStyle]}
                     hitSlop={styleContext.seekBar.progressHitSlop}
                     {...this._seekPanResponder.panHandlers}
                   />

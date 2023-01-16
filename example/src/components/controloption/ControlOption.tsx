@@ -15,7 +15,7 @@ export const ControlOption = (props: ControlOptionProps) => {
 
   return (
     <TouchableOpacity
-      style={defaultPlayerStyle.container}
+      style={defaultPlayerStyle.videoPlayer.container}
       activeOpacity={1.0}
       tvParallaxProperties={{ enabled: false }}
       onPress={() => {
@@ -30,7 +30,13 @@ export const ControlOption = (props: ControlOptionProps) => {
       onBlur={() => {
         setFocused(false);
       }}>
-      <Text style={[textStyle, { fontWeight: isSelected ? 'bold' : 'normal', color: focused ? '#ffc50f' : 'white' }]}>[{text}]</Text>
+      <Text
+        style={[
+          textStyle,
+          { fontWeight: isSelected ? 'bold' : 'normal', color: focused ? defaultPlayerStyle.colors.accent : defaultPlayerStyle.colors.primary },
+        ]}>
+        [{text}]
+      </Text>
     </TouchableOpacity>
   );
 };

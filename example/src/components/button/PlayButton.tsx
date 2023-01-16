@@ -79,7 +79,7 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
       <PlayerStyleContext.Consumer>
         {(styleContext: VideoPlayerStyle) => (
           <ActionButton
-            style={styleContext.controlBar.controlBarButton}
+            style={styleContext.controlBar.buttonIcon}
             touchable={!Platform.isTV}
             svg={paused ? <PlayButtonSvg /> : <PauseButtonSvg />}
             // @ts-ignore

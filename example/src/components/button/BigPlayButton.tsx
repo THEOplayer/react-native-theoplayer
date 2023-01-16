@@ -5,7 +5,7 @@ import { PlayerStyleContext, VideoPlayerStyle } from '../style/VideoPlayerStyle'
 export const BigPlayButton = () => {
   return (
     <PlayerStyleContext.Consumer>
-      {(styleContext: VideoPlayerStyle) => <PlayButton style={styleContext.controlBar.centerControlBarButton} />}
+      {(styleContext: VideoPlayerStyle) => <PlayButton style={styleContext.controlBar.buttonIconCenterControls} />}
     </PlayerStyleContext.Consumer>
   );
 };

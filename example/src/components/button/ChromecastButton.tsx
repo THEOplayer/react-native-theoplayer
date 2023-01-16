@@ -48,7 +48,10 @@ export class ChromecastButton extends PureComponent<unknown, ChromecastButtonSta
     return (
       <PlayerStyleContext.Consumer>
         {(styleContext: VideoPlayerStyle) => (
-          <GoogleCastButton style={styleContext.controlBar.castButton} tintColor={connected ? '#ffc50f' : 'white'} />
+          <GoogleCastButton
+            style={styleContext.controlBar.buttonIcon}
+            tintColor={connected ? styleContext.colors.accent : styleContext.colors.primary}
+          />
         )}
       </PlayerStyleContext.Consumer>
     );
