@@ -4,7 +4,7 @@ import { SeekBar } from '../seekbar/SeekBar';
 import { THUMBNAIL_MODE } from './VideoPlayerUIProps';
 import { AirplayButton } from '../button/AirplayButton';
 import { ChromecastButton } from '../button/ChromecastButton';
-import { ControlBar, SplitControlBar } from '../controlbar/ControlBar';
+import { ControlBar } from '../controlbar/ControlBar';
 import { TimeLabel } from '../timelabel/TimeLabel';
 import { FullscreenButton } from '../button/FullscreenButton';
 import { TextTrackMenu } from '../menu/TextTrackMenu';
@@ -19,6 +19,7 @@ import { CastMessage } from '../view/CastMessage';
 import { CenteredDelayedActivityIndicator } from '../delayedactivityindicator/CenteredDelayedActivityIndicator';
 import { ErrorDisplay } from '../view/ErrorDisplay';
 import { defaultPlayerStyle, PlayerStyleContext, VideoPlayerStyle } from '../style/VideoPlayerStyle';
+import { View } from 'react-native';
 
 export interface VideoPlayerUIProps {
   style?: Partial<VideoPlayerStyle>;
@@ -88,24 +89,20 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
                   <SeekBar thumbnailMode={THUMBNAIL_MODE} />
                 </ControlBar>
 
-                <SplitControlBar
-                  left={
-                    <>
-                      <MuteButton />
-                      <TimeLabel showDuration={true} style={defaultPlayerStyle.videoPlayer.timeLabel} />
-                    </>
-                  }
-                  right={
-                    <>
-                      <TextTrackMenu />
-                      <AudioTrackMenu />
-                      {/*Note: quality selection is not available on iOS */}
-                      <VideoQualityMenu />
-                      <SourceMenu />
-                      <FullscreenButton />
-                    </>
-                  }
-                />
+                <ControlBar>
+                  <MuteButton />
+                  <TimeLabel showDuration={true} style={defaultPlayerStyle.videoPlayer.timeLabelContainer} />
+
+                  {/*Spacer*/}
+                  <View style={{ flexGrow: 1 }} />
+
+                  <TextTrackMenu />
+                  <AudioTrackMenu />
+                  {/*Note: quality selection is not available on iOS */}
+                  <VideoQualityMenu />
+                  <SourceMenu />
+                  <FullscreenButton />
+                </ControlBar>
               </>
             }>
             <ErrorDisplay />
