@@ -11,21 +11,6 @@ interface ControlBarProps {
   right?: ReactNode;
 }
 
-export const SplitControlBar = (props: ControlBarProps) => {
-  const { style, left, right } = props;
-  return (
-    <PlayerStyleContext.Consumer>
-      {(styleContext: VideoPlayerStyle) => (
-        <View style={[styleContext.controlBar.container, style]}>
-          {left}
-          <View style={{ flexGrow: 1 }} />
-          {right}
-        </View>
-      )}
-    </PlayerStyleContext.Consumer>
-  );
-};
-
 export const ControlBar = (props: React.PropsWithChildren<ControlBarProps>) => {
   const { style, children } = props;
   return (
