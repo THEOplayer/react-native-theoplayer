@@ -17,7 +17,7 @@ import {
   TrackListEventType,
 } from 'react-native-theoplayer';
 import { getTrackLabel } from './TrackUtils';
-import { PlayerContext } from '../util/Context';
+import { PlayerContext } from '../util/PlayerContext';
 
 function stringFromTextTrackListEvent(type: TrackListEventType): string {
   switch (type) {

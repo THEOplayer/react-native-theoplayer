@@ -4,7 +4,7 @@ import { ActionButton } from '../../button/actionbutton/ActionButton';
 import { ModalMenu } from '../modalmenu/ModalMenu';
 import { MenuRow } from '../modalmenu/MenuRow';
 import type { MenuItem } from '../modalmenu/MenuItem';
-import { PlayerContext, PlayerWithStyle } from '../../util/Context';
+import { PlayerContext, PlayerWithStyle } from '../../util/PlayerContext';
 
 export interface MenuButtonProps {
   title: string;

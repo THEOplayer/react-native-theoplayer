@@ -2,7 +2,7 @@ import React, { PureComponent, useContext } from 'react';
 import { Image, Platform, TouchableOpacity } from 'react-native';
 import { AirplayIcon } from '../../res/images';
 import { CastEvent, CastEventType, PlayerEventType, THEOplayerInternal } from 'react-native-theoplayer';
-import { PlayerContext, PlayerWithStyle } from '../util/Context';
+import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
 
 interface AirplayButtonState {
   connected: boolean;

@@ -3,7 +3,7 @@ import type { DelayedActivityIndicatorProps } from './DelayedActivityIndicator';
 import { DelayedActivityIndicator } from './DelayedActivityIndicator';
 import { View } from 'react-native';
 import { BufferingChangeEvent, PlayerEventType, THEOplayerInternal } from 'react-native-theoplayer';
-import { PlayerContext, PlayerWithStyle } from '../util/Context';
+import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
 
 interface CenteredDelayedActivityIndicatorState {
   showing: boolean;

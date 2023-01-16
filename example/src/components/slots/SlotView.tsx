@@ -1,6 +1,6 @@
 import React, { PureComponent, ReactNode } from 'react';
 import { Animated, Platform, StyleProp, View, ViewStyle } from 'react-native';
-import { PlayerContext, PlayerWithStyle } from '../util/Context';
+import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
 import type { THEOplayerInternal } from 'react-native-theoplayer';
 import { PlayerEventType } from 'react-native-theoplayer';
 

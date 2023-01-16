@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { CastEvent, CastEventType, PlayerEventType, THEOplayerInternal } from 'react-native-theoplayer';
 import { Text } from 'react-native';
-import { PlayerContext, PlayerWithStyle } from '../util/Context';
+import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
 
 interface CastMessageState {
   message: string | undefined;

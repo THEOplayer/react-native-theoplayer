@@ -5,7 +5,7 @@ import type { Source } from '../../utils/source/Source';
 import type { THEOplayerInternal } from 'react-native-theoplayer';
 import { Platform } from 'react-native';
 import ALL_SOURCES from '../../res/sources.json';
-import { PlayerContext } from '../util/Context';
+import { PlayerContext } from '../util/PlayerContext';
 import { ListSvg } from '../button/svg/ListSvg';
 
 export interface SourceMenuState {

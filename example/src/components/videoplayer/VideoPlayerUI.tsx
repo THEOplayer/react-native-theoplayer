@@ -12,7 +12,7 @@ import { AudioTrackMenu } from '../menu/AudioTrackMenu';
 import { VideoQualityMenu } from '../menu/VideoQualityMenu';
 import { SourceMenu } from '../menu/SourceMenu';
 import { MuteButton } from '../button/MuteButton';
-import { PlayerContext } from '../util/Context';
+import { PlayerContext } from '../util/PlayerContext';
 import { SlotView } from '../slots/SlotView';
 import { BigPlayButton } from '../button/BigPlayButton';
 import { CastMessage } from '../view/CastMessage';

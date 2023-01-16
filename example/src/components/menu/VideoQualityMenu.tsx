@@ -5,7 +5,7 @@ import { findMediaTrackByUid, LoadedMetadataEvent, MediaTrack, PlayerEventType, 
 import { MenuButton } from './menubutton/MenuButton';
 import React, { PureComponent } from 'react';
 import { Platform } from 'react-native';
-import { PlayerContext } from '../util/Context';
+import { PlayerContext } from '../util/PlayerContext';
 
 export interface VideoQualityMenuState {
   videoTracks: MediaTrack[];
