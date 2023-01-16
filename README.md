@@ -2,6 +2,24 @@
 
 ![](./doc/logo-react-native.png) ![](./doc/logo-theo.png)
 
+## Using published fork
+
+We're using the pre-release version to update our patched version and keep track of the upstream version.
+
+E.g. we're working on v1.7.2, we will use version `1.7.2-0` and incrementally increase the `-0` with the patches we do.
+
+If they release a new version upstream we will merge it in our patched branch `git merge v1.8.0` and release a new version starting from 0 again as `1.8.0-0`.
+
+### Publishing
+
+```bash
+# build the source
+npm run prepare
+
+# publish to npm
+npm publish --access public
+```
+
 ## License
 
 This projects falls under the license as defined in https://github.com/THEOplayer/license-and-disclaimer.
