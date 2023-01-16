@@ -1,4 +1,4 @@
-import type { ContentProtectionAPI, ContentProtectionIntegrationFactory, KeySystemId } from 'react-native-theoplayer';
+import type { ContentProtectionAPI, ContentProtectionIntegrationFactory, KeySystemId } from '@wouterds/react-native-theoplayer';
 import { registerContentProtectionIntegration } from 'theoplayer';
 
 export class WebContentProtectionRegistry implements ContentProtectionAPI {

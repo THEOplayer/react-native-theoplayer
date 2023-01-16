@@ -1,8 +1,8 @@
 import type { NativeContentProtectionEvent } from './NativeContentProtectionEvent';
-import type { CertificateResponse } from 'react-native-theoplayer';
+import type { CertificateResponse } from '@wouterds/react-native-theoplayer';
 import type { NativeCertificateRequest } from './NativeCertificateRequest';
 import { fromNativeCertificateRequest } from './NativeCertificateRequest';
-import { fromBase64StringToUint8Array, fromUint8ArrayToBase64String } from 'react-native-theoplayer';
+import { fromBase64StringToUint8Array, fromUint8ArrayToBase64String } from '@wouterds/react-native-theoplayer';
 
 export interface NativeCertificateResponse extends NativeContentProtectionEvent {
   url: string;

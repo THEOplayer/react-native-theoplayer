@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 
-import type { AdEvent, AdsAPI, MediaTrack, PlayerError, TextTrack, THEOplayerViewProps, TimeRange } from 'react-native-theoplayer';
+import type { AdEvent, AdsAPI, MediaTrack, PlayerError, TextTrack, THEOplayerViewProps, TimeRange } from '@wouterds/react-native-theoplayer';
 import {
   AdEventNames,
   MediaTrackEventType,
@@ -8,7 +8,7 @@ import {
   TextTrackEventType,
   THEOplayerViewComponent,
   TrackListEventType,
-} from 'react-native-theoplayer';
+} from '@wouterds/react-native-theoplayer';
 import type { Event, TextTrackCue as NativeTextTrackCue, TrackChangeEvent } from 'theoplayer';
 
 import type {

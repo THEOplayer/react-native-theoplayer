@@ -1,6 +1,6 @@
 import type { NativeContentProtectionEvent } from './NativeContentProtectionEvent';
-import type { LicenseRequest } from 'react-native-theoplayer';
-import { fromBase64StringToUint8Array, fromUint8ArrayToBase64String } from 'react-native-theoplayer';
+import type { LicenseRequest } from '@wouterds/react-native-theoplayer';
+import { fromBase64StringToUint8Array, fromUint8ArrayToBase64String } from '@wouterds/react-native-theoplayer';
 
 export interface NativeLicenseRequest extends NativeContentProtectionEvent {
   url: string;

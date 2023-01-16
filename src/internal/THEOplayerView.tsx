@@ -17,10 +17,10 @@ import type {
   AdsAPI,
   MediaTrackEvent,
   MediaTrackListEvent,
-} from 'react-native-theoplayer';
+} from '@wouterds/react-native-theoplayer';
 
 import styles from './THEOplayerView.style';
-import type { SourceDescription } from 'react-native-theoplayer';
+import type { SourceDescription } from '@wouterds/react-native-theoplayer';
 import { THEOplayerNativeAdsAPI } from './ads/THEOplayerNativeAdsAPI';
 import { decodeNanInf } from './utils/TypeUtils';
 
@@ -359,7 +359,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
 }
 
 const LINKING_ERROR =
-  `The package 'react-native-theoplayer' doesn't seem to be linked. Make sure: \n\n` +
+  `The package '@wouterds/react-native-theoplayer' doesn't seem to be linked. Make sure: \n\n` +
   Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo managed workflow\n';

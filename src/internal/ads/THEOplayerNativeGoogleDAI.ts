@@ -1,6 +1,6 @@
-import type { GoogleDAI } from 'react-native-theoplayer';
+import type { GoogleDAI } from '@wouterds/react-native-theoplayer';
 import { NativeModules } from 'react-native';
-import type { THEOplayerView } from 'react-native-theoplayer';
+import type { THEOplayerView } from '@wouterds/react-native-theoplayer';
 
 export class THEOplayerNativeGoogleDAI implements GoogleDAI {
   public constructor(private readonly _player: THEOplayerView) {}

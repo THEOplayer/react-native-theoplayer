@@ -1,4 +1,4 @@
-import type { KeySystemId } from 'react-native-theoplayer';
+import type { KeySystemId } from '@wouterds/react-native-theoplayer';
 import type { ContentProtectionIntegrationFactory } from './ContentProtectionIntegrationFactory';
 
 export interface ContentProtectionAPI {

@@ -1,8 +1,8 @@
-import type { CertificateRequest, ContentProtectionAPI, DRMConfiguration, LicenseRequest } from 'react-native-theoplayer';
-import type { KeySystemId } from 'react-native-theoplayer';
-import type { ContentProtectionIntegrationFactory } from 'react-native-theoplayer';
+import type { CertificateRequest, ContentProtectionAPI, DRMConfiguration, LicenseRequest } from '@wouterds/react-native-theoplayer';
+import type { KeySystemId } from '@wouterds/react-native-theoplayer';
+import type { ContentProtectionIntegrationFactory } from '@wouterds/react-native-theoplayer';
 import { NativeEventEmitter, NativeModules } from 'react-native';
-import type { ContentProtectionIntegration } from 'react-native-theoplayer';
+import type { ContentProtectionIntegration } from '@wouterds/react-native-theoplayer';
 import type { NativeContentProtectionEvent } from './NativeContentProtectionEvent';
 import { fromNativeLicenseRequest, NativeLicenseRequest, toNativeLicenseRequest } from './NativeLicenseRequest';
 import { fromNativeLicenseResponse, NativeLicenseResponse, toNativeLicenseResponseResult } from './NativeLicenseResponse';

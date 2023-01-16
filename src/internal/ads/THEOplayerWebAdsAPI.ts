@@ -1,6 +1,5 @@
-import type { Ad, AdDescription, AdBreak, AdsAPI } from "react-native-theoplayer";
+import type { Ad, AdDescription, AdBreak, AdsAPI, GoogleDAI } from "@wouterds/react-native-theoplayer";
 import type { THEOplayerView } from "../THEOplayerView.web";
-import type { GoogleDAI } from "react-native-theoplayer";
 import { THEOplayerWebGoogleDAI } from "./THEOplayerWebGoogleDAI";
 
 export class THEOplayerWebAdsAPI implements AdsAPI {

@@ -1,4 +1,4 @@
-import type { Ad, AdBreak } from 'react-native-theoplayer';
+import type { Ad, AdBreak } from '@wouterds/react-native-theoplayer';
 
 export interface AdEvent {
   /**

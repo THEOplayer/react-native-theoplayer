@@ -1,5 +1,5 @@
 import type { ContentProtectionIntegration } from './ContentProtectionIntegration';
-import type { DRMConfiguration } from 'react-native-theoplayer';
+import type { DRMConfiguration } from '@wouterds/react-native-theoplayer';
 
 /**
  * Factory pattern to create {@link ContentProtectionIntegration}s.

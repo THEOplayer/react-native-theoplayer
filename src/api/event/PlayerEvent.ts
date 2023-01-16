@@ -1,4 +1,4 @@
-import type { MediaTrack, PlayerError, TextTrack } from 'react-native-theoplayer';
+import type { MediaTrack, PlayerError, TextTrack } from '@wouterds/react-native-theoplayer';
 import type { TimeRange } from '../timeranges/TimeRange';
 
 export interface ErrorEvent {

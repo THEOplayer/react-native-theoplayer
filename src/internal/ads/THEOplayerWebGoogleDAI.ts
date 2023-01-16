@@ -1,4 +1,4 @@
-import type { GoogleDAI } from 'react-native-theoplayer';
+import type { GoogleDAI } from '@wouterds/react-native-theoplayer';
 import type { GoogleDAI as NativeGoogleDAI } from 'theoplayer';
 
 export class THEOplayerWebGoogleDAI implements GoogleDAI {
