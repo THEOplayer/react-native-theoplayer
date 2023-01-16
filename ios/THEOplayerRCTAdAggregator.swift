@@ -40,7 +40,7 @@ let PROP_COMPANION_RESOURCE_URI: String = "resourceURI"
 
 class THEOplayerRCTAdAggregator {
 
-#if ADS && (GOOGLE_IMA || GOOGLE_DAI)
+#if os(iOS) && ADS && (GOOGLE_IMA || GOOGLE_DAI)
     class func aggregateAd(ad: Ad, processAdBreak: Bool = true) -> [String:Any] {
         var adData: [String:Any] = [:]
         adData[PROP_AD_INTEGRATION] = ad.integration._rawValue
@@ -60,14 +60,14 @@ class THEOplayerRCTAdAggregator {
         }
         adData[PROP_AD_COMPANIONS] = THEOplayerRCTAdAggregator.aggregateCompanionAds(companionAds: ad.companions)
         adData[PROP_AD_UNIVERSAL_AD_IDS] = []
-        
+
         // Add additional properties for Linear Ads
         if let linearAd = ad as? LinearAd {
             if let adDuration = linearAd.duration {
                 adData[PROP_AD_DURATION] = adDuration * 1000 // sec -> msec
             }
         }
-        
+
         // Add additional properties for NonLinear Ads
         if let nonLinearAd = ad as? NonLinearAd {
             if let adClickThrough = nonLinearAd.clickThrough {
@@ -109,10 +109,10 @@ class THEOplayerRCTAdAggregator {
             adData[PROP_GOOLGE_AD_WRAPPER_AD_SYSTEMS] = googleImaAd.wrapperAdSystems
             adData[PROP_GOOLGE_AD_WRAPPER_CREATIVE_IDS] = googleImaAd.wrapperCreativeIds
         }
-        
+
         return adData
     }
-    
+
     class func aggregateAdBreak(adBreak: AdBreak) -> [String:Any] {
         var adBreakData: [String:Any] = [:]
         adBreakData[PROP_ADBREAK_MAX_DURATION] = adBreak.maxDuration * 1000 // sec -> msec
@@ -132,7 +132,7 @@ class THEOplayerRCTAdAggregator {
         }
         return adBreakData
     }
-    
+
     class private func aggregateCompanionAds(companionAds: [CompanionAd?]) -> [[String:Any]] {
         var companionAdsData: [[String:Any]] = []
         for cAd in companionAds {
@@ -149,7 +149,7 @@ class THEOplayerRCTAdAggregator {
         }
         return companionAdsData
     }
-    
+
     class private func aggregateTraffickingParameters(traffickingParametersString: String) -> [String:Any]? {
         if let data = traffickingParametersString.data(using: .utf8) {
             return try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String:Any]
@@ -157,5 +157,5 @@ class THEOplayerRCTAdAggregator {
         return nil
     }
 #endif
-    
+
 }

@@ -32,19 +32,19 @@ let ERROR_MESSAGE_DAI_GET_SNAPBACK_UNDEFINED = "Undefined dai snapback"
 @objc(THEOplayerRCTAdsAPI)
 class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
     @objc var bridge: RCTBridge!
-    
+
     static func moduleName() -> String! {
         return "AdsModule"
     }
-    
+
     static func requiresMainQueueSetup() -> Bool {
         return false
     }
 
-#if ADS && (GOOGLE_IMA || GOOGLE_DAI)
+#if os(iOS) && ADS && (GOOGLE_IMA || GOOGLE_DAI)
     @objc(skip:)
     func skip(_ node: NSNumber) -> Void {
-        
+
         DispatchQueue.main.async {
             let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
             if let ads = theView.ads() {
@@ -54,7 +54,7 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
             }
         }
     }
-    
+
     @objc(playing:resolver:rejecter:)
     func playing(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         DispatchQueue.main.async {
@@ -74,7 +74,7 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
             }
         }
     }
-    
+
     @objc(currentAdBreak:resolver:rejecter:)
     func currentAdBreak(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         DispatchQueue.main.async {
@@ -97,7 +97,7 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
             }
         }
     }
-    
+
     @objc(currentAds:resolver:rejecter:)
     func currentAds(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         DispatchQueue.main.async {
@@ -124,7 +124,7 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
             }
         }
     }
-    
+
     @objc(scheduledAdBreaks:resolver:rejecter:)
     func scheduledAdBreaks(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         DispatchQueue.main.async {
@@ -151,7 +151,7 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
             }
         }
     }
-    
+
     @objc(schedule:ad:)
     func schedule(_ node: NSNumber, adDict: NSDictionary) -> Void {
         DispatchQueue.main.async {
@@ -165,7 +165,7 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
             }
         }
     }
-    
+
     @objc(daiSnapback:resolver:rejecter:)
     func daiSnapback(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         DispatchQueue.main.async {
@@ -189,7 +189,7 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
             }
         }
     }
-    
+
     @objc(daiSetSnapback:enabled:)
     func daiSetSnapback(_ node: NSNumber, enabled: Bool) -> Void {
         DispatchQueue.main.async {
@@ -202,7 +202,7 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
             }
         }
     }
-    
+
     @objc(daiContentTimeForStreamTime:time:resolver:rejecter:)
     func daiContentTimeForStreamTime(_ node: NSNumber, timeValue: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         DispatchQueue.main.async {
@@ -218,7 +218,7 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
             }
         }
     }
-    
+
     @objc(daiStreamTimeForContentTime:time:resolver:rejecter:)
     func daiStreamTimeForContentTime(_ node: NSNumber, timeValue: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         DispatchQueue.main.async {
@@ -234,63 +234,63 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
             }
         }
     }
-    
+
 #else
-    
+
     @objc(skip:)
     func skip(_ node: NSNumber) -> Void {
         if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE) }
         return
     }
-    
+
     @objc(playing:resolver:rejecter:)
     func playing(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE) }
         resolve(false)
     }
-    
+
     @objc(currentAdBreak:resolver:rejecter:)
     func currentAdBreak(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE) }
         resolve([:])
     }
-    
+
     @objc(currentAds:resolver:rejecter:)
     func currentAds(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE) }
         resolve([])
     }
-    
+
     @objc(scheduledAdBreaks:resolver:rejecter:)
     func scheduledAdBreaks(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE) }
         resolve([])
         // TODO: handle request for scheduled adbreaks. Awaiting iOS SDK implementation
     }
-    
+
     @objc(schedule:ad:)
     func schedule(_ node: NSNumber, adDict: NSDictionary) -> Void {
         if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE) }
         return
     }
-    
+
     @objc(daiSnapback:resolver:rejecter:)
     func daiSnapback(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE) }
         resolve(false)
     }
-    
+
     @objc(daiContentTimeForStreamTime:time:resolver:rejecter:)
     func daiContentTimeForStreamTime(_ node: NSNumber, timeValue: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE) }
         resolve(timeValue.doubleValue)
     }
-    
+
     @objc(daiStreamTimeForContentTime:time:resolver:rejecter:)
     func daiStreamTimeForContentTime(_ node: NSNumber, timeValue: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE) }
         resolve(timeValue.doubleValue)
     }
-    
+
 #endif
 }

@@ -3,7 +3,7 @@
 import Foundation
 import UIKit
 import THEOplayerSDK
- 
+
 class THEOplayerRCTView: UIView {
     // MARK: Members
     private var player: THEOplayer?
@@ -11,7 +11,7 @@ class THEOplayerRCTView: UIView {
     private var textTrackEventHandler: THEOplayerRCTViewTextTrackEventHandler
     private var mediaTrackEventHandler: THEOplayerRCTViewMediaTrackEventHandler
     private var adEventHandler: THEOplayerRCTViewAdEventHandler
-    
+
     // MARK: Bridged props
     private var src: SourceDescription?
     private var license: String?
@@ -26,14 +26,14 @@ class THEOplayerRCTView: UIView {
     private var selectedAudioTrackUid: Int = 0
     private var seek: Double? = nil                  // in msec
     private var fullscreen: Bool = false
-    
-#if ADS && (GOOGLE_IMA || GOOGLE_DAI)
+
+#if os(iOS) && ADS && (GOOGLE_IMA || GOOGLE_DAI)
     private var adSUIEnabled: Bool = true
     private var adPreloadType: THEOplayerSDK.AdPreloadType = THEOplayerSDK.AdPreloadType.MIDROLL_AND_POSTROLL
     private var googleImaUsesNativeIma: Bool = true
 #endif
-    
-    
+
+
     // MARK: - Initialisation / view setup
     init() {
         // create event handlers to maintain event props
@@ -41,10 +41,10 @@ class THEOplayerRCTView: UIView {
         self.textTrackEventHandler = THEOplayerRCTViewTextTrackEventHandler()
         self.mediaTrackEventHandler = THEOplayerRCTViewMediaTrackEventHandler()
         self.adEventHandler = THEOplayerRCTViewAdEventHandler()
-        
+
         super.init(frame: .zero)
     }
-    
+
     func destroy() {
         self.mainEventHandler.destroy()
         self.textTrackEventHandler.destroy()
@@ -54,18 +54,18 @@ class THEOplayerRCTView: UIView {
         self.player = nil
         if DEBUG_THEOPLAYER_INTERACTION { print("[NATIVE] THEOplayer instance destroyed.") }
     }
-    
+
     func ads() -> Ads? {
         guard let player = self.player else {
             return nil
         }
         return player.ads
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("[NATIVE] init(coder:) has not been implemented")
     }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
         if let player = self.player {
@@ -73,7 +73,7 @@ class THEOplayerRCTView: UIView {
             player.autoresizingMask = [.flexibleBottomMargin, .flexibleHeight, .flexibleLeftMargin, .flexibleRightMargin, .flexibleTopMargin, .flexibleWidth]
         }
     }
-    
+
     // MARK: - Property bridging
     private func syncAllPlayerProps() {
         // sync stored props with player instance
@@ -89,7 +89,7 @@ class THEOplayerRCTView: UIView {
         self.syncPlayerFullscreen()
         if DEBUG_THEOPLAYER_INTERACTION { print("[NATIVE] All props synced with THEOplayer instance.") }
     }
-    
+
     // MARK: - Property bridging
     @objc(setSrc:)
     func setSrc(srcDict: NSDictionary) {
@@ -101,7 +101,7 @@ class THEOplayerRCTView: UIView {
             if DEBUG_PROP_UPDATES  { print("[NATIVE] failed to update THEOplayer source.") }
             return
         }
-        
+
         // reset player for new source
         if self.player != nil {
             self.player?.destroy()
@@ -121,7 +121,7 @@ class THEOplayerRCTView: UIView {
             self.syncAllPlayerProps()
         }
     }
-    
+
     private func initPlayer() {
         if DEBUG_THEOPLAYER_INTERACTION { print("[NATIVE] 'lazy' init THEOplayer instance") }
 #if os(tvOS)
@@ -140,9 +140,9 @@ class THEOplayerRCTView: UIView {
                                                                         licenseUrl: self.licenseUrl))
 #endif
     }
-    
+
     private func initAdsConfiguration() -> AdsConfiguration? {
-#if ADS && (GOOGLE_IMA || GOOGLE_DAI)
+#if os(iOS) && ADS && (GOOGLE_IMA || GOOGLE_DAI)
         let googleIMAConfiguration = GoogleIMAConfiguration()
         googleIMAConfiguration.useNativeIma = self.googleImaUsesNativeIma
         googleIMAConfiguration.disableUI = !self.adSUIEnabled
@@ -152,9 +152,9 @@ class THEOplayerRCTView: UIView {
 #else
         return nil
 #endif
-        
+
     }
-    
+
     private func syncPlayerSrc() {
         // set sourceDescription on player
         if DEBUG_THEOPLAYER_INTERACTION { print("[NATIVE] Setting new source on TheoPlayer") }
@@ -162,14 +162,14 @@ class THEOplayerRCTView: UIView {
             player.source = self.src
         }
     }
-    
+
     @objc(setConfig:)
     func setConfig(configDict: NSDictionary) {
         // store license info
         self.license = configDict["license"] as? String
         self.licenseUrl = configDict["licenseUrl"] as? String
         self.chromeless = configDict["chromeless"] as? Bool ?? true
-#if ADS && (GOOGLE_IMA || GOOGLE_DAI)
+#if os(iOS) && ADS && (GOOGLE_IMA || GOOGLE_DAI)
         if let adsConfig = configDict["ads"] as? NSDictionary {
             self.adSUIEnabled = adsConfig["uiEnabled"] as? Bool ?? true
             if let adPreloadType = adsConfig["preload"] as? String {
@@ -182,7 +182,7 @@ class THEOplayerRCTView: UIView {
 #endif
         if DEBUG_PROP_UPDATES  { print("[NATIVE] config prop updated.") }
     }
-    
+
     @objc(setPaused:)
     func setPaused(paused: Bool) {
         // store paused state
@@ -191,7 +191,7 @@ class THEOplayerRCTView: UIView {
         // sync player state with paused prop
         self.syncPlayerPaused()
     }
-    
+
     private func syncPlayerPaused() {
         if let player = self.player {
             if DEBUG_THEOPLAYER_INTERACTION { print("RNView paused: \(self.paused), THEOplayer paused: \(player.paused)") }
@@ -204,7 +204,7 @@ class THEOplayerRCTView: UIView {
             }
         }
     }
-    
+
     @objc(setVolume:)
     func setVolume(volume: NSNumber) {
         if DEBUG_THEOPLAYER_INTERACTION { print("[NATIVE] Setting volume: TheoPlayer does not handle volume changes for iOS. This is handled by the device.") }
@@ -218,7 +218,7 @@ class THEOplayerRCTView: UIView {
         // sync player state with muted prop
         self.syncPlayerMuted()
     }
-    
+
     private func syncPlayerMuted() {
         if let player = self.player {
             if player.muted != self.muted {
@@ -227,7 +227,7 @@ class THEOplayerRCTView: UIView {
             }
         }
     }
-    
+
     @objc(setPlaybackRate:)
     func setPlaybackRate(playbackRate: NSNumber) {
         // store playbackRate
@@ -236,7 +236,7 @@ class THEOplayerRCTView: UIView {
         // sync player state with playbackRate prop
         self.syncPlayerPlaybackRate()
     }
-    
+
     private func syncPlayerPlaybackRate() {
         if let player = self.player {
             if player.playbackRate != self.playbackRate {
@@ -245,7 +245,7 @@ class THEOplayerRCTView: UIView {
             }
         }
     }
-    
+
     @objc(setSelectedTextTrack:)
     func setSelectedTextTrack(selectedTextTrackUid: NSNumber) {
         // store selectedTextTrackUid
@@ -254,7 +254,7 @@ class THEOplayerRCTView: UIView {
         // sync player state with selectedTextTrackUid prop
         self.syncPlayerSelectedTextTrack()
     }
-    
+
     private func syncPlayerSelectedTextTrack() {
         if let player = self.player {
             let textTracks: TextTrackList = player.textTracks
@@ -268,7 +268,7 @@ class THEOplayerRCTView: UIView {
             }
         }
     }
-    
+
     @objc(setSelectedAudioTrack:)
     func setSelectedAudioTrack(selectedAudioTrackUid: NSNumber) {
         // store selectedAudioTrackUid
@@ -277,7 +277,7 @@ class THEOplayerRCTView: UIView {
         // sync player state with selectedAudioTrackUid prop
         self.syncPlayerSelectedAudioTrack()
     }
-    
+
     private func syncPlayerSelectedAudioTrack() {
         if let player = self.player {
             let audioTracks: AudioTrackList = player.audioTracks
@@ -291,7 +291,7 @@ class THEOplayerRCTView: UIView {
             }
         }
     }
-    
+
     @objc(setSelectedVideoTrack:)
     func setSelectedVideoTrack(selectedVideoTrackUid: NSNumber) {
         // store selectedVideoTrackUid
@@ -300,7 +300,7 @@ class THEOplayerRCTView: UIView {
         // sync player state with selectedVideoTrackUid prop
         self.syncPlayerSelectedVideoTrack()
     }
-    
+
     private func syncPlayerSelectedVideoTrack() {
         if let player = self.player {
             let videoTracks: VideoTrackList = player.videoTracks
@@ -314,7 +314,7 @@ class THEOplayerRCTView: UIView {
             }
         }
     }
-    
+
     @objc(setSeek:)
     func setSeek(seek: NSNumber) {
         // store selectedVideoTrackUid
@@ -323,7 +323,7 @@ class THEOplayerRCTView: UIView {
         // sync player state with seek prop
         self.syncPlayerSeek()
     }
-    
+
     private func syncPlayerSeek() {
         if let player = self.player,
            let seek = self.seek {
@@ -334,7 +334,7 @@ class THEOplayerRCTView: UIView {
             if DEBUG_PROP_UPDATES  { print("[NATIVE] seek prop unset.") }
         }
     }
-    
+
     @objc(setFullscreen:)
     func setFullscreen(fullscreen: Bool) {
         // store fullscreen
@@ -343,7 +343,7 @@ class THEOplayerRCTView: UIView {
         // sync player state with fullscreen prop
         self.syncPlayerFullscreen()
     }
-    
+
     private func syncPlayerFullscreen() {
         // NOTE: Fullscreen changes only supported through default UI or with custom implementation in RN
         if let player = self.player {
@@ -354,105 +354,105 @@ class THEOplayerRCTView: UIView {
             }
         }
     }
-    
+
     // MARK: - Listener based MAIN event bridging
-    
+
     @objc(setOnNativePlay:)
     func setOnNativePlay(nativePlay: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativePlay = nativePlay
         if DEBUG_PROP_UPDATES  { print("[NATIVE] nativePlay prop set.") }
     }
-    
+
     @objc(setOnNativePause:)
     func setOnNativePause(nativePause: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativePause = nativePause
         if DEBUG_PROP_UPDATES  { print("[NATIVE] nativePause prop set.") }
     }
-    
+
     @objc(setOnNativeSourceChange:)
     func setOnNativeSourceChange(nativeSourceChange: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeSourceChange = nativeSourceChange
         if DEBUG_PROP_UPDATES  { print("[NATIVE] nativeSourceChange prop set.") }
     }
-    
+
     @objc(setOnNativeLoadStart:)
     func setOnNativeLoadStart(nativeLoadStart: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeLoadStart = nativeLoadStart
         if DEBUG_PROP_UPDATES  { print("[NATIVE] nativeLoadStart prop set.") }
     }
-    
+
     @objc(setOnNativeReadyStateChange:)
     func setOnNativeReadyStateChange(nativeReadyStateChange: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeReadyStateChange = nativeReadyStateChange
         if DEBUG_PROP_UPDATES  { print("[NATIVE] nativeReadyStateChange prop set.") }
     }
-    
+
     @objc(setOnNativeDurationChange:)
     func setOnNativeDurationChange(nativeDurationChange: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeDurationChange = nativeDurationChange
         if DEBUG_PROP_UPDATES  { print("[NATIVE] nativeDurationChange prop set.") }
     }
-    
+
     @objc(setOnNativeProgress:)
     func setOnNativeProgress(nativeProgress: @escaping RCTBubblingEventBlock) {
         self.mainEventHandler.onNativeProgress = nativeProgress
         if DEBUG_PROP_UPDATES  { print("[NATIVE] nativeProgress prop set.") }
     }
-    
+
     @objc(setOnNativeTimeUpdate:)
     func setOnNativeTimeUpdate(nativeTimeUpdate: @escaping RCTBubblingEventBlock) {
         self.mainEventHandler.onNativeTimeUpdate = nativeTimeUpdate
         if DEBUG_PROP_UPDATES  { print("[NATIVE] nativeTimeUpdate prop set.") }
     }
-    
+
     @objc(setOnNativePlaying:)
     func setOnNativePlaying(nativePlaying: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativePlaying = nativePlaying
         if DEBUG_PROP_UPDATES  { print("[NATIVE] nativePlaying prop set.") }
     }
-    
+
     @objc(setOnNativeSeeking:)
     func setOnNativeSeeking(nativeSeeking: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeSeeking = nativeSeeking
         if DEBUG_PROP_UPDATES  { print("[NATIVE] nativeSeeking prop set.") }
     }
-    
+
     @objc(setOnNativeSeeked:)
     func setOnNativeSeeked(nativeSeeked: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeSeeked = nativeSeeked
         if DEBUG_PROP_UPDATES  { print("[NATIVE] nativeSeeked prop set.") }
     }
-    
+
     @objc(setOnNativeEnded:)
     func setOnNativeEnded(nativeEnded: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeEnded = nativeEnded
         if DEBUG_PROP_UPDATES  { print("[NATIVE] nativeEnded prop set.") }
     }
-    
+
     @objc(setOnNativeError:)
     func setOnNativeError(nativeError: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeError = nativeError
         if DEBUG_PROP_UPDATES  { print("[NATIVE] nativeError prop set.") }
     }
-    
+
     @objc(setOnNativeLoadedData:)
     func setOnNativeLoadedData(nativeLoadedData: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeLoadedData = nativeLoadedData
         if DEBUG_PROP_UPDATES  { print("[NATIVE] nativeLoadedData prop set.") }
     }
-    
+
     @objc(setOnNativeLoadedMetadata:)
     func setOnNativeLoadedMetadata(nativeLoadedMetadata: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeLoadedMetadata = nativeLoadedMetadata
         if DEBUG_PROP_UPDATES  { print("[NATIVE] nativeLoadedMetadata prop set.") }
     }
-    
+
     @objc(setOnNativeFullscreenPlayerWillPresent:)
     func setOnNativeFullscreenPlayerWillPresent(nativeFullscreenPlayerWillPresent: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeFullscreenPlayerWillPresent = nativeFullscreenPlayerWillPresent
         if DEBUG_PROP_UPDATES  { print("[NATIVE] nativeFullscreenPlayerWillPresent prop set.") }
     }
-    
+
     @objc(setOnNativeFullscreenPlayerDidPresent:)
     func setOnNativeFullscreenPlayerDidPresent(nativeFullscreenPlayerDidPresent: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeFullscreenPlayerDidPresent = nativeFullscreenPlayerDidPresent
@@ -464,43 +464,43 @@ class THEOplayerRCTView: UIView {
         self.mainEventHandler.onNativeFullscreenPlayerWillDismiss = nativeFullscreenPlayerWillDismiss
         if DEBUG_PROP_UPDATES  { print("[NATIVE] nativeFullscreenPlayerWillDismiss prop set.") }
     }
-    
+
     @objc(setOnNativeFullscreenPlayerDidDismiss:)
     func setOnNativeFullscreenPlayerDidDismiss(nativeFullscreenPlayerDidDismiss: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeFullscreenPlayerDidDismiss = nativeFullscreenPlayerDidDismiss
         if DEBUG_PROP_UPDATES  { print("[NATIVE] nativeFullscreenPlayerDidDismiss prop set.") }
     }
-    
+
     // MARK: - Listener based TEXTTRACK event bridging
-    
+
     @objc(setOnNativeTextTrackListEvent:)
     func setOnNativeTextTrackListEvent(nativeTextTrackListEvent: @escaping RCTDirectEventBlock) {
         self.textTrackEventHandler.onNativeTextTrackListEvent = nativeTextTrackListEvent
         if DEBUG_PROP_UPDATES  { print("[NATIVE] nativeTextTrackListEvent prop set.") }
     }
-    
+
     @objc(setOnNativeTextTrackEvent:)
     func setOnNativeTextTrackEvent(nativeTextTrackEvent: @escaping RCTDirectEventBlock) {
         self.textTrackEventHandler.onNativeTextTrackEvent = nativeTextTrackEvent
         if DEBUG_PROP_UPDATES  { print("[NATIVE] nativeTextTrackEvent prop set.") }
     }
-    
+
     // MARK: - Listener based MEDIATRACK event bridging
-    
+
     @objc(setOnNativeMediaTrackListEvent:)
     func setOnNativeMediaTrackListEvent(nativeMediaTrackListEvent: @escaping RCTDirectEventBlock) {
         self.mediaTrackEventHandler.onNativeMediaTrackListEvent = nativeMediaTrackListEvent
         if DEBUG_PROP_UPDATES  { print("[NATIVE] nativeMediaTrackListEvent prop set.") }
     }
-    
+
     @objc(setOnNativeMediaTrackEvent:)
     func setOnNativeMediaTrackEvent(nativeMediaTrackEvent: @escaping RCTDirectEventBlock) {
         self.mediaTrackEventHandler.onNativeMediaTrackEvent = nativeMediaTrackEvent
         if DEBUG_PROP_UPDATES  { print("[NATIVE] nativeMediaTrackEvent prop set.") }
     }
-    
+
     // MARK: - Listener based AD event bridging
-    
+
     @objc(setOnNativeAdEvent:)
     func setOnNativeAdEvent(nativeAdEvent: @escaping RCTDirectEventBlock) {
         self.adEventHandler.onNativeAdEvent = nativeAdEvent
