@@ -1,7 +1,7 @@
 import { StyleProp, Text, TextStyle } from 'react-native';
 import React, { PureComponent } from 'react';
 import { DurationChangeEvent, PlayerEventType, THEOplayerInternal, TimeUpdateEvent } from 'react-native-theoplayer';
-import { PlayerContext, PlayerWithStyle } from '../util/Context';
+import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
 
 export interface TimeLabelProps {
   showDuration: boolean;

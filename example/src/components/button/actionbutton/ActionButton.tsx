@@ -1,7 +1,7 @@
 import { Image, ImageSourcePropType, ImageStyle, Platform, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 import React, { ReactNode, useState } from 'react';
 import { SvgContext } from '../svg/SvgUtils';
-import { PlayerContext, PlayerWithStyle } from '../../util/Context';
+import { PlayerContext, PlayerWithStyle } from '../../util/PlayerContext';
 
 export interface ActionButtonProps {
   icon?: ImageSourcePropType;

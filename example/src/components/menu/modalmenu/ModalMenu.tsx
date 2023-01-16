@@ -1,6 +1,6 @@
 import { Modal, Platform, StyleProp, Text, TextStyle, TouchableOpacity, View, ViewProps, ViewStyle } from 'react-native';
 import React from 'react';
-import { PlayerContext, PlayerWithStyle } from '../../util/Context';
+import { PlayerContext, PlayerWithStyle } from '../../util/PlayerContext';
 
 export interface ModalMenuProps extends ViewProps {
   title?: string;

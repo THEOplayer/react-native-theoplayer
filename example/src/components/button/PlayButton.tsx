@@ -2,7 +2,7 @@ import { ActionButton } from './actionbutton/ActionButton';
 import { Platform, StyleProp, ViewStyle } from 'react-native';
 import React, { PureComponent } from 'react';
 import { PlayerEventType, THEOplayerInternal } from 'react-native-theoplayer';
-import { PlayerContext, PlayerWithStyle } from '../util/Context';
+import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
 import { PlayButtonSvg } from './svg/PlayButtonSvg';
 import { PauseButtonSvg } from './svg/PauseButtonSvg';
 

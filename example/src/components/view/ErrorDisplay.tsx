@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { CastEvent, CastEventType, ErrorEvent, PlayerError, PlayerEventType, THEOplayerInternal } from 'react-native-theoplayer';
 import { Text, View } from 'react-native';
-import { PlayerContext, PlayerWithStyle } from '../util/Context';
+import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
 
 interface ErrorDisplayState {
   error: PlayerError | undefined;

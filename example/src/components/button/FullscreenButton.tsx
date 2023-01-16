@@ -3,7 +3,7 @@ import type { FullscreenEvent, THEOplayerInternal } from 'react-native-theoplaye
 import { FullscreenActionType, PlayerEventType } from 'react-native-theoplayer';
 import { Platform } from 'react-native';
 import { ActionButton } from './actionbutton/ActionButton';
-import { PlayerContext, PlayerWithStyle } from '../util/Context';
+import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
 import { FullScreenExitSvg } from './svg/FullScreenExitSvg';
 import { FullScreenEnterSvg } from './svg/FullScreenEnterSvg';
 

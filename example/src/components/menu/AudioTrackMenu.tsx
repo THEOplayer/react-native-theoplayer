@@ -5,7 +5,7 @@ import React, { PureComponent } from 'react';
 import type { MediaTrack } from 'react-native-theoplayer';
 import { LoadedMetadataEvent, PlayerEventType, THEOplayerInternal } from 'react-native-theoplayer';
 import { getTrackLabel } from './TrackUtils';
-import { PlayerContext } from '../util/Context';
+import { PlayerContext } from '../util/PlayerContext';
 
 export interface AudioQualityMenuState {
   audioTracks: MediaTrack[];

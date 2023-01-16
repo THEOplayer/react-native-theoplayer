@@ -1,6 +1,6 @@
 import { ActionButton } from './actionbutton/ActionButton';
 import React, { PureComponent } from 'react';
-import { PlayerContext, PlayerWithStyle } from '../util/Context';
+import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
 import { PlayerEventType, THEOplayerInternal, VolumeChangeEvent } from 'react-native-theoplayer';
 import { Platform } from 'react-native';
 import { VolumeOffSvg } from './svg/VolumeOffSvg';

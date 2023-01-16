@@ -3,7 +3,7 @@ import { CastButton as GoogleCastButton } from 'react-native-google-cast';
 import type { CastEvent, THEOplayerInternal } from 'react-native-theoplayer';
 import { CastEventType, PlayerEventType } from 'react-native-theoplayer';
 import { ENABLE_CAST_BUTTON } from '../videoplayer/VideoPlayerUIProps';
-import { PlayerContext, PlayerWithStyle } from '../util/Context';
+import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
 import { Platform } from 'react-native';
 
 interface ChromecastButtonState {

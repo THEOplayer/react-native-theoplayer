@@ -1,6 +1,6 @@
 import React from 'react';
 import { PlayButton } from './PlayButton';
-import { PlayerContext, PlayerWithStyle } from '../util/Context';
+import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
 
 export const BigPlayButton = () => {
   return (

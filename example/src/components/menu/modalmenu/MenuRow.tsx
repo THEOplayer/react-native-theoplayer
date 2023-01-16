@@ -1,7 +1,7 @@
 import { Text, TouchableOpacity } from 'react-native';
 import React from 'react';
 import type { MenuItem } from './MenuItem';
-import { PlayerContext, PlayerWithStyle } from '../../util/Context';
+import { PlayerContext, PlayerWithStyle } from '../../util/PlayerContext';
 
 export interface MenuRowProps {
   onSelected?: () => void;
