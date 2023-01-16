@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.8.0]
+
+### Added
+
+- Support for Chromecast and Airplay.
+
+### Fixed
+
+- Fixed an issue where moving the sender app to the background while playing a DAI source on an Airplay device, would pause playback.
+
+### Changed
+
+- Upgraded Web SDK to v4.6.0.
+- Updated the custom build setup to support both iOS and tvOS.
+
 ## [1.7.2]
 
 ### Fixed
