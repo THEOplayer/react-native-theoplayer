@@ -148,7 +148,7 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
               </TouchableOpacity>
             )}
             {/*Chromecast button*/}
-            <CastButton style={styles.castButton} tintColor={chromecastConnected ? '#ffc50f' : 'white'} />
+            {ENABLE_CAST_BUTTON && <CastButton style={styles.castButton} tintColor={chromecastConnected ? '#ffc50f' : 'white'} />}
           </View>
         )}
 
@@ -158,7 +158,7 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
           </View>
         )}
 
-        {ENABLE_CAST_BUTTON && !error && (
+        {!error && (
           <ActionButton
             touchable={!Platform.isTV}
             icon={paused ? PlayButton : null}
