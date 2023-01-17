@@ -1,17 +1,17 @@
 import { DefaultEventDispatcher } from '../event/DefaultEventDispatcher';
-import type { AdsAPI, CastAPI, PlayerEventMap, THEOplayerInternal } from 'react-native-theoplayer';
+import type { AdsAPI, CastAPI, PlayerEventMap, THEOplayer } from 'react-native-theoplayer';
 import { FullscreenActionType } from 'react-native-theoplayer';
 import { THEOplayerWebAdsAPI } from '../ads/THEOplayerWebAdsAPI';
 import { THEOplayerWebCastAPI } from '../cast/THEOplayerWebCastApi';
-import type * as THEOplayer from 'theoplayer';
+import type * as THEOplayerWeb from 'theoplayer';
 import type { MediaTrack, TextTrack } from 'theoplayer';
 import { findNativeQualitiesByUid } from '../web/TrackUtils';
 import type { ABRConfiguration, SourceDescription } from 'src/api/barrel';
 import { DefaultFullscreenEvent } from '../event/PlayerEvents';
 import { WebEventForwarder } from './WebEventForwarder';
 
-export class THEOplayerViewWebExposed extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayerInternal {
-  private readonly _player: THEOplayer.ChromelessPlayer;
+export class THEOplayerViewWebExposed extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayer {
+  private readonly _player: THEOplayerWeb.ChromelessPlayer;
   private readonly _adsApi: THEOplayerWebAdsAPI;
   private readonly _castApi: THEOplayerWebCastAPI;
   private readonly _eventForwarder: WebEventForwarder;
@@ -19,7 +19,7 @@ export class THEOplayerViewWebExposed extends DefaultEventDispatcher<PlayerEvent
   private _isFullscreen = false;
   private _targetVideoQuality: number | number[] | undefined = undefined;
 
-  constructor(player: THEOplayer.ChromelessPlayer) {
+  constructor(player: THEOplayerWeb.ChromelessPlayer) {
     super();
     this._player = player;
     this._adsApi = new THEOplayerWebAdsAPI(this._player);

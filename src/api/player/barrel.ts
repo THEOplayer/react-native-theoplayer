@@ -1,2 +1,2 @@
-export * from './THEOplayerInternal';
+export * from './THEOplayer';
 export * from './PlayerEventMap';

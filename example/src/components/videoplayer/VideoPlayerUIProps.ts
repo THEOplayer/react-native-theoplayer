@@ -1,5 +1,5 @@
 import type { Source } from '../../utils/source/Source';
-import type { MediaTrack, PlayerError, TextTrack, THEOplayerInternal, TimeRange } from 'react-native-theoplayer';
+import type { MediaTrack, PlayerError, TextTrack, THEOplayer, TimeRange } from 'react-native-theoplayer';
 import type { StyleProp, ViewStyle } from 'react-native';
 import { Dimensions, Platform } from 'react-native';
 
@@ -19,7 +19,7 @@ export const ENABLE_CAST_BUTTON = Platform.OS !== 'web';
 export interface VideoPlayerUIProps {
   sources: Source[];
   style?: StyleProp<ViewStyle>;
-  player: THEOplayerInternal;
+  player: THEOplayer;
 }
 
 export interface VideoPlayerUIState {

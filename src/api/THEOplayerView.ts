@@ -1,6 +1,6 @@
 import type { StyleProp, ViewStyle } from 'react-native';
 import type { PlayerConfiguration } from './config/PlayerConfiguration';
-import type { THEOplayerInternal } from './player/THEOplayerInternal';
+import type { THEOplayer } from './player/THEOplayer';
 
 export interface THEOplayerViewProps {
   /**
@@ -16,5 +16,5 @@ export interface THEOplayerViewProps {
   /**
    * Callback for when the internal THEOplayer is ready.
    */
-  onReady?: (player: THEOplayerInternal) => void;
+  onReady?: (player: THEOplayer) => void;
 }
