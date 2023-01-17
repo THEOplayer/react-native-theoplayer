@@ -45,6 +45,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   set autoplay(autoplay: boolean) {
     this._autoplay = autoplay;
+    this._view.setState({ paused: !autoplay });
   }
 
   get autoplay(): boolean {
@@ -122,6 +123,8 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   set source(source: SourceDescription | undefined) {
     this._view.setState({ source });
+    // After a source changes, set paused based on autoplay.
+    this._view.setState({ paused: !this._autoplay });
   }
 
   get targetVideoQuality(): number | number[] | undefined {
