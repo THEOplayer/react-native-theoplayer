@@ -62,7 +62,7 @@ import type {
   NativeTimeUpdateEvent,
 } from './event/native/NativePlayerEvent';
 import type { NativeAdEvent } from './event/native/NativeAdEvent';
-import { THEOplayerViewExposed } from './exposed/THEOplayerViewExposed';
+import { THEOplayerAdapter } from './adapter/THEOplayerAdapter';
 
 export interface LegacyTHEOplayerViewProps {
   config?: PlayerConfiguration;
@@ -139,7 +139,7 @@ interface THEOplayerViewNativeComponent extends HostComponent<LegacyTHEOplayerVi
 
 export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplayerRCTViewState> {
   private readonly _root: React.RefObject<THEOplayerViewNativeComponent>;
-  private readonly _exposedPlayer: THEOplayerViewExposed;
+  private readonly _exposedPlayer: THEOplayerAdapter;
 
   private static initialState: THEOplayerRCTViewState = {
     isBuffering: false,
@@ -159,7 +159,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
     super(props);
     this._root = React.createRef();
     this.state = THEOplayerView.initialState;
-    this._exposedPlayer = new THEOplayerViewExposed(this);
+    this._exposedPlayer = new THEOplayerAdapter(this);
     this.props.onReady?.(this._exposedPlayer);
   }
 

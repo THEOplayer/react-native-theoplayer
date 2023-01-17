@@ -14,7 +14,7 @@ import { THEOplayerNativeAdsAPI } from '../ads/THEOplayerNativeAdsAPI';
 import { THEOplayerNativeCastAPI } from '../cast/THEOplayerNativeCastApi';
 import { DefaultVolumeChangeEvent } from '../event/PlayerEvents';
 
-export class THEOplayerViewExposed extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayer {
+export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayer {
   private readonly _view: THEOplayerView;
   private readonly _adsApi: THEOplayerNativeAdsAPI;
   private readonly _castApi: THEOplayerNativeCastAPI;
