@@ -5,7 +5,7 @@ import type {
   CastAPI,
   PlayerEventMap,
   SourceDescription,
-  THEOplayerInternal,
+  THEOplayer,
   THEOplayerView,
   TimeUpdateEvent,
 } from 'react-native-theoplayer';
@@ -14,7 +14,7 @@ import { THEOplayerNativeAdsAPI } from '../ads/THEOplayerNativeAdsAPI';
 import { THEOplayerNativeCastAPI } from '../cast/THEOplayerNativeCastApi';
 import { DefaultVolumeChangeEvent } from '../event/PlayerEvents';
 
-export class THEOplayerViewExposed extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayerInternal {
+export class THEOplayerViewExposed extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayer {
   private readonly _view: THEOplayerView;
   private readonly _adsApi: THEOplayerNativeAdsAPI;
   private readonly _castApi: THEOplayerNativeCastAPI;

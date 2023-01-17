@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { PlayerConfiguration, THEOplayerInternal, THEOplayerView } from 'react-native-theoplayer';
+import { PlayerConfiguration, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
 import ALL_SOURCES from '../../res/sources.json';
 
 import { Platform, View } from 'react-native';
@@ -14,7 +14,7 @@ export interface VideoPlayerProps {
 }
 
 interface VideoPlayerState {
-  player: THEOplayerInternal | undefined;
+  player: THEOplayer | undefined;
 }
 
 export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerState> {
@@ -23,7 +23,7 @@ export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerStat
     this.state = { player: undefined };
   }
 
-  private onPlayerReady = (player: THEOplayerInternal) => {
+  private onPlayerReady = (player: THEOplayer) => {
     this.setState({ player });
   };
 
