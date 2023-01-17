@@ -1,4 +1,4 @@
-import type { CastState, ChromecastError } from 'react-native-theoplayer';
+import type { CastState, ChromecastError } from '@wouterds/react-native-theoplayer';
 
 export const CastEventNames = [
   /**

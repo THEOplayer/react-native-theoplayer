@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 
-import type { AdEvent, AdsAPI, MediaTrack, PlayerError, TextTrack, THEOplayerViewProps, TimeRange } from '@wouterds/react-native-theoplayer';
+import type { AdEvent, AdsAPI, CastAPI,MediaTrack, PlayerError, TextTrack, THEOplayerViewProps, TimeRange } from '@wouterds/react-native-theoplayer';
 import {
   AdEventNames,
   MediaTrackEventType,

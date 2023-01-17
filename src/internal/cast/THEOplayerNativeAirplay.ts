@@ -1,4 +1,4 @@
-import type { Airplay, CastState, THEOplayerView } from 'react-native-theoplayer';
+import type { Airplay, CastState, THEOplayerView } from '@wouterds/react-native-theoplayer';
 import { NativeModules } from 'react-native';
 
 export class THEOplayerNativeAirplay implements Airplay {
