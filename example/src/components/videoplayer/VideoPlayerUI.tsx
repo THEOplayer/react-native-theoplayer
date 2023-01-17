@@ -20,6 +20,7 @@ import { CenteredDelayedActivityIndicator } from '../delayedactivityindicator/Ce
 import { ErrorDisplay } from '../view/ErrorDisplay';
 import { defaultPlayerStyle, VideoPlayerStyle } from '../style/VideoPlayerStyle';
 import { View } from 'react-native';
+import { AnimationController } from '../util/AnimationController';
 
 export interface VideoPlayerUIProps {
   style?: Partial<VideoPlayerStyle>;
@@ -67,7 +68,7 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
     const { style, player } = this.props;
 
     return (
-      <PlayerContext.Provider value={{ player, style: { ...defaultPlayerStyle, ...style } }}>
+      <PlayerContext.Provider value={{ player, style: { ...defaultPlayerStyle, ...style }, animation: new AnimationController() }}>
         <SlotView
           top={
             <ControlBar>
