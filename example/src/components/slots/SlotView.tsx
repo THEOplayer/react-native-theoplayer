@@ -1,8 +1,6 @@
 import React, { PureComponent, ReactNode } from 'react';
 import { Animated, Platform, StyleProp, View, ViewStyle } from 'react-native';
 import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
-import type { THEOplayerInternal } from 'react-native-theoplayer';
-import { PlayerEventType } from 'react-native-theoplayer';
 
 interface SlotViewProps {
   style?: StyleProp<ViewStyle>;
@@ -17,8 +15,6 @@ interface SlotViewState {
 }
 
 export class SlotView extends PureComponent<React.PropsWithChildren<SlotViewProps>, SlotViewState> {
-  private currentFadeOutTimeout: number | undefined = undefined;
-
   constructor(props: SlotViewProps) {
     super(props);
     this.state = {
@@ -28,23 +24,27 @@ export class SlotView extends PureComponent<React.PropsWithChildren<SlotViewProp
   }
 
   componentDidMount() {
-    const player = this.context.player as THEOplayerInternal;
-    player.addEventListener(PlayerEventType.PLAY, this.resetFadeOutTimeout);
-  }
-
-  componentWillUnmount() {
-    const player = this.context.player as THEOplayerInternal;
-    player.addEventListener(PlayerEventType.PLAY, this.resetFadeOutTimeout);
-  }
-
-  private fadeIn = () => {
     if (Platform.isTV) {
       // TODO fade effects for TV UI.
       return;
     }
+    const context = this.context as PlayerWithStyle;
+    context.animation.addEventListener('startFadingIn', this.fadeIn);
+    context.animation.addEventListener('startFadingOut', this.fadeOut);
+  }
+
+  componentWillUnmount() {
+    if (Platform.isTV) {
+      // TODO fade effects for TV UI.
+      return;
+    }
+    const context = this.context as PlayerWithStyle;
+    context.animation.removeEventListener('startFadingIn', this.fadeIn);
+    context.animation.removeEventListener('startFadingOut', this.fadeOut);
+  }
+
+  private fadeIn = () => {
     const { fadeAnim } = this.state;
-    this.resetFadeOutTimeout();
-    this.enableControls();
     Animated.timing(fadeAnim, {
       useNativeDriver: true,
       toValue: 1,
@@ -52,52 +52,28 @@ export class SlotView extends PureComponent<React.PropsWithChildren<SlotViewProp
     }).start();
   };
 
-  private resetFadeOutTimeout = () => {
-    if (Platform.isTV) {
-      // TODO fade effects for TV UI.
-      return;
-    }
-    clearTimeout(this.currentFadeOutTimeout);
-    //@ts-ignore
-    this.currentFadeOutTimeout = setTimeout(this.fadeOut, 2000);
-  };
-
   private fadeOut = () => {
-    this.currentFadeOutTimeout = undefined;
-    if (this.context.player.paused) {
-      // Player is paused, don't hide the UI.
-      return;
-    }
     const { fadeAnim } = this.state;
     Animated.timing(fadeAnim, {
       useNativeDriver: true,
       toValue: 0,
       duration: 1000,
-    }).start(this.disableControls);
+    }).start(this.onFadeOutFinished);
   };
 
-  private enableControls = () => {
-    this.setState({ controlsEnabled: true });
-  };
-
-  private disableControls = () => {
-    if (!this.currentFadeOutTimeout) {
-      this.setState({ controlsEnabled: false });
-    }
+  private onFadeOutFinished = () => {
+    // this.setState({ controlsEnabled: false }); TODO: disable controls when faded out?
   };
 
   render() {
     const { style, top, center, bottom, children } = this.props;
-    const { fadeAnim, controlsEnabled } = this.state;
+    const { fadeAnim } = this.state;
     return (
       <PlayerContext.Consumer>
         {(context: PlayerWithStyle) => (
           <>
-            <View style={context.style.slotView.container} onTouchStart={this.fadeIn}></View>
             {/* The Animated.View is for showing and hiding the UI*/}
-            <Animated.View
-              style={[context.style.slotView.container, { opacity: fadeAnim, display: controlsEnabled ? 'flex' : 'none' }]}
-              onTouchStart={this.fadeIn}>
+            <Animated.View style={[context.style.slotView.container, { opacity: fadeAnim }]} onTouchStart={this.context.animation.onTouch}>
               {/* The UI background */}
               <View style={[context.style.slotView.container, context.style.slotView.background]} />
               {/* The UI control bars*/}

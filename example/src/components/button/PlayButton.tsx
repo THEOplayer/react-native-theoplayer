@@ -16,6 +16,8 @@ interface PlayButtonState {
 }
 
 export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> {
+  private animationPauseId: number | undefined = undefined;
+
   constructor(props: PlayButtonProps) {
     super(props);
     this.state = {
@@ -44,10 +46,15 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
 
   private onPlay = () => {
     this.setState({ paused: false });
+    this.context.animation.requestResumeAnimations(this.animationPauseId);
+    this.animationPauseId = undefined;
   };
 
   private onPause = () => {
     this.setState({ paused: true });
+    if (this.animationPauseId === undefined) {
+      this.animationPauseId = this.context.animation.requestPause();
+    }
   };
 
   private onError = () => {
