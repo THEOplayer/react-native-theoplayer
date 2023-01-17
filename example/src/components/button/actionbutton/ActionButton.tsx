@@ -36,6 +36,7 @@ export const ActionButton = (props: ActionButtonProps) => {
             }
           }}
           onFocus={() => {
+            context.animation.onTouch();
             setFocused(true);
           }}
           onBlur={() => {

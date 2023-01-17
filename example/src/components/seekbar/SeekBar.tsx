@@ -72,6 +72,8 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
   private _seekPanResponder!: PanResponderInstance;
   private _seekTimer: NodeJS.Timeout | null = null;
 
+  private animationPauseId: number | undefined = undefined;
+
   private static initialState: SeekBarState = {
     textTracks: [],
     focused: false,
@@ -114,6 +116,9 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
         if (onStartScrubbing) {
           onStartScrubbing();
         }
+        if (this.animationPauseId === undefined) {
+          this.animationPauseId = this.context.animation.requestPause();
+        }
       },
       onPanResponderMove: (_evt: GestureResponderEvent, gestureState: PanResponderGestureState) => {
         const seekTime = this.seekableStart + (this.duration * (gestureState.moveX - this._offset)) / this._width;
@@ -125,6 +130,8 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
         if (onStopScrubbing) {
           onStopScrubbing();
         }
+        this.context.animation.requestResumeAnimations(this.animationPauseId);
+        this.animationPauseId = undefined;
       },
     });
   }
@@ -317,6 +324,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
     } else {
       this.seekBackward();
     }
+    this.context.animation.onTouch();
   };
 
   onFocus = () => {
