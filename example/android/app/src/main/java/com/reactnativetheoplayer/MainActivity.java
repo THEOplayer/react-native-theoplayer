@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.WindowManager;
 
 import com.facebook.react.ReactActivity;
+import com.google.android.gms.cast.framework.CastContext;
 
 public class MainActivity extends ReactActivity {
 
@@ -11,6 +12,13 @@ public class MainActivity extends ReactActivity {
   public void onCreate(Bundle bundle) {
     super.onCreate(bundle);
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+    try {
+      // lazy load Google Cast context
+      CastContext.getSharedInstance(this);
+    } catch (Exception e) {
+      // cast framework not supported
+    }
   }
 
   /**

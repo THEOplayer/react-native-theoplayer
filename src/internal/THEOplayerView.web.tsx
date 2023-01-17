@@ -22,6 +22,7 @@ import type {
 import * as THEOplayer from 'theoplayer';
 import { findNativeQualitiesByUid, fromNativeCue, fromNativeMediaTrack, fromNativeTextTrack } from './web/TrackUtils';
 import { THEOplayerWebAdsAPI } from './ads/THEOplayerWebAdsAPI';
+import { THEOplayerWebCastAPI } from './cast/THEOplayerWebCastApi';
 
 interface THEOplayerRCTViewState {
   isBuffering: boolean;
@@ -31,6 +32,7 @@ interface THEOplayerRCTViewState {
 export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplayerRCTViewState> implements THEOplayerViewComponent {
   private _player: THEOplayer.ChromelessPlayer | null = null;
   private readonly _adsApi: THEOplayerWebAdsAPI;
+  private readonly _castApi: THEOplayerWebCastAPI;
 
   private static initialState: THEOplayerRCTViewState = {
     isBuffering: false,
@@ -41,6 +43,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
     super(props);
     this.state = THEOplayerView.initialState;
     this._adsApi = new THEOplayerWebAdsAPI(this);
+    this._castApi = new THEOplayerWebCastAPI(this);
   }
 
   componentDidMount() {
@@ -84,6 +87,10 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
 
   public get ads(): AdsAPI {
     return this._adsApi;
+  }
+
+  public get cast(): CastAPI {
+    return this._castApi;
   }
 
   public get nativePlayer(): THEOplayer.ChromelessPlayer | null {

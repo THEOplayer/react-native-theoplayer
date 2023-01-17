@@ -7,4 +7,5 @@ import UnMutedIcon from './unmuted.png';
 import AudioIcon from './audio.png';
 import SettingsIcon from './settings.png';
 import ListIcon from './list.png';
-export { PlayButton, FullScreenIcon, FullScreenExitIcon, SubtitlesIcon, AudioIcon, SettingsIcon, MutedIcon, UnMutedIcon, ListIcon };
+import AirplayIcon from './airplay.png';
+export { PlayButton, FullScreenIcon, FullScreenExitIcon, SubtitlesIcon, AudioIcon, SettingsIcon, MutedIcon, UnMutedIcon, ListIcon, AirplayIcon };

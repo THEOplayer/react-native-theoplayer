@@ -8,6 +8,7 @@ let SD_PROP_SOURCES: String = "sources"
 let SD_PROP_POSTER: String = "poster"
 let SD_PROP_TEXTTRACKS: String = "textTracks"
 let SD_PROP_ADS: String = "ads"
+let SD_PROP_METADATA: String = "metadata"
 let SD_PROP_SRC: String = "src"
 let SD_PROP_TYPE: String = "type"
 let SD_PROP_SSAI: String = "ssai"
@@ -35,6 +36,13 @@ let SD_PROP_CERTIFICATE_URL: String = "certificateURL"
 let SD_PROP_LICENSE_URL: String = "licenseAcquisitionURL"
 let SD_PROP_HEADERS: String = "headers"
 let SD_PROP_LICENSE_TYPE: String = "licenseType"
+let SD_PROP_METADATA_IMAGES: String = "images"
+let SD_PROP_METADATA_IMAGE_HEIGHT: String = "height"
+let SD_PROP_METADATA_IMAGE_WIDTH: String = "width"
+let SD_PROP_METADATA_RELEASE_DATE: String = "releaseDate"
+let SD_PROP_METADATA_RELEASE_YEAR: String = "releaseYear"
+let SD_PROP_METADATA_TITLE: String = "title"
+let SD_PROP_METADATA_SUBTITLE: String = "subtitle"
 
 let EXTENSION_HLS: String = ".m3u8"
 let EXTENSION_MP4: String = ".mp4"
@@ -138,13 +146,19 @@ class THEOplayerRCTSourceDescriptionBuilder {
             }
         }
 #endif
+        
+        // 5. extract metadata
+        var metadataDescription: MetadataDescription?
+        if let metadataData = sourceData[SD_PROP_METADATA] as? [String:Any] {
+            metadataDescription = THEOplayerRCTSourceDescriptionBuilder.buildMetaDataDescription(metadataData)
+        }
 
-        // 5. construct and return SourceDescription
+        // 6. construct and return SourceDescription
         return SourceDescription(sources: typedSources,
                                  textTracks: textTrackDescriptions,
                                  ads: adsDescriptions,
                                  poster: poster,
-                                 metadata: nil)     // TODO
+                                 metadata: metadataDescription)
     }
 
     // MARK: Private build methods
@@ -169,7 +183,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
                                drm: contentProtection)
         }
 
-#if ADS && GOOGLE_DAI
+#if os(iOS) && ADS && GOOGLE_DAI
         // check for alternative Google DAI SSAI
         if let ssaiData = typedSourceData[SD_PROP_SSAI] as? [String:Any] {
             if let integration = ssaiData[SD_PROP_INTEGRATION] as? String,
@@ -206,7 +220,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
                         }
                         return nil
                     }
-                    // when valid, create a GoolgeDAITypedSource from the GoogleDAIConfiguration
+                    // when valid, create a GoogleDAITypedSource from the GoogleDAIConfiguration
                     if let config = googleDaiConfig {
                         return GoogleDAITypedSource(ssai: config)
                     }
@@ -267,31 +281,89 @@ class THEOplayerRCTSourceDescriptionBuilder {
         return nil
     }
 #endif
+    
+    /**
+     Creates a THEOplayer MetadataDescription. This requires a metadata property in the RN source description.
+     - returns: a THEOplayer MetadataDescription
+     */
+    static func buildMetaDataDescription(_ metadataData: [String:Any]) -> MetadataDescription? {
+        // first extract explicit casting metadata:
+#if os(iOS)
+        var images: [ChromecastMetadataImage]?
+        if let metadataImagesArrayData = metadataData[SD_PROP_METADATA_IMAGES] as? [[String:Any]] {
+            images = THEOplayerRCTSourceDescriptionBuilder.buildChromecastMetaDataImagesArray(metadataImagesArrayData)
+        }
+        let type = THEOplayerRCTSourceDescriptionBuilder.buildChromecastMetadataType(metadataData[SD_PROP_TYPE] as? String)
+        let releaseDate = metadataData[SD_PROP_METADATA_RELEASE_DATE] as? String
+        let releaseYear = metadataData[SD_PROP_METADATA_RELEASE_YEAR] as? Int
+        let title = metadataData[SD_PROP_METADATA_TITLE] as? String
+        let subtitle = metadataData[SD_PROP_METADATA_SUBTITLE] as? String
+        // all the non-casting related metadata goes in the metadataKeys:
+        let metadataKeys = metadataData.filter { metadataElement in
+            !(metadataElement.key == SD_PROP_TYPE || metadataElement.key == SD_PROP_METADATA_IMAGES)
+        }
+        return ChromecastMetadataDescription(images: images,
+                                             releaseDate: releaseDate,
+                                             releaseYear: releaseYear,
+                                             title: title,
+                                             subtitle: subtitle,
+                                             type: type,
+                                             metadataKeys: metadataKeys)
+#else
+        let title = metadataData[SD_PROP_METADATA_TITLE] as? String
+        return MetadataDescription(metadataKeys: metadataData, title: title)
+#endif
+    }
+    
+#if os(iOS)
+    static func buildChromecastMetadataType(_ metadataType: String?) -> ChromecastMetadataType {
+        guard let typeString = metadataType else {
+            return ChromecastMetadataType.GENERIC
+        }
+        switch typeString {
+        case "none": return ChromecastMetadataType.NONE
+        case "audio": return ChromecastMetadataType.AUDIO
+        case "tv-show": return ChromecastMetadataType.TV_SHOW
+        case "generic": return ChromecastMetadataType.GENERIC
+        case "movie": return ChromecastMetadataType.MOVIE
+        default: return ChromecastMetadataType.GENERIC
+        }
+    }
+    
+    static func buildChromecastMetaDataImagesArray(_ metadataImagesArrayData: [[String:Any]]) -> [ChromecastMetadataImage]? {
+        var images: [ChromecastMetadataImage] = []
+        for metadataImageData in metadataImagesArrayData {
+            if let image: ChromecastMetadataImage = THEOplayerRCTSourceDescriptionBuilder.buildChromecastMetaDataImage(metadataImageData) {
+                images.append(image)
+            }
+        }
+        return images.count > 0 ? images : nil
+    }
+    
+    static func buildChromecastMetaDataImage(_ metadataImageData: [String:Any]) -> ChromecastMetadataImage? {
+        if let src = metadataImageData[SD_PROP_SRC] as? String,
+           let width = metadataImageData[SD_PROP_METADATA_IMAGE_WIDTH] as? Int,
+           let height = metadataImageData[SD_PROP_METADATA_IMAGE_HEIGHT] as? Int {
+            return ChromecastMetadataImage(src: src, width: width, height: height)
+        }
+        return nil
+    }
+#endif
 
 	  /**
      Updates the contentProtectionData to a valid iOS SDK contentProtectionData, flattening out cross SDK differences
      - returns: a THEOplayer valid contentProtection data map
      */
     private static func sanitiseContentProtectionData(_ contentProtectionData: [String:Any]) -> [String:Any] {
-        var sanitisedContentProtectionData: [String:Any] = [:]
-        // integration
-        let sanitisedIntegration = contentProtectionData[SD_PROP_INTEGRATION] as? String
-        sanitisedContentProtectionData[SD_PROP_INTEGRATION] = sanitisedIntegration
-        // integrationParameters
-        let sanitisedIntegrationParameters = contentProtectionData[SD_PROP_INTEGRATION_PARAMETERS] as? [String:Any]
-        sanitisedContentProtectionData[SD_PROP_INTEGRATION_PARAMETERS] = sanitisedIntegrationParameters
-        // headers
-        if let headers = contentProtectionData[SD_PROP_HEADERS] as? [String:String] {
-            sanitisedContentProtectionData[SD_PROP_HEADERS] = headers
-        }
-        // fairplay
+        var sanitisedContentProtectionData: [String:Any] = contentProtectionData
+        // fairplay update
         if let fairplayData = contentProtectionData[SD_PROP_FAIRPLAY] as? [String:Any] {
             var sanitisedFairplayData: [String:Any] = [:]
             // certificateUrl
             if let certificateUrl = fairplayData[SD_PROP_CERTIFICATE_URL] as? String {
                 sanitisedFairplayData[SD_PROP_CERTIFICATE_URL] = certificateUrl
             }
-            // convert certifiate into certificteUrl with marker prefix (also supported by THEOplayer Web SDK
+            // convert certificate into certificateUrl with marker prefix (also supported by THEOplayer Web SDK)
             if let certificate = fairplayData[SD_PROP_CERTIFICATE] as? String {
                 sanitisedFairplayData[SD_PROP_CERTIFICATE_URL] = "\(CERTIFICATE_MARKER)\(certificate)"
             }
@@ -309,14 +381,14 @@ class THEOplayerRCTSourceDescriptionBuilder {
             }
             sanitisedContentProtectionData[SD_PROP_FAIRPLAY] = sanitisedFairplayData
         }
-        // widevine
+        // widevine update
         if let widevineData = contentProtectionData[SD_PROP_WIDEVINE] as? [String:Any] {
             var sanitisedWidevineData: [String:Any] = [:]
             // certificateUrl
             if let certificateUrl = widevineData[SD_PROP_CERTIFICATE_URL] as? String {
                 sanitisedWidevineData[SD_PROP_CERTIFICATE_URL] = certificateUrl
             }
-            // convert certifiate into certificteUrl with marker prefix (also supported by THEOplayer Web SDK
+            // convert certificate into certificateUrl with marker prefix (also supported by THEOplayer Web SDK)
             if let certificate = widevineData[SD_PROP_CERTIFICATE] as? String {
                 sanitisedWidevineData[SD_PROP_CERTIFICATE_URL] = "\(CERTIFICATE_MARKER)\(certificate)"
             }

@@ -23,3 +23,6 @@ let DEBUG_SOURCE_DESCRIPTION_BUIDER = DEBUG && false
 
 // Debug flag to monitor ads API usage
 let DEBUG_ADS_API = DEBUG && false
+
+// Debug flag to monitor cast API usage
+let DEBUG_CAST_API = DEBUG && false

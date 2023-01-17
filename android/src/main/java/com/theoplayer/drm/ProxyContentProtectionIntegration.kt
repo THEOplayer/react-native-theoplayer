@@ -8,8 +8,7 @@ class ProxyContentProtectionIntegration(
   private val keySystemId: KeySystemId,
   config: DRMConfiguration?,
   private val module: ContentProtectionModule
-) :
-  ContentProtectionIntegration() {
+) : ContentProtectionIntegration() {
 
   init {
     module.onBuild(integrationId, keySystemId, config)

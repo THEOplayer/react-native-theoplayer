@@ -65,3 +65,5 @@ lib/
 *.hprof
 example/**/*.aar
 ios/custom/Frameworks/candidates
+ios/custom/Frameworks/**/*.zip
+ios/custom/Frameworks/integrations

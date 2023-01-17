@@ -171,39 +171,39 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
         if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE) }
         return
     }
-
+    
     @objc(playing:resolver:rejecter:)
     func playing(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE) }
         resolve(false)
     }
-
+    
     @objc(currentAdBreak:resolver:rejecter:)
     func currentAdBreak(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE) }
         resolve([:])
     }
-
+    
     @objc(currentAds:resolver:rejecter:)
     func currentAds(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE) }
         resolve([])
     }
-
+    
     @objc(scheduledAdBreaks:resolver:rejecter:)
     func scheduledAdBreaks(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE) }
         resolve([])
         // TODO: handle request for scheduled adbreaks. Awaiting iOS SDK implementation
     }
-
+    
     @objc(schedule:ad:)
     func schedule(_ node: NSNumber, adDict: NSDictionary) -> Void {
         if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE) }
         return
     }
 #endif
-
+    
 #if os(iOS) && ADS && GOOGLE_DAI
     @objc(daiSnapback:resolver:rejecter:)
     func daiSnapback(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {

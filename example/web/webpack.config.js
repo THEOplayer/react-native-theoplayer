@@ -3,6 +3,9 @@ const HTMLWebpackPlugin = require('html-webpack-plugin');
 
 const appDirectory = path.resolve(__dirname, '..');
 
+// A folder for any stub components we need in case there is no counterpart for it on react-native-web.
+const stubDirectory = path.resolve(appDirectory, '../src/internal/web/stub/');
+
 const HTMLWebpackPluginConfig = new HTMLWebpackPlugin({
   template: path.resolve(appDirectory, './web/public/index.html'),
   filename: 'index.html',
@@ -59,6 +62,7 @@ module.exports = {
     alias: {
       'react-native$': 'react-native-web',
       'react-native-url-polyfill': 'url-polyfill',
+      'react-native-google-cast': path.resolve(stubDirectory, 'CastButtonStub'),
     },
   },
   plugins: [HTMLWebpackPluginConfig],

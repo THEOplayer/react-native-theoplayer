@@ -7,12 +7,12 @@ please reach out to us for support.
 
 | Feature                                           | Android<br/>AndroidTV<br/>FireTV |       Web       |   iOS / tvOS    |
 |---------------------------------------------------|:--------------------------------:|:---------------:|:---------------:|
-| DASH (mp4)                                        |          as of v3.6.1 (*)        |        V        |                 |
+| DASH (mp4)                                        |         as of v3.6.1 (*)         |        V        |                 |
 | DASH (fmp4)                                       |                V                 |        V        |                 |
-| HLS (ts)                                          |          as of v3.6.1 (*)        |        V        |        V        |
+| HLS (ts)                                          |         as of v3.6.1 (*)         |        V        |        V        |
 | HLS (fmp4)                                        |                V                 |        V        |        V        |
-| plain MP4                                         |          as of v3.6.1 (*)        |        V        |        V        |
-| MP3                               		        |          as of v3.6.1 (*)        |        V        |        V        |
+| plain MP4                                         |         as of v3.6.1 (*)         |        V        |        V        |
+| MP3                               		              |         as of v3.6.1 (*)         |        V        |        V        |
 | DRM protection (Widevine)                         |                V                 |        V        |                 |
 | DRM protection (PlayReady)                        |                V                 |        V        |                 |
 | DRM protection (FairPlay)                         |                                  |     Safari      |        V        |
@@ -27,10 +27,11 @@ please reach out to us for support.
 | Chromefull (default SDK UI)                       |                                  |        V        |        V        |
 | Fullscreen                                        |                V                 | with default UI | with default UI |
 | Preview thumbnails                                |                V                 |        V        |  as of v3.6.0*  |
+| Chromecast                                        |               N/A                | with default UI |      (***)      |
 | Airplay                                           |               N/A                |     Safari      | with default UI |
 
 (*) This refers to the underlying platform's THEOplayer SDK.
 
 (**) Media quality change event. Not available on iOS systems.
 
-(***) Requires a custom-build framework from Portal with ads features enabled.
+(***) Requires a custom-built framework from Portal with the specific feature enabled.

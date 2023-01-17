@@ -12,7 +12,6 @@ import com.theoplayer.android.api.contentprotection.*
 import com.theoplayer.android.api.error.ErrorCode
 import com.theoplayer.android.api.error.THEOplayerException
 import com.theoplayer.android.api.source.drm.DRMConfiguration
-import com.theoplayer.drm.ContentProtectionAdapter.fromDRMConfiguration
 
 data class BridgeRequest(
   val onResult: HashMap<String, (result: ReadableMap) -> Unit>,
@@ -108,7 +107,7 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
   fun onBuild(integrationId: String, keySystemId: KeySystemId, config: DRMConfiguration?) {
     val payload = createBridgeData(integrationId, keySystemId)
     if (config != null) {
-      payload.putMap(PROP_DRM_CONFIG, fromDRMConfiguration(config))
+      payload.putMap(PROP_DRM_CONFIG, ContentProtectionAdapter.fromDRMConfiguration(config))
     }
     emit(
       EVENT_BUILD_INTEGRATION, payload,

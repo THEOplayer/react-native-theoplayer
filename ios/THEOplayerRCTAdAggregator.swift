@@ -23,9 +23,9 @@ let PROP_GOOGLE_AD_HEIGHT: String = "height"
 let PROP_GOOGLE_AD_CONTENT_TYPE: String = "contentType"
 let PROP_GOOGLE_AD_ID_REGISTRY: String = "adIdRegistry"
 let PROP_GOOGLE_AD_ID_VALUE: String = "adIdValue"
-let PROP_GOOLGE_AD_WRAPPER_AD_IDS: String = "wrapperAdIds"
-let PROP_GOOLGE_AD_WRAPPER_AD_SYSTEMS: String = "wrapperAdSystems"
-let PROP_GOOLGE_AD_WRAPPER_CREATIVE_IDS: String = "wrapperCreativeIds"
+let PROP_GOOGLE_AD_WRAPPER_AD_IDS: String = "wrapperAdIds"
+let PROP_GOOGLE_AD_WRAPPER_AD_SYSTEMS: String = "wrapperAdSystems"
+let PROP_GOOGLE_AD_WRAPPER_CREATIVE_IDS: String = "wrapperCreativeIds"
 let PROP_ADBREAK_MAX_DURATION: String = "maxDuration"
 let PROP_ADBREAK_TIME_OFFSET: String = "timeOffset"
 let PROP_ADBREAK_MAX_REMAINING_DURATION: String = "maxRemainingDuration"
@@ -58,11 +58,11 @@ class THEOplayerRCTAdAggregator {
            let adBreak = ad.adBreak {
             adData[PROP_AD_BREAK] = THEOplayerRCTAdAggregator.aggregateAdBreak(adBreak: adBreak)
         }
-
+        
 #if os(iOS)
         adData[PROP_AD_COMPANIONS] = THEOplayerRCTAdAggregator.aggregateCompanionAds(companionAds: ad.companions)
 #endif
-
+        
         adData[PROP_AD_UNIVERSAL_AD_IDS] = []
 
         // Add additional properties for Linear Ads
@@ -111,9 +111,9 @@ class THEOplayerRCTAdAggregator {
                 }
                 adData[PROP_AD_UNIVERSAL_AD_IDS] = adIdList
             }
-            adData[PROP_GOOLGE_AD_WRAPPER_AD_IDS] = googleImaAd.wrapperAdIds
-            adData[PROP_GOOLGE_AD_WRAPPER_AD_SYSTEMS] = googleImaAd.wrapperAdSystems
-            adData[PROP_GOOLGE_AD_WRAPPER_CREATIVE_IDS] = googleImaAd.wrapperCreativeIds
+            adData[PROP_GOOGLE_AD_WRAPPER_AD_IDS] = googleImaAd.wrapperAdIds
+            adData[PROP_GOOGLE_AD_WRAPPER_AD_SYSTEMS] = googleImaAd.wrapperAdSystems
+            adData[PROP_GOOGLE_AD_WRAPPER_CREATIVE_IDS] = googleImaAd.wrapperCreativeIds
         }
 
         return adData

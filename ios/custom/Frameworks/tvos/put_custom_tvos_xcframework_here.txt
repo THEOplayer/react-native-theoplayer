@@ -1,0 +1,2 @@
+When using a custom THEO portal build, move the downloaded xcframework for tvOS to this folder.
+You can also use a different folder structure. In that case make sure to update ../../react-native-theoplayer_custom.podspec to reflect to the correct xcframework paths, before you copy it over the original podspec

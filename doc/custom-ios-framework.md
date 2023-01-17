@@ -14,7 +14,15 @@ Replace the content of react-native-theoplayer.podspec in **[YourLocalModulesFol
 > cd [YourLocalModulesFolder]/react-native-theoplayer
 > cp ./ios/custom/react-native-theoplayer_custom_ios.podspec ./react-native-theoplayer.podspec
 ```
-And make sure that after copying the paths in the updated podspec of your module point to your downloaded xcframeworks. (Should be ok by default)
+Make sure that after copying the paths in the updated podspec of your module point to your downloaded xcframeworks. (Should be ok by default)
+
+## Set additional cocoapod dependencies
+In the updated podspec file link to the SDK's on which your custom xcframework build depends. The example .podspec file in the custom folder contains for example: 
+```
+s.ios.dependency "GoogleAds-IMA-iOS-SDK", "3.14.1"     <-- required for iOS Google IMA or DAI
+s.tvos.dependency "GoogleAds-IMA-tvOS-SDK", "4.4.1"     <-- required for tvOS Google IMA
+s.ios.dependency "google-cast-sdk-dynamic-xcframework-no-bluetooth"     <-- required for iOS Chromecast
+```
 
 ## Link to new SDK
 Run **pod install** to update the SDK dependencies in your application. This will regenerate the pod project for your application that now depends on the generated xcframework

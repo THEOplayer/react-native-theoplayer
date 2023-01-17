@@ -19,7 +19,6 @@
 
       <activity
         android:name=".MainActivity"
-        android:label="@string/app_name"
         android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
         android:launchMode="singleTask"
         android:windowSoftInputMode="adjustResize"
@@ -32,7 +31,6 @@
 
       <activity
         android:name=".MainActivityTV"
-        android:label="@string/app_name"
         android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
         android:screenOrientation="landscape"
         android:launchMode="singleTask"
@@ -45,6 +43,10 @@
       </activity>
 
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+
+      <meta-data
+        android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
+        android:value="com.reactnativetheoplayer.cast.CastOptionsProvider" />
     </application>
 
 </manifest>

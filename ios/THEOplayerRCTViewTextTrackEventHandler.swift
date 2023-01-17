@@ -49,7 +49,7 @@ class THEOplayerRCTViewTextTrackEventHandler {
                 if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received ADD_TRACK event from THEOplayer textTrack list: trackUid = \(textTrack.uid)") }
                 // trigger tracklist event
                 forwardedTextTrackListEvent([
-                    "track" : THEOplayerRCTMetadataAggregator.aggregatedTextTrackInfo(textTrack: textTrack),
+                    "track" : THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackInfo(textTrack: textTrack),
                     "type" : TrackListEventType.ADD_TRACK.rawValue
                 ])
                 // start listening for cue events on this track and keep listener for later removal
@@ -69,7 +69,7 @@ class THEOplayerRCTViewTextTrackEventHandler {
                 if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received REMOVE_TRACK event from THEOplayer textTrack list: trackUid = \(textTrack.uid)") }
                 // trigger tracklist event
                 forwardedTextTrackListEvent([
-                    "track" : THEOplayerRCTMetadataAggregator.aggregatedTextTrackInfo(textTrack: textTrack),
+                    "track" : THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackInfo(textTrack: textTrack),
                     "type" : TrackListEventType.REMOVE_TRACK.rawValue
                 ])
                 // stop listening for cue events on this track
@@ -92,7 +92,7 @@ class THEOplayerRCTViewTextTrackEventHandler {
                 if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received CHANGE event from THEOplayer textTrack list: trackUid = \(textTrack.uid)") }
                 // trigger tracklist event
                 forwardedTextTrackListEvent([
-                    "track" : THEOplayerRCTMetadataAggregator.aggregatedTextTrackInfo(textTrack: textTrack),
+                    "track" : THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackInfo(textTrack: textTrack),
                     "type" : TrackListEventType.CHANGE_TRACK.rawValue
                 ])
             }
@@ -132,7 +132,7 @@ class THEOplayerRCTViewTextTrackEventHandler {
             forwardedTextTrackEvent([
                 "trackUid" : textTrack.uid,
                 "type": TrackCueEventType.ADD_CUE,
-                "cue": THEOplayerRCTMetadataAggregator.aggregatedTextTrackCueInfo(textTrackCue: event.cue)
+                "cue": THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackCueInfo(textTrackCue: event.cue)
             ])
         }
     }
@@ -144,7 +144,7 @@ class THEOplayerRCTViewTextTrackEventHandler {
             forwardedTextTrackEvent([
                 "trackUid" : textTrack.uid,
                 "type": TrackCueEventType.REMOVE_CUE,
-                "cue": THEOplayerRCTMetadataAggregator.aggregatedTextTrackCueInfo(textTrackCue: event.cue)
+                "cue": THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackCueInfo(textTrackCue: event.cue)
             ])
         }
     }

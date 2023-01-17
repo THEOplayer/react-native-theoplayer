@@ -121,6 +121,10 @@ def jscFlavor = 'org.webkit:android-jsc:+'
  */
 def enableHermes = project.ext.react.get("enableHermes", false)
 
+def safeExtGet(prop, fallback) {
+  rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+}
+
 android {
     ndkVersion rootProject.ext.ndkVersion
 
@@ -187,12 +191,14 @@ android {
 }
 
 dependencies {
-    //noinspection GradleDynamicVersion
-    implementation "com.facebook.react:react-native:+"  // From node_modules
+  //noinspection GradleDynamicVersion
+  implementation "com.facebook.react:react-native:+"  // From node_modules
 
-    implementation project(path: ':reactnativetheoplayer')
+  implementation project(path: ':reactnativetheoplayer')
 
-    debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
+  implementation "com.google.android.gms:play-services-cast-framework:${safeExtGet('castFrameworkVersion', '+')}"
+
+  debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
     }
 
