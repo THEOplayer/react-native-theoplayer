@@ -2,10 +2,10 @@ import React, { PureComponent } from 'react';
 
 import type { THEOplayerViewProps } from 'react-native-theoplayer';
 import * as THEOplayer from 'theoplayer';
-import { THEOplayerViewWebExposed } from './exposed/THEOplayerViewWebExposed';
+import { THEOplayerWebAdapter } from './exposed/THEOplayerWebAdapter';
 
 export class THEOplayerView extends PureComponent<THEOplayerViewProps> {
-  private _facade: THEOplayerViewWebExposed | undefined;
+  private _facade: THEOplayerWebAdapter | undefined;
   private _player: THEOplayer.ChromelessPlayer | null = null;
 
   constructor(props: THEOplayerViewProps) {
@@ -34,7 +34,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps> {
     // Object.assign(this._player.abr, abr); // TODO
     this._player.prepareWithUserAction();
     // this._player.source = source; // TODO
-    this._facade = new THEOplayerViewWebExposed(this._player);
+    this._facade = new THEOplayerWebAdapter(this._player);
     onReady?.(this._facade);
   }
 

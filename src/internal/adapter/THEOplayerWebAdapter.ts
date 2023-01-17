@@ -10,7 +10,7 @@ import type { ABRConfiguration, SourceDescription } from 'src/api/barrel';
 import { DefaultFullscreenEvent } from '../event/PlayerEvents';
 import { WebEventForwarder } from './WebEventForwarder';
 
-export class THEOplayerViewWebExposed extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayer {
+export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayer {
   private readonly _player: THEOplayerWeb.ChromelessPlayer;
   private readonly _adsApi: THEOplayerWebAdsAPI;
   private readonly _castApi: THEOplayerWebCastAPI;

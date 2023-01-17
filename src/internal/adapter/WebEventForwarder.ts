@@ -24,7 +24,7 @@ import {
   TextTrackEventType,
   TrackListEventType,
 } from 'react-native-theoplayer';
-import type { THEOplayerViewWebExposed } from './THEOplayerViewWebExposed';
+import type { THEOplayerWebAdapter } from './THEOplayerWebAdapter';
 import { BaseEvent } from '../event/BaseEvent';
 import {
   DefaultAdEvent,
@@ -47,11 +47,11 @@ import { fromNativeCue, fromNativeMediaTrack, fromNativeTextTrack } from '../web
 
 export class WebEventForwarder {
   private readonly _player: THEOplayer.ChromelessPlayer;
-  private readonly _facade: THEOplayerViewWebExposed;
+  private readonly _facade: THEOplayerWebAdapter;
 
   private _isBuffering = false;
 
-  constructor(player: THEOplayer.ChromelessPlayer, facade: THEOplayerViewWebExposed) {
+  constructor(player: THEOplayer.ChromelessPlayer, facade: THEOplayerWebAdapter) {
     this._player = player;
     this._facade = facade;
     this.addEventListeners();
