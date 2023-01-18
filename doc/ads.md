@@ -104,10 +104,9 @@ Note that DAI support for Android is available as of SDK version 4.3.0.
 </details>
 
 <details>
-<summary>iOS/tvOS</summary>
+<summary>iOS</summary>
 
-To enable Google DAI for the iOS/tvOS platforms, a dependency to the THEOplayer SDK
-that includes the DAI library needs to be added. See [Custom iOS framework](./custom-ios-framework.md) for more details.
+To enable Google DAI for iOS, a dependency to the THEOplayer SDK that includes the DAI library needs to be added. See [Custom iOS framework](./custom-ios-framework.md) for more details. For tvOS this feature is currently not available yet.
 
 </details>
 

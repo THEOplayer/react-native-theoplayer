@@ -22,7 +22,7 @@ please reach out to us for support.
 | Media track selection                             |                V                 |        V        |        V        |
 | Media track events                                |                V                 |        V        |      (**)       |
 | Google IMA CSAI                                   |                V                 |        V        |      (***)      |
-| Google DAI SSAI                                   |                V                 |        V        |      (***)      |
+| Google DAI SSAI                                   |                V                 |        V        |      (****)     |
 | Chromeless                                        |                V                 |        V        |        V        |
 | Chromefull (default SDK UI)                       |                                  |        V        |        V        |
 | Fullscreen                                        |                V                 | with default UI | with default UI |
@@ -34,4 +34,6 @@ please reach out to us for support.
 
 (**) Media quality change event. Not available on iOS systems.
 
-(***) Requires a custom-built framework from Portal with the specific feature enabled.
+(***) Requires a custom-built iOS and tvOS framework from Portal with the specific feature enabled.
+
+(***) Requires a custom-built iOS framework from Portal with the specific feature enabled. This is currently not available on tvOS
