@@ -34,7 +34,7 @@ export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerStat
 
     return (
       <View style={styles.container}>
-        <THEOplayerView config={config} style={styles.fullScreen} onReady={this.onPlayerReady} />
+        <THEOplayerView config={config} style={styles.fullScreen} onPlayerReady={this.onPlayerReady} />
 
         {chromeless && player && <VideoPlayerUI sources={SOURCES as Source[]} player={player} />}
       </View>
