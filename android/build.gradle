@@ -18,13 +18,13 @@ def safeExtGet(prop, fallback) {
 }
 
 // Extensions
-def enabledGoogleIMA = safeExtGet("THEOplayer_extensionGoogleIMA", 'false').toBoolean()
-def enabledGoogleDAI = safeExtGet("THEOplayer_extensionGoogleDAI", 'false').toBoolean()
-// def enabledGoogleIMA = true
-// def enabledGoogleDAI = true
+// def enabledGoogleIMA = safeExtGet("THEOplayer_extensionGoogleIMA", 'false').toBoolean()
+// def enabledGoogleDAI = safeExtGet("THEOplayer_extensionGoogleDAI", 'false').toBoolean()
+def enabledGoogleIMA = true
+def enabledGoogleDAI = true
 def enabledAds = enabledGoogleIMA || enabledGoogleDAI
-def enabledCast = safeExtGet("THEOplayer_extensionCast", 'false').toBoolean()
-// def enabledCast = true
+// def enabledCast = safeExtGet("THEOplayer_extensionCast", 'false').toBoolean()
+def enabledCast = true
 
 android {
   compileSdkVersion safeExtGet('THEOplayer_compileSdkVersion', 31)
