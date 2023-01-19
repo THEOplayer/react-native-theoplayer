@@ -20,7 +20,8 @@ def safeExtGet(prop, fallback) {
 // Extensions
 def enabledGoogleIMA = safeExtGet("THEOplayer_extensionGoogleIMA", 'false').toBoolean()
 def enabledGoogleDAI = safeExtGet("THEOplayer_extensionGoogleDAI", 'false').toBoolean()
-def enabledAds = enabledGoogleIMA || enabledGoogleDAI
+// def enabledAds = enabledGoogleIMA || enabledGoogleDAI
+def enabledAds = true
 def enabledCast = safeExtGet("THEOplayer_extensionCast", 'false').toBoolean()
 
 android {
