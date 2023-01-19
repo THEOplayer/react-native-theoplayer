@@ -8,7 +8,7 @@ theo_features_tvos = `sh ./ios/custom/theofeatures.sh tvos ./ios/custom/Framewor
 
 Pod::Spec.new do |s|
   #  s.name         = package["name"]
-   s.name         = "@wouterds/react-native-theoplayer"
+   s.name         = "react-native-theoplayer"
    s.version      = package["version"]
    s.summary      = package["description"]
    s.homepage     = package["homepage"]
