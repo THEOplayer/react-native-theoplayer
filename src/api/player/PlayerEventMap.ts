@@ -44,79 +44,101 @@ export enum PlayerEventType {
 }
 
 /**
- * The events fired by the {@link THEOplayerViewProps}.
+ * The events fired by THEOplayer.
  *
  */
 export interface PlayerEventMap {
+  /**
+   * Fired when the player's internal paused state changes to `false`.
+   */
   [PlayerEventType.PLAY]: Event<PlayerEventType.PLAY>;
 
+  /**
+   * Fired when playback is ready to start after having been paused or delayed due to lack of media data.
+   */
   [PlayerEventType.PLAYING]: Event<PlayerEventType.PLAYING>;
 
+  /**
+   * Fired when the player.
+   */
   [PlayerEventType.FULLSCREEN]: FullscreenEvent;
 
+  // TODO Remove this
   [PlayerEventType.BUFFERING_CHANGE]: BufferingChangeEvent;
 
+  /**
+   * Fired when the player's source changes.
+   */
   [PlayerEventType.SOURCE_CHANGE]: Event<PlayerEventType.SOURCE_CHANGE>;
 
+  /**
+   * Fired when the player starts loading the manifest.
+   */
   [PlayerEventType.LOAD_START]: Event<PlayerEventType.LOAD_START>;
 
+  /**
+   * Fired when the player determines the metadata for its source.
+   */
   [PlayerEventType.LOADED_METADATA]: LoadedMetadataEvent;
 
+  /**
+   * Fired when the player can render the media data at the current playback position for the first time.
+   */
   [PlayerEventType.LOADED_DATA]: Event<PlayerEventType.LOADED_DATA>;
 
   /**
-   * Invoked when the player's readyState has changed.
+   * Fired when the player's readyState has changed.
    */
   [PlayerEventType.READYSTATE_CHANGE]: ReadyStateChangeEvent;
 
   /**
-   * Invoked when the player's volume changes.
+   * Fired when the player's volume changes.
    */
   [PlayerEventType.VOLUME_CHANGE]: VolumeChangeEvent;
 
   /**
-   * Invoked when an error occurs.
+   * Fired when an error occurs.
    */
   [PlayerEventType.ERROR]: ErrorEvent;
 
   /**
-   * Invoked each time the player has loaded media data.
+   * Fired each time the player has loaded media data.
    */
   [PlayerEventType.PROGRESS]: ProgressEvent;
 
   /**
-   * Invoked when the player's internal paused state changes to `true`.
+   * Fired when the player's internal paused state changes to `true`.
    */
   [PlayerEventType.PAUSE]: Event<PlayerEventType.PAUSE>;
 
   /**
-   * Invoked when a seek operation starts and the player is seeking a new position.
+   * Fired when a seek operation starts and the player is seeking a new position.
    */
   [PlayerEventType.SEEKING]: Event<PlayerEventType.SEEKING>;
 
   /**
-   * Invoked when a seek operation completed and the current playback position has changed.
+   * Fired when a seek operation completed and the current playback position has changed.
    */
   [PlayerEventType.SEEKED]: Event<PlayerEventType.SEEKED>;
 
   /**
-   * Invoked when playback has stopped because the end of the media was reached or because
+   * Fired when playback has stopped because the end of the media was reached or because
    * no further data is available.
    */
   [PlayerEventType.ENDED]: Event<PlayerEventType.ENDED>;
 
   /**
-   * Invoked each time the current playback position changed.
+   * Fired each time the current playback position changed.
    */
   [PlayerEventType.TIME_UPDATE]: TimeUpdateEvent;
 
   /**
-   * Invoked when the player's duration attribute has been updated.
+   * Fired when the player's duration attribute has been updated.
    */
   [PlayerEventType.DURATION_CHANGE]: DurationChangeEvent;
 
   /**
-   * Invoked when a segment can not be found.
+   * Fired when a segment can not be found.
    *
    * @remarks
    * <br/> - Only dispatched on DASH streams.
@@ -124,32 +146,32 @@ export interface PlayerEventMap {
   [PlayerEventType.SEGMENT_NOT_FOUND]: SegmentNotFoundEvent;
 
   /**
-   * Invoked when a text track list event occurs.
+   * Fired when a text track list event occurs.
    */
   [PlayerEventType.TEXT_TRACK_LIST]: TextTrackListEvent;
 
   /**
-   * Invoked when a text track event occurs.
+   * Fired when a text track event occurs.
    */
   [PlayerEventType.TEXT_TRACK]: TextTrackEvent;
 
   /**
-   * Invoked when a media track list event occurs.
+   * Fired when a media track list event occurs.
    */
   [PlayerEventType.MEDIA_TRACK_LIST]: MediaTrackListEvent;
 
   /**
-   * Invoked when a media track event occurs.
+   * Fired when a media track event occurs.
    */
   [PlayerEventType.MEDIA_TRACK]: MediaTrackEvent;
 
   /**
-   * Invoked when an ad event occurs.
+   * Fired when an ad event occurs.
    */
   [PlayerEventType.AD_EVENT]: AdEvent;
 
   /**
-   * Invoked when a cast event occurs, either for Chromecast or Airplay.
+   * Fired when a cast event occurs, either for Chromecast or Airplay.
    */
   [PlayerEventType.CAST_EVENT]: CastEvent;
 }
