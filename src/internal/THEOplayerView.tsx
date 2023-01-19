@@ -160,7 +160,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
     this._root = React.createRef();
     this.state = THEOplayerView.initialState;
     this._exposedPlayer = new THEOplayerAdapter(this);
-    this.props.onReady?.(this._exposedPlayer);
+    this.props.onPlayerReady?.(this._exposedPlayer);
   }
 
   componentWillUnmount() {
