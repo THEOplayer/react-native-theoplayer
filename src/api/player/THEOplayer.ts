@@ -5,6 +5,9 @@ import type { SourceDescription } from '../source/SourceDescription';
 import type { AdsAPI } from '../ads/AdsAPI';
 import type { CastAPI } from '../cast/CastAPI';
 
+/**
+ * The THEOplayer API.
+ */
 export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
   /**
    * The player's adaptive bitrate (ABR) configuration.
