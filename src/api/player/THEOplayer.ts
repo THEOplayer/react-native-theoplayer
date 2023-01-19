@@ -75,22 +75,22 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
   fullscreen: boolean;
 
   /**
-   * Used to set the current selected text track by passing its `uid`, or `null` to select none.
+   * Used to set the current selected text track by passing its `uid`, or `undefined` to select none.
    */
   selectedTextTrack: number | undefined;
 
   /**
-   * Used to set the current selected video track by passing its `uid`, or `null` to select none.
+   * Used to set the current selected video track by passing its `uid`, or `undefined` to select none.
    */
   selectedVideoTrack: number | undefined;
 
   /**
-   * Used to set the current selected video quality by passing its `uid`, or `null` to select none.
+   * Used to set the current selected video quality by passing its `uid`, or `undefined` to select none.
    */
   targetVideoQuality: number | number[] | undefined;
 
   /**
-   * Used to set the current selected audio track by passing its `uid`, or `null` to select none.
+   * Used to set the current selected audio track by passing its `uid`, or `undefined` to select none.
    */
   selectedAudioTrack: number | undefined;
 

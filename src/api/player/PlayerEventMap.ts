@@ -59,11 +59,13 @@ export interface PlayerEventMap {
   [PlayerEventType.PLAYING]: Event<PlayerEventType.PLAYING>;
 
   /**
-   * Fired when the player.
+   * Fired when the fullscreen state of the player changes.
    */
   [PlayerEventType.FULLSCREEN]: FullscreenEvent;
 
-  // TODO Remove this
+  /**
+   * Fired when the player's buffering state changes.
+   */
   [PlayerEventType.BUFFERING_CHANGE]: BufferingChangeEvent;
 
   /**
