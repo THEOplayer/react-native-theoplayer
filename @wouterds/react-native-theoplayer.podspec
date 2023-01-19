@@ -7,7 +7,8 @@ theo_features_ios = `sh ./ios/custom/theofeatures.sh ios ./ios/custom/Frameworks
 theo_features_tvos = `sh ./ios/custom/theofeatures.sh tvos ./ios/custom/Frameworks/tvos/`
 
 Pod::Spec.new do |s|
-   s.name         = package["name"]
+  #  s.name         = package["name"]
+   s.name         = "@wouterds/react-native-theoplayer"
    s.version      = package["version"]
    s.summary      = package["description"]
    s.homepage     = package["homepage"]
