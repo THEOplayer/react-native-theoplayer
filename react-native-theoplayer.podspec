@@ -35,8 +35,8 @@ Pod::Spec.new do |s|
 }
 
    ### Set custom player SDK
-  s.ios.vendored_frameworks = "ios/custom/Frameworks/ios/THEOplayerSDK.xcframework"
-  s.tvos.vendored_frameworks = "ios/custom/Frameworks/tvos/THEOplayerSDK.xcframework"
+  s.ios.vendored_frameworks = "./ios/custom/Frameworks/ios/THEOplayerSDK.xcframework"
+  s.tvos.vendored_frameworks = "./ios/custom/Frameworks/tvos/THEOplayerSDK.xcframework"
 
   ### Add external dependencies
   s.ios.dependency "GoogleAds-IMA-iOS-SDK"
