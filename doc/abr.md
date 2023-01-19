@@ -3,7 +3,8 @@
 ### Overview
 
 The playback quality during play-out of a stream is determined by the ABR algorithm.
-On starting play-out of a stream, the ABR *strategy* determines which quality to prefer, while during play-out the network's bandwidth is
+On starting play-out of a stream, the ABR *strategy* determines which quality to prefer, while during play-out the
+network's bandwidth is
 monitored to select an optimal quality.
 
 More information on ABR can be found on our
@@ -15,20 +16,20 @@ subscribe to related events.
 
 ### ABR Configuration
 
-The `abrConfig` property on `THEOplayerView` determines which initial quality the player will download, depending
+The [ABR Configuration](../src/api/abr/ABRConfiguration.ts) determines which initial quality the player will download, depending
 on the chosen strategy, as well as various parameters of the playback buffer.
 
 ```tsx
-const abrConfig: ABRConfiguration = {
-  strategy: 'quality',
-  targetBuffer: 20,
-  bufferLookbackWindow: 30,
-  maxBufferLength: 30
+ const onPlayerReady = (player: THEOplayer) => {
+  player.abr.strategy = 'quality';
+  player.abr.targetBuffer = 20;
+  player.abr.bufferLookbackWindow = 30;
+  player.abr.maxBufferLength = 30;
 }
 
 <THEOplayerView
   config={playerConfig}
-  abrConfig={abrConfig}
+  onPlayerReady={onPlayerReady}
 />
 ```
 
@@ -39,7 +40,8 @@ const abrConfig: ABRConfiguration = {
 | `bufferLookbackWindow` | The amount of data which the player should keep in its buffer before the current playback position, in seconds. Default is **30**s.                             | Web                 |
 | `maxBufferLength`      | The maximum length of the player's buffer, in seconds.                                                                                                          | Web                 |                 |
 
-When specifying the strategy, apart from the values `'performance'`, `'quality'`, `'bandwidth'`, an `ABRStrategyConfiguration`
+When specifying the strategy, apart from the values `'performance'`, `'quality'`, `'bandwidth'`,
+an `ABRStrategyConfiguration`
 object can be set with an estimate for the initial bitrate value (in bits per second):
 
 ```typescript
@@ -49,9 +51,7 @@ const strategyConfig: ABRStrategyConfiguration = {
     'bitrate': 1200000
   }
 }
-const abrConfig = {
-    strategy: strategyConfig
-}
+player.abr.strategy = strategyConfig;
 ```
 
 ### Setting Target Video Quality
@@ -60,15 +60,11 @@ By default, the ABR algorithm will choose, depending on the available bandwidth,
 from all the video qualities that are available in the manifest or playlist.
 
 It is possible to set a specific quality, or subset of qualities, that should be retained as
-a source set by passing the `uid` to the `targetVideoQuality` property.
+a source set by passing the `uid` to the `targetVideoQuality` property on the [THEOplayer API](../src/api/player/THEOplayer.ts).
 
 ```tsx
 const selectedVideoQuality: number | number[] | undefined = [33, 34, 35]
-
-<THEOplayerView
-  config={playerConfig}
-  targetVideoQuality={selectedVideoQuality}
-/>
+player.targetVideoQuality = selectedVideoQuality;
 ```
 
 ### Subscribing to track events
@@ -81,7 +77,6 @@ when the track list is modified, or when a track's current quality changes:
 | `onMediaTrackListEvent` | when a media track list event occurs, for `trackType` with value `Audio` or `Video`, and event `type` with values `AddTrack`, `RemoveTrack` or `ChangeTrack`. | Android & Web       |
 | `onMediaTrackEvent`     | when a media track event occurs, for `trackType` with value `Audio` or `Video`, and event `type`, which currently is only `ActiveQualityChanged`.             | Android & Web       |
 
-
 #### Setting a preferred video quality across period switches and discontinuities
 
 Subscribing to the `AddTrack` event on `onMediaTrackListEvent` for video tracks makes it possible set a
@@ -89,27 +84,27 @@ fixed preferred video quality, even when a stream's track list changes due to a 
 HLS discontinuity (for example during an ad break).
 
 ```tsx
-function usePreferredTargetQuality(preferredBandwidth: number): [number | undefined, (event: MediaTrackListEvent) => void] {
-  const [targetVideoQuality, setTargetVideoQuality] = useState<number | undefined>(undefined);
+const onMediaTrackListEvent = (event: MediaTrackListEvent) => {
+  const {subType, trackType} = event;
+  if (trackType === MediaTrackType.VIDEO && subType === TrackListEventType.ADD_TRACK) {
+    const {qualities, activeQuality: currentActiveQuality} = event.track;
 
-  // Subscribe to track list events
-  const onMediaTrackListEvent = (event: MediaTrackListEvent) => {
-    const {type, track, trackType} = event;
-    if (event.trackType === MediaTrackType.Video && event.type === TrackListEventType.AddTrack) {
-      const {qualities, activeQuality: currentActiveQuality} = track;
-
-      // Try to set a preferreed quality
-      const targetQuality = qualities.find(q => q.bandwidth === preferredBandwidth);
-      if (targetQuality) {
-        const {uid} = targetQuality;
-        setTargetVideoQuality(uid);
-      }
+    // Try to set a preferreed quality
+    const targetQuality = qualities.find(q => q.bandwidth === preferredBandwidth);
+    if (targetQuality) {
+      const {uid} = targetQuality;
+      this.player.targetVideoQuality = uid;
     }
-  };
-  return [targetVideoQuality, onMediaTrackListEvent];
+  }
+};
+
+const onPlayerReady = (player: THEOplayer) => {
+  this.player = player;
+  this.player.addEventListener(PlayerEventType.MEDIA_TRACK_LIST, onMediaTrackListEvent)
 }
 
 <THEOplayerView
-  onMediaTrackListEvent={onMediaTrackListEvent}
+  config={playerConfig}
+  onPlayerReady={onPlayerReady}
 />
 ```

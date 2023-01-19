@@ -5,7 +5,8 @@
 A good starting point to get acquainted with THEOplayer's advertising features
 is THEOplayer's [Knowledge Base](https://docs.theoplayer.com/knowledge-base/01-advertisement/01-user-guide.md).
 
-While THEOplayer supports a wide range of different [ad types](https://docs.theoplayer.com/knowledge-base/01-advertisement/01-user-guide.md#an-overview-of-theoplayers-different-ad-types),
+While THEOplayer supports a wide range of
+different [ad types](https://docs.theoplayer.com/knowledge-base/01-advertisement/01-user-guide.md#an-overview-of-theoplayers-different-ad-types),
 `THEOplayerView` currently supports:
 
 - client-side ad insertion (CSAI) through [Google IMA](#getting-started-with-google-ima)
@@ -33,6 +34,7 @@ the ima extension in gradle by setting this flag in your `gradle.properties`:
 # Enable THEOplayer Extensions (default: disabled)
 THEOplayer_extensionGoogleIMA = true
 ```
+
 </details>
 
 <details>
@@ -51,11 +53,13 @@ To enable Google IMA on web, it suffices to add this script in the web page's he
 in the example app's [index.html](../example/web/public/index.html):
 
 ```html
+
 <head>
-    <!-- Optionally load Google IMA/DAI libraries -->
-    <script type="text/javascript" src="//imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
+  <!-- Optionally load Google IMA/DAI libraries -->
+  <script type="text/javascript" src="//imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
 </head>
 ```
+
 </details>
 
 #### Source description
@@ -118,11 +122,13 @@ To enable Google DAI on web, it suffices to add this script in the web page's he
 in the example app's [index.html](../example/web/public/index.html):
 
 ```html
+
 <head>
-    <!-- Optionally load Google IMA/DAI libraries -->
-    <script type="text/javascript" src="//imasdk.googleapis.com/js/sdkloader/ima3_dai.js"></script>
+  <!-- Optionally load Google IMA/DAI libraries -->
+  <script type="text/javascript" src="//imasdk.googleapis.com/js/sdkloader/ima3_dai.js"></script>
 </head>
 ```
+
 </details>
 
 #### Source description
@@ -148,7 +154,8 @@ A full description of the available source properties can be found in the
 
 ### Using the Ads API
 
-`THEOplayerView` also provides a separate ads [API](../src/api/ads/AdsAPI.ts) that enables additional features
+[THEOplayer](../src/api/player/THEOplayer.ts) provides an [AdsAPI](../src/api/ads/AdsAPI.ts) that enables additional
+features
 such as:
 
 - Querying whether an ad is currently playing;
@@ -158,18 +165,21 @@ such as:
 - Getting a list of ad breaks that are still scheduled. Once an ad break starts, it is removed from the list;
 - Manually scheduling a client-side ad.
 
-The ads API is used by accessing the `ads` property on `THEOplayerView` component:
+The `THEOplayer` is provided with a callback on the `THEOplayerView` component:
 
 ```tsx
-<THEOplayerView
-  ref={(ref: THEOplayerView) => {
-    this.player = ref;
-  }}
-/>
+const onPlayerReady = (player: THEOplayer) => {
+  this.player = player;
+}
 
-// Query whether an ad is currently playing.
+<THEOplayerView onPlayerReady={onPlayerReady}/>
+```
+
+After which the AdsAPI can be used:
+
+```typescript
 const isPlayingAd = () => {
-  return player.ads.playing();
+  return this.player.ads.playing();
 };
 ```
 
@@ -177,70 +187,25 @@ Google DAI has its own [API](../src/api/ads/GoogleDai.ts), which includes DAI-sp
 converting time stamps between stream time and content time, and manipulating the `snapback` flag that prevents
 users from seeking across ad breaks.
 
-```tsx
+```typescript
 // Convert timestamps using the DAI ads api.
 const streamTimeForContentTime = (contentTime: number): Promise<number> | undefined => {
-  return player.ads.dai?.streamTimeForContentTime(contentTime);
+  return this.player.ads.dai?.streamTimeForContentTime(contentTime);
 };
 ```
 
 ### Subscribing to ad events
 
-The `THEOplayerView` component includes a callback to subscribe to ad events:
-
-```tsx
-<THEOplayerView
-  onAdEvent={(event: AdEvent) => {
-    const { type, ad } = event;
-    console.log(TAG, 'onAdEvent', type, ad);
-  }}
-/>
-```
-
-Where [`AdEvent`](../src/api/event/AdEvent.ts)
-contains a field indicating the type of the event, and a description of the
-relevant [`Ad`](../src/api/ads/Ad.ts) or [`AdBreak`](../src/api/ads/AdBreak.ts) instance.
+[THEOplayer](../src/api/player/THEOplayer.ts) allows you to subscribe to ad events:
 
 ```typescript
-export interface AdEvent {
-  /**
-   * Type of ad event.
-   */
-  type: AdEventType;
-
-  /**
-   * The ad or adbreak for which the event was dispatched.
-   */
-  ad: Ad | AdBreak;
+const onAdEvent = (event: AdEvent) => {
+  console.log(event)
 }
+player.addEventListener(PlayerEventType.AD_EVENT, onAdEvent);
 ```
 
-The event type can be any of the following:
-
-| Event name        | Event                                           |
-|-------------------|-------------------------------------------------|
-| `addadbreak`      | an ad break is added.                           |
-| `removeadbreak`   | an ad break is removed.                         |
-| `adloaded`        | an ad is loaded.                                |
-| `adbreakbegin`    | an ad break (a list of consecutive ads) begins. |
-| `adbreakend`      | an ad break ends.                               |
-| `adbreakchange`   | an ad break changes.                            |
-| `updateadbreak`   | an ad break is updated.                         |
-| `addad`           | an ad is added.                                 |
-| `adbegin`         | an ad begins.                                   |
-| `adend`           | an ad ends.                                     |
-| `updatead`        | an ad is updated.                               |
-| `adloaded`        | an ad is loaded.                                |
-| `adfirstquartile` | an ad reaches the first quartile.               |
-| `admidpoint`      | an ad reaches the mid point.                    |
-| `adthirdquartile` | an ad reaches the third quartile.               |
-| `adskip`          | an ad is skipped.                               |
-| `adimpression`    | an ad counts as an impression.                  |
-| `aderror`         | an ad error occurs.                             |
-| `admetadata`      | an ads list is loaded.                          |
-| `adbuffering`     | the ad has stalled playback to buffer.          |
+See [AdEvent](../src/api/event/AdEvent.ts), [Ad](../src/api/ads/Ad.ts) and [AdBreak](../src/api/ads/AdBreak.ts)  for
+more information.
 
 Note that the availability of the events being dispatched depends on the platform.
-
-For details on the [Ad](../src/api/ads/Ad.ts) and [AdBreak](../src/api/ads/AdBreak.ts) types,
-we refer to the API.

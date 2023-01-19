@@ -29,13 +29,11 @@ const source = {
     }
   }
 }
+const onReady = (player: THEOplayer) => {
+  player.source = source;
+}
 
-<THEOplayerView
-  ref={(ref: THEOplayerView) => {
-    this.video = ref;
-  }}
-  source={source}
-/>
+<THEOplayerView onPlayerReady={onReady}/>
 ```
 
 ### Content Protection Integrations
@@ -76,7 +74,6 @@ Finally, the `integrationId` used on registration (in this case `"myCustomDRM"`)
 should be added to the sourceDescription so that THEOplayer knows which integration to
 use for this source. Any additional `integrationParameters` needed by the custom integration
 can be passed here as well.
-
 
 ```javascript
 const source = {

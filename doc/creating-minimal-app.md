@@ -55,7 +55,7 @@ Finally, replace the `App.tsx` with this minimal code:
 ```typescript
 import React from 'react';
 import { Platform, View } from 'react-native';
-import { PlayerConfiguration, THEOplayerView } from 'react-native-theoplayer';
+import { PlayerConfiguration, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
 
 const playerConfig: PlayerConfiguration = {
   license: undefined,     // insert THEOplayer React Native license here
@@ -70,10 +70,18 @@ const source = {
   ],
 };
 
+const onReady = (player: THEOplayer) => {
+  player.source = source;
+  player.play();
+}
+
+export default function App() {
+  return <VideoPlayer config={playerConfig} />;
+}
 const App = () => {
     return (
       <View style={{position: 'absolute', top: 0, left: 0, bottom: 0, right: 0}}>
-          <THEOplayerView config={playerConfig} source={source} paused={false}/>
+          <THEOplayerView config={playerConfig} onPlayerReady={onReady}/>
       </View>
     );
 };
