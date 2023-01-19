@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 
 import type { THEOplayerViewProps } from 'react-native-theoplayer';
 import * as THEOplayer from 'theoplayer';
-import { THEOplayerWebAdapter } from './exposed/THEOplayerWebAdapter';
+import { THEOplayerWebAdapter } from './adapter/THEOplayerWebAdapter';
 
 export class THEOplayerView extends PureComponent<THEOplayerViewProps> {
   private _facade: THEOplayerWebAdapter | undefined;
