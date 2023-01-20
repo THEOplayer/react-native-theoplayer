@@ -289,7 +289,6 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
     this.setState({
       ...VideoPlayerUI.initialState,
       srcIndex,
-      paused: true,
       airplayIsConnected,
       chromecastIsConnected,
     });

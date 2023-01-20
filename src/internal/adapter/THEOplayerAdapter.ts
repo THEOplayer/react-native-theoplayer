@@ -19,7 +19,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   private readonly _adsApi: THEOplayerNativeAdsAPI;
   private readonly _castApi: THEOplayerNativeCastAPI;
 
-  private _autoplay: boolean;
+  private _autoplay = false;
   private _currentTime = 0;
 
   constructor(view: THEOplayerView) {
@@ -27,8 +27,16 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._view = view;
     this._adsApi = new THEOplayerNativeAdsAPI(this._view);
     this._castApi = new THEOplayerNativeCastAPI(this._view);
-    this._autoplay = false;
     this.addEventListener(PlayerEventType.TIME_UPDATE, this.onTimeupdate);
+    this.addEventListener(PlayerEventType.SOURCE_CHANGE, this.onSourceChange);
+  }
+
+  private onSourceChange = () => {
+    if (this._autoplay) {
+      this.play();
+    } else {
+      this.pause();
+    }
   }
 
   private onTimeupdate = (event: TimeUpdateEvent) => {
@@ -122,9 +130,9 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   }
 
   set source(source: SourceDescription | undefined) {
+    // This is to correctly reset autoplay during a source change.
+    this.pause();
     this._view.setState({ source });
-    // After a source changes, set paused based on autoplay.
-    this._view.setState({ paused: !this._autoplay });
   }
 
   get targetVideoQuality(): number | number[] | undefined {
