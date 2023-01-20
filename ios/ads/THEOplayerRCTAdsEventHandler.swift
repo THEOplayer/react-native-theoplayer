@@ -16,7 +16,7 @@ let EVENT_TYPE_AD_THIRD_QUARTILE: String = "adthirdquartile"
 let EVENT_TYPE_AD_MIDPOINT: String = "admidpoint"
 let EVENT_TYPE_AD_LOADED: String = "adloaded"
 
-class THEOplayerRCTViewAdEventHandler {
+class THEOplayerRCTAdsEventHandler {
     // MARK: Members
     private weak var player: THEOplayer?
         
@@ -54,7 +54,7 @@ class THEOplayerRCTViewAdEventHandler {
             return
         }
         
-#if ADS && (GOOGLE_IMA || GOOGLE_DAI)
+#if (GOOGLE_IMA || GOOGLE_DAI)
         // AD_BEGIN
         self.adBeginListener = player.ads.addEventListener(type: AdsEventTypes.AD_BEGIN) { [weak self] event in
             if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received AD_BEGIN event from THEOplayer Ads") }
@@ -180,7 +180,7 @@ class THEOplayerRCTViewAdEventHandler {
             return
         }
         
-#if ADS && (GOOGLE_IMA || GOOGLE_DAI)
+#if (GOOGLE_IMA || GOOGLE_DAI)
         // AD_BEGIN
         if let adBeginListener = self.adBeginListener {
             player.ads.removeEventListener(type: AdsEventTypes.AD_BEGIN, listener: adBeginListener)

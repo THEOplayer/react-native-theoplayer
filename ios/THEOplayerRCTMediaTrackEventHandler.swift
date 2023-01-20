@@ -1,9 +1,9 @@
-// THEOplayerRCTViewMediaTrackEventHandler.swift
+// THEOplayerRCTMediaTrackEventHandler.swift
 
 import Foundation
 import THEOplayerSDK
 
-class THEOplayerRCTViewMediaTrackEventHandler {
+class THEOplayerRCTMediaTrackEventHandler {
     // MARK: Members
     private weak var player: THEOplayer?
         

@@ -13,7 +13,7 @@ let EVENT_TYPE_CHROMECAST_STATE_CHANGE: String = "chromecaststatechange"
 let EVENT_TYPE_CHROMECAST_ERROR: String = "chromecasterror"
 let EVENT_TYPE_AIRPLAY_STATE_CHANGE: String = "airplaystatechange"
 
-class THEOplayerRCTViewCastEventHandler {
+class THEOplayerRCTCastEventHandler {
     // MARK: Members
     private weak var player: THEOplayer?
         

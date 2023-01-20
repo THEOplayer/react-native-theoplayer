@@ -3,7 +3,7 @@
 import Foundation
 import THEOplayerSDK
 
-class THEOplayerRCTViewMainEventHandler {
+class THEOplayerRCTMainEventHandler {
     // MARK: Members
     private weak var player: THEOplayer?
     private var currentPresentationMode = THEOplayerSDK.PresentationMode.inline // TheoPlayer's initial presentationMode

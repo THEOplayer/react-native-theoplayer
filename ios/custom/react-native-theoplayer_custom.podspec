@@ -33,14 +33,14 @@ Pod::Spec.new do |s|
 	}
 
  	### Set custom player SDK
-	s.ios.vendored_frameworks = "ios/custom/Frameworks/ios/THEOplayerSDK.xcframework"
-  	s.tvos.vendored_frameworks = "ios/custom/Frameworks/tvos/THEOplayerSDK.xcframework"
+	s.ios.vendored_frameworks = 'ios/custom/Frameworks/ios/THEOplayerSDK.xcframework'
+  	s.tvos.vendored_frameworks = 'ios/custom/Frameworks/tvos/THEOplayerSDK.xcframework'
 
   	### Set Ads dependencies
-  	# s.ios.dependency "GoogleAds-IMA-iOS-SDK", "3.14.1"
-	# s.tvos.dependency "GoogleAds-IMA-tvOS-SDK", "4.4.1"
+  	s.ios.dependency "GoogleAds-IMA-iOS-SDK", "3.14.1"
+	s.tvos.dependency "GoogleAds-IMA-tvOS-SDK", "4.4.1"
 	
 	### Set ChromeCast dependency (iOS only)
-	# s.ios.dependency "google-cast-sdk-dynamic-xcframework-no-bluetooth"
+	s.ios.dependency "google-cast-sdk-dynamic-xcframework-no-bluetooth"
 	
 end
