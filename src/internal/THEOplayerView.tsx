@@ -168,6 +168,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
       // on iOS, we trigger an explicit 'destroy' to clean up the underlying THEOplayer
       this.destroyTheoPlayer();
     }
+    this._exposedPlayer.clearEventListeners();
   }
 
   private destroyTheoPlayer() {
