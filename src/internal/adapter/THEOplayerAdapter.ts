@@ -3,17 +3,22 @@ import type {
   ABRConfiguration,
   AdsAPI,
   CastAPI,
+  DurationChangeEvent,
+  LoadedMetadataEvent,
+  MediaTrack,
+  TextTrack,
   PlayerEventMap,
   SourceDescription,
   THEOplayer,
   THEOplayerView,
   TimeUpdateEvent,
 } from 'react-native-theoplayer';
-import { PlayerEventType } from 'react-native-theoplayer';
+import { PlayerEventType, ReadyStateChangeEvent } from 'react-native-theoplayer';
 import { THEOplayerNativeAdsAdapter } from './ads/THEOplayerNativeAdsAdapter';
 import { THEOplayerNativeCastAdapter } from './cast/THEOplayerNativeCastAdapter';
-import { DefaultVolumeChangeEvent } from './event/PlayerEvents';
+import { DefaultBufferingChangeEvent, DefaultVolumeChangeEvent } from './event/PlayerEvents';
 import { AbrAdapter } from './abr/AbrAdapter';
+import { NativeModules, Platform } from 'react-native';
 
 export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayer {
   private readonly _view: THEOplayerView;
@@ -21,8 +26,24 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   private readonly _castAdapter: THEOplayerNativeCastAdapter;
   private readonly _abrAdapter: AbrAdapter;
 
+  private _source: SourceDescription | undefined = undefined;
   private _autoplay = false;
-  private _currentTime = 0;
+  private _paused = false;
+  private _fullscreen = false;
+  private _muted = false;
+  private _volume = 1;
+  private _currentTime = NaN;
+  private _duration = NaN;
+  private _playbackRate = 1;
+  private _videoTracks: MediaTrack[] = [];
+  private _buffering = false;
+
+  private _audioTracks: MediaTrack[] = [];
+  private _textTracks: TextTrack[] = [];
+  private _targetVideoQuality: number | number[] | undefined = undefined;
+  private _selectedVideoTrack: number | undefined = undefined;
+  private _selectedAudioTrack: number | undefined = undefined;
+  private _selectedTextTrack: number | undefined = undefined;
 
   constructor(view: THEOplayerView) {
     super();
@@ -30,11 +51,46 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._adsAdapter = new THEOplayerNativeAdsAdapter(this._view);
     this._castAdapter = new THEOplayerNativeCastAdapter(this._view);
     this._abrAdapter = new AbrAdapter(this._view);
-    this.addEventListener(PlayerEventType.TIME_UPDATE, this.onTimeupdate);
     this.addEventListener(PlayerEventType.SOURCE_CHANGE, this.onSourceChange);
+    this.addEventListener(PlayerEventType.READYSTATE_CHANGE, this.onReadyStateChange);
+    this.addEventListener(PlayerEventType.LOAD_START, this.onLoadStart);
+    this.addEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
+    this.addEventListener(PlayerEventType.PAUSE, this.onPause);
+    this.addEventListener(PlayerEventType.PLAYING, this.onPlaying);
+    this.addEventListener(PlayerEventType.TIME_UPDATE, this.onTimeupdate);
+    this.addEventListener(PlayerEventType.DURATION_CHANGE, this.onDurationChange);
+    this.addEventListener(PlayerEventType.ERROR, this.onError);
+  }
+
+  private reset() {
+    this._buffering = false;
+    this._playbackRate = 1;
+    this._volume = 1;
+    this._muted = false;
+    this._paused = true;
+    this._fullscreen = false;
+    this._selectedTextTrack = undefined;
+    this._selectedVideoTrack = undefined;
+    this._selectedAudioTrack = undefined;
+    this._targetVideoQuality = undefined;
+  }
+
+  private maybeChangeBufferingState(isBuffering: boolean) {
+    const wasBuffering = this._buffering;
+    const { error } = this._view.state;
+
+    // do not change state to buffering in case of an error or if the player is paused
+    const newIsBuffering = isBuffering && !error && !this._paused;
+    this._buffering = newIsBuffering;
+
+    // notify change in buffering state
+    if (newIsBuffering !== wasBuffering) {
+      this.dispatchEvent(new DefaultBufferingChangeEvent(newIsBuffering));
+    }
   }
 
   private onSourceChange = () => {
+    this.reset();
     if (this._autoplay) {
       this.play();
     } else {
@@ -42,12 +98,46 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     }
   };
 
+  private onReadyStateChange = (event: ReadyStateChangeEvent) => {
+    this.maybeChangeBufferingState(event.readyState < 3);
+  };
+
+  private onError = () => {
+    this.maybeChangeBufferingState(false);
+  };
+
+  private onLoadStart = () => {
+    this.maybeChangeBufferingState(true);
+  };
+
+  private onPlaying = () => {
+    this.maybeChangeBufferingState(false);
+  };
+
+  private onPause = () => {
+    this._paused = true;
+  };
+
   private onTimeupdate = (event: TimeUpdateEvent) => {
     this._currentTime = event.currentTime;
   };
 
+  private onLoadedMetadata = (event: LoadedMetadataEvent) => {
+    this._duration = event.duration;
+    this._audioTracks = event.audioTracks;
+    this._videoTracks = event.videoTracks;
+    this._textTracks = event.textTracks;
+    this._selectedAudioTrack = event.selectedAudioTrack;
+    this._selectedVideoTrack = event.selectedVideoTrack;
+    this._selectedTextTrack = event.selectedTextTrack;
+  };
+
+  private onDurationChange = (event: DurationChangeEvent) => {
+    this._duration = event.duration;
+  };
+
   get abr(): ABRConfiguration | undefined {
-    return this._abrAdapter;
+    return Platform.OS === 'android' ? this._abrAdapter : undefined;
   }
 
   get ads(): AdsAPI {
@@ -56,7 +146,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   set autoplay(autoplay: boolean) {
     this._autoplay = autoplay;
-    this._view.setState({ paused: !autoplay });
+    NativeModules.PlayerModule.setPause(this._view.nativeHandle, !autoplay);
   }
 
   get autoplay(): boolean {
@@ -72,94 +162,122 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   }
 
   set currentTime(currentTime: number) {
-    this._view.seek(currentTime);
+    NativeModules.PlayerModule.setCurrentTime(this._view.nativeHandle, currentTime);
+  }
+
+  get duration(): number {
+    return this._duration;
   }
 
   get fullscreen(): boolean {
-    return this._view.state.fullscreen ?? false;
+    // TODO: rename to presentationState?
+    return this._fullscreen;
   }
 
   set fullscreen(fullscreen: boolean) {
-    this._view.setState({ fullscreen });
+    // TODO: rename to presentationState?
+    NativeModules.PlayerModule.setFullscreen(this._view.nativeHandle, fullscreen);
   }
 
   get muted(): boolean {
-    return this._view.state.muted ?? false;
+    return this._muted;
   }
 
   set muted(muted: boolean) {
-    this._view.setState({ muted });
+    this._muted = muted;
+    NativeModules.PlayerModule.setMuted(this._view.nativeHandle, muted);
     this.dispatchEvent(new DefaultVolumeChangeEvent(this.volume));
   }
 
   get paused(): boolean {
-    return this._view.state.paused ?? false;
+    return this._paused;
   }
 
   get playbackRate(): number {
-    return this._view.state.playbackRate ?? 1;
+    return this._playbackRate;
   }
 
   set playbackRate(playbackRate: number) {
-    this._view.setState({ playbackRate });
+    this._playbackRate = playbackRate;
+    NativeModules.PlayerModule.setPlaybackRate(this._view.nativeHandle, playbackRate);
+  }
+
+  get audioTracks(): MediaTrack[] {
+    return this._audioTracks;
   }
 
   get selectedAudioTrack(): number | undefined {
-    return this._view.state.selectedAudioTrack;
+    return this._selectedAudioTrack;
   }
 
-  set selectedAudioTrack(selectedAudioTrack: number | undefined) {
-    this._view.setState({ selectedAudioTrack });
+  set selectedAudioTrack(track: number | undefined) {
+    this._selectedAudioTrack = track;
+    NativeModules.PlayerModule.setSelectedAudioTrack(this._view.nativeHandle, track);
   }
 
-  get selectedTextTrack(): number | undefined {
-    return this._view.state.selectedTextTrack;
-  }
-
-  set selectedTextTrack(selectedTextTrack: number | undefined) {
-    this._view.setState({ selectedTextTrack });
+  get videoTracks(): MediaTrack[] {
+    return this._videoTracks;
   }
 
   get selectedVideoTrack(): number | undefined {
-    return this._view.state.selectedVideoTrack;
+    return this._selectedVideoTrack;
   }
 
-  set selectedVideoTrack(selectedVideoTrack: number | undefined) {
-    this._view.setState({ selectedVideoTrack });
+  set selectedVideoTrack(track: number | undefined) {
+    this._selectedVideoTrack = track;
+    NativeModules.PlayerModule.setSelectedVideoTrack(this._view.nativeHandle, track);
+  }
+
+  get textTracks(): TextTrack[] {
+    return this._textTracks;
+  }
+
+  get selectedTextTrack(): number | undefined {
+    return this._selectedTextTrack;
+  }
+
+  set selectedTextTrack(track: number | undefined) {
+    NativeModules.PlayerModule.setSelectedTextTrack(this._view.nativeHandle, track);
   }
 
   get source(): SourceDescription | undefined {
-    return this._view.state.source;
+    return this._source;
   }
 
   set source(source: SourceDescription | undefined) {
     // This is to correctly reset autoplay during a source change.
     this.pause();
-    this._view.setState({ source });
+    this._source = source;
+    NativeModules.PlayerModule.setSource(this._view.nativeHandle, source);
   }
 
   get targetVideoQuality(): number | number[] | undefined {
-    return this._view.state.targetVideoQuality;
+    return this._targetVideoQuality;
   }
 
   set targetVideoQuality(target: number | number[] | undefined) {
-    this._view.setState({ targetVideoQuality: target });
+    // Always pass an array for targetVideoQuality.
+    this._targetVideoQuality = !target ? [] : Array.isArray(target) ? target : [target];
+    NativeModules.PlayerModule.setTargetVideoQuality(this._view.nativeHandle, this._targetVideoQuality);
   }
 
   get volume(): number {
-    return this._view.state.volume ?? 1; // TODO
+    return this._volume;
   }
 
   set volume(volume: number) {
-    this._view.setState({ volume });
+    this._volume = volume;
+    NativeModules.PlayerModule.setVolume(this._view.nativeHandle, volume);
     this.dispatchEvent(new DefaultVolumeChangeEvent(volume));
   }
 
   pause(): void {
-    this._view.setState({ paused: true });
+    this._paused = true;
+    NativeModules.PlayerModule.setPaused(this._view.nativeHandle, true);
   }
 
   play(): void {
-    this._view.setState({ paused: false });
+    this._paused = false;
+    NativeModules.PlayerModule.setPaused(this._view.nativeHandle, false);
   }
 }
