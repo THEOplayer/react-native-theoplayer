@@ -2,7 +2,7 @@ import type { Ad, AdBreak, AdDescription, AdsAPI, GoogleDAI, THEOplayerView } fr
 import { NativeModules } from 'react-native';
 import { THEOplayerNativeGoogleDAI } from './THEOplayerNativeGoogleDAI';
 
-export class THEOplayerNativeAdsAPI implements AdsAPI {
+export class THEOplayerNativeAdsAdapter implements AdsAPI {
   private readonly _dai: GoogleDAI;
 
   constructor(private _player: THEOplayerView) {

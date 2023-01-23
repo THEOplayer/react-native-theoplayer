@@ -3,7 +3,7 @@ import { THEOplayerNativeChromecast } from './THEOplayerNativeChromecast';
 import { THEOplayerNativeAirplay } from './THEOplayerNativeAirplay';
 import type { Airplay, CastAPI, Chromecast, THEOplayerView } from 'react-native-theoplayer';
 
-export class THEOplayerNativeCastAPI implements CastAPI {
+export class THEOplayerNativeCastAdapter implements CastAPI {
   private readonly _chromecast: Chromecast;
   private readonly _airplay: Airplay | undefined;
 
