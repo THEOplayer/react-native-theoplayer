@@ -361,27 +361,15 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
     this._facade.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_DID_DISMISS));
   };
 
-  private buildWrapperProps(): LegacyTHEOplayerViewProps {
-    const { targetVideoQuality } = this.state;
-    return Object.assign(
-      {},
-      {
-        ...this.props,
-        ...this.state,
-        // Always pass an array for targetVideoQuality.
-        targetVideoQuality: !targetVideoQuality ? [] : Array.isArray(targetVideoQuality) ? targetVideoQuality : [targetVideoQuality],
-      },
-    );
-  }
-
   public render(): JSX.Element {
     console.log('rendering');
-    const wrapperProps = this.buildWrapperProps();
+    const { config, style } = this.props;
+    const { targetVideoQuality, source } = this.state;
     return (
-      <View style={[styles.base, wrapperProps.style]}>
+      <View style={[styles.base, style]}>
         <THEOplayerRCTView
           ref={this._root}
-          src={this.state.source || {}}
+          src={source || {}}
           onNativeSourceChange={this._onSourceChange}
           onNativeLoadStart={this._onLoadStart}
           onNativeLoadedData={this._onLoadedData}
@@ -409,7 +397,10 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
           onNativeFullscreenPlayerWillDismiss={this._onFullscreenPlayerWillDismiss}
           onNativeFullscreenPlayerDidDismiss={this._onFullscreenPlayerDidDismiss}
           style={StyleSheet.absoluteFill}
-          {...wrapperProps}
+          config={config}
+          {...this.state}
+          // Always pass an array for targetVideoQuality.
+          targetVideoQuality={!targetVideoQuality ? [] : Array.isArray(targetVideoQuality) ? targetVideoQuality : [targetVideoQuality]}
         />
       </View>
     );
