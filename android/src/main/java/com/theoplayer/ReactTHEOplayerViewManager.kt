@@ -42,70 +42,70 @@ class ReactTHEOplayerViewManager : ViewGroupManager<ReactTHEOplayerView>() {
   fun setConfig(videoView: ReactTHEOplayerView, config: ReadableMap?) {
     videoView.initialize(config)
   }
+//
+//  @ReactProp(name = PROP_ABR_CONFIG)
+//  fun setABRConfig(videoView: ReactTHEOplayerView, config: ReadableMap?) {
+//    videoView.setABRConfig(config)
+//  }
 
-  @ReactProp(name = PROP_ABR_CONFIG)
-  fun setABRConfig(videoView: ReactTHEOplayerView, config: ReadableMap?) {
-    videoView.setABRConfig(config)
-  }
+//  @ReactProp(name = PROP_SRC)
+//  fun setSource(videoView: ReactTHEOplayerView, src: ReadableMap?) {
+//    videoView.setSource(src)
+//  }
 
-  @ReactProp(name = PROP_SRC)
-  fun setSource(videoView: ReactTHEOplayerView, src: ReadableMap?) {
-    videoView.setSource(src)
-  }
+//  @ReactProp(name = PROP_SEEK)
+//  fun setSeek(videoView: ReactTHEOplayerView, seek: Double) {
+//    videoView.seekTo(seek)
+//  }
 
-  @ReactProp(name = PROP_SEEK)
-  fun setSeek(videoView: ReactTHEOplayerView, seek: Double) {
-    videoView.seekTo(seek)
-  }
+//  @ReactProp(name = PROP_PAUSED, defaultBoolean = false)
+//  fun setPaused(videoView: ReactTHEOplayerView, paused: Boolean) {
+//    videoView.setPaused(paused)
+//  }
 
-  @ReactProp(name = PROP_PAUSED, defaultBoolean = false)
-  fun setPaused(videoView: ReactTHEOplayerView, paused: Boolean) {
-    videoView.setPaused(paused)
-  }
+//  @ReactProp(name = PROP_MUTED, defaultBoolean = false)
+//  fun setMuted(videoView: ReactTHEOplayerView, muted: Boolean) {
+//    videoView.setMuted(muted)
+//  }
+//
+//  @ReactProp(name = PROP_VOLUME, defaultDouble = 1.0)
+//  fun setVolume(videoView: ReactTHEOplayerView, volume: Double) {
+//    videoView.setVolume(volume)
+//  }
 
-  @ReactProp(name = PROP_MUTED, defaultBoolean = false)
-  fun setMuted(videoView: ReactTHEOplayerView, muted: Boolean) {
-    videoView.setMuted(muted)
-  }
-
-  @ReactProp(name = PROP_VOLUME, defaultDouble = 1.0)
-  fun setVolume(videoView: ReactTHEOplayerView, volume: Double) {
-    videoView.setVolume(volume)
-  }
-
-  @ReactProp(name = PROP_PLAYBACKRATE, defaultDouble = 1.0)
-  fun setPlaybackRate(videoView: ReactTHEOplayerView, playbackRate: Double) {
-    videoView.setPlaybackRate(playbackRate)
-  }
-
-  @ReactProp(name = PROP_FULLSCREEN, defaultBoolean = false)
-  fun setFullscreen(videoView: ReactTHEOplayerView, fullscreen: Boolean) {
-    videoView.setFullscreen(fullscreen)
-  }
-
-  @ReactProp(name = PROP_SELECTED_TEXTTRACK, defaultInt = -1)
-  fun setSelectedTextTrack(videoView: ReactTHEOplayerView, uid: Int) {
-    videoView.setSelectedTextTrack(uid)
-  }
-
-  @ReactProp(name = PROP_SELECTED_AUDIOTRACK, defaultInt = -1)
-  fun setSelectedAudioTrack(videoView: ReactTHEOplayerView, uid: Int) {
-    if (uid != -1) {
-      videoView.setSelectedAudioTrack(uid)
-    }
-  }
-
-  @ReactProp(name = PROP_SELECTED_VIDEOTRACK, defaultInt = -1)
-  fun setSelectedVideoTrack(videoView: ReactTHEOplayerView, uid: Int) {
-    if (uid != -1) {
-      videoView.setSelectedVideoTrack(uid)
-    }
-  }
-
-  @ReactProp(name = PROP_TARGET_VIDEOQUALITY)
-  fun setTargetVideoQuality(videoView: ReactTHEOplayerView, uid: ReadableArray) {
-    videoView.setTargetVideoQualities(uid)
-  }
+//  @ReactProp(name = PROP_PLAYBACKRATE, defaultDouble = 1.0)
+//  fun setPlaybackRate(videoView: ReactTHEOplayerView, playbackRate: Double) {
+//    videoView.setPlaybackRate(playbackRate)
+//  }
+//
+//  @ReactProp(name = PROP_FULLSCREEN, defaultBoolean = false)
+//  fun setFullscreen(videoView: ReactTHEOplayerView, fullscreen: Boolean) {
+//    videoView.setFullscreen(fullscreen)
+//  }
+//
+//  @ReactProp(name = PROP_SELECTED_TEXTTRACK, defaultInt = -1)
+//  fun setSelectedTextTrack(videoView: ReactTHEOplayerView, uid: Int) {
+//    videoView.setSelectedTextTrack(uid)
+//  }
+//
+//  @ReactProp(name = PROP_SELECTED_AUDIOTRACK, defaultInt = -1)
+//  fun setSelectedAudioTrack(videoView: ReactTHEOplayerView, uid: Int) {
+//    if (uid != -1) {
+//      videoView.setSelectedAudioTrack(uid)
+//    }
+//  }
+//
+//  @ReactProp(name = PROP_SELECTED_VIDEOTRACK, defaultInt = -1)
+//  fun setSelectedVideoTrack(videoView: ReactTHEOplayerView, uid: Int) {
+//    if (uid != -1) {
+//      videoView.setSelectedVideoTrack(uid)
+//    }
+//  }
+//
+//  @ReactProp(name = PROP_TARGET_VIDEOQUALITY)
+//  fun setTargetVideoQuality(videoView: ReactTHEOplayerView, uid: ReadableArray) {
+//    videoView.setTargetVideoQualities(uid)
+//  }
 
   override fun getExportedCustomDirectEventTypeConstants(): Map<String, Any> {
     val builder = MapBuilder.builder<String, Any>()
