@@ -362,7 +362,6 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
   };
 
   public render(): JSX.Element {
-    console.log('rendering');
     const { config, style } = this.props;
     const { targetVideoQuality, source } = this.state;
     return (
