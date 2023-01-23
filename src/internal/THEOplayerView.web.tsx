@@ -31,9 +31,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps> {
       });
     }
 
-    // Object.assign(this._player.abr, abr); // TODO
     this._player.prepareWithUserAction();
-    // this._player.source = source; // TODO
     this._facade = new THEOplayerWebAdapter(this._player);
     onPlayerReady?.(this._facade);
   }
