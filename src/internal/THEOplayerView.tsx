@@ -11,15 +11,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import type {
-  ABRConfiguration,
-  AdsAPI,
-  CastAPI,
-  PlayerConfiguration,
-  PlayerError,
-  SourceDescription,
-  THEOplayerViewProps,
-} from 'react-native-theoplayer';
+import type { PlayerConfiguration, PlayerError, THEOplayerViewProps } from 'react-native-theoplayer';
 import { CastEventType, FullscreenActionType, PlayerEventType } from 'react-native-theoplayer';
 
 import styles from './THEOplayerView.style';
@@ -28,7 +20,6 @@ import { BaseEvent } from './adapter/event/BaseEvent';
 import {
   DefaultAdEvent,
   DefaultAirplayStateChangeEvent,
-  DefaultBufferingChangeEvent,
   DefaultChromecastChangeEvent,
   DefaultChromecastErrorEvent,
   DefaultDurationChangeEvent,
@@ -64,27 +55,10 @@ import type {
 import type { NativeAdEvent } from './adapter/event/native/NativeAdEvent';
 import { THEOplayerAdapter } from './adapter/THEOplayerAdapter';
 
-export interface LegacyTHEOplayerViewProps {
-  config?: PlayerConfiguration;
-  abrConfig?: ABRConfiguration;
-  source?: SourceDescription;
-  paused?: boolean;
-  playbackRate?: number;
-  volume?: number;
-  muted?: boolean;
-  fullscreen?: boolean;
-  selectedTextTrack?: number | undefined;
-  selectedVideoTrack?: number | undefined;
-  targetVideoQuality?: number | number[] | undefined;
-  selectedAudioTrack?: number | undefined;
-  style?: StyleProp<ViewStyle>;
-}
-
-interface THEOplayerRCTViewProps extends LegacyTHEOplayerViewProps {
+interface THEOplayerRCTViewProps {
   ref: React.RefObject<THEOplayerViewNativeComponent>;
-  src: SourceDescription;
-  seek?: number;
-
+  style?: StyleProp<ViewStyle>;
+  config?: PlayerConfiguration;
   onNativeSourceChange: () => void;
   onNativeLoadStart: () => void;
   onNativeLoadedData: () => void;
@@ -113,53 +87,21 @@ interface THEOplayerRCTViewProps extends LegacyTHEOplayerViewProps {
   onNativeFullscreenPlayerDidDismiss?: () => void;
 }
 
-interface THEOplayerRCTViewState extends LegacyTHEOplayerViewProps {
-  isBuffering: boolean;
+interface THEOplayerRCTViewState {
   error?: PlayerError;
 }
 
-interface THEOplayerViewNativeComponent extends HostComponent<LegacyTHEOplayerViewProps> {
-  /**
-   * Seek to a new position.
-   *
-   * @param seekTime - new time, in milliseconds.
-   */
-  seek: (seekTime: number) => void;
-  /**
-   * The API for advertisements.
-   */
-  ads: AdsAPI;
-
-  /**
-   * The API for casting devices.
-   */
-  cast: CastAPI;
-  setNativeProps: (props: Partial<THEOplayerRCTViewProps>) => void;
-}
+type THEOplayerViewNativeComponent = HostComponent<THEOplayerRCTViewProps>;
 
 export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplayerRCTViewState> {
   private readonly _root: React.RefObject<THEOplayerViewNativeComponent>;
   private readonly _facade: THEOplayerAdapter;
 
   private static initialState: THEOplayerRCTViewState = {
-    abrConfig: {
-      strategy: 'bandwidth',
-      targetBuffer: 20,
-    },
-    isBuffering: false,
     error: undefined,
-    playbackRate: 1,
-    volume: 1,
-    muted: false,
-    paused: true,
-    fullscreen: false,
-    selectedTextTrack: undefined,
-    selectedVideoTrack: undefined,
-    targetVideoQuality: undefined,
-    selectedAudioTrack: undefined,
   };
 
-  constructor(props: THEOplayerRCTViewProps) {
+  constructor(props: THEOplayerViewProps) {
     super(props);
     this._root = React.createRef();
     this.state = THEOplayerView.initialState;
@@ -169,20 +111,12 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
 
   componentWillUnmount() {
     if (Platform.OS === 'ios') {
+      // TODO: move to native module
       // on iOS, we trigger an explicit 'destroy' to clean up the underlying THEOplayer
-      const node = findNodeHandle(this._root.current);
       const command = (UIManager as { [index: string]: any })['THEOplayerRCTView'].Commands.destroy;
-      const params: any[] = [];
-      UIManager.dispatchViewManagerCommand(node, command, params);
+      UIManager.dispatchViewManagerCommand(findNodeHandle(this._root.current), command, []);
     }
     this._facade.clearEventListeners();
-  }
-
-  public seek(time: number): void {
-    if (isNaN(time)) {
-      throw new Error('Specified time is not a number');
-    }
-    this.setNativeProps({ seek: time });
   }
 
   public get nativeHandle(): number | null {
@@ -193,34 +127,12 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
     this.setState(THEOplayerView.initialState);
   }
 
-  private setNativeProps(nativeProps: Partial<THEOplayerRCTViewProps>) {
-    if (this._root?.current) {
-      this._root.current.setNativeProps(nativeProps);
-    }
-  }
-
-  private maybeChangeBufferingState(isBuffering: boolean) {
-    const { isBuffering: wasBuffering, error } = this.state;
-    const { paused } = this.state;
-
-    // do not change state to buffering in case of an error or if the player is paused
-    const newIsBuffering = isBuffering && !error && !paused;
-    this.setState({ isBuffering: newIsBuffering });
-
-    // notify change in buffering state
-    if (newIsBuffering !== wasBuffering) {
-      this._facade.dispatchEvent(new DefaultBufferingChangeEvent(isBuffering));
-    }
-  }
-
   private _onSourceChange = () => {
     this.reset();
     this._facade.dispatchEvent(new BaseEvent(PlayerEventType.SOURCE_CHANGE));
   };
 
   private _onLoadStart = () => {
-    // potentially notify change in buffering state
-    this.maybeChangeBufferingState(true);
     this._facade.dispatchEvent(new BaseEvent(PlayerEventType.LOAD_START));
   };
 
@@ -246,7 +158,6 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
   private _onError = (event: NativeSyntheticEvent<NativeErrorEvent>) => {
     const { error } = event.nativeEvent;
     this.setState({ error });
-    this.maybeChangeBufferingState(false);
     this._facade.dispatchEvent(new DefaultErrorEvent(event.nativeEvent.error));
   };
 
@@ -259,7 +170,6 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
   };
 
   private _onPlaying = () => {
-    this.maybeChangeBufferingState(false);
     this._facade.dispatchEvent(new BaseEvent(PlayerEventType.PLAYING));
   };
 
@@ -280,7 +190,6 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
   };
 
   private _onReadStateChange = (event: NativeSyntheticEvent<NativeReadyStateChangeEvent>) => {
-    this.maybeChangeBufferingState(event.nativeEvent.readyState < 3);
     this._facade.dispatchEvent(new DefaultReadyStateChangeEvent(event.nativeEvent.readyState));
   };
 
@@ -363,12 +272,12 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
 
   public render(): JSX.Element {
     const { config, style } = this.props;
-    const { targetVideoQuality, source } = this.state;
     return (
       <View style={[styles.base, style]}>
         <THEOplayerRCTView
           ref={this._root}
-          src={source || {}}
+          style={StyleSheet.absoluteFill}
+          config={config}
           onNativeSourceChange={this._onSourceChange}
           onNativeLoadStart={this._onLoadStart}
           onNativeLoadedData={this._onLoadedData}
@@ -395,11 +304,6 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
           onNativeFullscreenPlayerDidPresent={this._onFullscreenPlayerDidPresent}
           onNativeFullscreenPlayerWillDismiss={this._onFullscreenPlayerWillDismiss}
           onNativeFullscreenPlayerDidDismiss={this._onFullscreenPlayerDidDismiss}
-          style={StyleSheet.absoluteFill}
-          config={config}
-          {...this.state}
-          // Always pass an array for targetVideoQuality.
-          targetVideoQuality={!targetVideoQuality ? [] : Array.isArray(targetVideoQuality) ? targetVideoQuality : [targetVideoQuality]}
         />
       </View>
     );
