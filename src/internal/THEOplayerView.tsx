@@ -24,7 +24,7 @@ import { CastEventType, FullscreenActionType, PlayerEventType } from 'react-nati
 
 import styles from './THEOplayerView.style';
 import { decodeNanInf } from './utils/TypeUtils';
-import { BaseEvent } from './event/BaseEvent';
+import { BaseEvent } from './adapter/event/BaseEvent';
 import {
   DefaultAdEvent,
   DefaultAirplayStateChangeEvent,
@@ -43,15 +43,15 @@ import {
   DefaultTextTrackEvent,
   DefaultTextTrackListEvent,
   DefaultTimeupdateEvent,
-} from './event/PlayerEvents';
-import type { NativeCastEvent } from './event/native/NativeCastEvent';
+} from './adapter/event/PlayerEvents';
+import type { NativeCastEvent } from './adapter/event/native/NativeCastEvent';
 import type {
   NativeMediaTrackEvent,
   NativeMediaTrackListEvent,
   NativeTextTrackEvent,
   NativeTextTrackListEvent,
-} from './event/native/NativeTrackEvent';
-import { toMediaTrackType, toMediaTrackTypeEventType, toTextTrackEventType, toTrackListEventType } from './event/native/NativeTrackEvent';
+} from './adapter/event/native/NativeTrackEvent';
+import { toMediaTrackType, toMediaTrackTypeEventType, toTextTrackEventType, toTrackListEventType } from './adapter/event/native/NativeTrackEvent';
 import type {
   NativeDurationChangeEvent,
   NativeErrorEvent,
@@ -60,8 +60,8 @@ import type {
   NativeReadyStateChangeEvent,
   NativeSegmentNotFoundEvent,
   NativeTimeUpdateEvent,
-} from './event/native/NativePlayerEvent';
-import type { NativeAdEvent } from './event/native/NativeAdEvent';
+} from './adapter/event/native/NativePlayerEvent';
+import type { NativeAdEvent } from './adapter/event/native/NativeAdEvent';
 import { THEOplayerAdapter } from './adapter/THEOplayerAdapter';
 
 export interface LegacyTHEOplayerViewProps {

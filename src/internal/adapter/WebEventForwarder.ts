@@ -25,7 +25,7 @@ import {
   TrackListEventType,
 } from 'react-native-theoplayer';
 import type { THEOplayerWebAdapter } from './THEOplayerWebAdapter';
-import { BaseEvent } from '../event/BaseEvent';
+import { BaseEvent } from './event/BaseEvent';
 import {
   DefaultAdEvent,
   DefaultBufferingChangeEvent,
@@ -42,8 +42,8 @@ import {
   DefaultTextTrackListEvent,
   DefaultTimeupdateEvent,
   DefaultVolumeChangeEvent,
-} from '../event/PlayerEvents';
-import { fromNativeCue, fromNativeMediaTrack, fromNativeTextTrack } from '../web/TrackUtils';
+} from './event/PlayerEvents';
+import { fromNativeCue, fromNativeMediaTrack, fromNativeTextTrack } from './web/TrackUtils';
 
 export class WebEventForwarder {
   private readonly _player: THEOplayer.ChromelessPlayer;

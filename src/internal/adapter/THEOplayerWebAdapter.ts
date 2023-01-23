@@ -1,13 +1,13 @@
-import { DefaultEventDispatcher } from '../event/DefaultEventDispatcher';
+import { DefaultEventDispatcher } from './event/DefaultEventDispatcher';
 import type { AdsAPI, CastAPI, PlayerEventMap, THEOplayer } from 'react-native-theoplayer';
 import { FullscreenActionType } from 'react-native-theoplayer';
-import { THEOplayerWebAdsAPI } from '../ads/THEOplayerWebAdsAPI';
-import { THEOplayerWebCastAPI } from '../cast/THEOplayerWebCastApi';
+import { THEOplayerWebAdsAPI } from './ads/THEOplayerWebAdsAPI';
+import { THEOplayerWebCastAPI } from './cast/THEOplayerWebCastApi';
 import type * as THEOplayerWeb from 'theoplayer';
 import type { MediaTrack, TextTrack } from 'theoplayer';
-import { findNativeQualitiesByUid } from '../web/TrackUtils';
+import { findNativeQualitiesByUid } from './web/TrackUtils';
 import type { ABRConfiguration, SourceDescription } from 'src/api/barrel';
-import { DefaultFullscreenEvent } from '../event/PlayerEvents';
+import { DefaultFullscreenEvent } from './event/PlayerEvents';
 import { WebEventForwarder } from './WebEventForwarder';
 
 export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayer {
