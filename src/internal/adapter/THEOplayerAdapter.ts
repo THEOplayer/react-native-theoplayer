@@ -40,7 +40,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     } else {
       this.pause();
     }
-  }
+  };
 
   private onTimeupdate = (event: TimeUpdateEvent) => {
     this._currentTime = event.currentTime;
