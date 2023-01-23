@@ -139,7 +139,7 @@ interface THEOplayerViewNativeComponent extends HostComponent<LegacyTHEOplayerVi
 
 export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplayerRCTViewState> {
   private readonly _root: React.RefObject<THEOplayerViewNativeComponent>;
-  private readonly _exposedPlayer: THEOplayerAdapter;
+  private readonly _facade: THEOplayerAdapter;
 
   private static initialState: THEOplayerRCTViewState = {
     isBuffering: false,
@@ -159,8 +159,8 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
     super(props);
     this._root = React.createRef();
     this.state = THEOplayerView.initialState;
-    this._exposedPlayer = new THEOplayerAdapter(this);
-    this.props.onPlayerReady?.(this._exposedPlayer);
+    this._facade = new THEOplayerAdapter(this);
+    this.props.onPlayerReady?.(this._facade);
   }
 
   componentWillUnmount() {
@@ -171,7 +171,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
       const params: any[] = [];
       UIManager.dispatchViewManagerCommand(node, command, params);
     }
-    this._exposedPlayer.clearEventListeners();
+    this._facade.clearEventListeners();
   }
 
   public seek(time: number): void {
@@ -205,28 +205,28 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
 
     // notify change in buffering state
     if (newIsBuffering !== wasBuffering) {
-      this._exposedPlayer.dispatchEvent(new DefaultBufferingChangeEvent(isBuffering));
+      this._facade.dispatchEvent(new DefaultBufferingChangeEvent(isBuffering));
     }
   }
 
   private _onSourceChange = () => {
     this.reset();
-    this._exposedPlayer.dispatchEvent(new BaseEvent(PlayerEventType.SOURCE_CHANGE));
+    this._facade.dispatchEvent(new BaseEvent(PlayerEventType.SOURCE_CHANGE));
   };
 
   private _onLoadStart = () => {
     // potentially notify change in buffering state
     this.maybeChangeBufferingState(true);
-    this._exposedPlayer.dispatchEvent(new BaseEvent(PlayerEventType.LOAD_START));
+    this._facade.dispatchEvent(new BaseEvent(PlayerEventType.LOAD_START));
   };
 
   private _onLoadedData = () => {
-    this._exposedPlayer.dispatchEvent(new BaseEvent(PlayerEventType.LOADED_DATA));
+    this._facade.dispatchEvent(new BaseEvent(PlayerEventType.LOADED_DATA));
   };
 
   private _onLoadedMetadata = (event: NativeSyntheticEvent<NativeLoadedMetadataEvent>) => {
     const nativeEvent = event.nativeEvent;
-    this._exposedPlayer.dispatchEvent(
+    this._facade.dispatchEvent(
       new DefaultLoadedMetadataEvent(
         nativeEvent.textTracks,
         nativeEvent.audioTracks,
@@ -243,76 +243,76 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
     const { error } = event.nativeEvent;
     this.setState({ error });
     this.maybeChangeBufferingState(false);
-    this._exposedPlayer.dispatchEvent(new DefaultErrorEvent(event.nativeEvent.error));
+    this._facade.dispatchEvent(new DefaultErrorEvent(event.nativeEvent.error));
   };
 
   private _onProgress = (event: NativeSyntheticEvent<NativeProgressEvent>) => {
-    this._exposedPlayer.dispatchEvent(new DefaultProgressEvent(event.nativeEvent.seekable));
+    this._facade.dispatchEvent(new DefaultProgressEvent(event.nativeEvent.seekable));
   };
 
   private _onPlay = () => {
-    this._exposedPlayer.dispatchEvent(new BaseEvent(PlayerEventType.PLAY));
+    this._facade.dispatchEvent(new BaseEvent(PlayerEventType.PLAY));
   };
 
   private _onPlaying = () => {
     this.maybeChangeBufferingState(false);
-    this._exposedPlayer.dispatchEvent(new BaseEvent(PlayerEventType.PLAYING));
+    this._facade.dispatchEvent(new BaseEvent(PlayerEventType.PLAYING));
   };
 
   private _onPause = () => {
-    this._exposedPlayer.dispatchEvent(new BaseEvent(PlayerEventType.PAUSE));
+    this._facade.dispatchEvent(new BaseEvent(PlayerEventType.PAUSE));
   };
 
   private _onSeeking = () => {
-    this._exposedPlayer.dispatchEvent(new BaseEvent(PlayerEventType.SEEKING));
+    this._facade.dispatchEvent(new BaseEvent(PlayerEventType.SEEKING));
   };
 
   private _onSeeked = () => {
-    this._exposedPlayer.dispatchEvent(new BaseEvent(PlayerEventType.SEEKED));
+    this._facade.dispatchEvent(new BaseEvent(PlayerEventType.SEEKED));
   };
 
   private _onEnded = () => {
-    this._exposedPlayer.dispatchEvent(new BaseEvent(PlayerEventType.ENDED));
+    this._facade.dispatchEvent(new BaseEvent(PlayerEventType.ENDED));
   };
 
   private _onReadStateChange = (event: NativeSyntheticEvent<NativeReadyStateChangeEvent>) => {
     this.maybeChangeBufferingState(event.nativeEvent.readyState < 3);
-    this._exposedPlayer.dispatchEvent(new DefaultReadyStateChangeEvent(event.nativeEvent.readyState));
+    this._facade.dispatchEvent(new DefaultReadyStateChangeEvent(event.nativeEvent.readyState));
   };
 
   private _onTimeUpdate = (event: NativeSyntheticEvent<NativeTimeUpdateEvent>) => {
-    this._exposedPlayer.dispatchEvent(new DefaultTimeupdateEvent(event.nativeEvent.currentTime, event.nativeEvent.currentProgramDateTime));
+    this._facade.dispatchEvent(new DefaultTimeupdateEvent(event.nativeEvent.currentTime, event.nativeEvent.currentProgramDateTime));
   };
 
   private _onDurationChange = (event: NativeSyntheticEvent<NativeDurationChangeEvent>) => {
-    this._exposedPlayer.dispatchEvent(new DefaultDurationChangeEvent(decodeNanInf(event.nativeEvent.duration)));
+    this._facade.dispatchEvent(new DefaultDurationChangeEvent(decodeNanInf(event.nativeEvent.duration)));
   };
 
   private _onSegmentNotFound = (event: NativeSyntheticEvent<NativeSegmentNotFoundEvent>) => {
     const nativeEvent = event.nativeEvent;
-    this._exposedPlayer.dispatchEvent(new DefaultSegmentNotFoundEvent(nativeEvent.segmentStartTime, nativeEvent.error, nativeEvent.retryCount));
+    this._facade.dispatchEvent(new DefaultSegmentNotFoundEvent(nativeEvent.segmentStartTime, nativeEvent.error, nativeEvent.retryCount));
   };
 
   private _onTextTrackListEvent = (event: NativeSyntheticEvent<NativeTextTrackListEvent>) => {
     const nativeEvent = event.nativeEvent;
-    this._exposedPlayer.dispatchEvent(new DefaultTextTrackListEvent(toTrackListEventType(nativeEvent.type), nativeEvent.track));
+    this._facade.dispatchEvent(new DefaultTextTrackListEvent(toTrackListEventType(nativeEvent.type), nativeEvent.track));
   };
 
   private _onTextTrackEvent = (event: NativeSyntheticEvent<NativeTextTrackEvent>) => {
     const nativeEvent = event.nativeEvent;
-    this._exposedPlayer.dispatchEvent(new DefaultTextTrackEvent(toTextTrackEventType(nativeEvent.type), nativeEvent.trackUid, nativeEvent.cue));
+    this._facade.dispatchEvent(new DefaultTextTrackEvent(toTextTrackEventType(nativeEvent.type), nativeEvent.trackUid, nativeEvent.cue));
   };
 
   private _onMediaTrackListEvent = (event: NativeSyntheticEvent<NativeMediaTrackListEvent>) => {
     const nativeEvent = event.nativeEvent;
-    this._exposedPlayer.dispatchEvent(
+    this._facade.dispatchEvent(
       new DefaultMediaTrackListEvent(toTrackListEventType(nativeEvent.type), toMediaTrackType(nativeEvent.trackType), nativeEvent.track),
     );
   };
 
   private _onMediaTrackEvent = (event: NativeSyntheticEvent<NativeMediaTrackEvent>) => {
     const nativeEvent = event.nativeEvent;
-    this._exposedPlayer.dispatchEvent(
+    this._facade.dispatchEvent(
       new DefaultMediaTrackEvent(
         toMediaTrackTypeEventType(nativeEvent.type),
         toMediaTrackType(nativeEvent.trackType),
@@ -324,37 +324,37 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
 
   private _onAdEvent = (event: NativeSyntheticEvent<NativeAdEvent>) => {
     const nativeEvent = event.nativeEvent;
-    this._exposedPlayer.dispatchEvent(new DefaultAdEvent(nativeEvent.type, nativeEvent.ad));
+    this._facade.dispatchEvent(new DefaultAdEvent(nativeEvent.type, nativeEvent.ad));
   };
 
   private _onCastEvent = (event: NativeSyntheticEvent<NativeCastEvent>) => {
     switch (event.nativeEvent.type) {
       case CastEventType.CHROMECAST_STATE_CHANGE:
-        this._exposedPlayer.dispatchEvent(new DefaultChromecastChangeEvent(event.nativeEvent.state));
+        this._facade.dispatchEvent(new DefaultChromecastChangeEvent(event.nativeEvent.state));
         break;
       case CastEventType.AIRPLAY_STATE_CHANGE:
-        this._exposedPlayer.dispatchEvent(new DefaultAirplayStateChangeEvent(event.nativeEvent.state));
+        this._facade.dispatchEvent(new DefaultAirplayStateChangeEvent(event.nativeEvent.state));
         break;
       case CastEventType.CHROMECAST_ERROR:
-        this._exposedPlayer.dispatchEvent(new DefaultChromecastErrorEvent(event.nativeEvent.error));
+        this._facade.dispatchEvent(new DefaultChromecastErrorEvent(event.nativeEvent.error));
         break;
     }
   };
 
   private _onFullscreenPlayerWillPresent = () => {
-    this._exposedPlayer.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_WILL_PRESENT));
+    this._facade.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_WILL_PRESENT));
   };
 
   private _onFullscreenPlayerDidPresent = () => {
-    this._exposedPlayer.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_DID_PRESENT));
+    this._facade.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_DID_PRESENT));
   };
 
   private _onFullscreenPlayerWillDismiss = () => {
-    this._exposedPlayer.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_WILL_DISMISS));
+    this._facade.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_WILL_DISMISS));
   };
 
   private _onFullscreenPlayerDidDismiss = () => {
-    this._exposedPlayer.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_DID_DISMISS));
+    this._facade.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_DID_DISMISS));
   };
 
   private buildWrapperProps(): LegacyTHEOplayerViewProps {
