@@ -13,11 +13,13 @@ import { PlayerEventType } from 'react-native-theoplayer';
 import { THEOplayerNativeAdsAPI } from '../ads/THEOplayerNativeAdsAPI';
 import { THEOplayerNativeCastAPI } from '../cast/THEOplayerNativeCastApi';
 import { DefaultVolumeChangeEvent } from '../event/PlayerEvents';
+import { AbrAdapter } from './abr/AbrAdapter';
 
 export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayer {
   private readonly _view: THEOplayerView;
   private readonly _adsApi: THEOplayerNativeAdsAPI;
   private readonly _castApi: THEOplayerNativeCastAPI;
+  private readonly _abrAdapter: AbrAdapter;
 
   private _autoplay = false;
   private _currentTime = 0;
@@ -27,6 +29,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._view = view;
     this._adsApi = new THEOplayerNativeAdsAPI(this._view);
     this._castApi = new THEOplayerNativeCastAPI(this._view);
+    this._abrAdapter = new AbrAdapter(this._view);
     this.addEventListener(PlayerEventType.TIME_UPDATE, this.onTimeupdate);
     this.addEventListener(PlayerEventType.SOURCE_CHANGE, this.onSourceChange);
   }
@@ -44,7 +47,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   };
 
   get abr(): ABRConfiguration | undefined {
-    return this._view.state.abrConfig;
+    return this._abrAdapter;
   }
 
   get ads(): AdsAPI {

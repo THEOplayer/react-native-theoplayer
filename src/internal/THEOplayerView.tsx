@@ -142,6 +142,10 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
   private readonly _facade: THEOplayerAdapter;
 
   private static initialState: THEOplayerRCTViewState = {
+    abrConfig: {
+      strategy: 'bandwidth',
+      targetBuffer: 20,
+    },
     isBuffering: false,
     error: undefined,
     playbackRate: 1,
