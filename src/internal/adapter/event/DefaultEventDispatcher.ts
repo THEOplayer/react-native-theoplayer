@@ -1,6 +1,6 @@
-import type { EventDispatcher, EventMap, StringKeyOf } from '../../api/event/EventDispatcher';
-import type { EventListener } from '../../api/event/EventListener';
-import { arrayRemoveElement } from '../utils/arrayUtil';
+import type { EventDispatcher, EventMap, StringKeyOf } from '../../../api/event/EventDispatcher';
+import type { EventListener } from '../../../api/event/EventListener';
+import { arrayRemoveElement } from '../../utils/arrayUtil';
 
 export class DefaultEventDispatcher<TMap extends EventMap<StringKeyOf<TMap>>> implements EventDispatcher<TMap> {
   readonly _eventListeners: Map<StringKeyOf<TMap>, EventListener<TMap[StringKeyOf<TMap>]>[]> = new Map();

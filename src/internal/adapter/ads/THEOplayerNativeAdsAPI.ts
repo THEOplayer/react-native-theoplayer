@@ -1,13 +1,8 @@
-import type { AdBreak, AdsAPI } from "react-native-theoplayer";
-import { NativeModules } from "react-native";
-import type { AdDescription } from "react-native-theoplayer";
-import type { Ad } from "react-native-theoplayer";
-import type { THEOplayerView } from "react-native-theoplayer";
-import type { GoogleDAI } from "react-native-theoplayer";
-import { THEOplayerNativeGoogleDAI } from "./THEOplayerNativeGoogleDAI";
+import type { Ad, AdBreak, AdDescription, AdsAPI, GoogleDAI, THEOplayerView } from 'react-native-theoplayer';
+import { NativeModules } from 'react-native';
+import { THEOplayerNativeGoogleDAI } from './THEOplayerNativeGoogleDAI';
 
 export class THEOplayerNativeAdsAPI implements AdsAPI {
-
   private readonly _dai: GoogleDAI;
 
   constructor(private _player: THEOplayerView) {

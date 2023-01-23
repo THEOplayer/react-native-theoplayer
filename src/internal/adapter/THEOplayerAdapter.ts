@@ -1,4 +1,4 @@
-import { DefaultEventDispatcher } from '../event/DefaultEventDispatcher';
+import { DefaultEventDispatcher } from './event/DefaultEventDispatcher';
 import type {
   ABRConfiguration,
   AdsAPI,
@@ -10,9 +10,9 @@ import type {
   TimeUpdateEvent,
 } from 'react-native-theoplayer';
 import { PlayerEventType } from 'react-native-theoplayer';
-import { THEOplayerNativeAdsAPI } from '../ads/THEOplayerNativeAdsAPI';
-import { THEOplayerNativeCastAPI } from '../cast/THEOplayerNativeCastApi';
-import { DefaultVolumeChangeEvent } from '../event/PlayerEvents';
+import { THEOplayerNativeAdsAPI } from './ads/THEOplayerNativeAdsAPI';
+import { THEOplayerNativeCastAPI } from './cast/THEOplayerNativeCastApi';
+import { DefaultVolumeChangeEvent } from './event/PlayerEvents';
 import { AbrAdapter } from './abr/AbrAdapter';
 
 export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayer {

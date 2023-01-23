@@ -1,10 +1,10 @@
 import type {
-  TextTrackCue as NativeTextTrackCue,
-  TextTrack as NativeTextTrack,
   MediaTrack as NativeMediaTrack,
   Quality as NativeQuality,
+  TextTrack as NativeTextTrack,
+  TextTrackCue as NativeTextTrackCue,
 } from 'theoplayer';
-import type { TextTrack, TextTrackCue, MediaTrack } from 'react-native-theoplayer';
+import type { MediaTrack, TextTrack, TextTrackCue } from 'react-native-theoplayer';
 
 export function fromNativeCue(cue: NativeTextTrackCue): TextTrackCue {
   return {
