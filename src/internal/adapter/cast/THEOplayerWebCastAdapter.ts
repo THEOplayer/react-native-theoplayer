@@ -1,7 +1,7 @@
 import type { Airplay, CastAPI, Chromecast } from 'react-native-theoplayer';
 import type * as THEOplayer from 'theoplayer';
 
-export class THEOplayerWebCastAPI implements CastAPI {
+export class THEOplayerWebCastAdapter implements CastAPI {
   // @ts-ignore
   private readonly _player: THEOplayer.ChromelessPlayer;
 
