@@ -4,13 +4,13 @@ import {
   addTextTrackCue,
   AdEvent,
   AirplayStateChangeEvent,
-  BufferingChangeEvent,
   CastEvent,
   CastEventType,
   ChromecastChangeEvent,
   ChromecastErrorEvent,
   DurationChangeEvent,
   ErrorEvent,
+  Event,
   filterThumbnailTracks,
   findTextTrackByUid,
   LoadedMetadataEvent,
@@ -20,6 +20,7 @@ import {
   MediaTrackType,
   PlayerEventType,
   ProgressEvent,
+  ReadyStateChangeEvent,
   removeTextTrack,
   removeTextTrackCue,
   TextTrackEvent,
@@ -90,9 +91,9 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
     const { player } = this.props;
     player.addEventListener(PlayerEventType.SOURCE_CHANGE, console.log);
     player.addEventListener(PlayerEventType.LOADED_DATA, console.log);
-    player.addEventListener(PlayerEventType.READYSTATE_CHANGE, console.log);
+    player.addEventListener(PlayerEventType.READYSTATE_CHANGE, this.onReadyStateChange);
     player.addEventListener(PlayerEventType.PLAY, this.onPlay);
-    player.addEventListener(PlayerEventType.PLAYING, console.log);
+    player.addEventListener(PlayerEventType.PLAYING, this.onPlaying);
     player.addEventListener(PlayerEventType.SEEKING, console.log);
     player.addEventListener(PlayerEventType.SEEKED, console.log);
     player.addEventListener(PlayerEventType.ENDED, console.log);
@@ -109,11 +110,21 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
     player.addEventListener(PlayerEventType.CAST_EVENT, this.onCastEvent);
     player.addEventListener(PlayerEventType.PROGRESS, this.onProgress);
     player.addEventListener(PlayerEventType.ERROR, this.onError);
-    player.addEventListener(PlayerEventType.BUFFERING_CHANGE, this.onBufferingStateChange);
   }
+
+  private onReadyStateChange = (event: ReadyStateChangeEvent) => {
+    console.log(event);
+    this.maybeShowLoadingIndicator(event.readyState < 3);
+  };
+
+  private onPlaying = (event: Event<'playing'>) => {
+    console.log(event);
+    this.maybeShowLoadingIndicator(false);
+  };
 
   private onLoadStart = () => {
     console.log(TAG, 'loadstart');
+    this.maybeShowLoadingIndicator(true);
     this.setState({ error: undefined });
   };
 
@@ -251,11 +262,8 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
 
   private onError = (event: ErrorEvent) => {
     const { error } = event;
+    this.maybeShowLoadingIndicator(false);
     this.setState({ error });
-  };
-
-  private onBufferingStateChange = (event: BufferingChangeEvent) => {
-    this.setState({ showLoadingIndicator: event.isBuffering });
   };
 
   private onSeek = (time: number) => {
@@ -335,6 +343,12 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
     player.muted = newMuted;
     this.setState({ muted: newMuted });
   };
+
+  private maybeShowLoadingIndicator(showLoading: boolean) {
+    const { error, paused } = this.state;
+    // do not change state to buffering in case of an error or if the player is paused
+    this.setState({ showLoadingIndicator: showLoading && !error && !paused });
+  }
 
   private renderThumbnailCarousel = (seekBarPosition: SeekBarPosition) => {
     const { textTracks } = this.state;

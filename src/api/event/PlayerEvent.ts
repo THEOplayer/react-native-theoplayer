@@ -83,7 +83,3 @@ export enum FullscreenActionType {
 export interface FullscreenEvent extends Event<PlayerEventType.FULLSCREEN> {
   fullscreenAction: FullscreenActionType;
 }
-
-export interface BufferingChangeEvent extends Event<PlayerEventType.BUFFERING_CHANGE> {
-  isBuffering: boolean;
-}

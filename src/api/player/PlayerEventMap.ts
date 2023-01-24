@@ -1,6 +1,5 @@
 import type { Event } from '../event/Event';
 import type {
-  BufferingChangeEvent,
   DurationChangeEvent,
   ErrorEvent,
   FullscreenEvent,
@@ -20,7 +19,6 @@ export enum PlayerEventType {
   CANPLAY = 'canplay',
   PLAYING = 'playing',
   FULLSCREEN = 'fullscreen',
-  BUFFERING_CHANGE = 'bufferingchange',
   SOURCE_CHANGE = 'sourcechange',
   LOAD_START = 'loadstart',
   LOADED_METADATA = 'loadedmetadata',
@@ -68,11 +66,6 @@ export interface PlayerEventMap {
    * Fired when the fullscreen state of the player changes.
    */
   [PlayerEventType.FULLSCREEN]: FullscreenEvent;
-
-  /**
-   * Fired when the player's buffering state changes.
-   */
-  [PlayerEventType.BUFFERING_CHANGE]: BufferingChangeEvent;
 
   /**
    * Fired when the player's source changes.

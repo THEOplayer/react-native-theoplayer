@@ -5,7 +5,6 @@ import {
   AdEvent,
   AdEventType,
   AirplayStateChangeEvent,
-  BufferingChangeEvent,
   CastEventType,
   CastState,
   ChromecastChangeEvent,
@@ -41,12 +40,6 @@ import {
 export class DefaultFullscreenEvent extends BaseEvent<PlayerEventType.FULLSCREEN> implements FullscreenEvent {
   constructor(public fullscreenAction: FullscreenActionType) {
     super(PlayerEventType.FULLSCREEN);
-  }
-}
-
-export class DefaultBufferingChangeEvent extends BaseEvent<PlayerEventType.BUFFERING_CHANGE> implements BufferingChangeEvent {
-  constructor(public isBuffering: boolean) {
-    super(PlayerEventType.BUFFERING_CHANGE);
   }
 }
 

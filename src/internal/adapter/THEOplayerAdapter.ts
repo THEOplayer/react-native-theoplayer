@@ -6,17 +6,17 @@ import type {
   DurationChangeEvent,
   LoadedMetadataEvent,
   MediaTrack,
-  TextTrack,
   PlayerEventMap,
   SourceDescription,
+  TextTrack,
   THEOplayer,
   THEOplayerView,
   TimeUpdateEvent,
 } from 'react-native-theoplayer';
-import { PlayerEventType, PreloadType, ReadyStateChangeEvent } from 'react-native-theoplayer';
+import { PlayerEventType, PreloadType } from 'react-native-theoplayer';
 import { THEOplayerNativeAdsAdapter } from './ads/THEOplayerNativeAdsAdapter';
 import { THEOplayerNativeCastAdapter } from './cast/THEOplayerNativeCastAdapter';
-import { DefaultBufferingChangeEvent, DefaultVolumeChangeEvent } from './event/PlayerEvents';
+import { DefaultVolumeChangeEvent } from './event/PlayerEvents';
 import { AbrAdapter } from './abr/AbrAdapter';
 import { NativeModules, Platform } from 'react-native';
 
@@ -36,7 +36,6 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   private _currentTime = NaN;
   private _duration = NaN;
   private _playbackRate = 1;
-  private _buffering = false;
   private _preload: PreloadType = 'none';
   private _audioTracks: MediaTrack[] = [];
   private _videoTracks: MediaTrack[] = [];
@@ -53,20 +52,15 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._castAdapter = new THEOplayerNativeCastAdapter(this._view);
     this._abrAdapter = new AbrAdapter(this._view);
     this.addEventListener(PlayerEventType.SOURCE_CHANGE, this.onSourceChange);
-    this.addEventListener(PlayerEventType.READYSTATE_CHANGE, this.onReadyStateChange);
-    this.addEventListener(PlayerEventType.LOAD_START, this.onLoadStart);
     this.addEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
     this.addEventListener(PlayerEventType.PAUSE, this.onPause);
-    this.addEventListener(PlayerEventType.PLAYING, this.onPlaying);
     this.addEventListener(PlayerEventType.TIME_UPDATE, this.onTimeupdate);
     this.addEventListener(PlayerEventType.DURATION_CHANGE, this.onDurationChange);
     this.addEventListener(PlayerEventType.SEEKING, this.onSeeking);
     this.addEventListener(PlayerEventType.SEEKED, this.onSeeked);
-    this.addEventListener(PlayerEventType.ERROR, this.onError);
   }
 
   private reset() {
-    this._buffering = false;
     this._playbackRate = 1;
     this._volume = 1;
     this._muted = false;
@@ -82,20 +76,6 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._targetVideoQuality = undefined;
   }
 
-  private maybeChangeBufferingState(isBuffering: boolean) {
-    const wasBuffering = this._buffering;
-    const { error } = this._view.state;
-
-    // do not change state to buffering in case of an error or if the player is paused
-    const newIsBuffering = isBuffering && !error && !this._paused;
-    this._buffering = newIsBuffering;
-
-    // notify change in buffering state
-    if (newIsBuffering !== wasBuffering) {
-      this.dispatchEvent(new DefaultBufferingChangeEvent(newIsBuffering));
-    }
-  }
-
   private onSourceChange = () => {
     this.reset();
     if (this._autoplay) {
@@ -103,22 +83,6 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     } else {
       this.pause();
     }
-  };
-
-  private onReadyStateChange = (event: ReadyStateChangeEvent) => {
-    this.maybeChangeBufferingState(event.readyState < 3);
-  };
-
-  private onError = () => {
-    this.maybeChangeBufferingState(false);
-  };
-
-  private onLoadStart = () => {
-    this.maybeChangeBufferingState(true);
-  };
-
-  private onPlaying = () => {
-    this.maybeChangeBufferingState(false);
   };
 
   private onPause = () => {
