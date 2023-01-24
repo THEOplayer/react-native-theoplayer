@@ -62,7 +62,10 @@ class SourceAdapter {
   private val gson = Gson()
 
   @Throws(THEOplayerException::class)
-  fun parseSourceFromJS(source: ReadableMap): SourceDescription? {
+  fun parseSourceFromJS(source: ReadableMap?): SourceDescription? {
+    if (source == null) {
+      return null
+    }
     val hashmap = eliminateReadables(source)
     try {
       val json = gson.toJson(hashmap)
