@@ -70,4 +70,4 @@ ios/custom/Frameworks/**/*.zip
 ios/custom/Frameworks/integrations
 ios/build.sh
 ios/custom/Frameworks/tvos/*.xcframework
-example/dist
+*.sh
