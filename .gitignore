@@ -68,3 +68,5 @@ ios/custom/Frameworks/ios/*.xcframework
 ios/custom/Frameworks/candidates
 ios/custom/Frameworks/**/*.zip
 ios/custom/Frameworks/integrations
+ios/build.sh
+ios/custom/Frameworks/tvos/*.xcframework
