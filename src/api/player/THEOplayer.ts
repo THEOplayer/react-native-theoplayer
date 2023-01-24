@@ -70,6 +70,11 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
   muted: boolean;
 
   /**
+   * Whether the player is seeking.
+   */
+  readonly seeking: boolean;
+
+  /**
    * Determines whether the player is currently playing in fullscreen.
    */
   fullscreen: boolean;
