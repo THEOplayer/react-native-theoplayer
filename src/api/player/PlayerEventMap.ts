@@ -17,6 +17,7 @@ import type { CastEvent } from '../event/CastEvent';
 
 export enum PlayerEventType {
   PLAY = 'play',
+  CANPLAY = 'canplay',
   PLAYING = 'playing',
   FULLSCREEN = 'fullscreen',
   BUFFERING_CHANGE = 'bufferingchange',
@@ -48,6 +49,11 @@ export enum PlayerEventType {
  *
  */
 export interface PlayerEventMap {
+  /**
+   * Fired when the player can resume playback of the media data.
+   */
+  [PlayerEventType.CANPLAY]: Event<PlayerEventType.CANPLAY>;
+
   /**
    * Fired when the player's internal paused state changes to `false`.
    */
