@@ -95,8 +95,7 @@ class THEOplayerRCTView: UIView {
         }
         
         if !self.isCasting() || self.player == nil {
-            self.player?.destroy()
-            self.player = nil
+            self.destroy()
             DispatchQueue.main.async {
                 self.initPlayer()
                 if let player = self.player {
