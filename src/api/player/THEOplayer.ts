@@ -5,6 +5,8 @@ import type { SourceDescription } from '../source/SourceDescription';
 import type { AdsAPI } from '../ads/AdsAPI';
 import type { CastAPI } from '../cast/CastAPI';
 
+export type PreloadType = 'none' | 'metadata' | 'auto' | '';
+
 /**
  * The THEOplayer API.
  */
@@ -41,6 +43,11 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
    * Whether the player should immediately start playback after source change.
    */
   autoplay: boolean;
+
+  /**
+   * The preload setting of the player.
+   */
+  preload: PreloadType;
 
   /**
    * Used to set the playback rate of the media.
