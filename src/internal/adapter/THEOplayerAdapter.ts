@@ -31,6 +31,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   private _paused = false;
   private _fullscreen = false;
   private _muted = false;
+  private _seeking = false;
   private _volume = 1;
   private _currentTime = NaN;
   private _duration = NaN;
@@ -59,6 +60,8 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this.addEventListener(PlayerEventType.PLAYING, this.onPlaying);
     this.addEventListener(PlayerEventType.TIME_UPDATE, this.onTimeupdate);
     this.addEventListener(PlayerEventType.DURATION_CHANGE, this.onDurationChange);
+    this.addEventListener(PlayerEventType.SEEKING, this.onSeeking);
+    this.addEventListener(PlayerEventType.SEEKED, this.onSeeked);
     this.addEventListener(PlayerEventType.ERROR, this.onError);
   }
 
@@ -68,6 +71,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._volume = 1;
     this._muted = false;
     this._paused = true;
+    this._seeking = false;
     this._fullscreen = false;
     this._selectedTextTrack = undefined;
     this._selectedVideoTrack = undefined;
@@ -136,6 +140,14 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._duration = event.duration;
   };
 
+  private onSeeking = () => {
+    this._seeking = true;
+  };
+
+  private onSeeked = () => {
+    this._seeking = false;
+  };
+
   get abr(): ABRConfiguration | undefined {
     return Platform.OS === 'android' ? this._abrAdapter : undefined;
   }
@@ -187,6 +199,10 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._muted = muted;
     NativeModules.PlayerModule.setMuted(this._view.nativeHandle, muted);
     this.dispatchEvent(new DefaultVolumeChangeEvent(this.volume));
+  }
+
+  get seeking(): boolean {
+    return this._seeking;
   }
 
   get paused(): boolean {

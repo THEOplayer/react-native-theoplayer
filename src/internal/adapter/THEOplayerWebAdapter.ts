@@ -83,6 +83,10 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     this._player.muted = muted;
   }
 
+  get seeking(): boolean {
+    return this._player.seeking;
+  }
+
   get fullscreen(): boolean {
     return this._isFullscreen;
   }
