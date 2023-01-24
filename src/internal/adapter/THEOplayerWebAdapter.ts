@@ -1,5 +1,5 @@
 import { DefaultEventDispatcher } from './event/DefaultEventDispatcher';
-import type { AdsAPI, CastAPI, PlayerEventMap, THEOplayer } from 'react-native-theoplayer';
+import type { AdsAPI, CastAPI, PlayerEventMap, PreloadType, THEOplayer } from 'react-native-theoplayer';
 import { FullscreenActionType } from 'react-native-theoplayer';
 import { THEOplayerWebAdsAdapter } from './ads/THEOplayerWebAdsAdapter';
 import { THEOplayerWebCastAdapter } from './cast/THEOplayerWebCastAdapter';
@@ -57,6 +57,14 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
 
   set autoplay(autoplay: boolean) {
     this._player.autoplay = autoplay;
+  }
+
+  set preload(type: PreloadType) {
+    this._player.preload = type;
+  }
+
+  get preload(): PreloadType {
+    return this._player.preload;
   }
 
   get playbackRate(): number {

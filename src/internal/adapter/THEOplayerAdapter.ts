@@ -13,7 +13,7 @@ import type {
   THEOplayerView,
   TimeUpdateEvent,
 } from 'react-native-theoplayer';
-import { PlayerEventType, ReadyStateChangeEvent } from 'react-native-theoplayer';
+import { PlayerEventType, PreloadType, ReadyStateChangeEvent } from 'react-native-theoplayer';
 import { THEOplayerNativeAdsAdapter } from './ads/THEOplayerNativeAdsAdapter';
 import { THEOplayerNativeCastAdapter } from './cast/THEOplayerNativeCastAdapter';
 import { DefaultBufferingChangeEvent, DefaultVolumeChangeEvent } from './event/PlayerEvents';
@@ -38,6 +38,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   private _playbackRate = 1;
   private _videoTracks: MediaTrack[] = [];
   private _buffering = false;
+  private _preload: PreloadType = 'none';
 
   private _audioTracks: MediaTrack[] = [];
   private _textTracks: TextTrack[] = [];
@@ -163,6 +164,15 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   get autoplay(): boolean {
     return this._autoplay;
+  }
+
+  set preload(type: PreloadType) {
+    this._preload = type;
+    NativeModules.PlayerModule.setPreload(this._view.nativeHandle, type);
+  }
+
+  get preload(): PreloadType {
+    return this._preload;
   }
 
   get cast(): CastAPI {
