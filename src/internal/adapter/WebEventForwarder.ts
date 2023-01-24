@@ -65,6 +65,7 @@ export class WebEventForwarder {
     this._player.addEventListener('error', this.onError);
     this._player.addEventListener('progress', this.onProgress);
     this._player.addEventListener('play', this.onPlay);
+    this._player.addEventListener('canplay', this.onCanPlay);
     this._player.addEventListener('playing', this.onPlaying);
     this._player.addEventListener('pause', this.onPause);
     this._player.addEventListener('seeking', this.onSeeking);
@@ -103,6 +104,7 @@ export class WebEventForwarder {
     this._player.removeEventListener('loadedmetadata', this.onLoadedMetadata);
     this._player.removeEventListener('error', this.onError);
     this._player.removeEventListener('progress', this.onProgress);
+    this._player.removeEventListener('canplay', this.onCanPlay);
     this._player.removeEventListener('play', this.onPlay);
     this._player.removeEventListener('playing', this.onPlaying);
     this._player.removeEventListener('pause', this.onPause);
@@ -177,6 +179,10 @@ export class WebEventForwarder {
       });
     }
     this._facade.dispatchEvent(new DefaultProgressEvent(seekable));
+  };
+
+  private readonly onCanPlay = () => {
+    this._facade.dispatchEvent(new BaseEvent(PlayerEventType.CANPLAY));
   };
 
   private readonly onPlay = () => {
