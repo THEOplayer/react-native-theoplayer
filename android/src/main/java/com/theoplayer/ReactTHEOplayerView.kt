@@ -262,7 +262,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
 
   fun setSource(source: ReadableMap?) {
     try {
-      setSource(SourceAdapter().parseSourceFromJS(source!!))
+      setSource(SourceAdapter().parseSourceFromJS(source))
     } catch (exception: THEOplayerException) {
       Log.e(TAG, exception.message!!)
       eventEmitter.emitError(exception)
