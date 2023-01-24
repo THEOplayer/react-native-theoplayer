@@ -31,6 +31,7 @@ import com.theoplayer.android.api.player.track.texttrack.TextTrackMode
 import com.theoplayer.android.api.player.track.mediatrack.quality.AudioQuality
 import com.theoplayer.android.api.player.track.mediatrack.quality.VideoQuality
 import com.theoplayer.android.api.cast.Cast
+import com.theoplayer.android.api.player.PreloadType
 import com.theoplayer.android.api.player.track.mediatrack.MediaTrack
 import com.theoplayer.android.api.timerange.TimeRanges
 import com.theoplayer.track.QualityListFilter
@@ -48,6 +49,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
   private var playerView: THEOplayerView? = null
   private var abrConfig: ReadableMap? = null
   private var paused = false
+  private var preload: PreloadType? = null
   private var muted = false
   private var fullscreen = false
   private var playbackRate = 1.0
@@ -206,6 +208,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
           adsApi.initialize(player!!, imaIntegration, daiIntegration)
         }
         eventEmitter.attachListeners(player!!)
+        preload?.let { player?.preload = it }
         player?.isMuted = muted
         player?.volume = volume
         player?.playbackRate = playbackRate
@@ -265,6 +268,13 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
     } catch (exception: THEOplayerException) {
       Log.e(TAG, exception.message!!)
       eventEmitter.emitError(exception)
+    }
+  }
+
+  fun setPreload(preload: PreloadType) {
+    this.preload = preload
+    player?.apply {
+      this.preload = preload
     }
   }
 

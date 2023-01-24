@@ -2,6 +2,7 @@ package com.theoplayer.player
 
 import com.facebook.react.bridge.*
 import com.theoplayer.*
+import com.theoplayer.android.api.player.PreloadType
 import com.theoplayer.util.ViewResolver
 
 private const val TAG = "PlayerModule"
@@ -102,6 +103,17 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
   fun setTargetVideoQuality(tag: Int, uid: ReadableArray) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.setTargetVideoQualities(uid)
+    }
+  }
+
+  @ReactMethod
+  fun setPreload(tag: Int, type: String?) {
+    viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
+      view?.setPreload(when (type) {
+        "auto" -> PreloadType.AUTO
+        "metadata" -> PreloadType.METADATA
+        else -> PreloadType.NONE
+      })
     }
   }
 }
