@@ -148,7 +148,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   }
 
   get currentTime(): number {
-    return this._player.currentTime;
+    return 1e3 * this._player.currentTime;
   }
 
   set currentTime(currentTime: number) {
