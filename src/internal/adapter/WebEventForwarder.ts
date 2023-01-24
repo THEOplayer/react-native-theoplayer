@@ -28,7 +28,6 @@ import type { THEOplayerWebAdapter } from './THEOplayerWebAdapter';
 import { BaseEvent } from './event/BaseEvent';
 import {
   DefaultAdEvent,
-  DefaultBufferingChangeEvent,
   DefaultDurationChangeEvent,
   DefaultErrorEvent,
   DefaultFullscreenEvent,
@@ -48,8 +47,6 @@ import { fromNativeCue, fromNativeMediaTrack, fromNativeTextTrack } from './web/
 export class WebEventForwarder {
   private readonly _player: THEOplayer.ChromelessPlayer;
   private readonly _facade: THEOplayerWebAdapter;
-
-  private _isBuffering = false;
 
   constructor(player: THEOplayer.ChromelessPlayer, facade: THEOplayerWebAdapter) {
     this._player = player;
@@ -138,7 +135,6 @@ export class WebEventForwarder {
   };
 
   private readonly onLoadStart = () => {
-    this.maybeChangeBufferingState(true);
     this._facade.dispatchEvent(new BaseEvent(PlayerEventType.LOAD_START));
   };
 
@@ -161,7 +157,6 @@ export class WebEventForwarder {
   };
 
   private readonly onError = (event: NativeErrorEvent) => {
-    this.maybeChangeBufferingState(false);
     this._facade.dispatchEvent(
       new DefaultErrorEvent({
         errorCode: event.errorObject.code.toString(),
@@ -190,7 +185,6 @@ export class WebEventForwarder {
   };
 
   private readonly onPlaying = () => {
-    this.maybeChangeBufferingState(false);
     this._facade.dispatchEvent(new BaseEvent(PlayerEventType.PLAYING));
   };
 
@@ -211,7 +205,6 @@ export class WebEventForwarder {
   };
 
   private readonly onReadyStateChanged = (event: NativeReadyStateChangeEvent) => {
-    this.maybeChangeBufferingState(event.readyState < 3);
     this._facade.dispatchEvent(new DefaultReadyStateChangeEvent(event.readyState));
   };
 
@@ -302,14 +295,6 @@ export class WebEventForwarder {
     const castedEvent = event as AdEvent;
     this._facade.dispatchEvent(new DefaultAdEvent(event.type as AdEventType, castedEvent.ad));
   };
-
-  private maybeChangeBufferingState(isBuffering: boolean) {
-    const newIsBuffering = isBuffering && !this._player.errorObject && !this._player.paused;
-    if (newIsBuffering !== this._isBuffering) {
-      this._isBuffering = newIsBuffering;
-      this._facade.dispatchEvent(new DefaultBufferingChangeEvent(newIsBuffering));
-    }
-  }
 
   private readonly onAddTextTrackCue = (track: NativeTextTrack) => (event: NativeEvent<'addcue'>) => {
     const { cue } = event as unknown as { cue: NativeTextTrackCue };
