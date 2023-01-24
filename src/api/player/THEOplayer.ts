@@ -95,9 +95,14 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
   selectedAudioTrack: number | undefined;
 
   /**
-   * The current playback position of the media, in seconds.
+   * The current playback position of the media, in milliseconds.
    */
   currentTime: number;
+
+  /**
+   * The duration of the media, in milliseconds.
+   */
+  readonly duration: number;
 
   /**
    * The API for advertisements.
