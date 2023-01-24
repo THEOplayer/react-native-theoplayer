@@ -160,6 +160,10 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     }
   }
 
+  get duration(): number {
+    return this._player.duration * 1e3;
+  }
+
   public get ads(): AdsAPI {
     return this._adsAdapter;
   }
