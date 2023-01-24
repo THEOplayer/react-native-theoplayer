@@ -66,6 +66,7 @@ interface THEOplayerRCTViewProps {
   onNativeReadyStateChange?: (event: NativeSyntheticEvent<NativeReadyStateChangeEvent>) => void;
   onNativeError: (event: NativeSyntheticEvent<NativeErrorEvent>) => void;
   onNativeProgress: (event: NativeSyntheticEvent<NativeProgressEvent>) => void;
+  onNativeCanPlay: () => void;
   onNativePlay: () => void;
   onNativePlaying: () => void;
   onNativePause: () => void;
@@ -166,6 +167,10 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
 
   private _onProgress = (event: NativeSyntheticEvent<NativeProgressEvent>) => {
     this._facade.dispatchEvent(new DefaultProgressEvent(event.nativeEvent.seekable));
+  };
+
+  private _onCanPlay = () => {
+    this._facade.dispatchEvent(new BaseEvent(PlayerEventType.CANPLAY));
   };
 
   private _onPlay = () => {
@@ -287,6 +292,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
           onNativeLoadedMetadata={this._onLoadedMetadata}
           onNativeError={this._onError}
           onNativeProgress={this._onProgress}
+          onNativeCanPlay={this._onCanPlay}
           onNativePlay={this._onPlay}
           onNativePlaying={this._onPlaying}
           onNativePause={this._onPause}
