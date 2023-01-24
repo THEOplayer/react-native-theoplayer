@@ -45,6 +45,7 @@ private const val EVENT_SOURCECHANGE = "onNativeSourceChange"
 private const val EVENT_LOADSTART = "onNativeLoadStart"
 private const val EVENT_LOADEDMETADATA = "onNativeLoadedMetadata"
 private const val EVENT_LOADEDDATA = "onNativeLoadedData"
+private const val EVENT_CANPLAY = "onNativeCanPlay"
 private const val EVENT_PLAY = "onNativePlay"
 private const val EVENT_PLAYING = "onNativePlaying"
 private const val EVENT_PAUSE = "onNativePause"
@@ -104,6 +105,7 @@ class PlayerEventEmitter internal constructor(
     EVENT_LOADSTART,
     EVENT_LOADEDMETADATA,
     EVENT_LOADEDDATA,
+    EVENT_CANPLAY,
     EVENT_PLAY,
     EVENT_PLAYING,
     EVENT_PAUSE,
@@ -137,6 +139,7 @@ class PlayerEventEmitter internal constructor(
       EVENT_LOADSTART,
       EVENT_LOADEDMETADATA,
       EVENT_LOADEDDATA,
+      EVENT_CANPLAY,
       EVENT_PLAY,
       EVENT_PLAYING,
       EVENT_PAUSE,
@@ -190,6 +193,9 @@ class PlayerEventEmitter internal constructor(
       EventListener<PlayerEvent<*>> { onLoadedMetadata() }
     playerListeners[PlayerEventTypes.LOADEDDATA] = EventListener<PlayerEvent<*>> {
       receiveEvent(EVENT_LOADEDDATA, null)
+    }
+    playerListeners[PlayerEventTypes.CANPLAY] = EventListener<PlayerEvent<*>> {
+      receiveEvent(EVENT_CANPLAY, null)
     }
     playerListeners[PlayerEventTypes.PLAY] = EventListener<PlayerEvent<*>> {
       receiveEvent(EVENT_PLAY, null)
