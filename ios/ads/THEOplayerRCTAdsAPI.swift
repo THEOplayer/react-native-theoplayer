@@ -153,7 +153,7 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
             let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
             if let adData = adDict as? [String:Any],
                let ads = theView.ads(),
-               let adDescription = THEOplayerRCTSourceDescriptionBuilder.buildAdDescription(adData) {
+               let adDescription = THEOplayerRCTSourceDescriptionBuilder.buildSingleAdDescription(adData) {
                 ads.schedule(adDescription: adDescription)
             } else {
                 if DEBUG_ADS_API { print("[NATIVE] Could not schedule new ad.") }
