@@ -3,6 +3,18 @@ import type { CastConfiguration } from '../cast/CastConfiguration';
 
 export interface PlayerConfiguration {
   /**
+   * The directory in which the THEOplayer library worker files are located.
+   * These worker files are THEOplayer.transmux.*
+   *
+   * @remarks
+   * <br/> - This parameter is required when using a HLS source and has no default.
+   *
+   * @example
+   * `'/lib/theoplayer/'`
+   */
+  libraryLocation?: string;
+
+  /**
    * The ads configuration for the player.
    */
   ads?: AdsConfiguration;
