@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/no-var-requires,no-undef */
 const path = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
+const projectDirectory = path.resolve(__dirname, '../..');
 const appDirectory = path.resolve(__dirname, '..');
 
 // A folder for any stub components we need in case there is no counterpart for it on react-native-web.
@@ -10,6 +13,18 @@ const HTMLWebpackPluginConfig = new HTMLWebpackPlugin({
   template: path.resolve(appDirectory, './web/public/index.html'),
   filename: 'index.html',
   inject: 'body',
+});
+
+const libraryLocation = 'theoplayer';
+const CopyWebpackPluginConfig = new CopyWebpackPlugin({
+  patterns: [
+    {
+      // Copy transmuxer worker files.
+      // THEOplayer will find them by setting `libraryLocation` in the playerConfiguration.
+      from: path.resolve(projectDirectory, './node_modules/theoplayer/THEOplayer.transmux.*'),
+      to: `${libraryLocation}/[name][ext]`,
+    },
+  ],
 });
 
 // This is needed for webpack to compile JavaScript.
@@ -65,7 +80,7 @@ module.exports = {
       'react-native-google-cast': path.resolve(stubDirectory, 'CastButtonStub'),
     },
   },
-  plugins: [HTMLWebpackPluginConfig],
+  plugins: [HTMLWebpackPluginConfig, CopyWebpackPluginConfig],
   devServer: {
     // Tells dev-server to open the browser after server had been started.
     open: true,
@@ -74,11 +89,8 @@ module.exports = {
       {
         directory: path.join(appDirectory, 'web/public'),
       },
-      {
-        // This is needed to also serve the node_modules/theoplayer folder.
-        directory: path.join(appDirectory, '..'),
-      },
     ],
+    // Hot reload on source changes
     hot: true,
   },
 };
