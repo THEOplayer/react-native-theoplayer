@@ -4,6 +4,8 @@ import type { ABRConfiguration } from '../abr/ABRConfiguration';
 import type { SourceDescription } from '../source/SourceDescription';
 import type { AdsAPI } from '../ads/AdsAPI';
 import type { CastAPI } from '../cast/CastAPI';
+import type { MediaTrack } from '../track/MediaTrack';
+import type { TextTrack } from '../track/TextTrack';
 
 export type PreloadType = 'none' | 'metadata' | 'auto' | '';
 
@@ -85,6 +87,21 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
    * Determines whether the player is currently playing in fullscreen.
    */
   fullscreen: boolean;
+
+  /**
+   * List of audio tracks of the current source.
+   */
+  audioTracks: MediaTrack[];
+
+  /**
+   * List of video tracks of the current source.
+   */
+  videoTracks: MediaTrack[];
+
+  /**
+   * List of text tracks of the current source.
+   */
+  textTracks: TextTrack[];
 
   /**
    * Used to set the current selected text track by passing its `uid`, or `undefined` to select none.
