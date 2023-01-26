@@ -17,13 +17,9 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps> {
     const { config, onPlayerReady } = this.props;
     const element = document.querySelector('.theoplayer-container') as HTMLElement;
     if (config?.chromeless === true || config?.chromeless === undefined) {
-      this._player = new THEOplayer.ChromelessPlayer(element, {
-        libraryLocation: 'node_modules/theoplayer',
-        ...config,
-      });
+      this._player = new THEOplayer.ChromelessPlayer(element, config);
     } else {
       this._player = new THEOplayer.Player(element, {
-        libraryLocation: 'node_modules/theoplayer',
         ...config,
         ui: {
           fluid: true,

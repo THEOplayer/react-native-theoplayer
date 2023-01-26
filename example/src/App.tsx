@@ -8,12 +8,13 @@ const playerConfig: PlayerConfiguration = {
   // Without a license, only demo sources hosted on '*.theoplayer.com' domains can be played.
   license: undefined,
   chromeless: true,
+  libraryLocation: 'theoplayer',
   cast: {
     chromecast: {
-      appID: 'CC1AD845'
+      appID: 'CC1AD845',
     },
-    strategy: 'auto'
-  }
+    strategy: 'auto',
+  },
 };
 
 export default function App() {
