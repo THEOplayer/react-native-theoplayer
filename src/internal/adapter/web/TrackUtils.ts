@@ -1,7 +1,9 @@
 import type {
   MediaTrack as NativeMediaTrack,
+  MediaTrackList as NativeMediaTrackList,
   Quality as NativeQuality,
   TextTrack as NativeTextTrack,
+  TextTracksList as NativeTextTrackList,
   TextTrackCue as NativeTextTrackCue,
 } from 'theoplayer';
 import type { MediaTrack, TextTrack, TextTrackCue } from 'react-native-theoplayer';
@@ -14,6 +16,10 @@ export function fromNativeCue(cue: NativeTextTrackCue): TextTrackCue {
     endTime: 1e3 * cue.endTime,
     content: cue.content,
   } as TextTrackCue;
+}
+
+export function fromNativeTextTrackList(tracks: NativeTextTrackList): TextTrack[] {
+  return tracks.map((track) => fromNativeTextTrack(track));
 }
 
 export function fromNativeTextTrack(track: NativeTextTrack): TextTrack {
@@ -31,6 +37,10 @@ export function fromNativeTextTrack(track: NativeTextTrack): TextTrack {
     forced,
     cues: track.cues ? track.cues.map((cue) => fromNativeCue(cue)) : [],
   } as TextTrack;
+}
+
+export function fromNativeMediaTrackList(tracks: NativeMediaTrackList): MediaTrack[] {
+  return tracks.map((track) => fromNativeMediaTrack(track));
 }
 
 export function fromNativeMediaTrack(track: NativeMediaTrack): MediaTrack {

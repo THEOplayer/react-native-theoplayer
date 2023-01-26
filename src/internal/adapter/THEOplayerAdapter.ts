@@ -36,11 +36,10 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   private _currentTime = NaN;
   private _duration = NaN;
   private _playbackRate = 1;
-  private _videoTracks: MediaTrack[] = [];
   private _buffering = false;
   private _preload: PreloadType = 'none';
-
   private _audioTracks: MediaTrack[] = [];
+  private _videoTracks: MediaTrack[] = [];
   private _textTracks: TextTrack[] = [];
   private _targetVideoQuality: number | number[] | undefined = undefined;
   private _selectedVideoTrack: number | undefined = undefined;
@@ -74,6 +73,9 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._paused = true;
     this._seeking = false;
     this._fullscreen = false;
+    this._audioTracks = [];
+    this._videoTracks = [];
+    this._textTracks = [];
     this._selectedTextTrack = undefined;
     this._selectedVideoTrack = undefined;
     this._selectedAudioTrack = undefined;

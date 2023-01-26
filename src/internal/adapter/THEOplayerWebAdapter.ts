@@ -1,11 +1,11 @@
 import { DefaultEventDispatcher } from './event/DefaultEventDispatcher';
-import type { AdsAPI, CastAPI, PlayerEventMap, PreloadType, THEOplayer } from 'react-native-theoplayer';
-import { FullscreenActionType } from 'react-native-theoplayer';
+import type { AdsAPI, CastAPI, MediaTrack, PlayerEventMap, PreloadType, THEOplayer } from 'react-native-theoplayer';
+import { FullscreenActionType, TextTrack } from 'react-native-theoplayer';
 import { THEOplayerWebAdsAdapter } from './ads/THEOplayerWebAdsAdapter';
 import { THEOplayerWebCastAdapter } from './cast/THEOplayerWebCastAdapter';
 import type * as THEOplayerWeb from 'theoplayer';
-import type { MediaTrack, TextTrack } from 'theoplayer';
-import { findNativeQualitiesByUid } from './web/TrackUtils';
+import type { MediaTrack as NativeMediaTrack, TextTrack as NativeTextTrack } from 'theoplayer';
+import { findNativeQualitiesByUid, fromNativeMediaTrackList, fromNativeTextTrackList } from './web/TrackUtils';
 import type { ABRConfiguration, SourceDescription } from 'src/api/barrel';
 import { DefaultFullscreenEvent } from './event/PlayerEvents';
 import { WebEventForwarder } from './WebEventForwarder';
@@ -111,38 +111,50 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     this._isFullscreen = fullscreen;
   }
 
+  get audioTracks(): MediaTrack[] {
+    return fromNativeMediaTrackList(this._player.audioTracks);
+  }
+
+  get videoTracks(): MediaTrack[] {
+    return fromNativeMediaTrackList(this._player.videoTracks);
+  }
+
+  get textTracks(): TextTrack[] {
+    return fromNativeTextTrackList(this._player.textTracks);
+  }
+
   get selectedTextTrack(): number | undefined {
-    return this._player.textTracks.find((textTrack: TextTrack) => {
+    return this._player.textTracks.find((textTrack: NativeTextTrack) => {
       return textTrack.mode === 'showing';
     })?.uid;
   }
 
   set selectedTextTrack(selectedTextTrack: number | undefined) {
-    this._player.textTracks.forEach((textTrack: TextTrack) => {
+    this._player.textTracks.forEach((textTrack: NativeTextTrack) => {
       textTrack.mode = textTrack.uid === selectedTextTrack ? 'showing' : 'disabled';
     });
   }
 
   get selectedVideoTrack(): number | undefined {
-    return this._player.videoTracks.find((videoTrack: MediaTrack) => {
+    return this._player.videoTracks.find((videoTrack: NativeMediaTrack) => {
       return videoTrack.enabled;
     })?.uid;
   }
 
   set selectedVideoTrack(selectedVideoTrack: number | undefined) {
-    this._player.videoTracks.forEach((videoTrack: MediaTrack) => {
+    this._player.videoTracks.forEach((videoTrack: NativeMediaTrack) => {
       videoTrack.enabled = videoTrack.uid === selectedVideoTrack;
     });
   }
 
   get selectedAudioTrack(): number | undefined {
-    return this._player.audioTracks.find((audioTrack: MediaTrack) => {
+    return this._player.audioTracks.find((audioTrack: NativeMediaTrack) => {
       return audioTrack.enabled;
     })?.uid;
   }
 
   set selectedAudioTrack(selectedAudioTrack: number | undefined) {
-    this._player.audioTracks.forEach((audioTrack: MediaTrack) => {
+    this._player.audioTracks.forEach((audioTrack: NativeMediaTrack) => {
       audioTrack.enabled = audioTrack.uid === selectedAudioTrack;
     });
   }
@@ -152,7 +164,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   }
 
   set targetVideoQuality(targetVideoQuality: number | number[] | undefined) {
-    const videoTrack = this._player.videoTracks.find((videoTrack: MediaTrack) => videoTrack.uid === this.selectedVideoTrack);
+    const videoTrack = this._player.videoTracks.find((videoTrack: NativeMediaTrack) => videoTrack.uid === this.selectedVideoTrack);
     if (videoTrack) {
       videoTrack.targetQuality = findNativeQualitiesByUid(videoTrack, targetVideoQuality);
     }
