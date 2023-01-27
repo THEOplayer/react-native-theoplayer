@@ -65,7 +65,7 @@ RCT_EXTERN_METHOD(destroy:(nonnull NSNumber *)node);
 @interface RCT_EXTERN_REMAP_MODULE(PlayerModule, THEOplayerRCTPlayerAPI, NSObject)
 
 RCT_EXTERN_METHOD(setPaused:(nonnull NSNumber *)node
-                  paused:(BOOL)enabled)
+                  paused:(BOOL)paused)
 
 RCT_EXTERN_METHOD(setSource:(nonnull NSNumber *)node
                   src:(NSDictionary)src)
@@ -75,6 +75,33 @@ RCT_EXTERN_METHOD(setABRConfig:(nonnull NSNumber *)node
 
 RCT_EXTERN_METHOD(setCurrentTime:(nonnull NSNumber *)node
                   time:(nonnull NSNumber *)time)
+
+RCT_EXTERN_METHOD(setMuted:(nonnull NSNumber *)node
+                  muted:(BOOL)muted)
+
+RCT_EXTERN_METHOD(setVolume:(nonnull NSNumber *)node
+                  volume:(nonnull NSNumber *)volume)
+
+RCT_EXTERN_METHOD(setPlaybackRate:(nonnull NSNumber *)node
+                  playbackRate:(nonnull NSNumber *)playbackRate)
+
+RCT_EXTERN_METHOD(setFullscreen:(nonnull NSNumber *)node
+                  fullscreen:(BOOL)fullscreen)
+
+RCT_EXTERN_METHOD(setSelectedTextTrack:(nonnull NSNumber *)node
+                  uid:(nonnull NSNumber *)uid)
+
+RCT_EXTERN_METHOD(setSelectedAudioTrack:(nonnull NSNumber *)node
+                  uid:(nonnull NSNumber *)uid)
+
+RCT_EXTERN_METHOD(setSelectedVideoTrack:(nonnull NSNumber *)node
+                  uid:(nonnull NSNumber *)uid)
+
+RCT_EXTERN_METHOD(setTargetVideoQuality:(nonnull NSNumber *)node
+                  uid:(nonnull NSNumber *)uid)
+
+RCT_EXTERN_METHOD(setPreload:(nonnull NSNumber *)node
+                  type:(nonnull NSString *)type)
 
 @end
 
