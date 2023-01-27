@@ -60,6 +60,25 @@ RCT_EXTERN_METHOD(destroy:(nonnull NSNumber *)node);
 @end
 
 // ----------------------------------------------------------------------------
+// Player Module
+// ----------------------------------------------------------------------------
+@interface RCT_EXTERN_REMAP_MODULE(PlayerModule, THEOplayerRCTPlayerAPI, NSObject)
+
+RCT_EXTERN_METHOD(setPaused:(nonnull NSNumber *)node
+                  paused:(BOOL)enabled)
+
+RCT_EXTERN_METHOD(setSource:(nonnull NSNumber *)node
+                  src:(NSDictionary)src)
+
+RCT_EXTERN_METHOD(setABRConfig:(nonnull NSNumber *)node
+                  abrConfig:(NSDictionary)abrConfig)
+
+RCT_EXTERN_METHOD(setCurrentTime:(nonnull NSNumber *)node
+                  time:(nonnull NSNumber *)time)
+
+@end
+
+// ----------------------------------------------------------------------------
 // Ads Module
 // ----------------------------------------------------------------------------
 
@@ -84,7 +103,7 @@ RCT_EXTERN_METHOD(scheduledAdBreaks:(nonnull NSNumber *)node
                   rejecter:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(schedule:(nonnull NSNumber *)node
-                  ad: NSDictionary)
+                  ad:(NSDictionary)ad)
 
 RCT_EXTERN_METHOD(daiSnapback:(nonnull NSNumber *)node
                   resolver:(RCTPromiseResolveBlock)resolve
