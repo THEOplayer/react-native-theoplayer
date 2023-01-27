@@ -47,13 +47,13 @@ extension THEOplayerRCTSourceDescriptionBuilder {
         
         return adsDescriptions
     }
-
-#if GOOGLE_IMA
+    
     /**
      Creates a THEOplayer GoogleImaAdDescription. This requires an ads property in the RN source description.
      - returns: a THEOplayer GoogleImaAdDescription
      */
     static func buildSingleAdDescription(_ adsData: [String:Any]) -> AdDescription? {
+#if GOOGLE_IMA
         if let integration = adsData[SD_PROP_INTEGRATION] as? String,
            integration == AdIntegration.google_ima._rawValue {
             // timeOffset can be Int or String: 10, "01:32:54.78", "1234.56", "start", "end", "10%", ...
@@ -71,12 +71,13 @@ extension THEOplayerRCTSourceDescriptionBuilder {
             }
         }
         if DEBUG_SOURCE_DESCRIPTION_BUIDER  { print("[NATIVE] We currently require and only support the 'google-ima' integration in the 'ads' description.") }
+#endif
+        
         return nil
     }
-#endif
     
-#if GOOGLE_DAI
     static func buildDAITypedSource(_ typedSourceData: [String:Any]) -> TypedSource? {
+#if GOOGLE_DAI
         // check for alternative Google DAI SSAI
         if let ssaiData = typedSourceData[SD_PROP_SSAI] as? [String:Any] {
             if let integration = ssaiData[SD_PROP_INTEGRATION] as? String,
@@ -120,8 +121,9 @@ extension THEOplayerRCTSourceDescriptionBuilder {
                 }
             }
         }
+#endif
+        
         return nil
     }
-#endif
 
 }

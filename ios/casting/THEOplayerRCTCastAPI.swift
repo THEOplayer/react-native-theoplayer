@@ -9,7 +9,7 @@
 import Foundation
 
 let ERROR_CODE_CAST_ACCESS_FAILURE = "cast_access_failure"
-let ERROR_MESSAGE_CASTING_UNSUPPORTED_FEATURE = "Chromecast and Airplay are not supported by the provided iOS SDK"
+let ERROR_MESSAGE_CASTING_UNSUPPORTED_FEATURE = "Chromecast and Airplay are not supported by the provided SDK"
 let ERROR_MESSAGE_CAST_ACCESS_FAILURE = "Could not access THEOplayer Cast Module"
 
 @objc(THEOplayerRCTCastAPI)
@@ -25,7 +25,7 @@ class THEOplayerRCTCastAPI: NSObject, RCTBridgeModule {
     }
     
     // MARK: CHROMECAST AND AIRPLAY
-#if os(iOS) && (AIRPLAY || CHROMECAST)
+#if os(iOS)
     
     @objc(casting:resolver:rejecter:)
     func casting(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
