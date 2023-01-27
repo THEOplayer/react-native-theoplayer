@@ -46,7 +46,7 @@ class THEOplayerRCTCastEventHandler {
             return
         }
         
-#if os(iOS) && CHROMECAST
+#if os(iOS) && (CHROMECAST || canImport(GoogleCastIntegration))
         // CHROMECAST STATE_CHANGE
         self.chromecastStateChangeListener = player.cast?.chromecast?.addEventListener(type: ChromecastEventTypes.STATE_CHANGE) { [weak self] event in
             if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received Chromecast STATE_CHANGE event from THEOplayer cast.chromecast") }
@@ -101,7 +101,7 @@ class THEOplayerRCTCastEventHandler {
             return
         }
 
-#if os(iOS) && CHROMECAST
+#if os(iOS) && (CHROMECAST || canImport(GoogleCastIntegration))
         // CHROMECAST STATE_CHANGE
         if let chromecastStateChangeListener = self.chromecastStateChangeListener {
             player.cast?.chromecast?.removeEventListener(type: ChromecastEventTypes.STATE_CHANGE, listener: chromecastStateChangeListener)
