@@ -40,6 +40,7 @@ export enum PlayerEventType {
   AD_EVENT = 'adevent',
   CAST_EVENT = 'castevent',
   VOLUME_CHANGE = 'volumechange',
+  WAITING = 'waiting',
 }
 
 /**
@@ -127,6 +128,12 @@ export interface PlayerEventMap {
    * no further data is available.
    */
   [PlayerEventType.ENDED]: Event<PlayerEventType.ENDED>;
+
+  /**
+   * Fired when playback has stopped because the next frame is not available, but the
+   * player expects that frame to become available in due course.
+   */
+  [PlayerEventType.WAITING]: Event<PlayerEventType.WAITING>;
 
   /**
    * Fired each time the current playback position changed.

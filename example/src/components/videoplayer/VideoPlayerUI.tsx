@@ -97,6 +97,7 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
     player.addEventListener(PlayerEventType.SEEKING, console.log);
     player.addEventListener(PlayerEventType.SEEKED, console.log);
     player.addEventListener(PlayerEventType.ENDED, console.log);
+    player.addEventListener(PlayerEventType.WAITING, console.log);
     player.addEventListener(PlayerEventType.LOAD_START, this.onLoadStart);
     player.addEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
     player.addEventListener(PlayerEventType.PAUSE, this.onPause);

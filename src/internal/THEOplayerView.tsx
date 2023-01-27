@@ -73,6 +73,7 @@ interface THEOplayerRCTViewProps {
   onNativeSeeking: () => void;
   onNativeSeeked: () => void;
   onNativeEnded: () => void;
+  onNativeWaiting: () => void;
   onNativeTimeUpdate: (event: NativeSyntheticEvent<NativeTimeUpdateEvent>) => void;
   onNativeDurationChange: (event: NativeSyntheticEvent<NativeDurationChangeEvent>) => void;
   onNativeSegmentNotFound: (event: NativeSyntheticEvent<NativeSegmentNotFoundEvent>) => void;
@@ -193,6 +194,10 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
     this._facade.dispatchEvent(new BaseEvent(PlayerEventType.SEEKED));
   };
 
+  private _onWaiting = () => {
+    this._facade.dispatchEvent(new BaseEvent(PlayerEventType.WAITING));
+  };
+
   private _onEnded = () => {
     this._facade.dispatchEvent(new BaseEvent(PlayerEventType.ENDED));
   };
@@ -298,6 +303,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
           onNativePause={this._onPause}
           onNativeSeeking={this._onSeeking}
           onNativeSeeked={this._onSeeked}
+          onNativeWaiting={this._onWaiting}
           onNativeEnded={this._onEnded}
           onNativeReadyStateChange={this._onReadStateChange}
           onNativeTimeUpdate={this._onTimeUpdate}

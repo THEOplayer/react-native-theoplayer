@@ -48,6 +48,7 @@ private const val EVENT_LOADEDDATA = "onNativeLoadedData"
 private const val EVENT_CANPLAY = "onNativeCanPlay"
 private const val EVENT_PLAY = "onNativePlay"
 private const val EVENT_PLAYING = "onNativePlaying"
+private const val EVENT_WAITING = "onNativeWaiting"
 private const val EVENT_PAUSE = "onNativePause"
 private const val EVENT_ERROR = "onNativeError"
 private const val EVENT_PROGRESS = "onNativeProgress"
@@ -108,6 +109,7 @@ class PlayerEventEmitter internal constructor(
     EVENT_CANPLAY,
     EVENT_PLAY,
     EVENT_PLAYING,
+    EVENT_WAITING,
     EVENT_PAUSE,
     EVENT_ERROR,
     EVENT_PROGRESS,
@@ -132,8 +134,6 @@ class PlayerEventEmitter internal constructor(
   annotation class VideoEvents
 
   companion object {
-
-    @JvmField
     val Events = arrayOf(
       EVENT_SOURCECHANGE,
       EVENT_LOADSTART,
@@ -142,6 +142,7 @@ class PlayerEventEmitter internal constructor(
       EVENT_CANPLAY,
       EVENT_PLAY,
       EVENT_PLAYING,
+      EVENT_WAITING,
       EVENT_PAUSE,
       EVENT_ERROR,
       EVENT_PROGRESS,
@@ -202,6 +203,9 @@ class PlayerEventEmitter internal constructor(
     }
     playerListeners[PlayerEventTypes.PLAYING] = EventListener<PlayerEvent<*>> {
       receiveEvent(EVENT_PLAYING, null)
+    }
+    playerListeners[PlayerEventTypes.WAITING] = EventListener<PlayerEvent<*>> {
+      receiveEvent(EVENT_WAITING, null)
     }
     playerListeners[PlayerEventTypes.READYSTATECHANGE] =
       EventListener { event: ReadyStateChangeEvent -> onReadyState(event) }
