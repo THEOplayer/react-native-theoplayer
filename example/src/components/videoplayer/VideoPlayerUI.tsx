@@ -214,8 +214,8 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
   };
 
   private onAdEvent = (event: AdEvent) => {
-    const { type, ad } = event;
-    console.log(TAG, 'onAdEvent', type, ad);
+    const { subType, ad } = event;
+    console.log(TAG, 'onAdEvent', subType, ad);
   };
 
   private onCastStateChangeEvent = (event: ChromecastChangeEvent | AirplayStateChangeEvent) => {
