@@ -125,7 +125,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   set autoplay(autoplay: boolean) {
     this._autoplay = autoplay;
-    NativeModules.PlayerModule.setPause(this._view.nativeHandle, !autoplay);
+    NativeModules.PlayerModule.setPaused(this._view.nativeHandle, !autoplay);
   }
 
   get autoplay(): boolean {
