@@ -74,5 +74,54 @@ extension THEOplayerRCTSourceDescriptionBuilder {
         return nil
     }
 #endif
+    
+#if GOOGLE_DAI
+    static func buildDAITypedSource(_ typedSourceData: [String:Any]) -> TypedSource? {
+        // check for alternative Google DAI SSAI
+        if let ssaiData = typedSourceData[SD_PROP_SSAI] as? [String:Any] {
+            if let integration = ssaiData[SD_PROP_INTEGRATION] as? String,
+               integration == SSAIIntegrationId.GoogleDAISSAIIntegrationID._rawValue {
+                if let availabilityType = ssaiData[SD_PROP_AVAILABILITY_TYPE] as? String {
+                    // build a GoogleDAIConfiguration
+                    var googleDaiConfig: GoogleDAIConfiguration?
+                    let authToken = ssaiData[SD_PROP_AUTH_TOKEN] as? String
+                    let streamActivityMonitorID = ssaiData[SD_PROP_STREAM_ACTIVITY_MONITOR_ID] as? String
+                    let adTagParameters = ssaiData[SD_PROP_AD_TAG_PARAMETERS] as? [String:String]
+                    let apiKey = ssaiData[SD_PROP_APIKEY] as? String ?? ""
+                    switch availabilityType {
+                    case StreamType.vod._rawValue:
+                        if let videoId = ssaiData[SD_PROP_VIDEOID] as? String,
+                           let contentSourceID = ssaiData[SD_PROP_CONTENT_SOURCE_ID] as? String {
+                            googleDaiConfig = GoogleDAIVodConfiguration(videoID: videoId,
+                                                                        contentSourceID: contentSourceID,
+                                                                        apiKey: apiKey,
+                                                                        authToken: authToken,
+                                                                        streamActivityMonitorID: streamActivityMonitorID,
+                                                                        adTagParameters: adTagParameters)
+                        }
+                    case StreamType.live._rawValue:
+                        if let assetKey = ssaiData[SD_PROP_ASSET_KEY] as? String {
+                            googleDaiConfig = GoogleDAILiveConfiguration(assetKey: assetKey,
+                                                                         apiKey: apiKey,
+                                                                         authToken: authToken,
+                                                                         streamActivityMonitorID: streamActivityMonitorID,
+                                                                         adTagParameters: adTagParameters)
+                        }
+                    default:
+                        if DEBUG_SOURCE_DESCRIPTION_BUIDER {
+                            print("[NATIVE] THEOplayer ssai 'availabilityType' must be 'live' or 'vod'")
+                        }
+                        return nil
+                    }
+                    // when valid, create a GoogleDAITypedSource from the GoogleDAIConfiguration
+                    if let config = googleDaiConfig {
+                        return GoogleDAITypedSource(ssai: config)
+                    }
+                }
+            }
+        }
+        return nil
+    }
+#endif
 
 }
