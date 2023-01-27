@@ -26,3 +26,6 @@ let DEBUG_ADS_API = DEBUG && false
 
 // Debug flag to monitor cast API usage
 let DEBUG_CAST_API = DEBUG && false
+
+// Debug flag to monitor player API usage
+let DEBUG_PLAYER_API = DEBUG && false
