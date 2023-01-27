@@ -68,6 +68,7 @@ export class WebEventForwarder {
     this._player.addEventListener('seeking', this.onSeeking);
     this._player.addEventListener('seeked', this.onSeeked);
     this._player.addEventListener('ended', this.onEnded);
+    this._player.addEventListener('waiting', this.onWaiting);
     this._player.addEventListener('readystatechange', this.onReadyStateChanged);
     this._player.addEventListener('timeupdate', this.onTimeUpdate);
     this._player.addEventListener('durationchange', this.onDurationChange);
@@ -108,6 +109,7 @@ export class WebEventForwarder {
     this._player.removeEventListener('seeking', this.onSeeking);
     this._player.removeEventListener('seeked', this.onSeeked);
     this._player.removeEventListener('ended', this.onEnded);
+    this._player.removeEventListener('waiting', this.onWaiting);
     this._player.removeEventListener('readystatechange', this.onReadyStateChanged);
     this._player.removeEventListener('timeupdate', this.onTimeUpdate);
     this._player.removeEventListener('durationchange', this.onDurationChange);
@@ -202,6 +204,10 @@ export class WebEventForwarder {
 
   private readonly onEnded = () => {
     this._facade.dispatchEvent(new BaseEvent(PlayerEventType.ENDED));
+  };
+
+  private readonly onWaiting = () => {
+    this._facade.dispatchEvent(new BaseEvent(PlayerEventType.WAITING));
   };
 
   private readonly onReadyStateChanged = (event: NativeReadyStateChangeEvent) => {
