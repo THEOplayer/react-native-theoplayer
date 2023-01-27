@@ -29,6 +29,7 @@ class THEOplayerRCTView: UIView {
     private var selectedAudioTrackUid: Int = 0
     private var seek: Double? = nil                  // in msec
     private var fullscreen: Bool = false
+    private var preloadtype: Preload = .none
     
     // MARK: - Initialisation / view setup
     init() {
@@ -78,6 +79,7 @@ class THEOplayerRCTView: UIView {
         self.syncPlayerSelectedAudioTrack()
         self.syncPlayerSelectedVideoTrack()
         self.syncPlayerSeek()
+        self.syncPlayerPreloadType()
         self.syncPlayerFullscreen()
         if DEBUG_THEOPLAYER_INTERACTION { print("[NATIVE] All props synced with THEOplayer instance.") }
     }
@@ -323,6 +325,23 @@ class THEOplayerRCTView: UIView {
                 // if DEBUG_THEOPLAYER_INTERACTION { print("[NATIVE] Putting TheoPlayer in fullscreen") }
             } else if !self.fullscreen && player.presentationMode == PresentationMode.fullscreen {
                 // if DEBUG_THEOPLAYER_INTERACTION { print("[NATIVE] Taking TheoPlayer out of fullscreen") }
+            }
+        }
+    }
+    
+    @objc(setPreloadType:)
+    func setPreloadType(type: String) {
+        self.preloadtype = THEOplayerRCTTypeUtils.preloadType(type)
+        if DEBUG_PROP_UPDATES  { print("[NATIVE] preload prop updated.") }
+        // sync player state with preload prop
+        self.syncPlayerPreloadType()
+    }
+    
+    private func syncPlayerPreloadType() {
+        if let player = self.player {
+            if player.preload != self.preloadtype {
+                if DEBUG_THEOPLAYER_INTERACTION { print("[NATIVE] Changing TheoPlayer preload type to \(self.preloadtype._rawValue)") }
+                player.setPreload(self.preloadtype)
             }
         }
     }

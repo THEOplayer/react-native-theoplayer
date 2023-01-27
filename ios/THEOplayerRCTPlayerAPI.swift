@@ -113,8 +113,11 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
     }
     
     @objc(setPreload:type:)
-    func setPreload(_ node: NSNumber, type: NSString) -> Void {
-        return
+    func setPreload(_ node: NSNumber, type: String) -> Void {
+        DispatchQueue.main.async {
+            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
+            theView.setPreloadType(type: type)
+        }
     }
 
 }
