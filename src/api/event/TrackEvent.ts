@@ -40,6 +40,16 @@ export enum TextTrackEventType {
    * Dispatched when cue has been removed from the text track.
    */
   REMOVE_CUE = 'removecue',
+
+  /**
+   * Dispatched when a cue of the track enters.
+   */
+  ENTER_CUE = 'entercue',
+
+  /**
+   * Dispatched when a cue of the track exits.
+   */
+  EXIT_CUE = 'exitcue',
 }
 
 export interface TextTrackEvent extends Event<PlayerEventType.TEXT_TRACK> {

@@ -20,6 +20,8 @@ import com.theoplayer.android.api.event.track.mediatrack.audio.list.AudioTrackLi
 import com.theoplayer.android.api.event.track.mediatrack.video.VideoTrackEventTypes
 import com.theoplayer.android.api.event.track.mediatrack.video.list.VideoTrackListEventTypes
 import com.theoplayer.android.api.event.track.texttrack.AddCueEvent
+import com.theoplayer.android.api.event.track.texttrack.EnterCueEvent
+import com.theoplayer.android.api.event.track.texttrack.ExitCueEvent
 import com.theoplayer.android.api.event.track.texttrack.RemoveCueEvent
 import com.theoplayer.android.api.event.track.texttrack.TextTrackEventTypes
 import com.theoplayer.android.api.event.track.texttrack.list.AddTrackEvent
@@ -397,26 +399,56 @@ class PlayerEventEmitter internal constructor(
     receiveEvent(EVENT_SEGMENTNOTFOUND, payload)
   }
 
+  private val onTextTrackAddCue = EventListener<AddCueEvent> { event ->
+    val payload = Arguments.createMap()
+    payload.putInt(EVENT_PROP_TRACK_UID, event.track.uid)
+    payload.putInt(EVENT_PROP_TYPE, TextTrackCueEventType.ADD_CUE.type)
+    payload.putMap(EVENT_PROP_CUE, playerView.getTextTrackCueInfo(event.cue))
+    receiveEvent(EVENT_TEXTTRACK_EVENT, payload)
+  }
+
+  private val onTextTrackRemoveCue = EventListener<RemoveCueEvent> { event ->
+    val payload = Arguments.createMap()
+    payload.putInt(EVENT_PROP_TRACK_UID, event.track.uid)
+    payload.putInt(EVENT_PROP_TYPE, TextTrackCueEventType.REMOVE_CUE.type)
+    payload.putMap(EVENT_PROP_CUE, playerView.getTextTrackCueInfo(event.cue))
+    receiveEvent(EVENT_TEXTTRACK_EVENT, payload)
+  }
+
+  private val onTextTrackEnterCue = EventListener<EnterCueEvent> { event ->
+    val payload = Arguments.createMap()
+    // TODO
+    // payload.putInt(EVENT_PROP_TRACK_UID, event.track.uid)
+    payload.putInt(EVENT_PROP_TYPE, TextTrackCueEventType.ENTER_CUE.type)
+    payload.putMap(EVENT_PROP_CUE, playerView.getTextTrackCueInfo(event.cue))
+    receiveEvent(EVENT_TEXTTRACK_EVENT, payload)
+  }
+
+  private val onTextTrackExitCue = EventListener<ExitCueEvent> { event ->
+    val payload = Arguments.createMap()
+    // TODO
+    // payload.putInt(EVENT_PROP_TRACK_UID, event.track.uid)
+    payload.putInt(EVENT_PROP_TYPE, TextTrackCueEventType.EXIT_CUE.type)
+    payload.putMap(EVENT_PROP_CUE, playerView.getTextTrackCueInfo(event.cue))
+    receiveEvent(EVENT_TEXTTRACK_EVENT, payload)
+  }
+
   private fun dispatchTextTrackEvent(eventType: TrackEventType, textTrack: TextTrack) {
     val payload = Arguments.createMap()
     payload.putMap(EVENT_PROP_TRACK, playerView.getTextTrackInfo(textTrack))
     payload.putInt(EVENT_PROP_TYPE, eventType.type)
     when (eventType) {
       TrackEventType.ADD_TRACK -> {
-        textTrack.addEventListener(TextTrackEventTypes.ADDCUE) { event: AddCueEvent ->
-          onTextTrackAddCue(event)
-        }
-        textTrack.addEventListener(TextTrackEventTypes.REMOVECUE) { event: RemoveCueEvent ->
-          onTextTrackRemoveCue(event)
-        }
+        textTrack.addEventListener(TextTrackEventTypes.ADDCUE, onTextTrackAddCue)
+        textTrack.addEventListener(TextTrackEventTypes.REMOVECUE, onTextTrackRemoveCue)
+        textTrack.addEventListener(TextTrackEventTypes.ENTERCUE, onTextTrackEnterCue)
+        textTrack.addEventListener(TextTrackEventTypes.EXITCUE, onTextTrackExitCue)
       }
       TrackEventType.REMOVE_TRACK -> {
-        textTrack.removeEventListener(TextTrackEventTypes.ADDCUE) { event: AddCueEvent ->
-          onTextTrackAddCue(event)
-        }
-        textTrack.removeEventListener(TextTrackEventTypes.REMOVECUE) { event: RemoveCueEvent ->
-          onTextTrackRemoveCue(event)
-        }
+        textTrack.removeEventListener(TextTrackEventTypes.ADDCUE, onTextTrackAddCue)
+        textTrack.removeEventListener(TextTrackEventTypes.REMOVECUE, onTextTrackRemoveCue)
+        textTrack.removeEventListener(TextTrackEventTypes.ENTERCUE, onTextTrackEnterCue)
+        textTrack.removeEventListener(TextTrackEventTypes.EXITCUE, onTextTrackExitCue)
       }
       else -> {
         // Ignore
@@ -435,22 +467,6 @@ class PlayerEventEmitter internal constructor(
 
   private fun onTextTrackChange(event: TrackListChangeEvent) {
     dispatchTextTrackEvent(TrackEventType.CHANGE_TRACK, event.track)
-  }
-
-  private fun onTextTrackAddCue(event: AddCueEvent) {
-    val payload = Arguments.createMap()
-    payload.putInt(EVENT_PROP_TRACK_UID, event.track.uid)
-    payload.putInt(EVENT_PROP_TYPE, TextTrackCueEventType.ADD_CUE.type)
-    payload.putMap(EVENT_PROP_CUE, playerView.getTextTrackCueInfo(event.cue))
-    receiveEvent(EVENT_TEXTTRACK_EVENT, payload)
-  }
-
-  private fun onTextTrackRemoveCue(event: RemoveCueEvent) {
-    val payload = Arguments.createMap()
-    payload.putInt(EVENT_PROP_TRACK_UID, event.track.uid)
-    payload.putInt(EVENT_PROP_TYPE, TextTrackCueEventType.REMOVE_CUE.type)
-    payload.putMap(EVENT_PROP_CUE, playerView.getTextTrackCueInfo(event.cue))
-    receiveEvent(EVENT_TEXTTRACK_EVENT, payload)
   }
 
   private fun activeAudioTrack(): MediaTrack<AudioQuality>? {
@@ -475,7 +491,7 @@ class PlayerEventEmitter internal constructor(
     return null
   }
 
-  private fun onActiveQualityChanged(event: QualityChangedEvent<*, *>) {
+  private val onActiveQualityChanged = EventListener<QualityChangedEvent<*, *>> { event ->
     val quality = event.quality
     val trackType = if (quality is AudioQuality) MediaTrackType.AUDIO else MediaTrackType.VIDEO
     val payload = Arguments.createMap()
@@ -506,12 +522,14 @@ class PlayerEventEmitter internal constructor(
         AudioTrackEventTypes.ACTIVEQUALITYCHANGEDEVENT
       else VideoTrackEventTypes.ACTIVEQUALITYCHANGEDEVENT) as EventType<QualityChangedEvent<Q, ActiveQualityChangedEvent>>
     when (eventType) {
-      TrackEventType.ADD_TRACK -> track.addEventListener(qualityChangedEventType) { event: QualityChangedEvent<Q, ActiveQualityChangedEvent> ->
-        onActiveQualityChanged(event)
-      }
-      TrackEventType.REMOVE_TRACK -> track.removeEventListener(qualityChangedEventType) { event: QualityChangedEvent<Q, ActiveQualityChangedEvent> ->
-        onActiveQualityChanged(event)
-      }
+      TrackEventType.ADD_TRACK -> track.addEventListener(
+        qualityChangedEventType,
+        onActiveQualityChanged
+      )
+      TrackEventType.REMOVE_TRACK -> track.removeEventListener(
+        qualityChangedEventType,
+        onActiveQualityChanged
+      )
       else -> { /* ignore */
       }
     }
