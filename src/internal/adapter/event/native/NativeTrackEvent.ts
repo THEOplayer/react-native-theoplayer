@@ -42,6 +42,16 @@ export enum NativeTextTrackEventType {
    * Dispatched when cue has been removed from the text track.
    */
   RemoveCue,
+
+  /**
+   * Dispatched when a cue of the track enters.
+   */
+  EnterCue,
+
+  /**
+   * Dispatched when a cue of the track exits.
+   */
+  ExitCue,
 }
 
 export interface NativeTextTrackEvent {
@@ -125,6 +135,10 @@ export function toTextTrackEventType(type: NativeTextTrackEventType): TextTrackE
       return TextTrackEventType.ADD_CUE;
     case NativeTextTrackEventType.RemoveCue:
       return TextTrackEventType.REMOVE_CUE;
+    case NativeTextTrackEventType.EnterCue:
+      return TextTrackEventType.ENTER_CUE;
+    case NativeTextTrackEventType.ExitCue:
+      return TextTrackEventType.EXIT_CUE;
   }
 }
 

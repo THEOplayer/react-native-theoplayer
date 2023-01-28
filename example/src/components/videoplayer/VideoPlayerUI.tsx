@@ -182,17 +182,15 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
     const { textTracks } = this.state;
     const { trackUid, cue } = event;
     const track = findTextTrackByUid(textTracks, trackUid);
-    if (!track) {
-      console.warn(TAG, 'onTextTrackCueEvent - Unknown track:', trackUid);
-      return;
-    }
-    switch (event.subType) {
-      case TextTrackEventType.ADD_CUE:
-        addTextTrackCue(track, cue);
-        break;
-      case TextTrackEventType.REMOVE_CUE:
-        removeTextTrackCue(track, cue);
-        break;
+    if (track) {
+      switch (event.subType) {
+        case TextTrackEventType.ADD_CUE:
+          addTextTrackCue(track, cue);
+          break;
+        case TextTrackEventType.REMOVE_CUE:
+          removeTextTrackCue(track, cue);
+          break;
+      }
     }
   };
 

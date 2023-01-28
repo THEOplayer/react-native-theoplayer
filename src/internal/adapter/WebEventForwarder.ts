@@ -242,6 +242,8 @@ export class WebEventForwarder {
     const track = event.track as NativeTextTrack;
     track.addEventListener('addcue', this.onAddTextTrackCue(track));
     track.addEventListener('removecue', this.onRemoveTextTrackCue(track));
+    track.addEventListener('entercue', this.onEnterTextTrackCue(track));
+    track.addEventListener('exitcue', this.onExitTextTrackCue(track));
     this._facade.dispatchEvent(new DefaultTextTrackListEvent(TrackListEventType.ADD_TRACK, track as TextTrack));
   };
 
@@ -249,6 +251,8 @@ export class WebEventForwarder {
     const track = event.track as NativeTextTrack;
     track.removeEventListener('addcue', this.onAddTextTrackCue(track));
     track.removeEventListener('removecue', this.onRemoveTextTrackCue(track));
+    track.removeEventListener('entercue', this.onEnterTextTrackCue(track));
+    track.removeEventListener('exitcue', this.onExitTextTrackCue(track));
     this._facade.dispatchEvent(new DefaultTextTrackListEvent(TrackListEventType.REMOVE_TRACK, track as NativeTextTrack as TextTrack));
   };
 
@@ -313,6 +317,20 @@ export class WebEventForwarder {
     const { cue } = event as unknown as { cue: NativeTextTrackCue };
     if (cue) {
       this._facade.dispatchEvent(new DefaultTextTrackEvent(TextTrackEventType.REMOVE_CUE, track.uid, fromNativeCue(cue)));
+    }
+  };
+
+  private readonly onEnterTextTrackCue = (track: NativeTextTrack) => (event: NativeEvent<'entercue'>) => {
+    const { cue } = event as unknown as { cue: NativeTextTrackCue };
+    if (cue) {
+      this._facade.dispatchEvent(new DefaultTextTrackEvent(TextTrackEventType.ENTER_CUE, track.uid, fromNativeCue(cue)));
+    }
+  };
+
+  private readonly onExitTextTrackCue = (track: NativeTextTrack) => (event: NativeEvent<'exitcue'>) => {
+    const { cue } = event as unknown as { cue: NativeTextTrackCue };
+    if (cue) {
+      this._facade.dispatchEvent(new DefaultTextTrackEvent(TextTrackEventType.EXIT_CUE, track.uid, fromNativeCue(cue)));
     }
   };
 
