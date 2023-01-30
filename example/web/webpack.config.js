@@ -7,7 +7,7 @@ const projectDirectory = path.resolve(__dirname, '../..');
 const appDirectory = path.resolve(__dirname, '..');
 
 // A folder for any stub components we need in case there is no counterpart for it on react-native-web.
-const stubDirectory = path.resolve(appDirectory, '../src/internal/web/stub/');
+const stubDirectory = path.resolve(appDirectory, './web/stub/');
 
 const HTMLWebpackPluginConfig = new HTMLWebpackPlugin({
   template: path.resolve(appDirectory, './web/public/index.html'),
