@@ -15,17 +15,8 @@
 // ----------------------------------------------------------------------------
 @interface RCT_EXTERN_MODULE(THEOplayerRCTViewManager, RCTViewManager)
 
-RCT_EXPORT_VIEW_PROPERTY(src, NSDictionary);
 RCT_EXPORT_VIEW_PROPERTY(config, NSDictionary);
-RCT_EXPORT_VIEW_PROPERTY(paused, BOOL);
-RCT_EXPORT_VIEW_PROPERTY(volume, NSNumber);
-RCT_EXPORT_VIEW_PROPERTY(muted, BOOL);
-RCT_EXPORT_VIEW_PROPERTY(playbackRate, NSNumber);
-RCT_EXPORT_VIEW_PROPERTY(selectedTextTrack, NSNumber);
-RCT_EXPORT_VIEW_PROPERTY(selectedAudioTrack, NSNumber);
-RCT_EXPORT_VIEW_PROPERTY(selectedVideoTrack, NSNumber);
-RCT_EXPORT_VIEW_PROPERTY(seek, NSNumber);
-RCT_EXPORT_VIEW_PROPERTY(fullscreen, BOOL);
+
 RCT_EXPORT_VIEW_PROPERTY(onNativePause, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativePlay, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeSourceChange, RCTDirectEventBlock);

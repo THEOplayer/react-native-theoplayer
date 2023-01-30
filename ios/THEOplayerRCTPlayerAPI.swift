@@ -4,9 +4,11 @@
 
 import Foundation
 import UIKit
+import THEOplayerSDK
 
 let ERROR_MESSAGE_PLAYER_ABR_UNSUPPORTED_FEATURE: String = "Setting an ABRconfig is not supported on iOS/tvOS."
 let ERROR_MESSAGE_PLAYER_QUALITY_UNSUPPORTED_FEATURE: String = "Setting a target video quality is not supported on iOS/tvOS."
+let ERROR_MESSAGE_PLAYER_FULLSCREEN_UNSUPPORTED_FEATURE: String = "Fullscreen presentationmode should be implemented on the RN level for iOS/tvOS."
 
 @objc(THEOplayerRCTPlayerAPI)
 class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
@@ -23,16 +25,31 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
     @objc(setPaused:paused:)
     func setPaused(_ node: NSNumber, paused: Bool) -> Void {
         DispatchQueue.main.async {
-            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            theView.setPaused(paused: paused)
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let player = theView.player {
+                if paused && !player.paused {
+                    if DEBUG_PLAYER_API { print("[NATIVE] Triggering pause on TheoPlayer") }
+                    player.pause()
+                } else if !paused && player.paused {
+                    if DEBUG_PLAYER_API { print("[NATIVE] Triggering play on TheoPlayer") }
+                    player.play()
+                }
+            }
         }
     }
     
     @objc(setSource:src:)
     func setSource(_ node: NSNumber, src: NSDictionary) -> Void {
         DispatchQueue.main.async {
-            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            theView.setSrc(srcDict: src)
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let src = THEOplayerRCTSourceDescriptionBuilder.buildSourceDescription(src) {
+                if let player = theView.player {
+                    if DEBUG_PLAYER_API { print("[NATIVE] Setting new source on TheoPlayer") }
+                    player.source = src
+                }
+            } else {
+                if DEBUG_PLAYER_API { print("[NATIVE] Failed to update THEOplayer source.") }
+            }
         }
     }
     
@@ -45,64 +62,107 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
     @objc(setCurrentTime:time:)
     func setCurrentTime(_ node: NSNumber, time: NSNumber) -> Void {
         DispatchQueue.main.async {
-            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            theView.setSeek(seek: time)
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let player = theView.player {
+                let timeValue = time.doubleValue * 0.001
+                if DEBUG_PLAYER_API { print("[NATIVE] Seeking to \(timeValue) on TheoPlayer") }
+                player.setCurrentTime(timeValue)
+            }
         }
     }
     
     @objc(setMuted:muted:)
     func setMuted(_ node: NSNumber, muted: Bool) -> Void {
         DispatchQueue.main.async {
-            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            theView.setMuted(muted: muted)
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let player = theView.player {
+                if player.muted != muted {
+                    if DEBUG_PLAYER_API { print("[NATIVE] Changing TheoPlayer to \(muted ? "muted" : "not muted")") }
+                    player.muted = muted
+                }
+            }
         }
     }
     
     @objc(setVolume:volume:)
     func setVolume(_ node: NSNumber, volume: NSNumber) -> Void {
-        DispatchQueue.main.async {
-            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            theView.setVolume(volume: volume)
-        }
+        if DEBUG_PLAYER_API { print("[NATIVE] Setting volume: TheoPlayer does not handle volume changes for iOS. This is handled by the device.") }
     }
     
     @objc(setPlaybackRate:playbackRate:)
     func setPlaybackRate(_ node: NSNumber, playbackRate: NSNumber) -> Void {
         DispatchQueue.main.async {
-            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            theView.setPlaybackRate(playbackRate: playbackRate)
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let player = theView.player {
+                let playbackRateValue = playbackRate.doubleValue
+                if player.playbackRate != playbackRateValue {
+                    if true || DEBUG_PLAYER_API { print("[NATIVE] Setting playbackRate on TheoPlayer to \(playbackRateValue)") }
+                    player.setPlaybackRate(playbackRateValue)
+                }
+            }
         }
     }
     
     @objc(setFullscreen:fullscreen:)
     func setFullscreen(_ node: NSNumber, fullscreen: Bool) -> Void {
-        DispatchQueue.main.async {
-            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            theView.setFullscreen(fullscreen: fullscreen)
-        }
+        if DEBUG_PLAYER_API { print(ERROR_MESSAGE_PLAYER_FULLSCREEN_UNSUPPORTED_FEATURE) }
+        return
     }
     
     @objc(setSelectedTextTrack:uid:)
     func setSelectedTextTrack(_ node: NSNumber, uid: NSNumber) -> Void {
         DispatchQueue.main.async {
-            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            theView.setSelectedTextTrack(selectedTextTrackUid: uid)
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let player = theView.player {
+                let uidValue = uid.intValue
+                let textTracks: TextTrackList = player.textTracks
+                guard textTracks.count > 0 else {
+                    return
+                }
+                if DEBUG_PLAYER_API { print("[NATIVE] Showing textTrack \(uidValue) on TheoPlayer") }
+                for i in 0...textTracks.count-1 {
+                    var textTrack: TextTrack = textTracks.get(i)
+                    textTrack.mode = (textTrack.uid == uidValue) ? TextTrackMode.showing : TextTrackMode.disabled
+                }
+            }
         }
     }
     
     @objc(setSelectedAudioTrack:uid:)
     func setSelectedAudioTrack(_ node: NSNumber, uid: NSNumber) -> Void {
         DispatchQueue.main.async {
-            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            theView.setSelectedAudioTrack(selectedAudioTrackUid: uid)
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let player = theView.player {
+                let uidValue = uid.intValue
+                let audioTracks: AudioTrackList = player.audioTracks
+                guard audioTracks.count > 0 else {
+                    return
+                }
+                if DEBUG_PLAYER_API { print("[NATIVE] Enabling audioTrack \(uidValue) on TheoPlayer") }
+                for i in 0...audioTracks.count-1 {
+                    var audioTrack: MediaTrack = audioTracks.get(i)
+                    audioTrack.enabled = (audioTrack.uid == uidValue)
+                }
+            }
         }
     }
     
     @objc(setSelectedVideoTrack:uid:)
     func setSelectedVideoTrack(_ node: NSNumber, uid: NSNumber) -> Void {
         DispatchQueue.main.async {
-            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            theView.setSelectedVideoTrack(selectedVideoTrackUid: uid)
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let player = theView.player {
+                let uidValue = uid.intValue
+                let videoTracks: VideoTrackList = player.videoTracks
+                guard videoTracks.count > 0 else {
+                    return
+                }
+                if DEBUG_PLAYER_API { print("[NATIVE] Enabling videoTrack \(uidValue) on TheoPlayer") }
+                for i in 0...videoTracks.count-1 {
+                    var videoTrack: MediaTrack = videoTracks.get(i)
+                    videoTrack.enabled = (videoTrack.uid == uidValue)
+                }
+            }
         }
     }
     
@@ -115,9 +175,15 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
     @objc(setPreload:type:)
     func setPreload(_ node: NSNumber, type: String) -> Void {
         DispatchQueue.main.async {
-            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            theView.setPreloadType(type: type)
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let player = theView.player {
+                let preloadType = THEOplayerRCTTypeUtils.preloadType(type)
+                if player.preload != preloadType {
+                    if DEBUG_PLAYER_API { print("[NATIVE] Changing TheoPlayer preload type to \(type)") }
+                    player.setPreload(preloadType)
+                }
+            }
         }
     }
-
+    
 }

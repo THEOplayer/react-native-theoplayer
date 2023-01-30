@@ -25,7 +25,7 @@ class THEOplayerRCTViewManager: RCTViewManager {
             let theView = self.bridge.uiManager.view(
                 forReactTag: node
             ) as! THEOplayerRCTView
-            theView.destroy()
+            theView.destroyPlayer()
         }
     }
 }
