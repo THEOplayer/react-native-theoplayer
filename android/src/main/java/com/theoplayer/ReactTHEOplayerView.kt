@@ -342,73 +342,39 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
 
   val selectedTextTrack: TextTrack?
     get() {
-      if (player != null) {
-        val tracks = player!!.textTracks
-        for (i in 0 until tracks.length()) {
-          val track = tracks.getItem(i)
+      return player?.let {
+        for (track in it.textTracks) {
           if (track.mode == TextTrackMode.SHOWING) {
             return track
           }
         }
-      }
-      return null
-    }
-
-  fun setSelectedTextTrack(uid: Int) {
-    player?.let {
-      for (track in it.textTracks) {
-        if (track.uid == uid) {
-          track.mode = TextTrackMode.SHOWING
-        } else if (track.mode == TextTrackMode.SHOWING) {
-          track.mode = TextTrackMode.DISABLED
-        }
+        null
       }
     }
-  }
 
   val selectedAudioTrack: MediaTrack<AudioQuality>?
     get() {
-      if (player != null) {
-        val tracks = player!!.audioTracks
-        for (i in 0 until tracks.length()) {
-          val track = tracks.getItem(i)
+      return player?.let {
+        for (track in it.audioTracks) {
           if (track.isEnabled) {
             return track
           }
         }
-      }
-      return null
-    }
-
-  fun setSelectedAudioTrack(uid: Int) {
-    player?.let {
-      for (track in it.audioTracks) {
-        track.isEnabled = track.uid == uid
+        null
       }
     }
-  }
 
   val selectedVideoTrack: MediaTrack<VideoQuality?>?
     get() {
-      if (player != null) {
-        val tracks = player!!.videoTracks
-        for (i in 0 until tracks.length()) {
-          val track = tracks.getItem(i)
+      return player?.let {
+        for (track in it.videoTracks) {
           if (track.isEnabled) {
             return track
           }
         }
-      }
-      return null
-    }
-
-  fun setSelectedVideoTrack(uid: Int) {
-    if (player != null) {
-      for (track in player!!.videoTracks) {
-        track.isEnabled = track.uid == uid
+        null
       }
     }
-  }
 
   fun setTargetVideoQualities(uids: ReadableArray) {
     @Suppress("UNCHECKED_CAST") val currentVideoTrack = selectedVideoTrack as MediaTrack<VideoQuality>?
