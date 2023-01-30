@@ -4,6 +4,7 @@ import type {
   AdsAPI,
   CastAPI,
   DurationChangeEvent,
+  RateChangeEvent,
   LoadedMetadataEvent,
   MediaTrack,
   PlayerEventMap,
@@ -56,6 +57,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this.addEventListener(PlayerEventType.PAUSE, this.onPause);
     this.addEventListener(PlayerEventType.TIME_UPDATE, this.onTimeupdate);
     this.addEventListener(PlayerEventType.DURATION_CHANGE, this.onDurationChange);
+    this.addEventListener(PlayerEventType.RATE_CHANGE, this.onRateChange);
     this.addEventListener(PlayerEventType.SEEKING, this.onSeeking);
     this.addEventListener(PlayerEventType.SEEKED, this.onSeeked);
   }
@@ -98,6 +100,10 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   private onDurationChange = (event: DurationChangeEvent) => {
     this._duration = event.duration;
+  };
+
+  private onRateChange = (event: RateChangeEvent) => {
+    this._playbackRate = event.playbackRate;
   };
 
   private onSeeking = () => {

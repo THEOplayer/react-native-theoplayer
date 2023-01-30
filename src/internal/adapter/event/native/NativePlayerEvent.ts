@@ -33,6 +33,13 @@ export interface NativeDurationChangeEvent {
   readonly duration: number;
 }
 
+export interface NativeRateChangeEvent {
+  /**
+   * The player's new playbackRate.
+   */
+  readonly playbackRate: number;
+}
+
 export interface NativeReadyStateChangeEvent {
   /**
    * The player's new ready state.

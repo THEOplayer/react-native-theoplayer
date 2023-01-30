@@ -11,6 +11,7 @@ import {
   ChromecastError,
   ChromecastErrorEvent,
   DurationChangeEvent,
+  RateChangeEvent,
   ErrorEvent,
   FullscreenActionType,
   FullscreenEvent,
@@ -90,6 +91,12 @@ export class DefaultTimeupdateEvent extends BaseEvent<PlayerEventType.TIME_UPDAT
 export class DefaultDurationChangeEvent extends BaseEvent<PlayerEventType.DURATION_CHANGE> implements DurationChangeEvent {
   constructor(public duration: number) {
     super(PlayerEventType.DURATION_CHANGE);
+  }
+}
+
+export class DefaultRateChangeEvent extends BaseEvent<PlayerEventType.RATE_CHANGE> implements RateChangeEvent {
+  constructor(public playbackRate: number) {
+    super(PlayerEventType.RATE_CHANGE);
   }
 }
 

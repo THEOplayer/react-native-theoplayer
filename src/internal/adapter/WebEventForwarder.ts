@@ -2,6 +2,7 @@ import type * as THEOplayer from 'theoplayer';
 import type {
   AddTrackEvent,
   DurationChangeEvent as NativeDurationChangeEvent,
+  RateChangeEvent as NativeRateChangeEvent,
   ErrorEvent as NativeErrorEvent,
   Event as NativeEvent,
   MediaTrack as NativeMediaTrack,
@@ -35,6 +36,7 @@ import {
   DefaultMediaTrackEvent,
   DefaultMediaTrackListEvent,
   DefaultProgressEvent,
+  DefaultRateChangeEvent,
   DefaultReadyStateChangeEvent,
   DefaultSegmentNotFoundEvent,
   DefaultTextTrackEvent,
@@ -72,6 +74,7 @@ export class WebEventForwarder {
     this._player.addEventListener('readystatechange', this.onReadyStateChanged);
     this._player.addEventListener('timeupdate', this.onTimeUpdate);
     this._player.addEventListener('durationchange', this.onDurationChange);
+    this._player.addEventListener('ratechange', this.onPlaybackRateChange);
     this._player.addEventListener('segmentnotfound', this.onSegmentNotFound);
     this._player.addEventListener('volumechange', this.onVolumeChangeEvent);
     this._player.presentation.addEventListener('presentationmodechange', this.onPresentationModeChange);
@@ -113,6 +116,7 @@ export class WebEventForwarder {
     this._player.removeEventListener('readystatechange', this.onReadyStateChanged);
     this._player.removeEventListener('timeupdate', this.onTimeUpdate);
     this._player.removeEventListener('durationchange', this.onDurationChange);
+    this._player.removeEventListener('ratechange', this.onPlaybackRateChange);
     this._player.removeEventListener('segmentnotfound', this.onSegmentNotFound);
     this._player.removeEventListener('volumechange', this.onVolumeChangeEvent);
     this._player.presentation.removeEventListener('presentationmodechange', this.onPresentationModeChange);
@@ -220,6 +224,10 @@ export class WebEventForwarder {
 
   private readonly onDurationChange = (event: NativeDurationChangeEvent) => {
     this._facade.dispatchEvent(new DefaultDurationChangeEvent(event.duration * 1e3));
+  };
+
+  private readonly onPlaybackRateChange = (event: NativeRateChangeEvent) => {
+    this._facade.dispatchEvent(new DefaultRateChangeEvent(event.playbackRate));
   };
 
   private readonly onSegmentNotFound = () => {

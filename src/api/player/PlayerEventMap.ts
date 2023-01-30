@@ -5,6 +5,7 @@ import type {
   FullscreenEvent,
   LoadedMetadataEvent,
   ProgressEvent,
+  RateChangeEvent,
   ReadyStateChangeEvent,
   SegmentNotFoundEvent,
   TimeUpdateEvent,
@@ -32,6 +33,7 @@ export enum PlayerEventType {
   ENDED = 'ended',
   TIME_UPDATE = 'timeupdate',
   DURATION_CHANGE = 'durationchange',
+  RATE_CHANGE = 'ratechange',
   SEGMENT_NOT_FOUND = 'segmentnotfound',
   TEXT_TRACK_LIST = 'texttracklist',
   TEXT_TRACK = 'texttrack',
@@ -144,6 +146,11 @@ export interface PlayerEventMap {
    * Fired when the player's duration attribute has been updated.
    */
   [PlayerEventType.DURATION_CHANGE]: DurationChangeEvent;
+
+  /**
+   * Fired when the player's playbackRate changes.
+   */
+  [PlayerEventType.RATE_CHANGE]: RateChangeEvent;
 
   /**
    * Fired when a segment can not be found.

@@ -23,6 +23,7 @@ import {
   DefaultChromecastChangeEvent,
   DefaultChromecastErrorEvent,
   DefaultDurationChangeEvent,
+  DefaultRateChangeEvent,
   DefaultErrorEvent,
   DefaultFullscreenEvent,
   DefaultLoadedMetadataEvent,
@@ -45,6 +46,7 @@ import type {
 import { toMediaTrackType, toMediaTrackTypeEventType, toTextTrackEventType, toTrackListEventType } from './adapter/event/native/NativeTrackEvent';
 import type {
   NativeDurationChangeEvent,
+  NativeRateChangeEvent,
   NativeErrorEvent,
   NativeLoadedMetadataEvent,
   NativeProgressEvent,
@@ -76,6 +78,7 @@ interface THEOplayerRCTViewProps {
   onNativeWaiting: () => void;
   onNativeTimeUpdate: (event: NativeSyntheticEvent<NativeTimeUpdateEvent>) => void;
   onNativeDurationChange: (event: NativeSyntheticEvent<NativeDurationChangeEvent>) => void;
+  onNativeRateChange: (event: NativeSyntheticEvent<NativeRateChangeEvent>) => void;
   onNativeSegmentNotFound: (event: NativeSyntheticEvent<NativeSegmentNotFoundEvent>) => void;
   onNativeTextTrackListEvent: (event: NativeSyntheticEvent<NativeTextTrackListEvent>) => void;
   onNativeTextTrackEvent: (event: NativeSyntheticEvent<NativeTextTrackEvent>) => void;
@@ -214,6 +217,10 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
     this._facade.dispatchEvent(new DefaultDurationChangeEvent(decodeNanInf(event.nativeEvent.duration)));
   };
 
+  private _onRateChange = (event: NativeSyntheticEvent<NativeRateChangeEvent>) => {
+    this._facade.dispatchEvent(new DefaultRateChangeEvent(event.nativeEvent.playbackRate));
+  };
+
   private _onSegmentNotFound = (event: NativeSyntheticEvent<NativeSegmentNotFoundEvent>) => {
     const nativeEvent = event.nativeEvent;
     this._facade.dispatchEvent(new DefaultSegmentNotFoundEvent(nativeEvent.segmentStartTime, nativeEvent.error, nativeEvent.retryCount));
@@ -308,6 +315,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
           onNativeReadyStateChange={this._onReadStateChange}
           onNativeTimeUpdate={this._onTimeUpdate}
           onNativeDurationChange={this._onDurationChange}
+          onNativeRateChange={this._onRateChange}
           onNativeSegmentNotFound={this._onSegmentNotFound}
           onNativeTextTrackListEvent={this._onTextTrackListEvent}
           onNativeTextTrackEvent={this._onTextTrackEvent}

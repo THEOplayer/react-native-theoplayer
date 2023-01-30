@@ -35,6 +35,13 @@ export interface DurationChangeEvent extends Event<PlayerEventType.DURATION_CHAN
   readonly duration: number;
 }
 
+export interface RateChangeEvent extends Event<PlayerEventType.RATE_CHANGE> {
+  /**
+   * The player's new playback rate.
+   */
+  readonly playbackRate: number;
+}
+
 export interface ReadyStateChangeEvent extends Event<PlayerEventType.READYSTATE_CHANGE> {
   /**
    * The player's new ready state.
