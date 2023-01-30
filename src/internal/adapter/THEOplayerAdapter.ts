@@ -60,13 +60,9 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this.addEventListener(PlayerEventType.SEEKED, this.onSeeked);
   }
 
-  private reset() {
+  private onSourceChange = () => {
     this._playbackRate = 1;
-    this._volume = 1;
-    this._muted = false;
-    this._paused = true;
     this._seeking = false;
-    this._fullscreen = false;
     this._audioTracks = [];
     this._videoTracks = [];
     this._textTracks = [];
@@ -74,10 +70,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._selectedVideoTrack = undefined;
     this._selectedAudioTrack = undefined;
     this._targetVideoQuality = undefined;
-  }
 
-  private onSourceChange = () => {
-    this.reset();
     if (this._autoplay) {
       this.play();
     } else {
