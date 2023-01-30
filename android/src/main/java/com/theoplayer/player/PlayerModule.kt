@@ -3,6 +3,7 @@ package com.theoplayer.player
 import com.facebook.react.bridge.*
 import com.theoplayer.*
 import com.theoplayer.android.api.player.PreloadType
+import com.theoplayer.android.api.player.track.texttrack.TextTrackMode
 import com.theoplayer.util.ViewResolver
 
 private const val TAG = "PlayerModule"
@@ -77,24 +78,36 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
   @ReactMethod
   fun setSelectedTextTrack(tag: Int, uid: Int) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      view?.setSelectedTextTrack(uid)
+      view?.player?.let {
+        for (track in it.textTracks) {
+          if (track.uid == uid) {
+            track.mode = TextTrackMode.SHOWING
+          } else if (track.mode == TextTrackMode.SHOWING) {
+            track.mode = TextTrackMode.DISABLED
+          }
+        }
+      }
     }
   }
 
   @ReactMethod
   fun setSelectedAudioTrack(tag: Int, uid: Int) {
-    if (uid != -1) {
-      viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-        view?.setSelectedAudioTrack(uid)
+    viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
+      view?.player?.let {
+        for (track in it.audioTracks) {
+          track.isEnabled = track.uid == uid
+        }
       }
     }
   }
 
   @ReactMethod
   fun setSelectedVideoTrack(tag: Int, uid: Int) {
-    if (uid != -1) {
-      viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-        view?.setSelectedVideoTrack(uid)
+    viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
+      view?.player?.let {
+        for (track in it.videoTracks) {
+          track.isEnabled = track.uid == uid
+        }
       }
     }
   }
