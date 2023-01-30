@@ -278,9 +278,9 @@ class PlayerEventEmitter internal constructor(
 
   private fun onLoadedMetadata() {
     val payload = Arguments.createMap()
-    payload.putArray(EVENT_PROP_TEXT_TRACKS, playerView.textTrackInfo)
-    payload.putArray(EVENT_PROP_AUDIO_TRACKS, playerView.audioTrackInfo)
-    payload.putArray(EVENT_PROP_VIDEO_TRACKS, playerView.videoTrackInfo)
+    payload.putArray(EVENT_PROP_TEXT_TRACKS, trackListAdapter.fromTextTrackList(playerView.player?.textTracks))
+    payload.putArray(EVENT_PROP_AUDIO_TRACKS, trackListAdapter.fromAudioTrackList(playerView.player?.audioTracks))
+    payload.putArray(EVENT_PROP_VIDEO_TRACKS, trackListAdapter.fromVideoTrackList(playerView.player?.videoTracks))
     val selectedTextTrack = playerView.selectedTextTrack
     if (selectedTextTrack != null) {
       payload.putInt(EVENT_PROP_SELECTED_TEXT_TRACK, selectedTextTrack.uid)
@@ -376,18 +376,16 @@ class PlayerEventEmitter internal constructor(
   }
 
   private fun onProgress() {
-    val timeRanges = playerView.getSeekableRange()
+    val timeRanges = playerView.player?.seekable
     val payload = Arguments.createMap()
-    if (timeRanges != null) {
-      val seekable = Arguments.createArray()
-      for (i in 0 until timeRanges.length()) {
-        val range = Arguments.createMap()
-        range.putDouble(EVENT_PROP_START, 1e03 * timeRanges.getStart(i))
-        range.putDouble(EVENT_PROP_END, 1e03 * timeRanges.getEnd(i))
-        seekable.pushMap(range)
-      }
-      payload.putArray(EVENT_PROP_SEEKABLE, seekable)
+    val seekable = Arguments.createArray()
+    timeRanges?.forEach { timeRange ->
+      val range = Arguments.createMap()
+      range.putDouble(EVENT_PROP_START, 1e03 * timeRange.start)
+      range.putDouble(EVENT_PROP_END, 1e03 * timeRange.end)
+      seekable.pushMap(range)
     }
+    payload.putArray(EVENT_PROP_SEEKABLE, seekable)
     receiveEvent(EVENT_PROGRESS, payload)
   }
 
@@ -403,7 +401,7 @@ class PlayerEventEmitter internal constructor(
     val payload = Arguments.createMap()
     payload.putInt(EVENT_PROP_TRACK_UID, event.track.uid)
     payload.putInt(EVENT_PROP_TYPE, TextTrackCueEventType.ADD_CUE.type)
-    payload.putMap(EVENT_PROP_CUE, playerView.getTextTrackCueInfo(event.cue))
+    payload.putMap(EVENT_PROP_CUE, trackListAdapter.fromTextTrackCue(event.cue))
     receiveEvent(EVENT_TEXTTRACK_EVENT, payload)
   }
 
@@ -411,7 +409,7 @@ class PlayerEventEmitter internal constructor(
     val payload = Arguments.createMap()
     payload.putInt(EVENT_PROP_TRACK_UID, event.track.uid)
     payload.putInt(EVENT_PROP_TYPE, TextTrackCueEventType.REMOVE_CUE.type)
-    payload.putMap(EVENT_PROP_CUE, playerView.getTextTrackCueInfo(event.cue))
+    payload.putMap(EVENT_PROP_CUE, trackListAdapter.fromTextTrackCue(event.cue))
     receiveEvent(EVENT_TEXTTRACK_EVENT, payload)
   }
 
@@ -420,7 +418,7 @@ class PlayerEventEmitter internal constructor(
     // TODO
     // payload.putInt(EVENT_PROP_TRACK_UID, event.track.uid)
     payload.putInt(EVENT_PROP_TYPE, TextTrackCueEventType.ENTER_CUE.type)
-    payload.putMap(EVENT_PROP_CUE, playerView.getTextTrackCueInfo(event.cue))
+    payload.putMap(EVENT_PROP_CUE, trackListAdapter.fromTextTrackCue(event.cue))
     receiveEvent(EVENT_TEXTTRACK_EVENT, payload)
   }
 
@@ -429,13 +427,13 @@ class PlayerEventEmitter internal constructor(
     // TODO
     // payload.putInt(EVENT_PROP_TRACK_UID, event.track.uid)
     payload.putInt(EVENT_PROP_TYPE, TextTrackCueEventType.EXIT_CUE.type)
-    payload.putMap(EVENT_PROP_CUE, playerView.getTextTrackCueInfo(event.cue))
+    payload.putMap(EVENT_PROP_CUE, trackListAdapter.fromTextTrackCue(event.cue))
     receiveEvent(EVENT_TEXTTRACK_EVENT, payload)
   }
 
   private fun dispatchTextTrackEvent(eventType: TrackEventType, textTrack: TextTrack) {
     val payload = Arguments.createMap()
-    payload.putMap(EVENT_PROP_TRACK, playerView.getTextTrackInfo(textTrack))
+    payload.putMap(EVENT_PROP_TRACK, trackListAdapter.fromTextTrack(textTrack))
     payload.putInt(EVENT_PROP_TYPE, eventType.type)
     when (eventType) {
       TrackEventType.ADD_TRACK -> {
@@ -481,9 +479,8 @@ class PlayerEventEmitter internal constructor(
     ) else null
   }
 
-  private fun <T : Quality?> activeTrack(tracks: MediaTrackList<T>): MediaTrack<T>? {
-    for (i in 0 until tracks.length()) {
-      val track = tracks.getItem(i)
+  private fun <T : Quality?> activeTrack(tracks: MediaTrackList<T>?): MediaTrack<T>? {
+    tracks?.forEach { track ->
       if (track.isEnabled) {
         return track
       }

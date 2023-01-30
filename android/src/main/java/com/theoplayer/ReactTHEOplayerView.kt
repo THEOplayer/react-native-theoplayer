@@ -20,7 +20,6 @@ import com.theoplayer.android.api.ads.wrapper.AdsApiWrapper
 import com.theoplayer.android.api.player.Player
 import com.theoplayer.android.api.source.SourceDescription
 import com.theoplayer.android.api.player.track.texttrack.TextTrack
-import com.theoplayer.android.api.player.track.texttrack.cue.TextTrackCue
 import com.theoplayer.android.api.THEOplayerConfig
 import com.google.ads.interactivemedia.v3.api.AdsRenderingSettings
 import com.google.ads.interactivemedia.v3.api.ImaSdkFactory
@@ -33,7 +32,6 @@ import com.theoplayer.android.api.player.track.mediatrack.quality.VideoQuality
 import com.theoplayer.android.api.cast.Cast
 import com.theoplayer.android.api.player.PreloadType
 import com.theoplayer.android.api.player.track.mediatrack.MediaTrack
-import com.theoplayer.android.api.timerange.TimeRanges
 import com.theoplayer.track.QualityListFilter
 import com.theoplayer.track.TrackListAdapter
 import java.lang.Exception
@@ -70,57 +68,11 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
     adsApi = AdsApiWrapper()
   }
 
-  val castApi: Cast?
-    get() = if (playerView != null) playerView!!.cast else null
-
-  val textTrackInfo: WritableArray
-    get() = if (player != null) {
-      trackListAdapter.fromTextTrackList(player!!.textTracks)
-    } else Arguments.createArray()
-
   fun initialize(configProps: ReadableMap?) {
-    createViews(PlayerConfigAdapter.fromProps(configProps))
-  }
-
-  fun getTextTrackInfo(track: TextTrack): WritableMap {
-    return if (player != null) {
-      trackListAdapter.fromTextTrack(track)
-    } else Arguments.createMap()
-  }
-
-  fun getTextTrackCueInfo(cue: TextTrackCue): WritableMap {
-    return if (player != null) {
-      trackListAdapter.fromTextTrackCue(cue)
-    } else Arguments.createMap()
-  }
-
-  val audioTrackInfo: WritableArray
-    get() = if (player != null) {
-      trackListAdapter.fromAudioTrackList(player!!.audioTracks)
-    } else Arguments.createArray()
-
-  val videoTrackInfo: WritableArray
-    get() = if (player != null) {
-      trackListAdapter.fromVideoTrackList(player!!.videoTracks)
-    } else Arguments.createArray()
-
-  val duration: Double
-    get() = encodeInfNan(if (player != null) 1e03 * player!!.duration else Double.NaN)
-
-  fun getSeekableRange() : TimeRanges? {
-    return player?.seekable
-  }
-
-  override fun setId(id: Int) {
-    super.setId(id)
-    eventEmitter.setViewId(id)
-  }
-
-  private fun createViews(playerConfig: THEOplayerConfig) {
     if (BuildConfig.LOG_VIEW_EVENTS) {
-      Log.d(TAG, "Create views")
+      Log.d(TAG, "Initialize view")
     }
-
+    val playerConfig = PlayerConfigAdapter.fromProps(configProps)
     playerView = object : THEOplayerView(reactContext.currentActivity!!, playerConfig) {
       private fun measureAndLayout() {
         measure(
@@ -142,6 +94,17 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
       addIntegrations(it, playerConfig)
       addView(it, 0, layoutParams)
     }
+  }
+
+  val castApi: Cast?
+    get() = playerView?.cast
+
+  val duration: Double
+    get() = encodeInfNan(if (player != null) 1e03 * player!!.duration else Double.NaN)
+
+  override fun setId(id: Int) {
+    super.setId(id)
+    eventEmitter.setViewId(id)
   }
 
   private fun addIntegrations(playerView: THEOplayerView, playerConfig: THEOplayerConfig) {
@@ -241,17 +204,13 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
     if (BuildConfig.LOG_VIEW_EVENTS) {
       Log.d(TAG, "onHostDestroy")
     }
-    cleanUpResources()
-  }
-
-  fun cleanUpResources() {
-    if (BuildConfig.LOG_VIEW_EVENTS) {
-      Log.d(TAG, "cleanUpResources")
-    }
     releasePlayer()
   }
 
-  private fun releasePlayer() {
+  fun releasePlayer() {
+    if (BuildConfig.LOG_VIEW_EVENTS) {
+      Log.d(TAG, "releasePlayer")
+    }
     player?.let {
       eventEmitter.removeListeners(it)
       adsApi.destroy()
