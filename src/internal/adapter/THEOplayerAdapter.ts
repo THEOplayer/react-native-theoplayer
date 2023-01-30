@@ -202,9 +202,9 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     return this._selectedAudioTrack;
   }
 
-  set selectedAudioTrack(track: number | undefined) {
-    this._selectedAudioTrack = track;
-    NativeModules.PlayerModule.setSelectedAudioTrack(this._view.nativeHandle, track);
+  set selectedAudioTrack(trackUid: number | undefined) {
+    this._selectedAudioTrack = trackUid;
+    NativeModules.PlayerModule.setSelectedAudioTrack(this._view.nativeHandle, trackUid || -1);
   }
 
   get videoTracks(): MediaTrack[] {
@@ -215,9 +215,9 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     return this._selectedVideoTrack;
   }
 
-  set selectedVideoTrack(track: number | undefined) {
-    this._selectedVideoTrack = track;
-    NativeModules.PlayerModule.setSelectedVideoTrack(this._view.nativeHandle, track);
+  set selectedVideoTrack(trackUid: number | undefined) {
+    this._selectedVideoTrack = trackUid;
+    NativeModules.PlayerModule.setSelectedVideoTrack(this._view.nativeHandle, trackUid || -1);
   }
 
   get textTracks(): TextTrack[] {
@@ -228,8 +228,9 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     return this._selectedTextTrack;
   }
 
-  set selectedTextTrack(track: number | undefined) {
-    NativeModules.PlayerModule.setSelectedTextTrack(this._view.nativeHandle, track);
+  set selectedTextTrack(trackUid: number | undefined) {
+    this._selectedTextTrack = trackUid;
+    NativeModules.PlayerModule.setSelectedTextTrack(this._view.nativeHandle, trackUid || -1);
   }
 
   get source(): SourceDescription | undefined {

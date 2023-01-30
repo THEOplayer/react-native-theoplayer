@@ -356,8 +356,8 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
     }
 
   fun setSelectedTextTrack(uid: Int) {
-    if (player != null) {
-      for (track in player!!.textTracks) {
+    player?.let {
+      for (track in it.textTracks) {
         if (track.uid == uid) {
           track.mode = TextTrackMode.SHOWING
         } else if (track.mode == TextTrackMode.SHOWING) {
@@ -382,8 +382,8 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
     }
 
   fun setSelectedAudioTrack(uid: Int) {
-    if (player != null) {
-      for (track in player!!.audioTracks) {
+    player?.let {
+      for (track in it.audioTracks) {
         track.isEnabled = track.uid == uid
       }
     }
