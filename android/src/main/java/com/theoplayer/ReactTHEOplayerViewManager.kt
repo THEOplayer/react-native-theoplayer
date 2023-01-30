@@ -35,7 +35,7 @@ class ReactTHEOplayerViewManager : ViewGroupManager<ReactTHEOplayerView>() {
   }
 
   override fun onDropViewInstance(view: ReactTHEOplayerView) {
-    view.cleanUpResources()
+    view.releasePlayer()
   }
 
   @ReactProp(name = PROP_CONFIG)
