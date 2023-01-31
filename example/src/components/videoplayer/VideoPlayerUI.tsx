@@ -535,3 +535,16 @@ function stringFromTextTrackListEvent(type: TrackListEventType): string {
       return 'ChangeTrack';
   }
 }
+
+function stringFromTextTrackEvent(type: TextTrackEventType): string {
+  switch (type) {
+    case TextTrackEventType.ADD_CUE:
+      return 'AddCue';
+    case TextTrackEventType.REMOVE_CUE:
+      return 'RemoveCue';
+    case TextTrackEventType.ENTER_CUE:
+      return 'EnterCue';
+    case TextTrackEventType.EXIT_CUE:
+      return 'ExitCue';
+  }
+}
