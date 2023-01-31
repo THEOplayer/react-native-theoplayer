@@ -60,6 +60,7 @@ private const val EVENT_ENDED = "onNativeEnded"
 private const val EVENT_READYSTATECHANGE = "onNativeReadyStateChange"
 private const val EVENT_TIMEUPDATE = "onNativeTimeUpdate"
 private const val EVENT_DURATIONCHANGE = "onNativeDurationChange"
+private const val EVENT_RATECHANGE = "onNativeRateChange"
 private const val EVENT_SEGMENTNOTFOUND = "onNativeSegmentNotFound"
 private const val EVENT_TEXTTRACK_LIST_EVENT = "onNativeTextTrackListEvent"
 private const val EVENT_TEXTTRACK_EVENT = "onNativeTextTrackEvent"
@@ -75,6 +76,7 @@ private const val EVENT_CAST_EVENT = "onNativeCastEvent"
 private const val EVENT_PROP_CURRENT_TIME = "currentTime"
 private const val EVENT_PROP_CURRENT_PROGRAM_DATE_TIME = "currentProgramDateTime"
 private const val EVENT_PROP_DURATION = "duration"
+private const val EVENT_PROP_RATE = "playbackRate"
 private const val EVENT_PROP_READYSTATE = "readyState"
 private const val EVENT_PROP_ERROR = "error"
 private const val EVENT_PROP_ERROR_CODE = "errorCode"
@@ -121,6 +123,7 @@ class PlayerEventEmitter internal constructor(
     EVENT_READYSTATECHANGE,
     EVENT_TIMEUPDATE,
     EVENT_DURATIONCHANGE,
+    EVENT_RATECHANGE,
     EVENT_SEGMENTNOTFOUND,
     EVENT_TEXTTRACK_LIST_EVENT,
     EVENT_TEXTTRACK_EVENT,
@@ -154,6 +157,7 @@ class PlayerEventEmitter internal constructor(
       EVENT_READYSTATECHANGE,
       EVENT_TIMEUPDATE,
       EVENT_DURATIONCHANGE,
+      EVENT_RATECHANGE,
       EVENT_SEGMENTNOTFOUND,
       EVENT_TEXTTRACK_LIST_EVENT,
       EVENT_TEXTTRACK_EVENT,
@@ -224,6 +228,8 @@ class PlayerEventEmitter internal constructor(
       EventListener { event: TimeUpdateEvent -> onTimeUpdate(event) }
     playerListeners[PlayerEventTypes.DURATIONCHANGE] =
       EventListener { event: DurationChangeEvent -> onDurationChange(event) }
+    playerListeners[PlayerEventTypes.RATECHANGE] =
+      EventListener { event: RateChangeEvent -> onRateChange(event) }
     playerListeners[PlayerEventTypes.PAUSE] = EventListener<PlayerEvent<*>> { onPause() }
     playerListeners[PlayerEventTypes.SEGMENTNOTFOUND] =
       EventListener { event: SegmentNotFoundEvent -> onSegmentNotFound(event) }
@@ -369,6 +375,12 @@ class PlayerEventEmitter internal constructor(
     val payload = Arguments.createMap()
     payload.putDouble(EVENT_PROP_DURATION, encodeInfNan(1e03 * event.duration))
     receiveEvent(EVENT_DURATIONCHANGE, payload)
+  }
+
+  private fun onRateChange(event: RateChangeEvent) {
+    val payload = Arguments.createMap()
+    payload.putDouble(EVENT_PROP_RATE, event.playbackRate)
+    receiveEvent(EVENT_RATECHANGE, payload)
   }
 
   private fun onError(event: ErrorEvent) {
