@@ -99,6 +99,9 @@ public class THEOplayerRCTView: UIView {
                                                                         cast: self.playerCastConfiguration(),
                                                                         license: self.license,
                                                                         licenseUrl: self.licenseUrl))
+        self.initAdsIntegration()
+        self.initCastIntegration()
+        self.initBackgroundAudio()
         self.initPip()
         return self.player
     }
@@ -109,6 +112,8 @@ public class THEOplayerRCTView: UIView {
                                                                         license: self.license,
                                                                         licenseUrl: self.licenseUrl,
                                                                         pip: self.playerPipConfiguration()))
+        self.initAdsIntegration()
+        self.initBackgroundAudio()
         self.initPip()
         return self.player
     }
