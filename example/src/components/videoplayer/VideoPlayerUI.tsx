@@ -112,6 +112,7 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
     player.addEventListener(PlayerEventType.CAST_EVENT, this.onCastEvent);
     player.addEventListener(PlayerEventType.PROGRESS, this.onProgress);
     player.addEventListener(PlayerEventType.RATE_CHANGE, this.onRateChange);
+    player.addEventListener(PlayerEventType.CANPLAY, console.log);
     player.addEventListener(PlayerEventType.ERROR, this.onError);
   }
 
