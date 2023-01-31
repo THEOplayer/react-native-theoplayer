@@ -19,6 +19,8 @@ class THEOplayerRCTTextTrackEventHandler {
     // MARK: textTrack listeners (attached dynamically to new texttracks)
     private var addCueListeners: [Int:EventListener] = [:]
     private var removeCueListeners: [Int:EventListener] = [:]
+    private var enterCueListeners: [Int:EventListener] = [:]
+    private var exitCueListeners: [Int:EventListener] = [:]
     
     
     // MARK: - destruction
@@ -57,6 +59,10 @@ class THEOplayerRCTTextTrackEventHandler {
                 if DEBUG_EVENTHANDLER { print("[NATIVE] AddCue listener attached to THEOplayer textTrack with uid \(textTrack.uid)") }
                 welf.removeCueListeners[textTrack.uid] = textTrack.addEventListener(type: TextTrackEventTypes.REMOVE_CUE, listener: welf.removeCueListener(_:))
                 if DEBUG_EVENTHANDLER { print("[NATIVE] RemoveCue listener attached to THEOplayer textTrack with uid \(textTrack.uid)") }
+                welf.enterCueListeners[textTrack.uid] = textTrack.addEventListener(type: TextTrackEventTypes.ENTER_CUE, listener: welf.enterCueListener(_:))
+                if DEBUG_EVENTHANDLER { print("[NATIVE] EnterCue listener attached to THEOplayer textTrack with uid \(textTrack.uid)") }
+                welf.exitCueListeners[textTrack.uid] = textTrack.addEventListener(type: TextTrackEventTypes.EXIT_CUE, listener: welf.exitCueListener(_:))
+                if DEBUG_EVENTHANDLER { print("[NATIVE] ExitCue listener attached to THEOplayer textTrack with uid \(textTrack.uid)") }
             }
         }
         if DEBUG_EVENTHANDLER { print("[NATIVE] AddTrack listener attached to THEOplayer textTrack list") }
@@ -74,11 +80,17 @@ class THEOplayerRCTTextTrackEventHandler {
                 ])
                 // stop listening for cue events on this track
                 if let addCueListener = welf.addCueListeners[textTrack.uid],
-                   let removeCueListener = welf.removeCueListeners[textTrack.uid]{
+                   let removeCueListener = welf.removeCueListeners[textTrack.uid],
+                   let enterCueListener = welf.enterCueListeners[textTrack.uid],
+                   let exitCueListener = welf.exitCueListeners[textTrack.uid] {
                     textTrack.removeEventListener(type: TextTrackEventTypes.ADD_CUE, listener: addCueListener)
                     if DEBUG_EVENTHANDLER { print("[NATIVE] AddCue listener removed from THEOplayer textTrack with uid \(textTrack.uid)") }
                     textTrack.removeEventListener(type: TextTrackEventTypes.REMOVE_CUE, listener: removeCueListener)
                     if DEBUG_EVENTHANDLER { print("[NATIVE] RemoveCue listener removed from THEOplayer textTrack with uid \(textTrack.uid)") }
+                    textTrack.removeEventListener(type: TextTrackEventTypes.ENTER_CUE, listener: enterCueListener)
+                    if DEBUG_EVENTHANDLER { print("[NATIVE] EnterCue listener removed from THEOplayer textTrack with uid \(textTrack.uid)") }
+                    textTrack.removeEventListener(type: TextTrackEventTypes.EXIT_CUE, listener: exitCueListener)
+                    if DEBUG_EVENTHANDLER { print("[NATIVE] ExitCue listener removed from THEOplayer textTrack with uid \(textTrack.uid)") }
                 }
             }
         }
@@ -131,7 +143,7 @@ class THEOplayerRCTTextTrackEventHandler {
             if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received ADD_CUE event from textTrack: trackUid = \(textTrack.uid), cueUid = \(event.cue.uid)") }
             forwardedTextTrackEvent([
                 "trackUid" : textTrack.uid,
-                "type": TrackCueEventType.ADD_CUE,
+                "type": TrackCueEventType.ADD_CUE.rawValue,
                 "cue": THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackCueInfo(textTrackCue: event.cue)
             ])
         }
@@ -143,7 +155,31 @@ class THEOplayerRCTTextTrackEventHandler {
             if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received REMOVE_CUE event from textTrack: trackUid = \(textTrack.uid), cueUid = \(event.cue.uid)") }
             forwardedTextTrackEvent([
                 "trackUid" : textTrack.uid,
-                "type": TrackCueEventType.REMOVE_CUE,
+                "type": TrackCueEventType.REMOVE_CUE.rawValue,
+                "cue": THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackCueInfo(textTrackCue: event.cue)
+            ])
+        }
+    }
+    
+    private func enterCueListener(_ event: EnterCueEvent) {
+        if let forwardedTextTrackEvent = self.onNativeTextTrackEvent,
+           let textTrack = event.cue.track {
+            if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received ENTER_CUE event from textTrack: trackUid = \(textTrack.uid), cueUid = \(event.cue.uid)") }
+            forwardedTextTrackEvent([
+                "trackUid" : textTrack.uid,
+                "type": TrackCueEventType.ENTER_CUE.rawValue,
+                "cue": THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackCueInfo(textTrackCue: event.cue)
+            ])
+        }
+    }
+    
+    private func exitCueListener(_ event: ExitCueEvent) {
+        if let forwardedTextTrackEvent = self.onNativeTextTrackEvent,
+           let textTrack = event.cue.track {
+            if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received EXIT_CUE event from textTrack: trackUid = \(textTrack.uid), cueUid = \(event.cue.uid)") }
+            forwardedTextTrackEvent([
+                "trackUid" : textTrack.uid,
+                "type": TrackCueEventType.EXIT_CUE.rawValue,
                 "cue": THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackCueInfo(textTrackCue: event.cue)
             ])
         }

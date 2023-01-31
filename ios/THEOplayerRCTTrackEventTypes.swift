@@ -14,4 +14,6 @@ enum TrackListEventType: Int {
 enum TrackCueEventType: Int {
     case ADD_CUE = 0
     case REMOVE_CUE = 1
+    case ENTER_CUE = 2
+    case EXIT_CUE = 3
 }
