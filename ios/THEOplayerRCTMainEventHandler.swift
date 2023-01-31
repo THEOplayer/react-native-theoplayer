@@ -25,6 +25,7 @@ class THEOplayerRCTMainEventHandler {
     var onNativeLoadedData: RCTDirectEventBlock?
     var onNativeLoadedMetadata: RCTDirectEventBlock?
     var onNativeRateChange: RCTDirectEventBlock?
+    var onNativeWaiting: RCTDirectEventBlock?
     var onNativeFullscreenPlayerWillPresent: RCTDirectEventBlock?
     var onNativeFullscreenPlayerDidPresent: RCTDirectEventBlock?
     var onNativeFullscreenPlayerWillDismiss: RCTDirectEventBlock?
@@ -47,6 +48,7 @@ class THEOplayerRCTMainEventHandler {
     private var loadedDataListener: EventListener?
     private var loadedMetadataListener: EventListener?
     private var rateChangeListener: EventListener?
+    private var waitingListener: EventListener?
     private var presentationModeChangeListener: EventListener?
     
     // MARK: - destruction
@@ -258,7 +260,16 @@ class THEOplayerRCTMainEventHandler {
                 forwardedRateChangeEvent(["playbackRate": event.playbackRate])
             }
         }
-        if DEBUG_EVENTHANDLER { print("[NATIVE] LoadedData listener attached to THEOplayer") }
+        if DEBUG_EVENTHANDLER { print("[NATIVE] RateChange listener attached to THEOplayer") }
+        
+        // WAITING
+        self.waitingListener = player.addEventListener(type: PlayerEventTypes.WAITING) { [weak self] event in
+            if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received WAITING event from THEOplayer") }
+            if let forwardedWaitingEvent = self?.onNativeWaiting {
+                forwardedWaitingEvent([:])
+            }
+        }
+        if DEBUG_EVENTHANDLER { print("[NATIVE] Waiting listener attached to THEOplayer") }
         
         // PRESENTATION_MODE_CHANGE
         self.presentationModeChangeListener = player.addEventListener(type: PlayerEventTypes.PRESENTATION_MODE_CHANGE) { [weak self] event in
@@ -381,6 +392,18 @@ class THEOplayerRCTMainEventHandler {
         if let loadedMetadataListener = self.loadedMetadataListener {
             player.removeEventListener(type: PlayerEventTypes.LOADED_META_DATA, listener: loadedMetadataListener)
             if DEBUG_EVENTHANDLER { print("[NATIVE] LoadedMetadata listener dettached from THEOplayer") }
+        }
+        
+        // RATE_CHANGE
+        if let rateChangeListener = self.rateChangeListener {
+            player.removeEventListener(type: PlayerEventTypes.RATE_CHANGE, listener: rateChangeListener)
+            if DEBUG_EVENTHANDLER { print("[NATIVE] RateChange listener dettached from THEOplayer") }
+        }
+        
+        // WAITING
+        if let waitingListener = self.waitingListener {
+            player.removeEventListener(type: PlayerEventTypes.WAITING, listener: waitingListener)
+            if DEBUG_EVENTHANDLER { print("[NATIVE] Waiting listener dettached from THEOplayer") }
         }
         
         // PRESENTATION_MODE_CHANGE

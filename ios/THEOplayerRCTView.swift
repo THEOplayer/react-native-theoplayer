@@ -212,6 +212,12 @@ class THEOplayerRCTView: UIView {
         if DEBUG_VIEW { print("[NATIVE] nativeLoadedMetadata prop set.") }
     }
     
+    @objc(setOnNativeWaiting:)
+    func setOnNativeWaiting(nativewaiting: @escaping RCTDirectEventBlock) {
+        self.mainEventHandler.onNativeWaiting = nativewaiting
+        if DEBUG_VIEW { print("[NATIVE] nativeWaiting prop set.") }
+    }
+    
     @objc(setOnNativeFullscreenPlayerWillPresent:)
     func setOnNativeFullscreenPlayerWillPresent(nativeFullscreenPlayerWillPresent: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeFullscreenPlayerWillPresent = nativeFullscreenPlayerWillPresent
