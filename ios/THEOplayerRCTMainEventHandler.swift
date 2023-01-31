@@ -24,6 +24,7 @@ class THEOplayerRCTMainEventHandler {
     var onNativeError: RCTDirectEventBlock?
     var onNativeLoadedData: RCTDirectEventBlock?
     var onNativeLoadedMetadata: RCTDirectEventBlock?
+    var onNativeRateChange: RCTDirectEventBlock?
     var onNativeFullscreenPlayerWillPresent: RCTDirectEventBlock?
     var onNativeFullscreenPlayerDidPresent: RCTDirectEventBlock?
     var onNativeFullscreenPlayerWillDismiss: RCTDirectEventBlock?
@@ -45,6 +46,7 @@ class THEOplayerRCTMainEventHandler {
     private var errorListener: EventListener?
     private var loadedDataListener: EventListener?
     private var loadedMetadataListener: EventListener?
+    private var rateChangeListener: EventListener?
     private var presentationModeChangeListener: EventListener?
     
     // MARK: - destruction
@@ -248,6 +250,15 @@ class THEOplayerRCTMainEventHandler {
             }
         }
         if DEBUG_EVENTHANDLER { print("[NATIVE] LoadedMetadata listener attached to THEOplayer") }
+        
+        // RATE_CHANGE
+        self.rateChangeListener = player.addEventListener(type: PlayerEventTypes.RATE_CHANGE) { [weak self] event in
+            if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received RATE_CHANGE event from THEOplayer") }
+            if let forwardedRateChangeEvent = self?.onNativeRateChange {
+                forwardedRateChangeEvent(["playbackRate": event.playbackRate])
+            }
+        }
+        if DEBUG_EVENTHANDLER { print("[NATIVE] LoadedData listener attached to THEOplayer") }
         
         // PRESENTATION_MODE_CHANGE
         self.presentationModeChangeListener = player.addEventListener(type: PlayerEventTypes.PRESENTATION_MODE_CHANGE) { [weak self] event in

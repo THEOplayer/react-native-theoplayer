@@ -96,7 +96,7 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                let player = theView.player {
                 let playbackRateValue = playbackRate.doubleValue
                 if player.playbackRate != playbackRateValue {
-                    if true || DEBUG_PLAYER_API { print("[NATIVE] Setting playbackRate on TheoPlayer to \(playbackRateValue)") }
+                    if DEBUG_PLAYER_API { print("[NATIVE] Setting playbackRate on TheoPlayer to \(playbackRateValue)") }
                     player.setPlaybackRate(playbackRateValue)
                 }
             }
