@@ -201,6 +201,7 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
           break;
       }
     }
+    //console.log(TAG, `onTextTrackEvent: ${stringFromTextTrackEvent(event.subType)} track`, trackUid);
   };
 
   private onMediaTrackListEvent = (event: MediaTrackListEvent) => {
