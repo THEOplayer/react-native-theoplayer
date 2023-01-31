@@ -200,6 +200,12 @@ class THEOplayerRCTView: UIView {
         if DEBUG_VIEW { print("[NATIVE] nativeLoadedData prop set.") }
     }
     
+    @objc(setOnNativeRateChange:)
+    func setOnNativeRateChange(nativeRateChange: @escaping RCTDirectEventBlock) {
+        self.mainEventHandler.onNativeRateChange = nativeRateChange
+        if DEBUG_VIEW { print("[NATIVE] nativeRateChange prop set.") }
+    }
+    
     @objc(setOnNativeLoadedMetadata:)
     func setOnNativeLoadedMetadata(nativeLoadedMetadata: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeLoadedMetadata = nativeLoadedMetadata
