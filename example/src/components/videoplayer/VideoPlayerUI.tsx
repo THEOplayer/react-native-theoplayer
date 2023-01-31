@@ -14,6 +14,7 @@ import {
   filterThumbnailTracks,
   findTextTrackByUid,
   LoadedMetadataEvent,
+  RateChangeEvent,
   MediaTrackEvent,
   MediaTrackEventType,
   MediaTrackListEvent,
@@ -110,12 +111,19 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
     player.addEventListener(PlayerEventType.AD_EVENT, this.onAdEvent);
     player.addEventListener(PlayerEventType.CAST_EVENT, this.onCastEvent);
     player.addEventListener(PlayerEventType.PROGRESS, this.onProgress);
+    player.addEventListener(PlayerEventType.RATE_CHANGE, this.onRateChange);
     player.addEventListener(PlayerEventType.ERROR, this.onError);
   }
 
   private onReadyStateChange = (event: ReadyStateChangeEvent) => {
     console.log(event);
     this.maybeShowLoadingIndicator(event.readyState < 3);
+  };
+
+  private onRateChange = (event: RateChangeEvent) => {
+    const { playbackRate } = event
+    console.log(event);
+    this.setState({ playbackRate });
   };
 
   private onPlaying = (event: Event<'playing'>) => {
