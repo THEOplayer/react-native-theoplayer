@@ -112,14 +112,13 @@ class THEOplayerRCTTrackMetadataAggregator {
             return audioTrackEntries
         }
         for i in 0...audioTracks.count-1 {
-            if let audioTrack: AudioTrack = audioTracks.get(i) as? AudioTrack {
-                audioTrackEntries.append(THEOplayerRCTTrackMetadataAggregator.aggregatedAudioTrackInfo(audioTrack: audioTrack))
-            }
+            let audioTrack: MediaTrack = audioTracks.get(i) // should be casted to AudioTrack
+            audioTrackEntries.append(THEOplayerRCTTrackMetadataAggregator.aggregatedAudioTrackInfo(audioTrack: audioTrack))
         }
         return audioTrackEntries
     }
     
-    class func aggregatedAudioTrackInfo(audioTrack: AudioTrack) -> [String:Any] {
+    class func aggregatedAudioTrackInfo(audioTrack: MediaTrack) -> [String:Any] {
         var entry: [String:Any] = [:]
         entry[PROP_ID] = audioTrack.id
         entry[PROP_UID] = audioTrack.uid
