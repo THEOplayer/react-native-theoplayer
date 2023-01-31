@@ -38,6 +38,7 @@ RCT_EXPORT_VIEW_PROPERTY(onNativeFullscreenPlayerDidPresent, RCTDirectEventBlock
 RCT_EXPORT_VIEW_PROPERTY(onNativeFullscreenPlayerWillDismiss, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeFullscreenPlayerDidDismiss, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeWaiting, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeCanPlay, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeTextTrackListEvent, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeTextTrackEvent, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeMediaTrackListEvent, RCTDirectEventBlock);

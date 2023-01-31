@@ -26,6 +26,7 @@ class THEOplayerRCTMainEventHandler {
     var onNativeLoadedMetadata: RCTDirectEventBlock?
     var onNativeRateChange: RCTDirectEventBlock?
     var onNativeWaiting: RCTDirectEventBlock?
+    var onNativeCanPlay: RCTDirectEventBlock?
     var onNativeFullscreenPlayerWillPresent: RCTDirectEventBlock?
     var onNativeFullscreenPlayerDidPresent: RCTDirectEventBlock?
     var onNativeFullscreenPlayerWillDismiss: RCTDirectEventBlock?
@@ -49,6 +50,7 @@ class THEOplayerRCTMainEventHandler {
     private var loadedMetadataListener: EventListener?
     private var rateChangeListener: EventListener?
     private var waitingListener: EventListener?
+    private var canPlayListener: EventListener?
     private var presentationModeChangeListener: EventListener?
     
     // MARK: - destruction
@@ -271,6 +273,15 @@ class THEOplayerRCTMainEventHandler {
         }
         if DEBUG_EVENTHANDLER { print("[NATIVE] Waiting listener attached to THEOplayer") }
         
+        // CAN_PLAY
+        self.canPlayListener = player.addEventListener(type: PlayerEventTypes.CAN_PLAY) { [weak self] event in
+            if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received CAN_PLAY event from THEOplayer") }
+            if let forwardedCanPlayEvent = self?.onNativeCanPlay {
+                forwardedCanPlayEvent([:])
+            }
+        }
+        if DEBUG_EVENTHANDLER { print("[NATIVE] Waiting listener attached to THEOplayer") }
+        
         // PRESENTATION_MODE_CHANGE
         self.presentationModeChangeListener = player.addEventListener(type: PlayerEventTypes.PRESENTATION_MODE_CHANGE) { [weak self] event in
             if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received PRESENTATION_MODE_CHANGE event from THEOplayer") }
@@ -404,6 +415,12 @@ class THEOplayerRCTMainEventHandler {
         if let waitingListener = self.waitingListener {
             player.removeEventListener(type: PlayerEventTypes.WAITING, listener: waitingListener)
             if DEBUG_EVENTHANDLER { print("[NATIVE] Waiting listener dettached from THEOplayer") }
+        }
+        
+        // CAN_PLAY
+        if let canPlayListener = self.canPlayListener {
+            player.removeEventListener(type: PlayerEventTypes.CAN_PLAY, listener: canPlayListener)
+            if DEBUG_EVENTHANDLER { print("[NATIVE] CanPlay listener dettached from THEOplayer") }
         }
         
         // PRESENTATION_MODE_CHANGE
