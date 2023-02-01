@@ -122,7 +122,7 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
   };
 
   private onRateChange = (event: RateChangeEvent) => {
-    const { playbackRate } = event
+    const { playbackRate } = event;
     console.log(event);
     this.setState({ playbackRate });
   };
@@ -153,7 +153,6 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
 
   private onPlay = () => {
     console.log(TAG, 'play');
-    this.setState({ paused: false });
   };
 
   private onPause = () => {
@@ -334,7 +333,7 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
     } else {
       player.pause();
     }
-    // this.setState({ paused: !paused });
+    this.setState({ paused: !paused });
   };
 
   private toggleFullScreen = () => {
@@ -537,15 +536,15 @@ function stringFromTextTrackListEvent(type: TrackListEventType): string {
   }
 }
 
-function stringFromTextTrackEvent(type: TextTrackEventType): string {
-  switch (type) {
-    case TextTrackEventType.ADD_CUE:
-      return 'AddCue';
-    case TextTrackEventType.REMOVE_CUE:
-      return 'RemoveCue';
-    case TextTrackEventType.ENTER_CUE:
-      return 'EnterCue';
-    case TextTrackEventType.EXIT_CUE:
-      return 'ExitCue';
-  }
-}
+// function stringFromTextTrackEvent(type: TextTrackEventType): string {
+//   switch (type) {
+//     case TextTrackEventType.ADD_CUE:
+//       return 'AddCue';
+//     case TextTrackEventType.REMOVE_CUE:
+//       return 'RemoveCue';
+//     case TextTrackEventType.ENTER_CUE:
+//       return 'EnterCue';
+//     case TextTrackEventType.EXIT_CUE:
+//       return 'ExitCue';
+//   }
+// }
