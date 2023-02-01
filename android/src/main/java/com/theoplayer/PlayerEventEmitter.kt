@@ -43,6 +43,7 @@ import kotlin.math.floor
 
 private val TAG = PlayerEventEmitter::class.java.name
 
+private const val EVENT_PLAYER_READY = "onNativePlayerReady"
 private const val EVENT_SOURCECHANGE = "onNativeSourceChange"
 private const val EVENT_LOADSTART = "onNativeLoadStart"
 private const val EVENT_LOADEDMETADATA = "onNativeLoadedMetadata"
@@ -106,6 +107,7 @@ class PlayerEventEmitter internal constructor(
 ) {
   @Retention(AnnotationRetention.SOURCE)
   @StringDef(
+    EVENT_PLAYER_READY,
     EVENT_SOURCECHANGE,
     EVENT_LOADSTART,
     EVENT_LOADEDMETADATA,
@@ -140,6 +142,7 @@ class PlayerEventEmitter internal constructor(
 
   companion object {
     val Events = arrayOf(
+      EVENT_PLAYER_READY,
       EVENT_SOURCECHANGE,
       EVENT_LOADSTART,
       EVENT_LOADEDMETADATA,
@@ -271,6 +274,13 @@ class PlayerEventEmitter internal constructor(
 
   fun emitError(exception: THEOplayerException) {
     emitError(exception.code.name, exception.message)
+  }
+
+  fun preparePlayer(player: Player) {
+    attachListeners(player)
+
+    // Notify the player is ready
+    receiveEvent(EVENT_PLAYER_READY, null)
   }
 
   private fun emitError(code: String, message: String?) {
@@ -595,7 +605,7 @@ class PlayerEventEmitter internal constructor(
     eventEmitter.receiveEvent(viewId, type, event)
   }
 
-  fun attachListeners(player: Player) {
+  private fun attachListeners(player: Player) {
     // Attach player listeners
     for ((key, value) in playerListeners) {
       player.addEventListener(
