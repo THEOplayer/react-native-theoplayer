@@ -61,6 +61,7 @@ interface THEOplayerRCTViewProps {
   ref: React.RefObject<THEOplayerViewNativeComponent>;
   style?: StyleProp<ViewStyle>;
   config?: PlayerConfiguration;
+  onNativePlayerReady: () => void;
   onNativeSourceChange: () => void;
   onNativeLoadStart: () => void;
   onNativeLoadedData: () => void;
@@ -113,10 +114,6 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
     this._facade = new THEOplayerAdapter(this);
   }
 
-  componentDidMount() {
-    this.props.onPlayerReady?.(this._facade);
-  }
-
   componentWillUnmount() {
     if (Platform.OS === 'ios') {
       // TODO: move to native module
@@ -134,6 +131,10 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
   private reset() {
     this.setState(THEOplayerView.initialState);
   }
+
+  private _onNativePlayerReady = () => {
+    this.props.onPlayerReady?.(this._facade);
+  };
 
   private _onSourceChange = () => {
     this.reset();
@@ -298,6 +299,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
           ref={this._root}
           style={StyleSheet.absoluteFill}
           config={config || {}}
+          onNativePlayerReady={this._onNativePlayerReady}
           onNativeSourceChange={this._onSourceChange}
           onNativeLoadStart={this._onLoadStart}
           onNativeLoadedData={this._onLoadedData}
