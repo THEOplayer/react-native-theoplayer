@@ -9,6 +9,8 @@ import type { TextTrack } from '../track/TextTrack';
 
 export type PreloadType = 'none' | 'metadata' | 'auto' | '';
 
+export type NativeHandleType = unknown;
+
 /**
  * The THEOplayer API.
  */
@@ -142,4 +144,9 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
    * The API for casting devices.
    */
   readonly cast: CastAPI;
+
+  /**
+   * Native player handle.
+   */
+  readonly nativeHandle: NativeHandleType;
 }

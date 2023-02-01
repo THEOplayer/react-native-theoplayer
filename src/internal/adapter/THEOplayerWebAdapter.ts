@@ -1,5 +1,5 @@
 import { DefaultEventDispatcher } from './event/DefaultEventDispatcher';
-import type { AdsAPI, CastAPI, MediaTrack, PlayerEventMap, PreloadType, THEOplayer } from 'react-native-theoplayer';
+import type { AdsAPI, CastAPI, MediaTrack, NativeHandleType, PlayerEventMap, PreloadType, THEOplayer } from 'react-native-theoplayer';
 import { FullscreenActionType, TextTrack } from 'react-native-theoplayer';
 import { THEOplayerWebAdsAdapter } from './ads/THEOplayerWebAdsAdapter';
 import { THEOplayerWebCastAdapter } from './cast/THEOplayerWebCastAdapter';
@@ -198,5 +198,9 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
 
   destroy(): void {
     this._eventForwarder.unload();
+  }
+
+  get nativeHandle(): NativeHandleType {
+    return this._player;
   }
 }
