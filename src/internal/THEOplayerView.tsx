@@ -297,7 +297,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
         <THEOplayerRCTView
           ref={this._root}
           style={StyleSheet.absoluteFill}
-          config={config}
+          config={config || {}}
           onNativeSourceChange={this._onSourceChange}
           onNativeLoadStart={this._onLoadStart}
           onNativeLoadedData={this._onLoadedData}
