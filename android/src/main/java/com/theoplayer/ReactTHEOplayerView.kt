@@ -18,26 +18,20 @@ import com.theoplayer.android.api.ads.ima.GoogleImaIntegration
 import com.theoplayer.android.api.cast.CastIntegration
 import com.theoplayer.android.api.ads.wrapper.AdsApiWrapper
 import com.theoplayer.android.api.player.Player
-import com.theoplayer.android.api.source.SourceDescription
 import com.theoplayer.android.api.player.track.texttrack.TextTrack
 import com.theoplayer.android.api.THEOplayerConfig
 import com.google.ads.interactivemedia.v3.api.AdsRenderingSettings
 import com.google.ads.interactivemedia.v3.api.ImaSdkFactory
-import com.theoplayer.abr.ABRConfigurationAdapter
 import com.theoplayer.source.SourceAdapter
 import com.theoplayer.android.api.error.THEOplayerException
 import com.theoplayer.android.api.player.track.texttrack.TextTrackMode
 import com.theoplayer.android.api.player.track.mediatrack.quality.AudioQuality
 import com.theoplayer.android.api.player.track.mediatrack.quality.VideoQuality
 import com.theoplayer.android.api.cast.Cast
-import com.theoplayer.android.api.player.PreloadType
 import com.theoplayer.android.api.player.track.mediatrack.MediaTrack
-import com.theoplayer.track.QualityListFilter
-import com.theoplayer.track.TrackListAdapter
 import java.lang.Exception
 
 private const val TAG = "ReactTHEOplayerView"
-private const val TIME_UNSET = Long.MIN_VALUE + 1
 
 @SuppressLint("ViewConstructor")
 class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
@@ -45,17 +39,8 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
 
   private val eventEmitter: PlayerEventEmitter = PlayerEventEmitter(reactContext.reactApplicationContext, this)
   private var playerView: THEOplayerView? = null
-  private var abrConfig: ReadableMap? = null
-  private var paused = false
-  private var preload: PreloadType? = null
-  private var muted = false
   private var fullscreen = false
-  private var playbackRate = 1.0
-  private var volume = 1.0
-  private var seekTime = TIME_UNSET.toDouble()
-  private var sourceDescription: SourceDescription? = null
   private val mainHandler = Handler(Looper.getMainLooper())
-  private val trackListAdapter = TrackListAdapter()
 
   var daiIntegration: GoogleDaiIntegration? = null
   var imaIntegration: GoogleImaIntegration? = null
@@ -162,25 +147,14 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
   }
 
   private fun initializePlayer() {
-    // This ensures all props have been settled, to avoid async racing conditions.
+    // This ensures all props have been passed
     mainHandler.postDelayed({
       if (player == null) {
-        player = playerView!!.player
-        ABRConfigurationAdapter.applyABRConfigurationFromProps(player, abrConfig)
-        if (BuildConfig.EXTENSION_ADS) {
-          adsApi.initialize(player!!, imaIntegration, daiIntegration)
-        }
-        eventEmitter.attachListeners(player!!)
-        preload?.let { player?.preload = it }
-        player?.isMuted = muted
-        player?.volume = volume
-        player?.playbackRate = playbackRate
-        setSource(sourceDescription)
-        if (!paused) {
-          player?.play()
-        }
-        if (seekTime != TIME_UNSET.toDouble()) {
-          seekTo(seekTime)
+        player = playerView?.player?.also {
+          if (BuildConfig.EXTENSION_ADS) {
+            adsApi.initialize(it, imaIntegration, daiIntegration)
+          }
+          eventEmitter.preparePlayer(it)
         }
       }
     }, 1)
@@ -223,81 +197,17 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
 
   fun setSource(source: ReadableMap?) {
     try {
-      setSource(SourceAdapter().parseSourceFromJS(source))
+      val sourceDescription = SourceAdapter().parseSourceFromJS(source)
+      adsApi.setSource(sourceDescription)
+      if (player != null && sourceDescription != null) {
+        player?.source = sourceDescription
+      }
     } catch (exception: THEOplayerException) {
-      Log.e(TAG, exception.message!!)
+      Log.e(TAG, exception.message ?: "")
       eventEmitter.emitError(exception)
     }
   }
 
-  fun setPreload(preload: PreloadType) {
-    this.preload = preload
-    player?.apply {
-      this.preload = preload
-    }
-  }
-
-  fun setABRConfig(abrConfigProps: ReadableMap?) {
-    abrConfig = abrConfigProps
-    ABRConfigurationAdapter.applyABRConfigurationFromProps(player, abrConfig)
-  }
-
-  fun setSource(sourceDescription: SourceDescription?) {
-    this.sourceDescription = sourceDescription
-    adsApi.setSource(sourceDescription)
-    if (player != null && sourceDescription != null) {
-      player!!.source = sourceDescription
-    }
-  }
-
-  fun setPaused(paused: Boolean) {
-    this.paused = paused
-    if (player != null) {
-      val playerIsPaused = player!!.isPaused
-      if (!paused && playerIsPaused) {
-        applyPaused(false)
-      } else if (paused && (!playerIsPaused || adsApi.isPlaying)) {
-        applyPaused(true)
-      } else {
-        // The player's paused state is out-of-sync, this shouldn't happen.
-        Log.w(TAG, "paused stated out-of-sync")
-        applyPaused(paused)
-      }
-    }
-  }
-
-  private fun applyPaused(paused: Boolean) {
-    if (paused) {
-      player?.pause()
-    } else {
-      player?.play()
-    }
-  }
-
-  fun setMuted(muted: Boolean) {
-    this.muted = muted
-    player?.isMuted = muted
-  }
-
-  fun setVolume(volume: Double) {
-    this.volume = volume
-    player?.volume = volume
-  }
-
-  fun setPlaybackRate(playbackRate: Double) {
-    this.playbackRate = playbackRate
-    player?.playbackRate = playbackRate
-  }
-
-  fun seekTo(seekTime: Double) {
-    this.seekTime = seekTime
-    player?.let {
-      it.currentTime = 1e-03 * seekTime
-
-      // reset once used
-      this.seekTime = TIME_UNSET.toDouble()
-    }
-  }
 
   val selectedTextTrack: TextTrack?
     get() {
@@ -334,20 +244,6 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
         null
       }
     }
-
-  fun setTargetVideoQualities(uids: ReadableArray) {
-    @Suppress("UNCHECKED_CAST") val currentVideoTrack = selectedVideoTrack as MediaTrack<VideoQuality>?
-    if (currentVideoTrack != null) {
-      if (uids.size() == 0) {
-        // Reset target qualities when passing empty list.
-        currentVideoTrack.setTargetQuality(null)
-      } else {
-        currentVideoTrack.qualities?.let {
-          currentVideoTrack.targetQualities = QualityListFilter(it).filterQualityList(uids)
-        }
-      }
-    }
-  }
 
   @SuppressLint("ObsoleteSdkInt")
   fun setFullscreen(fullscreen: Boolean) {

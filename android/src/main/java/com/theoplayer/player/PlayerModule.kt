@@ -2,8 +2,12 @@ package com.theoplayer.player
 
 import com.facebook.react.bridge.*
 import com.theoplayer.*
+import com.theoplayer.abr.ABRConfigurationAdapter
 import com.theoplayer.android.api.player.PreloadType
+import com.theoplayer.android.api.player.track.mediatrack.MediaTrack
+import com.theoplayer.android.api.player.track.mediatrack.quality.VideoQuality
 import com.theoplayer.android.api.player.track.texttrack.TextTrackMode
+import com.theoplayer.track.QualityListFilter
 import com.theoplayer.util.ViewResolver
 
 private const val TAG = "PlayerModule"
@@ -22,7 +26,7 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
   @ReactMethod
   fun setABRConfig(tag: Int, config: ReadableMap?) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      view?.setABRConfig(config)
+      ABRConfigurationAdapter.applyABRConfigurationFromProps(view?.player, config)
     }
   }
 
@@ -36,35 +40,39 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
   @ReactMethod
   fun setCurrentTime(tag: Int, time: Double) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      view?.seekTo(time)
+      view?.player?.currentTime = 1e-03 * time
     }
   }
 
   @ReactMethod
   fun setPaused(tag: Int, paused: Boolean) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      view?.setPaused(paused)
+      if (paused) {
+        view?.player?.pause()
+      } else {
+        view?.player?.play()
+      }
     }
   }
 
   @ReactMethod
   fun setMuted(tag: Int, muted: Boolean) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      view?.setMuted(muted)
+      view?.player?.isMuted = muted
     }
   }
 
   @ReactMethod
   fun setVolume(tag: Int, volume: Double) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      view?.setVolume(volume)
+      view?.player?.volume = volume
     }
   }
 
   @ReactMethod
   fun setPlaybackRate(tag: Int, playbackRate: Double) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      view?.setPlaybackRate(playbackRate)
+      view?.player?.playbackRate = playbackRate
     }
   }
 
@@ -113,20 +121,30 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
   }
 
   @ReactMethod
-  fun setTargetVideoQuality(tag: Int, uid: ReadableArray) {
+  fun setTargetVideoQuality(tag: Int, uids: ReadableArray) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      view?.setTargetVideoQualities(uid)
+      view?.selectedVideoTrack?.let {
+        val currentVideoTrack = it as MediaTrack<VideoQuality>
+        if (uids.size() == 0) {
+          // Reset target qualities when passing empty list.
+          currentVideoTrack.setTargetQuality(null)
+        } else {
+          currentVideoTrack.qualities?.let { qualities ->
+            currentVideoTrack.targetQualities = QualityListFilter(qualities).filterQualityList(uids)
+          }
+        }
+      }
     }
   }
 
   @ReactMethod
   fun setPreload(tag: Int, type: String?) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      view?.setPreload(when (type) {
+      view?.player?.preload = when (type) {
         "auto" -> PreloadType.AUTO
         "metadata" -> PreloadType.METADATA
         else -> PreloadType.NONE
-      })
+      }
     }
   }
 }
