@@ -15,6 +15,9 @@ class THEOplayerRCTView: UIView {
     var adsConfig = AdsConfig()
     var castConfig = CastConfig()
     
+    // MARK: Events
+    var onNativePlayerReady: RCTDirectEventBlock?
+    
     // MARK: Bridged props
     private var license: String?
     private var licenseUrl: String?
@@ -31,8 +34,6 @@ class THEOplayerRCTView: UIView {
         self.castEventHandler = THEOplayerRCTCastEventHandler()
         
         super.init(frame: .zero)
-        
-        self.createPlayer()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -63,6 +64,14 @@ class THEOplayerRCTView: UIView {
         }
     }
     
+    private func notifyNativePlayerReady() {
+        DispatchQueue.main.async {
+            if let forwardedNativeReady = self.onNativePlayerReady {
+                forwardedNativeReady([:])
+            }
+        }
+    }
+    
 #if os(iOS)
     private func initPlayer() -> THEOplayer? {
         let stylePath = Bundle.main.path(forResource:"style", ofType: "css")
@@ -87,7 +96,7 @@ class THEOplayerRCTView: UIView {
     }
 #endif
     
-    // MARK: - Destrpy Player
+    // MARK: - Destroy Player
     
     func destroyPlayer() {
         self.mainEventHandler.destroy()
@@ -112,6 +121,20 @@ class THEOplayerRCTView: UIView {
         self.parseAdsConfig(configDict: configDict)
         self.parseCastConfig(configDict: configDict)
         if DEBUG_VIEW { print("[NATIVE] config prop updated.") }
+        
+        // Given the bridged config, create the initial THEOplayer instance
+        self.createPlayer()
+        
+        // Notify that the player is prepared for usage
+        self.notifyNativePlayerReady()
+    }
+    
+    // MARK: - VIEW READY event bridging
+    
+    @objc(setOnNativePlayerReady:)
+    func setOnNativePlayerReady(nativePlayerReady: @escaping RCTDirectEventBlock) {
+        self.onNativePlayerReady = nativePlayerReady
+        if DEBUG_VIEW { print("[NATIVE] nativePlayerReady prop set.") }
     }
     
     // MARK: - Listener based MAIN event bridging
