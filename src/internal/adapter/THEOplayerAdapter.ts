@@ -13,6 +13,7 @@ import type {
   THEOplayer,
   THEOplayerView,
   TimeUpdateEvent,
+  NativeHandleType,
 } from 'react-native-theoplayer';
 import { PlayerEventType, PreloadType } from 'react-native-theoplayer';
 import { THEOplayerNativeAdsAdapter } from './ads/THEOplayerNativeAdsAdapter';
@@ -271,5 +272,9 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   play(): void {
     this._paused = false;
     NativeModules.PlayerModule.setPaused(this._view.nativeHandle, false);
+  }
+
+  get nativeHandle(): NativeHandleType {
+    return this._view.nativeHandle;
   }
 }
