@@ -52,7 +52,7 @@ $ npm i react-native-theoplayer --legacy-peer-deps
 
 Finally, replace the `App.tsx` with this minimal code:
 
-```typescript
+```tsx
 import React from 'react';
 import { Platform, View } from 'react-native';
 import { PlayerConfiguration, SourceDescription, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
@@ -62,7 +62,7 @@ const playerConfig: PlayerConfiguration = {
 };
 
 const source: SourceDescription = {
-  sources [
+  sources: [
     {
       src: 'https://contentserver.prudentgiraffe.com/videos/dash/webvtt-embedded-in-isobmff/Manifest.mpd',
       type: 'application/dash+xml',
