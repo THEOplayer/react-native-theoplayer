@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import type { FullscreenEvent, THEOplayerInternal } from 'react-native-theoplayer';
+import type { FullscreenEvent, THEOplayer } from 'react-native-theoplayer';
 import { FullscreenActionType, PlayerEventType } from 'react-native-theoplayer';
 import { Platform } from 'react-native';
 import { ActionButton } from './actionbutton/ActionButton';
@@ -18,12 +18,12 @@ export class FullscreenButton extends PureComponent<unknown, FullscreenButtonSta
   }
 
   componentDidMount() {
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     player.addEventListener(PlayerEventType.FULLSCREEN, this.onFullscreenEvent);
   }
 
   componentWillUnmount() {
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     player.removeEventListener(PlayerEventType.FULLSCREEN, this.onFullscreenEvent);
   }
 
@@ -39,7 +39,7 @@ export class FullscreenButton extends PureComponent<unknown, FullscreenButtonSta
   };
 
   private toggleFullScreen = () => {
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     player.fullscreen = !player.fullscreen;
   };
 

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { CastEvent, CastEventType, ErrorEvent, PlayerError, PlayerEventType, THEOplayerInternal } from 'react-native-theoplayer';
+import { CastEvent, CastEventType, ErrorEvent, PlayerError, PlayerEventType, THEOplayer } from 'react-native-theoplayer';
 import { Text, View } from 'react-native';
 import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
 
@@ -14,14 +14,14 @@ export class ErrorDisplay extends PureComponent<unknown, ErrorDisplayState> {
   }
 
   componentDidMount() {
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     player.addEventListener(PlayerEventType.LOAD_START, this.onLoadStart);
     player.addEventListener(PlayerEventType.ERROR, this.onError);
     player.addEventListener(PlayerEventType.CAST_EVENT, this.onCastEvent);
   }
 
   componentWillUnmount() {
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     player.removeEventListener(PlayerEventType.LOAD_START, this.onLoadStart);
     player.removeEventListener(PlayerEventType.ERROR, this.onError);
     player.removeEventListener(PlayerEventType.CAST_EVENT, this.onCastEvent);

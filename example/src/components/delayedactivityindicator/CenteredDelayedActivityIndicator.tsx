@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import type { DelayedActivityIndicatorProps } from './DelayedActivityIndicator';
 import { DelayedActivityIndicator } from './DelayedActivityIndicator';
 import { View } from 'react-native';
-import { BufferingChangeEvent, PlayerEventType, THEOplayerInternal } from 'react-native-theoplayer';
+import { BufferingChangeEvent, PlayerEventType, THEOplayer } from 'react-native-theoplayer';
 import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
 
 interface CenteredDelayedActivityIndicatorState {
@@ -20,12 +20,12 @@ export class CenteredDelayedActivityIndicator extends PureComponent<DelayedActiv
   }
 
   componentDidMount() {
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     player.addEventListener(PlayerEventType.BUFFERING_CHANGE, this.onBufferingStateChange);
   }
 
   componentWillUnmount() {
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     player.removeEventListener(PlayerEventType.BUFFERING_CHANGE, this.onBufferingStateChange);
   }
 
@@ -36,7 +36,7 @@ export class CenteredDelayedActivityIndicator extends PureComponent<DelayedActiv
   render() {
     const { delay } = this.props;
     const { showing } = this.state;
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     return (
       showing &&
       !player.paused && (

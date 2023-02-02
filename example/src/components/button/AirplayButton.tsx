@@ -1,7 +1,7 @@
 import React, { PureComponent, useContext } from 'react';
 import { Image, Platform, TouchableOpacity } from 'react-native';
 import { AirplayIcon } from '../../res/images';
-import { CastEvent, CastEventType, PlayerEventType, THEOplayerInternal } from 'react-native-theoplayer';
+import { CastEvent, CastEventType, PlayerEventType, THEOplayer } from 'react-native-theoplayer';
 import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
 
 interface AirplayButtonState {
@@ -19,12 +19,12 @@ export class AirplayButton extends PureComponent<unknown, AirplayButtonState> {
   }
 
   componentDidMount() {
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     player.addEventListener(PlayerEventType.CAST_EVENT, this.onCastStateChangeEvent);
   }
 
   componentWillUnmount() {
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     player.removeEventListener(PlayerEventType.CAST_EVENT, this.onCastStateChangeEvent);
   }
 

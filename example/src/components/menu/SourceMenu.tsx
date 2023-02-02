@@ -2,7 +2,7 @@ import { MenuItem } from './modalmenu/MenuItem';
 import { MenuButton } from './menubutton/MenuButton';
 import React, { PureComponent } from 'react';
 import type { Source } from '../../utils/source/Source';
-import type { THEOplayerInternal } from 'react-native-theoplayer';
+import type { THEOplayer } from 'react-native-theoplayer';
 import { Platform } from 'react-native';
 import ALL_SOURCES from '../../res/sources.json';
 import { PlayerContext } from '../util/PlayerContext';
@@ -28,13 +28,13 @@ export class SourceMenu extends PureComponent<unknown, SourceMenuState> {
 
   componentDidMount() {
     const { sources, selectedSourceIndex } = this.state;
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     player.source = sources[selectedSourceIndex].source;
   }
 
   private onSelectSource = (selectedSourceIndex: number) => {
     const { sources } = this.state;
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     player.source = sources[selectedSourceIndex].source;
     this.setState({ selectedSourceIndex });
   };

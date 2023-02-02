@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { CastEvent, CastEventType, PlayerEventType, THEOplayerInternal } from 'react-native-theoplayer';
+import { CastEvent, CastEventType, PlayerEventType, THEOplayer } from 'react-native-theoplayer';
 import { Text } from 'react-native';
 import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
 
@@ -14,12 +14,12 @@ export class CastMessage extends PureComponent<unknown, CastMessageState> {
   }
 
   componentDidMount() {
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     player.addEventListener(PlayerEventType.CAST_EVENT, this.onCastEvent);
   }
 
   componentWillUnmount() {
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     player.removeEventListener(PlayerEventType.CAST_EVENT, this.onCastEvent);
   }
 

@@ -1,7 +1,7 @@
 import { ActionButton } from './actionbutton/ActionButton';
 import React, { PureComponent } from 'react';
 import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
-import { PlayerEventType, THEOplayerInternal, VolumeChangeEvent } from 'react-native-theoplayer';
+import { PlayerEventType, THEOplayer, VolumeChangeEvent } from 'react-native-theoplayer';
 import { Platform } from 'react-native';
 import { VolumeOffSvg } from './svg/VolumeOffSvg';
 import { VolumeUpSvg } from './svg/VolumeUpSvg';
@@ -17,22 +17,22 @@ export class MuteButton extends PureComponent<unknown, MuteButtonState> {
   }
 
   componentDidMount() {
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     player.addEventListener(PlayerEventType.VOLUME_CHANGE, this.onVolumeChange);
   }
 
   componentWillUnmount() {
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     player.removeEventListener(PlayerEventType.VOLUME_CHANGE, this.onVolumeChange);
   }
 
   private onVolumeChange = (_: VolumeChangeEvent) => {
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     this.setState({ muted: player.muted });
   };
 
   private toggleMuted = () => {
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     player.muted = !player.muted;
   };
 
