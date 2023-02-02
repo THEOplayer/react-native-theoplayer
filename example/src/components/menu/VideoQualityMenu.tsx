@@ -86,7 +86,8 @@ export class VideoQualityMenu extends PureComponent<unknown, VideoQualityMenuSta
   render() {
     const { videoTracks, selectedVideoTrack, targetVideoTrackQuality } = this.state;
 
-    if (!(Platform.OS === 'ios')) {
+    // Quality selection is not available on iOS.
+    if (Platform.OS === 'ios') {
       return <></>;
     }
 
