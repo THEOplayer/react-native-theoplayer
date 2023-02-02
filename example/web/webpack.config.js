@@ -21,7 +21,7 @@ const CopyWebpackPluginConfig = new CopyWebpackPlugin({
     {
       // Copy transmuxer worker files.
       // THEOplayer will find them by setting `libraryLocation` in the playerConfiguration.
-      from: path.resolve(projectDirectory, './node_modules/theoplayer/THEOplayer.transmux.*'),
+      from: path.resolve(projectDirectory, './node_modules/theoplayer/THEOplayer.transmux.*').replace(/\\/g, '/'),
       to: `${libraryLocation}/[name][ext]`,
     },
   ],
