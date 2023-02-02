@@ -4,18 +4,20 @@ import type {
   AdsAPI,
   CastAPI,
   DurationChangeEvent,
-  RateChangeEvent,
   LoadedMetadataEvent,
   MediaTrack,
+  MediaTrackListEvent,
+  NativeHandleType,
   PlayerEventMap,
+  RateChangeEvent,
   SourceDescription,
   TextTrack,
+  TextTrackListEvent,
   THEOplayer,
   THEOplayerView,
   TimeUpdateEvent,
-  NativeHandleType,
 } from 'react-native-theoplayer';
-import { PlayerEventType, PreloadType } from 'react-native-theoplayer';
+import { addTrack, MediaTrackType, PlayerEventType, PreloadType, removeTrack, TrackListEventType } from 'react-native-theoplayer';
 import { THEOplayerNativeAdsAdapter } from './ads/THEOplayerNativeAdsAdapter';
 import { THEOplayerNativeCastAdapter } from './cast/THEOplayerNativeCastAdapter';
 import { DefaultVolumeChangeEvent } from './event/PlayerEvents';
@@ -61,6 +63,8 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this.addEventListener(PlayerEventType.RATE_CHANGE, this.onRateChange);
     this.addEventListener(PlayerEventType.SEEKING, this.onSeeking);
     this.addEventListener(PlayerEventType.SEEKED, this.onSeeked);
+    this.addEventListener(PlayerEventType.TEXT_TRACK_LIST, this.onTextTrackList);
+    this.addEventListener(PlayerEventType.MEDIA_TRACK_LIST, this.onMediaTrackList);
   }
 
   private onSourceChange = () => {
@@ -113,6 +117,39 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   private onSeeked = () => {
     this._seeking = false;
+  };
+
+  private onTextTrackList = (event: TextTrackListEvent) => {
+    const { subType, track } = event;
+    switch (subType) {
+      case TrackListEventType.ADD_TRACK:
+        addTrack(this._textTracks, track);
+        break;
+      case TrackListEventType.REMOVE_TRACK:
+        removeTrack(this._textTracks, track);
+        break;
+      case TrackListEventType.CHANGE_TRACK:
+        removeTrack(this._textTracks, track);
+        addTrack(this._textTracks, track);
+        break;
+    }
+  };
+
+  private onMediaTrackList = (event: MediaTrackListEvent) => {
+    const { subType, trackType, track } = event;
+    const isAudio = trackType === MediaTrackType.AUDIO;
+    switch (subType) {
+      case TrackListEventType.ADD_TRACK:
+        addTrack(isAudio ? this._audioTracks : this._videoTracks, track);
+        break;
+      case TrackListEventType.REMOVE_TRACK:
+        removeTrack(isAudio ? this._audioTracks : this._videoTracks, track);
+        break;
+      case TrackListEventType.CHANGE_TRACK:
+        removeTrack(isAudio ? this._audioTracks : this._videoTracks, track);
+        addTrack(isAudio ? this._audioTracks : this._videoTracks, track);
+        break;
+    }
   };
 
   get abr(): ABRConfiguration | undefined {
