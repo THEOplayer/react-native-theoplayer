@@ -92,6 +92,8 @@ export class VideoQualityMenu extends PureComponent<unknown, VideoQualityMenuSta
     }
 
     const availableVideoQualities = findMediaTrackByUid(videoTracks, selectedVideoTrack)?.qualities || [];
+    availableVideoQualities.sort((q1, q2) => q2.bandwidth - q1.bandwidth);
+
     if (!availableVideoQualities || availableVideoQualities.length === 0) {
       return <></>;
     }
