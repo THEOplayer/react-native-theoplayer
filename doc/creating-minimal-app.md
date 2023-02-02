@@ -55,14 +55,14 @@ Finally, replace the `App.tsx` with this minimal code:
 ```typescript
 import React from 'react';
 import { Platform, View } from 'react-native';
-import { PlayerConfiguration, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
+import { PlayerConfiguration, SourceDescription, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
 
 const playerConfig: PlayerConfiguration = {
   license: undefined,     // insert THEOplayer React Native license here
 };
 
-const source = {
-  sources: [
+const source: SourceDescription = {
+  sources [
     {
       src: 'https://contentserver.prudentgiraffe.com/videos/dash/webvtt-embedded-in-isobmff/Manifest.mpd',
       type: 'application/dash+xml',
@@ -71,13 +71,10 @@ const source = {
 };
 
 const onReady = (player: THEOplayer) => {
+  player.autoplay = true
   player.source = source;
-  player.play();
 }
 
-export default function App() {
-  return <VideoPlayer config={playerConfig} />;
-}
 const App = () => {
     return (
       <View style={{position: 'absolute', top: 0, left: 0, bottom: 0, right: 0}}>
