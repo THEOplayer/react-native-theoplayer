@@ -25,6 +25,8 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
     private var keySystemId: String!
     private var skdUrl: String?
     private var drmConfig: THEOplayerSDK.DRMConfiguration
+    private var certificateResponseFinal = false
+    private var licenseResponseFinal = false
     
     init(contentProtectionAPI: THEOplayerRCTContentProtectionAPI?, integrationId: String, keySystemId: String, drmConfig: THEOplayerSDK.DRMConfiguration) {
         self.contentProtectionAPI = contentProtectionAPI
@@ -42,6 +44,7 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
     
     func onCertificateRequest(request: CertificateRequest, callback: CertificateRequestCallback) {
         if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "THEOplayer triggered an onCertificateRequest") }
+        self.certificateResponseFinal = false
         let processedLocally = self.handleCertificateRequestLocally(drmConfig: drmConfig, callback: callback)
         if !processedLocally {
             if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "Handling certificate request through content protection integration.") }
@@ -51,6 +54,7 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
                     return
                 }
                 if let data = certificateData {
+                    self.certificateResponseFinal = true
                     callback.respond(certificate: data)
                 } else {
                     callback.error(error: ProxyIntegrationError.certificateRequestHandlingFailed)
@@ -61,15 +65,22 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
     
     func onCertificateResponse(response: CertificateResponse, callback: CertificateResponseCallback) {
         if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "THEOplayer triggered an onCertificateResponse") }
-        self.contentProtectionAPI?.handleCertificateResponse(integrationId: self.integrationId, keySystemId: self.keySystemId, certificateResponse: response) { certificateData, error in
-            if let error = error {
-                callback.error(error: error)
-                return
-            }
-            if let data = certificateData {
-                callback.respond(certificate: data)
-            } else {
-                callback.error(error: ProxyIntegrationError.certificateResponseHandlingFailed)
+        if self.certificateResponseFinal {
+            if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "Certificate response was already final.") }
+            callback.respond(certificate: response.body)
+        } else {
+            if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "Certificate response was not final, processing...") }
+            self.contentProtectionAPI?.handleCertificateResponse(integrationId: self.integrationId, keySystemId: self.keySystemId, certificateResponse: response) { certificateData, error in
+                if let error = error {
+                    callback.error(error: error)
+                    return
+                }
+                if let data = certificateData {
+                    self.certificateResponseFinal = true
+                    callback.respond(certificate: data)
+                } else {
+                    callback.error(error: ProxyIntegrationError.certificateResponseHandlingFailed)
+                }
             }
         }
     }
@@ -80,6 +91,7 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
             callback.error(error: ProxyIntegrationError.licenseRequestHandlingFailed)
             return
         }
+        self.licenseResponseFinal = false
         
         // First, extract contentId
         self.contentProtectionAPI?.handleExtractFairplayContentId(integrationId: self.integrationId, keySystemId: self.keySystemId, skdUrl: skdUrl) { contentId, error in
@@ -95,6 +107,7 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
                         return
                     }
                     if let data = licenseData {
+                        self.licenseResponseFinal = true
                         callback.respond(license: data)
                     } else {
                         callback.error(error: ProxyIntegrationError.licenseRequestHandlingFailed)
@@ -106,15 +119,22 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
     
     func onLicenseResponse(response: LicenseResponse, callback: LicenseResponseCallback) {
         if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "THEOplayer triggered an onLicenseResponse") }
-        self.contentProtectionAPI?.handleLicenseResponse(integrationId: self.integrationId, keySystemId: self.keySystemId, licenseResponse: response) { licenseData, error in
-            if let error = error {
-                callback.error(error: error)
-                return
-            }
-            if let data = licenseData {
-                callback.respond(license: data)
-            } else {
-                callback.error(error: ProxyIntegrationError.licenseResponseHandlingFailed)
+        if self.licenseResponseFinal {
+            if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "License response was already final.") }
+            callback.respond(license: response.body)
+        } else {
+            if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "License response was not final, processing...") }
+            self.contentProtectionAPI?.handleLicenseResponse(integrationId: self.integrationId, keySystemId: self.keySystemId, licenseResponse: response) { licenseData, error in
+                if let error = error {
+                    callback.error(error: error)
+                    return
+                }
+                if let data = licenseData {
+                    self.licenseResponseFinal = true
+                    callback.respond(license: data)
+                } else {
+                    callback.error(error: ProxyIntegrationError.licenseResponseHandlingFailed)
+                }
             }
         }
     }
@@ -144,6 +164,7 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
             let certificateBase64 = String(certificateUrl.suffix(from: CERTIFICATE_MARKER.endIndex))
             if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "Using provided base64 certificate: \(certificateBase64)") }
             if let certificateData = Data(base64Encoded: certificateBase64, options: .ignoreUnknownCharacters) {
+                self.certificateResponseFinal = true
                 callback.respond(certificate: certificateData)
                 return true
             }
