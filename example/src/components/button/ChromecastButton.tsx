@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { CastButton as GoogleCastButton } from 'react-native-google-cast';
-import type { CastEvent, THEOplayerInternal } from 'react-native-theoplayer';
+import type { CastEvent, THEOplayer } from 'react-native-theoplayer';
 import { CastEventType, PlayerEventType } from 'react-native-theoplayer';
 import { ENABLE_CAST_BUTTON } from '../videoplayer/VideoPlayerUIProps';
 import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
@@ -21,12 +21,12 @@ export class ChromecastButton extends PureComponent<unknown, ChromecastButtonSta
   }
 
   componentDidMount() {
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     player.addEventListener(PlayerEventType.CAST_EVENT, this.onCastStateChangeEvent);
   }
 
   componentWillUnmount() {
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     player.removeEventListener(PlayerEventType.CAST_EVENT, this.onCastStateChangeEvent);
   }
 

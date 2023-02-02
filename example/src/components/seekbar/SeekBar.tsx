@@ -34,7 +34,7 @@ import {
   TextTrackEvent,
   TextTrackEventType,
   TextTrackListEvent,
-  THEOplayerInternal,
+  THEOplayer,
   TimeRange,
   TimeUpdateEvent,
   TrackListEventType,
@@ -94,7 +94,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
   }
 
   private onSeek = (time: number) => {
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     if (!isNaN(time)) {
       player.currentTime = time;
     }
@@ -219,7 +219,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
     if (Platform.isTV) {
       this.enableTVEventHandler();
     }
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     player.addEventListener(PlayerEventType.PROGRESS, this.onProgress);
     player.addEventListener(PlayerEventType.TIME_UPDATE, this.onTimeUpdate);
     player.addEventListener(PlayerEventType.TEXT_TRACK_LIST, this.onTextTrackListEvent);
@@ -232,7 +232,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
     if (Platform.isTV) {
       this.disableTVEventHandler();
     }
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     player.removeEventListener(PlayerEventType.PROGRESS, this.onProgress);
     player.removeEventListener(PlayerEventType.TIME_UPDATE, this.onTimeUpdate);
     player.removeEventListener(PlayerEventType.TEXT_TRACK_LIST, this.onTextTrackListEvent);
@@ -337,7 +337,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
 
   onDotPress = () => {
     // On TV platforms we use the progress dot to play/pause
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     if (player.paused) {
       player.play();
     } else {

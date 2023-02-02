@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { PlayerEventType, THEOplayerInternal } from 'react-native-theoplayer';
+import { PlayerEventType, THEOplayer } from 'react-native-theoplayer';
 import { SeekBar } from '../seekbar/SeekBar';
 import { THUMBNAIL_MODE } from './VideoPlayerUIProps';
 import { AirplayButton } from '../button/AirplayButton';
@@ -24,7 +24,7 @@ import { AnimationController } from '../util/AnimationController';
 
 export interface VideoPlayerUIProps {
   style?: Partial<VideoPlayerStyle>;
-  player: THEOplayerInternal;
+  player: THEOplayer;
 }
 
 export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {

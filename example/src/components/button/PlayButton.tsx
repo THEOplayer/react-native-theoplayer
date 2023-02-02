@@ -1,9 +1,10 @@
 import { ActionButton } from './actionbutton/ActionButton';
 import { Platform, StyleProp, ViewStyle } from 'react-native';
 import React, { PureComponent } from 'react';
-import { PlayerEventType, THEOplayerInternal } from 'react-native-theoplayer';
+import { PlayerEventType, THEOplayer } from 'react-native-theoplayer';
 import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
 import { PlayButtonSvg } from './svg/PlayButtonSvg';
+
 import { PauseButtonSvg } from './svg/PauseButtonSvg';
 
 interface PlayButtonProps {
@@ -27,7 +28,7 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
   }
 
   componentDidMount() {
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     player.addEventListener(PlayerEventType.PLAY, this.onPlay);
     player.addEventListener(PlayerEventType.PLAYING, this.onPlay);
     player.addEventListener(PlayerEventType.PAUSE, this.onPause);
@@ -36,7 +37,7 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
   }
 
   componentWillUnmount() {
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     player.removeEventListener(PlayerEventType.PLAY, this.onPlay);
     player.removeEventListener(PlayerEventType.PLAYING, this.onPlay);
     player.removeEventListener(PlayerEventType.PAUSE, this.onPause);
@@ -66,7 +67,7 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
   };
 
   private togglePlayPause = () => {
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     if (player.paused) {
       player.play();
     } else {

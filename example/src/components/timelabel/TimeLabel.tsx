@@ -1,6 +1,6 @@
 import { StyleProp, Text, TextStyle } from 'react-native';
 import React, { PureComponent } from 'react';
-import { DurationChangeEvent, PlayerEventType, THEOplayerInternal, TimeUpdateEvent } from 'react-native-theoplayer';
+import { DurationChangeEvent, PlayerEventType, THEOplayer, TimeUpdateEvent } from 'react-native-theoplayer';
 import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
 
 export interface TimeLabelProps {
@@ -27,13 +27,13 @@ export class TimeLabel extends PureComponent<TimeLabelProps, TimeLabelState> {
   }
 
   componentDidMount() {
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     player.addEventListener(PlayerEventType.TIME_UPDATE, this.onTimeUpdate);
     player.addEventListener(PlayerEventType.DURATION_CHANGE, this.onDurationChange);
   }
 
   componentWillUnmount() {
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     player.removeEventListener(PlayerEventType.TIME_UPDATE, this.onTimeUpdate);
     player.removeEventListener(PlayerEventType.DURATION_CHANGE, this.onDurationChange);
   }

@@ -3,7 +3,7 @@ import { AudioIcon } from '../../res/images';
 import { MenuItem } from './modalmenu/MenuItem';
 import React, { PureComponent } from 'react';
 import type { MediaTrack } from 'react-native-theoplayer';
-import { LoadedMetadataEvent, PlayerEventType, THEOplayerInternal } from 'react-native-theoplayer';
+import { LoadedMetadataEvent, PlayerEventType, THEOplayer } from 'react-native-theoplayer';
 import { getTrackLabel } from './TrackUtils';
 import { PlayerContext } from '../util/PlayerContext';
 
@@ -19,12 +19,12 @@ export class AudioTrackMenu extends PureComponent<unknown, AudioQualityMenuState
   }
 
   componentDidMount() {
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     player.addEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
   }
 
   componentWillUnmount() {
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     player.removeEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
   }
 
@@ -38,7 +38,7 @@ export class AudioTrackMenu extends PureComponent<unknown, AudioQualityMenuState
   private selectAudioTrack = (index: number) => {
     const { audioTracks } = this.state;
     if (audioTracks && index >= 0 && index < audioTracks.length) {
-      const player = this.context.player as THEOplayerInternal;
+      const player = this.context.player as THEOplayer;
       const uid = audioTracks[index].uid;
       player.selectedAudioTrack = uid;
       this.setState({ selectedAudioTrack: uid });

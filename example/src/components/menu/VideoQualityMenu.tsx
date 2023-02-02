@@ -1,7 +1,7 @@
 import { SettingsIcon } from '../../res/images';
 import { MenuItem } from './modalmenu/MenuItem';
 import type { VideoQuality } from 'react-native-theoplayer';
-import { findMediaTrackByUid, LoadedMetadataEvent, MediaTrack, PlayerEventType, THEOplayerInternal } from 'react-native-theoplayer';
+import { findMediaTrackByUid, LoadedMetadataEvent, MediaTrack, PlayerEventType, THEOplayer } from 'react-native-theoplayer';
 import { MenuButton } from './menubutton/MenuButton';
 import React, { PureComponent } from 'react';
 import { Platform } from 'react-native';
@@ -46,12 +46,12 @@ export class VideoQualityMenu extends PureComponent<unknown, VideoQualityMenuSta
   }
 
   componentDidMount() {
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     player.addEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
   }
 
   componentWillUnmount() {
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     player.removeEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
   }
 
@@ -77,7 +77,7 @@ export class VideoQualityMenu extends PureComponent<unknown, VideoQualityMenuSta
       uid = qualities[qualityIndex].uid;
       console.log('found index', uid);
     }
-    const player = this.context.player as THEOplayerInternal;
+    const player = this.context.player as THEOplayer;
     player.targetVideoQuality = uid;
     this.setState({ targetVideoTrackQuality: uid });
   };
