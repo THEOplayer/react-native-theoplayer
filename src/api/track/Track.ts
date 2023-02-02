@@ -45,3 +45,15 @@ export interface Track {
    */
   readonly language: string;
 }
+
+export function hasTrack(trackList: Track[], track: Track): boolean {
+  return !!(trackList && track && trackList.find((t) => t.uid === track.uid));
+}
+
+export function removeTrack(trackList: Track[], track: Track): Track[] {
+  return trackList && track ? trackList.filter((t) => t.uid !== track.uid) : trackList;
+}
+
+export function addTrack(trackList: Track[], textTrack: Track): Track[] {
+  return trackList && textTrack && !hasTrack(trackList, textTrack) ? [...trackList, textTrack] : trackList;
+}

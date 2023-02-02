@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import {
-  addTextTrack,
+  addTrack,
   addTextTrackCue,
   AdEvent,
   AirplayStateChangeEvent,
@@ -22,7 +22,7 @@ import {
   PlayerEventType,
   ProgressEvent,
   ReadyStateChangeEvent,
-  removeTextTrack,
+  removeTrack,
   removeTextTrackCue,
   TextTrackEvent,
   TextTrackEventType,
@@ -177,10 +177,10 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
     const { track } = event;
     switch (event.subType) {
       case TrackListEventType.ADD_TRACK:
-        this.setState({ textTracks: addTextTrack(textTracks, track) });
+        this.setState({ textTracks: addTrack(textTracks, track) });
         break;
       case TrackListEventType.REMOVE_TRACK:
-        this.setState({ textTracks: removeTextTrack(textTracks, track) });
+        this.setState({ textTracks: removeTrack(textTracks, track) });
         break;
     }
     console.log(TAG, `onTextTrackListEvent: ${stringFromTextTrackListEvent(event.subType)} track`, track.uid);
