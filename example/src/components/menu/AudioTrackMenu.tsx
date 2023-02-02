@@ -3,7 +3,7 @@ import { AudioIcon } from '../../res/images';
 import { MenuItem } from './modalmenu/MenuItem';
 import React, { PureComponent } from 'react';
 import type { MediaTrack } from 'react-native-theoplayer';
-import { LoadedMetadataEvent, PlayerEventType, THEOplayer } from 'react-native-theoplayer';
+import { PlayerEventType, THEOplayer } from 'react-native-theoplayer';
 import { getTrackLabel } from './TrackUtils';
 import { PlayerContext } from '../util/PlayerContext';
 
@@ -20,18 +20,20 @@ export class AudioTrackMenu extends PureComponent<unknown, AudioQualityMenuState
 
   componentDidMount() {
     const player = this.context.player as THEOplayer;
-    player.addEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
+    player.addEventListener(PlayerEventType.MEDIA_TRACK_LIST, this.onTrackListChanged);
   }
 
   componentWillUnmount() {
     const player = this.context.player as THEOplayer;
-    player.removeEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
+    player.removeEventListener(PlayerEventType.MEDIA_TRACK_LIST, this.onTrackListChanged);
   }
 
-  private onLoadedMetadata = (event: LoadedMetadataEvent) => {
+  private onTrackListChanged = () => {
+    const player = this.context.player as THEOplayer;
+    console.log(player.audioTracks);
     this.setState({
-      audioTracks: event.audioTracks,
-      selectedAudioTrack: event.selectedAudioTrack,
+      audioTracks: player.audioTracks,
+      selectedAudioTrack: player.selectedAudioTrack,
     });
   };
 
