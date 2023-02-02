@@ -100,18 +100,6 @@ export function isThumbnailTrack(textTrack: TextTrack | undefined): boolean {
   return !!textTrack && (textTrack.kind === 'thumbnails' || (textTrack.kind === 'metadata' && textTrack.label === 'thumbnails'));
 }
 
-export function hasTextTrack(textTrackList: TextTrack[], textTrack: TextTrack): boolean {
-  return !!(textTrackList && textTrack && textTrackList.find((t) => t.uid === textTrack.uid));
-}
-
-export function removeTextTrack(textTrackList: TextTrack[], textTrack: TextTrack): TextTrack[] {
-  return textTrackList && textTrack ? textTrackList.filter((t) => t.uid !== textTrack.uid) : textTrackList;
-}
-
-export function addTextTrack(textTrackList: TextTrack[], textTrack: TextTrack): TextTrack[] {
-  return textTrackList && textTrack && !hasTextTrack(textTrackList, textTrack) ? [...textTrackList, textTrack] : textTrackList;
-}
-
 export function hasTextTrackCue(textTrack: TextTrack, cue: TextTrackCue): boolean {
   return !!(textTrack.cues && cue && textTrack.cues.find((c) => cue.uid === c.uid));
 }
