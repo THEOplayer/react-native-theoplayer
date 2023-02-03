@@ -72,6 +72,11 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     return [...Array(nativeRange.length)].map((_, index) => ({ start: 1e3 * nativeRange.start(index), end: 1e3 * nativeRange.end(index) }));
   }
 
+  get buffered() {
+    const nativeRange = this._player.buffered;
+    return [...Array(nativeRange.length)].map((_, index) => ({ start: 1e3 * nativeRange.start(index), end: 1e3 * nativeRange.end(index) }));
+  }
+
   get playbackRate(): number {
     return this._player.playbackRate;
   }
