@@ -60,6 +60,11 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
   seekable: TimeRange[];
 
   /**
+   * Returns a list of TimeRanges that represents the ranges of the media resource that are buffered by the player.
+   */
+  buffered: TimeRange[];
+
+  /**
    * Used to set the playback rate of the media.
    *
    * @example

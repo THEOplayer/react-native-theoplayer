@@ -191,6 +191,12 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     return this._seekable;
   }
 
+  get buffered() {
+    // TODO
+    console.error('[NYI] player.buffered');
+    return [];
+  }
+
   get cast(): CastAPI {
     return this._castAdapter;
   }
