@@ -8,6 +8,7 @@
     "android-release": "react-native run-android --variant release",
     "ios": "react-native run-ios",
     "web": "webpack-dev-server --config ./web/webpack.config.js --mode development",
+    "web-release": "webpack --config ./web/webpack.config.js --mode production",
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"

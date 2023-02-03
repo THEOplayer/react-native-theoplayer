@@ -15,7 +15,12 @@ const HTMLWebpackPluginConfig = new HTMLWebpackPlugin({
   inject: 'body',
 });
 
+// THEOplayer's libraryLocation.
 const libraryLocation = 'theoplayer';
+
+// Webpack's output location
+const outputLocation = 'dist';
+
 const CopyWebpackPluginConfig = new CopyWebpackPlugin({
   patterns: [
     {
@@ -23,6 +28,11 @@ const CopyWebpackPluginConfig = new CopyWebpackPlugin({
       // THEOplayer will find them by setting `libraryLocation` in the playerConfiguration.
       from: path.resolve(projectDirectory, './node_modules/theoplayer/THEOplayer.transmux.*').replace(/\\/g, '/'),
       to: `${libraryLocation}/[name][ext]`,
+    },
+    {
+      // Copy CSS files
+      from: path.resolve(appDirectory, './web/public/*.css').replace(/\\/g, '/'),
+      to: `[name][ext]`,
     },
   ],
 });
@@ -66,7 +76,7 @@ module.exports = {
   // configures where the build ends up
   output: {
     filename: 'bundle.web.js',
-    path: path.resolve(appDirectory, 'dist'),
+    path: path.resolve(appDirectory, outputLocation),
   },
 
   module: {
