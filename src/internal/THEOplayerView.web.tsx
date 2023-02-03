@@ -1,25 +1,27 @@
 import React, { PureComponent } from 'react';
-
 import type { THEOplayerViewProps } from 'react-native-theoplayer';
 import * as THEOplayer from 'theoplayer';
 import { THEOplayerWebAdapter } from './adapter/THEOplayerWebAdapter';
+import uuid from 'react-native-uuid';
 
 export class THEOplayerView extends PureComponent<THEOplayerViewProps> {
   private _facade: THEOplayerWebAdapter | undefined;
   private _player: THEOplayer.ChromelessPlayer | null = null;
+  private readonly _containerId: string;
 
   constructor(props: THEOplayerViewProps) {
     super(props);
     this._facade = undefined;
+    this._containerId = `theoplayer-container-${uuid.v4().toString()}`;
   }
 
   componentDidMount() {
     const { config, onPlayerReady } = this.props;
-    const element = document.querySelector('.theoplayer-container') as HTMLElement;
+    const container = document.querySelector(`#${this._containerId}`) as HTMLElement;
     if (config?.chromeless === true || config?.chromeless === undefined) {
-      this._player = new THEOplayer.ChromelessPlayer(element, config);
+      this._player = new THEOplayer.ChromelessPlayer(container, config);
     } else {
-      this._player = new THEOplayer.Player(element, {
+      this._player = new THEOplayer.Player(container, {
         ...config,
         ui: {
           fluid: true,
@@ -42,11 +44,6 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps> {
   public render(): JSX.Element {
     const { config } = this.props;
     const chromeless = config?.chromeless === undefined || config?.chromeless === true;
-
-    return (
-      <div id={'theoplayer-wrapper'}>
-        <div className={chromeless ? 'theoplayer-container' : 'theoplayer-container video-js theoplayer-skin'} />
-      </div>
-    );
+    return <div id={this._containerId} className={chromeless ? 'theoplayer-container' : 'theoplayer-container video-js theoplayer-skin'} />;
   }
 }
