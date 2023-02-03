@@ -15,7 +15,9 @@ import type {
   TextTrackListEvent,
   THEOplayer,
   THEOplayerView,
+  TimeRange,
   TimeUpdateEvent,
+  ProgressEvent,
 } from 'react-native-theoplayer';
 import { addTrack, MediaTrackType, PlayerEventType, PreloadType, removeTrack, TrackListEventType } from 'react-native-theoplayer';
 import { THEOplayerNativeAdsAdapter } from './ads/THEOplayerNativeAdsAdapter';
@@ -33,6 +35,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   private _source: SourceDescription | undefined = undefined;
   private _autoplay = false;
   private _paused = false;
+  private _seekable: TimeRange[] = [];
   private _fullscreen = false;
   private _muted = false;
   private _seeking = false;
@@ -63,6 +66,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this.addEventListener(PlayerEventType.RATE_CHANGE, this.onRateChange);
     this.addEventListener(PlayerEventType.SEEKING, this.onSeeking);
     this.addEventListener(PlayerEventType.SEEKED, this.onSeeked);
+    this.addEventListener(PlayerEventType.PROGRESS, this.onProgress);
     this.addEventListener(PlayerEventType.TEXT_TRACK_LIST, this.onTextTrackList);
     this.addEventListener(PlayerEventType.MEDIA_TRACK_LIST, this.onMediaTrackList);
   }
@@ -73,6 +77,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._audioTracks = [];
     this._videoTracks = [];
     this._textTracks = [];
+    this._seekable = [];
     this._selectedTextTrack = undefined;
     this._selectedVideoTrack = undefined;
     this._selectedAudioTrack = undefined;
@@ -117,6 +122,10 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   private onSeeked = () => {
     this._seeking = false;
+  };
+
+  private onProgress = (event: ProgressEvent) => {
+    this._seekable = event.seekable;
   };
 
   private onTextTrackList = (event: TextTrackListEvent) => {
@@ -176,6 +185,10 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   get preload(): PreloadType {
     return this._preload;
+  }
+
+  get seekable() {
+    return this._seekable;
   }
 
   get cast(): CastAPI {

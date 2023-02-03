@@ -6,6 +6,7 @@ import type { AdsAPI } from '../ads/AdsAPI';
 import type { CastAPI } from '../cast/CastAPI';
 import type { MediaTrack } from '../track/MediaTrack';
 import type { TextTrack } from '../track/TextTrack';
+import type { TimeRange } from '../timeranges/TimeRange';
 
 export type PreloadType = 'none' | 'metadata' | 'auto' | '';
 
@@ -52,6 +53,11 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
    * The preload setting of the player.
    */
   preload: PreloadType;
+
+  /**
+   * Returns a list of TimeRanges that represents the ranges of the media resource that are seekable by the player.
+   */
+  seekable: TimeRange[];
 
   /**
    * Used to set the playback rate of the media.
