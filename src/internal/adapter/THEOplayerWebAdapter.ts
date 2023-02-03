@@ -36,6 +36,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   }
 
   set source(source: SourceDescription | undefined) {
+    this._targetVideoQuality = undefined;
     this._player.source = source;
   }
 
@@ -146,9 +147,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   }
 
   get selectedVideoTrack(): number | undefined {
-    return this._player.videoTracks.find((videoTrack: NativeMediaTrack) => {
-      return videoTrack.enabled;
-    })?.uid;
+    return this._player.videoTracks.find((videoTrack: NativeMediaTrack) => videoTrack.enabled)?.uid;
   }
 
   set selectedVideoTrack(selectedVideoTrack: number | undefined) {
@@ -174,9 +173,9 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   }
 
   set targetVideoQuality(targetVideoQuality: number | number[] | undefined) {
-    const videoTrack = this._player.videoTracks.find((videoTrack: NativeMediaTrack) => videoTrack.uid === this.selectedVideoTrack);
-    if (videoTrack) {
-      videoTrack.targetQuality = findNativeQualitiesByUid(videoTrack, targetVideoQuality);
+    const enabledVideoTrack = this._player.videoTracks.find((videoTrack: NativeMediaTrack) => videoTrack.enabled);
+    if (enabledVideoTrack) {
+      enabledVideoTrack.targetQuality = findNativeQualitiesByUid(enabledVideoTrack, targetVideoQuality);
     }
     this._targetVideoQuality = targetVideoQuality;
   }
