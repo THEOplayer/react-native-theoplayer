@@ -88,6 +88,9 @@ module.exports = {
       'react-native$': 'react-native-web',
       'react-native-url-polyfill': 'url-polyfill',
       'react-native-google-cast': path.resolve(stubDirectory, 'CastButtonStub'),
+
+      // Avoid duplicate react env.
+      react: path.resolve(appDirectory, 'node_modules/react'),
     },
   },
   plugins: [HTMLWebpackPluginConfig, CopyWebpackPluginConfig],
