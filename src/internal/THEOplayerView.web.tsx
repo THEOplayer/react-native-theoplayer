@@ -1,49 +1,45 @@
-import React, { PureComponent } from 'react';
+import React, { useEffect, useRef } from 'react';
 import type { THEOplayerViewProps } from 'react-native-theoplayer';
 import * as THEOplayer from 'theoplayer';
 import { THEOplayerWebAdapter } from './adapter/THEOplayerWebAdapter';
-import uuid from 'react-native-uuid';
 
-export class THEOplayerView extends PureComponent<THEOplayerViewProps> {
-  private _facade: THEOplayerWebAdapter | undefined;
-  private _player: THEOplayer.ChromelessPlayer | null = null;
-  private readonly _containerId: string;
+export function THEOplayerView(props: THEOplayerViewProps) {
+  const { config } = props;
+  const player = useRef<THEOplayer.ChromelessPlayer | null>(null);
+  const adapter = useRef<THEOplayerWebAdapter | null>(null);
+  const container = useRef<null | HTMLDivElement>(null);
+  useEffect(() => {
+    // Create player inside container.
+    if (container.current) {
+      const chromeless = config?.chromeless === true || config?.chromeless === undefined;
+      if (chromeless) {
+        player.current = new THEOplayer.ChromelessPlayer(container.current, config);
+      } else {
+        player.current = new THEOplayer.Player(container.current, {
+          ...config,
+          ui: {
+            fluid: true,
+          },
+        });
+      }
 
-  constructor(props: THEOplayerViewProps) {
-    super(props);
-    this._facade = undefined;
-    this._containerId = `theoplayer-container-${uuid.v4().toString()}`;
-  }
+      // Prepare the player to ChromelessPlayer.autoplay on platforms where autoplay is restricted without user action.
+      player.current.prepareWithUserAction();
 
-  componentDidMount() {
-    const { config, onPlayerReady } = this.props;
-    const container = document.querySelector(`#${this._containerId}`) as HTMLElement;
-    if (config?.chromeless === true || config?.chromeless === undefined) {
-      this._player = new THEOplayer.ChromelessPlayer(container, config);
-    } else {
-      this._player = new THEOplayer.Player(container, {
-        ...config,
-        ui: {
-          fluid: true,
-        },
-      });
+      // Adapt native player to react-native player.
+      adapter.current = new THEOplayerWebAdapter(player.current);
+
+      // Notify the player is ready
+      props.onPlayerReady?.(adapter.current);
     }
 
-    this._player.prepareWithUserAction();
-    this._facade = new THEOplayerWebAdapter(this._player);
-    onPlayerReady?.(this._facade);
-  }
+    // Clean-up
+    return () => {
+      player?.current?.destroy();
+      adapter?.current?.destroy();
+    };
+  }, [container]);
 
-  componentWillUnmount() {
-    if (this._player) {
-      this._player.destroy();
-      this._facade?.destroy();
-    }
-  }
-
-  public render(): JSX.Element {
-    const { config } = this.props;
-    const chromeless = config?.chromeless === undefined || config?.chromeless === true;
-    return <div id={this._containerId} className={chromeless ? 'theoplayer-container' : 'theoplayer-container video-js theoplayer-skin'} />;
-  }
+  const chromeless = config?.chromeless === undefined || config?.chromeless === true;
+  return <div ref={container} className={chromeless ? 'theoplayer-container' : 'theoplayer-container video-js theoplayer-skin'} />;
 }

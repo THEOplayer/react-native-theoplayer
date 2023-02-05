@@ -109,7 +109,6 @@
   },
   "dependencies": {
     "buffer": "^6.0.3",
-    "react-native-uuid": "^2.0.1",
     "theoplayer": "^4.6.0"
   }
 }
