@@ -46,14 +46,14 @@ export interface Track {
   readonly language: string;
 }
 
-export function hasTrack(trackList: Track[], track: Track): boolean {
+export function hasTrack<TTrack extends Track>(trackList: TTrack[], track: TTrack): boolean {
   return !!(trackList && track && trackList.find((t) => t.uid === track.uid));
 }
 
-export function removeTrack(trackList: Track[], track: Track): Track[] {
+export function removeTrack<TTrack extends Track>(trackList: TTrack[], track: TTrack): TTrack[] {
   return trackList && track ? trackList.filter((t) => t.uid !== track.uid) : trackList;
 }
 
-export function addTrack(trackList: Track[], textTrack: Track): Track[] {
-  return trackList && textTrack && !hasTrack(trackList, textTrack) ? [...trackList, textTrack] : trackList;
+export function addTrack<TTrack extends Track>(trackList: TTrack[], track: TTrack): TTrack[] {
+  return trackList && track && !hasTrack(trackList, track) ? [...trackList, track] : trackList;
 }
