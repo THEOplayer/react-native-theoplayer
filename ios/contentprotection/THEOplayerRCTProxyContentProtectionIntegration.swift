@@ -18,14 +18,12 @@ enum ProxyIntegrationError: Error {
 
 let CERTIFICATE_MARKER: String = "https://certificatemarker/"
 let PROXY_INTEGRATION_TAG: String = "[ProxyContentProtectionIntegration]"
-let BRIDGE_TIMEOUT = 10.0
 
 class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProtectionIntegration {
     private weak var contentProtectionAPI: THEOplayerRCTContentProtectionAPI?
     private var integrationId: String!
     private var keySystemId: String!
-    private var buildIntegrationSemaphore = DispatchSemaphore(value: 0)
-    private var contentIdExtractionSemaphore = DispatchSemaphore(value: 0)
+    private var skdUrl: String?
     private var drmConfig: THEOplayerSDK.DRMConfiguration
     
     init(contentProtectionAPI: THEOplayerRCTContentProtectionAPI?, integrationId: String, keySystemId: String, drmConfig: THEOplayerSDK.DRMConfiguration) {
@@ -39,9 +37,7 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
             } else {
                 print(PROXY_INTEGRATION_TAG, "WARNING: Failed to create a THEOplayer ContentProtectionIntegration for \(integrationId) - \(keySystemId)")
             }
-            self.buildIntegrationSemaphore.signal()
         })
-        _ = self.buildIntegrationSemaphore.wait(timeout: .now() + BRIDGE_TIMEOUT)
     }
     
     func onCertificateRequest(request: CertificateRequest, callback: CertificateRequestCallback) {
@@ -80,15 +76,32 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
     
     func onLicenseRequest(request: LicenseRequest, callback: LicenseRequestCallback) {
         if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "THEOplayer triggered an onLicenseRequest") }
-        self.contentProtectionAPI?.handleLicenseRequest(integrationId: self.integrationId, keySystemId: self.keySystemId, licenseRequest: request) { licenseData, error in
+        guard let skdUrl = self.skdUrl else {
+            callback.error(error: ProxyIntegrationError.licenseRequestHandlingFailed)
+            return
+        }
+        
+        // First, extract contentId
+        self.contentProtectionAPI?.handleExtractFairplayContentId(integrationId: self.integrationId, keySystemId: self.keySystemId, skdUrl: skdUrl) { contentId, error in
             if let error = error {
-                callback.error(error: error)
-                return
-            }
-            if let data = licenseData {
-                callback.respond(license: data)
-            } else {
+                print(PROXY_INTEGRATION_TAG, "We encountered an issue while extracting the fairplay contentId: \(error.localizedDescription)")
                 callback.error(error: ProxyIntegrationError.licenseRequestHandlingFailed)
+            } else {
+                // Next, handle onLicenseRequest
+                if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "Received extracted fairplay contentId \(contentId) on RN bridge") }
+                self.licenseResponseFinal = false
+                self.contentProtectionAPI?.handleLicenseRequest(integrationId: self.integrationId, keySystemId: self.keySystemId, licenseRequest: request) { licenseData, error in
+                    if let error = error {
+                        callback.error(error: error)
+                        return
+                    }
+                    if let data = licenseData {
+                        self.licenseResponseFinal = true
+                        callback.respond(license: data)
+                    } else {
+                        callback.error(error: ProxyIntegrationError.licenseRequestHandlingFailed)
+                    }
+                }
             }
         }
     }
@@ -110,22 +123,10 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
     
     func extractFairplayContentId(skdUrl: String) -> String {
         if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "THEOplayer triggered an extractFairplayContentId") }
-        var extractedContentId = skdUrl
-        self.contentProtectionAPI?.handleExtractFairplayContentId(integrationId: self.integrationId, keySystemId: self.keySystemId, skdUrl: skdUrl) { contentId, error in
-            if let error = error {
-                extractedContentId = skdUrl
-                print(PROXY_INTEGRATION_TAG, "We encountered an issue while extracting the fairplay contentId: \(error.localizedDescription)")
-                self.contentIdExtractionSemaphore.signal()
-                return
-            }
-            extractedContentId = contentId
-            if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "Received extracted fairplay contentId \(extractedContentId) on RN bridge") }
-            self.contentIdExtractionSemaphore.signal()
-        }
-        // TODO: make extractFairplayContentId async on THEOplayer SDK
-        // FOR NOW: We temporarily block (topped to max 5 sec) the flow to retrieve the extracted contentId asynchronously.
-        _ = self.contentIdExtractionSemaphore.wait(timeout: .now() + BRIDGE_TIMEOUT)
-        return extractedContentId
+        if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "Storing skdUrl: \(skdUrl)") }
+        // We cannot handle this synchronously  and store the skdUrl for later, asynchronous contentId extraction
+        self.skdUrl = skdUrl
+        return skdUrl
     }
     
     // MARK: local certificate handling
