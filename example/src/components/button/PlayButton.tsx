@@ -1,5 +1,5 @@
 import { ActionButton } from './actionbutton/ActionButton';
-import { Platform, StyleProp, ViewStyle } from 'react-native';
+import type { StyleProp, ViewStyle } from 'react-native';
 import React, { PureComponent } from 'react';
 import { PlayerEventType, THEOplayer } from 'react-native-theoplayer';
 import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
