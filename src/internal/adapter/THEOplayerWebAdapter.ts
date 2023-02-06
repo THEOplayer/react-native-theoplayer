@@ -9,6 +9,7 @@ import { findNativeQualitiesByUid, fromNativeMediaTrackList, fromNativeTextTrack
 import type { ABRConfiguration, SourceDescription } from 'src/api/barrel';
 import { DefaultFullscreenEvent } from './event/PlayerEvents';
 import { WebEventForwarder } from './WebEventForwarder';
+import { browserDetection } from "../platform/BrowserDetection";
 
 export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayer {
   private readonly _player: THEOplayerWeb.ChromelessPlayer;
@@ -114,10 +115,30 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     const appContainer = document.getElementById('app');
     if (fullscreen) {
       this.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_WILL_PRESENT));
-      appContainer?.requestFullscreen().then();
+      if(browserDetection.IS_IOS_ && browserDetection.IS_SAFARI_) {
+        // requestFullscreen isn't supported only on iOS Safari: https://caniuse.com/?search=requestFullscreen
+        // The workaround is using webkitEnterFullscreen which needs to be called on the video element
+        const elements = this._player.element.children;
+        for (const element of Array.from(elements)) {
+          if (element.tagName === 'VIDEO' && element.attributes.getNamedItem('src') !== null) {
+            (element as HTMLVideoElement).webkitEnterFullscreen?.();
+          }
+        }
+      } else {
+        appContainer?.requestFullscreen().then();
+      }
     } else {
       this.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_WILL_DISMISS));
-      document.exitFullscreen().then();
+      if(browserDetection.IS_IOS_ && browserDetection.IS_SAFARI_) {
+        const elements = this._player.element.children;
+        for (const element of Array.from(elements)) {
+          if (element.tagName === 'VIDEO' && element.attributes.getNamedItem('src') !== null) {
+            (element as HTMLVideoElement).webkitExitFullscreen?.();
+          }
+        }
+      } else {
+        document.exitFullscreen().then();
+      }
     }
     this._isFullscreen = fullscreen;
   }
