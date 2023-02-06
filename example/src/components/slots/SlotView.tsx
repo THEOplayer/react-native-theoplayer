@@ -1,5 +1,5 @@
 import React, { PureComponent, ReactNode } from 'react';
-import { Animated, Platform, StyleProp, View, ViewStyle } from 'react-native';
+import { Animated, StyleProp, View, ViewStyle } from 'react-native';
 import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
 
 interface SlotViewProps {
