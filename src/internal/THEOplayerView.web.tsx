@@ -29,6 +29,13 @@ export function THEOplayerView(props: THEOplayerViewProps) {
       // Adapt native player to react-native player.
       adapter.current = new THEOplayerWebAdapter(player.current);
 
+      // Expose players for easy access
+      // @ts-ignore
+      window.player = adapter.current;
+
+      // @ts-ignore
+      window.nativePlayer = player;
+
       // Notify the player is ready
       props.onPlayerReady?.(adapter.current);
     }
