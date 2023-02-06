@@ -401,7 +401,13 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
                       { flex: flexCompleted, backgroundColor: focused ? context.style.colors.accent : context.style.colors.primary },
                     ]}
                   />
-                  {focused && <View style={[context.style.seekBar.progressDot, progressDotStyle]} />}
+                  <View
+                    style={[
+                      context.style.seekBar.progressDot,
+                      { zIndex: 1, backgroundColor: focused ? context.style.colors.accent : context.style.colors.primary },
+                      progressDotStyle,
+                    ]}
+                  />
                   <View style={[context.style.seekBar.innerProgressRemaining, { flex: flexRemaining }]} />
                 </TouchableOpacity>
               )}
