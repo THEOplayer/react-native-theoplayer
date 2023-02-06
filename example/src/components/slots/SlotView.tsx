@@ -24,20 +24,12 @@ export class SlotView extends PureComponent<React.PropsWithChildren<SlotViewProp
   }
 
   componentDidMount() {
-    if (Platform.isTV) {
-      // TODO fade effects for TV UI.
-      return;
-    }
     const context = this.context as PlayerWithStyle;
     context.animation.addEventListener('startFadingIn', this.fadeIn);
     context.animation.addEventListener('startFadingOut', this.fadeOut);
   }
 
   componentWillUnmount() {
-    if (Platform.isTV) {
-      // TODO fade effects for TV UI.
-      return;
-    }
     const context = this.context as PlayerWithStyle;
     context.animation.removeEventListener('startFadingIn', this.fadeIn);
     context.animation.removeEventListener('startFadingOut', this.fadeOut);
