@@ -20,24 +20,15 @@ import {
 } from './SeekBarProps';
 import type { SeekBarPosition } from './SeekBarPosition';
 import {
-  addTextTrack,
-  addTextTrackCue,
   DurationChangeEvent,
   filterThumbnailTracks,
-  findTextTrackByUid,
   LoadedMetadataEvent,
   PlayerEventType,
   ProgressEvent,
-  removeTextTrack,
-  removeTextTrackCue,
   TextTrack,
-  TextTrackEvent,
-  TextTrackEventType,
-  TextTrackListEvent,
   THEOplayer,
   TimeRange,
   TimeUpdateEvent,
-  TrackListEventType,
 } from 'react-native-theoplayer';
 import { ThumbnailView } from '../thumbnail/ThumbnailView';
 import { THUMBNAIL_SIZE } from '../videoplayer/VideoPlayerUIProps';
@@ -345,35 +336,14 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
     }
   };
 
-  private onTextTrackListEvent = (event: TextTrackListEvent) => {
-    const { textTracks } = this.state;
-    const { track } = event;
-    switch (event.subType) {
-      case TrackListEventType.ADD_TRACK:
-        this.setState({ textTracks: addTextTrack(textTracks, track) });
-        break;
-      case TrackListEventType.REMOVE_TRACK:
-        this.setState({ textTracks: removeTextTrack(textTracks, track) });
-        break;
-    }
+  private onTextTrackListEvent = () => {
+    const player = this.context.player as THEOplayer;
+    this.setState({ textTracks: player.textTracks });
   };
 
-  private onTextTrackEvent = (event: TextTrackEvent) => {
-    const { textTracks } = this.state;
-    const { trackUid, cue } = event;
-    const track = findTextTrackByUid(textTracks, trackUid);
-    if (!track) {
-      console.warn('onTextTrackCueEvent - Unknown track:', trackUid);
-      return;
-    }
-    switch (event.subType) {
-      case TextTrackEventType.ADD_CUE:
-        addTextTrackCue(track, cue);
-        break;
-      case TextTrackEventType.REMOVE_CUE:
-        removeTextTrackCue(track, cue);
-        break;
-    }
+  private onTextTrackEvent = () => {
+    const player = this.context.player as THEOplayer;
+    this.setState({ textTracks: player.textTracks });
   };
 
   private onTimeUpdate = (event: TimeUpdateEvent) => {

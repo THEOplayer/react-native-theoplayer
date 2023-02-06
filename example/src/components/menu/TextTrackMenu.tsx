@@ -3,19 +3,7 @@ import { SubtitlesIcon } from '../../res/images';
 import { MenuItem } from './modalmenu/MenuItem';
 import React, { PureComponent } from 'react';
 import type { TextTrack, THEOplayer } from 'react-native-theoplayer';
-import {
-  addTextTrack,
-  addTextTrackCue,
-  findTextTrackByUid,
-  LoadedMetadataEvent,
-  PlayerEventType,
-  removeTextTrack,
-  removeTextTrackCue,
-  TextTrackEvent,
-  TextTrackEventType,
-  TextTrackListEvent,
-  TrackListEventType,
-} from 'react-native-theoplayer';
+import { LoadedMetadataEvent, PlayerEventType, TextTrackListEvent, TrackListEventType } from 'react-native-theoplayer';
 import { getTrackLabel } from './TrackUtils';
 import { PlayerContext } from '../util/PlayerContext';
 
@@ -55,14 +43,12 @@ export class TextTrackMenu extends PureComponent<unknown, TextTrackMenuState> {
     const player = this.context.player as THEOplayer;
     player.addEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
     player.addEventListener(PlayerEventType.TEXT_TRACK_LIST, this.onTextTrackListEvent);
-    player.addEventListener(PlayerEventType.TEXT_TRACK, this.onTextTrackEvent);
   }
 
   componentWillUnmount() {
     const player = this.context.player as THEOplayer;
     player.removeEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
     player.removeEventListener(PlayerEventType.TEXT_TRACK_LIST, this.onTextTrackListEvent);
-    player.removeEventListener(PlayerEventType.TEXT_TRACK, this.onTextTrackEvent);
   }
 
   private onLoadedMetadata = (event: LoadedMetadataEvent) => {
@@ -72,35 +58,9 @@ export class TextTrackMenu extends PureComponent<unknown, TextTrackMenuState> {
   };
 
   private onTextTrackListEvent = (event: TextTrackListEvent) => {
-    const { textTracks } = this.state;
-    const { track } = event;
-    switch (event.subType) {
-      case TrackListEventType.ADD_TRACK:
-        this.setState({ textTracks: addTextTrack(textTracks, track) });
-        break;
-      case TrackListEventType.REMOVE_TRACK:
-        this.setState({ textTracks: removeTextTrack(textTracks, track) });
-        break;
-    }
-    console.log(TAG, `onTextTrackListEvent: ${stringFromTextTrackListEvent(event.subType)} track`, track.uid);
-  };
-
-  private onTextTrackEvent = (event: TextTrackEvent) => {
-    const { textTracks } = this.state;
-    const { trackUid, cue } = event;
-    const track = findTextTrackByUid(textTracks, trackUid);
-    if (!track) {
-      console.warn(TAG, 'onTextTrackCueEvent - Unknown track:', trackUid);
-      return;
-    }
-    switch (event.subType) {
-      case TextTrackEventType.ADD_CUE:
-        addTextTrackCue(track, cue);
-        break;
-      case TextTrackEventType.REMOVE_CUE:
-        removeTextTrackCue(track, cue);
-        break;
-    }
+    const player = this.context.player as THEOplayer;
+    this.setState({ textTracks: player.textTracks });
+    console.log(TAG, `onTextTrackListEvent: ${stringFromTextTrackListEvent(event.subType)} track`, event.track.uid);
   };
 
   private onSelectTextTrack = (index: number) => {
