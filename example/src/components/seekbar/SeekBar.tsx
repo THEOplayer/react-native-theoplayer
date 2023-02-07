@@ -33,6 +33,7 @@ import {
 import { ThumbnailView } from '../thumbnail/ThumbnailView';
 import { THUMBNAIL_SIZE } from '../videoplayer/VideoPlayerUIProps';
 import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
+import type { AnimationController } from '../util/AnimationController';
 
 interface SeekBarState {
   focused: boolean;
@@ -108,7 +109,8 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
           onStartScrubbing();
         }
         if (this.animationPauseId === undefined) {
-          this.animationPauseId = this.context.animation.requestPause();
+          const animationController = this.context.animation as AnimationController;
+          this.animationPauseId = animationController.requestShowUiWithLock_();
         }
       },
       onPanResponderMove: (_evt: GestureResponderEvent, gestureState: PanResponderGestureState) => {
@@ -121,7 +123,8 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
         if (onStopScrubbing) {
           onStopScrubbing();
         }
-        this.context.animation.requestResumeAnimations(this.animationPauseId);
+        const animationController = this.context.animation as AnimationController;
+        animationController.releaseLock_(this.animationPauseId);
         this.animationPauseId = undefined;
       },
     });
@@ -315,7 +318,8 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
     } else {
       this.seekBackward();
     }
-    this.context.animation.onTouch();
+    const animationController = this.context.animation as AnimationController;
+    animationController.requestShowUi();
   };
 
   onFocus = () => {

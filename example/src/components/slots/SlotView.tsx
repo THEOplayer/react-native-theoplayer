@@ -1,6 +1,7 @@
 import React, { PureComponent, ReactNode } from 'react';
-import { Animated, StyleProp, View, ViewStyle } from 'react-native';
+import { Animated, Platform, StyleProp, View, ViewStyle } from 'react-native';
 import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
+import { AnimationController } from '../util/AnimationController';
 
 interface SlotViewProps {
   style?: StyleProp<ViewStyle>;
@@ -60,12 +61,16 @@ export class SlotView extends PureComponent<React.PropsWithChildren<SlotViewProp
   render() {
     const { style, top, center, bottom, children } = this.props;
     const { fadeAnim } = this.state;
+    const animationController = this.context.animation as AnimationController;
     return (
       <PlayerContext.Consumer>
         {(context: PlayerWithStyle) => (
           <>
             {/* The Animated.View is for showing and hiding the UI*/}
-            <Animated.View style={[context.style.slotView.container, { opacity: fadeAnim }]} onTouchStart={this.context.animation.onTouch}>
+            <Animated.View
+              style={[context.style.slotView.container, { opacity: fadeAnim }]}
+              onTouchStart={animationController.requestShowUi}
+              {...(Platform.OS === 'web' ? { onMouseMove: animationController.requestShowUi } : {})}>
               {/* The UI background */}
               <View style={[context.style.slotView.container, context.style.slotView.background]} />
               {/* The UI control bars*/}

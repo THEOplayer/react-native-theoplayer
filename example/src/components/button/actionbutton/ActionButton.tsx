@@ -31,7 +31,7 @@ export const ActionButton = (props: ActionButtonProps) => {
           tvParallaxProperties={{ enabled: false }}
           onPress={onPress}
           onFocus={() => {
-            context.animation.onTouch();
+            context.animation.requestShowUi();
             setFocused(true);
           }}
           onBlur={() => {
