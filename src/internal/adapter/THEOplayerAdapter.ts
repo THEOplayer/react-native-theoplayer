@@ -72,17 +72,6 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   }
 
   private onSourceChange = () => {
-    this._playbackRate = 1;
-    this._seeking = false;
-    this._audioTracks = [];
-    this._videoTracks = [];
-    this._textTracks = [];
-    this._seekable = [];
-    this._selectedTextTrack = undefined;
-    this._selectedVideoTrack = undefined;
-    this._selectedAudioTrack = undefined;
-    this._targetVideoQuality = undefined;
-
     if (this._autoplay) {
       this.play();
     } else {
@@ -299,6 +288,17 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this.pause();
     this._source = source;
     NativeModules.PlayerModule.setSource(this._view.nativeHandle, source);
+    // Reset state for playout of new source
+    this._playbackRate = 1;
+    this._seeking = false;
+    this._audioTracks = [];
+    this._videoTracks = [];
+    this._textTracks = [];
+    this._seekable = [];
+    this._selectedTextTrack = undefined;
+    this._selectedVideoTrack = undefined;
+    this._selectedAudioTrack = undefined;
+    this._targetVideoQuality = undefined;
   }
 
   get targetVideoQuality(): number | number[] | undefined {
