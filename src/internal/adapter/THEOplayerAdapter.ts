@@ -40,7 +40,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   private _muted = false;
   private _seeking = false;
   private _volume = 1;
-  private _currentTime = NaN;
+  private _currentTime = 0;
   private _duration = NaN;
   private _playbackRate = 1;
   private _preload: PreloadType = 'none';
