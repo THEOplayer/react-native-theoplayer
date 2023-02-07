@@ -88,6 +88,7 @@ module.exports = {
       'react-native$': 'react-native-web',
       'react-native-url-polyfill': 'url-polyfill',
       'react-native-google-cast': path.resolve(stubDirectory, 'CastButtonStub'),
+      'react-native-web': path.resolve(appDirectory, 'node_modules/react-native-web'),
 
       // Avoid duplicate react env.
       react: path.resolve(appDirectory, 'node_modules/react'),
