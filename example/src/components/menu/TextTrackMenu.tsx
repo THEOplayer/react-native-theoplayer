@@ -1,11 +1,11 @@
 import { MenuButton } from './menubutton/MenuButton';
-import { SubtitlesIcon } from '../../res/images';
 import { MenuItem } from './modalmenu/MenuItem';
 import React, { PureComponent } from 'react';
 import type { TextTrack, THEOplayer } from 'react-native-theoplayer';
 import { LoadedMetadataEvent, PlayerEventType, TextTrackListEvent, TrackListEventType } from 'react-native-theoplayer';
 import { getTrackLabel } from './TrackUtils';
 import { PlayerContext } from '../util/PlayerContext';
+import { SubtitleSvg } from '../button/svg/SubtitleSvg';
 
 function stringFromTextTrackListEvent(type: TrackListEventType): string {
   switch (type) {
@@ -82,7 +82,7 @@ export class TextTrackMenu extends PureComponent<unknown, TextTrackMenuState> {
     return (
       <MenuButton
         title={'Subtitles'}
-        icon={SubtitlesIcon}
+        svg={<SubtitleSvg />}
         data={[...selectableTextTracks, null].map((textTrack) => (textTrack ? new MenuItem(getTrackLabel(textTrack)) : new MenuItem('None')))}
         onItemSelected={this.onSelectTextTrack}
         selectedItem={

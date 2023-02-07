@@ -1,11 +1,11 @@
 import { MenuButton } from './menubutton/MenuButton';
-import { AudioIcon } from '../../res/images';
 import { MenuItem } from './modalmenu/MenuItem';
 import React, { PureComponent } from 'react';
 import type { MediaTrack } from 'react-native-theoplayer';
 import { PlayerEventType, THEOplayer } from 'react-native-theoplayer';
 import { getTrackLabel } from './TrackUtils';
 import { PlayerContext } from '../util/PlayerContext';
+import { HeadphonesSvg } from '../button/svg/HeadphonesSvg';
 
 export interface AudioQualityMenuState {
   audioTracks: MediaTrack[];
@@ -57,7 +57,7 @@ export class AudioTrackMenu extends PureComponent<unknown, AudioQualityMenuState
     return (
       <MenuButton
         title={'Language'}
-        icon={AudioIcon}
+        svg={<HeadphonesSvg />}
         data={audioTracks.map((audioTrack) => new MenuItem(getTrackLabel(audioTrack)))}
         onItemSelected={this.selectAudioTrack}
         minimumItems={2}
