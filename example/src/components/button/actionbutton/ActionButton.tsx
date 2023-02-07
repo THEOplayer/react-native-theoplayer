@@ -13,7 +13,7 @@ export interface ActionButtonProps {
 }
 
 export const ActionButton = (props: ActionButtonProps) => {
-  const { icon, style, iconStyle, touchable, svg } = props;
+  const { icon, style, iconStyle, touchable, svg, onPress } = props;
   const [focused, setFocused] = useState<boolean>(false);
 
   const shouldChangeTintColor = focused && Platform.isTV;
@@ -29,19 +29,15 @@ export const ActionButton = (props: ActionButtonProps) => {
           activeOpacity={1.0}
           style={context.style.controlBar.buttonContainer}
           tvParallaxProperties={{ enabled: false }}
-          onPress={() => {
-            const { onPress } = props;
-            if (onPress) {
-              onPress();
-            }
-          }}
+          onPress={onPress}
           onFocus={() => {
             context.animation.onTouch();
             setFocused(true);
           }}
           onBlur={() => {
             setFocused(false);
-          }}>
+          }}
+          {...(Platform.OS === 'web' ? { onClick: onPress } : {})}>
           {/* Give priority to SVG over image sources.*/}
           {svg && (
             <SvgContext.Provider
