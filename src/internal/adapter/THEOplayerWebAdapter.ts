@@ -9,7 +9,7 @@ import { findNativeQualitiesByUid, fromNativeMediaTrackList, fromNativeTextTrack
 import type { ABRConfiguration, SourceDescription } from 'src/api/barrel';
 import { DefaultFullscreenEvent } from './event/PlayerEvents';
 import { WebEventForwarder } from './WebEventForwarder';
-import { browserDetection } from "../platform/BrowserDetection";
+import { browserDetection } from "../../web/platform/BrowserDetection";
 
 export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayer {
   private readonly _player: THEOplayerWeb.ChromelessPlayer;
