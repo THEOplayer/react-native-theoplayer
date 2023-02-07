@@ -12,15 +12,13 @@ import { AudioTrackMenu } from '../menu/AudioTrackMenu';
 import { VideoQualityMenu } from '../menu/VideoQualityMenu';
 import { SourceMenu } from '../menu/SourceMenu';
 import { MuteButton } from '../button/MuteButton';
-import { PlayerContext } from '../util/PlayerContext';
-import { SlotView } from '../slots/SlotView';
+import { UiController } from '../slots/UiController';
 import { BigPlayButton } from '../button/BigPlayButton';
 import { CastMessage } from '../view/CastMessage';
 import { CenteredDelayedActivityIndicator } from '../delayedactivityindicator/CenteredDelayedActivityIndicator';
 import { ErrorDisplay } from '../view/ErrorDisplay';
 import { defaultPlayerStyle, VideoPlayerStyle } from '../style/VideoPlayerStyle';
 import { View } from 'react-native';
-import { AnimationController } from '../util/AnimationController';
 
 export interface VideoPlayerUIProps {
   style?: Partial<VideoPlayerStyle>;
@@ -68,46 +66,46 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
     const { style, player } = this.props;
 
     return (
-      <PlayerContext.Provider value={{ player, style: { ...defaultPlayerStyle, ...style }, animation: new AnimationController() }}>
-        <SlotView
-          top={
+      <UiController
+        style={{ ...defaultPlayerStyle, ...style }}
+        player={player}
+        top={
+          <ControlBar>
+            <AirplayButton />
+            <ChromecastButton />
+          </ControlBar>
+        }
+        center={
+          <>
+            <BigPlayButton />
+            <CenteredDelayedActivityIndicator />
+          </>
+        }
+        bottom={
+          <>
+            <CastMessage />
             <ControlBar>
-              <AirplayButton />
-              <ChromecastButton />
+              <SeekBar thumbnailMode={THUMBNAIL_MODE} />
             </ControlBar>
-          }
-          center={
-            <>
-              <BigPlayButton />
-              <CenteredDelayedActivityIndicator />
-            </>
-          }
-          bottom={
-            <>
-              <CastMessage />
-              <ControlBar>
-                <SeekBar thumbnailMode={THUMBNAIL_MODE} />
-              </ControlBar>
 
-              <ControlBar>
-                <MuteButton />
-                <TimeLabel showDuration={true} style={defaultPlayerStyle.videoPlayer.timeLabelContainer} />
+            <ControlBar>
+              <MuteButton />
+              <TimeLabel showDuration={true} style={defaultPlayerStyle.videoPlayer.timeLabelContainer} />
 
-                {/*Spacer*/}
-                <View style={{ flexGrow: 1 }} />
+              {/*Spacer*/}
+              <View style={{ flexGrow: 1 }} />
 
-                <TextTrackMenu />
-                <AudioTrackMenu />
-                {/*Note: quality selection is not available on iOS */}
-                <VideoQualityMenu />
-                <SourceMenu />
-                <FullscreenButton />
-              </ControlBar>
-            </>
-          }>
-          <ErrorDisplay />
-        </SlotView>
-      </PlayerContext.Provider>
+              <TextTrackMenu />
+              <AudioTrackMenu />
+              {/*Note: quality selection is not available on iOS */}
+              <VideoQualityMenu />
+              <SourceMenu />
+              <FullscreenButton />
+            </ControlBar>
+          </>
+        }>
+        <ErrorDisplay />
+      </UiController>
     );
   }
 }
