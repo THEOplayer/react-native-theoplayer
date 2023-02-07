@@ -1,4 +1,3 @@
-import { SettingsIcon } from '../../res/images';
 import { MenuItem } from './modalmenu/MenuItem';
 import type { VideoQuality } from 'react-native-theoplayer';
 import { findMediaTrackByUid, MediaTrack, PlayerEventType, THEOplayer } from 'react-native-theoplayer';
@@ -6,6 +5,7 @@ import { MenuButton } from './menubutton/MenuButton';
 import React, { PureComponent } from 'react';
 import { Platform } from 'react-native';
 import { PlayerContext } from '../util/PlayerContext';
+import { SettingsSvg } from '../button/svg/SettingsSvg';
 
 export interface VideoQualityMenuState {
   videoTracks: MediaTrack[];
@@ -101,7 +101,7 @@ export class VideoQualityMenu extends PureComponent<unknown, VideoQualityMenuSta
     return (
       <MenuButton
         title={'Quality'}
-        icon={SettingsIcon}
+        svg={<SettingsSvg />}
         data={[...availableVideoQualities, undefined].map((q) => new MenuItem(getQualityLabel(q as VideoQuality))).sort()}
         onItemSelected={this.selectTargetVideoQuality}
         minimumItems={3}
