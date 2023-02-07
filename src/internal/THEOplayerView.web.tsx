@@ -42,8 +42,8 @@ export function THEOplayerView(props: THEOplayerViewProps) {
 
     // Clean-up
     return () => {
-      player?.current?.destroy();
       adapter?.current?.destroy();
+      player?.current?.destroy();
     };
   }, [container]);
 
