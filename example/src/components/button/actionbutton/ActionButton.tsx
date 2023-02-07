@@ -1,5 +1,5 @@
 import { Image, ImageSourcePropType, ImageStyle, Platform, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useContext, useState } from 'react';
 import { SvgContext } from '../svg/SvgUtils';
 import { PlayerContext, PlayerWithStyle } from '../../util/PlayerContext';
 
@@ -15,12 +15,20 @@ export interface ActionButtonProps {
 export const ActionButton = (props: ActionButtonProps) => {
   const { icon, style, iconStyle, touchable, svg, onPress } = props;
   const [focused, setFocused] = useState<boolean>(false);
+  const context = useContext(PlayerContext);
 
   const shouldChangeTintColor = focused && Platform.isTV;
 
   if (!touchable) {
     return <View style={style}>{svg}</View>;
   }
+
+  const onTouch = () => {
+    if (context.animation.showing_) {
+      onPress?.();
+    }
+    context.animation.requestShowUi();
+  };
 
   return (
     <PlayerContext.Consumer>
@@ -29,7 +37,7 @@ export const ActionButton = (props: ActionButtonProps) => {
           activeOpacity={1.0}
           style={context.style.controlBar.buttonContainer}
           tvParallaxProperties={{ enabled: false }}
-          onPress={onPress}
+          onPress={onTouch}
           onFocus={() => {
             context.animation.requestShowUi();
             setFocused(true);
@@ -37,7 +45,7 @@ export const ActionButton = (props: ActionButtonProps) => {
           onBlur={() => {
             setFocused(false);
           }}
-          {...(Platform.OS === 'web' ? { onClick: onPress } : {})}>
+          {...(Platform.OS === 'web' ? { onClick: onTouch } : {})}>
           {/* Give priority to SVG over image sources.*/}
           {svg && (
             <SvgContext.Provider
