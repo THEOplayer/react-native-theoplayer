@@ -206,6 +206,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   }
 
   set currentTime(currentTime: number) {
+    this._currentTime = currentTime
     NativeModules.PlayerModule.setCurrentTime(this._view.nativeHandle, currentTime);
   }
 
