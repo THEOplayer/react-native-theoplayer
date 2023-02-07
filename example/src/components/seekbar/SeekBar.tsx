@@ -123,9 +123,11 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
         if (onStopScrubbing) {
           onStopScrubbing();
         }
-        const animationController = this.context.animation as AnimationController;
-        animationController.releaseLock_(this.animationPauseId);
-        this.animationPauseId = undefined;
+        if (this.animationPauseId) {
+          const animationController = this.context.animation as AnimationController;
+          animationController.releaseLock_(this.animationPauseId);
+          this.animationPauseId = undefined;
+        }
       },
     });
   }

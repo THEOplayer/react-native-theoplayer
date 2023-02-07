@@ -48,9 +48,11 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
 
   private onPlay = () => {
     this.setState({ paused: false });
-    const animationController = this.context.animation as AnimationController;
-    animationController.releaseLock_(this.animationPauseId);
-    this.animationPauseId = undefined;
+    if (this.animationPauseId) {
+      const animationController = this.context.animation as AnimationController;
+      animationController.releaseLock_(this.animationPauseId);
+      this.animationPauseId = undefined;
+    }
   };
 
   private onPause = () => {

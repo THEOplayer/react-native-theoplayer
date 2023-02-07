@@ -60,9 +60,7 @@ export class UiController extends PureComponent<React.PropsWithChildren<SlotView
    * Request to release the lock and start fading out again.
    */
   public releaseLock_(id: number) {
-    if (id !== undefined) {
-      arrayRemoveElement(this._animationsPauseRequestIds, id);
-    }
+    arrayRemoveElement(this._animationsPauseRequestIds, id);
     if (this._animationsPauseRequestIds.length === 0) {
       clearTimeout(this._currentFadeOutTimeout);
       // @ts-ignore
