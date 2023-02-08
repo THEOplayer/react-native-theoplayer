@@ -84,7 +84,8 @@ class SourceAdapter {
           }
         }
       } else {
-        val typedSource = parseTypedSource(jsonSourceObject.getJSONObject(PROP_SOURCES))
+        val jsonSource = jsonSourceObject.optJSONObject(PROP_SOURCES) ?: return null
+        val typedSource = parseTypedSource(jsonSource)
         if (typedSource != null) {
           typedSources.add(typedSource)
         }
