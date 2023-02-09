@@ -23,8 +23,10 @@ class THEOplayerRCTTypeUtils {
             return Preload.none
         case "auto":
             return Preload.auto
+#if os(iOS)
         case "metadata":
             return Preload.metadata
+#endif
         default:
             return Preload.none
         }
