@@ -245,6 +245,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
     if (BuildConfig.LOG_VIEW_EVENTS) {
       Log.d(TAG, "cleanUpResources")
     }
+    setFullscreen(false)
     releasePlayer()
   }
 
