@@ -39,18 +39,15 @@ export class UiController extends PureComponent<React.PropsWithChildren<SlotView
    * Request to show the UI due to user input.
    */
   public requestShowUi = () => {
-    this.releaseLock_(this.requestShowUiWithLock_());
+    this.showUi_();
+    this.hideUiAfterTimeout_();
   };
 
   /**
    * Request to show the UI until releaseLock_() is called.
    */
   public requestShowUiWithLock_(): number {
-    clearTimeout(this._currentFadeOutTimeout);
-    this._currentFadeOutTimeout = undefined;
-    if (!this._showing) {
-      this._doFadeIn();
-    }
+    this.showUi_();
     const id = this._idCounter++;
     this._animationsPauseRequestIds.push(id);
     return id;
@@ -61,14 +58,26 @@ export class UiController extends PureComponent<React.PropsWithChildren<SlotView
    */
   public releaseLock_(id: number) {
     arrayRemoveElement(this._animationsPauseRequestIds, id);
-    if (this._animationsPauseRequestIds.length === 0) {
-      clearTimeout(this._currentFadeOutTimeout);
-      // @ts-ignore
-      this._currentFadeOutTimeout = setTimeout(this._doFadeOut, 2000);
+    this.hideUiAfterTimeout_();
+  }
+
+  private showUi_() {
+    clearTimeout(this._currentFadeOutTimeout);
+    this._currentFadeOutTimeout = undefined;
+    if (!this._showing) {
+      this.doFadeIn_();
     }
   }
 
-  private _doFadeIn = () => {
+  private hideUiAfterTimeout_() {
+    if (this._animationsPauseRequestIds.length === 0) {
+      clearTimeout(this._currentFadeOutTimeout);
+      // @ts-ignore
+      this._currentFadeOutTimeout = setTimeout(this.doFadeOut_, 2000);
+    }
+  }
+
+  private doFadeIn_ = () => {
     const { fadeAnim } = this.state;
     this._showing = true;
     Animated.timing(fadeAnim, {
@@ -78,7 +87,7 @@ export class UiController extends PureComponent<React.PropsWithChildren<SlotView
     }).start();
   };
 
-  private _doFadeOut = () => {
+  private doFadeOut_ = () => {
     const { fadeAnim } = this.state;
     this._showing = false;
     Animated.timing(fadeAnim, {
