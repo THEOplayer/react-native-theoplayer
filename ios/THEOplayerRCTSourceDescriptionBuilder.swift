@@ -115,7 +115,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
 
         // 4. extract Google IMA "ads"
         let adsDescriptions: [AdDescription]? = self.buildAdDescriptions(sourceData) // Ads Extension
-        
+
         // 5. extract metadata
         var metadataDescription: MetadataDescription?
         if let metadataData = sourceData[SD_PROP_METADATA] as? [String:Any] {
@@ -137,30 +137,33 @@ class THEOplayerRCTSourceDescriptionBuilder {
      - returns: a THEOplayer TypedSource. In case of SSAI we  support GoogleDAITypedSource with GoogleDAIVodConfiguration or GoogleDAILiveConfiguration
      */
     private static func buildTypedSource(_ typedSourceData: [String:Any]) -> TypedSource? {
+        let contentProtection = extractDrmConfiguration(from: typedSourceData)
         if let src = typedSourceData[SD_PROP_SRC] as? String {
             // extract the type
             let type = typedSourceData[SD_PROP_TYPE] as? String ?? THEOplayerRCTSourceDescriptionBuilder.extractMimeType(src)
-            // check for a contentProtection
-            var contentProtection: MultiplatformDRMConfiguration?
-            if let contentProtectionData = typedSourceData[SD_PROP_CONTENT_PROTECTION] as? [String:Any] {
-                let sanitisedContentProtectionData = THEOplayerRCTSourceDescriptionBuilder.sanitiseContentProtectionData(contentProtectionData)
-                contentProtection = THEOplayerRCTSourceDescriptionBuilder.buildContentProtection(sanitisedContentProtectionData)
-            }
-
             return TypedSource(src: src,
                                type: type,
                                drm: contentProtection)
         }
-        
+
         // Check if we can extract a DAI source
-        if let daiSource = self.buildDAITypedSource(typedSourceData) {
+        if let daiSource = self.buildDAITypedSource(typedSourceData, contentProtection: contentProtection) {
             return daiSource
         }
-        
+
         if DEBUG_SOURCE_DESCRIPTION_BUIDER {
             print("[NATIVE] THEOplayer TypedSource requires 'src' property in 'sources' description")
         }
         return nil
+    }
+
+    private static func extractDrmConfiguration(from typedSourceData: [String:Any]) -> MultiplatformDRMConfiguration? {
+        // check for a contentProtection
+        guard let contentProtectionData = typedSourceData[SD_PROP_CONTENT_PROTECTION] as? [String:Any] else {
+            return nil
+        }
+        let sanitisedContentProtectionData = THEOplayerRCTSourceDescriptionBuilder.sanitiseContentProtectionData(contentProtectionData)
+        return THEOplayerRCTSourceDescriptionBuilder.buildContentProtection(sanitisedContentProtectionData)
     }
 
     /**
@@ -183,7 +186,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
         }
         return nil
     }
-    
+
     /**
      Creates a THEOplayer MetadataDescription. This requires a metadata property in the RN source description.
      - returns: a THEOplayer MetadataDescription
@@ -216,7 +219,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
         return MetadataDescription(metadataKeys: metadataData, title: title)
 #endif
     }
-    
+
 #if os(iOS)
     static func buildChromecastMetadataType(_ metadataType: String?) -> ChromecastMetadataType {
         guard let typeString = metadataType else {
@@ -231,7 +234,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
         default: return ChromecastMetadataType.GENERIC
         }
     }
-    
+
     static func buildChromecastMetaDataImagesArray(_ metadataImagesArrayData: [[String:Any]]) -> [ChromecastMetadataImage]? {
         var images: [ChromecastMetadataImage] = []
         for metadataImageData in metadataImagesArrayData {
@@ -241,7 +244,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
         }
         return images.count > 0 ? images : nil
     }
-    
+
     static func buildChromecastMetaDataImage(_ metadataImageData: [String:Any]) -> ChromecastMetadataImage? {
         if let src = metadataImageData[SD_PROP_SRC] as? String,
            let width = metadataImageData[SD_PROP_METADATA_IMAGE_WIDTH] as? Int,
