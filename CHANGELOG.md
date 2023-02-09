@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.8.1]
+
+### Improvement
+
+- Restructured iOS bridge code to extensions based on features.
+
+### Fixed
+
+- Fixed an issue on Android where the system UI would not be restored when unmounting THEOplayerView with `fullscreen` enabled.
+- Fixed an issue with the availability of the cast button and play buttons in the example application.
+- Fixed an issue on iOS where the player was not destroyed correctly on the iOS bridge.
+- Added support for `DRMConfig` through `SourceDescription` for SSAI sources on iOS.
+
 ## [1.8.0]
 
 ### Added
