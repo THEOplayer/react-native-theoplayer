@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [1.8.1]
 
-### Improvement
+### Changed
 
 - Restructured iOS bridge code to extensions based on features.
 
