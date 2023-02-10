@@ -537,9 +537,7 @@ class PlayerEventEmitter internal constructor(
     if (activeTrack != null) {
       payload.putInt(EVENT_PROP_TRACK_UID, activeTrack.uid)
     }
-    val qualities = Arguments.createArray()
-    qualities.pushMap(trackListAdapter.fromQuality(quality))
-    payload.putArray(EVENT_PROP_QUALITIES, qualities)
+    payload.putMap(EVENT_PROP_QUALITIES, trackListAdapter.fromQuality(quality))
     receiveEvent(EVENT_MEDIATRACK_EVENT, payload)
   }
 
