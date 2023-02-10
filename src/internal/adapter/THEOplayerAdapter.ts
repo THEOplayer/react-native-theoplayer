@@ -62,6 +62,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this.addEventListener(PlayerEventType.SOURCE_CHANGE, this.onSourceChange);
     this.addEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
     this.addEventListener(PlayerEventType.PAUSE, this.onPause);
+    this.addEventListener(PlayerEventType.PLAYING, this.onPlaying);
     this.addEventListener(PlayerEventType.TIME_UPDATE, this.onTimeupdate);
     this.addEventListener(PlayerEventType.DURATION_CHANGE, this.onDurationChange);
     this.addEventListener(PlayerEventType.RATE_CHANGE, this.onRateChange);
@@ -82,6 +83,10 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   private onPause = () => {
     this._paused = true;
+  };
+
+  private onPlaying = () => {
+    this._paused = false;
   };
 
   private onTimeupdate = (event: TimeUpdateEvent) => {
