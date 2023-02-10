@@ -5,6 +5,7 @@ import android.view.View
 import androidx.annotation.StringDef
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.WritableArray
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.uimanager.events.ReactEventEmitter
 import com.theoplayer.ads.AdEventAdapter
@@ -36,6 +37,7 @@ import com.theoplayer.android.api.player.track.mediatrack.quality.AudioQuality
 import com.theoplayer.android.api.player.track.mediatrack.quality.Quality
 import com.theoplayer.android.api.player.track.mediatrack.quality.VideoQuality
 import com.theoplayer.android.api.player.track.texttrack.TextTrack
+import com.theoplayer.android.api.timerange.TimeRanges
 import com.theoplayer.cast.CastEventAdapter
 import com.theoplayer.track.*
 import com.theoplayer.util.TypeUtils.encodeInfNan
@@ -89,6 +91,7 @@ private const val EVENT_PROP_SELECTED_TEXT_TRACK = "selectedTextTrack"
 private const val EVENT_PROP_SELECTED_AUDIO_TRACK = "selectedAudioTrack"
 private const val EVENT_PROP_SELECTED_VIDEO_TRACK = "selectedVideoTrack"
 private const val EVENT_PROP_SEEKABLE = "seekable"
+private const val EVENT_PROP_BUFFERED = "buffered"
 private const val EVENT_PROP_START = "start"
 private const val EVENT_PROP_END = "end"
 private const val EVENT_PROP_RETRYCOUNT = "retryCount"
@@ -294,9 +297,18 @@ class PlayerEventEmitter internal constructor(
 
   private fun onLoadedMetadata() {
     val payload = Arguments.createMap()
-    payload.putArray(EVENT_PROP_TEXT_TRACKS, trackListAdapter.fromTextTrackList(playerView.player?.textTracks))
-    payload.putArray(EVENT_PROP_AUDIO_TRACKS, trackListAdapter.fromAudioTrackList(playerView.player?.audioTracks))
-    payload.putArray(EVENT_PROP_VIDEO_TRACKS, trackListAdapter.fromVideoTrackList(playerView.player?.videoTracks))
+    payload.putArray(
+      EVENT_PROP_TEXT_TRACKS,
+      trackListAdapter.fromTextTrackList(playerView.player?.textTracks)
+    )
+    payload.putArray(
+      EVENT_PROP_AUDIO_TRACKS,
+      trackListAdapter.fromAudioTrackList(playerView.player?.audioTracks)
+    )
+    payload.putArray(
+      EVENT_PROP_VIDEO_TRACKS,
+      trackListAdapter.fromVideoTrackList(playerView.player?.videoTracks)
+    )
     val selectedTextTrack = playerView.selectedTextTrack
     if (selectedTextTrack != null) {
       payload.putInt(EVENT_PROP_SELECTED_TEXT_TRACK, selectedTextTrack.uid)
@@ -397,17 +409,21 @@ class PlayerEventEmitter internal constructor(
     emitError(event.errorObject)
   }
 
-  private fun onProgress() {
-    val timeRanges = playerView.player?.seekable
-    val payload = Arguments.createMap()
-    val seekable = Arguments.createArray()
+  private fun fromTimeRanges(timeRanges: TimeRanges?): WritableArray {
+    val payload = Arguments.createArray()
     timeRanges?.forEach { timeRange ->
       val range = Arguments.createMap()
       range.putDouble(EVENT_PROP_START, 1e03 * timeRange.start)
       range.putDouble(EVENT_PROP_END, 1e03 * timeRange.end)
-      seekable.pushMap(range)
+      payload.pushMap(range)
     }
-    payload.putArray(EVENT_PROP_SEEKABLE, seekable)
+    return payload
+  }
+
+  private fun onProgress() {
+    val payload = Arguments.createMap()
+    payload.putArray(EVENT_PROP_SEEKABLE, fromTimeRanges(playerView.player?.seekable))
+    payload.putArray(EVENT_PROP_BUFFERED, fromTimeRanges(playerView.player?.buffered))
     receiveEvent(EVENT_PROGRESS, payload)
   }
 
