@@ -143,21 +143,33 @@ class THEOplayerRCTMainEventHandler {
         self.progressListener = player.addEventListener(type: PlayerEventTypes.PROGRESS) { [weak self] event in
             //if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received PROGRESS event from THEOplayer") }
             if let forwardedProgressEvent = self?.onNativeProgress {
-                player.requestSeekable(completionHandler: { timeRanges, error in
-                    var seekable: [[String:Double]] = []
-                    timeRanges?.forEach({ timeRange in
-                        seekable.append(
+                player.requestSeekable(completionHandler: { seekableTimeRanges, error in
+                    player.requestBuffered(completionHandler: { bufferedTimeRanges, error in
+                        var seekable: [[String:Double]] = []
+                        seekableTimeRanges?.forEach({ timeRange in
+                            seekable.append(
+                                [
+                                    "start": timeRange.start * 1000,            // sec -> msec
+                                    "end": timeRange.end * 1000                 // sec -> msec
+                                ]
+                            )
+                        })
+                        var buffered: [[String:Double]] = []
+                        bufferedTimeRanges?.forEach({ timeRange in
+                            buffered.append(
+                                [
+                                    "start": timeRange.start * 1000,            // sec -> msec
+                                    "end": timeRange.end * 1000                 // sec -> msec
+                                ]
+                            )
+                        })
+                        forwardedProgressEvent(
                             [
-                                "start": timeRange.start * 1000,            // sec -> msec
-                                "end": timeRange.end * 1000                 // sec -> msec
+                                "seekable":seekable,
+                                "buffered":buffered
                             ]
                         )
                     })
-                    forwardedProgressEvent(
-                        [
-                            "seekable":seekable
-                        ]
-                    )
                 })
             }
         }
