@@ -172,14 +172,7 @@ export class WebEventForwarder {
   };
 
   private readonly onProgress = () => {
-    const seekable: TimeRange[] = [];
-    for (let i = 0; i < this._player.seekable.length; i++) {
-      seekable.push({
-        start: this._player.seekable.start(i) * 1e3,
-        end: this._player.seekable.end(i) * 1e3,
-      });
-    }
-    this._facade.dispatchEvent(new DefaultProgressEvent(seekable));
+    this._facade.dispatchEvent(new DefaultProgressEvent(fromTimeRanges(this._player.seekable), fromTimeRanges(this._player.buffered)));
   };
 
   private readonly onCanPlay = () => {
@@ -371,3 +364,14 @@ const FORWARDED_AD_EVENTS: Array<AdEventType> = [
   AdEventType.AD_METADATA,
   AdEventType.AD_BUFFERING,
 ];
+
+function fromTimeRanges(timeRanges: TimeRanges): TimeRange[] {
+  const result: TimeRange[] = [];
+  for (let i = 0; i < timeRanges.length; i++) {
+    result.push({
+      start: timeRanges.start(i) * 1e3,
+      end: timeRanges.end(i) * 1e3,
+    });
+  }
+  return result;
+}
