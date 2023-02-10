@@ -36,6 +36,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   private _autoplay = false;
   private _paused = false;
   private _seekable: TimeRange[] = [];
+  private _buffered: TimeRange[] = [];
   private _fullscreen = false;
   private _muted = false;
   private _seeking = false;
@@ -115,6 +116,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   private onProgress = (event: ProgressEvent) => {
     this._seekable = event.seekable;
+    this._buffered = event.buffered;
   };
 
   private onTextTrackList = (event: TextTrackListEvent) => {
@@ -181,9 +183,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   }
 
   get buffered() {
-    // TODO
-    console.error('[NYI] player.buffered');
-    return [];
+    return this._buffered;
   }
 
   get cast(): CastAPI {
@@ -195,7 +195,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   }
 
   set currentTime(currentTime: number) {
-    this._currentTime = currentTime
+    this._currentTime = currentTime;
     NativeModules.PlayerModule.setCurrentTime(this._view.nativeHandle, currentTime);
   }
 
@@ -295,6 +295,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._videoTracks = [];
     this._textTracks = [];
     this._seekable = [];
+    this._buffered = [];
     this._selectedTextTrack = undefined;
     this._selectedVideoTrack = undefined;
     this._selectedAudioTrack = undefined;

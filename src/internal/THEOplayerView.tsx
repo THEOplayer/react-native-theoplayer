@@ -171,7 +171,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
   };
 
   private _onProgress = (event: NativeSyntheticEvent<NativeProgressEvent>) => {
-    this._facade.dispatchEvent(new DefaultProgressEvent(event.nativeEvent.seekable));
+    this._facade.dispatchEvent(new DefaultProgressEvent(event.nativeEvent.seekable, event.nativeEvent.buffered));
   };
 
   private _onCanPlay = () => {

@@ -77,7 +77,7 @@ export class DefaultErrorEvent extends BaseEvent<PlayerEventType.ERROR> implemen
 }
 
 export class DefaultProgressEvent extends BaseEvent<PlayerEventType.PROGRESS> implements ProgressEvent {
-  constructor(public seekable: TimeRange[]) {
+  constructor(public seekable: TimeRange[], public buffered: TimeRange[]) {
     super(PlayerEventType.PROGRESS);
   }
 }

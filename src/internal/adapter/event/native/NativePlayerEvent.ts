@@ -52,6 +52,11 @@ export interface NativeProgressEvent {
    * The ranges of the media resource that are seekable by the player.
    */
   readonly seekable: TimeRange[];
+
+  /**
+   * The ranges of the media resource that are buffered by the player.
+   */
+  readonly buffered: TimeRange[];
 }
 
 export interface NativeSegmentNotFoundEvent {

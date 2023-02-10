@@ -61,6 +61,11 @@ export interface ProgressEvent extends Event<PlayerEventType.PROGRESS> {
    * The ranges of the media resource that are seekable by the player.
    */
   readonly seekable: TimeRange[];
+
+  /**
+   * The ranges of the media resource that are buffered by the player.
+   */
+  readonly buffered: TimeRange[];
 }
 
 export interface SegmentNotFoundEvent extends Event<PlayerEventType.SEGMENT_NOT_FOUND> {
