@@ -6,9 +6,11 @@ import type {
   DurationChangeEvent,
   LoadedMetadataEvent,
   MediaTrack,
+  MediaTrackEvent,
   MediaTrackListEvent,
   NativeHandleType,
   PlayerEventMap,
+  ProgressEvent,
   RateChangeEvent,
   SourceDescription,
   TextTrack,
@@ -17,11 +19,11 @@ import type {
   THEOplayerView,
   TimeRange,
   TimeUpdateEvent,
-  ProgressEvent,
 } from 'react-native-theoplayer';
 import {
   addTrack,
   findMediaTrackByUid,
+  MediaTrackEventType,
   MediaTrackType,
   PlayerEventType,
   PreloadType,
@@ -78,6 +80,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this.addEventListener(PlayerEventType.SEEKED, this.onSeeked);
     this.addEventListener(PlayerEventType.PROGRESS, this.onProgress);
     this.addEventListener(PlayerEventType.TEXT_TRACK_LIST, this.onTextTrackList);
+    this.addEventListener(PlayerEventType.MEDIA_TRACK, this.onMediaTrack);
     this.addEventListener(PlayerEventType.MEDIA_TRACK_LIST, this.onMediaTrackList);
   }
 
@@ -144,6 +147,20 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
       case TrackListEventType.CHANGE_TRACK:
         removeTrack(this._textTracks, track);
         addTrack(this._textTracks, track);
+        break;
+    }
+  };
+
+  private onMediaTrack = (event: MediaTrackEvent) => {
+    const { subType, trackType, trackUid } = event;
+    const tracks = trackType === MediaTrackType.VIDEO ? this._videoTracks : this._audioTracks;
+    const track = findMediaTrackByUid(tracks, trackUid);
+    switch (subType) {
+      case MediaTrackEventType.ACTIVE_QUALITY_CHANGED:
+        // Update local state
+        if (track) {
+          Object.assign(track, { ...track, activeQuality: event.qualities });
+        }
         break;
     }
   };
