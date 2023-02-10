@@ -19,7 +19,15 @@ import type {
   TimeUpdateEvent,
   ProgressEvent,
 } from 'react-native-theoplayer';
-import { addTrack, MediaTrackType, PlayerEventType, PreloadType, removeTrack, TrackListEventType } from 'react-native-theoplayer';
+import {
+  addTrack,
+  findMediaTrackByUid,
+  MediaTrackType,
+  PlayerEventType,
+  PreloadType,
+  removeTrack,
+  TrackListEventType,
+} from 'react-native-theoplayer';
 import { THEOplayerNativeAdsAdapter } from './ads/THEOplayerNativeAdsAdapter';
 import { THEOplayerNativeCastAdapter } from './cast/THEOplayerNativeCastAdapter';
 import { DefaultVolumeChangeEvent } from './event/PlayerEvents';
@@ -281,7 +289,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   set selectedTextTrack(trackUid: number | undefined) {
     this._selectedTextTrack = trackUid;
-    this.textTracks.forEach((track) => track.mode = track.uid == trackUid ? 'showing' : 'disabled')
+    this.textTracks.forEach((track) => (track.mode = track.uid == trackUid ? 'showing' : 'disabled'));
     NativeModules.PlayerModule.setSelectedTextTrack(this._view.nativeHandle, trackUid || -1);
   }
 
@@ -315,6 +323,12 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   set targetVideoQuality(target: number | number[] | undefined) {
     // Always pass an array for targetVideoQuality.
     this._targetVideoQuality = !target ? [] : Array.isArray(target) ? target : [target];
+
+    // Update local state
+    const track = findMediaTrackByUid(this._videoTracks, this.selectedVideoTrack);
+    if (track) {
+      Object.assign(track, { ...track, targetQuality: this._targetVideoQuality });
+    }
     NativeModules.PlayerModule.setTargetVideoQuality(this._view.nativeHandle, this._targetVideoQuality);
   }
 
