@@ -263,8 +263,8 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
   };
 
   private onProgress = (event: ProgressEvent) => {
-    const { seekable } = event;
-    console.log(TAG, 'progress', seekable);
+    const { seekable, buffered } = event;
+    console.log(TAG, 'progress', seekable, 'buffered', buffered);
     this.setState({ seekable });
   };
 
