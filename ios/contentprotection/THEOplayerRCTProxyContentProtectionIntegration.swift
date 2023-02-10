@@ -89,14 +89,12 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
             } else {
                 // Next, handle onLicenseRequest
                 if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "Received extracted fairplay contentId \(contentId) on RN bridge") }
-                self.licenseResponseFinal = false
                 self.contentProtectionAPI?.handleLicenseRequest(integrationId: self.integrationId, keySystemId: self.keySystemId, licenseRequest: request) { licenseData, error in
                     if let error = error {
                         callback.error(error: error)
                         return
                     }
                     if let data = licenseData {
-                        self.licenseResponseFinal = true
                         callback.respond(license: data)
                     } else {
                         callback.error(error: ProxyIntegrationError.licenseRequestHandlingFailed)
