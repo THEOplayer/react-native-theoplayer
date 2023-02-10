@@ -129,6 +129,7 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
 
   private onPlaying = (event: Event<'playing'>) => {
     console.log(event);
+    this.setState({ paused: false });
     this.maybeShowLoadingIndicator(false);
   };
 
