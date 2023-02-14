@@ -61,7 +61,7 @@ export function findNativeQualityByUid(mediaTrack: NativeMediaTrack, uid: number
 }
 
 export function findNativeQualitiesByUid(mediaTrack: NativeMediaTrack | undefined, uid: number | number[] | undefined): NativeQuality[] | undefined {
-  if (uid && mediaTrack) {
+  if (uid !== undefined && mediaTrack) {
     if (Array.isArray(uid)) {
       return mediaTrack.qualities.filter((quality) => uid.includes(quality.uid));
     } else {
