@@ -44,8 +44,7 @@ export function fromNativeMediaTrackList(tracks: NativeMediaTrackList): MediaTra
 }
 
 export function fromNativeMediaTrack(track: NativeMediaTrack): MediaTrack {
-  const { id, uid, kind, label, language, activeQuality, qualities, targetQuality } = track;
-
+  const { id, uid, kind, label, language, activeQuality, qualities } = track;
   return {
     kind,
     label,
@@ -54,7 +53,6 @@ export function fromNativeMediaTrack(track: NativeMediaTrack): MediaTrack {
     uid,
     activeQuality,
     qualities,
-    targetQuality,
   } as MediaTrack;
 }
 
