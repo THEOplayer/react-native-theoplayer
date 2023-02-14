@@ -8,6 +8,7 @@ import com.theoplayer.android.api.player.track.mediatrack.MediaTrack
 import com.theoplayer.android.api.player.track.mediatrack.quality.VideoQuality
 import com.theoplayer.android.api.player.track.texttrack.TextTrackMode
 import com.theoplayer.track.QualityListFilter
+import com.theoplayer.track.emptyQualityList
 import com.theoplayer.util.ViewResolver
 
 private const val TAG = "PlayerModule"
@@ -127,7 +128,8 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
         val currentVideoTrack = it as MediaTrack<VideoQuality>
         if (uids.size() == 0) {
           // Reset target qualities when passing empty list.
-          currentVideoTrack.setTargetQuality(null)
+          currentVideoTrack.targetQualities = emptyQualityList()
+          currentVideoTrack.targetQuality = null
         } else {
           currentVideoTrack.qualities?.let { qualities ->
             currentVideoTrack.targetQualities = QualityListFilter(qualities).filterQualityList(uids)
