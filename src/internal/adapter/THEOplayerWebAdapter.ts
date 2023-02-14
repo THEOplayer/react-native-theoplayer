@@ -172,6 +172,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   }
 
   set selectedVideoTrack(selectedVideoTrack: number | undefined) {
+    this._targetVideoQuality = undefined;
     this._player.videoTracks.forEach((videoTrack: NativeMediaTrack) => {
       videoTrack.enabled = videoTrack.uid === selectedVideoTrack;
     });
