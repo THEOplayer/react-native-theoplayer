@@ -293,6 +293,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   set selectedVideoTrack(trackUid: number | undefined) {
     this._selectedVideoTrack = trackUid;
+    this._targetVideoQuality = undefined;
     NativeModules.PlayerModule.setSelectedVideoTrack(this._view.nativeHandle, trackUid || -1);
   }
 
