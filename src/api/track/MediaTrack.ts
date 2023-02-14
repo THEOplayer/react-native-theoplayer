@@ -53,15 +53,6 @@ export interface MediaTrack extends Track {
    * The qualities of the media track.
    */
   readonly qualities: Quality[];
-
-  /**
-   * One or more desired uids of qualities of the media track.
-   *
-   * @remarks
-   * <br/> - If desired qualities are present, the Adaptive Bitrate mechanism of the player will limit itself to these qualities.
-   * <br/> - If one desired quality is present, the Adaptive Bitrate mechanism of the player will be disabled and the desired quality will be played back.
-   */
-  readonly targetQuality: number | number[] | undefined;
 }
 
 export function findMediaTrackByUid(mediaTracks: MediaTrack[], uid: number | undefined): MediaTrack | undefined {
