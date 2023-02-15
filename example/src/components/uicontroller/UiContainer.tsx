@@ -2,9 +2,9 @@ import React, { PureComponent, ReactNode } from 'react';
 import { Animated, Platform, View } from 'react-native';
 import { PlayerContext } from '../util/PlayerContext';
 import { arrayRemoveElement } from '../../utils/ArrayUtils';
-import type { AnimationController } from '../util/AnimationController';
 import type { THEOplayer } from 'react-native-theoplayer';
 import type { VideoPlayerStyle } from '../style/VideoPlayerStyle';
+import type { UiControls } from './UiControls';
 
 interface SlotViewProps {
   player: THEOplayer;
@@ -18,7 +18,7 @@ interface SlotViewState {
   fadeAnim: Animated.Value;
 }
 
-export class UiController extends PureComponent<React.PropsWithChildren<SlotViewProps>, SlotViewState> implements AnimationController {
+export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewProps>, SlotViewState> implements UiControls {
   private _animationsPauseRequestIds: number[] = [];
   private _idCounter = 0;
   private _showing = true;
@@ -46,20 +46,20 @@ export class UiController extends PureComponent<React.PropsWithChildren<SlotView
   /**
    * Request to show the UI until releaseLock_() is called.
    */
-  public requestShowUiWithLock_(): number {
+  public requestShowUiWithLock_ = () => {
     this.showUi_();
     const id = this._idCounter++;
     this._animationsPauseRequestIds.push(id);
     return id;
-  }
+  };
 
   /**
    * Request to release the lock and start fading out again.
    */
-  public releaseLock_(id: number) {
+  public releaseLock_ = (id: number) => {
     arrayRemoveElement(this._animationsPauseRequestIds, id);
     this.hideUiAfterTimeout_();
-  }
+  };
 
   private showUi_() {
     clearTimeout(this._currentFadeOutTimeout);
@@ -79,12 +79,13 @@ export class UiController extends PureComponent<React.PropsWithChildren<SlotView
 
   private doFadeIn_ = () => {
     const { fadeAnim } = this.state;
-    this._showing = true;
     Animated.timing(fadeAnim, {
       useNativeDriver: true,
       toValue: 1,
       duration: 200,
-    }).start();
+    }).start(() => {
+      this._showing = true;
+    });
   };
 
   private doFadeOut_ = () => {
@@ -123,4 +124,4 @@ export class UiController extends PureComponent<React.PropsWithChildren<SlotView
   }
 }
 
-UiController.contextType = PlayerContext;
+UiContainer.contextType = PlayerContext;

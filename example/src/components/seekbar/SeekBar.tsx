@@ -33,7 +33,7 @@ import {
 import { ThumbnailView } from '../thumbnail/ThumbnailView';
 import { THUMBNAIL_SIZE } from '../videoplayer/VideoPlayerUIProps';
 import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
-import type { AnimationController } from '../util/AnimationController';
+import type { UiControls } from '../uicontroller/UiControls';
 
 interface SeekBarState {
   focused: boolean;
@@ -109,7 +109,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
           onStartScrubbing();
         }
         if (this.animationPauseId === undefined) {
-          const animationController = this.context.animation as AnimationController;
+          const animationController = this.context.animation as UiControls;
           this.animationPauseId = animationController.requestShowUiWithLock_();
         }
       },
@@ -124,7 +124,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
           onStopScrubbing();
         }
         if (this.animationPauseId !== undefined) {
-          const animationController = this.context.animation as AnimationController;
+          const animationController = this.context.animation as UiControls;
           animationController.releaseLock_(this.animationPauseId);
           this.animationPauseId = undefined;
         }
@@ -320,7 +320,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
     } else {
       this.seekBackward();
     }
-    const animationController = this.context.animation as AnimationController;
+    const animationController = this.context.animation as UiControls;
     animationController.requestShowUi();
   };
 
