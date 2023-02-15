@@ -12,13 +12,13 @@ import { AudioTrackMenu } from '../menu/AudioTrackMenu';
 import { VideoQualityMenu } from '../menu/VideoQualityMenu';
 import { SourceMenu } from '../menu/SourceMenu';
 import { MuteButton } from '../button/MuteButton';
-import { UiController } from '../slots/UiController';
 import { BigPlayButton } from '../button/BigPlayButton';
 import { CastMessage } from '../view/CastMessage';
 import { CenteredDelayedActivityIndicator } from '../delayedactivityindicator/CenteredDelayedActivityIndicator';
 import { ErrorDisplay } from '../view/ErrorDisplay';
 import { defaultPlayerStyle, VideoPlayerStyle } from '../style/VideoPlayerStyle';
 import { View } from 'react-native';
+import { UiContainer } from '../uicontroller/UiContainer';
 
 export interface VideoPlayerUIProps {
   style?: Partial<VideoPlayerStyle>;
@@ -66,7 +66,7 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
     const { style, player } = this.props;
 
     return (
-      <UiController
+      <UiContainer
         style={{ ...defaultPlayerStyle, ...style }}
         player={player}
         top={
@@ -105,7 +105,7 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
           </>
         }>
         <ErrorDisplay />
-      </UiController>
+      </UiContainer>
     );
   }
 }

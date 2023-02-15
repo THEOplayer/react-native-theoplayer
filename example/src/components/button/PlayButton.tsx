@@ -6,7 +6,7 @@ import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
 import { PlayButtonSvg } from './svg/PlayButtonSvg';
 
 import { PauseButtonSvg } from './svg/PauseButtonSvg';
-import type { AnimationController } from '../util/AnimationController';
+import type { UiControls } from '../uicontroller/UiControls';
 
 interface PlayButtonProps {
   style?: StyleProp<ViewStyle>;
@@ -49,7 +49,7 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
   private onPlay = () => {
     this.setState({ paused: false });
     if (this.animationPauseId !== undefined) {
-      const animationController = this.context.animation as AnimationController;
+      const animationController = this.context.animation as UiControls;
       animationController.releaseLock_(this.animationPauseId);
       this.animationPauseId = undefined;
     }
@@ -58,7 +58,7 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
   private onPause = () => {
     this.setState({ paused: true });
     if (this.animationPauseId === undefined) {
-      const animationController = this.context.animation as AnimationController;
+      const animationController = this.context.animation as UiControls;
       this.animationPauseId = animationController.requestShowUiWithLock_();
     }
   };
