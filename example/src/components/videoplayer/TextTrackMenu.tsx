@@ -29,7 +29,8 @@ export function TextTrackMenu(props: TextTrackMenuProps) {
   const selectTextTrack = (index: number) => {
     const { textTracks, onSelectTextTrack } = props;
     if (onSelectTextTrack) {
-      const uid = textTracks && index >= 0 && index < textTracks.length ? textTracks[index].uid : undefined;
+      const selectableTextTracks = filterRenderableTracks(textTracks);
+      const uid = selectableTextTracks && index >= 0 && index < selectableTextTracks.length ? selectableTextTracks[index].uid : undefined;
       onSelectTextTrack(uid);
     }
   };
