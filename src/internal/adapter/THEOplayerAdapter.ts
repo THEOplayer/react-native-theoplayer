@@ -139,14 +139,14 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     const { subType, track } = event;
     switch (subType) {
       case TrackListEventType.ADD_TRACK:
-        addTrack(this._textTracks, track);
+        this._textTracks = addTrack(this._textTracks, track);
         break;
       case TrackListEventType.REMOVE_TRACK:
-        removeTrack(this._textTracks, track);
+        this._textTracks = removeTrack(this._textTracks, track);
         break;
       case TrackListEventType.CHANGE_TRACK:
-        removeTrack(this._textTracks, track);
-        addTrack(this._textTracks, track);
+        this._textTracks = removeTrack(this._textTracks, track);
+        this._textTracks = addTrack(this._textTracks, track);
         break;
     }
   };
@@ -170,14 +170,27 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     const isAudio = trackType === MediaTrackType.AUDIO;
     switch (subType) {
       case TrackListEventType.ADD_TRACK:
-        addTrack(isAudio ? this._audioTracks : this._videoTracks, track);
+        if (isAudio) {
+          this._audioTracks = addTrack(this._audioTracks, track);
+        } else {
+          this._videoTracks = addTrack(this._videoTracks, track);
+        }
         break;
       case TrackListEventType.REMOVE_TRACK:
-        removeTrack(isAudio ? this._audioTracks : this._videoTracks, track);
+        if (isAudio) {
+          this._audioTracks = removeTrack(this._audioTracks, track);
+        } else {
+          this._videoTracks = removeTrack(this._videoTracks, track);
+        }
         break;
       case TrackListEventType.CHANGE_TRACK:
-        removeTrack(isAudio ? this._audioTracks : this._videoTracks, track);
-        addTrack(isAudio ? this._audioTracks : this._videoTracks, track);
+        if (isAudio) {
+          this._audioTracks = removeTrack(this._audioTracks, track);
+          this._audioTracks = addTrack(this._audioTracks, track);
+        } else {
+          this._videoTracks = removeTrack(this._videoTracks, track);
+          this._videoTracks = addTrack(this._videoTracks, track);
+        }
         break;
     }
   };
