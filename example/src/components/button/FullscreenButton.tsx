@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
-import type { FullscreenEvent, THEOplayer } from 'react-native-theoplayer';
+import type { FullscreenEvent } from 'react-native-theoplayer';
 import { FullscreenActionType, PlayerEventType } from 'react-native-theoplayer';
 import { Platform } from 'react-native';
 import { ActionButton } from './actionbutton/ActionButton';
-import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
+import { PlayerContext, UiContext } from '../util/PlayerContext';
 import { FullScreenExitSvg } from './svg/FullScreenExitSvg';
 import { FullScreenEnterSvg } from './svg/FullScreenEnterSvg';
 
@@ -18,12 +18,12 @@ export class FullscreenButton extends PureComponent<unknown, FullscreenButtonSta
   }
 
   componentDidMount() {
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     player.addEventListener(PlayerEventType.FULLSCREEN, this.onFullscreenEvent);
   }
 
   componentWillUnmount() {
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     player.removeEventListener(PlayerEventType.FULLSCREEN, this.onFullscreenEvent);
   }
 
@@ -39,7 +39,7 @@ export class FullscreenButton extends PureComponent<unknown, FullscreenButtonSta
   };
 
   private toggleFullScreen = () => {
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     player.fullscreen = !player.fullscreen;
   };
 
@@ -50,7 +50,7 @@ export class FullscreenButton extends PureComponent<unknown, FullscreenButtonSta
     }
     return (
       <PlayerContext.Consumer>
-        {(context: PlayerWithStyle) => (
+        {(context: UiContext) => (
           <ActionButton
             svg={fullscreen ? <FullScreenExitSvg /> : <FullScreenEnterSvg />}
             onPress={this.toggleFullScreen}

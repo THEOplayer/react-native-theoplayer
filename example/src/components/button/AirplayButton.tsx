@@ -1,8 +1,8 @@
 import React, { PureComponent, useContext } from 'react';
 import { Image, Platform, TouchableOpacity } from 'react-native';
 import { AirplayIcon } from '../../res/images';
-import { CastEvent, CastEventType, PlayerEventType, THEOplayer } from 'react-native-theoplayer';
-import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
+import { CastEvent, CastEventType, PlayerEventType } from 'react-native-theoplayer';
+import { PlayerContext, UiContext } from '../util/PlayerContext';
 
 interface AirplayButtonState {
   connected: boolean;
@@ -19,12 +19,12 @@ export class AirplayButton extends PureComponent<unknown, AirplayButtonState> {
   }
 
   componentDidMount() {
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     player.addEventListener(PlayerEventType.CAST_EVENT, this.onCastStateChangeEvent);
   }
 
   componentWillUnmount() {
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     player.removeEventListener(PlayerEventType.CAST_EVENT, this.onCastStateChangeEvent);
   }
 
@@ -58,7 +58,7 @@ export class AirplayButton extends PureComponent<unknown, AirplayButtonState> {
     }
     return (
       <PlayerContext.Consumer>
-        {(context: PlayerWithStyle) => (
+        {(context: UiContext) => (
           <TouchableOpacity style={context.style.controlBar.buttonIcon} onPress={this.onUIAirplayToggled}>
             <Image
               style={[context.style.controlBar.buttonIcon, { tintColor: connected ? context.style.colors.accent : context.style.colors.primary }]}

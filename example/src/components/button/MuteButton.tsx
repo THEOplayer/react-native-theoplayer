@@ -1,7 +1,7 @@
 import { ActionButton } from './actionbutton/ActionButton';
 import React, { PureComponent } from 'react';
-import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
-import { PlayerEventType, THEOplayer, VolumeChangeEvent } from 'react-native-theoplayer';
+import { PlayerContext, UiContext } from '../util/PlayerContext';
+import { PlayerEventType, VolumeChangeEvent } from 'react-native-theoplayer';
 import { Platform } from 'react-native';
 import { VolumeOffSvg } from './svg/VolumeOffSvg';
 import { VolumeUpSvg } from './svg/VolumeUpSvg';
@@ -17,22 +17,22 @@ export class MuteButton extends PureComponent<unknown, MuteButtonState> {
   }
 
   componentDidMount() {
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     player.addEventListener(PlayerEventType.VOLUME_CHANGE, this.onVolumeChange);
   }
 
   componentWillUnmount() {
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     player.removeEventListener(PlayerEventType.VOLUME_CHANGE, this.onVolumeChange);
   }
 
   private onVolumeChange = (_: VolumeChangeEvent) => {
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     this.setState({ muted: player.muted });
   };
 
   private toggleMuted = () => {
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     player.muted = !player.muted;
   };
 
@@ -43,7 +43,7 @@ export class MuteButton extends PureComponent<unknown, MuteButtonState> {
     }
     return (
       <PlayerContext.Consumer>
-        {(context: PlayerWithStyle) => (
+        {(context: UiContext) => (
           <ActionButton
             svg={muted ? <VolumeOffSvg /> : <VolumeUpSvg />}
             onPress={this.toggleMuted}

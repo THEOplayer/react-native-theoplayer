@@ -2,8 +2,8 @@ import React, { PureComponent } from 'react';
 import type { DelayedActivityIndicatorProps } from './DelayedActivityIndicator';
 import { DelayedActivityIndicator } from './DelayedActivityIndicator';
 import { View } from 'react-native';
-import { ErrorEvent, PlayerError, PlayerEventType, ReadyStateChangeEvent, THEOplayer } from 'react-native-theoplayer';
-import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
+import { ErrorEvent, PlayerError, PlayerEventType, ReadyStateChangeEvent } from 'react-native-theoplayer';
+import { PlayerContext, UiContext } from '../util/PlayerContext';
 
 interface CenteredDelayedActivityIndicatorState {
   showLoadingIndicator: boolean;
@@ -22,7 +22,7 @@ export class CenteredDelayedActivityIndicator extends PureComponent<DelayedActiv
   }
 
   componentDidMount() {
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     player.addEventListener(PlayerEventType.READYSTATE_CHANGE, this.onReadyStateChange);
     player.addEventListener(PlayerEventType.ERROR, this.onError);
     player.addEventListener(PlayerEventType.PLAYING, this.onPlaying);
@@ -31,7 +31,7 @@ export class CenteredDelayedActivityIndicator extends PureComponent<DelayedActiv
   }
 
   componentWillUnmount() {
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     player.removeEventListener(PlayerEventType.READYSTATE_CHANGE, this.onReadyStateChange);
     player.removeEventListener(PlayerEventType.ERROR, this.onError);
     player.removeEventListener(PlayerEventType.PLAYING, this.onPlaying);
@@ -67,19 +67,19 @@ export class CenteredDelayedActivityIndicator extends PureComponent<DelayedActiv
   private maybeShowLoadingIndicator(showLoading: boolean) {
     const { error } = this.state;
     // do not change state to buffering in case of an error or if the player is paused
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     this.setState({ showLoadingIndicator: showLoading && !error && !player.paused });
   }
 
   render() {
     const { delay } = this.props;
     const { showLoadingIndicator } = this.state;
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     return (
       showLoadingIndicator &&
       !player.paused && (
         <PlayerContext.Consumer>
-          {(context: PlayerWithStyle) => (
+          {(context: UiContext) => (
             <View style={context.style.videoPlayer.fullScreenCenter}>
               <DelayedActivityIndicator size="large" color="#ffc50f" delay={delay} />
             </View>

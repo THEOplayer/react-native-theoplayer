@@ -1,12 +1,11 @@
 import { ActionButton } from './actionbutton/ActionButton';
 import type { StyleProp, ViewStyle } from 'react-native';
 import React, { PureComponent } from 'react';
-import { PlayerEventType, THEOplayer } from 'react-native-theoplayer';
-import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
+import { PlayerEventType } from 'react-native-theoplayer';
+import { PlayerContext, UiContext } from '../util/PlayerContext';
 import { PlayButtonSvg } from './svg/PlayButtonSvg';
 
 import { PauseButtonSvg } from './svg/PauseButtonSvg';
-import type { UiControls } from '../uicontroller/UiControls';
 
 interface PlayButtonProps {
   style?: StyleProp<ViewStyle>;
@@ -29,7 +28,7 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
   }
 
   componentDidMount() {
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     player.addEventListener(PlayerEventType.PLAY, this.onPlay);
     player.addEventListener(PlayerEventType.PLAYING, this.onPlay);
     player.addEventListener(PlayerEventType.PAUSE, this.onPause);
@@ -38,7 +37,7 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
   }
 
   componentWillUnmount() {
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     player.removeEventListener(PlayerEventType.PLAY, this.onPlay);
     player.removeEventListener(PlayerEventType.PLAYING, this.onPlay);
     player.removeEventListener(PlayerEventType.PAUSE, this.onPause);
@@ -49,7 +48,7 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
   private onPlay = () => {
     this.setState({ paused: false });
     if (this.animationPauseId !== undefined) {
-      const animationController = this.context.animation as UiControls;
+      const animationController = (this.context as UiContext).ui;
       animationController.releaseLock_(this.animationPauseId);
       this.animationPauseId = undefined;
     }
@@ -58,7 +57,7 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
   private onPause = () => {
     this.setState({ paused: true });
     if (this.animationPauseId === undefined) {
-      const animationController = this.context.animation as UiControls;
+      const animationController = (this.context as UiContext).ui;
       this.animationPauseId = animationController.requestShowUiWithLock_();
     }
   };
@@ -72,7 +71,7 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
   };
 
   private togglePlayPause = () => {
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     if (player.paused) {
       player.play();
     } else {
@@ -89,7 +88,7 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
 
     return (
       <PlayerContext.Consumer>
-        {(context: PlayerWithStyle) => (
+        {(context: UiContext) => (
           <ActionButton
             style={context.style.controlBar.buttonIcon}
             touchable={true}

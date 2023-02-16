@@ -2,9 +2,9 @@ import { MenuButton } from './menubutton/MenuButton';
 import { MenuItem } from './modalmenu/MenuItem';
 import React, { PureComponent } from 'react';
 import type { MediaTrack } from 'react-native-theoplayer';
-import { PlayerEventType, THEOplayer } from 'react-native-theoplayer';
+import { PlayerEventType } from 'react-native-theoplayer';
 import { getTrackLabel } from './TrackUtils';
-import { PlayerContext } from '../util/PlayerContext';
+import { PlayerContext, UiContext } from '../util/PlayerContext';
 import { HeadphonesSvg } from '../button/svg/HeadphonesSvg';
 
 export interface AudioQualityMenuState {
@@ -19,17 +19,17 @@ export class AudioTrackMenu extends PureComponent<unknown, AudioQualityMenuState
   }
 
   componentDidMount() {
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     player.addEventListener(PlayerEventType.MEDIA_TRACK_LIST, this.onTrackListChanged);
   }
 
   componentWillUnmount() {
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     player.removeEventListener(PlayerEventType.MEDIA_TRACK_LIST, this.onTrackListChanged);
   }
 
   private onTrackListChanged = () => {
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     console.log(player.audioTracks);
     this.setState({
       audioTracks: player.audioTracks,
@@ -40,7 +40,7 @@ export class AudioTrackMenu extends PureComponent<unknown, AudioQualityMenuState
   private selectAudioTrack = (index: number) => {
     const { audioTracks } = this.state;
     if (audioTracks && index >= 0 && index < audioTracks.length) {
-      const player = this.context.player as THEOplayer;
+      const player = (this.context as UiContext).player;
       const uid = audioTracks[index].uid;
       player.selectedAudioTrack = uid;
       this.setState({ selectedAudioTrack: uid });

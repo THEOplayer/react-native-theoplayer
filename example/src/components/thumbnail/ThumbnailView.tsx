@@ -7,7 +7,7 @@ import type { Thumbnail } from './Thumbnail';
 import { isTileMapThumbnail } from './Thumbnail';
 import { URL as URLPolyfill } from 'react-native-url-polyfill';
 import { TimeLabel } from '../timelabel/TimeLabel';
-import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
+import { PlayerContext, UiContext } from '../util/PlayerContext';
 
 const SPRITE_REGEX = /^([^#]*)#xywh=(\d+),(\d+),(\d+),(\d+)\s*$/;
 const TAG = 'ThumbnailView';
@@ -127,7 +127,7 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
     const style = index === 0 ? thumbnailStyleCurrent : thumbnailStyleCarousel;
     return (
       <PlayerContext.Consumer>
-        {(context: PlayerWithStyle) => <View key={`th${index}`} style={[context.style.videoPlayer.thumbnail, { width: size, height: 1 }, style]} />}
+        {(context: UiContext) => <View key={`th${index}`} style={[context.style.videoPlayer.thumbnail, { width: size, height: 1 }, style]} />}
       </PlayerContext.Consumer>
     );
   };
@@ -142,7 +142,7 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
       const ratio = thumbnail.tileWidth == 0 ? 0 : (scale * size) / thumbnail.tileWidth;
       return (
         <PlayerContext.Consumer>
-          {(context: PlayerWithStyle) => (
+          {(context: UiContext) => (
             <View
               key={`th${index}`}
               style={[context.style.videoPlayer.thumbnail, { width: scale * renderWidth, height: scale * renderHeight }, style]}>
@@ -166,7 +166,7 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
     } else {
       return (
         <PlayerContext.Consumer>
-          {(context: PlayerWithStyle) => (
+          {(context: UiContext) => (
             <View
               key={`th${index}`}
               style={[context.style.videoPlayer.thumbnail, { width: scale * renderWidth, height: scale * renderHeight }, style]}>
@@ -210,7 +210,7 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
     const { renderHeight } = this.state;
     return (
       <PlayerContext.Consumer>
-        {(context: PlayerWithStyle) => (
+        {(context: UiContext) => (
           <View style={{ flexDirection: 'column' }}>
             {showTimeLabel && (
               <TimeLabel

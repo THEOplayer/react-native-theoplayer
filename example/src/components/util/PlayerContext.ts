@@ -4,14 +4,14 @@ import type { VideoPlayerStyle } from '../style/VideoPlayerStyle';
 import { defaultPlayerStyle } from '../style/VideoPlayerStyle';
 import type { UiControls } from '../uicontroller/UiControls';
 
-export interface PlayerWithStyle {
-  player: THEOplayer;
-  style: VideoPlayerStyle;
-  animation: UiControls;
+export interface UiContext {
+  readonly player: THEOplayer;
+  readonly style: VideoPlayerStyle;
+  readonly ui: UiControls;
 }
 
-export const PlayerContext = React.createContext<PlayerWithStyle>({
+export const PlayerContext = React.createContext<UiContext>({
   player: undefined as unknown as THEOplayer,
   style: defaultPlayerStyle,
-  animation: undefined as unknown as UiControls,
+  ui: undefined as unknown as UiControls,
 });

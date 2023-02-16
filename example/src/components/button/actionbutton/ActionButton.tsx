@@ -1,7 +1,7 @@
 import { Image, ImageSourcePropType, ImageStyle, Platform, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 import React, { ReactNode, useContext, useState } from 'react';
 import { SvgContext } from '../svg/SvgUtils';
-import { PlayerContext, PlayerWithStyle } from '../../util/PlayerContext';
+import { PlayerContext, UiContext } from '../../util/PlayerContext';
 
 export interface ActionButtonProps {
   icon?: ImageSourcePropType;
@@ -24,22 +24,22 @@ export const ActionButton = (props: ActionButtonProps) => {
   }
 
   const onTouch = () => {
-    if (context.animation.showing_) {
+    if (context.ui.showing_) {
       onPress?.();
     }
-    context.animation.requestShowUi();
+    context.ui.requestShowUi();
   };
 
   return (
     <PlayerContext.Consumer>
-      {(context: PlayerWithStyle) => (
+      {(context: UiContext) => (
         <TouchableOpacity
           activeOpacity={1.0}
           style={context.style.controlBar.buttonContainer}
           tvParallaxProperties={{ enabled: false }}
           onPress={onTouch}
           onFocus={() => {
-            context.animation.requestShowUi();
+            context.ui.requestShowUi();
             setFocused(true);
           }}
           onBlur={() => {

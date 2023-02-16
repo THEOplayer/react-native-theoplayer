@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { StyleProp, View, ViewStyle } from 'react-native';
-import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
+import { PlayerContext, UiContext } from '../util/PlayerContext';
 
 export type SlotType = 'top' | 'bottom' | 'center';
 
@@ -15,7 +15,7 @@ export const ControlBar = (props: React.PropsWithChildren<ControlBarProps>) => {
   const { style, children } = props;
   return (
     <PlayerContext.Consumer>
-      {(context: PlayerWithStyle) => <View style={[context.style.controlBar.container, style]}>{children}</View>}
+      {(context: UiContext) => <View style={[context.style.controlBar.container, style]}>{children}</View>}
     </PlayerContext.Consumer>
   );
 };
