@@ -325,7 +325,13 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   set selectedTextTrack(trackUid: number | undefined) {
     this._selectedTextTrack = trackUid;
-    this.textTracks.forEach((track) => (track.mode = track.uid == trackUid ? 'showing' : 'disabled'));
+    this.textTracks.forEach((track) => {
+      if (track.uid == trackUid) {
+        track.mode = 'showing';
+      } else if (track.mode === 'showing') {
+        track.mode = 'disabled';
+      }
+    });
     NativeModules.PlayerModule.setSelectedTextTrack(this._view.nativeHandle, trackUid || -1);
   }
 
