@@ -28,6 +28,7 @@ import {
   PlayerEventType,
   PreloadType,
   removeTrack,
+  TextTrackStyle,
   TrackListEventType,
 } from 'react-native-theoplayer';
 import { THEOplayerNativeAdsAdapter } from './ads/THEOplayerNativeAdsAdapter';
@@ -35,12 +36,14 @@ import { THEOplayerNativeCastAdapter } from './cast/THEOplayerNativeCastAdapter'
 import { DefaultVolumeChangeEvent } from './event/PlayerEvents';
 import { AbrAdapter } from './abr/AbrAdapter';
 import { NativeModules, Platform } from 'react-native';
+import { TextTrackStyleAdapter } from './track/TextTrackStyleAdapter';
 
 export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayer {
   private readonly _view: THEOplayerView;
   private readonly _adsAdapter: THEOplayerNativeAdsAdapter;
   private readonly _castAdapter: THEOplayerNativeCastAdapter;
   private readonly _abrAdapter: AbrAdapter;
+  private readonly _textTrackStyleAdapter: TextTrackStyleAdapter;
 
   private _source: SourceDescription | undefined = undefined;
   private _autoplay = false;
@@ -69,6 +72,8 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._adsAdapter = new THEOplayerNativeAdsAdapter(this._view);
     this._castAdapter = new THEOplayerNativeCastAdapter(this._view);
     this._abrAdapter = new AbrAdapter(this._view);
+    this._textTrackStyleAdapter = new TextTrackStyleAdapter(this._view);
+
     this.addEventListener(PlayerEventType.SOURCE_CHANGE, this.onSourceChange);
     this.addEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
     this.addEventListener(PlayerEventType.PAUSE, this.onPause);
@@ -322,6 +327,10 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._selectedTextTrack = trackUid;
     this.textTracks.forEach((track) => (track.mode = track.uid == trackUid ? 'showing' : 'disabled'));
     NativeModules.PlayerModule.setSelectedTextTrack(this._view.nativeHandle, trackUid || -1);
+  }
+
+  get textTrackStyle(): TextTrackStyle {
+    return this._textTrackStyleAdapter;
   }
 
   get source(): SourceDescription | undefined {

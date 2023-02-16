@@ -1,5 +1,5 @@
 import { DefaultEventDispatcher } from './event/DefaultEventDispatcher';
-import type { AdsAPI, CastAPI, MediaTrack, NativeHandleType, PlayerEventMap, PreloadType, THEOplayer } from 'react-native-theoplayer';
+import type { AdsAPI, CastAPI, MediaTrack, NativeHandleType, PlayerEventMap, PreloadType, TextTrackStyle, THEOplayer } from 'react-native-theoplayer';
 import { FullscreenActionType, TextTrack } from 'react-native-theoplayer';
 import { THEOplayerWebAdsAdapter } from './ads/THEOplayerWebAdsAdapter';
 import { THEOplayerWebCastAdapter } from './cast/THEOplayerWebCastAdapter';
@@ -9,7 +9,7 @@ import { findNativeQualitiesByUid, fromNativeMediaTrackList, fromNativeTextTrack
 import type { ABRConfiguration, SourceDescription } from 'src/api/barrel';
 import { DefaultFullscreenEvent } from './event/PlayerEvents';
 import { WebEventForwarder } from './WebEventForwarder';
-import { browserDetection } from "../../web/platform/BrowserDetection";
+import { browserDetection } from '../../web/platform/BrowserDetection';
 
 export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayer {
   private readonly _player: THEOplayerWeb.ChromelessPlayer;
@@ -115,7 +115,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     const appContainer = document.getElementById('app');
     if (fullscreen) {
       this.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_WILL_PRESENT));
-      if(browserDetection.IS_IOS_ && browserDetection.IS_SAFARI_) {
+      if (browserDetection.IS_IOS_ && browserDetection.IS_SAFARI_) {
         // requestFullscreen isn't supported only on iOS Safari: https://caniuse.com/?search=requestFullscreen
         // The workaround is using webkitEnterFullscreen which needs to be called on the video element
         const elements = this._player.element.children;
@@ -129,7 +129,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
       }
     } else {
       this.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_WILL_DISMISS));
-      if(browserDetection.IS_IOS_ && browserDetection.IS_SAFARI_) {
+      if (browserDetection.IS_IOS_ && browserDetection.IS_SAFARI_) {
         const elements = this._player.element.children;
         for (const element of Array.from(elements)) {
           if (element.tagName === 'VIDEO' && element.attributes.getNamedItem('src') !== null) {
@@ -165,6 +165,10 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     this._player.textTracks.forEach((textTrack: NativeTextTrack) => {
       textTrack.mode = textTrack.uid === selectedTextTrack ? 'showing' : 'disabled';
     });
+  }
+
+  get textTrackStyle(): TextTrackStyle {
+    return this._player.textTrackStyle as TextTrackStyle;
   }
 
   get selectedVideoTrack(): number | undefined {
