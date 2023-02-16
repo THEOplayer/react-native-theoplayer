@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
-import { CastEvent, CastEventType, PlayerEventType, THEOplayer } from 'react-native-theoplayer';
+import { CastEvent, CastEventType, PlayerEventType } from 'react-native-theoplayer';
 import { Text } from 'react-native';
-import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
+import { PlayerContext, UiContext } from '../util/PlayerContext';
 
 interface CastMessageState {
   message: string | undefined;
@@ -14,12 +14,12 @@ export class CastMessage extends PureComponent<unknown, CastMessageState> {
   }
 
   componentDidMount() {
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     player.addEventListener(PlayerEventType.CAST_EVENT, this.onCastEvent);
   }
 
   componentWillUnmount() {
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     player.removeEventListener(PlayerEventType.CAST_EVENT, this.onCastEvent);
   }
 
@@ -52,7 +52,7 @@ export class CastMessage extends PureComponent<unknown, CastMessageState> {
 
     return (
       <PlayerContext.Consumer>
-        {(context: PlayerWithStyle) => (
+        {(context: UiContext) => (
           <Text
             style={[context.style.videoPlayer.message, { color: context.style.colors.text, backgroundColor: context.style.colors.textBackground }]}>
             {message}

@@ -32,7 +32,7 @@ import {
 } from 'react-native-theoplayer';
 import { ThumbnailView } from '../thumbnail/ThumbnailView';
 import { THUMBNAIL_SIZE } from '../videoplayer/VideoPlayerUIProps';
-import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
+import { PlayerContext, UiContext } from '../util/PlayerContext';
 import type { UiControls } from '../uicontroller/UiControls';
 
 interface SeekBarState {
@@ -86,7 +86,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
   }
 
   private onSeek = (time: number) => {
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     if (!isNaN(time)) {
       player.currentTime = time;
     }
@@ -109,8 +109,8 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
           onStartScrubbing();
         }
         if (this.animationPauseId === undefined) {
-          const animationController = this.context.animation as UiControls;
-          this.animationPauseId = animationController.requestShowUiWithLock_();
+          const uiController = (this.context as UiContext).ui;
+          this.animationPauseId = uiController.requestShowUiWithLock_();
         }
       },
       onPanResponderMove: (_evt: GestureResponderEvent, gestureState: PanResponderGestureState) => {
@@ -124,8 +124,8 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
           onStopScrubbing();
         }
         if (this.animationPauseId !== undefined) {
-          const animationController = this.context.animation as UiControls;
-          animationController.releaseLock_(this.animationPauseId);
+          const uiController = (this.context as UiContext).ui;
+          uiController.releaseLock_(this.animationPauseId);
           this.animationPauseId = undefined;
         }
       },
@@ -215,7 +215,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
     if (Platform.isTV) {
       this.enableTVEventHandler();
     }
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     player.addEventListener(PlayerEventType.PROGRESS, this.onProgress);
     player.addEventListener(PlayerEventType.TIME_UPDATE, this.onTimeUpdate);
     player.addEventListener(PlayerEventType.TEXT_TRACK_LIST, this.onTextTrackListEvent);
@@ -228,7 +228,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
     if (Platform.isTV) {
       this.disableTVEventHandler();
     }
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     player.removeEventListener(PlayerEventType.PROGRESS, this.onProgress);
     player.removeEventListener(PlayerEventType.TIME_UPDATE, this.onTimeUpdate);
     player.removeEventListener(PlayerEventType.TEXT_TRACK_LIST, this.onTextTrackListEvent);
@@ -320,8 +320,8 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
     } else {
       this.seekBackward();
     }
-    const animationController = this.context.animation as UiControls;
-    animationController.requestShowUi();
+    const uiController = (this.context as UiContext).ui;
+    uiController.requestShowUi();
   };
 
   onFocus = () => {
@@ -334,7 +334,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
 
   onDotPress = () => {
     // On TV platforms we use the progress dot to play/pause
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     if (player.paused) {
       player.play();
     } else {
@@ -343,12 +343,12 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
   };
 
   private onTextTrackListEvent = () => {
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     this.setState({ textTracks: player.textTracks });
   };
 
   private onTextTrackEvent = () => {
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     this.setState({ textTracks: player.textTracks });
   };
 
@@ -385,7 +385,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
 
     return (
       <PlayerContext.Consumer>
-        {(context: PlayerWithStyle) => (
+        {(context: UiContext) => (
           <View style={{ flex: 1, flexDirection: 'column', paddingHorizontal: 10 }}>
             {/* TODO {thumbnailMode === 'carousel' ? this.renderThumbnailCarousel(this.seekBarPosition) : this.renderSingleThumbnail(this.seekBarPosition)}*/}
 
@@ -455,7 +455,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
     }
     return (
       <PlayerContext.Consumer>
-        {(context: PlayerWithStyle) => (
+        {(context: UiContext) => (
           <ThumbnailView
             visible={seekBarPosition.isScrubbing}
             containerStyle={context.style.videoPlayer.thumbnailContainerCarousel}
@@ -482,7 +482,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
     }
     return (
       <PlayerContext.Consumer>
-        {(styleContext: PlayerWithStyle) => (
+        {(styleContext: UiContext) => (
           <ThumbnailView
             visible={seekBarPosition.isScrubbing}
             containerStyle={styleContext.style.videoPlayer.thumbnailContainerSingle}

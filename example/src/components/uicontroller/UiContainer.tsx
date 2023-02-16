@@ -102,7 +102,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewP
     const { player, style, top, center, bottom, children } = this.props;
     const { fadeAnim } = this.state;
     return (
-      <PlayerContext.Provider value={{ player, style: style, animation: this }}>
+      <PlayerContext.Provider value={{ player, style: style, ui: this }}>
         {/* The Animated.View is for showing and hiding the UI*/}
         <Animated.View
           style={[style.slotView.container, { opacity: fadeAnim }]}

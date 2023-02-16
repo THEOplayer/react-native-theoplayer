@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
-import { CastEvent, CastEventType, ErrorEvent, PlayerError, PlayerEventType, THEOplayer } from 'react-native-theoplayer';
+import { CastEvent, CastEventType, ErrorEvent, PlayerError, PlayerEventType } from 'react-native-theoplayer';
 import { Text, View } from 'react-native';
-import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
+import { PlayerContext, UiContext } from '../util/PlayerContext';
 
 interface ErrorDisplayState {
   error: PlayerError | undefined;
@@ -14,14 +14,14 @@ export class ErrorDisplay extends PureComponent<unknown, ErrorDisplayState> {
   }
 
   componentDidMount() {
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     player.addEventListener(PlayerEventType.LOAD_START, this.onLoadStart);
     player.addEventListener(PlayerEventType.ERROR, this.onError);
     player.addEventListener(PlayerEventType.CAST_EVENT, this.onCastEvent);
   }
 
   componentWillUnmount() {
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     player.removeEventListener(PlayerEventType.LOAD_START, this.onLoadStart);
     player.removeEventListener(PlayerEventType.ERROR, this.onError);
     player.removeEventListener(PlayerEventType.CAST_EVENT, this.onCastEvent);
@@ -55,7 +55,7 @@ export class ErrorDisplay extends PureComponent<unknown, ErrorDisplayState> {
 
     return (
       <PlayerContext.Consumer>
-        {(context: PlayerWithStyle) => (
+        {(context: UiContext) => (
           <View style={context.style.videoPlayer.errorContainer}>
             <Text
               style={[context.style.videoPlayer.message, { color: context.style.colors.text, backgroundColor: context.style.colors.textBackground }]}>

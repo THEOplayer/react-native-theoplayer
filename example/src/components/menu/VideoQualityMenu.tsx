@@ -1,10 +1,10 @@
 import { MenuItem } from './modalmenu/MenuItem';
 import type { VideoQuality } from 'react-native-theoplayer';
-import { findMediaTrackByUid, MediaTrack, PlayerEventType, THEOplayer } from 'react-native-theoplayer';
+import { findMediaTrackByUid, MediaTrack, PlayerEventType } from 'react-native-theoplayer';
 import { MenuButton } from './menubutton/MenuButton';
 import React, { PureComponent } from 'react';
 import { Platform } from 'react-native';
-import { PlayerContext } from '../util/PlayerContext';
+import { PlayerContext, UiContext } from '../util/PlayerContext';
 import { SettingsSvg } from '../button/svg/SettingsSvg';
 
 export interface VideoQualityMenuState {
@@ -46,17 +46,17 @@ export class VideoQualityMenu extends PureComponent<unknown, VideoQualityMenuSta
   }
 
   componentDidMount() {
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     player.addEventListener(PlayerEventType.MEDIA_TRACK_LIST, this.onTrackListChanged);
   }
 
   componentWillUnmount() {
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     player.removeEventListener(PlayerEventType.MEDIA_TRACK_LIST, this.onTrackListChanged);
   }
 
   private onTrackListChanged = () => {
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     this.setState({
       videoTracks: player.videoTracks,
       selectedVideoTrack: player.selectedVideoTrack,
@@ -78,7 +78,7 @@ export class VideoQualityMenu extends PureComponent<unknown, VideoQualityMenuSta
       uid = qualities[qualityIndex].uid;
       console.log('found index', uid);
     }
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     player.targetVideoQuality = uid;
     this.setState({ targetVideoTrackQuality: uid });
   };

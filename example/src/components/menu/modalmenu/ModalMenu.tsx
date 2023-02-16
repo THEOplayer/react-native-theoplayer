@@ -1,6 +1,6 @@
 import { Modal, Platform, StyleProp, Text, TextStyle, TouchableOpacity, View, ViewProps, ViewStyle } from 'react-native';
 import React from 'react';
-import { PlayerContext, PlayerWithStyle } from '../../util/PlayerContext';
+import { PlayerContext, UiContext } from '../../util/PlayerContext';
 
 export interface ModalMenuProps extends ViewProps {
   title?: string;
@@ -17,7 +17,7 @@ export const ModalMenu = (props: ModalMenuProps) => {
     <>
       {visible && (
         <PlayerContext.Consumer>
-          {(context: PlayerWithStyle) => (
+          {(context: UiContext) => (
             <Modal
               animationType="fade"
               supportedOrientations={['portrait', 'landscape']}

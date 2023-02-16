@@ -4,7 +4,7 @@ import { ActionButton } from '../../button/actionbutton/ActionButton';
 import { ModalMenu } from '../modalmenu/ModalMenu';
 import { MenuRow } from '../modalmenu/MenuRow';
 import type { MenuItem } from '../modalmenu/MenuItem';
-import { PlayerContext, PlayerWithStyle } from '../../util/PlayerContext';
+import { PlayerContext, UiContext } from '../../util/PlayerContext';
 
 export interface MenuButtonProps {
   title: string;
@@ -33,7 +33,7 @@ export const MenuButton = (props: MenuButtonProps) => {
   return (
     <>
       <PlayerContext.Consumer>
-        {(context: PlayerWithStyle) => (
+        {(context: UiContext) => (
           <ActionButton
             svg={svg}
             icon={icon}

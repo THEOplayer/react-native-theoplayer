@@ -1,7 +1,7 @@
 import { StyleProp, Text, TextStyle } from 'react-native';
 import React, { PureComponent } from 'react';
-import { DurationChangeEvent, PlayerEventType, THEOplayer, TimeUpdateEvent } from 'react-native-theoplayer';
-import { PlayerContext, PlayerWithStyle } from '../util/PlayerContext';
+import { DurationChangeEvent, PlayerEventType, TimeUpdateEvent } from 'react-native-theoplayer';
+import { PlayerContext, UiContext } from '../util/PlayerContext';
 
 export interface TimeLabelProps {
   showDuration: boolean;
@@ -27,13 +27,13 @@ export class TimeLabel extends PureComponent<TimeLabelProps, TimeLabelState> {
   }
 
   componentDidMount() {
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     player.addEventListener(PlayerEventType.TIME_UPDATE, this.onTimeUpdate);
     player.addEventListener(PlayerEventType.DURATION_CHANGE, this.onDurationChange);
   }
 
   componentWillUnmount() {
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     player.removeEventListener(PlayerEventType.TIME_UPDATE, this.onTimeUpdate);
     player.removeEventListener(PlayerEventType.DURATION_CHANGE, this.onDurationChange);
   }
@@ -61,7 +61,7 @@ export class TimeLabel extends PureComponent<TimeLabelProps, TimeLabelState> {
     if (!isFinite(duration)) {
       return (
         <PlayerContext.Consumer>
-          {(context: PlayerWithStyle) => (
+          {(context: UiContext) => (
             <Text style={[context.style.videoPlayer.timeLabel, { color: context.style.colors.text }, style]}>{LIVE_LABEL}</Text>
           )}
         </PlayerContext.Consumer>
@@ -76,9 +76,7 @@ export class TimeLabel extends PureComponent<TimeLabelProps, TimeLabelState> {
       const label = showDuration ? `${currentTimeLabel} / ${durationLabel}` : currentTimeLabel;
       return (
         <PlayerContext.Consumer>
-          {(context: PlayerWithStyle) => (
-            <Text style={[context.style.videoPlayer.timeLabel, { color: context.style.colors.text }, style]}>{label}</Text>
-          )}
+          {(context: UiContext) => <Text style={[context.style.videoPlayer.timeLabel, { color: context.style.colors.text }, style]}>{label}</Text>}
         </PlayerContext.Consumer>
       );
     } catch (ignore) {

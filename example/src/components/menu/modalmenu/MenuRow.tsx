@@ -1,7 +1,7 @@
 import { Text, TouchableOpacity } from 'react-native';
 import React from 'react';
 import type { MenuItem } from './MenuItem';
-import { PlayerContext, PlayerWithStyle } from '../../util/PlayerContext';
+import { PlayerContext, UiContext } from '../../util/PlayerContext';
 
 export interface MenuRowProps {
   onSelected?: () => void;
@@ -22,7 +22,7 @@ export const MenuRow = (props: MenuRowProps) => {
         }
       }}>
       <PlayerContext.Consumer>
-        {(context: PlayerWithStyle) => (
+        {(context: UiContext) => (
           <Text style={{ color: selected ? context.style.colors.accent : context.style.colors.primary, fontSize: 16, marginVertical: 5 }}>
             {label}
           </Text>

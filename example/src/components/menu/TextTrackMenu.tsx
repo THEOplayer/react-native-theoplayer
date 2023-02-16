@@ -1,10 +1,10 @@
 import { MenuButton } from './menubutton/MenuButton';
 import { MenuItem } from './modalmenu/MenuItem';
 import React, { PureComponent } from 'react';
-import type { TextTrack, THEOplayer } from 'react-native-theoplayer';
+import type { TextTrack } from 'react-native-theoplayer';
 import { LoadedMetadataEvent, PlayerEventType, TextTrackListEvent, TrackListEventType } from 'react-native-theoplayer';
 import { getTrackLabel } from './TrackUtils';
-import { PlayerContext } from '../util/PlayerContext';
+import { PlayerContext, UiContext } from '../util/PlayerContext';
 import { SubtitleSvg } from '../button/svg/SubtitleSvg';
 
 function stringFromTextTrackListEvent(type: TrackListEventType): string {
@@ -40,13 +40,13 @@ export class TextTrackMenu extends PureComponent<unknown, TextTrackMenuState> {
   }
 
   componentDidMount() {
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     player.addEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
     player.addEventListener(PlayerEventType.TEXT_TRACK_LIST, this.onTextTrackListEvent);
   }
 
   componentWillUnmount() {
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     player.removeEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
     player.removeEventListener(PlayerEventType.TEXT_TRACK_LIST, this.onTextTrackListEvent);
   }
@@ -58,14 +58,14 @@ export class TextTrackMenu extends PureComponent<unknown, TextTrackMenuState> {
   };
 
   private onTextTrackListEvent = (event: TextTrackListEvent) => {
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     this.setState({ textTracks: player.textTracks });
     console.log(TAG, `onTextTrackListEvent: ${stringFromTextTrackListEvent(event.subType)} track`, event.track.uid);
   };
 
   private onSelectTextTrack = (index: number) => {
     const { textTracks } = this.state;
-    const player = this.context.player as THEOplayer;
+    const player = (this.context as UiContext).player;
     const uid = textTracks && index >= 0 && index < textTracks.length ? textTracks[index].uid : undefined;
     player.selectedTextTrack = uid;
     console.log('selected', uid);
