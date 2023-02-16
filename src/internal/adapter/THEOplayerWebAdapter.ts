@@ -6,7 +6,7 @@ import { THEOplayerWebCastAdapter } from './cast/THEOplayerWebCastAdapter';
 import type * as THEOplayerWeb from 'theoplayer';
 import type { MediaTrack as NativeMediaTrack, TextTrack as NativeTextTrack } from 'theoplayer';
 import { findNativeQualitiesByUid, fromNativeMediaTrackList, fromNativeTextTrackList } from './web/TrackUtils';
-import type { ABRConfiguration, SourceDescription } from 'src/api/barrel';
+import type { ABRConfiguration, PresentationMode, SourceDescription } from 'src/api/barrel';
 import { DefaultFullscreenEvent } from './event/PlayerEvents';
 import { WebEventForwarder } from './WebEventForwarder';
 import { browserDetection } from '../../web/platform/BrowserDetection';
@@ -16,8 +16,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   private readonly _adsAdapter: THEOplayerWebAdsAdapter;
   private readonly _castAdapter: THEOplayerWebCastAdapter;
   private readonly _eventForwarder: WebEventForwarder;
-
-  private _isFullscreen = false;
+  private _presentationMode: PresentationMode = 'inline';
   private _targetVideoQuality: number | number[] | undefined = undefined;
 
   constructor(player: THEOplayerWeb.ChromelessPlayer) {
@@ -107,13 +106,16 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     return this._player.seeking;
   }
 
-  get fullscreen(): boolean {
-    return this._isFullscreen;
+  get presentationMode(): PresentationMode {
+    return this._presentationMode;
   }
 
-  set fullscreen(fullscreen: boolean) {
-    const appContainer = document.getElementById('app');
-    if (fullscreen) {
+  set presentationMode(presentationMode: PresentationMode) {
+    this._presentationMode = presentationMode
+    
+    // TODO implement explicit picture-in-picture and inline transitions
+    if (presentationMode == 'fullscreen') {
+      const appContainer = document.getElementById('app');
       this.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_WILL_PRESENT));
       if (browserDetection.IS_IOS_ && browserDetection.IS_SAFARI_) {
         // requestFullscreen isn't supported only on iOS Safari: https://caniuse.com/?search=requestFullscreen
@@ -140,7 +142,6 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
         document.exitFullscreen().then();
       }
     }
-    this._isFullscreen = fullscreen;
   }
 
   get audioTracks(): MediaTrack[] {
