@@ -7,6 +7,7 @@ import type { CastAPI } from '../cast/CastAPI';
 import type { MediaTrack } from '../track/MediaTrack';
 import type { TextTrack } from '../track/TextTrack';
 import type { TimeRange } from '../timeranges/TimeRange';
+import type { TextTrackStyle } from '../track/TextTrackStyle';
 
 export type PreloadType = 'none' | 'metadata' | 'auto' | '';
 
@@ -120,6 +121,14 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
    * Used to set the current selected text track by passing its `uid`, or `undefined` to select none.
    */
   selectedTextTrack: number | undefined;
+
+  /**
+   * The text track style API.
+   *
+   * @remarks
+   * Only available for Web.
+   */
+  readonly textTrackStyle: TextTrackStyle;
 
   /**
    * Used to set the current selected video track by passing its `uid`, or `undefined` to select none.
