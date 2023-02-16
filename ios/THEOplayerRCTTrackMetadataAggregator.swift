@@ -62,7 +62,7 @@ class THEOplayerRCTTrackMetadataAggregator {
         entry[PROP_UID] = textTrack.uid
         entry[PROP_KIND] = textTrack.kind
         entry[PROP_LANGUAGE] = textTrack.language
-        entry[PROP_MODE] = String(describing: textTrack.mode)
+        entry[PROP_MODE] = textTrack.mode._rawValue
         entry[PROP_LABEL] = textTrack.label
         entry[PROP_TYPE] = textTrack.type
         entry[PROP_SRC] = textTrack.src
