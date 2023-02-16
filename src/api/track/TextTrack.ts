@@ -5,7 +5,7 @@ export type TextTrackType = 'srt' | 'ttml' | 'webvtt' | 'cea608' | '';
 
 export type TextTrackKind = 'subtitles' | 'captions' | 'descriptions' | 'chapters' | 'metadata' | 'thumbnails';
 
-export type TextTrackMode = 'disabled' | 'showing';
+export type TextTrackMode = 'disabled' | 'showing' | 'hidden';
 
 export interface TextTrack extends Track {
   /**
