@@ -122,7 +122,11 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                 if DEBUG_PLAYER_API { print("[NATIVE] Showing textTrack \(uidValue) on TheoPlayer") }
                 for i in 0...textTracks.count-1 {
                     var textTrack: TextTrack = textTracks.get(i)
-                    textTrack.mode = (textTrack.uid == uidValue) ? TextTrackMode.showing : TextTrackMode.disabled
+                    if textTrack.uid == uidValue {
+                        textTrack.mode = TextTrackMode.showing
+                    } else if textTrack.mode == TextTrackMode.showing {
+                        textTrack.mode = TextTrackMode.disabled
+                    } 
                 }
             }
         }
