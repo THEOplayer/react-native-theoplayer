@@ -10,6 +10,7 @@ import type {
   MediaTrackListEvent,
   NativeHandleType,
   PlayerEventMap,
+  PresentationMode,
   ProgressEvent,
   RateChangeEvent,
   SourceDescription,
@@ -50,7 +51,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   private _paused = false;
   private _seekable: TimeRange[] = [];
   private _buffered: TimeRange[] = [];
-  private _fullscreen = false;
+  private _presentationMode: PresentationMode = 'inline';
   private _muted = false;
   private _seeking = false;
   private _volume = 1;
@@ -251,14 +252,13 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     return this._duration;
   }
 
-  get fullscreen(): boolean {
-    // TODO: rename to presentationState?
-    return this._fullscreen;
+  get presentationMode(): PresentationMode {
+    return this._presentationMode;
   }
 
-  set fullscreen(fullscreen: boolean) {
-    // TODO: rename to presentationState?
-    NativeModules.PlayerModule.setFullscreen(this._view.nativeHandle, fullscreen);
+  set presentationMode(presentationMode: PresentationMode) {
+    this._presentationMode = presentationMode;
+    NativeModules.PlayerModule.setPresentationMode(this._view.nativeHandle, presentationMode);
   }
 
   get muted(): boolean {
