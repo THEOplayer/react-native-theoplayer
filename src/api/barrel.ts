@@ -12,3 +12,4 @@ export * from './track/barrel';
 export * from './utils/barrel';
 export * from './THEOplayerView';
 export * from './player/barrel';
+export * from './presentation/barrel';
