@@ -8,16 +8,17 @@ import type { MediaTrack as NativeMediaTrack, TextTrack as NativeTextTrack } fro
 import { findNativeQualitiesByUid, fromNativeMediaTrackList, fromNativeTextTrackList } from './web/TrackUtils';
 import type { ABRConfiguration, SourceDescription } from 'src/api/barrel';
 import { WebEventForwarder } from './WebEventForwarder';
-import { browserDetection } from '../../web/platform/BrowserDetection';
 import type { PresentationMode } from 'src/api/presentation/PresentationMode';
+import { DefaultPresentationModeChangeEvent } from './event/PlayerEvents';
+import { THEOplayerWebPresentationModeManager } from './web/THEOplayerWebPresentationModeManager';
 
 export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayer {
   private readonly _player: THEOplayerWeb.ChromelessPlayer;
   private readonly _adsAdapter: THEOplayerWebAdsAdapter;
   private readonly _castAdapter: THEOplayerWebCastAdapter;
   private readonly _eventForwarder: WebEventForwarder;
-  private _presentationMode: PresentationMode = 'inline';
   private _targetVideoQuality: number | number[] | undefined = undefined;
+  private _presentationModeManager: THEOplayerWebPresentationModeManager;
 
   constructor(player: THEOplayerWeb.ChromelessPlayer) {
     super();
@@ -25,6 +26,8 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     this._adsAdapter = new THEOplayerWebAdsAdapter(this._player);
     this._castAdapter = new THEOplayerWebCastAdapter(this._player);
     this._eventForwarder = new WebEventForwarder(this._player, this);
+    this._presentationModeManager = new THEOplayerWebPresentationModeManager(this._player);
+
   }
 
   get abr(): ABRConfiguration | undefined {
@@ -107,41 +110,11 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   }
 
   get presentationMode(): PresentationMode {
-    return this._presentationMode;
+    return this._presentationModeManager.presentationMode
   }
 
   set presentationMode(presentationMode: PresentationMode) {
-    this._presentationMode = presentationMode
-    
-    // TODO implement explicit picture-in-picture and inline transitions
-    if (presentationMode == 'fullscreen') {
-      const appContainer = document.getElementById('app');
-      //this.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_WILL_PRESENT));
-      if (browserDetection.IS_IOS_ && browserDetection.IS_SAFARI_) {
-        // requestFullscreen isn't supported only on iOS Safari: https://caniuse.com/?search=requestFullscreen
-        // The workaround is using webkitEnterFullscreen which needs to be called on the video element
-        const elements = this._player.element.children;
-        for (const element of Array.from(elements)) {
-          if (element.tagName === 'VIDEO' && element.attributes.getNamedItem('src') !== null) {
-            (element as HTMLVideoElement).webkitEnterFullscreen?.();
-          }
-        }
-      } else {
-        appContainer?.requestFullscreen().then();
-      }
-    } else {
-      //this.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_WILL_DISMISS));
-      if (browserDetection.IS_IOS_ && browserDetection.IS_SAFARI_) {
-        const elements = this._player.element.children;
-        for (const element of Array.from(elements)) {
-          if (element.tagName === 'VIDEO' && element.attributes.getNamedItem('src') !== null) {
-            (element as HTMLVideoElement).webkitExitFullscreen?.();
-          }
-        }
-      } else {
-        document.exitFullscreen().then();
-      }
-    }
+    this._presentationModeManager.presentationMode = presentationMode;
   }
 
   get audioTracks(): MediaTrack[] {
