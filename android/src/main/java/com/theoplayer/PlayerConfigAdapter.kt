@@ -9,6 +9,7 @@ import com.theoplayer.android.api.ads.AdPreloadType
 import com.theoplayer.android.api.ads.GoogleImaConfiguration
 import com.theoplayer.android.api.cast.CastStrategy
 import com.google.android.gms.cast.framework.CastContext
+import com.theoplayer.android.api.pip.PipConfiguration
 
 private const val TAG = "PlayerConfigAdapter"
 private const val PROP_ADS_CONFIGURATION = "ads"
@@ -23,6 +24,7 @@ private const val PROP_CAST_CONFIGURATION = "cast"
 private const val PROP_CAST_STRATEGY = "strategy"
 private const val PROP_CHROMECAST_CONFIG = "chromecast"
 private const val PROP_CHROMECAST_APPID = "appID"
+private const val PROP_PIP_CONFIG = "pip"
 
 object PlayerConfigAdapter {
 
@@ -45,6 +47,7 @@ object PlayerConfigAdapter {
         configBuilder.chromeless(configProps.getBoolean(PROP_CHROMELESS))
       }
       applyCastConfigurationFromProps(configBuilder, configProps.getMap(PROP_CAST_CONFIGURATION))
+      configBuilder.pipConfiguration(PipConfiguration.Builder().build())
     }
     return configBuilder.build()
   }
