@@ -1,1 +1,1 @@
-export * from './PiPConfiguration';
+export * from './PresentationMode';

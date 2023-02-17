@@ -35,7 +35,7 @@ import { Image, Platform, Text, TouchableOpacity, View } from 'react-native';
 import { SeekBar } from '../seekbar/SeekBar';
 import styles from './VideoPlayerUI.style';
 import { DelayedActivityIndicator } from '../delayedactivityindicator/DelayedActivityIndicator';
-import { AirplayIcon, FullScreenExitIcon, FullScreenIcon, MutedIcon, PlayButton, UnMutedIcon } from '../../res/images';
+import { AirplayIcon, FullScreenExitIcon, FullScreenIcon, PipExitIcon, PipIcon, MutedIcon, PlayButton, UnMutedIcon } from '../../res/images';
 import { ActionButton } from '../actionbutton/ActionButton';
 import { TimeLabel } from '../timelabel/TimeLabel';
 import {
@@ -67,6 +67,7 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
     seekable: [],
     paused: true,
     fullscreen: false,
+    pip: false,
     showLoadingIndicator: false,
     textTracks: [],
     videoTracks: [],
@@ -345,6 +346,14 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
     this.setState({ fullscreen: !wasFullscreen });
   };
 
+  private togglePip = () => {
+    const { player } = this.props;
+    console.log(TAG, 'toggle pip');
+    const wasPip = player.presentationMode == 'picture-in-picture';
+    player.presentationMode = wasPip ? 'inline' : 'picture-in-picture';
+    this.setState({ pip: !wasPip });
+  };
+
   private toggleMuted = () => {
     const { player } = this.props;
     const newMuted = !player.muted;
@@ -418,6 +427,7 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
       airplayIsConnected,
       chromecastIsConnected,
       fullscreen,
+      pip,
       showLoadingIndicator,
       duration,
       seekable,
@@ -515,9 +525,14 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
             {/*Source menu */}
             <SourceMenu sources={sources} selectedSourceIndex={srcIndex} onSelectSource={this.onSelectSource} />
 
+              {/*Pip*/}
+            {!Platform.isTV && (
+              <ActionButton icon={pip ? PipExitIcon : PipIcon} onPress={this.toggleFullScreen} iconStyle={styles.menuIcon} />
+            )}
+
             {/*Fullscreen*/}
             {!Platform.isTV && (
-              <ActionButton icon={fullscreen ? FullScreenExitIcon : FullScreenIcon} onPress={this.toggleFullScreen} iconStyle={styles.menuIcon} />
+              <ActionButton icon={fullscreen ? FullScreenExitIcon : FullScreenIcon} onPress={this.togglePip} iconStyle={styles.menuIcon} />
             )}
           </View>
         </View>

@@ -32,6 +32,7 @@ export interface VideoPlayerUIState {
   currentTime: number;
   paused: boolean;
   fullscreen: boolean;
+  pip: boolean;
   showLoadingIndicator: boolean;
   textTracks: TextTrack[];
   videoTracks: MediaTrack[];
