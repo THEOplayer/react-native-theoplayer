@@ -9,7 +9,6 @@ import { findNativeQualitiesByUid, fromNativeMediaTrackList, fromNativeTextTrack
 import type { ABRConfiguration, SourceDescription } from 'src/api/barrel';
 import { WebEventForwarder } from './WebEventForwarder';
 import type { PresentationMode } from 'src/api/presentation/PresentationMode';
-import { DefaultPresentationModeChangeEvent } from './event/PlayerEvents';
 import { THEOplayerWebPresentationModeManager } from './web/THEOplayerWebPresentationModeManager';
 
 export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayer {
