@@ -45,7 +45,7 @@ export interface MediaTrack extends Track {
   readonly language: string;
 
   /**
-   * The uid of the active quality of the media track, i.e. the quality that is currently being played.
+   * The active quality of the media track, i.e. the quality that is currently being played.
    */
   readonly activeQuality: Quality | undefined;
 
