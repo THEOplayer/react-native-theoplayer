@@ -1,4 +1,4 @@
-import type { MediaTrack, PlayerError, TextTrack, TimeRange } from 'react-native-theoplayer';
+import type { MediaTrack, PlayerError, PresentationMode, TextTrack, TimeRange } from 'react-native-theoplayer';
 
 export interface NativeErrorEvent {
   error: PlayerError;
@@ -45,6 +45,13 @@ export interface NativeReadyStateChangeEvent {
    * The player's new ready state.
    */
   readonly readyState: number;
+}
+
+export interface NativePresentationModeChangeEvent {
+  /**
+   * The player's new presentation mode.
+   */
+  readonly presentationMode: PresentationMode;
 }
 
 export interface NativeProgressEvent {

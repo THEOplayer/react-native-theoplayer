@@ -2,13 +2,13 @@ import type { Event } from '../event/Event';
 import type {
   DurationChangeEvent,
   ErrorEvent,
-  FullscreenEvent,
   LoadedMetadataEvent,
   ProgressEvent,
   RateChangeEvent,
   ReadyStateChangeEvent,
   SegmentNotFoundEvent,
   TimeUpdateEvent,
+  PresentationModeChangeEvent,
   VolumeChangeEvent,
 } from '../event/PlayerEvent';
 import type { MediaTrackEvent, MediaTrackListEvent, TextTrackEvent, TextTrackListEvent } from '../event/TrackEvent';
@@ -19,7 +19,6 @@ export enum PlayerEventType {
   PLAY = 'play',
   CANPLAY = 'canplay',
   PLAYING = 'playing',
-  FULLSCREEN = 'fullscreen',
   SOURCE_CHANGE = 'sourcechange',
   LOAD_START = 'loadstart',
   LOADED_METADATA = 'loadedmetadata',
@@ -43,6 +42,7 @@ export enum PlayerEventType {
   CAST_EVENT = 'castevent',
   VOLUME_CHANGE = 'volumechange',
   WAITING = 'waiting',
+  PRESENTATIONMODE_CHANGE = 'presentationmodechange'
 }
 
 /**
@@ -66,9 +66,9 @@ export interface PlayerEventMap {
   [PlayerEventType.PLAYING]: Event<PlayerEventType.PLAYING>;
 
   /**
-   * Fired when the fullscreen state of the player changes.
+   * Fired when the presentationMode of the player changes.
    */
-  [PlayerEventType.FULLSCREEN]: FullscreenEvent;
+  [PlayerEventType.PRESENTATIONMODE_CHANGE]: PresentationModeChangeEvent;
 
   /**
    * Fired when the player's source changes.

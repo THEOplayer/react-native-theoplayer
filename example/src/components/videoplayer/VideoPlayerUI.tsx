@@ -527,12 +527,12 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
 
               {/*Pip*/}
             {!Platform.isTV && (
-              <ActionButton icon={pip ? PipExitIcon : PipIcon} onPress={this.toggleFullScreen} iconStyle={styles.menuIcon} />
+              <ActionButton icon={pip ? PipExitIcon : PipIcon} onPress={this.togglePip} iconStyle={styles.menuIcon} />
             )}
 
             {/*Fullscreen*/}
             {!Platform.isTV && (
-              <ActionButton icon={fullscreen ? FullScreenExitIcon : FullScreenIcon} onPress={this.togglePip} iconStyle={styles.menuIcon} />
+              <ActionButton icon={fullscreen ? FullScreenExitIcon : FullScreenIcon} onPress={this.toggleFullScreen} iconStyle={styles.menuIcon} />
             )}
           </View>
         </View>

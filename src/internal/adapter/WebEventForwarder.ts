@@ -18,7 +18,6 @@ import type {
 import type { AdEvent, MediaTrack, TextTrack, TimeRange } from 'react-native-theoplayer';
 import {
   AdEventType,
-  FullscreenActionType,
   MediaTrackEventType,
   MediaTrackType,
   PlayerEventType,
@@ -31,7 +30,7 @@ import {
   DefaultAdEvent,
   DefaultDurationChangeEvent,
   DefaultErrorEvent,
-  DefaultFullscreenEvent,
+  DefaultPresentationModeChangeEvent,
   DefaultLoadedMetadataEvent,
   DefaultMediaTrackEvent,
   DefaultMediaTrackListEvent,
@@ -232,11 +231,7 @@ export class WebEventForwarder {
   };
 
   private readonly onPresentationModeChange = (event: PresentationModeChangeEvent) => {
-    if (event.presentationMode === 'fullscreen') {
-      this._facade.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_DID_PRESENT));
-    } else if (event.presentationMode === 'inline') {
-      this._facade.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_DID_DISMISS));
-    }
+    this._facade.dispatchEvent(new DefaultPresentationModeChangeEvent(event.presentationMode));
   };
 
   private readonly onAddTextTrack = (event: AddTrackEvent) => {

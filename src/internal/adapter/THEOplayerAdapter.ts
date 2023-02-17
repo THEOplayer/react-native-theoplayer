@@ -11,6 +11,7 @@ import type {
   NativeHandleType,
   PlayerEventMap,
   PresentationMode,
+  PresentationModeChangeEvent,
   ProgressEvent,
   RateChangeEvent,
   SourceDescription,
@@ -88,6 +89,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this.addEventListener(PlayerEventType.TEXT_TRACK_LIST, this.onTextTrackList);
     this.addEventListener(PlayerEventType.MEDIA_TRACK, this.onMediaTrack);
     this.addEventListener(PlayerEventType.MEDIA_TRACK_LIST, this.onMediaTrackList);
+    this.addEventListener(PlayerEventType.PRESENTATIONMODE_CHANGE, this.onPresentationModeChange);
   }
 
   private onSourceChange = () => {
@@ -104,6 +106,10 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   private onPlaying = () => {
     this._paused = false;
+  };
+
+  private onPresentationModeChange = (event: PresentationModeChangeEvent) => {
+    this._presentationMode = event.presentationMode;
   };
 
   private onTimeupdate = (event: TimeUpdateEvent) => {
