@@ -5,6 +5,47 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Added `onPlayerReady` callback on `THEOplayerView` to pass a `THEOplayer` instance once it is ready for access. More info on the [migration documentation](./doc/migrating_v2.md) page.
+- Added `canplay` event, which is dispatched when the player can start play-out.
+- Added `waiting` event, which is dispatched when the player has stopped play-out because of a temporary lack of data.
+- Added `nativeHandle` property on `THEOplayer` to access the native player instance on web, and view id on mobile.
+- Added `entercue` and `exitcue` events for text tracks, which are dispatched when a cue becomes (in)active.
+- Added `ratechange` event, which is dispatched when the player's playback rate was changed.
+- Added `seekable` property on `THEOplayer`, containing the time ranges of the media the player is able to seek to.
+- Added `buffered` property on `THEOplayer`, containing the time ranges of the media the player has currently buffered.
+- Added `buffered` property to the payload of the `onprogress` event.
+- Added `duration`, `seeking`, `preload`, `textTrack`, `videoTracks` and `audioTracks` properties to `THEOplayer`.
+- Added `libraryLocation` property to `PlayerConfiguration` to allow passing custom location for web workers.
+- Added `mutedAutoplay` property to `PlayerConfiguration` to allow autoplay on web browsers with different autoplay policies.
+- Added mode `hidden` as a value for a text track's `TextTrackMode` property, which is typically used for metadata tracks.
+- Added `TextTrackStyle` API to support text track styling. This feature is currently supported on web only.
+
+### Changed
+
+- Moved all player properties such as `paused`, `muted` and `volume`, from  `THEOplayerView` component to `THEOplayer` instance. More info on the [migration documentation](./doc/migrating_v2.md) page.
+- Removed `onEventName` callback methods from `THEOplayerView` component in favor of `THEOplayer` event listener's interface. More info on the [migration documentation](./doc/migrating_v2.md) page.
+- Changed documentation sample code to reflect API changes.
+- Exposed the `activeQuality` of a `MediaTrack` instance as a `Quality` object instead of a
+
+### Removed
+
+- Removed `seek` method on `THEOplayer`. It is replaced with a `currentTime` setter.
+
+### Fixed
+
+- Fixed an issue on Android where an exception is thrown when an empty source description would be passed.
+- Fixed the Webpack configuration in the sample application to copy web workers to `libraryLocation`.
+- Fixed an issue on web where in case multiple player instances are created, the players would overlap.
+- Fixed an issue on iOS Safari where switching to fullscreen presentation would not work.
+- Fixed an issue on Android where passing an invalid empty source description would result in a crash.
+- Fixed an issue on Android where the `framerate` property of a `VideoQuality` instance would not be filled in.
+- Fixed an issue on iOS where the `TextTrackMode` property of a text track would be incorrect.
+- Fixed an issue on iOS where after enabling/disabling a text track, metadata tracks would be set to `disabled` as well.
+
 ## [1.8.0]
 
 ### Added
