@@ -107,6 +107,9 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
     func setPresentationMode(_ node: NSNumber, presentationMode: String) -> Void {
         DispatchQueue.main.async {
             let newPresentationMode: PresentationMode = THEOplayerRCTTypeUtils.presentationModeFromString(presentationMode)
+            if newPresentationMode == .fullscreen {
+                print(ERROR_MESSAGE_PLAYER_FULLSCREEN_UNSUPPORTED_FEATURE)
+            }
             if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
                let player = theView.player {
                 if player.presentationMode != newPresentationMode {
