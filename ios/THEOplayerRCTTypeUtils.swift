@@ -17,7 +17,7 @@ class THEOplayerRCTTypeUtils {
         return value
     }
     
-    class func preloadType(_ type: String) -> Preload {
+    class func preloadTypeFromString(_ type: String) -> Preload {
         switch type {
         case "none":
             return Preload.none
@@ -29,6 +29,32 @@ class THEOplayerRCTTypeUtils {
 #endif
         default:
             return Preload.none
+        }
+    }
+    
+    class func presentationModeFromString(_ mode: String) -> PresentationMode {
+        switch mode {
+        case "inline":
+            return PresentationMode.inline
+        case "picture-in-picture":
+            return PresentationMode.pictureInPicture
+        case "fullscreen":
+            return PresentationMode.fullscreen
+        default:
+            return PresentationMode.inline
+        }
+    }
+    
+    class func presentationModeToString(_ mode: PresentationMode) -> String {
+        switch mode {
+        case PresentationMode.inline:
+            return "inline"
+        case PresentationMode.pictureInPicture:
+            return "picture-in-picture"
+        case PresentationMode.fullscreen:
+            return "fullscreen"
+        default:
+            return "inline"
         }
     }
 }

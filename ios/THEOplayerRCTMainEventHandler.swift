@@ -27,10 +27,7 @@ class THEOplayerRCTMainEventHandler {
     var onNativeRateChange: RCTDirectEventBlock?
     var onNativeWaiting: RCTDirectEventBlock?
     var onNativeCanPlay: RCTDirectEventBlock?
-    var onNativeFullscreenPlayerWillPresent: RCTDirectEventBlock?
-    var onNativeFullscreenPlayerDidPresent: RCTDirectEventBlock?
-    var onNativeFullscreenPlayerWillDismiss: RCTDirectEventBlock?
-    var onNativeFullscreenPlayerDidDismiss: RCTDirectEventBlock?
+    var onNativePresentationModeChange: RCTDirectEventBlock?
     
     // MARK: player Listeners
     private var playListener: EventListener?
@@ -296,27 +293,13 @@ class THEOplayerRCTMainEventHandler {
         
         // PRESENTATION_MODE_CHANGE
         self.presentationModeChangeListener = player.addEventListener(type: PlayerEventTypes.PRESENTATION_MODE_CHANGE) { [weak self] event in
-            if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received PRESENTATION_MODE_CHANGE event from THEOplayer") }
-            if event.presentationMode != self?.currentPresentationMode {
-                // entering fullscreen
-                if event.presentationMode == .fullscreen ,
-                   let forwardedFullscreenPlayerWillPresentEvent = self?.onNativeFullscreenPlayerWillPresent {
-                    forwardedFullscreenPlayerWillPresentEvent([:])
-                }
-                if event.presentationMode == .fullscreen,
-                   let forwardedFullscreenPlayerDidPresentEvent = self?.onNativeFullscreenPlayerDidPresent {
-                    forwardedFullscreenPlayerDidPresentEvent([:])
-                }
-                // exiting fullscreen
-                if self?.currentPresentationMode == .fullscreen,
-                   let forwardedFullscreenPlayerWillDismissEvent = self?.onNativeFullscreenPlayerWillDismiss {
-                    forwardedFullscreenPlayerWillDismissEvent([:])
-                }
-                if self?.currentPresentationMode == .fullscreen,
-                   let forwardedFullscreenPlayerDidDismissEvent = self?.onNativeFullscreenPlayerDidDismiss {
-                    forwardedFullscreenPlayerDidDismissEvent([:])
-                }
-                self?.currentPresentationMode = event.presentationMode
+            if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received PRESENTATION_MODE_CHANGE event from THEOplayer (to \(event.presentationMode._rawValue))") }
+            if let forwardedPresentationModeChangeEvent = self?.onNativePresentationModeChange {
+                forwardedPresentationModeChangeEvent(
+                    [
+                        "presentationMode": THEOplayerRCTTypeUtils.presentationModeToString(event.presentationMode)
+                    ]
+                )
             }
         }
         if DEBUG_EVENTHANDLER { print("[NATIVE] PresentationModeChange listener attached to THEOplayer") }

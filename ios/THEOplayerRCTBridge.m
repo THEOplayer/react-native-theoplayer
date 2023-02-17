@@ -44,6 +44,7 @@ RCT_EXPORT_VIEW_PROPERTY(onNativeTextTrackEvent, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeMediaTrackListEvent, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeMediaTrackEvent, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativePlayerReady, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativePresentationModeChange, RCTDirectEventBlock);
 
 RCT_EXPORT_VIEW_PROPERTY(onNativeAdEvent, RCTDirectEventBlock);
 
@@ -79,8 +80,8 @@ RCT_EXTERN_METHOD(setVolume:(nonnull NSNumber *)node
 RCT_EXTERN_METHOD(setPlaybackRate:(nonnull NSNumber *)node
                   playbackRate:(nonnull NSNumber *)playbackRate)
 
-RCT_EXTERN_METHOD(setFullscreen:(nonnull NSNumber *)node
-                  fullscreen:(BOOL)fullscreen)
+RCT_EXTERN_METHOD(setPresentationMode:(nonnull NSNumber *)node
+                  presentationMode:(nonnull NSString *)presentationMode)
 
 RCT_EXTERN_METHOD(setSelectedTextTrack:(nonnull NSNumber *)node
                   uid:(nonnull NSNumber *)uid)
