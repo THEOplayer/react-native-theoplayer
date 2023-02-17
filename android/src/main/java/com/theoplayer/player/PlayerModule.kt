@@ -4,6 +4,7 @@ import com.facebook.react.bridge.*
 import com.theoplayer.*
 import com.theoplayer.abr.ABRConfigurationAdapter
 import com.theoplayer.android.api.player.PreloadType
+import com.theoplayer.android.api.player.PresentationMode
 import com.theoplayer.android.api.player.track.mediatrack.MediaTrack
 import com.theoplayer.android.api.player.track.mediatrack.quality.VideoQuality
 import com.theoplayer.android.api.player.track.texttrack.TextTrackMode
@@ -78,13 +79,6 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
   }
 
   @ReactMethod
-  fun setFullscreen(tag: Int, fullscreen: Boolean) {
-    viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      view?.setFullscreen(fullscreen)
-    }
-  }
-
-  @ReactMethod
   fun setSelectedTextTrack(tag: Int, uid: Int) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.player?.let {
@@ -147,6 +141,17 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
         "metadata" -> PreloadType.METADATA
         else -> PreloadType.NONE
       }
+    }
+  }
+
+  @ReactMethod
+  fun setPresentationMode(tag: Int, type: String?) {
+    viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
+      view?.presentationManager?.setPresentation(when (type) {
+        "picture-in-picture" -> PresentationMode.PICTURE_IN_PICTURE
+        "fullscreen" -> PresentationMode.FULLSCREEN
+        else -> PresentationMode.INLINE
+      })
     }
   }
 }
