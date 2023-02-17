@@ -29,6 +29,7 @@ import {
   TextTrackListEvent,
   TimeUpdateEvent,
   TrackListEventType,
+  PresentationModeChangeEvent,
 } from 'react-native-theoplayer';
 
 import { Image, Platform, Text, TouchableOpacity, View } from 'react-native';
@@ -94,6 +95,7 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
     player.addEventListener(PlayerEventType.SOURCE_CHANGE, console.log);
     player.addEventListener(PlayerEventType.LOADED_DATA, console.log);
     player.addEventListener(PlayerEventType.READYSTATE_CHANGE, this.onReadyStateChange);
+    player.addEventListener(PlayerEventType.PRESENTATIONMODE_CHANGE, this.onPresentationModeChange);
     player.addEventListener(PlayerEventType.PLAY, this.onPlay);
     player.addEventListener(PlayerEventType.PLAYING, this.onPlaying);
     player.addEventListener(PlayerEventType.SEEKING, console.log);
@@ -120,6 +122,17 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
   private onReadyStateChange = (event: ReadyStateChangeEvent) => {
     console.log(event);
     this.maybeShowLoadingIndicator(event.readyState < 3);
+  };
+
+  private onPresentationModeChange = (event: PresentationModeChangeEvent) => {
+    console.log(event);
+    if (event.presentationMode === 'fullscreen') {
+      this.setState({ pip: false, fullscreen: true });
+    } else if (event.presentationMode === 'picture-in-picture') {
+      this.setState({ pip: true, fullscreen: false });
+    } else { // 'inline'
+      this.setState({ pip: false, fullscreen: false });
+    }
   };
 
   private onRateChange = (event: RateChangeEvent) => {
@@ -343,7 +356,7 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
     console.log(TAG, 'toggle fullscreen');
     const wasFullscreen = player.presentationMode == 'fullscreen';
     player.presentationMode = wasFullscreen ? 'inline' : 'fullscreen';
-    this.setState({ fullscreen: !wasFullscreen });
+    this.setState({ fullscreen: !wasFullscreen, pip: false });
   };
 
   private togglePip = () => {
@@ -351,7 +364,7 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
     console.log(TAG, 'toggle pip');
     const wasPip = player.presentationMode == 'picture-in-picture';
     player.presentationMode = wasPip ? 'inline' : 'picture-in-picture';
-    this.setState({ pip: !wasPip });
+    this.setState({ pip: !wasPip, fullscreen: false });
   };
 
   private toggleMuted = () => {
