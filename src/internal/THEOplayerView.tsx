@@ -12,7 +12,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import type { PlayerConfiguration, PlayerError, THEOplayerViewProps } from 'react-native-theoplayer';
-import { CastEventType, FullscreenActionType, PlayerEventType } from 'react-native-theoplayer';
+import { CastEventType, PlayerEventType } from 'react-native-theoplayer';
 
 import styles from './THEOplayerView.style';
 import { decodeNanInf } from './utils/TypeUtils';
@@ -25,7 +25,7 @@ import {
   DefaultDurationChangeEvent,
   DefaultRateChangeEvent,
   DefaultErrorEvent,
-  DefaultFullscreenEvent,
+  DefaultPresentationModeChangeEvent,
   DefaultLoadedMetadataEvent,
   DefaultMediaTrackEvent,
   DefaultMediaTrackListEvent,
@@ -53,6 +53,7 @@ import type {
   NativeReadyStateChangeEvent,
   NativeSegmentNotFoundEvent,
   NativeTimeUpdateEvent,
+  NativePresentationModeChangeEvent,
 } from './adapter/event/native/NativePlayerEvent';
 import type { NativeAdEvent } from './adapter/event/native/NativeAdEvent';
 import { THEOplayerAdapter } from './adapter/THEOplayerAdapter';
@@ -87,10 +88,7 @@ interface THEOplayerRCTViewProps {
   onNativeMediaTrackEvent: (event: NativeSyntheticEvent<NativeMediaTrackEvent>) => void;
   onNativeAdEvent: (event: NativeSyntheticEvent<NativeAdEvent>) => void;
   onNativeCastEvent: (event: NativeSyntheticEvent<NativeCastEvent>) => void;
-  onNativeFullscreenPlayerWillPresent?: () => void;
-  onNativeFullscreenPlayerDidPresent?: () => void;
-  onNativeFullscreenPlayerWillDismiss?: () => void;
-  onNativeFullscreenPlayerDidDismiss?: () => void;
+  onNativePresentationModeChange:  (event: NativeSyntheticEvent<NativePresentationModeChangeEvent>) => void;
 }
 
 interface THEOplayerRCTViewState {
@@ -275,20 +273,8 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
     }
   };
 
-  private _onFullscreenPlayerWillPresent = () => {
-    this._facade.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_WILL_PRESENT));
-  };
-
-  private _onFullscreenPlayerDidPresent = () => {
-    this._facade.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_DID_PRESENT));
-  };
-
-  private _onFullscreenPlayerWillDismiss = () => {
-    this._facade.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_WILL_DISMISS));
-  };
-
-  private _onFullscreenPlayerDidDismiss = () => {
-    this._facade.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_DID_DISMISS));
+  private _onPresentationModeChange = (event: NativeSyntheticEvent<NativePresentationModeChangeEvent>) => {
+    this._facade.dispatchEvent(new DefaultPresentationModeChangeEvent(event.nativeEvent.presentationMode));
   };
 
   public render(): JSX.Element {
@@ -325,10 +311,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
           onNativeMediaTrackEvent={this._onMediaTrackEvent}
           onNativeAdEvent={this._onAdEvent}
           onNativeCastEvent={this._onCastEvent}
-          onNativeFullscreenPlayerWillPresent={this._onFullscreenPlayerWillPresent}
-          onNativeFullscreenPlayerDidPresent={this._onFullscreenPlayerDidPresent}
-          onNativeFullscreenPlayerWillDismiss={this._onFullscreenPlayerWillDismiss}
-          onNativeFullscreenPlayerDidDismiss={this._onFullscreenPlayerDidDismiss}
+          onNativePresentationModeChange={this._onPresentationModeChange}
         />
       </View>
     );

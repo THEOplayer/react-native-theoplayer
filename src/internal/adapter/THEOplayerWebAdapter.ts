@@ -1,15 +1,15 @@
 import { DefaultEventDispatcher } from './event/DefaultEventDispatcher';
 import type { AdsAPI, CastAPI, MediaTrack, NativeHandleType, PlayerEventMap, PreloadType, TextTrackStyle, THEOplayer } from 'react-native-theoplayer';
-import { FullscreenActionType, TextTrack } from 'react-native-theoplayer';
+import type { TextTrack } from 'react-native-theoplayer';
 import { THEOplayerWebAdsAdapter } from './ads/THEOplayerWebAdsAdapter';
 import { THEOplayerWebCastAdapter } from './cast/THEOplayerWebCastAdapter';
 import type * as THEOplayerWeb from 'theoplayer';
 import type { MediaTrack as NativeMediaTrack, TextTrack as NativeTextTrack } from 'theoplayer';
 import { findNativeQualitiesByUid, fromNativeMediaTrackList, fromNativeTextTrackList } from './web/TrackUtils';
-import type { ABRConfiguration, PresentationMode, SourceDescription } from 'src/api/barrel';
-import { DefaultFullscreenEvent } from './event/PlayerEvents';
+import type { ABRConfiguration, SourceDescription } from 'src/api/barrel';
 import { WebEventForwarder } from './WebEventForwarder';
 import { browserDetection } from '../../web/platform/BrowserDetection';
+import type { PresentationMode } from 'src/api/presentation/PresentationMode';
 
 export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayer {
   private readonly _player: THEOplayerWeb.ChromelessPlayer;
@@ -116,7 +116,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     // TODO implement explicit picture-in-picture and inline transitions
     if (presentationMode == 'fullscreen') {
       const appContainer = document.getElementById('app');
-      this.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_WILL_PRESENT));
+      //this.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_WILL_PRESENT));
       if (browserDetection.IS_IOS_ && browserDetection.IS_SAFARI_) {
         // requestFullscreen isn't supported only on iOS Safari: https://caniuse.com/?search=requestFullscreen
         // The workaround is using webkitEnterFullscreen which needs to be called on the video element
@@ -130,7 +130,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
         appContainer?.requestFullscreen().then();
       }
     } else {
-      this.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_WILL_DISMISS));
+      //this.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_WILL_DISMISS));
       if (browserDetection.IS_IOS_ && browserDetection.IS_SAFARI_) {
         const elements = this._player.element.children;
         for (const element of Array.from(elements)) {
