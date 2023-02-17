@@ -340,9 +340,9 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
   private toggleFullScreen = () => {
     const { player } = this.props;
     console.log(TAG, 'toggle fullscreen');
-    const newFullscreen = !player.fullscreen;
-    player.fullscreen = newFullscreen;
-    this.setState({ fullscreen: newFullscreen });
+    const wasFullscreen = player.presentationMode == 'fullscreen';
+    player.presentationMode = wasFullscreen ? 'inline' : 'fullscreen';
+    this.setState({ fullscreen: !wasFullscreen });
   };
 
   private toggleMuted = () => {
