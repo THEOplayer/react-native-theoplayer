@@ -103,9 +103,18 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
         }
     }
     
-    @objc(setFullscreen:fullscreen:)
-    func setFullscreen(_ node: NSNumber, fullscreen: Bool) -> Void {
-        if DEBUG_PLAYER_API { print(ERROR_MESSAGE_PLAYER_FULLSCREEN_UNSUPPORTED_FEATURE) }
+    @objc(setPresentationMode:presentationMode:)
+    func setPresentationMode(_ node: NSNumber, presentationMode: String) -> Void {
+        DispatchQueue.main.async {
+            let newPresentationMode: PresentationMode = THEOplayerRCTTypeUtils.presentationModeFromString(presentationMode)
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let player = theView.player {
+                if player.presentationMode != newPresentationMode {
+                    if DEBUG_PLAYER_API { print("[NATIVE] Changing TheoPlayer to \(presentationMode)") }
+                    player.presentationMode = newPresentationMode
+                }
+            }
+        }
         return
     }
     
@@ -181,7 +190,7 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
         DispatchQueue.main.async {
             if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
                let player = theView.player {
-                let preloadType = THEOplayerRCTTypeUtils.preloadType(type)
+                let preloadType = THEOplayerRCTTypeUtils.preloadTypeFromString(type)
                 if player.preload != preloadType {
                     if DEBUG_PLAYER_API { print("[NATIVE] Changing TheoPlayer preload type to \(type)") }
                     player.setPreload(preloadType)
