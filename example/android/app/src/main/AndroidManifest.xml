@@ -22,6 +22,7 @@
         android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
         android:launchMode="singleTask"
         android:windowSoftInputMode="adjustResize"
+        android:supportsPictureInPicture="true"
         android:exported="true">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
@@ -35,6 +36,7 @@
         android:screenOrientation="landscape"
         android:launchMode="singleTask"
         android:windowSoftInputMode="adjustResize"
+        android:supportsPictureInPicture="true"
         android:exported="true">
         <intent-filter>
           <action android:name="android.intent.action.MAIN" />
