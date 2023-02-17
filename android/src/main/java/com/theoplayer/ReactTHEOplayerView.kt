@@ -1,7 +1,6 @@
 package com.theoplayer
 
 import android.annotation.SuppressLint
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -29,6 +28,7 @@ import com.theoplayer.android.api.player.track.mediatrack.quality.AudioQuality
 import com.theoplayer.android.api.player.track.mediatrack.quality.VideoQuality
 import com.theoplayer.android.api.cast.Cast
 import com.theoplayer.android.api.player.track.mediatrack.MediaTrack
+import com.theoplayer.presentation.PresentationManager
 import java.lang.Exception
 
 private const val TAG = "ReactTHEOplayerView"
@@ -39,9 +39,9 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
 
   private val eventEmitter: PlayerEventEmitter = PlayerEventEmitter(reactContext.reactApplicationContext, this)
   private var playerView: THEOplayerView? = null
-  private var fullscreen = false
   private val mainHandler = Handler(Looper.getMainLooper())
 
+  var presentationManager: PresentationManager? = null
   var daiIntegration: GoogleDaiIntegration? = null
   var imaIntegration: GoogleImaIntegration? = null
   var castIntegration: CastIntegration? = null
@@ -73,11 +73,12 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
         // schedule a forced layout
         mainHandler.post { measureAndLayout() }
       }
-    }.also {
+    }.also {view ->
       val layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-      it.layoutParams = layoutParams
-      addIntegrations(it, playerConfig)
-      addView(it, 0, layoutParams)
+      view.layoutParams = layoutParams
+      addIntegrations(view, playerConfig)
+      addView(view, 0, layoutParams)
+      presentationManager = PresentationManager(view, reactContext, eventEmitter)
     }
   }
 
@@ -208,7 +209,6 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
     }
   }
 
-
   val selectedTextTrack: TextTrack?
     get() {
       return player?.let {
@@ -244,34 +244,4 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
         null
       }
     }
-
-  @SuppressLint("ObsoleteSdkInt")
-  fun setFullscreen(fullscreen: Boolean) {
-    if (fullscreen == this.fullscreen) {
-      return
-    }
-    this.fullscreen = fullscreen
-    val activity = reactContext.currentActivity ?: return
-    val window = activity.window
-    val decorView = window.decorView
-    val uiOptions: Int
-    if (fullscreen) {
-      uiOptions = if (Build.VERSION.SDK_INT >= 19) { // 4.4+
-        (SYSTEM_UI_FLAG_HIDE_NAVIGATION
-          or SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-          or SYSTEM_UI_FLAG_FULLSCREEN)
-      } else {
-        (SYSTEM_UI_FLAG_HIDE_NAVIGATION
-          or SYSTEM_UI_FLAG_FULLSCREEN)
-      }
-      eventEmitter.onFullscreenWillPresent()
-      decorView.systemUiVisibility = uiOptions
-      eventEmitter.onFullscreenDidPresent()
-    } else {
-      uiOptions = SYSTEM_UI_FLAG_VISIBLE
-      eventEmitter.onFullscreenWillDismiss()
-      decorView.systemUiVisibility = uiOptions
-      eventEmitter.onFullscreenDidDismiss()
-    }
-  }
 }
