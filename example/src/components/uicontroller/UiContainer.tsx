@@ -16,6 +16,7 @@ interface SlotViewProps {
 
 interface SlotViewState {
   fadeAnim: Animated.Value;
+  currentMenu: ReactNode | undefined;
 }
 
 export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewProps>, SlotViewState> implements UiControls {
@@ -24,10 +25,13 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewP
   private _showing = true;
   private _currentFadeOutTimeout: number | undefined = undefined;
 
+  private _menuLockId: number | undefined = undefined;
+
   constructor(props: SlotViewProps) {
     super(props);
     this.state = {
       fadeAnim: new Animated.Value(1),
+      currentMenu: undefined,
     };
   }
 
@@ -56,9 +60,22 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewP
   /**
    * Request to release the lock and start fading out again.
    */
-  public releaseLock_ = (id: number) => {
+  public releaseLock_ = (id?: number) => {
     arrayRemoveElement(this._animationsPauseRequestIds, id);
     this.hideUiAfterTimeout_();
+  };
+
+  public setMenu_ = (menu: ReactNode | undefined) => {
+    const { currentMenu } = this.state;
+    const previousMenu = currentMenu;
+    if (this._menuLockId !== undefined) {
+      this.releaseLock_(this._menuLockId);
+    }
+    if (menu !== undefined) {
+      this._menuLockId = this.requestShowUiWithLock_();
+    }
+    this.setState({ currentMenu: menu });
+    return previousMenu;
   };
 
   private showUi_() {
@@ -100,7 +117,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewP
 
   render() {
     const { player, style, top, center, bottom, children } = this.props;
-    const { fadeAnim } = this.state;
+    const { fadeAnim, currentMenu } = this.state;
     return (
       <PlayerContext.Provider value={{ player, style: style, ui: this }}>
         {/* The Animated.View is for showing and hiding the UI*/}
@@ -110,8 +127,12 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewP
           {...(Platform.OS === 'web' ? { onMouseMove: this.requestShowUi } : {})}>
           {/* The UI background */}
           <View style={[style.slotView.container, style.slotView.background]} />
+
+          {/* The Settings Menu */}
+          {currentMenu !== undefined && <View style={[style.slotView.container]}>{currentMenu}</View>}
+
           {/* The UI control bars*/}
-          <View style={[style.slotView.container]}>
+          <View style={[style.slotView.container, { display: currentMenu !== undefined ? 'none' : 'flex' }]}>
             <View style={style.slotView.topSlot}>{top}</View>
             {/* The center controls*/}
             <View style={[style.slotView.centerSlot]}>{center}</View>
