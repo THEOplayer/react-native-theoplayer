@@ -1,35 +1,35 @@
 package com.theoplayer
 
 import android.annotation.SuppressLint
+import android.content.*
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.widget.FrameLayout
 import com.facebook.react.bridge.*
-import com.theoplayer.util.TypeUtils.encodeInfNan
-import com.theoplayer.android.api.ads.ima.GoogleImaIntegrationFactory.createGoogleImaIntegration
-import com.theoplayer.android.api.ads.dai.GoogleDaiIntegrationFactory.createGoogleDaiIntegration
-import com.theoplayer.android.api.cast.CastIntegrationFactory.createCastIntegration
 import com.facebook.react.uimanager.ThemedReactContext
-import com.theoplayer.android.api.THEOplayerView
-import com.theoplayer.android.api.ads.dai.GoogleDaiIntegration
-import com.theoplayer.android.api.ads.ima.GoogleImaIntegration
-import com.theoplayer.android.api.cast.CastIntegration
-import com.theoplayer.android.api.ads.wrapper.AdsApiWrapper
-import com.theoplayer.android.api.player.Player
-import com.theoplayer.android.api.player.track.texttrack.TextTrack
-import com.theoplayer.android.api.THEOplayerConfig
 import com.google.ads.interactivemedia.v3.api.AdsRenderingSettings
 import com.google.ads.interactivemedia.v3.api.ImaSdkFactory
-import com.theoplayer.source.SourceAdapter
+import com.theoplayer.android.api.THEOplayerConfig
+import com.theoplayer.android.api.THEOplayerView
+import com.theoplayer.android.api.ads.dai.GoogleDaiIntegration
+import com.theoplayer.android.api.ads.dai.GoogleDaiIntegrationFactory.createGoogleDaiIntegration
+import com.theoplayer.android.api.ads.ima.GoogleImaIntegration
+import com.theoplayer.android.api.ads.ima.GoogleImaIntegrationFactory.createGoogleImaIntegration
+import com.theoplayer.android.api.ads.wrapper.AdsApiWrapper
+import com.theoplayer.android.api.cast.Cast
+import com.theoplayer.android.api.cast.CastIntegration
+import com.theoplayer.android.api.cast.CastIntegrationFactory.createCastIntegration
 import com.theoplayer.android.api.error.THEOplayerException
-import com.theoplayer.android.api.player.track.texttrack.TextTrackMode
+import com.theoplayer.android.api.player.Player
+import com.theoplayer.android.api.player.track.mediatrack.MediaTrack
 import com.theoplayer.android.api.player.track.mediatrack.quality.AudioQuality
 import com.theoplayer.android.api.player.track.mediatrack.quality.VideoQuality
-import com.theoplayer.android.api.cast.Cast
-import com.theoplayer.android.api.player.track.mediatrack.MediaTrack
+import com.theoplayer.android.api.player.track.texttrack.TextTrack
+import com.theoplayer.android.api.player.track.texttrack.TextTrackMode
 import com.theoplayer.presentation.PresentationManager
-import java.lang.Exception
+import com.theoplayer.source.SourceAdapter
+import com.theoplayer.util.TypeUtils.encodeInfNan
 
 private const val TAG = "ReactTHEOplayerView"
 
@@ -161,18 +161,20 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
     }, 1)
   }
 
+  override fun onHostPause() {
+    if (BuildConfig.LOG_VIEW_EVENTS) {
+      Log.d(TAG, "onHostPause")
+    }
+    if (presentationManager?.shouldPauseOnHostPause != false) {
+      playerView?.onPause()
+    }
+  }
+
   override fun onHostResume() {
     if (BuildConfig.LOG_VIEW_EVENTS) {
       Log.d(TAG, "onHostResume")
     }
     playerView?.onResume()
-  }
-
-  override fun onHostPause() {
-    if (BuildConfig.LOG_VIEW_EVENTS) {
-      Log.d(TAG, "onHostPause")
-    }
-    playerView?.onPause()
   }
 
   override fun onHostDestroy() {
@@ -193,6 +195,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
       player = null
     }
     playerView?.onDestroy()
+    presentationManager?.onDestroy()
     reactContext.removeLifecycleEventListener(this)
   }
 
