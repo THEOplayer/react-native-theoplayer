@@ -37,7 +37,8 @@ private const val TAG = "ReactTHEOplayerView"
 class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
   FrameLayout(reactContext), LifecycleEventListener {
 
-  private val eventEmitter: PlayerEventEmitter = PlayerEventEmitter(reactContext.reactApplicationContext, this)
+  private val eventEmitter: PlayerEventEmitter =
+    PlayerEventEmitter(reactContext.reactApplicationContext, this)
   private var playerView: THEOplayerView? = null
   private val mainHandler = Handler(Looper.getMainLooper())
 
@@ -57,7 +58,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
     if (BuildConfig.LOG_VIEW_EVENTS) {
       Log.d(TAG, "Initialize view")
     }
-    val playerConfig = PlayerConfigAdapter.fromProps(configProps)
+    val playerConfig = PlayerConfigAdapter.theoConfigFromProps(configProps)
     playerView = object : THEOplayerView(reactContext.currentActivity!!, playerConfig) {
       private fun measureAndLayout() {
         measure(
@@ -73,12 +74,17 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
         // schedule a forced layout
         mainHandler.post { measureAndLayout() }
       }
-    }.also {view ->
+    }.also { view ->
       val layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
       view.layoutParams = layoutParams
       addIntegrations(view, playerConfig)
       addView(view, 0, layoutParams)
-      presentationManager = PresentationManager(view, reactContext, eventEmitter)
+      presentationManager = PresentationManager(
+        view,
+        reactContext,
+        eventEmitter,
+        PlayerConfigAdapter.presentationManagerConfigFromProps(configProps)
+      )
     }
   }
 
