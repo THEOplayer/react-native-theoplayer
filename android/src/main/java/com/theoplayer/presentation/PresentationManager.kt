@@ -22,7 +22,8 @@ import com.theoplayer.android.api.player.PresentationMode
 class PresentationManager(
   private val view: THEOplayerView,
   private val reactContext: ThemedReactContext,
-  private val eventEmitter: PlayerEventEmitter
+  private val eventEmitter: PlayerEventEmitter,
+  private val config: PresentationConfig,
 ) {
   private var fullscreen = false
   private var pip = false
@@ -33,7 +34,10 @@ class PresentationManager(
   init {
     onUserLeaveHintReceiver = object : BroadcastReceiver() {
       override fun onReceive(context: Context?, intent: Intent?) {
-        setPresentation(PresentationMode.PICTURE_IN_PICTURE)
+        // Optionally into PiP mode when the app goes to background.
+        if (config.canStartPictureInPictureAutomaticallyFromInline == true) {
+          setPresentation(PresentationMode.PICTURE_IN_PICTURE)
+        }
       }
     }
     onPictureInPictureModeChanged = object : BroadcastReceiver() {
@@ -52,9 +56,19 @@ class PresentationManager(
     )
   }
 
+  /**
+   * Whether playback should be allowed to continue when the activity is paused.
+   *
+   * Pause if:
+   * - No PiP available: Build.VERSION.SDK_INT < Build.VERSION_CODES.N (API 24), or;
+   * - Not in PiP mode, and;
+   * - Not configured to automatically go into PiP when going to the background.
+   */
   val shouldPauseOnHostPause: Boolean
-    // TODO: check user config prop
-    get() = Build.VERSION.SDK_INT < Build.VERSION_CODES.N || reactContext.currentActivity?.isInPictureInPictureMode != true
+    get() =
+      Build.VERSION.SDK_INT < Build.VERSION_CODES.N ||
+        (reactContext.currentActivity?.isInPictureInPictureMode != true &&
+        config.canStartPictureInPictureAutomaticallyFromInline != true)
 
   fun onDestroy() {
     try {
