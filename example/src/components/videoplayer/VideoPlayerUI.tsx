@@ -10,7 +10,6 @@ import { FullscreenButton } from '../button/FullscreenButton';
 import { TextTrackMenu } from '../menu/TextTrackMenu';
 import { AudioTrackMenu } from '../menu/AudioTrackMenu';
 import { VideoQualityMenu } from '../menu/VideoQualityMenu';
-import { SourceMenu } from '../menu/SourceMenu';
 import { MuteButton } from '../button/MuteButton';
 import { BigPlayButton } from '../button/BigPlayButton';
 import { CastMessage } from '../view/CastMessage';
@@ -19,6 +18,7 @@ import { ErrorDisplay } from '../view/ErrorDisplay';
 import { defaultPlayerStyle, VideoPlayerStyle } from '../style/VideoPlayerStyle';
 import { View } from 'react-native';
 import { UiContainer } from '../uicontroller/UiContainer';
+import { SourceMenuButton } from '../menu/SourceMenuButton';
 
 export interface VideoPlayerUIProps {
   style?: Partial<VideoPlayerStyle>;
@@ -99,7 +99,7 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
               <AudioTrackMenu />
               {/*Note: quality selection is not available on iOS */}
               <VideoQualityMenu />
-              <SourceMenu />
+              <SourceMenuButton />
               <FullscreenButton />
             </ControlBar>
           </>

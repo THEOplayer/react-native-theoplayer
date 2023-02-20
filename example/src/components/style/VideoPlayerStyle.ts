@@ -59,6 +59,13 @@ export interface VideoPlayerStyle {
     title: TextStyle;
     rowContainer: ViewStyle;
   };
+  MenuView: {
+    container: ViewStyle;
+    backButton: TextStyle;
+    menus: ViewStyle;
+    title: TextStyle;
+    row: TextStyle;
+  };
 }
 
 const BUTTON_SIZE = 40;
@@ -275,6 +282,46 @@ export const defaultPlayerStyle: VideoPlayerStyle = {
     rowContainer: {
       padding: 15,
       marginLeft: 5,
+    },
+  },
+  MenuView: {
+    container: {
+      flex: 1,
+      flexDirection: 'row',
+      left: 0,
+      right: 0,
+      top: 0,
+      bottom: 0,
+      paddingVertical: 20,
+      paddingLeft: 50,
+      paddingRight: 40,
+    },
+    backButton: {
+      fontSize: 16,
+      lineHeight: 30,
+    },
+    menus: {
+      flex: 1,
+      left: 0,
+      right: 0,
+      top: 0,
+      bottom: 0,
+      paddingRight: 10,
+    },
+    title: {
+      color: 'white',
+      fontSize: 20,
+      lineHeight: 24,
+      padding: 10,
+      textAlign: 'center',
+      fontWeight: 'bold',
+    },
+    row: {
+      color: 'white',
+      fontSize: 16,
+      lineHeight: 24,
+      padding: 10,
+      textAlign: 'center',
     },
   },
 };
