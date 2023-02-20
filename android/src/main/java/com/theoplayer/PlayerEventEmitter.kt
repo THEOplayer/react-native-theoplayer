@@ -274,6 +274,18 @@ class PlayerEventEmitter internal constructor(
     emitError(exception.code.name, exception.message)
   }
 
+  fun emitPresentationModeChange(presentationMode: PresentationMode) {
+    val payload = Arguments.createMap()
+    payload.putString(EVENT_PROP_PRESENTATIONMODE,
+      when (presentationMode) {
+        PresentationMode.PICTURE_IN_PICTURE -> "picture-in-picture"
+        PresentationMode.FULLSCREEN -> "fullscreen"
+        else -> "inline"
+      }
+    )
+    receiveEvent(EVENT_PRESENTATIONMODECHANGE, payload)
+  }
+
   fun preparePlayer(player: Player) {
     attachListeners(player)
 
@@ -431,15 +443,7 @@ class PlayerEventEmitter internal constructor(
   }
 
   private fun onPresentationModeChange(event: PresentationModeChange) {
-    val payload = Arguments.createMap()
-    payload.putString(EVENT_PROP_PRESENTATIONMODE,
-      when (event.presentationMode) {
-        PresentationMode.PICTURE_IN_PICTURE -> "picture-in-picture"
-        PresentationMode.FULLSCREEN -> "fullscreen"
-        else -> "inline"
-      }
-    )
-    receiveEvent(EVENT_PRESENTATIONMODECHANGE, payload)
+    emitPresentationModeChange(event.presentationMode)
   }
 
   private val onTextTrackAddCue = EventListener<AddCueEvent> { event ->
