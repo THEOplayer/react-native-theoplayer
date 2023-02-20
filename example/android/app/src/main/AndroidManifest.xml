@@ -19,7 +19,7 @@
 
       <activity
         android:name=".MainActivity"
-        android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
+        android:configChanges="keyboard|keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout|uiMode"
         android:launchMode="singleTask"
         android:windowSoftInputMode="adjustResize"
         android:supportsPictureInPicture="true"
@@ -32,7 +32,7 @@
 
       <activity
         android:name=".MainActivityTV"
-        android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
+        android:configChanges="keyboard|keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout|uiMode"
         android:screenOrientation="landscape"
         android:launchMode="singleTask"
         android:windowSoftInputMode="adjustResize"
