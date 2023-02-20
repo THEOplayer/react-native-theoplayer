@@ -6,7 +6,7 @@ export interface ColorTheme {
   uiBackground: string;
   seekBarCompleted: string;
   seekBarRemaining: string;
-  menuBackGround: string;
+  menuBackground: string;
   text: string;
   textBackground: string;
 }
@@ -78,7 +78,7 @@ export const defaultPlayerStyle: VideoPlayerStyle = {
     uiBackground: '#00000066',
     seekBarCompleted: 'white',
     seekBarRemaining: '#2C2C2C',
-    menuBackGround: '#00000099',
+    menuBackground: '#00000099',
     text: 'white',
     textBackground: 'black',
   },

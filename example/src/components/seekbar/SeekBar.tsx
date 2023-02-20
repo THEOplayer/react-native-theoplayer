@@ -26,14 +26,12 @@ import {
   PlayerEventType,
   ProgressEvent,
   TextTrack,
-  THEOplayer,
   TimeRange,
   TimeUpdateEvent,
 } from 'react-native-theoplayer';
 import { ThumbnailView } from '../thumbnail/ThumbnailView';
 import { THUMBNAIL_SIZE } from '../videoplayer/VideoPlayerUIProps';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
-import type { UiControls } from '../uicontroller/UiControls';
 
 interface SeekBarState {
   focused: boolean;
