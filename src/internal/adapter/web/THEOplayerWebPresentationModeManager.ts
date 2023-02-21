@@ -20,7 +20,7 @@ export class THEOplayerWebPresentationModeManager extends DefaultEventDispatcher
   }
 
   set presentationMode(presentationMode: PresentationMode) {
-    if (presentationMode == this._presentationMode) {
+    if (presentationMode === this._presentationMode) {
       return;
     }
 
@@ -28,24 +28,24 @@ export class THEOplayerWebPresentationModeManager extends DefaultEventDispatcher
 
     // on iOS Safari requestFullscreen isn't supported (https://caniuse.com/?search=requestFullscreen), where we need to use webkit methods on the video element
     if (browserDetection.IS_IOS_ && browserDetection.IS_SAFARI_) {
-      if (presentationMode == 'fullscreen') {
+      if (presentationMode === 'fullscreen') {
         this._element?.webkitEnterFullscreen?.();
-      } else if (presentationMode == 'picture-in-picture') {
+      } else if (presentationMode === 'picture-in-picture') {
         this._element?.webkitSetPresentationMode?.('picture-in-picture');
       } else {
         this._element?.webkitSetPresentationMode?.('inline');
-      } 
+      }
     } else { // other web-platforms
-      if (presentationMode == 'fullscreen') {
+      if (presentationMode === 'fullscreen') {
         const appElement = document.getElementById('app');
         appElement?.requestFullscreen();
-      } else if (presentationMode == 'picture-in-picture') {
+      } else if (presentationMode === 'picture-in-picture') {
         this._element?.requestPictureInPicture?.()
       } else {
-        if (this._presentationMode == 'fullscreen') {
+        if (this._presentationMode === 'fullscreen') {
           document.exitFullscreen()
         }
-        if (this._presentationMode == 'picture-in-picture') {
+        if (this._presentationMode === 'picture-in-picture') {
           document.exitPictureInPicture()
         }
       }
@@ -71,17 +71,17 @@ export class THEOplayerWebPresentationModeManager extends DefaultEventDispatcher
   private updatePresentationMode() {
     // detect new presentation mode
     let newPresentationMode: PresentationMode = 'inline';
-    if (document.fullscreenElement != null) {
+    if (document.fullscreenElement !== null) {
       newPresentationMode = 'fullscreen';
-    } else if (document.pictureInPictureElement != null) {
+    } else if (document.pictureInPictureElement !== null) {
       newPresentationMode = 'picture-in-picture';
     }
 
     // when changed, notify by dispatching presentationModeChange event
-    if (newPresentationMode != this._presentationMode) {
+    if (newPresentationMode !== this._presentationMode) {
       this._presentationMode = newPresentationMode
       this.dispatchEvent(new DefaultPresentationModeChangeEvent(this._presentationMode))
     }
-  } 
+  }
 
 }
