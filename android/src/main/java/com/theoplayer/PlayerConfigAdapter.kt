@@ -10,8 +10,7 @@ import com.theoplayer.android.api.ads.GoogleImaConfiguration
 import com.theoplayer.android.api.cast.CastStrategy
 import com.google.android.gms.cast.framework.CastContext
 import com.theoplayer.android.api.pip.PipConfiguration
-import com.theoplayer.presentation.PresentationManager
-import com.theoplayer.presentation.PresentationManagerConfig
+import com.theoplayer.presentation.PresentationConfig
 
 private const val TAG = "PlayerConfigAdapter"
 private const val PROP_ADS_CONFIGURATION = "ads"
@@ -56,9 +55,9 @@ object PlayerConfigAdapter {
     return configBuilder.build()
   }
 
-  fun presentationManagerConfigFromProps(configProps: ReadableMap?): PresentationManagerConfig {
+  fun presentationManagerConfigFromProps(configProps: ReadableMap?): PresentationConfig {
     val pip = configProps?.getMap(PROP_PIP_CONFIG)?.toHashMap() ?: emptyMap()
-    return PresentationManagerConfig(
+    return PresentationConfig(
       pip[PROP_PIP_RETAIN_ON_SOURCECHANGE] as? Boolean ?: false,
       pip[PROP_PIP_AUTO] as? Boolean ?: false
     )
