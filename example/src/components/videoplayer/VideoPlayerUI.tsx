@@ -30,6 +30,7 @@ import {
   TimeUpdateEvent,
   TrackListEventType,
   PresentationModeChangeEvent,
+  VolumeChangeEvent,
 } from 'react-native-theoplayer';
 
 import { Image, Platform, Text, TouchableOpacity, View } from 'react-native';
@@ -119,6 +120,7 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
     player.addEventListener(PlayerEventType.CAST_EVENT, this.onCastEvent);
     player.addEventListener(PlayerEventType.PROGRESS, this.onProgress);
     player.addEventListener(PlayerEventType.RATE_CHANGE, this.onRateChange);
+    player.addEventListener(PlayerEventType.VOLUME_CHANGE, this.onVolumeChange);
     player.addEventListener(PlayerEventType.CANPLAY, console.log);
     player.addEventListener(PlayerEventType.ERROR, this.onError);
   }
@@ -148,6 +150,7 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
     player.removeEventListener(PlayerEventType.CAST_EVENT, this.onCastEvent);
     player.removeEventListener(PlayerEventType.PROGRESS, this.onProgress);
     player.removeEventListener(PlayerEventType.RATE_CHANGE, this.onRateChange);
+    player.removeEventListener(PlayerEventType.VOLUME_CHANGE, this.onVolumeChange);
     player.removeEventListener(PlayerEventType.CANPLAY, console.log);
     player.removeEventListener(PlayerEventType.ERROR, this.onError);
   }
@@ -173,6 +176,12 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
     const { playbackRate } = event;
     console.log(event);
     this.setState({ playbackRate });
+  };
+
+  private onVolumeChange = (event: VolumeChangeEvent) => {
+    const { volume, muted } = event;
+    console.log(TAG, 'volumechange: volume =', volume, ', muted =', muted);
+    this.setState({ volume, muted });
   };
 
   private onPlaying = (event: Event<'playing'>) => {
