@@ -32,6 +32,7 @@ RCT_EXPORT_VIEW_PROPERTY(onNativeEnded, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeError, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeLoadedData, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeRateChange, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeVolumeChange, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeLoadedMetadata, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeFullscreenPlayerWillPresent, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeFullscreenPlayerDidPresent, RCTDirectEventBlock);

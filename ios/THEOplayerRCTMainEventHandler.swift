@@ -15,6 +15,7 @@ class THEOplayerRCTMainEventHandler {
     var onNativeLoadStart: RCTDirectEventBlock?
     var onNativeReadyStateChange: RCTDirectEventBlock?
     var onNativeDurationChange: RCTDirectEventBlock?
+    var onNativeVolumeChange: RCTDirectEventBlock?
     var onNativeProgress: RCTBubblingEventBlock?
     var onNativeTimeUpdate: RCTBubblingEventBlock?
     var onNativePlaying: RCTDirectEventBlock?
@@ -36,6 +37,7 @@ class THEOplayerRCTMainEventHandler {
     private var loadStartListener: EventListener?
     private var readyStateChangeListener: EventListener?
     private var durationChangeListener: EventListener?
+    private var volumeChangeListener: EventListener?
     private var progressListener: EventListener?
     private var timeUpdateListener: EventListener?
     private var playingListener: EventListener?
@@ -135,6 +137,20 @@ class THEOplayerRCTMainEventHandler {
             }
         }
         if DEBUG_EVENTHANDLER { print("[NATIVE] DurationChange listener attached to THEOplayer") }
+        
+        // VOLUME_CHANGE
+        self.volumeChangeListener = player.addEventListener(type: PlayerEventTypes.VOLUME_CHANGE) { [weak self] event in
+            if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received VOLUME_CHANGE event from THEOplayer") }
+            if let forwardedVolumeChangeEvent = self?.onNativeVolumeChange {
+                forwardedVolumeChangeEvent(
+                    [
+                        "volume": event.volume,
+                        "muted": player.muted
+                    ]
+                )
+            }
+        }
+        if DEBUG_EVENTHANDLER { print("[NATIVE] VolumeChange listener attached to THEOplayer") }
         
         // PROGRESS
         self.progressListener = player.addEventListener(type: PlayerEventTypes.PROGRESS) { [weak self] event in
