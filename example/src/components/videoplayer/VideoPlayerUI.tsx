@@ -90,6 +90,10 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
     this.props.player.source = this.props.sources[this.state.srcIndex].source;
   }
 
+  componentWillUnmount() {
+    this.removePlayerEventListeners();
+  }
+
   private addPlayerEventListeners() {
     const { player } = this.props;
     player.addEventListener(PlayerEventType.SOURCE_CHANGE, console.log);
@@ -119,6 +123,35 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
     player.addEventListener(PlayerEventType.ERROR, this.onError);
   }
 
+  private removePlayerEventListeners() {
+    const { player } = this.props;
+    player.removeEventListener(PlayerEventType.SOURCE_CHANGE, console.log);
+    player.removeEventListener(PlayerEventType.LOADED_DATA, console.log);
+    player.removeEventListener(PlayerEventType.READYSTATE_CHANGE, this.onReadyStateChange);
+    player.removeEventListener(PlayerEventType.PRESENTATIONMODE_CHANGE, this.onPresentationModeChange);
+    player.removeEventListener(PlayerEventType.PLAY, this.onPlay);
+    player.removeEventListener(PlayerEventType.PLAYING, this.onPlaying);
+    player.removeEventListener(PlayerEventType.SEEKING, console.log);
+    player.removeEventListener(PlayerEventType.SEEKED, console.log);
+    player.removeEventListener(PlayerEventType.ENDED, console.log);
+    player.removeEventListener(PlayerEventType.WAITING, console.log);
+    player.removeEventListener(PlayerEventType.LOAD_START, this.onLoadStart);
+    player.removeEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
+    player.removeEventListener(PlayerEventType.PAUSE, this.onPause);
+    player.removeEventListener(PlayerEventType.TIME_UPDATE, this.onTimeUpdate);
+    player.removeEventListener(PlayerEventType.DURATION_CHANGE, this.onDurationChange);
+    player.removeEventListener(PlayerEventType.TEXT_TRACK_LIST, this.onTextTrackListEvent);
+    player.removeEventListener(PlayerEventType.TEXT_TRACK, this.onTextTrackEvent);
+    player.removeEventListener(PlayerEventType.MEDIA_TRACK_LIST, this.onMediaTrackListEvent);
+    player.removeEventListener(PlayerEventType.MEDIA_TRACK, this.onMediaTrackEvent);
+    player.removeEventListener(PlayerEventType.AD_EVENT, this.onAdEvent);
+    player.removeEventListener(PlayerEventType.CAST_EVENT, this.onCastEvent);
+    player.removeEventListener(PlayerEventType.PROGRESS, this.onProgress);
+    player.removeEventListener(PlayerEventType.RATE_CHANGE, this.onRateChange);
+    player.removeEventListener(PlayerEventType.CANPLAY, console.log);
+    player.removeEventListener(PlayerEventType.ERROR, this.onError);
+  }
+
   private onReadyStateChange = (event: ReadyStateChangeEvent) => {
     console.log(event);
     this.maybeShowLoadingIndicator(event.readyState < 3);
@@ -130,7 +163,8 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
       this.setState({ pip: false, fullscreen: true });
     } else if (event.presentationMode === 'picture-in-picture') {
       this.setState({ pip: true, fullscreen: false });
-    } else { // 'inline'
+    } else {
+      // 'inline'
       this.setState({ pip: false, fullscreen: false });
     }
   };
@@ -428,6 +462,12 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
     );
   };
 
+  private shouldShowControls(): boolean {
+    const { pip } = this.state;
+    // On Android, the UI controls need to disappear when going to PiP
+    return !(Platform.OS === 'android' && pip);
+  }
+
   render() {
     const { style, sources } = this.props;
 
@@ -454,12 +494,14 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
       selectedAudioTrack,
     } = this.state;
 
+    const showControls = this.shouldShowControls();
+
     return (
       <View style={[styles.container, style]}>
         {/*Background*/}
-        <View style={styles.background} />
+        {showControls && <View style={styles.background} />}
 
-        {!Platform.isTV && (
+        {!Platform.isTV && showControls && (
           <View style={styles.topContainer}>
             {/*Airplay button*/}
             {Platform.OS === 'ios' && (
@@ -478,7 +520,7 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
           </View>
         )}
 
-        {!error && (
+        {!error && showControls && (
           <ActionButton
             touchable={!Platform.isTV}
             icon={paused ? PlayButton : null}
@@ -496,59 +538,59 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
           </View>
         )}
 
-        <View style={styles.controlsContainer}>
-          {message && <Text style={styles.message}>{message}</Text>}
+        {showControls && (
+          <View style={styles.controlsContainer}>
+            {message && <Text style={styles.message}>{message}</Text>}
 
-          <SeekBar
-            // On TV platforms we use the progress dot to play/pause
-            onDotPress={this.togglePlayPause}
-            onSeek={this.onSeek}
-            seekable={seekable}
-            duration={duration}
-            currentTime={currentTime}
-            renderTopComponent={THUMBNAIL_MODE === 'carousel' ? this.renderThumbnailCarousel : this.renderSingleThumbnail}
-          />
+            <SeekBar
+              // On TV platforms we use the progress dot to play/pause
+              onDotPress={this.togglePlayPause}
+              onSeek={this.onSeek}
+              seekable={seekable}
+              duration={duration}
+              currentTime={currentTime}
+              renderTopComponent={THUMBNAIL_MODE === 'carousel' ? this.renderThumbnailCarousel : this.renderSingleThumbnail}
+            />
 
-          <View style={styles.bottomControlsContainer}>
-            {/*Mute*/}
-            <ActionButton style={{ marginLeft: 0 }} icon={muted ? MutedIcon : UnMutedIcon} onPress={this.toggleMuted} iconStyle={styles.menuIcon} />
+            <View style={styles.bottomControlsContainer}>
+              {/*Mute*/}
+              <ActionButton style={{ marginLeft: 0 }} icon={muted ? MutedIcon : UnMutedIcon} onPress={this.toggleMuted} iconStyle={styles.menuIcon} />
 
-            {/*TimeLabel*/}
-            <TimeLabel style={styles.timeLabel} isLive={!isFinite(duration)} currentTime={currentTime} duration={duration} />
+              {/*TimeLabel*/}
+              <TimeLabel style={styles.timeLabel} isLive={!isFinite(duration)} currentTime={currentTime} duration={duration} />
 
-            {/*Spacer*/}
-            <View style={{ flexGrow: 1 }} />
+              {/*Spacer*/}
+              <View style={{ flexGrow: 1 }} />
 
-            {/*TextTrack menu */}
-            <TextTrackMenu textTracks={textTracks} selectedTextTrack={selectedTextTrack} onSelectTextTrack={this.onSelectTextTrack} />
+              {/*TextTrack menu */}
+              <TextTrackMenu textTracks={textTracks} selectedTextTrack={selectedTextTrack} onSelectTextTrack={this.onSelectTextTrack} />
 
-            {/*AudioTrack menu */}
-            <AudioTrackMenu audioTracks={audioTracks} selectedAudioTrack={selectedAudioTrack} onSelectAudioTrack={this.onSelectAudioTrack} />
+              {/*AudioTrack menu */}
+              <AudioTrackMenu audioTracks={audioTracks} selectedAudioTrack={selectedAudioTrack} onSelectAudioTrack={this.onSelectAudioTrack} />
 
-            {/*Video quality menu. Note: quality selection is not available on iOS */}
-            {ENABLE_QUALITY_MENU && (
-              <VideoQualityMenu
-                videoTracks={videoTracks}
-                selectedVideoTrack={selectedVideoTrack}
-                targetVideoTrackQuality={targetVideoQuality}
-                onSelectTargetVideoQuality={this.onSelectTargetVideoQuality}
-              />
-            )}
+              {/*Video quality menu. Note: quality selection is not available on iOS */}
+              {ENABLE_QUALITY_MENU && (
+                <VideoQualityMenu
+                  videoTracks={videoTracks}
+                  selectedVideoTrack={selectedVideoTrack}
+                  targetVideoTrackQuality={targetVideoQuality}
+                  onSelectTargetVideoQuality={this.onSelectTargetVideoQuality}
+                />
+              )}
 
-            {/*Source menu */}
-            <SourceMenu sources={sources} selectedSourceIndex={srcIndex} onSelectSource={this.onSelectSource} />
+              {/*Source menu */}
+              <SourceMenu sources={sources} selectedSourceIndex={srcIndex} onSelectSource={this.onSelectSource} />
 
               {/*Pip*/}
-            {!Platform.isTV && (
-              <ActionButton icon={pip ? PipExitIcon : PipIcon} onPress={this.togglePip} iconStyle={styles.menuIcon} />
-            )}
+              {!Platform.isTV && <ActionButton icon={pip ? PipExitIcon : PipIcon} onPress={this.togglePip} iconStyle={styles.menuIcon} />}
 
-            {/*Fullscreen*/}
-            {!Platform.isTV && (
-              <ActionButton icon={fullscreen ? FullScreenExitIcon : FullScreenIcon} onPress={this.toggleFullScreen} iconStyle={styles.menuIcon} />
-            )}
+              {/*Fullscreen*/}
+              {!Platform.isTV && (
+                <ActionButton icon={fullscreen ? FullScreenExitIcon : FullScreenIcon} onPress={this.toggleFullScreen} iconStyle={styles.menuIcon} />
+              )}
+            </View>
           </View>
-        </View>
+        )}
       </View>
     );
   }
