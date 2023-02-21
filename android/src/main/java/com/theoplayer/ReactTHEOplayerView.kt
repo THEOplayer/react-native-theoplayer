@@ -27,6 +27,7 @@ import com.theoplayer.android.api.player.track.mediatrack.quality.AudioQuality
 import com.theoplayer.android.api.player.track.mediatrack.quality.VideoQuality
 import com.theoplayer.android.api.player.track.texttrack.TextTrack
 import com.theoplayer.android.api.player.track.texttrack.TextTrackMode
+import com.theoplayer.mediasession.MediaSessionIntegration
 import com.theoplayer.presentation.PresentationManager
 import com.theoplayer.source.SourceAdapter
 import com.theoplayer.util.TypeUtils.encodeInfNan
@@ -46,6 +47,8 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
   var daiIntegration: GoogleDaiIntegration? = null
   var imaIntegration: GoogleImaIntegration? = null
   var castIntegration: CastIntegration? = null
+  var mediaSessionIntegration: MediaSessionIntegration? = null
+
   val adsApi: AdsApiWrapper
   var player: Player? = null
 
@@ -100,6 +103,10 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
   }
 
   private fun addIntegrations(playerView: THEOplayerView, playerConfig: THEOplayerConfig) {
+    if (BuildConfig.EXTENSION_MEDIASESSION) {
+      mediaSessionIntegration = MediaSessionIntegration(context, playerView.player)
+    }
+
     try {
       if (BuildConfig.EXTENSION_GOOGLE_IMA) {
         imaIntegration = createGoogleImaIntegration(playerView).apply {
@@ -172,6 +179,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
       Log.d(TAG, "onHostPause")
     }
     if (presentationManager?.shouldPauseOnHostPause != false) {
+      mediaSessionIntegration?.onPause()
       playerView?.onPause()
     }
   }
@@ -180,6 +188,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
     if (BuildConfig.LOG_VIEW_EVENTS) {
       Log.d(TAG, "onHostResume")
     }
+    mediaSessionIntegration?.onResume()
     playerView?.onResume()
   }
 
@@ -194,6 +203,8 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
     if (BuildConfig.LOG_VIEW_EVENTS) {
       Log.d(TAG, "releasePlayer")
     }
+    mediaSessionIntegration?.onDestroy()
+    presentationManager?.onDestroy()
     player?.let {
       eventEmitter.removeListeners(it)
       adsApi.destroy()
@@ -201,7 +212,6 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
       player = null
     }
     playerView?.onDestroy()
-    presentationManager?.onDestroy()
     reactContext.removeLifecycleEventListener(this)
   }
 
