@@ -119,12 +119,16 @@ class PresentationManager(
     if (pip) {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val visibleRect = getContentViewRect(view)
+        val aspectRatio = if (view.player.videoHeight > 0) {
+          Rational(view.player.videoWidth, view.player.videoHeight)
+        } else {
+          // Default aspect ratio
+          Rational(16, 9)
+        }
         reactContext.currentActivity?.enterPictureInPictureMode(
           PictureInPictureParams.Builder()
             .setSourceRectHint(visibleRect)
-            .setAspectRatio(
-              Rational(view.player.videoWidth, view.player.videoHeight)
-            )
+            .setAspectRatio(aspectRatio)
             // The active MediaSession will connect the controls
             .build()
         )
