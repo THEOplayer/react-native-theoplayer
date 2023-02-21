@@ -23,6 +23,11 @@ export const SourceMenuButton = () => {
     return <></>;
   }
 
+  // Since this button in mostly for debugging purposes, set the first available source on the player.
+  if (selectedSourceId === undefined) {
+    onSelectSource(0);
+  }
+
   return <MenuButton svg={<ListSvg />} menu={<SourceMenuView selectedSourceId={selectedSourceId} onSelectSource={onSelectSource} />} />;
 };
 
