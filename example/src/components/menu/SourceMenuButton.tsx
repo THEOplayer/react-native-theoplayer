@@ -7,17 +7,25 @@ import { ListSvg } from '../button/svg/ListSvg';
 import { MenuButton } from './menuview/MenuButton';
 import { MenuRadioButton } from './menuview/MenuRadioButton';
 import { ScrollableMenu } from './menuview/ScrollableMenu';
+import { MenuView } from './menuview/MenuView';
 
 const SOURCES = ALL_SOURCES.filter((source) => source.os.indexOf(Platform.OS) >= 0) as Source[];
 
 export const SourceMenuButton = () => {
+  if (!(SOURCES && SOURCES.length > 0)) {
+    return <></>;
+  }
+
+  return <MenuButton svg={<ListSvg />} menu={<SourceMenuView />} />;
+};
+
+export const SourceMenuView = () => {
   const context = useContext(PlayerContext);
   const [selectedSourceId, setSelectedSourceId] = useState<number | undefined>(undefined);
 
   const onSelectSource = (id: number) => {
     context.player.source = SOURCES[id].source;
     setSelectedSourceId(id);
-    context.ui.setMenu_(undefined);
   };
 
   if (!(SOURCES && SOURCES.length > 0)) {
@@ -25,11 +33,10 @@ export const SourceMenuButton = () => {
   }
 
   return (
-    <MenuButton
-      svg={<ListSvg />}
+    <MenuView
       menu={
         <ScrollableMenu
-          title={'Select a source:'}
+          title={'Source'}
           items={SOURCES.map((source, id) => (
             <MenuRadioButton key={id} label={source.name} id={id} onSelect={onSelectSource} selected={id === selectedSourceId}></MenuRadioButton>
           ))}
