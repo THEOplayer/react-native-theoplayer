@@ -27,7 +27,6 @@ class PresentationManager(
 ) {
   private var fullscreen = false
   private var pip = false
-
   private var onUserLeaveHintReceiver: BroadcastReceiver? = null
   private var onPictureInPictureModeChanged: BroadcastReceiver? = null
 
@@ -42,10 +41,12 @@ class PresentationManager(
     }
     onPictureInPictureModeChanged = object : BroadcastReceiver() {
       override fun onReceive(context: Context?, intent: Intent?) {
+        // Dispatch event on every PiP mode change
         pip = intent?.getBooleanExtra("isInPictureInPictureMode", false) ?: false
         eventEmitter.emitPresentationModeChange(if (pip) PresentationMode.PICTURE_IN_PICTURE else PresentationMode.INLINE)
       }
     }
+
     reactContext.currentActivity?.registerReceiver(
       onUserLeaveHintReceiver,
       IntentFilter("onUserLeaveHint")
@@ -68,7 +69,7 @@ class PresentationManager(
     get() =
       Build.VERSION.SDK_INT < Build.VERSION_CODES.N ||
         (reactContext.currentActivity?.isInPictureInPictureMode != true &&
-        config.canStartPictureInPictureAutomaticallyFromInline != true)
+          config.canStartPictureInPictureAutomaticallyFromInline != true)
 
   fun onDestroy() {
     try {
@@ -124,6 +125,7 @@ class PresentationManager(
             .setAspectRatio(
               Rational(view.player.videoWidth, view.player.videoHeight)
             )
+            // The active MediaSession will connect the controls
             .build()
         )
       }
