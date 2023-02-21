@@ -12,14 +12,6 @@ import { MenuView } from './menuview/MenuView';
 const SOURCES = ALL_SOURCES.filter((source) => source.os.indexOf(Platform.OS) >= 0) as Source[];
 
 export const SourceMenuButton = () => {
-  if (!(SOURCES && SOURCES.length > 0)) {
-    return <></>;
-  }
-
-  return <MenuButton svg={<ListSvg />} menu={<SourceMenuView />} />;
-};
-
-export const SourceMenuView = () => {
   const context = useContext(PlayerContext);
   const [selectedSourceId, setSelectedSourceId] = useState<number | undefined>(undefined);
 
@@ -27,18 +19,32 @@ export const SourceMenuView = () => {
     context.player.source = SOURCES[id].source;
     setSelectedSourceId(id);
   };
-
   if (!(SOURCES && SOURCES.length > 0)) {
     return <></>;
   }
 
+  return <MenuButton svg={<ListSvg />} menu={<SourceMenuView selectedSourceId={selectedSourceId} onSelectSource={onSelectSource} />} />;
+};
+
+interface SourceMenuViewProps {
+  selectedSourceId: number | undefined;
+  onSelectSource: (id: number) => void;
+}
+
+export const SourceMenuView = (props: SourceMenuViewProps) => {
+  const { onSelectSource, selectedSourceId } = props;
+  const [localSourceId, setLocalSourceId] = useState<number | undefined>(selectedSourceId);
+  const selectSource = (id: number) => {
+    setLocalSourceId(id);
+    onSelectSource(id);
+  };
   return (
     <MenuView
       menu={
         <ScrollableMenu
           title={'Source'}
           items={SOURCES.map((source, id) => (
-            <MenuRadioButton key={id} label={source.name} id={id} onSelect={onSelectSource} selected={id === selectedSourceId}></MenuRadioButton>
+            <MenuRadioButton key={id} label={source.name} id={id} onSelect={selectSource} selected={id === localSourceId}></MenuRadioButton>
           ))}
         />
       }
