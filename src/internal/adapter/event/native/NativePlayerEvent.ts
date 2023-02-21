@@ -14,6 +14,18 @@ export interface NativeLoadedMetadataEvent {
   selectedAudioTrack: number | undefined;
 }
 
+export interface NativeVolumeChangeEvent {
+  /**
+   * The player's current volume.
+   */
+  readonly volume: number;
+
+  /**
+   * The player's current mute state.
+   */
+  readonly muted: boolean;
+}
+
 export interface NativeTimeUpdateEvent {
   /**
    * The player's current time, in msecs.

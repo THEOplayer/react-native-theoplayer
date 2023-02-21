@@ -220,7 +220,7 @@ export class WebEventForwarder {
   };
 
   private readonly onVolumeChangeEvent = (event: NativeVolumeChangeEvent) => {
-    this._facade.dispatchEvent(new DefaultVolumeChangeEvent(event.volume));
+    this._facade.dispatchEvent(new DefaultVolumeChangeEvent(event.volume, this._player.muted));
   };
 
   private readonly onPresentationModeChange = (event: PresentationModeChangeEvent) => {

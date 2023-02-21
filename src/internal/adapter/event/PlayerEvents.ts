@@ -65,7 +65,7 @@ export class DefaultPresentationModeChangeEvent extends BaseEvent<PlayerEventTyp
 }
 
 export class DefaultVolumeChangeEvent extends BaseEvent<PlayerEventType.VOLUME_CHANGE> implements VolumeChangeEvent {
-  constructor(public volume: number) {
+  constructor(public volume: number, public muted: boolean) {
     super(PlayerEventType.VOLUME_CHANGE);
   }
 }
