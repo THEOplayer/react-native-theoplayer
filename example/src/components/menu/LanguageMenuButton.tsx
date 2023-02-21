@@ -6,7 +6,7 @@ import { HeadphonesSvg } from '../button/svg/HeadphonesSvg';
 import { ScrollableMenu } from './menuview/ScrollableMenu';
 import { MenuRadioButton } from './menuview/MenuRadioButton';
 import { MenuButton } from './menuview/MenuButton';
-import { filterRenderableTracks, getTrackLabel } from './TrackUtils';
+import { filterRenderableTracks, getTrackLabel } from '../util/TrackUtils';
 import { MenuView } from './menuview/MenuView';
 
 export interface LanguageMenuButtonState {
