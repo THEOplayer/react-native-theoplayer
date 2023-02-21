@@ -7,8 +7,7 @@ import { ChromecastButton } from '../button/ChromecastButton';
 import { ControlBar } from '../controlbar/ControlBar';
 import { TimeLabel } from '../timelabel/TimeLabel';
 import { FullscreenButton } from '../button/FullscreenButton';
-import { TextTrackMenu } from '../menu/TextTrackMenu';
-import { AudioTrackMenu } from '../menu/AudioTrackMenu';
+import { LanguageMenuButton } from '../menu/LanguageMenuButton';
 import { VideoQualityMenu } from '../menu/VideoQualityMenu';
 import { MuteButton } from '../button/MuteButton';
 import { BigPlayButton } from '../button/BigPlayButton';
@@ -95,8 +94,7 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
               {/*Spacer*/}
               <View style={{ flexGrow: 1 }} />
 
-              <TextTrackMenu />
-              <AudioTrackMenu />
+              <LanguageMenuButton />
               {/*Note: quality selection is not available on iOS */}
               <VideoQualityMenu />
               <SourceMenuButton />
