@@ -2,6 +2,7 @@ package com.reactnativetheoplayer;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.WindowManager;
 
@@ -14,6 +15,9 @@ public class MainActivity extends ReactActivity {
   public void onCreate(Bundle bundle) {
     super.onCreate(bundle);
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+    // STREAM_MUSIC volume should be changed by the hardware volume controls.
+    setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
     try {
       // lazy load Google Cast context
