@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.graphics.Rect
 import android.os.Build
 import android.util.Rational
@@ -26,6 +27,7 @@ class PresentationManager(
   private val config: PresentationConfig,
 ) {
   private var fullscreen = false
+  private var canDoPip = false
   private var pip = false
   private var onUserLeaveHintReceiver: BroadcastReceiver? = null
   private var onPictureInPictureModeChanged: BroadcastReceiver? = null
@@ -46,7 +48,9 @@ class PresentationManager(
         eventEmitter.emitPresentationModeChange(if (pip) PresentationMode.PICTURE_IN_PICTURE else PresentationMode.INLINE)
       }
     }
-
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      canDoPip = reactContext.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
+    }
     reactContext.currentActivity?.registerReceiver(
       onUserLeaveHintReceiver,
       IntentFilter("onUserLeaveHint")
@@ -111,28 +115,29 @@ class PresentationManager(
   }
 
   private fun setPip(pip: Boolean) {
+    if (!canDoPip || Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+      return
+    }
     val wasInPip = this.pip
     if (wasInPip == pip) {
       // Already in right PiP state
       return
     }
     if (pip) {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        val visibleRect = getContentViewRect(view)
-        val aspectRatio = if (view.player.videoHeight > 0) {
-          Rational(view.player.videoWidth, view.player.videoHeight)
-        } else {
-          // Default aspect ratio
-          Rational(16, 9)
-        }
-        reactContext.currentActivity?.enterPictureInPictureMode(
-          PictureInPictureParams.Builder()
-            .setSourceRectHint(visibleRect)
-            .setAspectRatio(aspectRatio)
-            // The active MediaSession will connect the controls
-            .build()
-        )
+      val visibleRect = getContentViewRect(view)
+      val aspectRatio = if (view.player.videoHeight > 0) {
+        Rational(view.player.videoWidth, view.player.videoHeight)
+      } else {
+        // Default aspect ratio
+        Rational(16, 9)
       }
+      reactContext.currentActivity?.enterPictureInPictureMode(
+        PictureInPictureParams.Builder()
+          .setSourceRectHint(visibleRect)
+          .setAspectRatio(aspectRatio)
+          // The active MediaSession will connect the controls
+          .build()
+      )
     }
   }
 
