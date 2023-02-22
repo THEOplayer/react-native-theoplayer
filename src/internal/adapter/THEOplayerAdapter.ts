@@ -35,7 +35,6 @@ import {
 } from 'react-native-theoplayer';
 import { THEOplayerNativeAdsAdapter } from './ads/THEOplayerNativeAdsAdapter';
 import { THEOplayerNativeCastAdapter } from './cast/THEOplayerNativeCastAdapter';
-import { DefaultVolumeChangeEvent } from './event/PlayerEvents';
 import { AbrAdapter } from './abr/AbrAdapter';
 import { NativeModules, Platform } from 'react-native';
 import { TextTrackStyleAdapter } from './track/TextTrackStyleAdapter';
@@ -274,7 +273,6 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   set muted(muted: boolean) {
     this._muted = muted;
     NativeModules.PlayerModule.setMuted(this._view.nativeHandle, muted);
-    this.dispatchEvent(new DefaultVolumeChangeEvent(this.volume, this._muted));
   }
 
   get seeking(): boolean {
@@ -391,7 +389,6 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   set volume(volume: number) {
     this._volume = volume;
     NativeModules.PlayerModule.setVolume(this._view.nativeHandle, volume);
-    this.dispatchEvent(new DefaultVolumeChangeEvent(this._volume, this._muted));
   }
 
   pause(): void {
