@@ -73,6 +73,7 @@ private const val EVENT_MEDIATRACK_EVENT = "onNativeMediaTrackEvent"
 private const val EVENT_AD_EVENT = "onNativeAdEvent"
 private const val EVENT_CAST_EVENT = "onNativeCastEvent"
 private const val EVENT_PRESENTATIONMODECHANGE = "onNativePresentationModeChange"
+private const val EVENT_VOLUMECHANGE = "onNativeVolumeChange"
 
 private const val EVENT_PROP_CURRENT_TIME = "currentTime"
 private const val EVENT_PROP_CURRENT_PROGRAM_DATE_TIME = "currentProgramDateTime"
@@ -101,6 +102,8 @@ private const val EVENT_PROP_CUE = "cue"
 private const val EVENT_PROP_TYPE = "type"
 private const val EVENT_PROP_QUALITIES = "qualities"
 private const val EVENT_PROP_PRESENTATIONMODE = "presentationMode"
+private const val EVENT_PROP_VOLUME = "volume"
+private const val EVENT_PROP_MUTED = "muted"
 
 @Suppress("UNCHECKED_CAST")
 class PlayerEventEmitter internal constructor(
@@ -135,7 +138,8 @@ class PlayerEventEmitter internal constructor(
     EVENT_MEDIATRACK_EVENT,
     EVENT_AD_EVENT,
     EVENT_CAST_EVENT,
-    EVENT_PRESENTATIONMODECHANGE
+    EVENT_PRESENTATIONMODECHANGE,
+    EVENT_VOLUMECHANGE
   )
   annotation class VideoEvents
 
@@ -167,7 +171,8 @@ class PlayerEventEmitter internal constructor(
       EVENT_MEDIATRACK_EVENT,
       EVENT_AD_EVENT,
       EVENT_CAST_EVENT,
-      EVENT_PRESENTATIONMODECHANGE
+      EVENT_PRESENTATIONMODECHANGE,
+      EVENT_VOLUMECHANGE
     )
   }
 
@@ -234,6 +239,8 @@ class PlayerEventEmitter internal constructor(
       EventListener { event: SegmentNotFoundEvent -> onSegmentNotFound(event) }
     playerListeners[PlayerEventTypes.PRESENTATIONMODECHANGE] =
       EventListener { event: PresentationModeChange -> onPresentationModeChange(event) }
+    playerListeners[PlayerEventTypes.VOLUMECHANGE] =
+      EventListener { event: VolumeChangeEvent -> onVolumeChange(event) }
     textTrackListeners[TextTrackListEventTypes.ADDTRACK] =
       EventListener { event: AddTrackEvent -> onTextTrackAdd(event) }
     textTrackListeners[TextTrackListEventTypes.REMOVETRACK] =
@@ -444,6 +451,13 @@ class PlayerEventEmitter internal constructor(
 
   private fun onPresentationModeChange(event: PresentationModeChange) {
     emitPresentationModeChange(event.presentationMode)
+  }
+
+  private fun onVolumeChange(event: VolumeChangeEvent) {
+    val payload = Arguments.createMap()
+    payload.putDouble(EVENT_PROP_VOLUME, event.volume)
+    payload.putBoolean(EVENT_PROP_MUTED, playerView.player?.isMuted ?: false)
+    receiveEvent(EVENT_VOLUMECHANGE, payload)
   }
 
   private val onTextTrackAddCue = EventListener<AddCueEvent> { event ->
