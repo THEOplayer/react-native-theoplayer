@@ -177,6 +177,12 @@ class THEOplayerRCTView: UIView {
         if DEBUG_VIEW { print("[NATIVE] nativeDurationChange prop set.") }
     }
     
+    @objc(setOnNativeVolumeChange:)
+    func setOnNativeVolumeChange(nativeVolumeChange: @escaping RCTDirectEventBlock) {
+        self.mainEventHandler.onNativeVolumeChange = nativeVolumeChange
+        if DEBUG_VIEW { print("[NATIVE] nativeVolumeChange prop set.") }
+    }
+    
     @objc(setOnNativeProgress:)
     func setOnNativeProgress(nativeProgress: @escaping RCTBubblingEventBlock) {
         self.mainEventHandler.onNativeProgress = nativeProgress

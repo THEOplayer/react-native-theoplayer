@@ -34,6 +34,7 @@ import {
   DefaultSegmentNotFoundEvent,
   DefaultTextTrackEvent,
   DefaultTextTrackListEvent,
+  DefaultVolumeChangeEvent,
   DefaultTimeupdateEvent,
 } from './adapter/event/PlayerEvents';
 import type { NativeCastEvent } from './adapter/event/native/NativeCastEvent';
@@ -54,6 +55,7 @@ import type {
   NativeReadyStateChangeEvent,
   NativeSegmentNotFoundEvent,
   NativeTimeUpdateEvent,
+  NativeVolumeChangeEvent,
 } from './adapter/event/native/NativePlayerEvent';
 import type { NativeAdEvent } from './adapter/event/native/NativeAdEvent';
 import { THEOplayerAdapter } from './adapter/THEOplayerAdapter';
@@ -70,6 +72,7 @@ interface THEOplayerRCTViewProps {
   onNativeReadyStateChange?: (event: NativeSyntheticEvent<NativeReadyStateChangeEvent>) => void;
   onNativeError: (event: NativeSyntheticEvent<NativeErrorEvent>) => void;
   onNativeProgress: (event: NativeSyntheticEvent<NativeProgressEvent>) => void;
+  onNativeVolumeChange:  (event: NativeSyntheticEvent<NativeVolumeChangeEvent>) => void;
   onNativeCanPlay: () => void;
   onNativePlay: () => void;
   onNativePlaying: () => void;
@@ -160,6 +163,10 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
         nativeEvent.selectedAudioTrack,
       ),
     );
+  };
+
+  private _onVolumeChange = (event: NativeSyntheticEvent<NativeVolumeChangeEvent>) => {
+    this._facade.dispatchEvent(new DefaultVolumeChangeEvent(event.nativeEvent.volume, event.nativeEvent.muted));
   };
 
   private _onError = (event: NativeSyntheticEvent<NativeErrorEvent>) => {
@@ -290,6 +297,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
           onNativeLoadStart={this._onLoadStart}
           onNativeLoadedData={this._onLoadedData}
           onNativeLoadedMetadata={this._onLoadedMetadata}
+          onNativeVolumeChange={this._onVolumeChange}
           onNativeError={this._onError}
           onNativeProgress={this._onProgress}
           onNativeCanPlay={this._onCanPlay}
