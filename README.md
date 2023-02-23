@@ -69,5 +69,6 @@ and discussed in the next section. Finally, an overview of features, limitations
   - [Casting with Chromecast and Airplay](./doc/cast.md)
   - [Custom iOS framework](./doc/custom-ios-framework.md)
   - [Digital Rights Management (DRM)](./doc/drm.md)
+  - [Picture-in-Picture (PiP)](./doc/pip.md)
   - [Migrating to `react-native-theoplayer` v2.x](./doc/migrating_v2.md)
 - [Limitations and known issues](./doc/limitations.md)
