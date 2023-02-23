@@ -53,7 +53,7 @@ export interface VideoPlayerStyle {
     progressDot: ViewStyle;
     progressHitSlop: Insets;
   };
-  MenuView: {
+  menu: {
     container: ViewStyle;
     backButton: TextStyle;
     menus: ViewStyle;
@@ -254,7 +254,7 @@ export const defaultPlayerStyle: VideoPlayerStyle = {
       right: 20,
     },
   },
-  MenuView: {
+  menu: {
     container: {
       flex: 1,
       flexDirection: 'row',
