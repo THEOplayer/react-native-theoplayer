@@ -38,7 +38,9 @@ Additional configuration is necessary depending on the platform the app runs on.
 
 ### Android
 
-On Android the react-native app is typically a single-activity application. Launching picture-in-picture
+Picture-in-picture support for Android was added in Android 8.0 (API level 26).
+
+A react-native app on Android is typically a single-activity application. Launching picture-in-picture
 mode means the whole activity transitions to an _out-of-app_ PiP window.
 
 To enable PiP support, make sure to set `android:supportsPictureInPicture=true` in the
