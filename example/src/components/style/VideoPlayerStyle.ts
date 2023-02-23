@@ -1,4 +1,4 @@
-import type { ImageStyle, Insets, TextStyle, ViewStyle } from 'react-native';
+import type { ActivityIndicatorProps, ImageStyle, Insets, TextStyle, ViewStyle } from 'react-native';
 
 export interface ColorTheme {
   primary: string;
@@ -40,6 +40,7 @@ export interface VideoPlayerStyle {
     timeLabelThumbnail: TextStyle;
     liveDot: ViewStyle;
   };
+  activityIndicator: ActivityIndicatorProps;
   seekBar: {
     container: ViewStyle;
     progress: ViewStyle;
@@ -201,7 +202,9 @@ export const defaultPlayerStyle: VideoPlayerStyle = {
       backgroundColor: 'red',
     },
   },
-
+  activityIndicator: {
+    size: 60,
+  },
   seekBar: {
     container: {
       flex: 1,
