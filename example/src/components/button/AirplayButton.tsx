@@ -1,4 +1,4 @@
-import React, { PureComponent, useContext } from 'react';
+import React, { PureComponent } from 'react';
 import { Image, Platform, TouchableOpacity } from 'react-native';
 import { AirplayIcon } from '../../res/images';
 import { CastEvent, CastEventType, PlayerEventType } from 'react-native-theoplayer';
@@ -38,7 +38,7 @@ export class AirplayButton extends PureComponent<unknown, AirplayButtonState> {
   };
 
   private onUIAirplayToggled = () => {
-    const player = useContext(PlayerContext);
+    const player = (this.context as UiContext).player;
     if (Platform.OS === 'ios' && !Platform.isTV) {
       player.cast.airplay?.state().then((airplayCastState) => {
         const inConnection = airplayCastState === 'connected' || airplayCastState === 'connecting';
