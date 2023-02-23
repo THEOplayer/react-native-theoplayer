@@ -21,7 +21,7 @@ export const MenuRadioButton = (props: MenuRowProps) => {
           <Text
             style={[
               context.style.menu.row,
-              selected ? { color: context.style.colors.textBackground, backgroundColor: context.style.colors.text } : {},
+              selected ? { color: context.style.colors.secondary, backgroundColor: context.style.colors.text } : { color: context.style.colors.text },
             ]}>
             {label}
           </Text>

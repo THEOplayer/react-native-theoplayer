@@ -2,20 +2,16 @@ import type { ImageStyle, Insets, TextStyle, ViewStyle } from 'react-native';
 
 export interface ColorTheme {
   primary: string;
+  secondary: string;
   accent: string;
-  uiBackground: string;
-  seekBarCompleted: string;
-  seekBarRemaining: string;
-  menuBackground: string;
+  background: string;
   text: string;
-  textBackground: string;
 }
 
 export interface VideoPlayerStyle {
   colors: ColorTheme;
   slotView: {
     container: ViewStyle;
-    background: ViewStyle;
     topSlot: ViewStyle;
     centerSlot: ViewStyle;
     bottomSlot: ViewStyle;
@@ -68,13 +64,10 @@ const CENTER_BUTTON_SIZE = 48;
 export const defaultPlayerStyle: VideoPlayerStyle = {
   colors: {
     primary: 'white',
+    secondary: '#2C2C2C',
     accent: '#ffc50f',
-    uiBackground: '#00000066',
-    seekBarCompleted: 'white',
-    seekBarRemaining: '#2C2C2C',
-    menuBackground: '#00000099',
+    background: '#00000066',
     text: 'white',
-    textBackground: 'black',
   },
   slotView: {
     container: {
@@ -86,9 +79,6 @@ export const defaultPlayerStyle: VideoPlayerStyle = {
       flexDirection: 'column',
       justifyContent: 'space-between',
       zIndex: 1,
-    },
-    background: {
-      backgroundColor: '#00000066',
     },
     topSlot: {
       paddingTop: 10,
@@ -175,7 +165,6 @@ export const defaultPlayerStyle: VideoPlayerStyle = {
       marginBottom: 15,
     },
     thumbnailCurrentCarousel: {
-      borderColor: '#ffc50f',
       borderWidth: 2,
     },
     thumbnailCurrentSingle: {
@@ -232,7 +221,6 @@ export const defaultPlayerStyle: VideoPlayerStyle = {
     },
     innerProgressRemaining: {
       height: 6,
-      backgroundColor: '#2C2C2C',
     },
     touchable: {
       position: 'absolute',
@@ -279,7 +267,6 @@ export const defaultPlayerStyle: VideoPlayerStyle = {
       paddingRight: 10,
     },
     title: {
-      color: 'white',
       fontSize: 20,
       lineHeight: 24,
       padding: 10,
@@ -287,7 +274,6 @@ export const defaultPlayerStyle: VideoPlayerStyle = {
       fontWeight: 'bold',
     },
     row: {
-      color: 'white',
       fontSize: 16,
       lineHeight: 24,
       padding: 10,

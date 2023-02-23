@@ -126,7 +126,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewP
           onTouchStart={this.requestShowUi}
           {...(Platform.OS === 'web' ? { onMouseMove: this.requestShowUi } : {})}>
           {/* The UI background */}
-          <View style={[style.slotView.container, style.slotView.background]} />
+          <View style={[style.slotView.container, { backgroundColor: style.colors.background }]} />
 
           {/* The Settings Menu */}
           {currentMenu !== undefined && <View style={[style.slotView.container]}>{currentMenu}</View>}

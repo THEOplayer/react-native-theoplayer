@@ -8,5 +8,9 @@ export interface MenuTitleProps {
 
 export const MenuTitle = (props: MenuTitleProps) => {
   const { label } = props;
-  return <PlayerContext.Consumer>{(context: UiContext) => <Text style={[context.style.MenuView.title]}>{label}</Text>}</PlayerContext.Consumer>;
+  return (
+    <PlayerContext.Consumer>
+      {(context: UiContext) => <Text style={[context.style.menu.title, { color: context.style.colors.text }]}>{label}</Text>}
+    </PlayerContext.Consumer>
+  );
 };
