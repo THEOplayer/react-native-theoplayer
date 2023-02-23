@@ -62,15 +62,15 @@ export class WebPresentationModeManager extends DefaultEventDispatcher<PlayerEve
     }
     // listen for pip updates on element
     if (this._element != null) {
-      this._element.onenterpictureinpicture = (_event) => {
+      this._element.onenterpictureinpicture = () => {
         this.updatePresentationMode();
       };
-      this._element.onleavepictureinpicture = (_event) => {
+      this._element.onleavepictureinpicture = () => {
         this.updatePresentationMode();
       };
     }
     // listen for fullscreen updates on document
-    document.onfullscreenchange = (_event) => {
+    document.onfullscreenchange = () => {
       this.updatePresentationMode();
     };
   }
