@@ -5,7 +5,7 @@ import type { PresentationMode } from 'src/api/presentation/PresentationMode';
 import { DefaultPresentationModeChangeEvent } from '../event/PlayerEvents';
 import { browserDetection } from '../../../web/platform/BrowserDetection';
 
-export class THEOplayerWebPresentationModeManager extends DefaultEventDispatcher<PlayerEventMap> {
+export class WebPresentationModeManager extends DefaultEventDispatcher<PlayerEventMap> {
   private readonly _player: THEOplayerWeb.ChromelessPlayer;
   private _presentationMode: PresentationMode = 'inline';
   private _element: HTMLVideoElement | undefined = undefined;
