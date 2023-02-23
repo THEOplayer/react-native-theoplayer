@@ -23,13 +23,13 @@ import {
   DefaultChromecastChangeEvent,
   DefaultChromecastErrorEvent,
   DefaultDurationChangeEvent,
-  DefaultRateChangeEvent,
   DefaultErrorEvent,
-  DefaultPresentationModeChangeEvent,
   DefaultLoadedMetadataEvent,
   DefaultMediaTrackEvent,
   DefaultMediaTrackListEvent,
+  DefaultPresentationModeChangeEvent,
   DefaultProgressEvent,
+  DefaultRateChangeEvent,
   DefaultReadyStateChangeEvent,
   DefaultSegmentNotFoundEvent,
   DefaultTextTrackEvent,
@@ -46,14 +46,14 @@ import type {
 import { toMediaTrackType, toMediaTrackTypeEventType, toTextTrackEventType, toTrackListEventType } from './adapter/event/native/NativeTrackEvent';
 import type {
   NativeDurationChangeEvent,
-  NativeRateChangeEvent,
   NativeErrorEvent,
   NativeLoadedMetadataEvent,
+  NativePresentationModeChangeEvent,
   NativeProgressEvent,
+  NativeRateChangeEvent,
   NativeReadyStateChangeEvent,
   NativeSegmentNotFoundEvent,
   NativeTimeUpdateEvent,
-  NativePresentationModeChangeEvent,
 } from './adapter/event/native/NativePlayerEvent';
 import type { NativeAdEvent } from './adapter/event/native/NativeAdEvent';
 import { THEOplayerAdapter } from './adapter/THEOplayerAdapter';
@@ -88,7 +88,7 @@ interface THEOplayerRCTViewProps {
   onNativeMediaTrackEvent: (event: NativeSyntheticEvent<NativeMediaTrackEvent>) => void;
   onNativeAdEvent: (event: NativeSyntheticEvent<NativeAdEvent>) => void;
   onNativeCastEvent: (event: NativeSyntheticEvent<NativeCastEvent>) => void;
-  onNativePresentationModeChange:  (event: NativeSyntheticEvent<NativePresentationModeChangeEvent>) => void;
+  onNativePresentationModeChange: (event: NativeSyntheticEvent<NativePresentationModeChangeEvent>) => void;
 }
 
 interface THEOplayerRCTViewState {

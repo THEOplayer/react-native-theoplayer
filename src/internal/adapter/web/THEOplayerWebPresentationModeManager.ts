@@ -35,18 +35,19 @@ export class THEOplayerWebPresentationModeManager extends DefaultEventDispatcher
       } else {
         this._element?.webkitSetPresentationMode?.('inline');
       }
-    } else { // other web-platforms
+    } else {
+      // other web-platforms
       if (presentationMode === 'fullscreen') {
         const appElement = document.getElementById('app');
-        appElement?.requestFullscreen();
+        void appElement?.requestFullscreen();
       } else if (presentationMode === 'picture-in-picture') {
-        this._element?.requestPictureInPicture?.()
+        void this._element?.requestPictureInPicture?.();
       } else {
         if (this._presentationMode === 'fullscreen') {
-          document.exitFullscreen()
+          void document.exitFullscreen();
         }
         if (this._presentationMode === 'picture-in-picture') {
-          document.exitPictureInPicture()
+          void document.exitPictureInPicture();
         }
       }
     }
@@ -56,16 +57,22 @@ export class THEOplayerWebPresentationModeManager extends DefaultEventDispatcher
     const elements = this._player.element.children;
     for (const element of Array.from(elements)) {
       if (element.tagName === 'VIDEO' && element.attributes.getNamedItem('src') !== null) {
-        this._element = (element as HTMLVideoElement)
+        this._element = element as HTMLVideoElement;
       }
     }
     // listen for pip updates on element
     if (this._element != null) {
-      this._element.onenterpictureinpicture = (_event) => {this.updatePresentationMode()};
-      this._element.onleavepictureinpicture = (_event) => {this.updatePresentationMode()};
+      this._element.onenterpictureinpicture = (_event) => {
+        this.updatePresentationMode();
+      };
+      this._element.onleavepictureinpicture = (_event) => {
+        this.updatePresentationMode();
+      };
     }
     // listen for fullscreen updates on document
-    document.onfullscreenchange = (_event) => {this.updatePresentationMode()};
+    document.onfullscreenchange = (_event) => {
+      this.updatePresentationMode();
+    };
   }
 
   private updatePresentationMode() {
@@ -79,9 +86,8 @@ export class THEOplayerWebPresentationModeManager extends DefaultEventDispatcher
 
     // when changed, notify by dispatching presentationModeChange event
     if (newPresentationMode !== this._presentationMode) {
-      this._presentationMode = newPresentationMode
-      this.dispatchEvent(new DefaultPresentationModeChangeEvent(this._presentationMode))
+      this._presentationMode = newPresentationMode;
+      this.dispatchEvent(new DefaultPresentationModeChangeEvent(this._presentationMode));
     }
   }
-
 }

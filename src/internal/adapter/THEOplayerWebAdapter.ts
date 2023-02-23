@@ -1,6 +1,15 @@
 import { DefaultEventDispatcher } from './event/DefaultEventDispatcher';
-import type { AdsAPI, CastAPI, MediaTrack, NativeHandleType, PlayerEventMap, PreloadType, TextTrackStyle, THEOplayer } from 'react-native-theoplayer';
-import type { TextTrack } from 'react-native-theoplayer';
+import type {
+  AdsAPI,
+  CastAPI,
+  MediaTrack,
+  NativeHandleType,
+  PlayerEventMap,
+  PreloadType,
+  TextTrack,
+  TextTrackStyle,
+  THEOplayer,
+} from 'react-native-theoplayer';
 import { THEOplayerWebAdsAdapter } from './ads/THEOplayerWebAdsAdapter';
 import { THEOplayerWebCastAdapter } from './cast/THEOplayerWebCastAdapter';
 import type * as THEOplayerWeb from 'theoplayer';
@@ -26,7 +35,6 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     this._castAdapter = new THEOplayerWebCastAdapter(this._player);
     this._eventForwarder = new WebEventForwarder(this._player, this);
     this._presentationModeManager = new THEOplayerWebPresentationModeManager(this._player);
-
   }
 
   get abr(): ABRConfiguration | undefined {
@@ -109,7 +117,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   }
 
   get presentationMode(): PresentationMode {
-    return this._presentationModeManager.presentationMode
+    return this._presentationModeManager.presentationMode;
   }
 
   set presentationMode(presentationMode: PresentationMode) {

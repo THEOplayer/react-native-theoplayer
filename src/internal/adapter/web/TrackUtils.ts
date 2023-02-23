@@ -3,8 +3,8 @@ import type {
   MediaTrackList as NativeMediaTrackList,
   Quality as NativeQuality,
   TextTrack as NativeTextTrack,
-  TextTracksList as NativeTextTrackList,
   TextTrackCue as NativeTextTrackCue,
+  TextTracksList as NativeTextTrackList,
 } from 'theoplayer';
 import type { MediaTrack, TextTrack, TextTrackCue } from 'react-native-theoplayer';
 
