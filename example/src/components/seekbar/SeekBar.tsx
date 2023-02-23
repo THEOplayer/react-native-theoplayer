@@ -378,15 +378,13 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
     const flexCompleted = currentProgressPercentage * 100;
     const flexRemaining = (1 - currentProgressPercentage) * 100;
     const { focused } = this.state;
-    //@ts-ignore
     const { style, progressDotStyle, thumbnailMode } = this.props;
 
     return (
       <PlayerContext.Consumer>
         {(context: UiContext) => (
           <View style={{ flex: 1, flexDirection: 'column', paddingHorizontal: 10 }}>
-            {/* TODO {thumbnailMode === 'carousel' ? this.renderThumbnailCarousel(this.seekBarPosition) : this.renderSingleThumbnail(this.seekBarPosition)}*/}
-
+            {thumbnailMode === 'carousel' ? this.renderThumbnailCarousel(this.seekBarPosition) : this.renderSingleThumbnail(this.seekBarPosition)}
             <View style={[context.style.seekBar.container, style]}>
               {Platform.isTV && (
                 <TouchableOpacity
@@ -456,19 +454,22 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
     return (
       <PlayerContext.Consumer>
         {(context: UiContext) => (
-          <ThumbnailView
-            visible={seekBarPosition.isScrubbing}
-            containerStyle={context.style.videoPlayer.thumbnailContainerCarousel}
-            thumbnailStyleCurrent={[context.style.videoPlayer.thumbnailCurrentCarousel, { borderColor: context.style.colors.primary }]}
-            thumbnailStyleCarousel={context.style.videoPlayer.thumbnailCarousel}
-            thumbnailTrack={thumbnailTrack}
-            time={seekBarPosition.currentProgress}
-            duration={seekBarPosition.duration}
-            size={THUMBNAIL_SIZE}
-            carouselCount={2}
-            // Optionally scale down the thumbnails when further from currentTime.
-            // carouselThumbnailScale={(index: number) => 1.0 - Math.abs(index) * 0.15}
-          />
+          // TODO: Improve layout
+          <View style={{ position: 'absolute', top: -(THUMBNAIL_SIZE * 0.75), left: 0, right: 0 }}>
+            <ThumbnailView
+              visible={seekBarPosition.isScrubbing}
+              containerStyle={context.style.videoPlayer.thumbnailContainerCarousel}
+              thumbnailStyleCurrent={[context.style.videoPlayer.thumbnailCurrentCarousel, { borderColor: context.style.colors.primary }]}
+              thumbnailStyleCarousel={context.style.videoPlayer.thumbnailCarousel}
+              thumbnailTrack={thumbnailTrack}
+              time={seekBarPosition.currentProgress}
+              duration={seekBarPosition.duration}
+              size={THUMBNAIL_SIZE}
+              carouselCount={2}
+              // Optionally scale down the thumbnails when further from currentTime.
+              // carouselThumbnailScale={(index: number) => 1.0 - Math.abs(index) * 0.15}
+            />
+          </View>
         )}
       </PlayerContext.Consumer>
     );
@@ -483,20 +484,22 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
     return (
       <PlayerContext.Consumer>
         {(styleContext: UiContext) => (
-          <ThumbnailView
-            visible={seekBarPosition.isScrubbing}
-            containerStyle={styleContext.style.videoPlayer.thumbnailContainerSingle}
-            thumbnailStyleCurrent={styleContext.style.videoPlayer.thumbnailCurrentSingle}
-            thumbnailTrack={thumbnailTrack}
-            duration={seekBarPosition.duration}
-            time={seekBarPosition.currentProgress}
-            size={THUMBNAIL_SIZE}
-            showTimeLabel={false}
-            offset={Math.min(
-              seekBarPosition.seekBarWidth - THUMBNAIL_SIZE,
-              Math.max(0, seekBarPosition.currentProgressPercentage * seekBarPosition.seekBarWidth - 0.5 * THUMBNAIL_SIZE),
-            )}
-          />
+          <View style={{ position: 'absolute', top: -(THUMBNAIL_SIZE * 0.75), left: 0, right: 0 }}>
+            <ThumbnailView
+              visible={seekBarPosition.isScrubbing}
+              containerStyle={styleContext.style.videoPlayer.thumbnailContainerSingle}
+              thumbnailStyleCurrent={styleContext.style.videoPlayer.thumbnailCurrentSingle}
+              thumbnailTrack={thumbnailTrack}
+              duration={seekBarPosition.duration}
+              time={seekBarPosition.currentProgress}
+              size={THUMBNAIL_SIZE}
+              showTimeLabel={false}
+              offset={Math.min(
+                seekBarPosition.seekBarWidth - THUMBNAIL_SIZE,
+                Math.max(0, seekBarPosition.currentProgressPercentage * seekBarPosition.seekBarWidth - 0.5 * THUMBNAIL_SIZE),
+              )}
+            />
+          </View>
         )}
       </PlayerContext.Consumer>
     );
