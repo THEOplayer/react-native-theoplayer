@@ -8,7 +8,7 @@ import { ControlBar } from '../controlbar/ControlBar';
 import { TimeLabel } from '../timelabel/TimeLabel';
 import { FullscreenButton } from '../button/FullscreenButton';
 import { LanguageMenuButton } from '../menu/LanguageMenuButton';
-import { VideoQualityMenu } from '../menu/VideoQualityMenu';
+import { SettingsMenuButton } from '../menu/SettingsMenuButton';
 import { MuteButton } from '../button/MuteButton';
 import { BigPlayButton } from '../button/BigPlayButton';
 import { CastMessage } from '../view/CastMessage';
@@ -96,7 +96,7 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps> {
 
               <LanguageMenuButton />
               {/*Note: quality selection is not available on iOS */}
-              <VideoQualityMenu />
+              <SettingsMenuButton />
               <SourceMenuButton />
               <FullscreenButton />
             </ControlBar>
