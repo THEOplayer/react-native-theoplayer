@@ -24,7 +24,7 @@ export const MenuView = (props: MenuViewProps) => {
             <Text style={{ color: context.style.colors.text, fontSize: 16, lineHeight: 30 }}>Back</Text>
             <View style={{ flexGrow: 1 }} />
           </ControlBar>
-          <View style={[context.style.MenuView.container]}>{menu}</View>
+          <View style={[context.style.menu.container]}>{menu}</View>
         </View>
       )}
     </PlayerContext.Consumer>

@@ -13,7 +13,7 @@ export const ScrollableMenu = (props: ScrollableMenuProps) => {
   return (
     <PlayerContext.Consumer>
       {(context: UiContext) => (
-        <SafeAreaView style={context.style.MenuView.menus}>
+        <SafeAreaView style={context.style.menu.menus}>
           <MenuTitle label={title} />
           <ScrollView>
             <View style={{ flexDirection: 'column' }}>{items}</View>
