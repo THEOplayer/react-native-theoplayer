@@ -426,7 +426,9 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
                     hitSlop={context.style.seekBar.progressHitSlop}
                     {...this._seekPanResponder.panHandlers}
                   />
-                  <View style={[context.style.seekBar.innerProgressRemaining, { flex: flexRemaining }]} />
+                  <View
+                    style={[context.style.seekBar.innerProgressRemaining, { flex: flexRemaining, backgroundColor: context.style.colors.secondary }]}
+                  />
                   <TouchableOpacity
                     ref={this.setScrubberArea}
                     style={context.style.seekBar.touchable}
@@ -457,7 +459,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
           <ThumbnailView
             visible={seekBarPosition.isScrubbing}
             containerStyle={context.style.videoPlayer.thumbnailContainerCarousel}
-            thumbnailStyleCurrent={context.style.videoPlayer.thumbnailCurrentCarousel}
+            thumbnailStyleCurrent={[context.style.videoPlayer.thumbnailCurrentCarousel, { borderColor: context.style.colors.primary }]}
             thumbnailStyleCarousel={context.style.videoPlayer.thumbnailCarousel}
             thumbnailTrack={thumbnailTrack}
             time={seekBarPosition.currentProgress}
