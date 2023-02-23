@@ -18,7 +18,7 @@ import { findNativeQualitiesByUid, fromNativeMediaTrackList, fromNativeTextTrack
 import type { ABRConfiguration, SourceDescription } from 'src/api/barrel';
 import { WebEventForwarder } from './WebEventForwarder';
 import type { PresentationMode } from 'src/api/presentation/PresentationMode';
-import { THEOplayerWebPresentationModeManager } from './web/THEOplayerWebPresentationModeManager';
+import { WebPresentationModeManager } from './web/WebPresentationModeManager';
 
 export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayer {
   private readonly _player: THEOplayerWeb.ChromelessPlayer;
@@ -26,7 +26,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   private readonly _castAdapter: THEOplayerWebCastAdapter;
   private readonly _eventForwarder: WebEventForwarder;
   private _targetVideoQuality: number | number[] | undefined = undefined;
-  private _presentationModeManager: THEOplayerWebPresentationModeManager;
+  private _presentationModeManager: WebPresentationModeManager;
 
   constructor(player: THEOplayerWeb.ChromelessPlayer) {
     super();
@@ -34,7 +34,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     this._adsAdapter = new THEOplayerWebAdsAdapter(this._player);
     this._castAdapter = new THEOplayerWebCastAdapter(this._player);
     this._eventForwarder = new WebEventForwarder(this._player, this);
-    this._presentationModeManager = new THEOplayerWebPresentationModeManager(this._player);
+    this._presentationModeManager = new WebPresentationModeManager(this._player);
   }
 
   get abr(): ABRConfiguration | undefined {
