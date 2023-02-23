@@ -4,10 +4,10 @@ import { Platform } from 'react-native';
 import ALL_SOURCES from '../../res/sources.json';
 import { PlayerContext } from '../util/PlayerContext';
 import { ListSvg } from '../button/svg/ListSvg';
-import { MenuButton } from './menuview/MenuButton';
-import { MenuRadioButton } from './menuview/MenuRadioButton';
-import { ScrollableMenu } from './menuview/ScrollableMenu';
-import { MenuView } from './menuview/MenuView';
+import { MenuButton } from './common/MenuButton';
+import { MenuRadioButton } from './common/MenuRadioButton';
+import { ScrollableMenu } from './common/ScrollableMenu';
+import { MenuView } from './common/MenuView';
 
 const SOURCES = ALL_SOURCES.filter((source) => source.os.indexOf(Platform.OS) >= 0) as Source[];
 

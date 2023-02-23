@@ -3,11 +3,11 @@ import type { MediaTrack } from 'react-native-theoplayer';
 import { PlayerEventType, TextTrack } from 'react-native-theoplayer';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
 import { HeadphonesSvg } from '../button/svg/HeadphonesSvg';
-import { ScrollableMenu } from './menuview/ScrollableMenu';
-import { MenuRadioButton } from './menuview/MenuRadioButton';
-import { MenuButton } from './menuview/MenuButton';
+import { ScrollableMenu } from './common/ScrollableMenu';
+import { MenuRadioButton } from './common/MenuRadioButton';
+import { MenuButton } from './common/MenuButton';
 import { filterRenderableTracks, getTrackLabel } from '../util/TrackUtils';
-import { MenuView } from './menuview/MenuView';
+import { MenuView } from './common/MenuView';
 
 export interface LanguageMenuButtonState {
   audioTracks: MediaTrack[];

@@ -4,11 +4,11 @@ import React, { PureComponent, useContext } from 'react';
 import { Platform } from 'react-native';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
 import { getVideoQualityLabel } from '../util/TrackUtils';
-import { MenuButton } from './menuview/MenuButton';
+import { MenuButton } from './common/MenuButton';
 import { SettingsSvg } from '../button/svg/SettingsSvg';
-import { MenuView } from './menuview/MenuView';
-import { ScrollableMenu } from './menuview/ScrollableMenu';
-import { MenuRadioButton } from './menuview/MenuRadioButton';
+import { MenuView } from './common/MenuView';
+import { ScrollableMenu } from './common/ScrollableMenu';
+import { MenuRadioButton } from './common/MenuRadioButton';
 
 export const SettingsMenuButton = () => {
   if (Platform.OS === 'ios') {
