@@ -1,35 +1,36 @@
 package com.theoplayer
 
 import android.annotation.SuppressLint
-import android.os.Build
+import android.content.*
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.widget.FrameLayout
 import com.facebook.react.bridge.*
-import com.theoplayer.util.TypeUtils.encodeInfNan
-import com.theoplayer.android.api.ads.ima.GoogleImaIntegrationFactory.createGoogleImaIntegration
-import com.theoplayer.android.api.ads.dai.GoogleDaiIntegrationFactory.createGoogleDaiIntegration
-import com.theoplayer.android.api.cast.CastIntegrationFactory.createCastIntegration
 import com.facebook.react.uimanager.ThemedReactContext
-import com.theoplayer.android.api.THEOplayerView
-import com.theoplayer.android.api.ads.dai.GoogleDaiIntegration
-import com.theoplayer.android.api.ads.ima.GoogleImaIntegration
-import com.theoplayer.android.api.cast.CastIntegration
-import com.theoplayer.android.api.ads.wrapper.AdsApiWrapper
-import com.theoplayer.android.api.player.Player
-import com.theoplayer.android.api.player.track.texttrack.TextTrack
-import com.theoplayer.android.api.THEOplayerConfig
 import com.google.ads.interactivemedia.v3.api.AdsRenderingSettings
 import com.google.ads.interactivemedia.v3.api.ImaSdkFactory
-import com.theoplayer.source.SourceAdapter
+import com.theoplayer.android.api.THEOplayerConfig
+import com.theoplayer.android.api.THEOplayerView
+import com.theoplayer.android.api.ads.dai.GoogleDaiIntegration
+import com.theoplayer.android.api.ads.dai.GoogleDaiIntegrationFactory.createGoogleDaiIntegration
+import com.theoplayer.android.api.ads.ima.GoogleImaIntegration
+import com.theoplayer.android.api.ads.ima.GoogleImaIntegrationFactory.createGoogleImaIntegration
+import com.theoplayer.android.api.ads.wrapper.AdsApiWrapper
+import com.theoplayer.android.api.cast.Cast
+import com.theoplayer.android.api.cast.CastIntegration
+import com.theoplayer.android.api.cast.CastIntegrationFactory.createCastIntegration
 import com.theoplayer.android.api.error.THEOplayerException
-import com.theoplayer.android.api.player.track.texttrack.TextTrackMode
+import com.theoplayer.android.api.player.Player
+import com.theoplayer.android.api.player.track.mediatrack.MediaTrack
 import com.theoplayer.android.api.player.track.mediatrack.quality.AudioQuality
 import com.theoplayer.android.api.player.track.mediatrack.quality.VideoQuality
-import com.theoplayer.android.api.cast.Cast
-import com.theoplayer.android.api.player.track.mediatrack.MediaTrack
-import java.lang.Exception
+import com.theoplayer.android.api.player.track.texttrack.TextTrack
+import com.theoplayer.android.api.player.track.texttrack.TextTrackMode
+import com.theoplayer.mediasession.MediaSessionIntegration
+import com.theoplayer.presentation.PresentationManager
+import com.theoplayer.source.SourceAdapter
+import com.theoplayer.util.TypeUtils.encodeInfNan
 
 private const val TAG = "ReactTHEOplayerView"
 
@@ -37,14 +38,17 @@ private const val TAG = "ReactTHEOplayerView"
 class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
   FrameLayout(reactContext), LifecycleEventListener {
 
-  private val eventEmitter: PlayerEventEmitter = PlayerEventEmitter(reactContext.reactApplicationContext, this)
+  private val eventEmitter: PlayerEventEmitter =
+    PlayerEventEmitter(reactContext.reactApplicationContext, this)
   private var playerView: THEOplayerView? = null
-  private var fullscreen = false
   private val mainHandler = Handler(Looper.getMainLooper())
 
+  var presentationManager: PresentationManager? = null
   var daiIntegration: GoogleDaiIntegration? = null
   var imaIntegration: GoogleImaIntegration? = null
   var castIntegration: CastIntegration? = null
+  var mediaSessionIntegration: MediaSessionIntegration? = null
+
   val adsApi: AdsApiWrapper
   var player: Player? = null
 
@@ -57,7 +61,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
     if (BuildConfig.LOG_VIEW_EVENTS) {
       Log.d(TAG, "Initialize view")
     }
-    val playerConfig = PlayerConfigAdapter.fromProps(configProps)
+    val playerConfig = PlayerConfigAdapter.theoConfigFromProps(configProps)
     playerView = object : THEOplayerView(reactContext.currentActivity!!, playerConfig) {
       private fun measureAndLayout() {
         measure(
@@ -73,11 +77,17 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
         // schedule a forced layout
         mainHandler.post { measureAndLayout() }
       }
-    }.also {
+    }.also { view ->
       val layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-      it.layoutParams = layoutParams
-      addIntegrations(it, playerConfig)
-      addView(it, 0, layoutParams)
+      view.layoutParams = layoutParams
+      addIntegrations(view, playerConfig)
+      addView(view, 0, layoutParams)
+      presentationManager = PresentationManager(
+        view,
+        reactContext,
+        eventEmitter,
+        PlayerConfigAdapter.presentationManagerConfigFromProps(configProps)
+      )
     }
   }
 
@@ -93,6 +103,10 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
   }
 
   private fun addIntegrations(playerView: THEOplayerView, playerConfig: THEOplayerConfig) {
+    if (BuildConfig.EXTENSION_MEDIASESSION) {
+      mediaSessionIntegration = MediaSessionIntegration(context, playerView.player)
+    }
+
     try {
       if (BuildConfig.EXTENSION_GOOGLE_IMA) {
         imaIntegration = createGoogleImaIntegration(playerView).apply {
@@ -160,18 +174,22 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
     }, 1)
   }
 
-  override fun onHostResume() {
-    if (BuildConfig.LOG_VIEW_EVENTS) {
-      Log.d(TAG, "onHostResume")
-    }
-    playerView?.onResume()
-  }
-
   override fun onHostPause() {
     if (BuildConfig.LOG_VIEW_EVENTS) {
       Log.d(TAG, "onHostPause")
     }
-    playerView?.onPause()
+    if (presentationManager?.shouldPauseOnHostPause != false) {
+      mediaSessionIntegration?.onPause()
+      playerView?.onPause()
+    }
+  }
+
+  override fun onHostResume() {
+    if (BuildConfig.LOG_VIEW_EVENTS) {
+      Log.d(TAG, "onHostResume")
+    }
+    mediaSessionIntegration?.onResume()
+    playerView?.onResume()
   }
 
   override fun onHostDestroy() {
@@ -185,6 +203,8 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
     if (BuildConfig.LOG_VIEW_EVENTS) {
       Log.d(TAG, "releasePlayer")
     }
+    mediaSessionIntegration?.onDestroy()
+    presentationManager?.onDestroy()
     player?.let {
       eventEmitter.removeListeners(it)
       adsApi.destroy()
@@ -207,7 +227,6 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
       eventEmitter.emitError(exception)
     }
   }
-
 
   val selectedTextTrack: TextTrack?
     get() {
@@ -244,34 +263,4 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
         null
       }
     }
-
-  @SuppressLint("ObsoleteSdkInt")
-  fun setFullscreen(fullscreen: Boolean) {
-    if (fullscreen == this.fullscreen) {
-      return
-    }
-    this.fullscreen = fullscreen
-    val activity = reactContext.currentActivity ?: return
-    val window = activity.window
-    val decorView = window.decorView
-    val uiOptions: Int
-    if (fullscreen) {
-      uiOptions = if (Build.VERSION.SDK_INT >= 19) { // 4.4+
-        (SYSTEM_UI_FLAG_HIDE_NAVIGATION
-          or SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-          or SYSTEM_UI_FLAG_FULLSCREEN)
-      } else {
-        (SYSTEM_UI_FLAG_HIDE_NAVIGATION
-          or SYSTEM_UI_FLAG_FULLSCREEN)
-      }
-      eventEmitter.onFullscreenWillPresent()
-      decorView.systemUiVisibility = uiOptions
-      eventEmitter.onFullscreenDidPresent()
-    } else {
-      uiOptions = SYSTEM_UI_FLAG_VISIBLE
-      eventEmitter.onFullscreenWillDismiss()
-      decorView.systemUiVisibility = uiOptions
-      eventEmitter.onFullscreenDidDismiss()
-    }
-  }
 }

@@ -14,6 +14,7 @@ class THEOplayerRCTView: UIView {
     var castEventHandler: THEOplayerRCTCastEventHandler
     var adsConfig = AdsConfig()
     var castConfig = CastConfig()
+    var pipConfig = PipConfig()
     
     // MARK: Events
     var onNativePlayerReady: RCTDirectEventBlock?
@@ -78,7 +79,7 @@ class THEOplayerRCTView: UIView {
         let cssPaths = stylePath != nil ? [stylePath!] : []
         self.player = THEOplayer(configuration: THEOplayerConfiguration(chromeless: self.chromeless,
                                                                         cssPaths: cssPaths,
-                                                                        pip: nil,
+                                                                        pip: self.playerPipConfiguration(),
                                                                         ads: self.playerAdsConfiguration(),
                                                                         cast: self.playerCastConfiguration(),
                                                                         license: self.license,
@@ -91,7 +92,7 @@ class THEOplayerRCTView: UIView {
                                                                         ads: self.playerAdsConfiguration(),
                                                                         license: self.license,
                                                                         licenseUrl: self.licenseUrl,
-                                                                        pip: nil))
+                                                                        pip: self.playerPipConfiguration()))
         return self.player
     }
 #endif
@@ -120,6 +121,7 @@ class THEOplayerRCTView: UIView {
         self.chromeless = configDict["chromeless"] as? Bool ?? true
         self.parseAdsConfig(configDict: configDict)
         self.parseCastConfig(configDict: configDict)
+        self.parsePipConfig(configDict: configDict)
         if DEBUG_VIEW { print("[NATIVE] config prop updated.") }
         
         // Given the bridged config, create the initial THEOplayer instance
@@ -247,28 +249,10 @@ class THEOplayerRCTView: UIView {
         if DEBUG_VIEW { print("[NATIVE] nativeCanPlay prop set.") }
     }
     
-    @objc(setOnNativeFullscreenPlayerWillPresent:)
-    func setOnNativeFullscreenPlayerWillPresent(nativeFullscreenPlayerWillPresent: @escaping RCTDirectEventBlock) {
-        self.mainEventHandler.onNativeFullscreenPlayerWillPresent = nativeFullscreenPlayerWillPresent
-        if DEBUG_VIEW { print("[NATIVE] nativeFullscreenPlayerWillPresent prop set.") }
-    }
-    
-    @objc(setOnNativeFullscreenPlayerDidPresent:)
-    func setOnNativeFullscreenPlayerDidPresent(nativeFullscreenPlayerDidPresent: @escaping RCTDirectEventBlock) {
-        self.mainEventHandler.onNativeFullscreenPlayerDidPresent = nativeFullscreenPlayerDidPresent
-        if DEBUG_VIEW { print("[NATIVE] nativeFullscreenPlayerDidPresent prop set.") }
-    }
-
-    @objc(setOnNativeFullscreenPlayerWillDismiss:)
-    func setOnNativeFullscreenPlayerWillDismiss(nativeFullscreenPlayerWillDismiss: @escaping RCTDirectEventBlock) {
-        self.mainEventHandler.onNativeFullscreenPlayerWillDismiss = nativeFullscreenPlayerWillDismiss
-        if DEBUG_VIEW { print("[NATIVE] nativeFullscreenPlayerWillDismiss prop set.") }
-    }
-    
-    @objc(setOnNativeFullscreenPlayerDidDismiss:)
-    func setOnNativeFullscreenPlayerDidDismiss(nativeFullscreenPlayerDidDismiss: @escaping RCTDirectEventBlock) {
-        self.mainEventHandler.onNativeFullscreenPlayerDidDismiss = nativeFullscreenPlayerDidDismiss
-        if DEBUG_VIEW { print("[NATIVE] nativeFullscreenPlayerDidDismiss prop set.") }
+    @objc(setOnNativePresentationModeChange:)
+    func setOnNativePresentationModeChange(nativePresentationMode: @escaping RCTDirectEventBlock) {
+        self.mainEventHandler.onNativePresentationModeChange = nativePresentationMode
+        if DEBUG_VIEW { print("[NATIVE] nativePresentationMode prop set.") }
     }
     
     // MARK: - Listener based TEXTTRACK event bridging

@@ -2,11 +2,11 @@ import type * as THEOplayer from 'theoplayer';
 import type {
   AddTrackEvent,
   DurationChangeEvent as NativeDurationChangeEvent,
-  RateChangeEvent as NativeRateChangeEvent,
   ErrorEvent as NativeErrorEvent,
   Event as NativeEvent,
   MediaTrack as NativeMediaTrack,
   PresentationModeChangeEvent,
+  RateChangeEvent as NativeRateChangeEvent,
   ReadyStateChangeEvent as NativeReadyStateChangeEvent,
   RemoveTrackEvent,
   TextTrack as NativeTextTrack,
@@ -16,25 +16,17 @@ import type {
   VolumeChangeEvent as NativeVolumeChangeEvent,
 } from 'theoplayer';
 import type { AdEvent, MediaTrack, TextTrack, TimeRange } from 'react-native-theoplayer';
-import {
-  AdEventType,
-  FullscreenActionType,
-  MediaTrackEventType,
-  MediaTrackType,
-  PlayerEventType,
-  TextTrackEventType,
-  TrackListEventType,
-} from 'react-native-theoplayer';
+import { AdEventType, MediaTrackEventType, MediaTrackType, PlayerEventType, TextTrackEventType, TrackListEventType } from 'react-native-theoplayer';
 import type { THEOplayerWebAdapter } from './THEOplayerWebAdapter';
 import { BaseEvent } from './event/BaseEvent';
 import {
   DefaultAdEvent,
   DefaultDurationChangeEvent,
   DefaultErrorEvent,
-  DefaultFullscreenEvent,
   DefaultLoadedMetadataEvent,
   DefaultMediaTrackEvent,
   DefaultMediaTrackListEvent,
+  DefaultPresentationModeChangeEvent,
   DefaultProgressEvent,
   DefaultRateChangeEvent,
   DefaultReadyStateChangeEvent,
@@ -232,11 +224,7 @@ export class WebEventForwarder {
   };
 
   private readonly onPresentationModeChange = (event: PresentationModeChangeEvent) => {
-    if (event.presentationMode === 'fullscreen') {
-      this._facade.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_DID_PRESENT));
-    } else if (event.presentationMode === 'inline') {
-      this._facade.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_DID_DISMISS));
-    }
+    this._facade.dispatchEvent(new DefaultPresentationModeChangeEvent(event.presentationMode));
   };
 
   private readonly onAddTextTrack = (event: AddTrackEvent) => {

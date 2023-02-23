@@ -1,4 +1,4 @@
-import type { MediaTrack, PlayerError, PlayerEventType, TextTrack } from 'react-native-theoplayer';
+import type { MediaTrack, PlayerError, PlayerEventType, PresentationMode, TextTrack } from 'react-native-theoplayer';
 import type { TimeRange } from '../timeranges/TimeRange';
 import type { Event } from './Event';
 
@@ -33,6 +33,13 @@ export interface DurationChangeEvent extends Event<PlayerEventType.DURATION_CHAN
    * The player's new duration, in msecs.
    */
   readonly duration: number;
+}
+
+export interface PresentationModeChangeEvent extends Event<PlayerEventType.PRESENTATIONMODE_CHANGE> {
+  /**
+   * The player's new presentationMode.
+   */
+  readonly presentationMode: PresentationMode;
 }
 
 export interface RateChangeEvent extends Event<PlayerEventType.RATE_CHANGE> {
@@ -83,15 +90,4 @@ export interface SegmentNotFoundEvent extends Event<PlayerEventType.SEGMENT_NOT_
    * Number of times the segment was retried.
    */
   readonly retryCount: number;
-}
-
-export enum FullscreenActionType {
-  PLAYER_WILL_PRESENT,
-  PLAYER_DID_PRESENT,
-  PLAYER_WILL_DISMISS,
-  PLAYER_DID_DISMISS,
-}
-
-export interface FullscreenEvent extends Event<PlayerEventType.FULLSCREEN> {
-  fullscreenAction: FullscreenActionType;
 }

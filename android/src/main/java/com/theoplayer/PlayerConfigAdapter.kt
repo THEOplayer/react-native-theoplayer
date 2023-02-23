@@ -9,6 +9,8 @@ import com.theoplayer.android.api.ads.AdPreloadType
 import com.theoplayer.android.api.ads.GoogleImaConfiguration
 import com.theoplayer.android.api.cast.CastStrategy
 import com.google.android.gms.cast.framework.CastContext
+import com.theoplayer.android.api.pip.PipConfiguration
+import com.theoplayer.presentation.PresentationConfig
 
 private const val TAG = "PlayerConfigAdapter"
 private const val PROP_ADS_CONFIGURATION = "ads"
@@ -23,10 +25,13 @@ private const val PROP_CAST_CONFIGURATION = "cast"
 private const val PROP_CAST_STRATEGY = "strategy"
 private const val PROP_CHROMECAST_CONFIG = "chromecast"
 private const val PROP_CHROMECAST_APPID = "appID"
+private const val PROP_PIP_CONFIG = "pip"
+private const val PROP_PIP_RETAIN_ON_SOURCECHANGE = "retainPresentationModeOnSourceChange"
+private const val PROP_PIP_AUTO = "canStartPictureInPictureAutomaticallyFromInline"
 
 object PlayerConfigAdapter {
 
-  fun fromProps(configProps: ReadableMap?): THEOplayerConfig {
+  fun theoConfigFromProps(configProps: ReadableMap?): THEOplayerConfig {
     val configBuilder = THEOplayerConfig.Builder()
     if (configProps != null) {
       val adsConfig = adsConfigurationFromProps(configProps.getMap(PROP_ADS_CONFIGURATION))
@@ -45,8 +50,17 @@ object PlayerConfigAdapter {
         configBuilder.chromeless(configProps.getBoolean(PROP_CHROMELESS))
       }
       applyCastConfigurationFromProps(configBuilder, configProps.getMap(PROP_CAST_CONFIGURATION))
+      configBuilder.pipConfiguration(PipConfiguration.Builder().build())
     }
     return configBuilder.build()
+  }
+
+  fun presentationManagerConfigFromProps(configProps: ReadableMap?): PresentationConfig {
+    val pip = configProps?.getMap(PROP_PIP_CONFIG)?.toHashMap() ?: emptyMap()
+    return PresentationConfig(
+      pip[PROP_PIP_RETAIN_ON_SOURCECHANGE] as? Boolean ?: false,
+      pip[PROP_PIP_AUTO] as? Boolean ?: false
+    )
   }
 
   private fun adsConfigurationFromProps(configProps: ReadableMap?): AdsConfiguration? {

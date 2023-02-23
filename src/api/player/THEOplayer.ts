@@ -8,6 +8,7 @@ import type { MediaTrack } from '../track/MediaTrack';
 import type { TextTrack } from '../track/TextTrack';
 import type { TimeRange } from '../timeranges/TimeRange';
 import type { TextTrackStyle } from '../track/TextTrackStyle';
+import type { PresentationMode } from '../presentation/PresentationMode';
 
 export type PreloadType = 'none' | 'metadata' | 'auto' | '';
 
@@ -98,9 +99,9 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
   readonly seeking: boolean;
 
   /**
-   * Determines whether the player is currently playing in fullscreen.
+   * The PresentationMode of theplayer. Can be switched to: pictureinpicture, fullscreen or inline
    */
-  fullscreen: boolean;
+  presentationMode: PresentationMode;
 
   /**
    * List of audio tracks of the current source.

@@ -11,10 +11,7 @@ import {
   ChromecastError,
   ChromecastErrorEvent,
   DurationChangeEvent,
-  RateChangeEvent,
   ErrorEvent,
-  FullscreenActionType,
-  FullscreenEvent,
   LoadedMetadataEvent,
   MediaTrack,
   MediaTrackEvent,
@@ -23,8 +20,11 @@ import {
   MediaTrackType,
   PlayerError,
   PlayerEventType,
+  PresentationMode,
+  PresentationModeChangeEvent,
   ProgressEvent,
   Quality,
+  RateChangeEvent,
   ReadyStateChangeEvent,
   SegmentNotFoundEvent,
   TextTrack,
@@ -37,12 +37,6 @@ import {
   TrackListEventType,
   VolumeChangeEvent,
 } from 'react-native-theoplayer';
-
-export class DefaultFullscreenEvent extends BaseEvent<PlayerEventType.FULLSCREEN> implements FullscreenEvent {
-  constructor(public fullscreenAction: FullscreenActionType) {
-    super(PlayerEventType.FULLSCREEN);
-  }
-}
 
 export class DefaultLoadedMetadataEvent extends BaseEvent<PlayerEventType.LOADED_METADATA> implements LoadedMetadataEvent {
   constructor(
@@ -61,6 +55,12 @@ export class DefaultLoadedMetadataEvent extends BaseEvent<PlayerEventType.LOADED
 export class DefaultReadyStateChangeEvent extends BaseEvent<PlayerEventType.READYSTATE_CHANGE> implements ReadyStateChangeEvent {
   constructor(public readyState: number) {
     super(PlayerEventType.READYSTATE_CHANGE);
+  }
+}
+
+export class DefaultPresentationModeChangeEvent extends BaseEvent<PlayerEventType.PRESENTATIONMODE_CHANGE> implements PresentationModeChangeEvent {
+  constructor(public presentationMode: PresentationMode) {
+    super(PlayerEventType.PRESENTATIONMODE_CHANGE);
   }
 }
 

@@ -31,6 +31,7 @@ import com.theoplayer.android.api.event.track.texttrack.list.TextTrackListEventT
 import com.theoplayer.android.api.event.track.texttrack.list.TrackListChangeEvent
 import com.theoplayer.android.api.event.track.tracklist.TrackListEvent
 import com.theoplayer.android.api.player.Player
+import com.theoplayer.android.api.player.PresentationMode
 import com.theoplayer.android.api.player.track.mediatrack.MediaTrack
 import com.theoplayer.android.api.player.track.mediatrack.MediaTrackList
 import com.theoplayer.android.api.player.track.mediatrack.quality.AudioQuality
@@ -70,11 +71,8 @@ private const val EVENT_TEXTTRACK_EVENT = "onNativeTextTrackEvent"
 private const val EVENT_MEDIATRACK_LIST_EVENT = "onNativeMediaTrackListEvent"
 private const val EVENT_MEDIATRACK_EVENT = "onNativeMediaTrackEvent"
 private const val EVENT_AD_EVENT = "onNativeAdEvent"
-private const val EVENT_FULLSCREEN_WILL_PRESENT = "onNativeFullscreenPlayerWillPresent"
-private const val EVENT_FULLSCREEN_DID_PRESENT = "onNativeFullscreenPlayerDidPresent"
-private const val EVENT_FULLSCREEN_WILL_DISMISS = "onNativeFullscreenPlayerWillDismiss"
-private const val EVENT_FULLSCREEN_DID_DISMISS = "onNativeFullscreenPlayerDidDismiss"
 private const val EVENT_CAST_EVENT = "onNativeCastEvent"
+private const val EVENT_PRESENTATIONMODECHANGE = "onNativePresentationModeChange"
 
 private const val EVENT_PROP_CURRENT_TIME = "currentTime"
 private const val EVENT_PROP_CURRENT_PROGRAM_DATE_TIME = "currentProgramDateTime"
@@ -102,6 +100,7 @@ private const val EVENT_PROP_TRACK_TYPE = "trackType"
 private const val EVENT_PROP_CUE = "cue"
 private const val EVENT_PROP_TYPE = "type"
 private const val EVENT_PROP_QUALITIES = "qualities"
+private const val EVENT_PROP_PRESENTATIONMODE = "presentationMode"
 
 @Suppress("UNCHECKED_CAST")
 class PlayerEventEmitter internal constructor(
@@ -135,11 +134,8 @@ class PlayerEventEmitter internal constructor(
     EVENT_MEDIATRACK_LIST_EVENT,
     EVENT_MEDIATRACK_EVENT,
     EVENT_AD_EVENT,
-    EVENT_FULLSCREEN_WILL_PRESENT,
-    EVENT_FULLSCREEN_DID_PRESENT,
-    EVENT_FULLSCREEN_WILL_DISMISS,
-    EVENT_FULLSCREEN_DID_DISMISS,
-    EVENT_CAST_EVENT
+    EVENT_CAST_EVENT,
+    EVENT_PRESENTATIONMODECHANGE
   )
   annotation class VideoEvents
 
@@ -170,11 +166,8 @@ class PlayerEventEmitter internal constructor(
       EVENT_MEDIATRACK_LIST_EVENT,
       EVENT_MEDIATRACK_EVENT,
       EVENT_AD_EVENT,
-      EVENT_FULLSCREEN_WILL_PRESENT,
-      EVENT_FULLSCREEN_DID_PRESENT,
-      EVENT_FULLSCREEN_WILL_DISMISS,
-      EVENT_FULLSCREEN_DID_DISMISS,
-      EVENT_CAST_EVENT
+      EVENT_CAST_EVENT,
+      EVENT_PRESENTATIONMODECHANGE
     )
   }
 
@@ -239,6 +232,8 @@ class PlayerEventEmitter internal constructor(
     playerListeners[PlayerEventTypes.PAUSE] = EventListener<PlayerEvent<*>> { onPause() }
     playerListeners[PlayerEventTypes.SEGMENTNOTFOUND] =
       EventListener { event: SegmentNotFoundEvent -> onSegmentNotFound(event) }
+    playerListeners[PlayerEventTypes.PRESENTATIONMODECHANGE] =
+      EventListener { event: PresentationModeChange -> onPresentationModeChange(event) }
     textTrackListeners[TextTrackListEventTypes.ADDTRACK] =
       EventListener { event: AddTrackEvent -> onTextTrackAdd(event) }
     textTrackListeners[TextTrackListEventTypes.REMOVETRACK] =
@@ -277,6 +272,18 @@ class PlayerEventEmitter internal constructor(
 
   fun emitError(exception: THEOplayerException) {
     emitError(exception.code.name, exception.message)
+  }
+
+  fun emitPresentationModeChange(presentationMode: PresentationMode) {
+    val payload = Arguments.createMap()
+    payload.putString(EVENT_PROP_PRESENTATIONMODE,
+      when (presentationMode) {
+        PresentationMode.PICTURE_IN_PICTURE -> "picture-in-picture"
+        PresentationMode.FULLSCREEN -> "fullscreen"
+        else -> "inline"
+      }
+    )
+    receiveEvent(EVENT_PRESENTATIONMODECHANGE, payload)
   }
 
   fun preparePlayer(player: Player) {
@@ -435,6 +442,10 @@ class PlayerEventEmitter internal constructor(
     receiveEvent(EVENT_SEGMENTNOTFOUND, payload)
   }
 
+  private fun onPresentationModeChange(event: PresentationModeChange) {
+    emitPresentationModeChange(event.presentationMode)
+  }
+
   private val onTextTrackAddCue = EventListener<AddCueEvent> { event ->
     val payload = Arguments.createMap()
     payload.putInt(EVENT_PROP_TRACK_UID, event.track.uid)
@@ -591,22 +602,6 @@ class PlayerEventEmitter internal constructor(
 
   private fun onVideoTrackChange(event: com.theoplayer.android.api.event.track.mediatrack.video.list.TrackListChangeEvent) {
     dispatchMediaTrackEvent(TrackEventType.CHANGE_TRACK, MediaTrackType.VIDEO, event.track)
-  }
-
-  fun onFullscreenWillPresent() {
-    receiveEvent(EVENT_FULLSCREEN_WILL_PRESENT, null)
-  }
-
-  fun onFullscreenDidPresent() {
-    receiveEvent(EVENT_FULLSCREEN_DID_PRESENT, null)
-  }
-
-  fun onFullscreenWillDismiss() {
-    receiveEvent(EVENT_FULLSCREEN_WILL_DISMISS, null)
-  }
-
-  fun onFullscreenDidDismiss() {
-    receiveEvent(EVENT_FULLSCREEN_DID_DISMISS, null)
   }
 
   private fun receiveEvent(@VideoEvents type: String, event: WritableMap?) {

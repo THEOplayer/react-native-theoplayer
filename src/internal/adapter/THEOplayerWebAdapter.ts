@@ -1,24 +1,32 @@
 import { DefaultEventDispatcher } from './event/DefaultEventDispatcher';
-import type { AdsAPI, CastAPI, MediaTrack, NativeHandleType, PlayerEventMap, PreloadType, TextTrackStyle, THEOplayer } from 'react-native-theoplayer';
-import { FullscreenActionType, TextTrack } from 'react-native-theoplayer';
+import type {
+  AdsAPI,
+  CastAPI,
+  MediaTrack,
+  NativeHandleType,
+  PlayerEventMap,
+  PreloadType,
+  TextTrack,
+  TextTrackStyle,
+  THEOplayer,
+} from 'react-native-theoplayer';
 import { THEOplayerWebAdsAdapter } from './ads/THEOplayerWebAdsAdapter';
 import { THEOplayerWebCastAdapter } from './cast/THEOplayerWebCastAdapter';
 import type * as THEOplayerWeb from 'theoplayer';
 import type { MediaTrack as NativeMediaTrack, TextTrack as NativeTextTrack } from 'theoplayer';
 import { findNativeQualitiesByUid, fromNativeMediaTrackList, fromNativeTextTrackList } from './web/TrackUtils';
 import type { ABRConfiguration, SourceDescription } from 'src/api/barrel';
-import { DefaultFullscreenEvent } from './event/PlayerEvents';
 import { WebEventForwarder } from './WebEventForwarder';
-import { browserDetection } from '../../web/platform/BrowserDetection';
+import type { PresentationMode } from 'src/api/presentation/PresentationMode';
+import { WebPresentationModeManager } from './web/WebPresentationModeManager';
 
 export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayer {
   private readonly _player: THEOplayerWeb.ChromelessPlayer;
   private readonly _adsAdapter: THEOplayerWebAdsAdapter;
   private readonly _castAdapter: THEOplayerWebCastAdapter;
   private readonly _eventForwarder: WebEventForwarder;
-
-  private _isFullscreen = false;
   private _targetVideoQuality: number | number[] | undefined = undefined;
+  private _presentationModeManager: WebPresentationModeManager;
 
   constructor(player: THEOplayerWeb.ChromelessPlayer) {
     super();
@@ -26,6 +34,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     this._adsAdapter = new THEOplayerWebAdsAdapter(this._player);
     this._castAdapter = new THEOplayerWebCastAdapter(this._player);
     this._eventForwarder = new WebEventForwarder(this._player, this);
+    this._presentationModeManager = new WebPresentationModeManager(this._player);
   }
 
   get abr(): ABRConfiguration | undefined {
@@ -107,40 +116,12 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     return this._player.seeking;
   }
 
-  get fullscreen(): boolean {
-    return this._isFullscreen;
+  get presentationMode(): PresentationMode {
+    return this._presentationModeManager.presentationMode;
   }
 
-  set fullscreen(fullscreen: boolean) {
-    const appContainer = document.getElementById('app');
-    if (fullscreen) {
-      this.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_WILL_PRESENT));
-      if (browserDetection.IS_IOS_ && browserDetection.IS_SAFARI_) {
-        // requestFullscreen isn't supported only on iOS Safari: https://caniuse.com/?search=requestFullscreen
-        // The workaround is using webkitEnterFullscreen which needs to be called on the video element
-        const elements = this._player.element.children;
-        for (const element of Array.from(elements)) {
-          if (element.tagName === 'VIDEO' && element.attributes.getNamedItem('src') !== null) {
-            (element as HTMLVideoElement).webkitEnterFullscreen?.();
-          }
-        }
-      } else {
-        appContainer?.requestFullscreen().then();
-      }
-    } else {
-      this.dispatchEvent(new DefaultFullscreenEvent(FullscreenActionType.PLAYER_WILL_DISMISS));
-      if (browserDetection.IS_IOS_ && browserDetection.IS_SAFARI_) {
-        const elements = this._player.element.children;
-        for (const element of Array.from(elements)) {
-          if (element.tagName === 'VIDEO' && element.attributes.getNamedItem('src') !== null) {
-            (element as HTMLVideoElement).webkitExitFullscreen?.();
-          }
-        }
-      } else {
-        document.exitFullscreen().then();
-      }
-    }
-    this._isFullscreen = fullscreen;
+  set presentationMode(presentationMode: PresentationMode) {
+    this._presentationModeManager.presentationMode = presentationMode;
   }
 
   get audioTracks(): MediaTrack[] {

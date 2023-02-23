@@ -10,6 +10,8 @@ import type {
   MediaTrackListEvent,
   NativeHandleType,
   PlayerEventMap,
+  PresentationMode,
+  PresentationModeChangeEvent,
   ProgressEvent,
   RateChangeEvent,
   SourceDescription,
@@ -50,7 +52,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   private _paused = false;
   private _seekable: TimeRange[] = [];
   private _buffered: TimeRange[] = [];
-  private _fullscreen = false;
+  private _presentationMode: PresentationMode = 'inline';
   private _muted = false;
   private _seeking = false;
   private _volume = 1;
@@ -87,6 +89,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this.addEventListener(PlayerEventType.TEXT_TRACK_LIST, this.onTextTrackList);
     this.addEventListener(PlayerEventType.MEDIA_TRACK, this.onMediaTrack);
     this.addEventListener(PlayerEventType.MEDIA_TRACK_LIST, this.onMediaTrackList);
+    this.addEventListener(PlayerEventType.PRESENTATIONMODE_CHANGE, this.onPresentationModeChange);
   }
 
   private onSourceChange = () => {
@@ -103,6 +106,10 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   private onPlaying = () => {
     this._paused = false;
+  };
+
+  private onPresentationModeChange = (event: PresentationModeChangeEvent) => {
+    this._presentationMode = event.presentationMode;
   };
 
   private onTimeupdate = (event: TimeUpdateEvent) => {
@@ -251,14 +258,13 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     return this._duration;
   }
 
-  get fullscreen(): boolean {
-    // TODO: rename to presentationState?
-    return this._fullscreen;
+  get presentationMode(): PresentationMode {
+    return this._presentationMode;
   }
 
-  set fullscreen(fullscreen: boolean) {
-    // TODO: rename to presentationState?
-    NativeModules.PlayerModule.setFullscreen(this._view.nativeHandle, fullscreen);
+  set presentationMode(presentationMode: PresentationMode) {
+    this._presentationMode = presentationMode;
+    NativeModules.PlayerModule.setPresentationMode(this._view.nativeHandle, presentationMode);
   }
 
   get muted(): boolean {
