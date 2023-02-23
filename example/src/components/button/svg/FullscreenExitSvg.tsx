@@ -3,7 +3,7 @@ import Svg, { Path } from 'react-native-svg';
 import React from 'react';
 import { SvgContext } from './SvgUtils';
 
-export const FullScreenExitSvg = (props: SvgProps) => {
+export const FullscreenExitSvg = (props: SvgProps) => {
   return (
     <SvgContext.Consumer>
       {(context) => (
