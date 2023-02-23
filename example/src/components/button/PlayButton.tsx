@@ -3,9 +3,9 @@ import type { StyleProp, ViewStyle } from 'react-native';
 import React, { PureComponent } from 'react';
 import { PlayerEventType } from 'react-native-theoplayer';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
-import { PlayButtonSvg } from './svg/PlayButtonSvg';
+import { PlaySvg } from './svg/PlaySvg';
 
-import { PauseButtonSvg } from './svg/PauseButtonSvg';
+import { PauseSvg } from './svg/PauseSvg';
 
 interface PlayButtonProps {
   style?: StyleProp<ViewStyle>;
@@ -92,7 +92,7 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
           <ActionButton
             style={context.style.controlBar.buttonIcon}
             touchable={true}
-            svg={paused ? <PlayButtonSvg /> : <PauseButtonSvg />}
+            svg={paused ? <PlaySvg /> : <PauseSvg />}
             // @ts-ignore
             iconStyle={[style]}
             onPress={this.togglePlayPause}

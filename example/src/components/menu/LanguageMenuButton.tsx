@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import type { MediaTrack } from 'react-native-theoplayer';
 import { PlayerEventType, TextTrack } from 'react-native-theoplayer';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
-import { HeadphonesSvg } from '../button/svg/HeadphonesSvg';
+import { LanguageSvg } from '../button/svg/LanguageSvg';
 import { ScrollableMenu } from './common/ScrollableMenu';
 import { MenuRadioButton } from './common/MenuRadioButton';
 import { MenuButton } from './common/MenuButton';
@@ -55,7 +55,7 @@ export class LanguageMenuButton extends PureComponent<unknown, LanguageMenuButto
 
     return (
       <MenuButton
-        svg={<HeadphonesSvg />}
+        svg={<LanguageSvg />}
         menu={
           <LanguageMenuView
             audioTracks={context.player.audioTracks}
