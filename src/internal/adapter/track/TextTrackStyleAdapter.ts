@@ -1,5 +1,4 @@
-import type { EdgeStyle, TextTrackStyle } from 'react-native-theoplayer';
-import type { THEOplayerView } from 'react-native-theoplayer';
+import type { EdgeStyle, TextTrackStyle, THEOplayerView } from 'react-native-theoplayer';
 
 export class TextTrackStyleAdapter implements TextTrackStyle {
   // @ts-ignore

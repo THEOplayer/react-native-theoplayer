@@ -20,7 +20,7 @@ export function THEOplayerView(props: THEOplayerViewProps) {
           ui: {
             fluid: true,
           },
-          allowNativeFullscreen: true
+          allowNativeFullscreen: true,
         });
       }
 

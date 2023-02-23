@@ -11,9 +11,7 @@ import {
   ChromecastError,
   ChromecastErrorEvent,
   DurationChangeEvent,
-  RateChangeEvent,
   ErrorEvent,
-  PresentationModeChangeEvent,
   LoadedMetadataEvent,
   MediaTrack,
   MediaTrackEvent,
@@ -22,8 +20,11 @@ import {
   MediaTrackType,
   PlayerError,
   PlayerEventType,
+  PresentationMode,
+  PresentationModeChangeEvent,
   ProgressEvent,
   Quality,
+  RateChangeEvent,
   ReadyStateChangeEvent,
   SegmentNotFoundEvent,
   TextTrack,
@@ -35,7 +36,6 @@ import {
   TimeUpdateEvent,
   TrackListEventType,
   VolumeChangeEvent,
-  PresentationMode,
 } from 'react-native-theoplayer';
 
 export class DefaultLoadedMetadataEvent extends BaseEvent<PlayerEventType.LOADED_METADATA> implements LoadedMetadataEvent {
