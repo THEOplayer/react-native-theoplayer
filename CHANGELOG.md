@@ -23,6 +23,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added `mutedAutoplay` property to `PlayerConfiguration` to allow autoplay on web browsers with different autoplay policies.
 - Added mode `hidden` as a value for a text track's `TextTrackMode` property, which is typically used for metadata tracks.
 - Added `TextTrackStyle` API to support text track styling. This feature is currently supported on web only.
+- Added support for 'picture-in-picture' presentation mode. More information on the [documentation page](./doc/pip.md)
+- Added `muted` state in `volumechange` event payload.
+- Added media session connector for Android.
 
 ### Changed
 
@@ -34,6 +37,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Removed
 
 - Removed `seek` method on `THEOplayer`. It is replaced with a `currentTime` setter.
+- Removed `fullscreen` setter and getter in favor of `presentationMode`.
 
 ### Fixed
 
@@ -45,6 +49,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed an issue on Android where the `framerate` property of a `VideoQuality` instance would not be filled in.
 - Fixed an issue on iOS where the `TextTrackMode` property of a text track would be incorrect.
 - Fixed an issue on iOS where after enabling/disabling a text track, metadata tracks would be set to `disabled` as well.
+- Fixed missing `volumechange` events on mobile platforms.
 
 ## [1.8.0]
 
