@@ -106,10 +106,10 @@ dependencies {
 
   if (enabledMediaSession) {
     println('ENABLE THEOplayer MediaSession extension.')
-    implementation "com.theoplayer.theoplayer-sdk-android:mediasession:${THEOplayerVersion}"
+    implementation "com.theoplayer.theoplayer-sdk-android:mediasession:4.9.0-1"
   } else {
     println('DISABLE THEOplayer MediaSession extension.')
-    compileOnly "com.theoplayer.theoplayer-sdk-android:mediasession:${THEOplayerVersion}"
+    compileOnly "com.theoplayer.theoplayer-sdk-android:mediasession:4.9.0-1"
   }
 
   if (enabledGoogleIMA) {
