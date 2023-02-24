@@ -49,5 +49,16 @@ export function THEOplayerView(props: THEOplayerViewProps) {
   }, [container]);
 
   const chromeless = config?.chromeless === undefined || config?.chromeless === true;
-  return <div ref={container} className={chromeless ? 'theoplayer-container' : 'theoplayer-container video-js theoplayer-skin'} />;
+  return (
+    <div ref={container} style={styles.container} className={chromeless ? 'theoplayer-container' : 'theoplayer-container video-js theoplayer-skin'} />
+  );
 }
+
+const styles = {
+  // by default stretch the video to cover the container.
+  // Override using the 'theoplayer-container' class.
+  container: {
+    width: '100%',
+    height: '100%',
+  },
+};
