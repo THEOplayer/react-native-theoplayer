@@ -14,6 +14,8 @@ This page describes how to configure PiP with react-native-theoplayer.
 
 ### Configuration
 
+#### Transitioning to PiP automatically
+
 The `PlayerConfiguration` object that is passed when creating a `THEOplayerView` component
 allows native mobile apps on iOS and Android to automatically go into PiP presentation mode when
 
@@ -26,12 +28,29 @@ const playerConfig: PlayerConfiguration = {
 };
 ```
 
+#### Using presentationMode
+
 The picture-in-picture presentation mode can also be triggered explicitly using the
 `THEOplayer` API:
 
 ```typescript
 // Change presentation mode ('inline', 'fullscreen' or 'picture-in-picture').
 player.presentationMode = 'picture-in-picture';
+```
+
+#### Listening for presentationMode changes
+
+Each time the player transitions from one presentationMode to another, either automatically
+or manually through the API, the player dispatches a `presentationmodechange` event that can be
+used to update the user-interface.
+
+```typescript
+player.addEventListener(
+  PlayerEventType.PRESENTATIONMODE_CHANGE,
+  (event: PresentationModeChangeEvent) => {
+    const newPresentationMode = event.presentationMode;
+  }
+);
 ```
 
 Additional configuration is necessary depending on the platform the app runs on.
@@ -43,11 +62,13 @@ Picture-in-picture support for Android was added in Android 8.0 (API level 26).
 A react-native app on Android is typically a single-activity application. Launching picture-in-picture
 mode means the whole activity transitions to an _out-of-app_ PiP window.
 
+#### Enabling PiP support
+
 To enable PiP support, make sure to set `android:supportsPictureInPicture=true` in the
 app's manifest, and specify that the activity handles layout configuration changes
 so that it does not relaunch when layout changes occur during PiP mode transitions.
 
-```groovy
+```xml
 <activity
   android:name=".MainActivity"
   android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
@@ -84,6 +105,8 @@ public override fun onStop() {
 }
 ```
 
+#### PiP controls
+
 The PiP window will show the default controls to configure, maximize and close the PiP window.
 In addition, the active media session enables a play/pause toggle button and (disabled) play-list
 navigator buttons.
@@ -91,11 +114,21 @@ navigator buttons.
 | ![pip1](./pip_android_1.png)    |       ![pip2](./pip_android_2.png)      | ![pip3](./pip_android_3.png)  |
 |---------------------------------------------------|:----------------------------------------------------------:|:-----------------------------:|
 
+#### User interface
+
+As mentioned before, when choosing `picture-in-picture`
+presentation mode on Android the whole activity moves to the PiP window, including the
+react-native UI that potentially lies on top. For this reason it is necessary to disable the UI
+on Android in PiP mode, as opposed to iOS and web where the video view is separated from the rest
+
 More information on Android PiP support can be found on the [Android developer pages](https://developer.android.com/develop/ui/views/picture-in-picture).
 
 ### iOS
 
+No extra configuration is necessary to support picture-in-picture on iOS.
 
+In contrast to Android, only the video view will move to the floating PiP window.
+The react-native UI can remain visible and provide playback control.
 
 ### Web
 
