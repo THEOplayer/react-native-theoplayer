@@ -51,6 +51,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed an issue on iOS where the `TextTrackMode` property of a text track would be incorrect.
 - Fixed an issue on iOS where after enabling/disabling a text track, metadata tracks would be set to `disabled` as well.
 - Fixed missing `volumechange` events on mobile platforms.
+- Fixed an issue on iOS where after toggling the mute state during an ad playout, succeeding mute toggles had no effect.
 
 ## [1.8.2]
 
