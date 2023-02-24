@@ -21,7 +21,7 @@ export function THEOplayerView(props: THEOplayerViewProps) {
             fluid: true,
           },
           allowNativeFullscreen: true,
-        });
+        } as THEOplayer.PlayerConfiguration);
       }
 
       // Prepare the player to ChromelessPlayer.autoplay on platforms where autoplay is restricted without user action.
