@@ -1,6 +1,5 @@
 import type { AdsConfiguration } from '../ads/AdsConfiguration';
 import type { CastConfiguration } from '../cast/CastConfiguration';
-import type { PiPConfiguration } from '../pip/PiPConfiguration';
 
 export interface PlayerConfiguration {
   /**
@@ -34,11 +33,6 @@ export interface PlayerConfiguration {
    * The cast configuration for the player.
    */
   cast?: CastConfiguration;
-
-  /**
-   * The pip configuration for the player.
-   */
-  pip?: PiPConfiguration;
 
   /**
    * The license for the player

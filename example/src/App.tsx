@@ -14,11 +14,7 @@ const playerConfig: PlayerConfiguration = {
       appID: 'CC1AD845',
     },
     strategy: 'auto',
-  },
-  pip: {
-    // Automatically switch to PiP when the app goes to background.
-    canStartPictureInPictureAutomaticallyFromInline: true,
-  },
+  }
 };
 
 export default function App() {
