@@ -9,6 +9,7 @@ import type {
   MediaTrackEvent,
   MediaTrackListEvent,
   NativeHandleType,
+  PiPConfiguration,
   PlayerEventMap,
   PresentationMode,
   PresentationModeChangeEvent,
@@ -38,6 +39,7 @@ import { THEOplayerNativeCastAdapter } from './cast/THEOplayerNativeCastAdapter'
 import { AbrAdapter } from './abr/AbrAdapter';
 import { NativeModules, Platform } from 'react-native';
 import { TextTrackStyleAdapter } from './track/TextTrackStyleAdapter';
+import type { BackgroundAudioConfiguration } from 'src/api/backgroundAudio/BackgroundAudioConfiguration';
 
 export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayer {
   private readonly _view: THEOplayerView;
@@ -51,6 +53,8 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   private _paused = false;
   private _seekable: TimeRange[] = [];
   private _buffered: TimeRange[] = [];
+  private _pipConfig: PiPConfiguration = { startsAutomatically: false, requiresLinearPlayback: false }
+  private _backgroundAudioConfig: BackgroundAudioConfiguration = { enabled: false }
   private _presentationMode: PresentationMode = 'inline';
   private _muted = false;
   private _seeking = false;
@@ -255,6 +259,24 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   get duration(): number {
     return this._duration;
+  }
+
+  get pipConfiguration(): PiPConfiguration {
+    return this._pipConfig;
+  }
+
+  set pipConfiguration(pipConfiguration: PiPConfiguration) {
+    this._pipConfig = pipConfiguration;
+    NativeModules.PlayerModule.setPipConfiguration(pipConfiguration);
+  }
+
+  get backgroundAudioConfiguration(): BackgroundAudioConfiguration {
+    return this._backgroundAudioConfig;
+  }
+
+  set backgroundAudioConfiguration(backgroundAudioConfiguration: BackgroundAudioConfiguration) {
+    this._backgroundAudioConfig = backgroundAudioConfiguration;
+    NativeModules.PlayerModule.setBackgroundAudioConfiguration(backgroundAudioConfiguration);
   }
 
   get presentationMode(): PresentationMode {
