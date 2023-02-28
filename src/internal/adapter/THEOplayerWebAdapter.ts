@@ -18,6 +18,8 @@ import { findNativeQualitiesByUid, fromNativeMediaTrackList, fromNativeTextTrack
 import type { ABRConfiguration, SourceDescription } from 'src/api/barrel';
 import { WebEventForwarder } from './WebEventForwarder';
 import type { PresentationMode } from 'src/api/presentation/PresentationMode';
+import type { PiPConfiguration } from 'src/api/pip/PiPConfiguration'
+import type { BackgroundAudioConfiguration } from 'src/api/backgroundAudio/BackgroundAudioConfiguration'
 import { WebPresentationModeManager } from './web/WebPresentationModeManager';
 
 export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayer {
@@ -94,6 +96,27 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
 
   set playbackRate(playbackRate: number) {
     this._player.playbackRate = playbackRate;
+  }
+
+  get pipConfiguration(): PiPConfiguration {
+    // TODO
+    return { 
+      startsAutomatically: false,
+      requiresLinearPlayback: false
+    };
+  }
+
+  set pipConfiguration(_pipConfiguration: PiPConfiguration) {
+    // TODO
+  }
+
+  get backgroundAudioConfiguration(): BackgroundAudioConfiguration {
+    // TODO
+    return { enabled: false };
+  }
+
+  set backgroundAudioConfiguration(_backgroundAudioConfiguration: BackgroundAudioConfiguration) {
+    // TODO
   }
 
   get volume(): number {
