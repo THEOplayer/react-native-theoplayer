@@ -101,7 +101,7 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
   readonly seeking: boolean;
 
   /**
-   * The PresentationMode of theplayer. Can be switched to: pictureinpicture, fullscreen or inline
+   * The PresentationMode of the player. Can be switched to: `picture-in-picture`, `fullscreen` or `inline`
    */
   presentationMode: PresentationMode;
 
@@ -158,7 +158,7 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
    */
   pipConfiguration: PiPConfiguration;
 
-    /**
+  /**
    * The avtive configuration for PiP.
    */
   backgroundAudioConfiguration: BackgroundAudioConfiguration;
