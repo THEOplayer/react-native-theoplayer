@@ -33,7 +33,7 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
     player.addEventListener(PlayerEventType.PLAYING, this.onPlay);
     player.addEventListener(PlayerEventType.PAUSE, this.onPause);
     player.addEventListener(PlayerEventType.ERROR, this.onError);
-    player.addEventListener(PlayerEventType.SOURCE_CHANGE, this.onSourceChange);
+    player.addEventListener(PlayerEventType.TIME_UPDATE, this.onTimeupdate);
     this.setState({
       paused: player.paused,
       error: false,
@@ -47,6 +47,7 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
     player.removeEventListener(PlayerEventType.PAUSE, this.onPause);
     player.removeEventListener(PlayerEventType.ERROR, this.onError);
     player.removeEventListener(PlayerEventType.SOURCE_CHANGE, this.onSourceChange);
+    player.removeEventListener(PlayerEventType.TIME_UPDATE, this.onTimeupdate);
   }
 
   private onPlay = () => {
@@ -66,12 +67,21 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
     }
   };
 
+  private onTimeupdate = () => {
+    const player = (this.context as UiContext).player;
+    this.setState({ paused: player.paused });
+  };
+
   private onError = () => {
     this.setState({ error: true });
   };
 
   private onSourceChange = () => {
-    this.setState({ error: false });
+    const player = (this.context as UiContext).player;
+    this.setState({
+      paused: player.paused,
+      error: false,
+    });
   };
 
   private togglePlayPause = () => {
