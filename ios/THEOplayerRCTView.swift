@@ -121,7 +121,6 @@ public class THEOplayerRCTView: UIView {
         self.chromeless = configDict["chromeless"] as? Bool ?? true
         self.parseAdsConfig(configDict: configDict)
         self.parseCastConfig(configDict: configDict)
-        self.parsePipConfig(configDict: configDict)
         if DEBUG_VIEW { print("[NATIVE] config prop updated.") }
         
         // Given the bridged config, create the initial THEOplayer instance
