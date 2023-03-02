@@ -9,6 +9,7 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Rect
 import android.os.Build
+import android.util.Log
 import android.util.Rational
 import android.view.SurfaceView
 import android.view.TextureView
@@ -18,7 +19,11 @@ import android.widget.FrameLayout
 import com.facebook.react.uimanager.ThemedReactContext
 import com.theoplayer.PlayerEventEmitter
 import com.theoplayer.android.api.THEOplayerView
+import com.theoplayer.android.api.error.ErrorCode
+import com.theoplayer.android.api.error.THEOplayerException
 import com.theoplayer.android.api.player.PresentationMode
+
+private const val TAG = "PresentationManager"
 
 class PresentationManager(
   private val view: THEOplayerView,
@@ -131,13 +136,18 @@ class PresentationManager(
         // Default aspect ratio
         Rational(16, 9)
       }
-      reactContext.currentActivity?.enterPictureInPictureMode(
-        PictureInPictureParams.Builder()
-          .setSourceRectHint(visibleRect)
-          .setAspectRatio(aspectRatio)
-          // The active MediaSession will connect the controls
-          .build()
-      )
+      try {
+        reactContext.currentActivity?.enterPictureInPictureMode(
+          PictureInPictureParams.Builder()
+            .setSourceRectHint(visibleRect)
+            .setAspectRatio(aspectRatio)
+            // The active MediaSession will connect the controls
+            .build()
+        )
+      } catch (_: Exception) {
+        val msg = "Failed to enter picture-in-picture mode."
+        eventEmitter.emitError(THEOplayerException(ErrorCode.CONFIGURATION_ERROR, msg))
+      }
     }
   }
 
