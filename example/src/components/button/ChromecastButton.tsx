@@ -23,6 +23,7 @@ export class ChromecastButton extends PureComponent<unknown, ChromecastButtonSta
   componentDidMount() {
     const player = (this.context as UiContext).player;
     player.addEventListener(PlayerEventType.CAST_EVENT, this.onCastStateChangeEvent);
+    player.cast.chromecast?.casting().then((casting) => this.setState({ connected: casting }));
   }
 
   componentWillUnmount() {

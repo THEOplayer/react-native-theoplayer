@@ -220,6 +220,13 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
     player.addEventListener(PlayerEventType.TEXT_TRACK, this.onTextTrackEvent);
     player.addEventListener(PlayerEventType.DURATION_CHANGE, this.onDurationChange);
     player.addEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
+    this.setState({
+      ...SeekBar.initialState,
+      textTracks: player.textTracks,
+      currentTime: player.currentTime,
+      duration: player.duration,
+      seekable: player.seekable,
+    });
   }
 
   componentWillUnmount() {

@@ -20,6 +20,7 @@ export class FullscreenButton extends PureComponent<unknown, FullscreenButtonSta
   componentDidMount() {
     const player = (this.context as UiContext).player;
     player.addEventListener(PlayerEventType.FULLSCREEN, this.onFullscreenEvent);
+    this.setState({ fullscreen: player.fullscreen });
   }
 
   componentWillUnmount() {

@@ -30,6 +30,7 @@ export class TimeLabel extends PureComponent<TimeLabelProps, TimeLabelState> {
     const player = (this.context as UiContext).player;
     player.addEventListener(PlayerEventType.TIME_UPDATE, this.onTimeUpdate);
     player.addEventListener(PlayerEventType.DURATION_CHANGE, this.onDurationChange);
+    this.setState({ currentTime: player.currentTime, duration: player.duration });
   }
 
   componentWillUnmount() {
