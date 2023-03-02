@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added support for 'picture-in-picture' presentation mode. More information on the [documentation page](./doc/pip.md)
 - Added `muted` state in `volumechange` event payload.
 - Added media session connector for Android.
+- Added public accessor on the `THEOplayerRCTView` that exposes the underlying iOS `THEOplayer` instance. So you can use the underlying THEOplayer from other packages.
 
 ### Changed
 
