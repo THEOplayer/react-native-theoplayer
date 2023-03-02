@@ -15,6 +15,7 @@ public class THEOplayerRCTView: UIView {
     var adsConfig = AdsConfig()
     var castConfig = CastConfig()
     var pipConfig = PipConfig()
+    var backgroundAudioConfig = BackgroundAudioConfig()
     
     // MARK: Events
     var onNativePlayerReady: RCTDirectEventBlock?
@@ -84,6 +85,7 @@ public class THEOplayerRCTView: UIView {
                                                                         cast: self.playerCastConfiguration(),
                                                                         license: self.license,
                                                                         licenseUrl: self.licenseUrl))
+        self.initBackgroundAudio()
         return self.player
     }
 #else
@@ -93,6 +95,7 @@ public class THEOplayerRCTView: UIView {
                                                                         license: self.license,
                                                                         licenseUrl: self.licenseUrl,
                                                                         pip: self.playerPipConfiguration()))
+        self.initBackgroundAudio()
         return self.player
     }
 #endif
