@@ -21,6 +21,7 @@ export class AirplayButton extends PureComponent<unknown, AirplayButtonState> {
   componentDidMount() {
     const player = (this.context as UiContext).player;
     player.addEventListener(PlayerEventType.CAST_EVENT, this.onCastStateChangeEvent);
+    player.cast.airplay?.casting().then((casting) => this.setState({ connected: casting }));
   }
 
   componentWillUnmount() {

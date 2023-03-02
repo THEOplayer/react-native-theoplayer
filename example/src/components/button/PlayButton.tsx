@@ -34,6 +34,10 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
     player.addEventListener(PlayerEventType.PAUSE, this.onPause);
     player.addEventListener(PlayerEventType.ERROR, this.onError);
     player.addEventListener(PlayerEventType.SOURCE_CHANGE, this.onSourceChange);
+    this.setState({
+      paused: player.paused,
+      error: false,
+    });
   }
 
   componentWillUnmount() {

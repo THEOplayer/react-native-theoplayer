@@ -19,6 +19,7 @@ export class MuteButton extends PureComponent<unknown, MuteButtonState> {
   componentDidMount() {
     const player = (this.context as UiContext).player;
     player.addEventListener(PlayerEventType.VOLUME_CHANGE, this.onVolumeChange);
+    this.setState({ muted: player.muted });
   }
 
   componentWillUnmount() {

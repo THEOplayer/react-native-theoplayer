@@ -13,22 +13,22 @@ const SOURCES = ALL_SOURCES.filter((source) => source.os.indexOf(Platform.OS) >=
 
 export const SourceMenuButton = () => {
   const context = useContext(PlayerContext);
-  const [selectedSourceId, setSelectedSourceId] = useState<number | undefined>(undefined);
+  const selectedSource = SOURCES.find((source) => source.source === context.player.source);
 
   const onSelectSource = (id: number) => {
-    context.player.source = SOURCES[id].source;
-    setSelectedSourceId(id);
+    const newSource = SOURCES[id];
+    context.player.source = newSource.source;
   };
   if (!(SOURCES && SOURCES.length > 0)) {
     return <></>;
   }
 
-  // Since this button in mostly for debugging purposes, set the first available source on the player.
-  if (selectedSourceId === undefined) {
-    onSelectSource(0);
-  }
-
-  return <MenuButton svg={<ListSvg />} menu={<SourceMenuView selectedSourceId={selectedSourceId} onSelectSource={onSelectSource} />} />;
+  return (
+    <MenuButton
+      svg={<ListSvg />}
+      menu={<SourceMenuView selectedSourceId={selectedSource ? SOURCES.indexOf(selectedSource) : undefined} onSelectSource={onSelectSource} />}
+    />
+  );
 };
 
 interface SourceMenuViewProps {

@@ -17,12 +17,12 @@ interface SlotViewProps {
 interface SlotViewState {
   fadeAnim: Animated.Value;
   currentMenu: ReactNode | undefined;
+  showing: boolean;
 }
 
 export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewProps>, SlotViewState> implements UiControls {
   private _animationsPauseRequestIds: number[] = [];
   private _idCounter = 0;
-  private _showing = true;
   private _currentFadeOutTimeout: number | undefined = undefined;
 
   private _menuLockId: number | undefined = undefined;
@@ -32,11 +32,12 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewP
     this.state = {
       fadeAnim: new Animated.Value(1),
       currentMenu: undefined,
+      showing: true,
     };
   }
 
   get showing_(): boolean {
-    return this._showing;
+    return this.state.showing;
   }
 
   /**
@@ -81,7 +82,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewP
   private showUi_() {
     clearTimeout(this._currentFadeOutTimeout);
     this._currentFadeOutTimeout = undefined;
-    if (!this._showing) {
+    if (!this.state.showing) {
       this.doFadeIn_();
     }
   }
@@ -96,28 +97,28 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewP
 
   private doFadeIn_ = () => {
     const { fadeAnim } = this.state;
+    this.setState({ showing: true });
     Animated.timing(fadeAnim, {
       useNativeDriver: true,
       toValue: 1,
       duration: 200,
-    }).start(() => {
-      this._showing = true;
-    });
+    }).start();
   };
 
   private doFadeOut_ = () => {
     const { fadeAnim } = this.state;
-    this._showing = false;
     Animated.timing(fadeAnim, {
       useNativeDriver: true,
       toValue: 0,
       duration: 1000,
-    }).start();
+    }).start(() => {
+      this.setState({ showing: false });
+    });
   };
 
   render() {
     const { player, style, top, center, bottom, children } = this.props;
-    const { fadeAnim, currentMenu } = this.state;
+    const { fadeAnim, currentMenu, showing } = this.state;
     return (
       <PlayerContext.Provider value={{ player, style: style, ui: this }}>
         {/* The Animated.View is for showing and hiding the UI*/}
@@ -125,20 +126,26 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewP
           style={[style.slotView.container, { opacity: fadeAnim }]}
           onTouchStart={this.requestShowUi}
           {...(Platform.OS === 'web' ? { onMouseMove: this.requestShowUi } : {})}>
-          {/* The UI background */}
-          <View style={[style.slotView.container, { backgroundColor: style.colors.background }]} />
+          {showing && (
+            <>
+              {/* The UI background */}
+              <View style={[style.slotView.container, { backgroundColor: style.colors.background }]} />
 
-          {/* The Settings Menu */}
-          {currentMenu !== undefined && <View style={[style.slotView.container]}>{currentMenu}</View>}
+              {/* The Settings Menu */}
+              {currentMenu !== undefined && <View style={[style.slotView.container]}>{currentMenu}</View>}
 
-          {/* The UI control bars*/}
-          <View style={[style.slotView.container, { display: currentMenu !== undefined ? 'none' : 'flex' }]}>
-            <View style={style.slotView.topSlot}>{top}</View>
-            {/* The center controls*/}
-            <View style={[style.slotView.centerSlot]}>{center}</View>
-            <View style={style.slotView.bottomSlot}>{bottom}</View>
-            {children}
-          </View>
+              {/* The UI control bars*/}
+              {currentMenu === undefined && (
+                <View style={[style.slotView.container]}>
+                  <View style={style.slotView.topSlot}>{top}</View>
+                  {/* The center controls*/}
+                  <View style={[style.slotView.centerSlot]}>{center}</View>
+                  <View style={style.slotView.bottomSlot}>{bottom}</View>
+                  {children}
+                </View>
+              )}
+            </>
+          )}
         </Animated.View>
       </PlayerContext.Provider>
     );
