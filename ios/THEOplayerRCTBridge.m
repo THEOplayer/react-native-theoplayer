@@ -84,6 +84,12 @@ RCT_EXTERN_METHOD(setPlaybackRate:(nonnull NSNumber *)node
 RCT_EXTERN_METHOD(setPresentationMode:(nonnull NSNumber *)node
                   presentationMode:(nonnull NSString *)presentationMode)
 
+RCT_EXTERN_METHOD(setPipConfig:(nonnull NSNumber *)node
+                  pipConfig:(NSDictionary)pipConfig)
+
+RCT_EXTERN_METHOD(setBackgroundAudioConfig:(nonnull NSNumber *)node
+                  backgroundAudioConfig:(NSDictionary)backgroundAudioConfig)
+
 RCT_EXTERN_METHOD(setSelectedTextTrack:(nonnull NSNumber *)node
                   uid:(nonnull NSNumber *)uid)
 
