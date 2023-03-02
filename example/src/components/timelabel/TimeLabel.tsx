@@ -69,10 +69,13 @@ export class TimeLabel extends PureComponent<TimeLabelProps, TimeLabelState> {
     }
 
     try {
-      const renderHours = duration >= 3600 * 1e3;
-      const s = renderHours ? 11 : 14;
-      const currentTimeLabel = new Date(currentTime).toISOString().substring(s, 19);
-      const durationLabel = new Date(duration).toISOString().substring(s, 19);
+      let currentTimeLabel = new Date(currentTime).toISOString().substring(11, 19);
+      let durationLabel = new Date(duration).toISOString().substring(11, 19);
+      if (durationLabel.startsWith('00:')) {
+        // Don't render hours if not needed.
+        currentTimeLabel = currentTimeLabel.slice(3);
+        durationLabel = durationLabel.slice(3);
+      }
       const label = showDuration ? `${currentTimeLabel} / ${durationLabel}` : currentTimeLabel;
       return (
         <PlayerContext.Consumer>
