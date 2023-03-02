@@ -4,9 +4,9 @@ import Foundation
 import UIKit
 import THEOplayerSDK
  
-class THEOplayerRCTView: UIView {
+public class THEOplayerRCTView: UIView {
     // MARK: Members
-    var player: THEOplayer?
+    public var player: THEOplayer?
     var mainEventHandler: THEOplayerRCTMainEventHandler
     var textTrackEventHandler: THEOplayerRCTTextTrackEventHandler
     var mediaTrackEventHandler: THEOplayerRCTMediaTrackEventHandler
@@ -41,7 +41,7 @@ class THEOplayerRCTView: UIView {
         fatalError("[NATIVE] init(coder:) has not been implemented")
     }
     
-    override func layoutSubviews() {
+    override public func layoutSubviews() {
         super.layoutSubviews()
         if let player = self.player {
             player.frame = self.frame
