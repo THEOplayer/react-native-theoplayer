@@ -6,7 +6,7 @@ import THEOplayerSDK
  
 public class THEOplayerRCTView: UIView {
     // MARK: Members
-    public var player: THEOplayer?
+    public private(set) var player: THEOplayer?
     var mainEventHandler: THEOplayerRCTMainEventHandler
     var textTrackEventHandler: THEOplayerRCTTextTrackEventHandler
     var mediaTrackEventHandler: THEOplayerRCTMediaTrackEventHandler
