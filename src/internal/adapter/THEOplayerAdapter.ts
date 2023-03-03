@@ -267,7 +267,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   set pipConfiguration(pipConfiguration: PiPConfiguration) {
     this._pipConfig = pipConfiguration;
-    NativeModules.PlayerModule.setPipConfig(pipConfiguration);
+    NativeModules.PlayerModule.setPipConfig(this._view.nativeHandle, pipConfiguration);
   }
 
   get backgroundAudioConfiguration(): BackgroundAudioConfiguration {
@@ -276,7 +276,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   set backgroundAudioConfiguration(backgroundAudioConfiguration: BackgroundAudioConfiguration) {
     this._backgroundAudioConfig = backgroundAudioConfiguration;
-    NativeModules.PlayerModule.setBackgroundAudioConfig(backgroundAudioConfiguration);
+    NativeModules.PlayerModule.setBackgroundAudioConfig(this._view.nativeHandle, backgroundAudioConfiguration);
   }
 
   get presentationMode(): PresentationMode {
