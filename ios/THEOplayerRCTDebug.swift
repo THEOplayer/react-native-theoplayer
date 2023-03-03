@@ -29,3 +29,6 @@ let DEBUG_CAST_API = DEBUG && false
 
 // Debug flag to monitor player API usage
 let DEBUG_PLAYER_API = DEBUG && false
+
+// Debug flag to monitor Now Playing Info updates
+let DEBUG_NOWINFO = DEBUG && false
