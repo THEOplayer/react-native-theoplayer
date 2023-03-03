@@ -42,10 +42,10 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
     func setSource(_ node: NSNumber, src: NSDictionary) -> Void {
         DispatchQueue.main.async {
             if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
-               let src = THEOplayerRCTSourceDescriptionBuilder.buildSourceDescription(src) {
+               let srcDescription = THEOplayerRCTSourceDescriptionBuilder.buildSourceDescription(src) {
                 if let player = theView.player {
                     if DEBUG_PLAYER_API { print("[NATIVE] Setting new source on TheoPlayer") }
-                    player.source = src
+                    player.source = srcDescription
                 }
             } else {
                 if DEBUG_PLAYER_API { print("[NATIVE] Failed to update THEOplayer source.") }
