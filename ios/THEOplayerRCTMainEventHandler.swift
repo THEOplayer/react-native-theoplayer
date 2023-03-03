@@ -66,16 +66,8 @@ class THEOplayerRCTMainEventHandler {
         self.attachListeners()
     }
     
-    private func attachListeners() {
-        self.attachMainPlayerListeners()
-    }
-    
-    private func dettachListeners() {
-        self.dettachMainPlayerListeners()
-    }
-    
     // MARK: - attach/dettach main player Listeners
-    private func attachMainPlayerListeners() {
+    private func attachListeners() {
         guard let player = self.player else {
             return
         }
@@ -321,7 +313,7 @@ class THEOplayerRCTMainEventHandler {
         if DEBUG_EVENTHANDLER { print("[NATIVE] PresentationModeChange listener attached to THEOplayer") }
     }
     
-    private func dettachMainPlayerListeners() {
+    private func dettachListeners() {
         guard let player = self.player else {
             return
         }
