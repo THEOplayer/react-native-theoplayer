@@ -1,6 +1,7 @@
 package com.theoplayer.presentation
 
 import android.annotation.SuppressLint
+import android.app.AppOpsManager
 import android.app.PictureInPictureParams
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -9,7 +10,6 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Rect
 import android.os.Build
-import android.util.Log
 import android.util.Rational
 import android.view.SurfaceView
 import android.view.TextureView
@@ -54,7 +54,8 @@ class PresentationManager(
       }
     }
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      canDoPip = reactContext.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
+      canDoPip =
+        reactContext.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
     }
     reactContext.currentActivity?.registerReceiver(
       onUserLeaveHintReceiver,
@@ -92,15 +93,13 @@ class PresentationManager(
     when (mode) {
       PresentationMode.INLINE -> {
         setFullscreen(false)
-        setPip(false)
       }
       PresentationMode.FULLSCREEN -> {
         setFullscreen(true)
-        setPip(false)
       }
       PresentationMode.PICTURE_IN_PICTURE -> {
         setFullscreen(false)
-        setPip(true)
+        enterPip()
       }
     }
   }
@@ -119,36 +118,72 @@ class PresentationManager(
     return null
   }
 
-  private fun setPip(pip: Boolean) {
+  private fun enterPip() {
+    // PiP not supported
     if (!canDoPip || Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
       return
     }
-    val wasInPip = this.pip
-    if (wasInPip == pip) {
-      // Already in right PiP state
+
+    // Already in right PiP state?
+    if (pip) {
       return
     }
-    if (pip) {
-      val visibleRect = getContentViewRect(view)
-      val aspectRatio = if (view.player.videoHeight > 0) {
-        Rational(view.player.videoWidth, view.player.videoHeight)
-      } else {
-        // Default aspect ratio
-        Rational(16, 9)
-      }
-      try {
-        reactContext.currentActivity?.enterPictureInPictureMode(
-          PictureInPictureParams.Builder()
-            .setSourceRectHint(visibleRect)
-            .setAspectRatio(aspectRatio)
-            // The active MediaSession will connect the controls
-            .build()
-        )
-      } catch (_: Exception) {
-        val msg = "Failed to enter picture-in-picture mode."
-        eventEmitter.emitError(THEOplayerException(ErrorCode.CONFIGURATION_ERROR, msg))
-      }
+
+    // Check to see whether this activity is in the process of finishing, either because you
+    // called finish on it or someone else has requested that it finished.
+    if (reactContext.currentActivity?.isFinishing == true) {
+      return
     }
+
+    // Check whether the special permission Picture-in-Picture is given.
+    if (!hasPipPermission()) {
+      return
+    }
+
+    val visibleRect = getContentViewRect(view)
+    val aspectRatio = if (view.player.videoHeight > 0) {
+      Rational(view.player.videoWidth, view.player.videoHeight)
+    } else {
+      // Default aspect ratio
+      Rational(16, 9)
+    }
+    try {
+      reactContext.currentActivity?.enterPictureInPictureMode(
+        PictureInPictureParams.Builder()
+          .setSourceRectHint(visibleRect)
+          .setAspectRatio(aspectRatio)
+          // The active MediaSession will connect the controls
+          .build()
+      )
+    } catch (_: Exception) {
+      onPipError()
+    }
+  }
+
+  private fun hasPipPermission(): Boolean {
+    val appOps = reactContext.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager?
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        appOps?.unsafeCheckOpNoThrow(
+          AppOpsManager.OPSTR_PICTURE_IN_PICTURE,
+          reactContext.applicationInfo.uid,
+          reactContext.packageName
+        ) == AppOpsManager.MODE_ALLOWED
+      } else {
+        appOps?.checkOpNoThrow(
+          AppOpsManager.OPSTR_PICTURE_IN_PICTURE,
+          reactContext.applicationInfo.uid,
+          reactContext.packageName
+        ) == AppOpsManager.MODE_ALLOWED
+      }
+    } else {
+      false
+    }
+  }
+
+  private fun onPipError() {
+    val message = "Failed to enter picture-in-picture mode."
+    eventEmitter.emitError(THEOplayerException(ErrorCode.CONFIGURATION_ERROR, message))
   }
 
   @SuppressLint("ObsoleteSdkInt")
