@@ -407,7 +407,6 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
     console.log(TAG, 'toggle pip');
     const wasPip = player.presentationMode == 'picture-in-picture';
     player.presentationMode = wasPip ? 'inline' : 'picture-in-picture';
-    this.setState({ pip: !wasPip, fullscreen: false });
   };
 
   private toggleMuted = () => {
