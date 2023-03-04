@@ -2,11 +2,13 @@ import React, { useEffect, useRef } from 'react';
 import type { THEOplayerViewProps } from 'react-native-theoplayer';
 import * as THEOplayer from 'theoplayer';
 import { THEOplayerWebAdapter } from './adapter/THEOplayerWebAdapter';
+import { WebMediaSession } from './adapter/web/WebMediaSession';
 
 export function THEOplayerView(props: THEOplayerViewProps) {
   const { config } = props;
   const player = useRef<THEOplayer.ChromelessPlayer | null>(null);
   const adapter = useRef<THEOplayerWebAdapter | null>(null);
+  const mediaSession = useRef<WebMediaSession | null>(null);
   const container = useRef<null | HTMLDivElement>(null);
   useEffect(() => {
     // Create player inside container.
@@ -30,6 +32,9 @@ export function THEOplayerView(props: THEOplayerViewProps) {
       // Adapt native player to react-native player.
       adapter.current = new THEOplayerWebAdapter(player.current);
 
+      // Create media session connector
+      mediaSession.current = new WebMediaSession(player.current);
+
       // Expose players for easy access
       // @ts-ignore
       window.player = adapter.current;
@@ -44,6 +49,7 @@ export function THEOplayerView(props: THEOplayerViewProps) {
     // Clean-up
     return () => {
       adapter?.current?.destroy();
+      mediaSession?.current?.destroy();
       player?.current?.destroy();
     };
   }, [container]);
