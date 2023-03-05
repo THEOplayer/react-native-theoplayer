@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
-import type { FullscreenEvent } from 'react-native-theoplayer';
-import { FullscreenActionType, PlayerEventType } from 'react-native-theoplayer';
+import type { PresentationMode, PresentationModeChangeEvent } from 'react-native-theoplayer';
+import { PlayerEventType } from 'react-native-theoplayer';
 import { Platform } from 'react-native';
 import { ActionButton } from './actionbutton/ActionButton';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
@@ -8,44 +8,45 @@ import { FullscreenExitSvg } from './svg/FullscreenExitSvg';
 import { FullscreenEnterSvg } from './svg/FullscreenEnterSvg';
 
 interface FullscreenButtonState {
-  fullscreen: boolean;
+  presentationMode: PresentationMode;
 }
 
 export class FullscreenButton extends PureComponent<unknown, FullscreenButtonState> {
   constructor(props: unknown) {
     super(props);
-    this.state = { fullscreen: false };
+    this.state = { presentationMode: 'inline' };
   }
 
   componentDidMount() {
     const player = (this.context as UiContext).player;
-    player.addEventListener(PlayerEventType.FULLSCREEN, this.onFullscreenEvent);
-    this.setState({ fullscreen: player.fullscreen });
+    player.addEventListener(PlayerEventType.PRESENTATIONMODE_CHANGE, this.onPresentationModeChange);
+    this.setState({ presentationMode: player.presentationMode });
   }
 
   componentWillUnmount() {
     const player = (this.context as UiContext).player;
-    player.removeEventListener(PlayerEventType.FULLSCREEN, this.onFullscreenEvent);
+    player.removeEventListener(PlayerEventType.PRESENTATIONMODE_CHANGE, this.onPresentationModeChange);
   }
 
-  private readonly onFullscreenEvent = (event: FullscreenEvent) => {
-    switch (event.fullscreenAction) {
-      case FullscreenActionType.PLAYER_WILL_PRESENT:
-        this.setState({ fullscreen: true });
-        break;
-      case FullscreenActionType.PLAYER_WILL_DISMISS:
-        this.setState({ fullscreen: false });
-        break;
-    }
+  private readonly onPresentationModeChange = (event: PresentationModeChangeEvent) => {
+    this.setState({ presentationMode: event.presentationMode });
   };
 
   private toggleFullScreen = () => {
     const player = (this.context as UiContext).player;
-    player.fullscreen = !player.fullscreen;
+    switch (player.presentationMode) {
+      case 'picture-in-picture': // TODO
+      case 'inline':
+        player.presentationMode = 'fullscreen';
+        break;
+      case 'fullscreen':
+        player.presentationMode = 'inline';
+        break;
+    }
   };
 
   render() {
-    const { fullscreen } = this.state;
+    const { presentationMode } = this.state;
     if (Platform.isTV) {
       return <></>;
     }
@@ -53,7 +54,7 @@ export class FullscreenButton extends PureComponent<unknown, FullscreenButtonSta
       <PlayerContext.Consumer>
         {(context: UiContext) => (
           <ActionButton
-            svg={fullscreen ? <FullscreenExitSvg /> : <FullscreenEnterSvg />}
+            svg={presentationMode === 'fullscreen' ? <FullscreenExitSvg /> : <FullscreenEnterSvg />}
             onPress={this.toggleFullScreen}
             iconStyle={context.style.controlBar.buttonIcon}
           />
