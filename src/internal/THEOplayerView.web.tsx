@@ -58,7 +58,9 @@ const styles = {
   // by default stretch the video to cover the container.
   // Override using the 'theoplayer-container' class.
   container: {
+    display: 'flex',
+    position: 'relative',
     width: '100%',
-    height: '100%',
-  },
+    aspectRatio: '16 / 9',
+  } as React.CSSProperties,
 };
