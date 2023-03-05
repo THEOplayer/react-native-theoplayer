@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed an issue where the IMA player container would be rendered collapsed on Web.
 - Fixed a missing check for picture-in-picture permission on Android.
 
+### Added
+
+- Added media session connector for Web.
+
 ## [Unreleased 2.0.0-pre5]
 
 ### Added
