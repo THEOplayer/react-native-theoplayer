@@ -9,12 +9,12 @@ export interface PiPConfiguration {
    *
    * @defaultValue `false`
    */
-  startsAutomatically?: boolean;
+  readonly startsAutomatically?: boolean;
 
   /**
    * Whether the Picture in Picture view shows controls to seek in the stream.
    *
    * @defaultValue `false`
    */
-  requiresLinearPlayback?: boolean;
+  readonly requiresLinearPlayback?: boolean;
 }
