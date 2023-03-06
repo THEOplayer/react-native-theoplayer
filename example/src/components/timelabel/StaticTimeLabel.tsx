@@ -46,5 +46,3 @@ export function StaticTimeLabel(props: TimeLabelProps) {
     return <></>;
   }
 }
-
-StaticTimeLabel.contextType = PlayerContext;
