@@ -9,7 +9,7 @@ import { MenuRadioButton } from './common/MenuRadioButton';
 import { ScrollableMenu } from './common/ScrollableMenu';
 import { MenuView } from './common/MenuView';
 
-const SOURCES = ALL_SOURCES.filter((source) => source.os.indexOf(Platform.OS) >= 0) as Source[];
+export const SOURCES = ALL_SOURCES.filter((source) => source.os.indexOf(Platform.OS) >= 0) as Source[];
 
 export const SourceMenuButton = () => {
   const context = useContext(PlayerContext);
