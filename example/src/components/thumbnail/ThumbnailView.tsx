@@ -8,6 +8,7 @@ import { isTileMapThumbnail } from './Thumbnail';
 import { URL as URLPolyfill } from 'react-native-url-polyfill';
 import { TimeLabel } from '../timelabel/TimeLabel';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
+import { StaticTimeLabel } from '../timelabel/StaticTimeLabel';
 
 const SPRITE_REGEX = /^([^#]*)#xywh=(\d+),(\d+),(\d+),(\d+)\s*$/;
 const TAG = 'ThumbnailView';
@@ -213,12 +214,11 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
         {(context: UiContext) => (
           <View style={{ flexDirection: 'column' }}>
             {showTimeLabel && (
-              <TimeLabel
+              <StaticTimeLabel
                 style={[context.style.videoPlayer.timeLabelContainer, timeLabelStyle]}
-                currentTime={time}
+                time={time}
                 duration={duration}
                 showDuration={false}
-                isLive={false}
               />
             )}
             <View style={[context.style.videoPlayer.containerThumbnail, { height: renderHeight, marginLeft: offset ?? 0 }, containerStyle]}>
