@@ -112,6 +112,7 @@ class THEOplayerRCTNowPlayingManager {
                 DispatchQueue.main.async {
                     if let welf = self,
                        let currentTime = time {
+                        print("[NATIVE] Setting NowPlaying currentTime to \(currentTime)")
                         welf.nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = NSNumber(value: currentTime)
                         completion?()
                     }
@@ -155,13 +156,13 @@ class THEOplayerRCTNowPlayingManager {
             self?.updateCurrentTime { [weak self] in
                 if let welf = self {
                     MPNowPlayingInfoCenter.default().nowPlayingInfo = welf.nowPlayingInfo
-                    if DEBUG_NOWINFO { print("[NATIVE] PUASED: PlaybackState and time updated on NowPlayingInfoCenter.") }
+                    if DEBUG_NOWINFO { print("[NATIVE] PAUSED: PlaybackState and time updated on NowPlayingInfoCenter.") }
                 }
             }
         }
                                           
         
-        // PAUSE
+        // RATE_CHANGE
         self.rateChangeListener = player.addEventListener(type: PlayerEventTypes.RATE_CHANGE) { [weak self] event in
             if let welf = self {
                 welf.nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = NSNumber(value: player.playbackRate)
@@ -183,6 +184,7 @@ class THEOplayerRCTNowPlayingManager {
         // SOURCE_CHANGE
         self.sourceChangeListener = player.addEventListener(type: PlayerEventTypes.SOURCE_CHANGE) { [weak self] event in
             self?.updateNowPlaying()
+            if DEBUG_NOWINFO { print("[NATIVE] SOURCE_CHANGE: Full update on NowPlayingInfoCenter.") }
         }
     }
     
