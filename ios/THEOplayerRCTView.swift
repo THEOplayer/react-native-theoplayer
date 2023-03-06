@@ -60,7 +60,7 @@ public class THEOplayerRCTView: UIView {
         // Create new player instance
         if let player = self.initPlayer() {
             // Attach player instance to event handlers
-            self.mainEventHandler.setPlayer(player)
+            self.mainEventHandler.setPlayer(player, pipConfig: self.pipConfig)
             self.textTrackEventHandler.setPlayer(player)
             self.mediaTrackEventHandler.setPlayer(player)
             self.adEventHandler.setPlayer(player)
@@ -92,6 +92,7 @@ public class THEOplayerRCTView: UIView {
                                                                         license: self.license,
                                                                         licenseUrl: self.licenseUrl))
         self.initBackgroundAudio()
+        self.initPip()
         return self.player
     }
 #else
@@ -102,6 +103,7 @@ public class THEOplayerRCTView: UIView {
                                                                         licenseUrl: self.licenseUrl,
                                                                         pip: self.playerPipConfiguration()))
         self.initBackgroundAudio()
+        self.initPip()
         return self.player
     }
 #endif
