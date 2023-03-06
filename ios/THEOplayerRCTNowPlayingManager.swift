@@ -112,7 +112,6 @@ class THEOplayerRCTNowPlayingManager {
                 DispatchQueue.main.async {
                     if let welf = self,
                        let currentTime = time {
-                        print("[NATIVE] Setting NowPlaying currentTime to \(currentTime)")
                         welf.nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = NSNumber(value: currentTime)
                         completion?()
                     }
