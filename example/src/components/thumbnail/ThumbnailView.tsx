@@ -6,7 +6,6 @@ import type { ThumbnailViewProps } from './ThumbnailViewProps';
 import type { Thumbnail } from './Thumbnail';
 import { isTileMapThumbnail } from './Thumbnail';
 import { URL as URLPolyfill } from 'react-native-url-polyfill';
-import { TimeLabel } from '../timelabel/TimeLabel';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
 import { StaticTimeLabel } from '../timelabel/StaticTimeLabel';
 
@@ -128,7 +127,7 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
     const style = index === 0 ? thumbnailStyleCurrent : thumbnailStyleCarousel;
     return (
       <PlayerContext.Consumer>
-        {(context: UiContext) => <View key={`th${index}`} style={[context.style.videoPlayer.thumbnail, { width: size, height: 1 }, style]} />}
+        {(context: UiContext) => <View key={index} style={[context.style.videoPlayer.thumbnail, { width: size, height: 1 }, style]} />}
       </PlayerContext.Consumer>
     );
   };
@@ -144,9 +143,7 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
       return (
         <PlayerContext.Consumer>
           {(context: UiContext) => (
-            <View
-              key={`th${index}`}
-              style={[context.style.videoPlayer.thumbnail, { width: scale * renderWidth, height: scale * renderHeight }, style]}>
+            <View key={index} style={[context.style.videoPlayer.thumbnail, { width: scale * renderWidth, height: scale * renderHeight }, style]}>
               <Image
                 resizeMode={'cover'}
                 style={{
@@ -168,9 +165,7 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
       return (
         <PlayerContext.Consumer>
           {(context: UiContext) => (
-            <View
-              key={`th${index}`}
-              style={[context.style.videoPlayer.thumbnail, { width: scale * renderWidth, height: scale * renderHeight }, style]}>
+            <View key={index} style={[context.style.videoPlayer.thumbnail, { width: scale * renderWidth, height: scale * renderHeight }, style]}>
               <Image
                 resizeMode={'contain'}
                 style={{ width: scale * size, height: scale * renderHeight }}
@@ -199,13 +194,19 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
     }
 
     const carouselThumbCount = carouselCount ?? 0;
-    const before = [];
-    const after = [];
+    const before: Thumbnail[] = [];
+    const after: Thumbnail[] = [];
     for (let i = 0; i < carouselThumbCount; i++) {
       const beforeIndex = nowCueIndex - carouselThumbCount + i;
-      before.push(beforeIndex >= 0 ? this.getThumbnailImageForCue(thumbnailTrack.cues[beforeIndex]) : null);
+      const beforeThumbnail = beforeIndex >= 0 ? this.getThumbnailImageForCue(thumbnailTrack.cues[beforeIndex]) : null;
+      if (beforeThumbnail !== null) {
+        before.push(beforeThumbnail);
+      }
       const afterIndex = nowCueIndex + i + 1;
-      after.push(afterIndex < thumbnailTrack.cues.length ? this.getThumbnailImageForCue(thumbnailTrack.cues[afterIndex]) : null);
+      const afterThumbnail = afterIndex < thumbnailTrack.cues.length ? this.getThumbnailImageForCue(thumbnailTrack.cues[afterIndex]) : null;
+      if (afterThumbnail !== null) {
+        after.push(afterThumbnail);
+      }
     }
     const current = this.getThumbnailImageForCue(thumbnailTrack.cues[nowCueIndex]);
     const { renderHeight } = this.state;
