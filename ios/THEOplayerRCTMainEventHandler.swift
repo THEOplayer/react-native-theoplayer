@@ -6,8 +6,7 @@ import THEOplayerSDK
 class THEOplayerRCTMainEventHandler {
     // MARK: Members
     private weak var player: THEOplayer?
-    private var pipConfig: PipConfig?
-    private var currentPresentationMode = THEOplayerSDK.PresentationMode.inline // TheoPlayer's initial presentationMode
+    private weak var presentationModeContext: THEOplayerRCTPresentationModeContext?
         
     // MARK: Events
     var onNativePlay: RCTDirectEventBlock?
@@ -60,9 +59,9 @@ class THEOplayerRCTMainEventHandler {
     }
     
     // MARK: - player setup / breakdown
-    func setPlayer(_ player: THEOplayer, pipConfig: PipConfig = PipConfig()) {
+    func setPlayer(_ player: THEOplayer, presentationModeContext: THEOplayerRCTPresentationModeContext) {
         self.player = player
-        self.pipConfig = pipConfig
+        self.presentationModeContext = presentationModeContext
         
         // attach listeners
         self.attachListeners()
@@ -303,27 +302,10 @@ class THEOplayerRCTMainEventHandler {
         
         // PRESENTATION_MODE_CHANGE
         self.presentationModeChangeListener = player.addEventListener(type: PlayerEventTypes.PRESENTATION_MODE_CHANGE) { [weak self] event in
-            if let welf = self {
-                let previousPresentationMode = welf.currentPresentationMode
-                welf.currentPresentationMode = event.presentationMode
-                var context: [String:Any] = [:]
-                switch welf.currentPresentationMode {
-                case .pictureInPicture:
-                    if let pipConf = welf.pipConfig {
-                        context["pip"] = pipConf.context
-                    }
-                default: break
-                }
-                if DEBUG_THEOPLAYER_EVENTS || true { print("[NATIVE] Received PRESENTATION_MODE_CHANGE event from THEOplayer (to \(event.presentationMode._rawValue))") }
-                if let forwardedPresentationModeChangeEvent = welf.onNativePresentationModeChange {
-                    forwardedPresentationModeChangeEvent(
-                        [
-                            "presentationMode": THEOplayerRCTTypeUtils.presentationModeToString(welf.currentPresentationMode),
-                            "previousPresentationMode": THEOplayerRCTTypeUtils.presentationModeToString(previousPresentationMode),
-                            "context": context
-                        ]
-                    )
-                }
+            if DEBUG_THEOPLAYER_EVENTS || true { print("[NATIVE] Received PRESENTATION_MODE_CHANGE event from THEOplayer (to \(event.presentationMode._rawValue))") }
+            if let forwardedPresentationModeChangeEvent = self?.onNativePresentationModeChange,
+               let presentationModeContext = self?.presentationModeContext {
+                forwardedPresentationModeChangeEvent(presentationModeContext.eventContextForNewPresentationMode(event.presentationMode))
             }
         }
         if DEBUG_EVENTHANDLER { print("[NATIVE] PresentationModeChange listener attached to THEOplayer") }
