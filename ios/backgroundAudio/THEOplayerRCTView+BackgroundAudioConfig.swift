@@ -13,7 +13,7 @@ extension THEOplayerRCTView: BackgroundPlaybackDelegate {
         self.player?.backgroundPlaybackDelegate = self
     }
     
-    func shouldContinueAudioPlaybackInBackground() -> Bool {
+    public func shouldContinueAudioPlaybackInBackground() -> Bool {
         return self.backgroundAudioConfig.enabled
     }
 }
