@@ -85,9 +85,10 @@ export class WebPresentationModeManager extends DefaultEventDispatcher<PlayerEve
     }
 
     // when changed, notify by dispatching presentationModeChange event
-    if (newPresentationMode !== this._presentationMode) {
+    let previousPresentationMode = this._presentationMode
+    if (newPresentationMode !== previousPresentationMode) {
       this._presentationMode = newPresentationMode;
-      this.dispatchEvent(new DefaultPresentationModeChangeEvent(this._presentationMode));
+      this.dispatchEvent(new DefaultPresentationModeChangeEvent(this._presentationMode, previousPresentationMode)); // TODO: add context
     }
   }
 }
