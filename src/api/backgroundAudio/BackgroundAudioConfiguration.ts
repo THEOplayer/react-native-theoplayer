@@ -9,5 +9,5 @@ export interface BackgroundAudioConfiguration {
    *
    * @defaultValue `false`
    */
-  enabled?: boolean;
+  readonly enabled?: boolean;
 }
