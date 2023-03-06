@@ -113,6 +113,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   private onPresentationModeChange = (event: PresentationModeChangeEvent) => {
     this._presentationMode = event.presentationMode;
+    console.log(JSON.stringify(event, null, 4));
   };
 
   private onTimeupdate = (event: TimeUpdateEvent) => {

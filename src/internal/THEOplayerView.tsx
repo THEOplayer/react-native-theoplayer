@@ -281,7 +281,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
   };
 
   private _onPresentationModeChange = (event: NativeSyntheticEvent<NativePresentationModeChangeEvent>) => {
-    this._facade.dispatchEvent(new DefaultPresentationModeChangeEvent(event.nativeEvent.presentationMode));
+    this._facade.dispatchEvent(new DefaultPresentationModeChangeEvent(event.nativeEvent.presentationMode, event.nativeEvent.previousPresentationMode, event.nativeEvent.context));
   };
 
   public render(): JSX.Element {

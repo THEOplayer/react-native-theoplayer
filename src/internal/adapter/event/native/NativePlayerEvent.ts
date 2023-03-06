@@ -1,4 +1,4 @@
-import type { MediaTrack, PlayerError, PresentationMode, TextTrack, TimeRange } from 'react-native-theoplayer';
+import type { MediaTrack, PlayerError, PresentationMode, PresentationModeChangeContext, TextTrack, TimeRange } from 'react-native-theoplayer';
 
 export interface NativeErrorEvent {
   error: PlayerError;
@@ -64,6 +64,16 @@ export interface NativePresentationModeChangeEvent {
    * The player's new presentation mode.
    */
   readonly presentationMode: PresentationMode;
+
+  /**
+   * The player's previous presentationMode.
+   */
+  readonly previousPresentationMode: PresentationMode;
+
+  /**
+   * The context for presentationMode change.
+   */
+  readonly context?: PresentationModeChangeContext;
 }
 
 export interface NativeProgressEvent {
