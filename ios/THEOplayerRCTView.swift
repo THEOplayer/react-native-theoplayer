@@ -17,6 +17,7 @@ public class THEOplayerRCTView: UIView {
     var adsConfig = AdsConfig()
     var castConfig = CastConfig()
     var pipConfig = PipConfig()
+    var presentationModeContext = THEOplayerRCTPresentationModeContext()
     var backgroundAudioConfig = BackgroundAudioConfig()
     
     // MARK: Events
@@ -60,7 +61,7 @@ public class THEOplayerRCTView: UIView {
         // Create new player instance
         if let player = self.initPlayer() {
             // Attach player instance to event handlers
-            self.mainEventHandler.setPlayer(player, pipConfig: self.pipConfig)
+            self.mainEventHandler.setPlayer(player, presentationModeContext: self.presentationModeContext)
             self.textTrackEventHandler.setPlayer(player)
             self.mediaTrackEventHandler.setPlayer(player)
             self.adEventHandler.setPlayer(player)

@@ -4,16 +4,10 @@ import Foundation
 import AVKit
 import THEOplayerSDK
 
-enum PipContext: String {
-    case PIP_CLOSED = "pipClosed"
-    case PIP_RESTORED = "pipRestored"
-}
-
 struct PipConfig {
     var retainPresentationModeOnSourceChange: Bool = false              // external config
     var canStartPictureInPictureAutomaticallyFromInline: Bool = false   // external config
     var requiresLinearPlayback: Bool = false                            // external config
-    var context: PipContext = .PIP_CLOSED                               // internal config, indicating last PIP closure context
 }
 
 extension THEOplayerRCTView: AVPictureInPictureControllerDelegate {
@@ -44,13 +38,13 @@ extension THEOplayerRCTView: AVPictureInPictureControllerDelegate {
     }
     
     public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        self.pipConfig.context = .PIP_CLOSED
+        self.presentationModeContext.pipContext = .PIP_CLOSED
         if #available(iOS 14.0, *) {
             pictureInPictureController.requiresLinearPlayback = self.pipConfig.requiresLinearPlayback
         }
     }
     
     public func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
-        self.pipConfig.context = .PIP_RESTORED
+        self.presentationModeContext.pipContext = .PIP_RESTORED
     }
 }
