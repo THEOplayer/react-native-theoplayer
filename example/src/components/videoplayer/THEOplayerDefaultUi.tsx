@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { PlayerConfiguration, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
 import { SeekBar } from '../seekbar/SeekBar';
 import { THUMBNAIL_MODE } from './VideoPlayerUIProps';
@@ -23,10 +23,12 @@ export interface THEOplayerDefaultUiProps {
   style?: Partial<VideoPlayerStyle>;
   config?: PlayerConfiguration;
   onPlayerReady?: (player: THEOplayer) => void;
+  topSlot?: ReactNode;
+  bottomSlot?: ReactNode;
 }
 
 export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
-  const { style, config } = props;
+  const { style, config, topSlot, bottomSlot } = props;
   const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);
   const chromeless = config?.chromeless ?? false;
 
@@ -44,6 +46,7 @@ export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
           player={player}
           top={
             <ControlBar>
+              {topSlot}
               <AirplayButton />
               <ChromecastButton />
             </ControlBar>
@@ -68,6 +71,7 @@ export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
                 {/*Spacer*/}
                 <View style={{ flexGrow: 1 }} />
 
+                {bottomSlot}
                 <LanguageMenuButton />
                 {/*Note: quality selection is not available on iOS */}
                 <SettingsMenuButton />
