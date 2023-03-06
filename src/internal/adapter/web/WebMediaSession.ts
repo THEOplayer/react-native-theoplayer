@@ -20,6 +20,12 @@ const mediaSession = (function () {
   return mediaSession;
 })();
 
+/**
+ * The MediaSession interface of the Media Session API allows a web page to provide custom behaviors for standard media playback interactions, and
+ * to report metadata that can be sent by the user agent to the device or operating system for presentation in standardized user interface elements.
+ *
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/MediaSession
+ */
 export class WebMediaSession {
   private readonly _config: WebMediaSessionConfig;
   private readonly _player: ChromelessPlayer;
@@ -30,6 +36,7 @@ export class WebMediaSession {
     this._player.addEventListener('sourcechange', this.onSourceChange);
     this._player.addEventListener('play', this.onPlay);
     this._player.addEventListener('pause', this.onPause);
+    this._player.addEventListener('timeupdate', this.updatePositionState);
     this._player.ads?.addEventListener('adbreakbegin', this.onAdbreakBegin);
     this._player.ads?.addEventListener('adbreakend', this.onAdbreakEnd);
 
@@ -64,6 +71,7 @@ export class WebMediaSession {
     this._player.removeEventListener('sourcechange', this.onSourceChange);
     this._player.removeEventListener('play', this.onPlay);
     this._player.removeEventListener('pause', this.onPause);
+    this._player.removeEventListener('timeupdate', this.updatePositionState);
     this._player.ads?.removeEventListener('adbreakbegin', this.onAdbreakBegin);
     this._player.ads?.removeEventListener('adbreakend', this.onAdbreakEnd);
     mediaSession.setActionHandler('play', null);
@@ -90,14 +98,20 @@ export class WebMediaSession {
     this.updatePositionState();
   };
 
-  updatePositionState() {
+  private updatePositionState = () => {
     const { duration, playbackRate, currentTime } = this._player;
     mediaSession.setPositionState({
+      // A floating-point value giving the total duration of the current media in seconds. This should always be a positive number,
+      // with positive infinity (Infinity) indicating media without a defined end, such as a live stream.
       duration: isNaN(duration) ? 0 : duration,
+
+      // A floating-point value indicating the rate at which the media is being played, as a ratio relative to its normal playback speed.
       playbackRate,
+
+      // A floating-point value indicating the last reported playback position of the media in seconds. This must always be a positive value.
       position: currentTime,
     });
-  }
+  };
 
   private onPlay = () => {
     mediaSession.playbackState = 'playing';
