@@ -24,7 +24,7 @@ export const ActionButton = (props: ActionButtonProps) => {
   }
 
   const onTouch = () => {
-    if (context.ui.showing_) {
+    if (context.ui.buttonsEnabled_) {
       onPress?.();
     }
     context.ui.requestShowUi();

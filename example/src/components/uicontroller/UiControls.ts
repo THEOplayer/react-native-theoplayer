@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 
 export interface UiControls {
-  readonly showing_: boolean;
+  readonly buttonsEnabled_: boolean;
 
   requestShowUi: () => void;
 
