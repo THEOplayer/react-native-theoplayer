@@ -24,6 +24,8 @@ interface SlotViewState {
   error: PlayerError | undefined;
 }
 
+const DEBUG_USER_IDLE_FADE = false;
+
 export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewProps>, SlotViewState> implements UiControls {
   private _userActiveIds: number[] = [];
   private _idCounter = 0;
@@ -84,6 +86,9 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewP
    * Request to show the UI due to user input.
    */
   public onUserAction_ = () => {
+    if (DEBUG_USER_IDLE_FADE) {
+      console.log('onUserAction_', this._userActiveIds);
+    }
     this.showUi_();
     this.hideUiAfterTimeout_();
   };
@@ -95,6 +100,9 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewP
     this.showUi_();
     const id = this._idCounter++;
     this._userActiveIds.push(id);
+    if (DEBUG_USER_IDLE_FADE) {
+      console.log('setUserActive_', this._userActiveIds);
+    }
     return id;
   };
 
@@ -103,6 +111,9 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewP
    */
   public setUserIdle_ = (id?: number) => {
     arrayRemoveElement(this._userActiveIds, id);
+    if (DEBUG_USER_IDLE_FADE) {
+      console.log('setUserIdle_', this._userActiveIds);
+    }
     this.hideUiAfterTimeout_();
   };
 
