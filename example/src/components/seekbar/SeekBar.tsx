@@ -108,7 +108,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
         }
         if (this.animationPauseId === undefined) {
           const uiController = (this.context as UiContext).ui;
-          this.animationPauseId = uiController.requestShowUiWithLock_();
+          this.animationPauseId = uiController.setUserActive_();
         }
       },
       onPanResponderMove: (_evt: GestureResponderEvent, gestureState: PanResponderGestureState) => {
@@ -123,7 +123,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
         }
         if (this.animationPauseId !== undefined) {
           const uiController = (this.context as UiContext).ui;
-          uiController.releaseLock_(this.animationPauseId);
+          uiController.setUserIdle_(this.animationPauseId);
           this.animationPauseId = undefined;
         }
       },
@@ -326,7 +326,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
       this.seekBackward();
     }
     const uiController = (this.context as UiContext).ui;
-    uiController.requestShowUi();
+    uiController.onUserAction_();
   };
 
   onFocus = () => {

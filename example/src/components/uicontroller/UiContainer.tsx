@@ -45,7 +45,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewP
   /**
    * Request to show the UI due to user input.
    */
-  public requestShowUi = () => {
+  public onUserAction_ = () => {
     this.showUi_();
     this.hideUiAfterTimeout_();
   };
@@ -53,7 +53,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewP
   /**
    * Request to show the UI until releaseLock_() is called.
    */
-  public requestShowUiWithLock_ = () => {
+  public setUserActive_ = () => {
     this.showUi_();
     const id = this._idCounter++;
     this._animationsPauseRequestIds.push(id);
@@ -63,7 +63,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewP
   /**
    * Request to release the lock and start fading out again.
    */
-  public releaseLock_ = (id?: number) => {
+  public setUserIdle_ = (id?: number) => {
     arrayRemoveElement(this._animationsPauseRequestIds, id);
     this.hideUiAfterTimeout_();
   };
@@ -72,10 +72,10 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewP
     const { currentMenu } = this.state;
     const previousMenu = currentMenu;
     if (this._menuLockId !== undefined) {
-      this.releaseLock_(this._menuLockId);
+      this.setUserIdle_(this._menuLockId);
     }
     if (menu !== undefined) {
-      this._menuLockId = this.requestShowUiWithLock_();
+      this._menuLockId = this.setUserActive_();
     }
     this.setState({ currentMenu: menu });
     return previousMenu;
@@ -129,8 +129,8 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewP
         {/* The Animated.View is for showing and hiding the UI*/}
         <Animated.View
           style={[style.slotView.container, { opacity: fadeAnimation }]}
-          onTouchStart={this.requestShowUi}
-          {...(Platform.OS === 'web' ? { onMouseMove: this.requestShowUi } : {})}>
+          onTouchStart={this.onUserAction_}
+          {...(Platform.OS === 'web' ? { onMouseMove: this.onUserAction_ } : {})}>
           <>
             {/* The UI background */}
             <View style={[style.slotView.container, { backgroundColor: style.colors.background }]} />
