@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-export type MenuContructor = () => ReactNode;
+export type MenuConstructor = () => ReactNode;
 
 export interface UiControls {
   /*
@@ -26,7 +26,7 @@ export interface UiControls {
   /*
    * Opens a new menu on top of the player.
    */
-  openMenu_: (menuConstructor: MenuContructor) => void;
+  openMenu_: (menuConstructor: MenuConstructor) => void;
 
   /*
    * Closes the current menu. If this was a sub-menu, the parent menu will re-open.
