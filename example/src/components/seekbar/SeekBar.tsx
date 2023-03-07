@@ -233,13 +233,16 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
     if (Platform.isTV) {
       this.disableTVEventHandler();
     }
-    const player = (this.context as UiContext).player;
-    player.removeEventListener(PlayerEventType.PROGRESS, this.onProgress);
-    player.removeEventListener(PlayerEventType.TIME_UPDATE, this.onTimeUpdate);
-    player.removeEventListener(PlayerEventType.TEXT_TRACK_LIST, this.onTextTrackListEvent);
-    player.removeEventListener(PlayerEventType.TEXT_TRACK, this.onTextTrackEvent);
-    player.removeEventListener(PlayerEventType.DURATION_CHANGE, this.onDurationChange);
-    player.removeEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
+    const context = this.context as UiContext;
+    context.player.removeEventListener(PlayerEventType.PROGRESS, this.onProgress);
+    context.player.removeEventListener(PlayerEventType.TIME_UPDATE, this.onTimeUpdate);
+    context.player.removeEventListener(PlayerEventType.TEXT_TRACK_LIST, this.onTextTrackListEvent);
+    context.player.removeEventListener(PlayerEventType.TEXT_TRACK, this.onTextTrackEvent);
+    context.player.removeEventListener(PlayerEventType.DURATION_CHANGE, this.onDurationChange);
+    context.player.removeEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
+    if (this.animationPauseId !== undefined) {
+      context.ui.setUserIdle_(this.animationPauseId);
+    }
   }
 
   componentDidUpdate(_: Readonly<SeekBarProps>, prevState: Readonly<SeekBarState>) {

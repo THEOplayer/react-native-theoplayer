@@ -28,26 +28,32 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
   }
 
   componentDidMount() {
-    const player = (this.context as UiContext).player;
-    player.addEventListener(PlayerEventType.PLAY, this.onPlay);
-    player.addEventListener(PlayerEventType.PLAYING, this.onPlay);
-    player.addEventListener(PlayerEventType.PAUSE, this.onPause);
-    player.addEventListener(PlayerEventType.ERROR, this.onError);
-    player.addEventListener(PlayerEventType.TIME_UPDATE, this.onTimeupdate);
+    const context = this.context as UiContext;
+    context.player.addEventListener(PlayerEventType.PLAY, this.onPlay);
+    context.player.addEventListener(PlayerEventType.PLAYING, this.onPlay);
+    context.player.addEventListener(PlayerEventType.PAUSE, this.onPause);
+    context.player.addEventListener(PlayerEventType.ERROR, this.onError);
+    context.player.addEventListener(PlayerEventType.TIME_UPDATE, this.onTimeupdate);
+    if (context.player.paused) {
+      this.animationPauseId = context.ui.setUserActive_();
+    }
     this.setState({
-      paused: player.paused,
+      paused: context.player.paused,
       error: false,
     });
   }
 
   componentWillUnmount() {
-    const player = (this.context as UiContext).player;
-    player.removeEventListener(PlayerEventType.PLAY, this.onPlay);
-    player.removeEventListener(PlayerEventType.PLAYING, this.onPlay);
-    player.removeEventListener(PlayerEventType.PAUSE, this.onPause);
-    player.removeEventListener(PlayerEventType.ERROR, this.onError);
-    player.removeEventListener(PlayerEventType.SOURCE_CHANGE, this.onSourceChange);
-    player.removeEventListener(PlayerEventType.TIME_UPDATE, this.onTimeupdate);
+    const context = this.context as UiContext;
+    context.player.removeEventListener(PlayerEventType.PLAY, this.onPlay);
+    context.player.removeEventListener(PlayerEventType.PLAYING, this.onPlay);
+    context.player.removeEventListener(PlayerEventType.PAUSE, this.onPause);
+    context.player.removeEventListener(PlayerEventType.ERROR, this.onError);
+    context.player.removeEventListener(PlayerEventType.SOURCE_CHANGE, this.onSourceChange);
+    context.player.removeEventListener(PlayerEventType.TIME_UPDATE, this.onTimeupdate);
+    if (this.animationPauseId !== undefined) {
+      context.ui.setUserIdle_(this.animationPauseId);
+    }
   }
 
   private onPlay = () => {
