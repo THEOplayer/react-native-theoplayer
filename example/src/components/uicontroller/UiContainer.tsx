@@ -148,7 +148,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
     if (this._userActiveIds.length === 0) {
       clearTimeout(this._currentFadeOutTimeout);
       // @ts-ignore
-      this._currentFadeOutTimeout = setTimeout(this.doFadeOut_, 2000);
+      this._currentFadeOutTimeout = setTimeout(this.doFadeOut_, 2500);
     }
   }
 
@@ -170,7 +170,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
     Animated.timing(fadeAnimation, {
       useNativeDriver: true,
       toValue: 0,
-      duration: 1000,
+      duration: 200,
     }).start(() => {
       this.setState({ showing: false });
     });
