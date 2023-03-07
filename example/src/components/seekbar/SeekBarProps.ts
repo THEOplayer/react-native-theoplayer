@@ -1,5 +1,5 @@
 import type { StyleProp, ViewStyle } from 'react-native';
-import type { ThumbnailMode } from '../videoplayer/VideoPlayerUIProps';
+import type { ThumbnailMode } from './SeekBar';
 
 // default value when skipping forward
 export const SKIP_FORWARD_MSEC_DEFAULT = 10000;

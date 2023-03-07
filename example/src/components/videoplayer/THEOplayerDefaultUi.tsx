@@ -1,7 +1,6 @@
 import React, { ReactNode, useState } from 'react';
 import { PlayerConfiguration, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
-import { SeekBar } from '../seekbar/SeekBar';
-import { THUMBNAIL_MODE } from './VideoPlayerUIProps';
+import { SeekBar, THUMBNAIL_MODE } from '../seekbar/SeekBar';
 import { AirplayButton } from '../button/AirplayButton';
 import { ChromecastButton, ENABLE_CAST_BUTTON } from '../button/ChromecastButton';
 import { ControlBar } from '../controlbar/ControlBar';
