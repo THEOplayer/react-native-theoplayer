@@ -57,7 +57,7 @@ export interface VideoPlayerStyle {
 }
 
 export const BUTTON_SIZE = 40;
-export const CENTER_BUTTON_SIZE = 48;
+export const CENTER_BUTTON_SIZE = 52;
 
 export const defaultPlayerStyle: VideoPlayerStyle = {
   colors: {
@@ -116,6 +116,7 @@ export const defaultPlayerStyle: VideoPlayerStyle = {
       resizeMode: 'contain',
       width: BUTTON_SIZE,
       height: BUTTON_SIZE,
+      padding: 5,
     },
   },
   text: {
@@ -149,10 +150,10 @@ export const defaultPlayerStyle: VideoPlayerStyle = {
       overflow: 'visible',
     },
     innerProgressCompleted: {
-      height: 6,
+      height: 5,
     },
     innerProgressRemaining: {
-      height: 6,
+      height: 5,
     },
     touchable: {
       position: 'absolute',
@@ -162,8 +163,8 @@ export const defaultPlayerStyle: VideoPlayerStyle = {
       bottom: 0,
     },
     progressDot: {
-      width: 20,
-      height: 20,
+      width: 15,
+      height: 15,
       marginLeft: -8,
       borderRadius: 10,
     },
