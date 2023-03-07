@@ -4,7 +4,7 @@ import { PlayerContext } from '../util/PlayerContext';
 import { arrayRemoveElement } from '../../utils/ArrayUtils';
 import type { THEOplayer } from 'react-native-theoplayer';
 import type { VideoPlayerStyle } from '../style/VideoPlayerStyle';
-import type { MenuContructor, UiControls } from './UiControls';
+import type { MenuConstructor, UiControls } from './UiControls';
 
 interface SlotViewProps {
   player: THEOplayer;
@@ -26,7 +26,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewP
   private _idCounter = 0;
   private _currentFadeOutTimeout: number | undefined = undefined;
 
-  private _menus: MenuContructor[] = [];
+  private _menus: MenuConstructor[] = [];
   private _menuLockId: number | undefined = undefined;
 
   constructor(props: SlotViewProps) {

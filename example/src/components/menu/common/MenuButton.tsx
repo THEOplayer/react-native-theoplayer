@@ -2,13 +2,13 @@ import type { ImageSourcePropType, StyleProp, ViewStyle } from 'react-native';
 import React, { ReactNode } from 'react';
 import { ActionButton } from '../../button/actionbutton/ActionButton';
 import { PlayerContext, UiContext } from '../../util/PlayerContext';
-import type { MenuContructor } from '../../uicontroller/UiControls';
+import type { MenuConstructor } from '../../uicontroller/UiControls';
 
 export interface NewMenuButtonProps {
   icon?: ImageSourcePropType;
   svg?: ReactNode;
   style?: StyleProp<ViewStyle>;
-  menuConstructor: MenuContructor;
+  menuConstructor: MenuConstructor;
 }
 
 export const MenuButton = (props: NewMenuButtonProps) => {
