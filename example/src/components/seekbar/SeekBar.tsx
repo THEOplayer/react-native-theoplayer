@@ -30,7 +30,7 @@ import {
   TimeRange,
   TimeUpdateEvent,
 } from 'react-native-theoplayer';
-import { ThumbnailView } from '../thumbnail/ThumbnailView';
+import { ThumbnailView } from './thumbnail/ThumbnailView';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
 
 interface SeekBarState {

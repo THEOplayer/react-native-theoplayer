@@ -6,8 +6,8 @@ import type { ThumbnailViewProps } from './ThumbnailViewProps';
 import type { Thumbnail } from './Thumbnail';
 import { isTileMapThumbnail } from './Thumbnail';
 import { URL as URLPolyfill } from 'react-native-url-polyfill';
-import { PlayerContext, UiContext } from '../util/PlayerContext';
-import { StaticTimeLabel } from '../timelabel/StaticTimeLabel';
+import { PlayerContext, UiContext } from '../../util/PlayerContext';
+import { StaticTimeLabel } from '../../timelabel/StaticTimeLabel';
 
 const SPRITE_REGEX = /^([^#]*)#xywh=(\d+),(\d+),(\d+),(\d+)\s*$/;
 const TAG = 'ThumbnailView';
