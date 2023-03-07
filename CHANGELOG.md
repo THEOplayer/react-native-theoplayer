@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed an issue where the media session connector for Web would report an error when passing an Infinite duration for live streams.
 
+### Changed
+
+- Replaced deprecated systemUiVisibility code in Android's PresentationManager.
+
 ## [Unreleased 2.0.0-pre6]
 
 ### Fixed

@@ -1,6 +1,5 @@
 package com.theoplayer.presentation
 
-import android.annotation.SuppressLint
 import android.app.AppOpsManager
 import android.app.PictureInPictureParams
 import android.content.BroadcastReceiver
@@ -23,8 +22,6 @@ import com.theoplayer.android.api.THEOplayerView
 import com.theoplayer.android.api.error.ErrorCode
 import com.theoplayer.android.api.error.THEOplayerException
 import com.theoplayer.android.api.player.PresentationMode
-
-private const val TAG = "PresentationManager"
 
 class PresentationManager(
   private val view: THEOplayerView,
@@ -171,6 +168,7 @@ class PresentationManager(
           reactContext.packageName
         ) == AppOpsManager.MODE_ALLOWED
       } else {
+        @Suppress("DEPRECATION")
         appOps?.checkOpNoThrow(
           AppOpsManager.OPSTR_PICTURE_IN_PICTURE,
           reactContext.applicationInfo.uid,
@@ -187,8 +185,7 @@ class PresentationManager(
     eventEmitter.emitError(THEOplayerException(ErrorCode.CONFIGURATION_ERROR, message))
   }
 
-  @SuppressLint("ObsoleteSdkInt")
-  fun setFullscreen(fullscreen: Boolean) {
+  private fun setFullscreen(fullscreen: Boolean) {
     if (fullscreen == this.fullscreen) {
       // Already in right fullscreen state
       return
