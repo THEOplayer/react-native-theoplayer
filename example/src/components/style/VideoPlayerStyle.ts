@@ -121,6 +121,7 @@ export const defaultPlayerStyle: VideoPlayerStyle = {
   text: {
     textAlignVertical: 'center',
     textAlign: 'center',
+    alignSelf: 'center',
     fontSize: 16,
   },
   timeLabel: {
