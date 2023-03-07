@@ -4,7 +4,7 @@ import { PlayerContext } from '../util/PlayerContext';
 import { arrayRemoveElement } from '../../utils/ArrayUtils';
 import type { THEOplayer } from 'react-native-theoplayer';
 import type { VideoPlayerStyle } from '../style/VideoPlayerStyle';
-import type { UiControls } from './UiControls';
+import type { MenuContructor, UiControls } from './UiControls';
 
 interface SlotViewProps {
   player: THEOplayer;
@@ -26,6 +26,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewP
   private _idCounter = 0;
   private _currentFadeOutTimeout: number | undefined = undefined;
 
+  private _menus: MenuContructor[] = [];
   private _menuLockId: number | undefined = undefined;
 
   constructor(props: SlotViewProps) {
@@ -68,17 +69,23 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewP
     this.hideUiAfterTimeout_();
   };
 
-  public setMenu_ = (menu: ReactNode | undefined) => {
-    const { currentMenu } = this.state;
-    const previousMenu = currentMenu;
-    if (this._menuLockId !== undefined) {
-      this.setUserIdle_(this._menuLockId);
-    }
-    if (menu !== undefined) {
+  public openMenu_ = (menuConstructor: () => ReactNode) => {
+    this._menus.push(menuConstructor);
+    if (this._menuLockId === undefined) {
       this._menuLockId = this.setUserActive_();
     }
-    this.setState({ currentMenu: menu });
-    return previousMenu;
+    this.setState({ currentMenu: menuConstructor() });
+  };
+
+  public closeCurrentMenu_ = () => {
+    this._menus.pop();
+    const nextMenu = this._menus.length > 0 ? this._menus[this._menus.length - 1] : undefined;
+    this.setState({ currentMenu: nextMenu?.() });
+    if (nextMenu === undefined) {
+      this.setUserIdle_(this._menuLockId);
+      this._menuLockId = undefined;
+    }
+    this.onUserAction_();
   };
 
   private showUi_() {

@@ -6,14 +6,13 @@ import { BackButton } from '../../button/BackButton';
 
 interface MenuViewProps {
   menu: ReactNode;
-  previousMenu?: ReactNode;
 }
 
 export const MenuView = (props: MenuViewProps) => {
-  const { menu, previousMenu } = props;
+  const { menu } = props;
   const context = useContext(PlayerContext);
   const onClose = () => {
-    context.ui.setMenu_(previousMenu);
+    context.ui.closeCurrentMenu_();
   };
   return (
     <PlayerContext.Consumer>

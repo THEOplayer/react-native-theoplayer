@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
 
+export type MenuContructor = () => ReactNode;
+
 export interface UiControls {
   readonly buttonsEnabled_: boolean;
 
@@ -9,8 +11,7 @@ export interface UiControls {
 
   setUserIdle_: (id: number) => void;
 
-  /**
-   * Sets the current menu overlay on the UI, and returns the previous menu in case you need to go back.
-   */
-  setMenu_: (menu: ReactNode | undefined) => ReactNode | undefined;
+  openMenu_: (menuConstructor: MenuContructor) => void;
+
+  closeCurrentMenu_: () => void;
 }

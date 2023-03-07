@@ -12,6 +12,9 @@ import { MenuView } from './common/MenuView';
 export const SOURCES = ALL_SOURCES.filter((source) => source.os.indexOf(Platform.OS) >= 0) as Source[];
 
 export const SourceMenuButton = () => {
+  if (!(SOURCES && SOURCES.length > 0)) {
+    return <></>;
+  }
   const context = useContext(PlayerContext);
   const selectedSource = SOURCES.find((source) => source.source === context.player.source);
 
@@ -19,16 +22,10 @@ export const SourceMenuButton = () => {
     const newSource = SOURCES[id];
     context.player.source = newSource.source;
   };
-  if (!(SOURCES && SOURCES.length > 0)) {
-    return <></>;
-  }
-
-  return (
-    <MenuButton
-      svg={<ListSvg />}
-      menu={<SourceMenuView selectedSourceId={selectedSource ? SOURCES.indexOf(selectedSource) : undefined} onSelectSource={onSelectSource} />}
-    />
-  );
+  const createMenu = () => {
+    return <SourceMenuView selectedSourceId={selectedSource ? SOURCES.indexOf(selectedSource) : undefined} onSelectSource={onSelectSource} />;
+  };
+  return <MenuButton svg={<ListSvg />} menuConstructor={createMenu} />;
 };
 
 interface SourceMenuViewProps {
