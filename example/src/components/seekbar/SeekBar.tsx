@@ -43,7 +43,7 @@ interface SeekBarState {
   currentTime: number;
   textTracks: TextTrack[];
 }
-
+// TODO: This component will be completely reworked in a follow-up to change the look and feel, aligning it with other THEOplayer SDKs.
 /**
  * SeekBar provides an interactive progress component that supports both touch-based and remote-controlled devices.
  *
