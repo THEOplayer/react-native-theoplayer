@@ -12,7 +12,6 @@ import { SettingsMenuButton } from '../menu/SettingsMenuButton';
 import { MuteButton } from '../button/MuteButton';
 import { CastMessage } from '../view/CastMessage';
 import { CenteredDelayedActivityIndicator } from '../delayedactivityindicator/CenteredDelayedActivityIndicator';
-import { ErrorDisplay } from '../view/ErrorDisplay';
 import { CENTER_BUTTON_SIZE, defaultPlayerStyle, VideoPlayerStyle } from '../style/VideoPlayerStyle';
 import { StyleSheet, View } from 'react-native';
 import { UiContainer } from '../uicontroller/UiContainer';
@@ -59,7 +58,10 @@ export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
           }
           bottom={
             <>
-              <CastMessage />
+              <ControlBar>
+                <CastMessage />
+                <View style={{ flexGrow: 1 }} />
+              </ControlBar>
               <ControlBar>
                 <SeekBar thumbnailMode={THUMBNAIL_MODE} />
               </ControlBar>
