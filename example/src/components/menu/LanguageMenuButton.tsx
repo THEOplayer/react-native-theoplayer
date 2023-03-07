@@ -22,22 +22,23 @@ export class LanguageMenuButton extends PureComponent<unknown, LanguageMenuButto
 
   componentDidMount() {
     const player = (this.context as UiContext).player;
-    player.addEventListener(PlayerEventType.MEDIA_TRACK_LIST, this.onTrackListChanged);
-    player.addEventListener(PlayerEventType.TEXT_TRACK_LIST, this.onTextTrackListChanged);
+    player.addEventListener(PlayerEventType.MEDIA_TRACK_LIST, this._updateTrackLists);
+    player.addEventListener(PlayerEventType.TEXT_TRACK_LIST, this._updateTrackLists);
+    this._updateTrackLists();
   }
 
   componentWillUnmount() {
     const player = (this.context as UiContext).player;
-    player.removeEventListener(PlayerEventType.MEDIA_TRACK_LIST, this.onTrackListChanged);
-    player.removeEventListener(PlayerEventType.TEXT_TRACK_LIST, this.onTextTrackListChanged);
+    player.removeEventListener(PlayerEventType.MEDIA_TRACK_LIST, this._updateTrackLists);
+    player.removeEventListener(PlayerEventType.TEXT_TRACK_LIST, this._updateTrackLists);
   }
 
-  private onTextTrackListChanged = () => {
-    this.setState({ textTracks: (this.context as UiContext).player.textTracks });
-  };
-
-  private onTrackListChanged = () => {
-    this.setState({ audioTracks: (this.context as UiContext).player.audioTracks });
+  private _updateTrackLists = () => {
+    const player = (this.context as UiContext).player;
+    this.setState({
+      audioTracks: player.audioTracks,
+      textTracks: player.textTracks,
+    });
   };
 
   render() {
