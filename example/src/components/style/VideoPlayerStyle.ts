@@ -10,6 +10,7 @@ export interface ColorTheme {
 
 export interface VideoPlayerStyle {
   colors: ColorTheme;
+  fullScreenCenter: ViewStyle;
   slotView: {
     container: ViewStyle;
     topSlot: ViewStyle;
@@ -21,23 +22,9 @@ export interface VideoPlayerStyle {
     buttonContainer: ViewStyle;
     buttonIcon: ImageStyle;
   };
-  videoPlayer: {
-    container: ViewStyle;
-    fullScreenCenter: ViewStyle;
-    errorContainer: ViewStyle;
-    message: TextStyle;
-    timeLabelContainer: ViewStyle;
-    thumbnailContainerCarousel: ViewStyle;
-    thumbnailContainerSingle: ViewStyle;
-    thumbnailCurrentCarousel: ViewStyle;
-    thumbnailCurrentSingle: ViewStyle;
-    thumbnailCarousel: ViewStyle;
-    timeLabel: TextStyle;
-    liveContainer: ViewStyle;
-    containerThumbnail: ViewStyle;
-    thumbnail: ViewStyle;
-    timeLabelThumbnail: TextStyle;
-    liveDot: ViewStyle;
+  text: TextStyle;
+  timeLabel: {
+    container: TextStyle;
   };
   activityIndicator: ActivityIndicatorProps;
   seekBar: {
@@ -48,11 +35,22 @@ export interface VideoPlayerStyle {
     touchable: ViewStyle;
     progressDot: ViewStyle;
     progressHitSlop: Insets;
+    liveContainer: ViewStyle;
+    liveDot: ViewStyle;
+    thumbnail: {
+      thumbnail: ViewStyle;
+      containerThumbnail: ViewStyle;
+      containerCarousel: ViewStyle;
+      containerSingle: ViewStyle;
+      currentCarousel: ViewStyle;
+      currentSingle: ViewStyle;
+      carousel: ViewStyle;
+    };
   };
   menu: {
     container: ViewStyle;
     backButton: TextStyle;
-    menus: ViewStyle;
+    subMenu: ViewStyle;
     title: TextStyle;
     row: TextStyle;
   };
@@ -68,6 +66,15 @@ export const defaultPlayerStyle: VideoPlayerStyle = {
     accent: '#ffc50f',
     background: '#00000066',
     text: 'white',
+  },
+  fullScreenCenter: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   slotView: {
     container: {
@@ -111,90 +118,16 @@ export const defaultPlayerStyle: VideoPlayerStyle = {
       height: BUTTON_SIZE,
     },
   },
-  videoPlayer: {
+  text: {
+    textAlignVertical: 'center',
+    textAlign: 'center',
+    fontSize: 16,
+  },
+  timeLabel: {
     container: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      bottom: 0,
-      right: 0,
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: 'black',
-      overflow: 'hidden',
-    },
-    fullScreenCenter: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      bottom: 0,
-      right: 0,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    errorContainer: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      bottom: 0,
-      right: 0,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    message: {
-      textAlignVertical: 'center',
-      textAlign: 'center',
-      fontSize: 16,
-      paddingLeft: 50,
-      paddingRight: 50,
-    },
-    timeLabelContainer: {
       marginLeft: 20,
       height: 20,
       alignSelf: 'center',
-    },
-    thumbnailContainerCarousel: {
-      justifyContent: 'center',
-      marginBottom: 15,
-    },
-    thumbnailContainerSingle: {
-      marginBottom: 15,
-    },
-    thumbnailCurrentCarousel: {
-      borderWidth: 2,
-    },
-    thumbnailCurrentSingle: {
-      borderWidth: 0,
-    },
-    thumbnailCarousel: {
-      margin: 4,
-    },
-    timeLabel: {
-      alignSelf: 'flex-start',
-      fontSize: 16,
-    },
-    liveContainer: {
-      flexDirection: 'row',
-    },
-    containerThumbnail: {
-      alignItems: 'center',
-      flexDirection: 'row',
-    },
-    thumbnail: {
-      overflow: 'hidden',
-      backgroundColor: 'transparent',
-    },
-    timeLabelThumbnail: {
-      alignSelf: 'center',
-      fontSize: 16,
-      lineHeight: 16,
-    },
-    liveDot: {
-      width: 16,
-      height: 16,
-      marginLeft: -8,
-      borderRadius: 8,
-      backgroundColor: 'red',
     },
   },
   activityIndicator: {
@@ -239,6 +172,42 @@ export const defaultPlayerStyle: VideoPlayerStyle = {
       left: 20,
       right: 20,
     },
+    liveContainer: {
+      flexDirection: 'row',
+    },
+    liveDot: {
+      width: 16,
+      height: 16,
+      marginLeft: -8,
+      borderRadius: 8,
+      backgroundColor: 'red',
+    },
+    thumbnail: {
+      containerCarousel: {
+        justifyContent: 'center',
+        marginBottom: 15,
+      },
+      containerSingle: {
+        marginBottom: 15,
+      },
+      currentCarousel: {
+        borderWidth: 2,
+      },
+      currentSingle: {
+        borderWidth: 0,
+      },
+      carousel: {
+        margin: 4,
+      },
+      containerThumbnail: {
+        alignItems: 'center',
+        flexDirection: 'row',
+      },
+      thumbnail: {
+        overflow: 'hidden',
+        backgroundColor: 'transparent',
+      },
+    },
   },
   menu: {
     container: {
@@ -256,7 +225,7 @@ export const defaultPlayerStyle: VideoPlayerStyle = {
       fontSize: 16,
       lineHeight: 30,
     },
-    menus: {
+    subMenu: {
       flex: 1,
       left: 0,
       right: 0,

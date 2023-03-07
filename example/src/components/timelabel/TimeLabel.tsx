@@ -51,7 +51,13 @@ export class TimeLabel extends PureComponent<TimeLabelProps, TimeLabelState> {
   render() {
     const { currentTime, duration } = this.state;
     const { style, showDuration } = this.props;
-    return <StaticTimeLabel showDuration={showDuration} time={currentTime} duration={duration} style={style}></StaticTimeLabel>;
+    return (
+      <StaticTimeLabel
+        showDuration={showDuration}
+        time={currentTime}
+        duration={duration}
+        style={[this.context.style.timeLabel.container, style]}></StaticTimeLabel>
+    );
   }
 }
 

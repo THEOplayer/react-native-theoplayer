@@ -80,7 +80,7 @@ export class CenteredDelayedActivityIndicator extends PureComponent<DelayedActiv
       !player.paused && (
         <PlayerContext.Consumer>
           {(context: UiContext) => (
-            <View style={context.style.videoPlayer.fullScreenCenter}>
+            <View style={context.style.fullScreenCenter}>
               <DelayedActivityIndicator color={context.style.colors.primary} delay={delay} {...context.style.activityIndicator} />
             </View>
           )}

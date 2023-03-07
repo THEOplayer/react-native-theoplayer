@@ -465,9 +465,9 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
           <View style={{ position: 'absolute', top: -(THUMBNAIL_SIZE * 0.75), left: 0, right: 0 }}>
             <ThumbnailView
               visible={seekBarPosition.isScrubbing}
-              containerStyle={context.style.videoPlayer.thumbnailContainerCarousel}
-              thumbnailStyleCurrent={[context.style.videoPlayer.thumbnailCurrentCarousel, { borderColor: context.style.colors.primary }]}
-              thumbnailStyleCarousel={context.style.videoPlayer.thumbnailCarousel}
+              containerStyle={context.style.seekBar.thumbnail.containerCarousel}
+              thumbnailStyleCurrent={[context.style.seekBar.thumbnail.currentCarousel, { borderColor: context.style.colors.primary }]}
+              thumbnailStyleCarousel={context.style.seekBar.thumbnail.carousel}
               thumbnailTrack={thumbnailTrack}
               time={seekBarPosition.currentProgress}
               duration={seekBarPosition.duration}
@@ -494,8 +494,8 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
           <View style={{ position: 'absolute', top: -(THUMBNAIL_SIZE * 0.75), left: 0, right: 0 }}>
             <ThumbnailView
               visible={seekBarPosition.isScrubbing}
-              containerStyle={styleContext.style.videoPlayer.thumbnailContainerSingle}
-              thumbnailStyleCurrent={styleContext.style.videoPlayer.thumbnailCurrentSingle}
+              containerStyle={styleContext.style.seekBar.thumbnail.containerSingle}
+              thumbnailStyleCurrent={styleContext.style.seekBar.thumbnail.currentSingle}
               thumbnailTrack={thumbnailTrack}
               duration={seekBarPosition.duration}
               time={seekBarPosition.currentProgress}
