@@ -7,6 +7,7 @@ import { Platform } from 'react-native';
 
 // whether to show a cast button.
 // NOTE: react-native-google-cast does not support web yet.
+// TODO: create own cast button for web.
 export const ENABLE_CAST_BUTTON = Platform.OS !== 'web' && !Platform.isTV;
 
 interface ChromecastButtonState {
