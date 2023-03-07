@@ -1,10 +1,12 @@
 import React, { PureComponent, ReactNode } from 'react';
 import { Animated, Platform, View } from 'react-native';
-import { PlayerContext } from '../util/PlayerContext';
+import { PlayerContext, UiContext } from '../util/PlayerContext';
 import { arrayRemoveElement } from '../../utils/ArrayUtils';
 import type { THEOplayer } from 'react-native-theoplayer';
 import type { VideoPlayerStyle } from '../style/VideoPlayerStyle';
 import type { MenuConstructor, UiControls } from './UiControls';
+import { CastEvent, CastEventType, ErrorEvent, PlayerError, PlayerEventType } from 'react-native-theoplayer';
+import { ErrorDisplay } from '../view/ErrorDisplay';
 
 interface SlotViewProps {
   player: THEOplayer;
@@ -19,6 +21,7 @@ interface SlotViewState {
   currentMenu: ReactNode | undefined;
   showing: boolean;
   buttonsEnabled: boolean;
+  error: PlayerError | undefined;
 }
 
 export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewProps>, SlotViewState> implements UiControls {
@@ -36,8 +39,42 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewP
       currentMenu: undefined,
       showing: true,
       buttonsEnabled: true,
+      error: undefined,
     };
   }
+
+  componentDidMount() {
+    const player = this.props.player;
+    player.addEventListener(PlayerEventType.LOAD_START, this.onLoadStart);
+    player.addEventListener(PlayerEventType.ERROR, this.onError);
+    player.addEventListener(PlayerEventType.CAST_EVENT, this.onCastEvent);
+  }
+
+  componentWillUnmount() {
+    const player = this.props.player;
+    player.removeEventListener(PlayerEventType.LOAD_START, this.onLoadStart);
+    player.removeEventListener(PlayerEventType.ERROR, this.onError);
+    player.removeEventListener(PlayerEventType.CAST_EVENT, this.onCastEvent);
+  }
+
+  private onLoadStart = () => {
+    this.setState({ error: undefined });
+  };
+
+  private onError = (event: ErrorEvent) => {
+    const { error } = event;
+    this.setState({ error });
+  };
+
+  private onCastEvent = (event: CastEvent) => {
+    if (event.subType === CastEventType.CHROMECAST_ERROR)
+      this.setState({
+        error: {
+          errorCode: event.error.errorCode,
+          errorMessage: event.error.description,
+        },
+      });
+  };
 
   get buttonsEnabled_(): boolean {
     return this.state.buttonsEnabled;
@@ -130,7 +167,12 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewP
 
   render() {
     const { player, style, top, center, bottom, children } = this.props;
-    const { fadeAnimation, currentMenu } = this.state;
+    const { fadeAnimation, currentMenu, error } = this.state;
+
+    if (error !== undefined) {
+      return <ErrorDisplay error={error} />;
+    }
+
     return (
       <PlayerContext.Provider value={{ player, style: style, ui: this }}>
         {/* The Animated.View is for showing and hiding the UI*/}

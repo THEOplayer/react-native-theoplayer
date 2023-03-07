@@ -79,9 +79,7 @@ export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
                 <FullscreenButton />
               </ControlBar>
             </>
-          }>
-          <ErrorDisplay />
-        </UiContainer>
+          }></UiContainer>
       )}
     </View>
   );
