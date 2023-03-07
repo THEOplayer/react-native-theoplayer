@@ -10,14 +10,14 @@ import { FullscreenButton } from '../button/FullscreenButton';
 import { LanguageMenuButton } from '../menu/LanguageMenuButton';
 import { SettingsMenuButton } from '../menu/SettingsMenuButton';
 import { MuteButton } from '../button/MuteButton';
-import { BigPlayButton } from '../button/BigPlayButton';
 import { CastMessage } from '../view/CastMessage';
 import { CenteredDelayedActivityIndicator } from '../delayedactivityindicator/CenteredDelayedActivityIndicator';
 import { ErrorDisplay } from '../view/ErrorDisplay';
-import { defaultPlayerStyle, VideoPlayerStyle } from '../style/VideoPlayerStyle';
+import { CENTER_BUTTON_SIZE, defaultPlayerStyle, VideoPlayerStyle } from '../style/VideoPlayerStyle';
 import { StyleSheet, View } from 'react-native';
 import { UiContainer } from '../uicontroller/UiContainer';
 import { SourceMenuButton } from '../menu/SourceMenuButton';
+import { PlayButton } from '../button/PlayButton';
 
 export interface THEOplayerDefaultUiProps {
   style?: Partial<VideoPlayerStyle>;
@@ -52,10 +52,10 @@ export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
             </ControlBar>
           }
           center={
-            <>
-              <BigPlayButton />
+            <ControlBar style={{ height: CENTER_BUTTON_SIZE }}>
+              <PlayButton style={{ height: CENTER_BUTTON_SIZE, width: CENTER_BUTTON_SIZE }} />
               <CenteredDelayedActivityIndicator />
-            </>
+            </ControlBar>
           }
           bottom={
             <>

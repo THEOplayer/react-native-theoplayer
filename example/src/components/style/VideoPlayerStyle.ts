@@ -20,7 +20,6 @@ export interface VideoPlayerStyle {
     container: ViewStyle;
     buttonContainer: ViewStyle;
     buttonIcon: ImageStyle;
-    buttonIconCenterControls: ViewStyle;
   };
   videoPlayer: {
     container: ViewStyle;
@@ -59,8 +58,8 @@ export interface VideoPlayerStyle {
   };
 }
 
-const BUTTON_SIZE = 40;
-const CENTER_BUTTON_SIZE = 48;
+export const BUTTON_SIZE = 40;
+export const CENTER_BUTTON_SIZE = 48;
 
 export const defaultPlayerStyle: VideoPlayerStyle = {
   colors: {
@@ -88,7 +87,7 @@ export const defaultPlayerStyle: VideoPlayerStyle = {
     },
     centerSlot: {
       alignItems: 'center',
-      transform: [{ translateY: BUTTON_SIZE / 2 }],
+      zIndex: 2,
     },
     bottomSlot: {
       paddingBottom: 10,
@@ -110,10 +109,6 @@ export const defaultPlayerStyle: VideoPlayerStyle = {
       resizeMode: 'contain',
       width: BUTTON_SIZE,
       height: BUTTON_SIZE,
-    },
-    buttonIconCenterControls: {
-      width: CENTER_BUTTON_SIZE,
-      height: CENTER_BUTTON_SIZE,
     },
   },
   videoPlayer: {
