@@ -1,14 +1,14 @@
 import React, { PureComponent, ReactNode } from 'react';
 import { Animated, Platform, View } from 'react-native';
-import { PlayerContext, UiContext } from '../util/PlayerContext';
+import { PlayerContext } from '../util/PlayerContext';
 import { arrayRemoveElement } from '../../utils/ArrayUtils';
 import type { THEOplayer } from 'react-native-theoplayer';
+import { CastEvent, CastEventType, ErrorEvent, PlayerError, PlayerEventType } from 'react-native-theoplayer';
 import type { VideoPlayerStyle } from '../style/VideoPlayerStyle';
 import type { MenuConstructor, UiControls } from './UiControls';
-import { CastEvent, CastEventType, ErrorEvent, PlayerError, PlayerEventType } from 'react-native-theoplayer';
 import { ErrorDisplay } from '../view/ErrorDisplay';
 
-interface SlotViewProps {
+interface UiContainerProps {
   player: THEOplayer;
   style: VideoPlayerStyle;
   top?: ReactNode;
@@ -16,7 +16,7 @@ interface SlotViewProps {
   bottom?: ReactNode;
 }
 
-interface SlotViewState {
+interface UiContainerState {
   fadeAnimation: Animated.Value;
   currentMenu: ReactNode | undefined;
   showing: boolean;
@@ -26,7 +26,7 @@ interface SlotViewState {
 
 const DEBUG_USER_IDLE_FADE = false;
 
-export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewProps>, SlotViewState> implements UiControls {
+export class UiContainer extends PureComponent<React.PropsWithChildren<UiContainerProps>, UiContainerState> implements UiControls {
   private _userActiveIds: number[] = [];
   private _idCounter = 0;
   private _currentFadeOutTimeout: number | undefined = undefined;
@@ -34,7 +34,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewP
   private _menus: MenuConstructor[] = [];
   private _menuLockId: number | undefined = undefined;
 
-  constructor(props: SlotViewProps) {
+  constructor(props: UiContainerProps) {
     super(props);
     this.state = {
       fadeAnimation: new Animated.Value(1),
