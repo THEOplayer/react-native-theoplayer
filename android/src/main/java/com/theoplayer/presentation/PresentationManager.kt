@@ -15,7 +15,8 @@ import android.view.SurfaceView
 import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.facebook.react.uimanager.ThemedReactContext
 import com.theoplayer.PlayerEventEmitter
 import com.theoplayer.android.api.THEOplayerView
@@ -195,22 +196,14 @@ class PresentationManager(
     this.fullscreen = fullscreen
     val activity = reactContext.currentActivity ?: return
     val window = activity.window
-    val decorView = window.decorView
-    val uiOptions: Int
     if (fullscreen) {
-      uiOptions = if (Build.VERSION.SDK_INT >= 19) { // 4.4+
-        (FrameLayout.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-          or FrameLayout.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-          or FrameLayout.SYSTEM_UI_FLAG_FULLSCREEN)
-      } else {
-        (FrameLayout.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-          or FrameLayout.SYSTEM_UI_FLAG_FULLSCREEN)
-      }
-      decorView.systemUiVisibility = uiOptions
+      WindowInsetsControllerCompat(window, window.decorView).apply {
+        systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+      }.hide(WindowInsetsCompat.Type.systemBars())
       eventEmitter.emitPresentationModeChange(PresentationMode.FULLSCREEN)
     } else {
-      uiOptions = FrameLayout.SYSTEM_UI_FLAG_VISIBLE
-      decorView.systemUiVisibility = uiOptions
+      WindowInsetsControllerCompat(window, window.decorView).show(
+        WindowInsetsCompat.Type.systemBars())
       eventEmitter.emitPresentationModeChange(PresentationMode.INLINE)
     }
   }
