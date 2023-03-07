@@ -394,7 +394,8 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
       <PlayerContext.Consumer>
         {(context: UiContext) => (
           <View style={{ flex: 1, flexDirection: 'column', paddingHorizontal: 10 }}>
-            {thumbnailMode === 'carousel' ? this.renderThumbnailCarousel(this.seekBarPosition) : this.renderSingleThumbnail(this.seekBarPosition)}
+            {/*TODO enable thumbnail rendering.*/}
+            {/*{thumbnailMode === 'carousel' ? this.renderThumbnailCarousel(this.seekBarPosition) : this.renderSingleThumbnail(this.seekBarPosition)}*/}
             <View style={[context.style.seekBar.container, style]}>
               {Platform.isTV && (
                 <TouchableOpacity
