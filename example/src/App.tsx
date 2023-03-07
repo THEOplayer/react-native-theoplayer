@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { PlayerConfiguration, PlayerEventType, THEOplayer } from 'react-native-theoplayer';
-import { THEOplayerDefaultUi } from './components/videoplayer/THEOplayerDefaultUi';
+import { THEOplayerDefaultUi } from './components/THEOplayerDefaultUi';
 import { SOURCES } from './components/menu/SourceMenuButton';
 
 const playerConfig: PlayerConfiguration = {

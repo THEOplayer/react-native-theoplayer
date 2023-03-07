@@ -8,7 +8,7 @@ export interface ColorTheme {
   text: string;
 }
 
-export interface VideoPlayerStyle {
+export interface THEOplayerStyle {
   colors: ColorTheme;
   fullScreenCenter: ViewStyle;
   slotView: {
@@ -59,7 +59,7 @@ export interface VideoPlayerStyle {
 export const BUTTON_SIZE = 40;
 export const CENTER_BUTTON_SIZE = 52;
 
-export const defaultPlayerStyle: VideoPlayerStyle = {
+export const defaultPlayerStyle: THEOplayerStyle = {
   colors: {
     primary: 'white',
     secondary: '#2C2C2C',

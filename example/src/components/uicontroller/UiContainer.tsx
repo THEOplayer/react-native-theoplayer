@@ -4,13 +4,13 @@ import { PlayerContext } from '../util/PlayerContext';
 import { arrayRemoveElement } from '../../utils/ArrayUtils';
 import type { THEOplayer } from 'react-native-theoplayer';
 import { CastEvent, CastEventType, ErrorEvent, PlayerError, PlayerEventType } from 'react-native-theoplayer';
-import type { VideoPlayerStyle } from '../style/VideoPlayerStyle';
+import type { THEOplayerStyle } from '../THEOplayerStyle';
 import type { MenuConstructor, UiControls } from './UiControls';
-import { ErrorDisplay } from '../view/ErrorDisplay';
+import { ErrorDisplay } from '../message/ErrorDisplay';
 
 interface UiContainerProps {
   player: THEOplayer;
-  style: VideoPlayerStyle;
+  style: THEOplayerStyle;
   top?: ReactNode;
   center?: ReactNode;
   bottom?: ReactNode;

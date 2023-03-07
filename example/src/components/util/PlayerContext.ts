@@ -1,12 +1,12 @@
 import React from 'react';
 import type { THEOplayer } from 'react-native-theoplayer';
-import type { VideoPlayerStyle } from '../style/VideoPlayerStyle';
-import { defaultPlayerStyle } from '../style/VideoPlayerStyle';
+import type { THEOplayerStyle } from '../THEOplayerStyle';
+import { defaultPlayerStyle } from '../THEOplayerStyle';
 import type { UiControls } from '../uicontroller/UiControls';
 
 export interface UiContext {
   readonly player: THEOplayer;
-  readonly style: VideoPlayerStyle;
+  readonly style: THEOplayerStyle;
   readonly ui: UiControls;
 }
 
