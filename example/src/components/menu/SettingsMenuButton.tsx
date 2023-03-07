@@ -1,6 +1,6 @@
 import type { VideoQuality } from 'react-native-theoplayer';
 import { findMediaTrackByUid, MediaTrack, PlayerEventType } from 'react-native-theoplayer';
-import React, { PureComponent, useContext } from 'react';
+import React, { PureComponent } from 'react';
 import { Platform } from 'react-native';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
 import { getVideoQualityLabel } from '../util/TrackUtils';
@@ -14,19 +14,21 @@ export const SettingsMenuButton = () => {
   if (Platform.OS === 'ios') {
     return <></>;
   }
-  const context = useContext(PlayerContext);
-  return (
-    <MenuButton
-      svg={<SettingsSvg />}
-      menu={
-        <SettingsMenuView
-          videoTracks={context.player.videoTracks}
-          selectedVideoTrack={context.player.selectedVideoTrack}
-          targetVideoTrackQuality={context.player.targetVideoQuality}
-        />
-      }
-    />
-  );
+  const createMenu = () => {
+    return (
+      <PlayerContext.Consumer>
+        {(context: UiContext) => (
+          <SettingsMenuView
+            videoTracks={context.player.videoTracks}
+            selectedVideoTrack={context.player.selectedVideoTrack}
+            targetVideoTrackQuality={context.player.targetVideoQuality}
+          />
+        )}
+      </PlayerContext.Consumer>
+    );
+  };
+
+  return <MenuButton svg={<SettingsSvg />} menuConstructor={createMenu} />;
 };
 
 export interface VideoQualityMenuState {

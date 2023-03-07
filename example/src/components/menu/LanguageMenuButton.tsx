@@ -49,23 +49,22 @@ export class LanguageMenuButton extends PureComponent<unknown, LanguageMenuButto
       return <></>;
     }
 
-    const context = this.context as UiContext;
+    const createMenu = () => {
+      return (
+        <PlayerContext.Consumer>
+          {(context) => (
+            <LanguageMenuView
+              audioTracks={context.player.audioTracks}
+              textTracks={context.player.textTracks}
+              selectedAudioTrack={context.player.selectedAudioTrack}
+              selectedTextTrack={context.player.selectedTextTrack}
+            />
+          )}
+        </PlayerContext.Consumer>
+      );
+    };
 
-    console.log(audioTracks, selectableTextTracks);
-
-    return (
-      <MenuButton
-        svg={<LanguageSvg />}
-        menu={
-          <LanguageMenuView
-            audioTracks={context.player.audioTracks}
-            textTracks={context.player.textTracks}
-            selectedAudioTrack={context.player.selectedAudioTrack}
-            selectedTextTrack={context.player.selectedTextTrack}
-          />
-        }
-      />
-    );
+    return <MenuButton svg={<LanguageSvg />} menuConstructor={createMenu} />;
   }
 }
 
