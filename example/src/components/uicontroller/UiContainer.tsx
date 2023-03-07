@@ -22,6 +22,7 @@ interface UiContainerState {
   showing: boolean;
   buttonsEnabled: boolean;
   error: PlayerError | undefined;
+  firstPlay: boolean;
 }
 
 const DEBUG_USER_IDLE_FADE = false;
@@ -34,15 +35,18 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
   private _menus: MenuConstructor[] = [];
   private _menuLockId: number | undefined = undefined;
 
+  static initialState: UiContainerState = {
+    fadeAnimation: new Animated.Value(1),
+    currentMenu: undefined,
+    showing: true,
+    buttonsEnabled: true,
+    error: undefined,
+    firstPlay: false,
+  };
+
   constructor(props: UiContainerProps) {
     super(props);
-    this.state = {
-      fadeAnimation: new Animated.Value(1),
-      currentMenu: undefined,
-      showing: true,
-      buttonsEnabled: true,
-      error: undefined,
-    };
+    this.state = UiContainer.initialState;
   }
 
   componentDidMount() {
@@ -50,6 +54,12 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
     player.addEventListener(PlayerEventType.LOAD_START, this.onLoadStart);
     player.addEventListener(PlayerEventType.ERROR, this.onError);
     player.addEventListener(PlayerEventType.CAST_EVENT, this.onCastEvent);
+    player.addEventListener(PlayerEventType.PLAY, this.onFirstPlay);
+    player.addEventListener(PlayerEventType.PLAYING, this.onFirstPlay);
+    player.addEventListener(PlayerEventType.SOURCE_CHANGE, this.resetFirstPlay);
+    if (player.source !== undefined && player.currentTime !== 0) {
+      this.onFirstPlay();
+    }
   }
 
   componentWillUnmount() {
@@ -57,7 +67,18 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
     player.removeEventListener(PlayerEventType.LOAD_START, this.onLoadStart);
     player.removeEventListener(PlayerEventType.ERROR, this.onError);
     player.removeEventListener(PlayerEventType.CAST_EVENT, this.onCastEvent);
+    player.removeEventListener(PlayerEventType.PLAY, this.onFirstPlay);
+    player.removeEventListener(PlayerEventType.PLAYING, this.onFirstPlay);
+    player.removeEventListener(PlayerEventType.SOURCE_CHANGE, this.resetFirstPlay);
   }
+
+  private onFirstPlay = () => {
+    this.setState({ firstPlay: true });
+  };
+
+  private resetFirstPlay = () => {
+    this.setState({ firstPlay: false });
+  };
 
   private onLoadStart = () => {
     this.setState({ error: undefined });
@@ -88,6 +109,9 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
   public onUserAction_ = () => {
     if (DEBUG_USER_IDLE_FADE) {
       console.log('onUserAction_', this._userActiveIds);
+    }
+    if (!this.state.firstPlay) {
+      return;
     }
     this.showUi_();
     this.hideUiAfterTimeout_();
@@ -178,7 +202,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
 
   render() {
     const { player, style, top, center, bottom, children } = this.props;
-    const { fadeAnimation, currentMenu, error } = this.state;
+    const { fadeAnimation, currentMenu, error, firstPlay } = this.state;
 
     if (error !== undefined) {
       return <ErrorDisplay error={error} />;
@@ -201,11 +225,11 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
             {/* The UI control bars*/}
             {currentMenu === undefined && (
               <View style={[style.slotView.container]}>
-                <View style={style.slotView.topSlot}>{top}</View>
+                {firstPlay && <View style={style.slotView.topSlot}>{top}</View>}
                 <View style={style.fullScreenCenter}>
                   <View style={[style.slotView.centerSlot]}>{center}</View>
                 </View>
-                <View style={style.slotView.bottomSlot}>{bottom}</View>
+                {firstPlay && <View style={style.slotView.bottomSlot}>{bottom}</View>}
                 {children}
               </View>
             )}
