@@ -3,7 +3,7 @@ import { PlayerConfiguration, THEOplayer, THEOplayerView } from 'react-native-th
 import { SeekBar } from '../seekbar/SeekBar';
 import { THUMBNAIL_MODE } from './VideoPlayerUIProps';
 import { AirplayButton } from '../button/AirplayButton';
-import { ChromecastButton } from '../button/ChromecastButton';
+import { ChromecastButton, ENABLE_CAST_BUTTON } from '../button/ChromecastButton';
 import { ControlBar } from '../controlbar/ControlBar';
 import { TimeLabel } from '../timelabel/TimeLabel';
 import { FullscreenButton } from '../button/FullscreenButton';
@@ -46,8 +46,12 @@ export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
           top={
             <ControlBar>
               {topSlot}
-              <AirplayButton />
-              <ChromecastButton />
+              {ENABLE_CAST_BUTTON && (
+                <>
+                  <AirplayButton />
+                  <ChromecastButton />
+                </>
+              )}
             </ControlBar>
           }
           center={
