@@ -25,7 +25,7 @@ interface SlotViewState {
 }
 
 export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewProps>, SlotViewState> implements UiControls {
-  private _animationsPauseRequestIds: number[] = [];
+  private _userActiveIds: number[] = [];
   private _idCounter = 0;
   private _currentFadeOutTimeout: number | undefined = undefined;
 
@@ -94,7 +94,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewP
   public setUserActive_ = () => {
     this.showUi_();
     const id = this._idCounter++;
-    this._animationsPauseRequestIds.push(id);
+    this._userActiveIds.push(id);
     return id;
   };
 
@@ -102,7 +102,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewP
    * Request to release the lock and start fading out again.
    */
   public setUserIdle_ = (id?: number) => {
-    arrayRemoveElement(this._animationsPauseRequestIds, id);
+    arrayRemoveElement(this._userActiveIds, id);
     this.hideUiAfterTimeout_();
   };
 
@@ -134,7 +134,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewP
   }
 
   private hideUiAfterTimeout_() {
-    if (this._animationsPauseRequestIds.length === 0) {
+    if (this._userActiveIds.length === 0) {
       clearTimeout(this._currentFadeOutTimeout);
       // @ts-ignore
       this._currentFadeOutTimeout = setTimeout(this.doFadeOut_, 2000);
