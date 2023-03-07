@@ -27,7 +27,7 @@ export const ActionButton = (props: ActionButtonProps) => {
     if (context.ui.buttonsEnabled_) {
       onPress?.();
     }
-    context.ui.requestShowUi();
+    context.ui.onUserAction_();
   };
 
   return (
@@ -39,7 +39,7 @@ export const ActionButton = (props: ActionButtonProps) => {
           tvParallaxProperties={{ enabled: false }}
           onPress={onTouch}
           onFocus={() => {
-            context.ui.requestShowUi();
+            context.ui.onUserAction_();
             setFocused(true);
           }}
           onBlur={() => {

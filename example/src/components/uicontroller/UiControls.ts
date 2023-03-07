@@ -3,11 +3,11 @@ import type { ReactNode } from 'react';
 export interface UiControls {
   readonly buttonsEnabled_: boolean;
 
-  requestShowUi: () => void;
+  onUserAction_: () => void;
 
-  requestShowUiWithLock_: () => number;
+  setUserActive_: () => number;
 
-  releaseLock_: (id: number) => void;
+  setUserIdle_: (id: number) => void;
 
   /**
    * Sets the current menu overlay on the UI, and returns the previous menu in case you need to go back.

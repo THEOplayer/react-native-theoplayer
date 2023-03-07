@@ -54,7 +54,7 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
     this.setState({ paused: false });
     if (this.animationPauseId !== undefined) {
       const animationController = (this.context as UiContext).ui;
-      animationController.releaseLock_(this.animationPauseId);
+      animationController.setUserIdle_(this.animationPauseId);
       this.animationPauseId = undefined;
     }
   };
@@ -63,7 +63,7 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
     this.setState({ paused: true });
     if (this.animationPauseId === undefined) {
       const animationController = (this.context as UiContext).ui;
-      this.animationPauseId = animationController.requestShowUiWithLock_();
+      this.animationPauseId = animationController.setUserActive_();
     }
   };
 
