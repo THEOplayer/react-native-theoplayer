@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import 'react-native/tvos-types.d';
 import {
+  Dimensions,
   findNodeHandle,
   GestureResponderEvent,
   PanResponder,
@@ -30,7 +31,6 @@ import {
   TimeUpdateEvent,
 } from 'react-native-theoplayer';
 import { ThumbnailView } from '../thumbnail/ThumbnailView';
-import { THUMBNAIL_SIZE } from '../videoplayer/VideoPlayerUIProps';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
 
 interface SeekBarState {
@@ -43,6 +43,13 @@ interface SeekBarState {
   currentTime: number;
   textTracks: TextTrack[];
 }
+
+// default thumbnail size (width).
+export const THUMBNAIL_SIZE = 0.19 * Math.max(Dimensions.get('window').width, Dimensions.get('window').height);
+// carousel mode
+export type ThumbnailMode = 'single' | 'carousel';
+export const THUMBNAIL_MODE: ThumbnailMode = 'carousel';
+
 // TODO: This component will be completely reworked in a follow-up to change the look and feel, aligning it with other THEOplayer SDKs.
 /**
  * SeekBar provides an interactive progress component that supports both touch-based and remote-controlled devices.
