@@ -17,6 +17,8 @@ import type { AdsAPI } from './ads/AdsAPI';
 import type { CastAPI } from './cast/CastAPI';
 import type { CastEvent } from './event/CastEvent';
 
+export type THEOAspectRatio = 'fit' | 'fill' | 'aspectFill';
+
 export interface THEOplayerViewProps {
   /**
    * The player configuration with THEOplayer license.
@@ -75,6 +77,11 @@ export interface THEOplayerViewProps {
    * Determines whether the player is currently playing in fullscreen.
    */
   fullscreen?: boolean;
+
+  /**
+   * Determines the aspect ratio of the player.
+   */
+  videoAspectRatio?: THEOAspectRatio;
 
   /**
    * Used to set the current selected text track by passing its `uid`, or `null` to select none.

@@ -20,6 +20,7 @@ private const val PROP_MUTED = "muted"
 private const val PROP_VOLUME = "volume"
 private const val PROP_PLAYBACKRATE = "playbackRate"
 private const val PROP_FULLSCREEN = "fullscreen"
+private const val PROP_VIDEO_ASPECT_RATIO = "videoAspectRatio"
 private const val PROP_SELECTED_TEXTTRACK = "selectedTextTrack"
 private const val PROP_SELECTED_AUDIOTRACK = "selectedAudioTrack"
 private const val PROP_SELECTED_VIDEOTRACK = "selectedVideoTrack"
@@ -81,6 +82,11 @@ class ReactTHEOplayerViewManager : ViewGroupManager<ReactTHEOplayerView>() {
   @ReactProp(name = PROP_FULLSCREEN, defaultBoolean = false)
   fun setFullscreen(videoView: ReactTHEOplayerView, fullscreen: Boolean) {
     videoView.setFullscreen(fullscreen)
+  }
+
+  @ReactProp(name = PROP_VIDEO_ASPECT_RATIO)
+  fun setVideoAspectRatio(videoView: ReactTHEOplayerView, videoAspectRatio: String?) {
+    videoView.setAspectRatio(videoAspectRatio)
   }
 
   @ReactProp(name = PROP_SELECTED_TEXTTRACK, defaultInt = -1)

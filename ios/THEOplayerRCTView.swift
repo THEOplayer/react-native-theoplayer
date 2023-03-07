@@ -29,7 +29,8 @@ class THEOplayerRCTView: UIView {
     private var selectedAudioTrackUid: Int = 0
     private var seek: Double? = nil                  // in msec
     private var fullscreen: Bool = false
-    
+    private var aspectRatio: String?
+
     // MARK: - Initialisation / view setup
     init() {
         // create event handlers to maintain event props
@@ -79,6 +80,7 @@ class THEOplayerRCTView: UIView {
         self.syncPlayerSelectedVideoTrack()
         self.syncPlayerSeek()
         self.syncPlayerFullscreen()
+        self.syncPlayerAspectRatio()
         if DEBUG_THEOPLAYER_INTERACTION { print("[NATIVE] All props synced with THEOplayer instance.") }
     }
     
@@ -326,7 +328,28 @@ class THEOplayerRCTView: UIView {
             }
         }
     }
-    
+
+    @objc(setVideoAspectRatio:)
+    func setVideoAspectRatio(videoAspectRatio: String?) {
+        // store aspectRatio
+        aspectRatio = videoAspectRatio
+        if DEBUG_PROP_UPDATES  { print("[NATIVE] aspectRatio prop updated.") }
+        // sync player state with aspectRatio prop
+        self.syncPlayerAspectRatio()
+    }
+
+    private func syncPlayerAspectRatio() {
+        guard let player = player else { return }
+        switch aspectRatio {
+        case "aspectFill":
+            player.fullscreen.setAspectRatio(aspectRatio: .aspectFill)
+        case "fill":
+            player.fullscreen.setAspectRatio(aspectRatio: .fill)
+        default:
+            player.fullscreen.setAspectRatio(aspectRatio: .fit)
+        }
+    }
+
     // MARK: - Listener based MAIN event bridging
     
     @objc(setOnNativePlay:)
