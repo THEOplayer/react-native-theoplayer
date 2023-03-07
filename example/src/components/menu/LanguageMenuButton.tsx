@@ -51,18 +51,7 @@ export class LanguageMenuButton extends PureComponent<unknown, LanguageMenuButto
     }
 
     const createMenu = () => {
-      return (
-        <PlayerContext.Consumer>
-          {(context) => (
-            <LanguageMenuView
-              audioTracks={context.player.audioTracks}
-              textTracks={context.player.textTracks}
-              selectedAudioTrack={context.player.selectedAudioTrack}
-              selectedTextTrack={context.player.selectedTextTrack}
-            />
-          )}
-        </PlayerContext.Consumer>
-      );
+      return <LanguageMenuView />;
     };
 
     return <MenuButton svg={<LanguageSvg />} menuConstructor={createMenu} />;
@@ -74,82 +63,78 @@ export interface LanguageMenuViewState extends LanguageMenuButtonState {
   selectedTextTrack: number | undefined;
 }
 
-export class LanguageMenuView extends PureComponent<LanguageMenuViewState, LanguageMenuViewState> {
-  constructor(props: LanguageMenuViewState) {
+export class LanguageMenuView extends PureComponent<unknown, LanguageMenuViewState> {
+  constructor(props: unknown) {
     super(props);
     this.state = {
-      audioTracks: props.audioTracks,
-      textTracks: props.textTracks,
-      selectedAudioTrack: props.selectedAudioTrack,
-      selectedTextTrack: props.selectedTextTrack,
+      audioTracks: [],
+      textTracks: [],
+      selectedAudioTrack: undefined,
+      selectedTextTrack: undefined,
     };
   }
 
-  componentDidMount() {
-    const player = (this.context as UiContext).player;
-    // The track lists might change while the menu is open, so we need to monitor them.
-    player.addEventListener(PlayerEventType.MEDIA_TRACK_LIST, this.onTrackListChanged);
-    player.addEventListener(PlayerEventType.TEXT_TRACK_LIST, this.onTextTrackListChanged);
-  }
-
-  componentWillUnmount() {
-    const player = (this.context as UiContext).player;
-    player.removeEventListener(PlayerEventType.MEDIA_TRACK_LIST, this.onTrackListChanged);
-    player.removeEventListener(PlayerEventType.TEXT_TRACK_LIST, this.onTextTrackListChanged);
-  }
-
-  private onTextTrackListChanged = () => {
+  private _updateTrackLists = () => {
     const player = (this.context as UiContext).player;
     this.setState({
+      audioTracks: player.audioTracks,
       textTracks: player.textTracks,
+      selectedAudioTrack: player.selectedAudioTrack,
       selectedTextTrack: player.selectedTextTrack,
     });
   };
 
-  private onSelectTextTrack = (index: number) => {
+  componentDidMount() {
+    const player = (this.context as UiContext).player;
+    // The track lists might change while the menu is open, so we need to monitor them.
+    player.addEventListener(PlayerEventType.MEDIA_TRACK_LIST, this._updateTrackLists);
+    player.addEventListener(PlayerEventType.TEXT_TRACK_LIST, this._updateTrackLists);
+    this._updateTrackLists();
+  }
+
+  componentWillUnmount() {
+    const player = (this.context as UiContext).player;
+    player.removeEventListener(PlayerEventType.MEDIA_TRACK_LIST, this._updateTrackLists);
+    player.removeEventListener(PlayerEventType.TEXT_TRACK_LIST, this._updateTrackLists);
+  }
+
+  private onSelectTextTrack = (id: number) => {
     const { textTracks } = this.state;
-    if (index >= 0 && index < textTracks.length) {
+    const textTrack = textTracks.find((track) => track.uid === id);
+    if (textTrack) {
       const context = this.context as UiContext;
-      const uid = index >= 0 && index < textTracks.length ? textTracks[index].uid : undefined;
-      context.player.selectedTextTrack = uid;
-      this.setState({ selectedTextTrack: uid });
+      context.player.selectedTextTrack = textTrack.uid;
+      this.setState({ selectedTextTrack: textTrack.uid });
     }
   };
 
-  private onTrackListChanged = () => {
-    const player = (this.context as UiContext).player;
-    this.setState({
-      audioTracks: player.audioTracks,
-      selectedAudioTrack: player.selectedAudioTrack,
-    });
-  };
-
-  private selectAudioTrack = (index: number) => {
+  private selectAudioTrack = (id: number) => {
     const { audioTracks } = this.state;
-    if (index >= 0 && index < audioTracks.length) {
+    const audioTrack = audioTracks.find((track) => track.uid === id);
+    if (audioTrack) {
       const context = this.context as UiContext;
-      const uid = audioTracks[index].uid;
-      context.player.selectedAudioTrack = uid;
-      this.setState({ selectedAudioTrack: uid });
+      context.player.selectedAudioTrack = audioTrack.uid;
+      this.setState({ selectedAudioTrack: audioTrack.uid });
     }
   };
 
   render() {
     const { audioTracks, textTracks, selectedAudioTrack, selectedTextTrack } = this.state;
-    const selectableTextTracks = filterRenderableTracks(textTracks);
-
+    // The sort is needed because tracks are returned in different order on the native SDKs.
+    const selectableTextTracks = filterRenderableTracks(textTracks).sort((first, second) => first.uid - second.uid);
+    const selectableAudioTracks = audioTracks.sort((first, second) => first.uid - second.uid);
     return (
       <MenuView
         menu={
           <>
-            {audioTracks.length > 1 && (
+            {selectableAudioTracks.length > 1 && (
               <ScrollableMenu
                 title={'Audio'}
-                items={audioTracks.map((track, id) => (
+                items={selectableAudioTracks.map((track, id) => (
                   <MenuRadioButton
                     key={id}
                     label={getTrackLabel(track)}
-                    id={id}
+                    id={track.uid}
                     onSelect={this.selectAudioTrack}
                     selected={track.uid === selectedAudioTrack}></MenuRadioButton>
                 ))}
@@ -162,7 +147,7 @@ export class LanguageMenuView extends PureComponent<LanguageMenuViewState, Langu
                   <MenuRadioButton
                     key={id}
                     label={getTrackLabel(track)}
-                    id={id}
+                    id={track.uid}
                     onSelect={this.onSelectTextTrack}
                     selected={track.uid === selectedTextTrack}></MenuRadioButton>
                 ))}
