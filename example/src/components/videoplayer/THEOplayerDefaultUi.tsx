@@ -66,7 +66,7 @@ export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
 
               <ControlBar>
                 <MuteButton />
-                <TimeLabel showDuration={true} style={defaultPlayerStyle.videoPlayer.timeLabelContainer} />
+                <TimeLabel showDuration={true} />
 
                 {/*Spacer*/}
                 <View style={{ flexGrow: 1 }} />

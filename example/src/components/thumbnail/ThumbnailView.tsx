@@ -127,7 +127,7 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
     const style = index === 0 ? thumbnailStyleCurrent : thumbnailStyleCarousel;
     return (
       <PlayerContext.Consumer>
-        {(context: UiContext) => <View key={index} style={[context.style.videoPlayer.thumbnail, { width: size, height: 1 }, style]} />}
+        {(context: UiContext) => <View key={index} style={[context.style.seekBar.thumbnail.thumbnail, { width: size, height: 1 }, style]} />}
       </PlayerContext.Consumer>
     );
   };
@@ -143,7 +143,9 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
       return (
         <PlayerContext.Consumer>
           {(context: UiContext) => (
-            <View key={index} style={[context.style.videoPlayer.thumbnail, { width: scale * renderWidth, height: scale * renderHeight }, style]}>
+            <View
+              key={index}
+              style={[context.style.seekBar.thumbnail.thumbnail, { width: scale * renderWidth, height: scale * renderHeight }, style]}>
               <Image
                 resizeMode={'cover'}
                 style={{
@@ -165,7 +167,9 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
       return (
         <PlayerContext.Consumer>
           {(context: UiContext) => (
-            <View key={index} style={[context.style.videoPlayer.thumbnail, { width: scale * renderWidth, height: scale * renderHeight }, style]}>
+            <View
+              key={index}
+              style={[context.style.seekBar.thumbnail.thumbnail, { width: scale * renderWidth, height: scale * renderHeight }, style]}>
               <Image
                 resizeMode={'contain'}
                 style={{ width: scale * size, height: scale * renderHeight }}
@@ -215,14 +219,9 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
         {(context: UiContext) => (
           <View style={{ flexDirection: 'column' }}>
             {showTimeLabel && (
-              <StaticTimeLabel
-                style={[context.style.videoPlayer.timeLabelContainer, timeLabelStyle]}
-                time={time}
-                duration={duration}
-                showDuration={false}
-              />
+              <StaticTimeLabel style={[context.style.timeLabel.container, timeLabelStyle]} time={time} duration={duration} showDuration={false} />
             )}
-            <View style={[context.style.videoPlayer.containerThumbnail, { height: renderHeight, marginLeft: offset ?? 0 }, containerStyle]}>
+            <View style={[context.style.seekBar.thumbnail.containerThumbnail, { height: renderHeight, marginLeft: offset ?? 0 }, containerStyle]}>
               {[...before, current, ...after].map((thumbnail, index) => {
                 return thumbnail
                   ? this.renderThumbnail(thumbnail, carouselThumbCount - index)

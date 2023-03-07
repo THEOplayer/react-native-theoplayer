@@ -53,9 +53,7 @@ export class CastMessage extends PureComponent<unknown, CastMessageState> {
     return (
       <PlayerContext.Consumer>
         {(context: UiContext) => (
-          <Text style={[context.style.videoPlayer.message, { color: context.style.colors.text, backgroundColor: context.style.colors.secondary }]}>
-            {message}
-          </Text>
+          <Text style={[context.style.text, { color: context.style.colors.text, backgroundColor: context.style.colors.secondary }]}>{message}</Text>
         )}
       </PlayerContext.Consumer>
     );

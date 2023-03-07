@@ -23,7 +23,7 @@ export function StaticTimeLabel(props: TimeLabelProps) {
   if (!isFinite(duration)) {
     return (
       <PlayerContext.Consumer>
-        {(context: UiContext) => <Text style={[context.style.videoPlayer.timeLabel, { color: context.style.colors.text }, style]}>{LIVE_LABEL}</Text>}
+        {(context: UiContext) => <Text style={[context.style.text, { color: context.style.colors.text }, style]}>{LIVE_LABEL}</Text>}
       </PlayerContext.Consumer>
     );
   }
@@ -39,7 +39,7 @@ export function StaticTimeLabel(props: TimeLabelProps) {
     const label = showDuration ? `${currentTimeLabel} / ${durationLabel}` : currentTimeLabel;
     return (
       <PlayerContext.Consumer>
-        {(context: UiContext) => <Text style={[context.style.videoPlayer.timeLabel, { color: context.style.colors.text }, style]}>{label}</Text>}
+        {(context: UiContext) => <Text style={[context.style.text, { color: context.style.colors.text }, style]}>{label}</Text>}
       </PlayerContext.Consumer>
     );
   } catch (ignore) {

@@ -149,7 +149,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<SlotViewP
             {currentMenu === undefined && (
               <View style={[style.slotView.container]}>
                 <View style={style.slotView.topSlot}>{top}</View>
-                <View style={style.videoPlayer.fullScreenCenter}>
+                <View style={style.fullScreenCenter}>
                   <View style={[style.slotView.centerSlot]}>{center}</View>
                 </View>
                 <View style={style.slotView.bottomSlot}>{bottom}</View>
