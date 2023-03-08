@@ -100,7 +100,7 @@ export class SettingsMenuView extends PureComponent<VideoQualityMenuState, Video
               <MenuRadioButton
                 key={id}
                 label={getVideoQualityLabel(track as VideoQuality)}
-                id={id}
+                uid={id}
                 onSelect={this.selectTargetVideoQuality}
                 selected={
                   (track === undefined && targetVideoTrackQuality === undefined) || (track !== undefined && track.uid === targetVideoTrackQuality)

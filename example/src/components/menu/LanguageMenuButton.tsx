@@ -98,19 +98,17 @@ export class LanguageMenuView extends PureComponent<unknown, LanguageMenuViewSta
     player.removeEventListener(PlayerEventType.TEXT_TRACK_LIST, this._updateTrackLists);
   }
 
-  private onSelectTextTrack = (id: number) => {
+  private onSelectTextTrack = (uid: number | undefined) => {
     const { textTracks } = this.state;
-    const textTrack = textTracks.find((track) => track.uid === id);
-    if (textTrack) {
-      const context = this.context as UiContext;
-      context.player.selectedTextTrack = textTrack.uid;
-      this.setState({ selectedTextTrack: textTrack.uid });
-    }
+    const textTrack = textTracks.find((track) => track.uid === uid);
+    const context = this.context as UiContext;
+    context.player.selectedTextTrack = textTrack?.uid;
+    this.setState({ selectedTextTrack: textTrack?.uid });
   };
 
-  private selectAudioTrack = (id: number) => {
+  private selectAudioTrack = (uid: number | undefined) => {
     const { audioTracks } = this.state;
-    const audioTrack = audioTracks.find((track) => track.uid === id);
+    const audioTrack = audioTracks.find((track) => track.uid === uid);
     if (audioTrack) {
       const context = this.context as UiContext;
       context.player.selectedAudioTrack = audioTrack.uid;
@@ -134,7 +132,7 @@ export class LanguageMenuView extends PureComponent<unknown, LanguageMenuViewSta
                   <MenuRadioButton
                     key={id}
                     label={getTrackLabel(track)}
-                    id={track.uid}
+                    uid={track.uid}
                     onSelect={this.selectAudioTrack}
                     selected={track.uid === selectedAudioTrack}></MenuRadioButton>
                 ))}
@@ -143,14 +141,26 @@ export class LanguageMenuView extends PureComponent<unknown, LanguageMenuViewSta
             {selectableTextTracks.length > 0 && (
               <ScrollableMenu
                 title={'Subtitles'}
-                items={selectableTextTracks.map((track, id) => (
-                  <MenuRadioButton
-                    key={id}
-                    label={getTrackLabel(track)}
-                    id={track.uid}
-                    onSelect={this.onSelectTextTrack}
-                    selected={track.uid === selectedTextTrack}></MenuRadioButton>
-                ))}
+                items={
+                  <>
+                    <MenuRadioButton
+                      key={0}
+                      label={'off'}
+                      uid={undefined}
+                      onSelect={this.onSelectTextTrack}
+                      selected={selectedTextTrack === undefined}
+                    />
+                    {selectableTextTracks.map((track, id) => (
+                      <MenuRadioButton
+                        key={id + 1}
+                        label={getTrackLabel(track)}
+                        uid={track.uid}
+                        onSelect={this.onSelectTextTrack}
+                        selected={track.uid === selectedTextTrack}
+                      />
+                    ))}
+                  </>
+                }
               />
             )}
           </>
