@@ -6,6 +6,7 @@ import { PlayerContext, UiContext } from '../util/PlayerContext';
 import { PlaySvg } from './svg/PlaySvg';
 
 import { PauseSvg } from './svg/PauseSvg';
+import { ReplaySvg } from './svg/ReplaySvg';
 
 interface PlayButtonProps {
   style?: StyleProp<ViewStyle>;
@@ -13,6 +14,7 @@ interface PlayButtonProps {
 
 interface PlayButtonState {
   paused: boolean;
+  ended: boolean;
 }
 
 export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> {
@@ -20,6 +22,7 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
     super(props);
     this.state = {
       paused: true,
+      ended: false,
     };
   }
 
@@ -29,8 +32,10 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
     context.player.addEventListener(PlayerEventType.PLAYING, this.onPlay);
     context.player.addEventListener(PlayerEventType.PAUSE, this.onPause);
     context.player.addEventListener(PlayerEventType.SOURCE_CHANGE, this.onSourceChange);
+    context.player.addEventListener(PlayerEventType.ENDED, this.onEnded);
     this.setState({
       paused: context.player.paused,
+      ended: context.player.currentTime === context.player.duration,
     });
   }
 
@@ -40,10 +45,11 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
     context.player.removeEventListener(PlayerEventType.PLAYING, this.onPlay);
     context.player.removeEventListener(PlayerEventType.PAUSE, this.onPause);
     context.player.removeEventListener(PlayerEventType.SOURCE_CHANGE, this.onSourceChange);
+    context.player.removeEventListener(PlayerEventType.ENDED, this.onEnded);
   }
 
   private onPlay = () => {
-    this.setState({ paused: false });
+    this.setState({ paused: false, ended: false });
   };
 
   private onPause = () => {
@@ -52,9 +58,11 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
 
   private onSourceChange = () => {
     const player = (this.context as UiContext).player;
-    this.setState({
-      paused: player.paused,
-    });
+    this.setState({ paused: player.paused });
+  };
+
+  private onEnded = () => {
+    this.setState({ ended: true });
   };
 
   private togglePlayPause = () => {
@@ -67,7 +75,7 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
   };
 
   render() {
-    const { paused } = this.state;
+    const { paused, ended } = this.state;
     const { style } = this.props;
 
     return (
@@ -76,7 +84,7 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
           <ActionButton
             style={context.style.controlBar.buttonIcon}
             touchable={true}
-            svg={paused ? <PlaySvg /> : <PauseSvg />}
+            svg={ended ? <ReplaySvg /> : paused ? <PlaySvg /> : <PauseSvg />}
             // @ts-ignore
             iconStyle={[style]}
             onPress={this.togglePlayPause}
