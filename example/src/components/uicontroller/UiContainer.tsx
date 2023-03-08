@@ -24,6 +24,7 @@ interface UiContainerState {
   error: PlayerError | undefined;
   firstPlay: boolean;
   paused: boolean;
+  casting: boolean;
 }
 
 const DEBUG_USER_IDLE_FADE = false;
@@ -43,6 +44,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
     error: undefined,
     firstPlay: false,
     paused: true,
+    casting: false,
   };
 
   constructor(props: UiContainerProps) {
@@ -59,6 +61,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
     player.addEventListener(PlayerEventType.PLAYING, this.onPlay);
     player.addEventListener(PlayerEventType.PAUSE, this.onPause);
     player.addEventListener(PlayerEventType.SOURCE_CHANGE, this.onSourceChange);
+    player.addEventListener(PlayerEventType.CAST_EVENT, this.onCastEvent);
     if (player.source !== undefined && player.currentTime !== 0) {
       this.onPlay();
     }
@@ -73,6 +76,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
     player.removeEventListener(PlayerEventType.PLAYING, this.onPlay);
     player.removeEventListener(PlayerEventType.PAUSE, this.onPause);
     player.removeEventListener(PlayerEventType.SOURCE_CHANGE, this.onSourceChange);
+    player.removeEventListener(PlayerEventType.CAST_EVENT, this.onCastEvent);
   }
 
   private onPlay = () => {
@@ -99,13 +103,9 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
   };
 
   private onCastEvent = (event: CastEvent) => {
-    if (event.subType === CastEventType.CHROMECAST_ERROR)
-      this.setState({
-        error: {
-          errorCode: event.error.errorCode,
-          errorMessage: event.error.description,
-        },
-      });
+    if (event.subType === CastEventType.CHROMECAST_STATE_CHANGE || event.subType === CastEventType.AIRPLAY_STATE_CHANGE) {
+      this.setState({ casting: event.state === 'connecting' || event.state === 'connected' });
+    }
   };
 
   get buttonsEnabled_(): boolean {
@@ -172,7 +172,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
   }
 
   private resumeAnimationsIfPossible_() {
-    if (this._userActiveIds.length === 0 && this._menus.length === 0 && !this.state.paused) {
+    if (this._userActiveIds.length === 0 && this._menus.length === 0 && !this.state.paused && !this.state.casting) {
       clearTimeout(this._currentFadeOutTimeout);
       // @ts-ignore
       this._currentFadeOutTimeout = setTimeout(this.doFadeOut_, 2500);

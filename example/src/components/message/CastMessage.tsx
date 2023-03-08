@@ -5,13 +5,12 @@ import { PlayerContext, UiContext } from '../util/PlayerContext';
 
 interface CastMessageState {
   message: string | undefined;
-  lockId: number | undefined;
 }
 
 export class CastMessage extends PureComponent<unknown, CastMessageState> {
   constructor(props: unknown) {
     super(props);
-    this.state = { message: undefined, lockId: undefined };
+    this.state = { message: undefined };
   }
 
   componentDidMount() {
@@ -19,7 +18,6 @@ export class CastMessage extends PureComponent<unknown, CastMessageState> {
     player.addEventListener(PlayerEventType.CAST_EVENT, this.onCastEvent);
     player.cast.chromecast?.state().then((state: CastState) => {
       if (state === 'connecting' || state === 'connected') {
-        console.log('processing');
         this._processCastState(state, 'Chromecast');
       }
     });
@@ -33,34 +31,16 @@ export class CastMessage extends PureComponent<unknown, CastMessageState> {
   componentWillUnmount() {
     const context = this.context as UiContext;
     context.player.removeEventListener(PlayerEventType.CAST_EVENT, this.onCastEvent);
-    if (this.state.lockId !== undefined) {
-      context.ui.setUserIdle_(this.state.lockId);
-    }
   }
 
   private _processCastState = (state: CastState, target: 'Chromecast' | 'Airplay') => {
     let message: string | undefined;
-    const ui = (this.context as UiContext).ui;
     switch (state) {
       case 'connecting':
         message = `Connecting to ${target} ...`;
-        if (this.state.lockId === undefined) {
-          const id = ui.setUserActive_();
-          this.setState({ lockId: id });
-        }
         break;
       case 'connected':
         message = `Playing on ${target}`;
-        if (this.state.lockId === undefined) {
-          const id = ui.setUserActive_();
-          this.setState({ lockId: id });
-        }
-        break;
-      default:
-        if (this.state.lockId !== undefined) {
-          ui.setUserIdle_(this.state.lockId);
-          this.setState({ lockId: undefined });
-        }
         break;
     }
     this.setState({
