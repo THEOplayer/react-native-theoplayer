@@ -7,7 +7,6 @@ import THEOplayerSDK
 struct PipConfig {
     var retainPresentationModeOnSourceChange: Bool = false              // external config
     var canStartPictureInPictureAutomaticallyFromInline: Bool = false   // external config
-    var requiresLinearPlayback: Bool = false                            // external config
 }
 
 extension THEOplayerRCTView: AVPictureInPictureControllerDelegate {
@@ -20,30 +19,37 @@ extension THEOplayerRCTView: AVPictureInPictureControllerDelegate {
                                 canStartPictureInPictureAutomaticallyFromInline: self.pipConfig.canStartPictureInPictureAutomaticallyFromInline)
     }
     
+    func initPip() {
+            if let player = self.player,
+               var pipController = player.pip {
+                if #available(iOS 14.0, *) {
+                    pipController.nativePictureInPictureDelegate = self
+                }
+            }
+        }
+    
 #elseif os(tvOS)
     
     func playerPipConfiguration() -> PiPConfiguration? {
         return PiPConfiguration(retainPresentationModeOnSourceChange: self.pipConfig.retainPresentationModeOnSourceChange)
     }
     
+    func initPip() {} // TODO: make player.pip available for tvOS
+    
 #endif
     
-    func initPip() {
-        if let player = self.player,
-           var pipController = player.pip {
-            if #available(iOS 14.0, *) {
-                pipController.nativePictureInPictureDelegate = self
+    @available(tvOS 14.0, *)
+    public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        self.presentationModeContext.pipContext = .PIP_CLOSED
+        if #available(iOS 14.0, *) {
+            if let player = self.player,
+               let duration = player.duration {
+                pictureInPictureController.requiresLinearPlayback = duration.isInfinite
             }
         }
     }
     
-    public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        self.presentationModeContext.pipContext = .PIP_CLOSED
-        if #available(iOS 14.0, *) {
-            pictureInPictureController.requiresLinearPlayback = self.pipConfig.requiresLinearPlayback
-        }
-    }
-    
+    @available(tvOS 14.0, *)
     public func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
         self.presentationModeContext.pipContext = .PIP_RESTORED
     }
