@@ -86,6 +86,7 @@ export const defaultPlayerStyle: THEOplayerStyle = {
       flexDirection: 'column',
       justifyContent: 'space-between',
       zIndex: 1,
+      overflow: 'hidden',
     },
     topSlot: {
       paddingTop: 10,
