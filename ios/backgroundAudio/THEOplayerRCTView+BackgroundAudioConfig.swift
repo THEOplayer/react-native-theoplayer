@@ -14,6 +14,9 @@ extension THEOplayerRCTView: BackgroundPlaybackDelegate {
     }
     
     public func shouldContinueAudioPlaybackInBackground() -> Bool {
+        // Make sure to go to the background with updated NoePlayingInfo
+        self.nowPlayingManager.updateNowPlaying()
+        
         return self.backgroundAudioConfig.enabled
     }
 }
