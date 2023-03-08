@@ -15,30 +15,21 @@ export const SourceMenuButton = () => {
   if (!(SOURCES && SOURCES.length > 0)) {
     return <></>;
   }
-  const context = useContext(PlayerContext);
-  const selectedSource = SOURCES.find((source) => source.source === context.player.source);
-
-  const onSelectSource = (id: number) => {
-    const newSource = SOURCES[id];
-    context.player.source = newSource.source;
-  };
   const createMenu = () => {
-    return <SourceMenuView selectedSourceId={selectedSource ? SOURCES.indexOf(selectedSource) : undefined} onSelectSource={onSelectSource} />;
+    return <SourceMenuView />;
   };
   return <MenuButton svg={<ListSvg />} menuConstructor={createMenu} />;
 };
 
-interface SourceMenuViewProps {
-  selectedSourceId: number | undefined;
-  onSelectSource: (id: number) => void;
-}
+export const SourceMenuView = () => {
+  const context = useContext(PlayerContext);
+  const selectedSource = SOURCES.find((source) => source.source === context.player.source);
+  const [localSourceId, setLocalSourceId] = useState<number | undefined>(selectedSource ? SOURCES.indexOf(selectedSource) : undefined);
 
-export const SourceMenuView = (props: SourceMenuViewProps) => {
-  const { onSelectSource, selectedSourceId } = props;
-  const [localSourceId, setLocalSourceId] = useState<number | undefined>(selectedSourceId);
   const selectSource = (id: number) => {
     setLocalSourceId(id);
-    onSelectSource(id);
+    const newSource = SOURCES[id];
+    context.player.source = newSource.source;
   };
   return (
     <MenuView
