@@ -3,9 +3,10 @@ import type { THEOplayerViewProps } from 'react-native-theoplayer';
 import * as THEOplayer from 'theoplayer';
 import { THEOplayerWebAdapter } from './adapter/THEOplayerWebAdapter';
 import { WebMediaSession } from './adapter/web/WebMediaSession';
+import { StyleSheet, View } from 'react-native';
 
-export function THEOplayerView(props: THEOplayerViewProps) {
-  const { config } = props;
+export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProps>) {
+  const { config, children } = props;
   const player = useRef<THEOplayer.ChromelessPlayer | null>(null);
   const adapter = useRef<THEOplayerWebAdapter | null>(null);
   const mediaSession = useRef<WebMediaSession | null>(null);
@@ -56,7 +57,14 @@ export function THEOplayerView(props: THEOplayerViewProps) {
 
   const chromeless = config?.chromeless === undefined || config?.chromeless === true;
   return (
-    <div ref={container} style={styles.container} className={chromeless ? 'theoplayer-container' : 'theoplayer-container video-js theoplayer-skin'} />
+    <>
+      <div
+        ref={container}
+        style={styles.container}
+        className={chromeless ? 'theoplayer-container' : 'theoplayer-container video-js theoplayer-skin'}
+      />
+      {children}
+    </>
   );
 }
 

@@ -100,7 +100,7 @@ interface THEOplayerRCTViewState {
 
 type THEOplayerViewNativeComponent = HostComponent<THEOplayerRCTViewProps>;
 
-export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplayerRCTViewState> {
+export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOplayerViewProps>, THEOplayerRCTViewState> {
   private readonly _root: React.RefObject<THEOplayerViewNativeComponent>;
   private readonly _facade: THEOplayerAdapter;
 
@@ -285,7 +285,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
   };
 
   public render(): JSX.Element {
-    const { config, style } = this.props;
+    const { config, style, children } = this.props;
     return (
       <View style={[styles.base, style]}>
         <THEOplayerRCTView
@@ -321,6 +321,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
           onNativeCastEvent={this._onCastEvent}
           onNativePresentationModeChange={this._onPresentationModeChange}
         />
+        {children}
       </View>
     );
   }
