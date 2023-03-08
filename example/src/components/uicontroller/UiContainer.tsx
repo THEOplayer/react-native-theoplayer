@@ -23,6 +23,7 @@ interface UiContainerState {
   buttonsEnabled: boolean;
   error: PlayerError | undefined;
   firstPlay: boolean;
+  paused: boolean;
 }
 
 const DEBUG_USER_IDLE_FADE = false;
@@ -33,7 +34,6 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
   private _currentFadeOutTimeout: number | undefined = undefined;
 
   private _menus: MenuConstructor[] = [];
-  private _menuLockId: number | undefined = undefined;
 
   static initialState: UiContainerState = {
     fadeAnimation: new Animated.Value(1),
@@ -42,6 +42,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
     buttonsEnabled: true,
     error: undefined,
     firstPlay: false,
+    paused: true,
   };
 
   constructor(props: UiContainerProps) {
@@ -54,11 +55,12 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
     player.addEventListener(PlayerEventType.LOAD_START, this.onLoadStart);
     player.addEventListener(PlayerEventType.ERROR, this.onError);
     player.addEventListener(PlayerEventType.CAST_EVENT, this.onCastEvent);
-    player.addEventListener(PlayerEventType.PLAY, this.onFirstPlay);
-    player.addEventListener(PlayerEventType.PLAYING, this.onFirstPlay);
-    player.addEventListener(PlayerEventType.SOURCE_CHANGE, this.resetFirstPlay);
+    player.addEventListener(PlayerEventType.PLAY, this.onPlay);
+    player.addEventListener(PlayerEventType.PLAYING, this.onPlay);
+    player.addEventListener(PlayerEventType.PAUSE, this.onPause);
+    player.addEventListener(PlayerEventType.SOURCE_CHANGE, this.onSourceChange);
     if (player.source !== undefined && player.currentTime !== 0) {
-      this.onFirstPlay();
+      this.onPlay();
     }
   }
 
@@ -67,17 +69,24 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
     player.removeEventListener(PlayerEventType.LOAD_START, this.onLoadStart);
     player.removeEventListener(PlayerEventType.ERROR, this.onError);
     player.removeEventListener(PlayerEventType.CAST_EVENT, this.onCastEvent);
-    player.removeEventListener(PlayerEventType.PLAY, this.onFirstPlay);
-    player.removeEventListener(PlayerEventType.PLAYING, this.onFirstPlay);
-    player.removeEventListener(PlayerEventType.SOURCE_CHANGE, this.resetFirstPlay);
+    player.removeEventListener(PlayerEventType.PLAY, this.onPlay);
+    player.removeEventListener(PlayerEventType.PLAYING, this.onPlay);
+    player.removeEventListener(PlayerEventType.PAUSE, this.onPause);
+    player.removeEventListener(PlayerEventType.SOURCE_CHANGE, this.onSourceChange);
   }
 
-  private onFirstPlay = () => {
-    this.setState({ firstPlay: true });
+  private onPlay = () => {
+    this.setState({ firstPlay: true, paused: false });
+    this.resumeAnimationsIfPossible_();
   };
 
-  private resetFirstPlay = () => {
-    this.setState({ firstPlay: false });
+  private onPause = () => {
+    this.setState({ firstPlay: true, paused: true });
+    this.stopAnimationsAndShowUi_();
+  };
+
+  private onSourceChange = () => {
+    this.setState({ firstPlay: false, paused: this.props.player.paused });
   };
 
   private onLoadStart = () => {
@@ -113,15 +122,15 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
     if (!this.state.firstPlay) {
       return;
     }
-    this.showUi_();
-    this.hideUiAfterTimeout_();
+    this.stopAnimationsAndShowUi_();
+    this.resumeAnimationsIfPossible_();
   };
 
   /**
    * Request to show the UI until releaseLock_() is called.
    */
   public setUserActive_ = () => {
-    this.showUi_();
+    this.stopAnimationsAndShowUi_();
     const id = this._idCounter++;
     this._userActiveIds.push(id);
     if (DEBUG_USER_IDLE_FADE) {
@@ -138,29 +147,23 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
     if (DEBUG_USER_IDLE_FADE) {
       console.log('setUserIdle_', this._userActiveIds);
     }
-    this.hideUiAfterTimeout_();
+    this.resumeAnimationsIfPossible_();
   };
 
   public openMenu_ = (menuConstructor: () => ReactNode) => {
     this._menus.push(menuConstructor);
-    if (this._menuLockId === undefined) {
-      this._menuLockId = this.setUserActive_();
-    }
     this.setState({ currentMenu: menuConstructor() });
+    this.stopAnimationsAndShowUi_();
   };
 
   public closeCurrentMenu_ = () => {
     this._menus.pop();
     const nextMenu = this._menus.length > 0 ? this._menus[this._menus.length - 1] : undefined;
     this.setState({ currentMenu: nextMenu?.() });
-    if (nextMenu === undefined) {
-      this.setUserIdle_(this._menuLockId);
-      this._menuLockId = undefined;
-    }
-    this.onUserAction_();
+    this.resumeAnimationsIfPossible_();
   };
 
-  private showUi_() {
+  private stopAnimationsAndShowUi_() {
     clearTimeout(this._currentFadeOutTimeout);
     this._currentFadeOutTimeout = undefined;
     if (!this.state.showing) {
@@ -168,8 +171,8 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
     }
   }
 
-  private hideUiAfterTimeout_() {
-    if (this._userActiveIds.length === 0) {
+  private resumeAnimationsIfPossible_() {
+    if (this._userActiveIds.length === 0 && this._menus.length === 0 && !this.state.paused) {
       clearTimeout(this._currentFadeOutTimeout);
       // @ts-ignore
       this._currentFadeOutTimeout = setTimeout(this.doFadeOut_, 2500);

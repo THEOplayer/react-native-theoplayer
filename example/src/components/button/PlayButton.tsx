@@ -16,8 +16,6 @@ interface PlayButtonState {
 }
 
 export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> {
-  private animationPauseId: number | undefined = undefined;
-
   constructor(props: PlayButtonProps) {
     super(props);
     this.state = {
@@ -31,10 +29,6 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
     context.player.addEventListener(PlayerEventType.PLAYING, this.onPlay);
     context.player.addEventListener(PlayerEventType.PAUSE, this.onPause);
     context.player.addEventListener(PlayerEventType.SOURCE_CHANGE, this.onSourceChange);
-    context.player.addEventListener(PlayerEventType.TIME_UPDATE, this.onTimeupdate);
-    if (context.player.paused) {
-      this.animationPauseId = context.ui.setUserActive_();
-    }
     this.setState({
       paused: context.player.paused,
     });
@@ -46,32 +40,14 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
     context.player.removeEventListener(PlayerEventType.PLAYING, this.onPlay);
     context.player.removeEventListener(PlayerEventType.PAUSE, this.onPause);
     context.player.removeEventListener(PlayerEventType.SOURCE_CHANGE, this.onSourceChange);
-    context.player.removeEventListener(PlayerEventType.TIME_UPDATE, this.onTimeupdate);
-    if (this.animationPauseId !== undefined) {
-      context.ui.setUserIdle_(this.animationPauseId);
-    }
   }
 
   private onPlay = () => {
     this.setState({ paused: false });
-    if (this.animationPauseId !== undefined) {
-      const animationController = (this.context as UiContext).ui;
-      animationController.setUserIdle_(this.animationPauseId);
-      this.animationPauseId = undefined;
-    }
   };
 
   private onPause = () => {
     this.setState({ paused: true });
-    if (this.animationPauseId === undefined) {
-      const animationController = (this.context as UiContext).ui;
-      this.animationPauseId = animationController.setUserActive_();
-    }
-  };
-
-  private onTimeupdate = () => {
-    const player = (this.context as UiContext).player;
-    this.setState({ paused: player.paused });
   };
 
   private onSourceChange = () => {
