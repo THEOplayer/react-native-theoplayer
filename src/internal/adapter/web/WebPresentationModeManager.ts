@@ -27,7 +27,7 @@ export class WebPresentationModeManager extends DefaultEventDispatcher<PlayerEve
     this.prepareForPresentationModeChanges();
 
     // on iOS Safari requestFullscreen isn't supported (https://caniuse.com/?search=requestFullscreen), where we need to use webkit methods on the video element
-    if (browserDetection.IS_IOS_ && browserDetection.IS_SAFARI_) {
+    if (/*browserDetection.IS_IOS_ && */browserDetection.IS_SAFARI_) {
       if (presentationMode === 'fullscreen') {
         this._element?.webkitEnterFullscreen?.();
       } else if (presentationMode === 'picture-in-picture') {
