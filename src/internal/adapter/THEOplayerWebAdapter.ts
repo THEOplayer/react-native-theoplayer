@@ -101,8 +101,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   get pipConfiguration(): PiPConfiguration {
     // TODO
     return { 
-      startsAutomatically: false,
-      requiresLinearPlayback: false
+      startsAutomatically: false
     };
   }
 

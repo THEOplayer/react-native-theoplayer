@@ -137,7 +137,6 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
         var pipConfig = PipConfig()
         pipConfig.retainPresentationModeOnSourceChange = configDict["retainPresentationModeOnSourceChange"] as? Bool ?? false
         pipConfig.canStartPictureInPictureAutomaticallyFromInline = configDict["startsAutomatically"] as? Bool ?? false
-        pipConfig.requiresLinearPlayback = configDict["requiresLinearPlayback"] as? Bool ?? false
         return pipConfig
     }
     
