@@ -62,6 +62,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
     player.addEventListener(PlayerEventType.PAUSE, this.onPause);
     player.addEventListener(PlayerEventType.SOURCE_CHANGE, this.onSourceChange);
     player.addEventListener(PlayerEventType.CAST_EVENT, this.onCastEvent);
+    player.addEventListener(PlayerEventType.ENDED, this.onEnded);
     if (player.source !== undefined && player.currentTime !== 0) {
       this.onPlay();
     }
@@ -106,6 +107,10 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
     if (event.subType === CastEventType.CHROMECAST_STATE_CHANGE || event.subType === CastEventType.AIRPLAY_STATE_CHANGE) {
       this.setState({ casting: event.state === 'connecting' || event.state === 'connected' });
     }
+  };
+
+  private onEnded = () => {
+    this.stopAnimationsAndShowUi_();
   };
 
   get buttonsEnabled_(): boolean {
