@@ -4,17 +4,17 @@ import { PlayerContext, UiContext } from '../../util/PlayerContext';
 
 export interface MenuRowProps {
   label: string;
-  id: number;
+  uid: number | undefined;
   selected?: boolean;
-  onSelect: (id: number) => void;
+  onSelect: (id: number | undefined) => void;
 }
 
 export const MenuRadioButton = (props: MenuRowProps) => {
-  const { id, onSelect, label, selected } = props;
+  const { uid, onSelect, label, selected } = props;
   return (
     <TouchableOpacity
       onPress={() => {
-        onSelect(id);
+        onSelect(uid);
       }}>
       <PlayerContext.Consumer>
         {(context: UiContext) => (

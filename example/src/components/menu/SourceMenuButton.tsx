@@ -26,10 +26,9 @@ export const SourceMenuView = () => {
   const selectedSource = SOURCES.find((source) => source.source === context.player.source);
   const [localSourceId, setLocalSourceId] = useState<number | undefined>(selectedSource ? SOURCES.indexOf(selectedSource) : undefined);
 
-  const selectSource = (id: number) => {
+  const selectSource = (id: number | undefined) => {
     setLocalSourceId(id);
-    const newSource = SOURCES[id];
-    context.player.source = newSource.source;
+    context.player.source = id !== undefined ? SOURCES[id].source : undefined;
   };
   return (
     <MenuView
@@ -37,7 +36,7 @@ export const SourceMenuView = () => {
         <ScrollableMenu
           title={'Source'}
           items={SOURCES.map((source, id) => (
-            <MenuRadioButton key={id} label={source.name} id={id} onSelect={selectSource} selected={id === localSourceId}></MenuRadioButton>
+            <MenuRadioButton key={id} label={source.name} uid={id} onSelect={selectSource} selected={id === localSourceId}></MenuRadioButton>
           ))}
         />
       }
