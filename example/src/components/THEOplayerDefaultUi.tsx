@@ -36,8 +36,7 @@ export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
   };
 
   return (
-    <View style={[StyleSheet.absoluteFill, { overflow: 'hidden' }]}>
-      <THEOplayerView config={config} style={StyleSheet.absoluteFill} onPlayerReady={onPlayerReady} />
+    <THEOplayerView config={config} onPlayerReady={onPlayerReady}>
       {player !== undefined && chromeless && (
         <UiContainer
           style={{ ...defaultPlayerStyle, ...style }}
@@ -86,6 +85,6 @@ export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
             </>
           }></UiContainer>
       )}
-    </View>
+    </THEOplayerView>
   );
 }
