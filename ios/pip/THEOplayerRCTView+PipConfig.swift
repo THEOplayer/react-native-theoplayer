@@ -4,9 +4,8 @@ import Foundation
 import THEOplayerSDK
 
 struct PipConfig {
-    var retainPresentationModeOnSourceChange: Bool = false
-    var canStartPictureInPictureAutomaticallyFromInline: Bool = false
-    var requiresLinearPlayback: Bool = false
+    var retainPresentationModeOnSourceChange: Bool = false              // external config
+    var canStartPictureInPictureAutomaticallyFromInline: Bool = false   // external config
 }
 
 #if os(iOS)
