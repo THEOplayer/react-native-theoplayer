@@ -13,7 +13,6 @@ interface PlayButtonProps {
 
 interface PlayButtonState {
   paused: boolean;
-  error: boolean;
 }
 
 export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> {
@@ -23,7 +22,6 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
     super(props);
     this.state = {
       paused: true,
-      error: false,
     };
   }
 
@@ -32,14 +30,13 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
     context.player.addEventListener(PlayerEventType.PLAY, this.onPlay);
     context.player.addEventListener(PlayerEventType.PLAYING, this.onPlay);
     context.player.addEventListener(PlayerEventType.PAUSE, this.onPause);
-    context.player.addEventListener(PlayerEventType.ERROR, this.onError);
+    context.player.addEventListener(PlayerEventType.SOURCE_CHANGE, this.onSourceChange);
     context.player.addEventListener(PlayerEventType.TIME_UPDATE, this.onTimeupdate);
     if (context.player.paused) {
       this.animationPauseId = context.ui.setUserActive_();
     }
     this.setState({
       paused: context.player.paused,
-      error: false,
     });
   }
 
@@ -48,7 +45,6 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
     context.player.removeEventListener(PlayerEventType.PLAY, this.onPlay);
     context.player.removeEventListener(PlayerEventType.PLAYING, this.onPlay);
     context.player.removeEventListener(PlayerEventType.PAUSE, this.onPause);
-    context.player.removeEventListener(PlayerEventType.ERROR, this.onError);
     context.player.removeEventListener(PlayerEventType.SOURCE_CHANGE, this.onSourceChange);
     context.player.removeEventListener(PlayerEventType.TIME_UPDATE, this.onTimeupdate);
     if (this.animationPauseId !== undefined) {
@@ -78,15 +74,10 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
     this.setState({ paused: player.paused });
   };
 
-  private onError = () => {
-    this.setState({ error: true });
-  };
-
   private onSourceChange = () => {
     const player = (this.context as UiContext).player;
     this.setState({
       paused: player.paused,
-      error: false,
     });
   };
 
@@ -100,11 +91,8 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
   };
 
   render() {
-    const { paused, error } = this.state;
+    const { paused } = this.state;
     const { style } = this.props;
-    if (error) {
-      return <></>;
-    }
 
     return (
       <PlayerContext.Consumer>
