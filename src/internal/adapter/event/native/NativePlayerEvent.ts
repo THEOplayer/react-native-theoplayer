@@ -1,4 +1,5 @@
 import type { MediaTrack, PlayerError, PresentationMode, PresentationModeChangeContext, TextTrack, TimeRange } from 'react-native-theoplayer';
+import type { NativePlayerState } from '../../NativePlayerState';
 
 export interface NativeErrorEvent {
   error: PlayerError;
@@ -103,4 +104,8 @@ export interface NativeSegmentNotFoundEvent {
    * Number of times the segment was retried.
    */
   readonly retryCount: number;
+}
+
+export interface NativePlayerStateEvent {
+  readonly state: NativePlayerState;
 }
