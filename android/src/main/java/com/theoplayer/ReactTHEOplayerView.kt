@@ -25,7 +25,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
 
   var presentationManager: PresentationManager? = null
   var playerContext: ReactTHEOplayerContext? = null
-  var isInitialized: Boolean = false
+  private var isInitialized: Boolean = false
 
   val adsApi: AdsApiWrapper
 
@@ -66,8 +66,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
       presentationManager = PresentationManager(
         it.playerView,
         reactContext,
-        eventEmitter,
-        PlayerConfigAdapter.presentationManagerConfigFromProps(configProps)
+        eventEmitter
       )
 
       eventEmitter.preparePlayer(it.player)
