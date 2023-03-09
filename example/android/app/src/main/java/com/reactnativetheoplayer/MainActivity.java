@@ -49,10 +49,4 @@ public class MainActivity extends ReactActivity {
     intent.putExtra("isInPictureInPictureMode", isInPictureInPictureMode);
     this.sendBroadcast(intent);
   }
-
-  @Override
-  public void onStop() {
-    super.onStop();
-    finishAndRemoveTask();
-  }
 }
