@@ -8,6 +8,7 @@ import com.theoplayer.android.api.player.PresentationMode
 import com.theoplayer.android.api.player.track.mediatrack.MediaTrack
 import com.theoplayer.android.api.player.track.mediatrack.quality.VideoQuality
 import com.theoplayer.android.api.player.track.texttrack.TextTrackMode
+import com.theoplayer.presentation.PipConfigAdapter
 import com.theoplayer.track.QualityListFilter
 import com.theoplayer.track.emptyQualityList
 import com.theoplayer.util.ViewResolver
@@ -157,6 +158,20 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
         "fullscreen" -> PresentationMode.FULLSCREEN
         else -> PresentationMode.INLINE
       })
+    }
+  }
+
+  @ReactMethod
+  fun setPipConfig(tag: Int, config: ReadableMap?) {
+    viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
+      view?.presentationManager?.pipConfig = PipConfigAdapter.fromProps(config)
+    }
+  }
+
+  @ReactMethod
+  fun setBackgroundAudioConfig(tag: Int, config: ReadableMap) {
+    viewResolver.resolveViewByTag(tag) {
+      // TODO
     }
   }
 }
