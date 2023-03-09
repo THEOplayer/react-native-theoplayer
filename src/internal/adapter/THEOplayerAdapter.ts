@@ -30,6 +30,7 @@ import {
   PlayerEventType,
   PreloadType,
   removeTrack,
+  TextTrackMode,
   TextTrackStyle,
   TrackListEventType,
 } from 'react-native-theoplayer';
@@ -331,9 +332,9 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._selectedTextTrack = trackUid;
     this.textTracks.forEach((track) => {
       if (track.uid == trackUid) {
-        track.mode = 'showing';
-      } else if (track.mode === 'showing') {
-        track.mode = 'disabled';
+        track.mode = TextTrackMode.showing;
+      } else if (track.mode === TextTrackMode.showing) {
+        track.mode = TextTrackMode.disabled;
       }
     });
     NativeModules.PlayerModule.setSelectedTextTrack(this._view.nativeHandle, trackUid || -1);

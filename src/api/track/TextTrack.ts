@@ -1,11 +1,27 @@
 import type { Track } from './Track';
 import type { TextTrackCue } from './TextTrackCue';
 
-export type TextTrackType = 'srt' | 'ttml' | 'webvtt' | 'cea608' | '';
+export enum TextTrackType {
+  cea608 = 'cea608',
+  id3 = 'id3',
+  srt = 'srt',
+  ttml = 'ttml',
+  webvtt = 'webvtt',
+}
 
-export type TextTrackKind = 'subtitles' | 'captions' | 'descriptions' | 'chapters' | 'metadata' | 'thumbnails';
+export enum TextTrackKind {
+  captions = 'captions',
+  descriptions = 'descriptions',
+  metadata = 'metadata',
+  subtitles = 'subtitles',
+  thumbnails = 'thumbnails',
+}
 
-export type TextTrackMode = 'disabled' | 'showing' | 'hidden';
+export enum TextTrackMode {
+  disabled = 'disabled',
+  showing = 'showing',
+  hidden = 'hidden',
+}
 
 export interface TextTrack extends Track {
   /**
