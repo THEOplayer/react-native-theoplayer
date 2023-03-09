@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.os.IBinder
 import android.support.v4.media.MediaBrowserCompat
 import android.text.TextUtils
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.media.MediaBrowserServiceCompat
@@ -27,8 +26,6 @@ private const val BROWSABLE_ROOT = "/"
 private const val EMPTY_ROOT = "@empty@"
 
 private const val NOTIFICATION_ID = 1
-
-private const val TAG = "MediaPlaybackService"
 
 class MediaPlaybackService : MediaBrowserServiceCompat() {
 
@@ -49,36 +46,27 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
 
   override fun onCreate() {
     super.onCreate()
-    Log.d(TAG, "onCreate")
-
     notificationManager = (getSystemService(NOTIFICATION_SERVICE) as NotificationManager)
 
     // Apply existing player context
     if (ReactTHEOplayerContext.instance != null) {
-      Log.d(TAG, "onCreate - EXISTING player context")
       connectPlayerContext(ReactTHEOplayerContext.instance!!)
-    } else {
-      Log.d(TAG, "onCreate - NO existing player context")
     }
   }
 
   override fun onBind(intent: Intent): IBinder {
-    Log.d(TAG, "onBind ${intent.action}")
     return binder
   }
 
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-    Log.d(TAG, "onStartCommand ${intent?.action}")
 
     playerContext?.mediaSessionIntegration?.mediaSession?.let { mediaSession ->
-      Log.d(TAG, "onStartCommand - handle intent - ${intent?.action}")
       MediaButtonReceiver.handleIntent(mediaSession, intent)
     }
     return super.onStartCommand(intent, flags, startId)
   }
 
   override fun onDestroy() {
-    Log.d(TAG, "onDestroy")
     super.onDestroy()
     removeListeners()
   }
@@ -130,7 +118,6 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
 
     // This ensures that the service starts and continues to run, even when all
     // UI MediaBrowser activities that are bound to it unbind.
-    Log.d(TAG, "startService")
     ContextCompat.startForegroundService(
       applicationContext,
       Intent(applicationContext, MediaPlaybackService::class.java)
@@ -154,7 +141,6 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
     playerContext?.mediaSessionIntegration?.connector?.apply {
       addEventListener<MediaSessionEvent.StopEvent> {
         // Stop the service
-        Log.d(TAG, "stopSelf")
         player?.pause()
         stopForeground(true)
         stopSelf()
@@ -228,8 +214,6 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
   }
 
   private fun updateNotification(isPaused: Boolean) {
-    Log.d(TAG, "updateNotification")
-
     val channelId = getString(R.string.notification_channel_id)
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
       val channel = NotificationChannel(
@@ -255,11 +239,9 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
         // needed. This does not stop the service from running (for that you use stopSelf()
         // or related methods), just takes it out of the foreground state.
         stopForeground(STOP_FOREGROUND_DETACH)
-        Log.d(TAG, "stopForeground")
       } else {
         @Suppress("DEPRECATION")
         stopForeground(false)
-        Log.d(TAG, "stopForeground")
       }
       notificationManager.notify(NOTIFICATION_ID, notification)
     } else {
@@ -267,7 +249,6 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
       // with one or more transport controls. The notification should also include useful
       // information from the session's metadata.
       startForeground(NOTIFICATION_ID, notification)
-      Log.d(TAG, "startForeground")
     }
   }
 }
