@@ -3,15 +3,14 @@ package com.theoplayer.mediasession
 import android.content.Context
 import com.theoplayer.android.api.player.Player
 import android.support.v4.media.session.MediaSessionCompat
-import android.support.v4.media.session.PlaybackStateCompat
 import com.theoplayer.BuildConfig
 import com.theoplayer.android.connector.mediasession.MediaSessionConnector
 
-const val TAG = "MediaSessionConnector"
+const val TAG = "MediaSessionIntegration"
 
 class MediaSessionIntegration(context: Context, player: Player) {
-  private val mediaSession: MediaSessionCompat
-  private val mediaSessionConnector: MediaSessionConnector
+  val mediaSession: MediaSessionCompat
+  val connector: MediaSessionConnector
 
   init {
     // Create and initialize the media session
@@ -21,24 +20,24 @@ class MediaSessionIntegration(context: Context, player: Player) {
     mediaSession.setMediaButtonReceiver(null)
 
     // Create a MediaSessionConnector and attach the THEOplayer instance.
-    mediaSessionConnector = MediaSessionConnector(mediaSession)
-    mediaSessionConnector.debug = BuildConfig.LOG_MEDIASESSION_EVENTS
-    mediaSessionConnector.player = player
-    mediaSessionConnector.playbackPreparer
+    connector = MediaSessionConnector(mediaSession)
+    connector.debug = BuildConfig.LOG_MEDIASESSION_EVENTS
+    connector.player = player
+    connector.playbackPreparer
 
     // Set mediaSession active
-    mediaSessionConnector.setActive(true)
+    connector.setActive(true)
   }
 
   fun onResume() {
-    mediaSessionConnector.setActive(true)
+    connector.setActive(true)
   }
 
   fun onPause() {
-    mediaSessionConnector.setActive(false)
+    connector.setActive(false)
   }
 
   fun onDestroy() {
-    mediaSessionConnector.destroy()
+    connector.destroy()
   }
 }

@@ -1,4 +1,5 @@
 @file:Suppress("unused")
+
 package com.theoplayer.cast
 
 import com.facebook.react.bridge.ReactApplicationContext
@@ -19,7 +20,7 @@ class CastModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(
   @ReactMethod
   fun casting(tag: Int, promise: Promise) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      promise.resolve(view?.castIntegration?.isCasting() ?: false)
+      promise.resolve(view?.playerContext?.castIntegration?.isCasting() ?: false)
     }
   }
 
@@ -31,7 +32,11 @@ class CastModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(
   @ReactMethod
   fun chromecastState(tag: Int, promise: Promise) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      promise.resolve(castStateToString(view?.castIntegration?.getState() ?: PlayerCastState.UNAVAILABLE))
+      promise.resolve(
+        castStateToString(
+          view?.playerContext?.castIntegration?.getState() ?: PlayerCastState.UNAVAILABLE
+        )
+      )
     }
   }
 
@@ -48,28 +53,28 @@ class CastModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(
   @ReactMethod
   fun chromecastStart(tag: Int) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      view?.castIntegration?.start()
+      view?.playerContext?.castIntegration?.start()
     }
   }
 
   @ReactMethod
   fun chromecastStop(tag: Int) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      view?.castIntegration?.stop()
+      view?.playerContext?.castIntegration?.stop()
     }
   }
 
   @ReactMethod
   fun chromecastJoin(tag: Int) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      view?.castIntegration?.join()
+      view?.playerContext?.castIntegration?.join()
     }
   }
 
   @ReactMethod
   fun chromecastLeave(tag: Int) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      view?.castIntegration?.leave()
+      view?.playerContext?.castIntegration?.leave()
     }
   }
 }

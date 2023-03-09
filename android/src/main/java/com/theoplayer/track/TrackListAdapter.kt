@@ -27,7 +27,6 @@ private const val PROP_AUDIO_SAMPLING_RATE = "audioSamplingRate"
 private const val PROP_BANDWIDTH = "bandwidth"
 private const val PROP_QUALITIES = "qualities"
 private const val PROP_ACTIVE_QUALITY = "activeQuality"
-private const val PROP_TARGET_QUALITY = "targetQuality"
 private const val PROP_WIDTH = "width"
 private const val PROP_HEIGHT = "height"
 private const val PROP_FRAMERATE = "frameRate"
@@ -36,7 +35,7 @@ private const val PROP_ENDTIME = "endTime"
 private const val PROP_CUES = "cues"
 private const val PROP_CUE_CONTENT = "content"
 
-class TrackListAdapter {
+object TrackListAdapter {
 
   fun fromTextTrackList(textTrackList: TextTrackList?): WritableArray {
     val textTracks = Arguments.createArray()
@@ -103,6 +102,7 @@ class TrackListAdapter {
     return audioQualityPayload
   }
 
+  @Suppress("UNCHECKED_CAST")
   fun <Q : Quality?> fromMediaTrack(
     track: MediaTrack<Q>,
     trackType: MediaTrackType
