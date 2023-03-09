@@ -52,7 +52,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
     playerContext = ReactTHEOplayerContext.create(
       reactContext,
       PlayerConfigAdapter.theoConfigFromProps(configProps),
-      true
+      false // TODO: get from property
     )
     playerContext?.let {
       if (BuildConfig.EXTENSION_ADS) {
