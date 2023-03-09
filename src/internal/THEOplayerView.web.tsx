@@ -3,7 +3,6 @@ import type { THEOplayerViewProps } from 'react-native-theoplayer';
 import * as THEOplayer from 'theoplayer';
 import { THEOplayerWebAdapter } from './adapter/THEOplayerWebAdapter';
 import { WebMediaSession } from './adapter/web/WebMediaSession';
-import { StyleSheet, View } from 'react-native';
 
 export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProps>) {
   const { config, children } = props;
@@ -75,6 +74,7 @@ const styles = {
     display: 'flex',
     position: 'relative',
     width: '100%',
+    height: '100%',
     aspectRatio: '16 / 9',
   } as React.CSSProperties,
 };
