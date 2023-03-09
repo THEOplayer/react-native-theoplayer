@@ -60,7 +60,11 @@ export class DefaultReadyStateChangeEvent extends BaseEvent<PlayerEventType.READ
 }
 
 export class DefaultPresentationModeChangeEvent extends BaseEvent<PlayerEventType.PRESENTATIONMODE_CHANGE> implements PresentationModeChangeEvent {
-  constructor(public presentationMode: PresentationMode, public previousPresentationMode: PresentationMode, public context?: PresentationModeChangeContext) {
+  constructor(
+    public presentationMode: PresentationMode,
+    public previousPresentationMode: PresentationMode,
+    public context?: PresentationModeChangeContext,
+  ) {
     super(PlayerEventType.PRESENTATIONMODE_CHANGE);
   }
 }
