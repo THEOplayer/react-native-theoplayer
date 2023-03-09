@@ -48,7 +48,7 @@ const defaultPlayerState: NativePlayerState = {
   paused: false,
   seekable: [],
   buffered: [],
-  pipConfig: { startsAutomatically: false, requiresLinearPlayback: false },
+  pipConfig: { startsAutomatically: false },
   backgroundAudioConfig: { enabled: false },
   presentationMode: 'inline',
   muted: false,
