@@ -7,7 +7,6 @@ import android.content.ServiceConnection
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import android.util.Log
 import com.facebook.react.uimanager.ThemedReactContext
 import com.google.ads.interactivemedia.v3.api.AdsRenderingSettings
 import com.google.ads.interactivemedia.v3.api.ImaSdkFactory
@@ -26,8 +25,6 @@ import com.theoplayer.audio.AudioBecomingNoisyManager
 import com.theoplayer.audio.MediaPlaybackService
 import com.theoplayer.mediasession.MediaSessionIntegration
 import java.util.concurrent.atomic.AtomicBoolean
-
-private const val TAG = "ReactTHEOplayerContext"
 
 class ReactTHEOplayerContext private constructor(
   private val reactContext: ThemedReactContext,
@@ -70,12 +67,10 @@ class ReactTHEOplayerContext private constructor(
 
   private val connection = object : ServiceConnection {
     override fun onServiceConnected(className: ComponentName, service: IBinder) {
-      Log.d(TAG, "onServiceConnected")
       binder = service as MediaPlaybackService.MediaPlaybackBinder
     }
 
     override fun onServiceDisconnected(arg0: ComponentName) {
-      Log.d(TAG, "onServiceDisconnected")
     }
   }
 
@@ -84,7 +79,6 @@ class ReactTHEOplayerContext private constructor(
   }
 
   private fun bindMediaPlaybackService(reactContext: ThemedReactContext) {
-    Log.d(TAG, "BIND MediaPlaybackService")
     // Bind to an existing service, if available
     // A bound service runs only as long as another application component is bound to it.
     // Multiple components can bind to the service at once, but when all of them unbind, the
@@ -100,7 +94,6 @@ class ReactTHEOplayerContext private constructor(
   }
 
   private fun unbindMediaPlaybackService() {
-    Log.d(TAG, "UNBIND MediaPlaybackService")
     // This client is done interacting with the service: unbind.
     // When there are no clients bound to the service, the system destroys the service.
     if (binder?.isBinderAlive == true) {
@@ -111,7 +104,6 @@ class ReactTHEOplayerContext private constructor(
   }
 
   private fun createPlayerView(reactContext: ThemedReactContext, playerConfig: THEOplayerConfig) {
-    Log.d(TAG, "createPlayerView")
     playerView = object : THEOplayerView(reactContext.currentActivity!!, playerConfig) {
       private fun measureAndLayout() {
         measure(
@@ -198,7 +190,6 @@ class ReactTHEOplayerContext private constructor(
    * The host activity is paused.
    */
   fun onHostPause() {
-    Log.d(TAG, "onHostPause")
     if (!backgroundAudioMode) {
       mediaSessionIntegration.onPause()
       playerView.onPause()
@@ -209,7 +200,6 @@ class ReactTHEOplayerContext private constructor(
    * The host activity is resumed.
    */
   fun onHostResume() {
-    Log.d(TAG, "onHostResume")
     if (!backgroundAudioMode) {
       mediaSessionIntegration.onResume()
       playerView.onResume()
@@ -223,7 +213,6 @@ class ReactTHEOplayerContext private constructor(
    * - with backgroundAudioMode: unbind from the MediaPlaybackService.
    */
   fun onHostDestroy() {
-    Log.d(TAG, "onHostDestroy")
     if (!backgroundAudioMode) {
       destroy()
     } else {
@@ -232,7 +221,6 @@ class ReactTHEOplayerContext private constructor(
   }
 
   private fun destroy() {
-    Log.d(TAG, "destroy")
     removeListeners()
     mediaSessionIntegration.onDestroy()
     playerView.onDestroy()
