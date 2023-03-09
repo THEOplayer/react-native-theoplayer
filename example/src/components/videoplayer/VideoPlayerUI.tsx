@@ -88,7 +88,10 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
     super(props);
     this.state = VideoPlayerUI.initialState;
     this.addPlayerEventListeners();
-    this.props.player.source = this.props.sources[this.state.srcIndex].source;
+    const { player, sources } = props;
+    if (!player.source) {
+      player.source = sources[this.state.srcIndex].source;
+    }
   }
 
   componentWillUnmount() {
