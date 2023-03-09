@@ -97,7 +97,11 @@ class THEOplayerRCTTrackMetadataAggregator {
         entry[PROP_UID] = textTrackCue.uid
         entry[PROP_STARTTIME] = (textTrackCue.startTime ?? 0) * 1000
         entry[PROP_ENDTIME] = (textTrackCue.endTime ?? 0) * 1000
-        entry[PROP_CUE_CONTENT] = textTrackCue.contentString
+        if let content = textTrackCue.content {
+            entry[PROP_CUE_CONTENT] = content
+        } else if let contentString = textTrackCue.contentString {
+            entry[PROP_CUE_CONTENT] = contentString
+        }
         return entry
     }
 
