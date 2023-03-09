@@ -19,24 +19,22 @@ extension THEOplayerRCTView: AVPictureInPictureControllerDelegate {
                                 canStartPictureInPictureAutomaticallyFromInline: self.pipConfig.canStartPictureInPictureAutomaticallyFromInline)
     }
     
-    func initPip() {
-            if let player = self.player,
-               var pipController = player.pip {
-                if #available(iOS 14.0, *) {
-                    pipController.nativePictureInPictureDelegate = self
-                }
-            }
-        }
-    
 #elseif os(tvOS)
     
     func playerPipConfiguration() -> PiPConfiguration? {
         return PiPConfiguration(retainPresentationModeOnSourceChange: self.pipConfig.retainPresentationModeOnSourceChange)
     }
     
-    func initPip() {} // TODO: make player.pip available for tvOS
-    
 #endif
+    
+    func initPip() {
+        if let player = self.player,
+           var pipController = player.pip {
+            if #available(iOS 14.0, tvOS 14.0, *) {
+                pipController.nativePictureInPictureDelegate = self
+            }
+        }
+    }
     
     @available(tvOS 14.0, *)
     public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {

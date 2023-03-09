@@ -127,7 +127,6 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
             let newPipConfig: PipConfig = self.parsePipConfig(configDict: pipConfig)
             if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView {
                 theView.pipConfig = newPipConfig
-                // TODO: update pipConfig on Player instance
             }
         }
         return
