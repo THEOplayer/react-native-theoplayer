@@ -95,7 +95,7 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
   @ReactMethod
   fun daiSnapback(tag: Int, promise: Promise) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      val daiIntegration = view?.daiIntegration
+      val daiIntegration = view?.playerContext?.daiIntegration
       if (daiIntegration == null) {
         promise.resolve(false)
       } else {
@@ -107,7 +107,7 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
   @ReactMethod
   fun daiSetSnapback(tag: Int, enabled: Boolean?) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      val daiIntegration = view?.daiIntegration
+      val daiIntegration = view?.playerContext?.daiIntegration
       if (daiIntegration != null) {
         daiIntegration.enableSnapback = enabled!!
       }
@@ -117,7 +117,7 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
   @ReactMethod
   fun daiContentTimeForStreamTime(tag: Int, time: Int, promise: Promise) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      val daiIntegration = view?.daiIntegration
+      val daiIntegration = view?.playerContext?.daiIntegration
       if (daiIntegration == null) {
         promise.resolve(time)
       } else {
@@ -129,7 +129,7 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
   @ReactMethod
   fun daiStreamTimeForContentTime(tag: Int, time: Int, promise: Promise) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      val daiIntegration = view?.daiIntegration
+      val daiIntegration = view?.playerContext?.daiIntegration
       if (daiIntegration == null) {
         promise.resolve(time)
       } else {

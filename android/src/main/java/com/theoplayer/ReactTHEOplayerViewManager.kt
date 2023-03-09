@@ -21,6 +21,10 @@ class ReactTHEOplayerViewManager : ViewGroupManager<ReactTHEOplayerView>() {
     return ReactTHEOplayerView(reactContext)
   }
 
+  /**
+   * Called when view is detached from view hierarchy and allows for some additional cleanup by the
+   * {@link ViewManager} subclass.
+   */
   override fun onDropViewInstance(view: ReactTHEOplayerView) {
     view.releasePlayer()
   }

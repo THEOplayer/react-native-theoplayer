@@ -6,6 +6,7 @@ import com.theoplayer.abr.ABRConfigurationAdapter
 import com.theoplayer.android.api.player.PreloadType
 import com.theoplayer.android.api.player.PresentationMode
 import com.theoplayer.android.api.player.track.mediatrack.MediaTrack
+import com.theoplayer.android.api.player.track.mediatrack.quality.VideoQuality
 import com.theoplayer.android.api.player.track.texttrack.TextTrackMode
 import com.theoplayer.track.QualityListFilter
 import com.theoplayer.track.emptyQualityList
@@ -117,15 +118,20 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
   @ReactMethod
   fun setTargetVideoQuality(tag: Int, uids: ReadableArray) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      view?.selectedVideoTrack?.let {
-        val currentVideoTrack = it as MediaTrack<*>
-        if (uids.size() == 0) {
-          // Reset target qualities when passing empty list.
-          currentVideoTrack.targetQualities = emptyQualityList()
-          currentVideoTrack.targetQuality = null
-        } else {
-          currentVideoTrack.qualities?.let { qualities ->
-            currentVideoTrack.targetQualities = QualityListFilter(qualities).filterQualityList(uids)
+      view?.player?.let {
+        // Apply the target quality to the current enabled video track
+        for (track in it.videoTracks) {
+          if (track.isEnabled) {
+            val currentVideoTrack = track as MediaTrack<VideoQuality>
+            if (uids.size() == 0) {
+              // Reset target qualities when passing empty list.
+              currentVideoTrack.targetQualities = emptyQualityList()
+              currentVideoTrack.targetQuality = null
+            } else {
+              currentVideoTrack.qualities?.let { qualities ->
+                currentVideoTrack.targetQualities = QualityListFilter(qualities).filterQualityList(uids)
+              }
+            }
           }
         }
       }

@@ -5,7 +5,6 @@ import android.view.View
 import androidx.annotation.StringDef
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.bridge.WritableArray
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.uimanager.events.ReactEventEmitter
 import com.theoplayer.ads.AdEventAdapter
@@ -38,10 +37,10 @@ import com.theoplayer.android.api.player.track.mediatrack.quality.AudioQuality
 import com.theoplayer.android.api.player.track.mediatrack.quality.Quality
 import com.theoplayer.android.api.player.track.mediatrack.quality.VideoQuality
 import com.theoplayer.android.api.player.track.texttrack.TextTrack
-import com.theoplayer.android.api.timerange.TimeRanges
+import com.theoplayer.android.api.player.track.texttrack.TextTrackMode
 import com.theoplayer.cast.CastEventAdapter
 import com.theoplayer.track.*
-import com.theoplayer.util.TypeUtils.encodeInfNan
+import com.theoplayer.util.PayloadBuilder
 import kotlin.math.floor
 
 private val TAG = PlayerEventEmitter::class.java.name
@@ -75,35 +74,8 @@ private const val EVENT_CAST_EVENT = "onNativeCastEvent"
 private const val EVENT_PRESENTATIONMODECHANGE = "onNativePresentationModeChange"
 private const val EVENT_VOLUMECHANGE = "onNativeVolumeChange"
 
-private const val EVENT_PROP_CURRENT_TIME = "currentTime"
-private const val EVENT_PROP_CURRENT_PROGRAM_DATE_TIME = "currentProgramDateTime"
-private const val EVENT_PROP_DURATION = "duration"
-private const val EVENT_PROP_RATE = "playbackRate"
-private const val EVENT_PROP_READYSTATE = "readyState"
-private const val EVENT_PROP_ERROR = "error"
-private const val EVENT_PROP_ERROR_CODE = "errorCode"
-private const val EVENT_PROP_ERROR_MESSAGE = "errorMessage"
-private const val EVENT_PROP_TEXT_TRACKS = "textTracks"
-private const val EVENT_PROP_AUDIO_TRACKS = "audioTracks"
-private const val EVENT_PROP_VIDEO_TRACKS = "videoTracks"
-private const val EVENT_PROP_SELECTED_TEXT_TRACK = "selectedTextTrack"
-private const val EVENT_PROP_SELECTED_AUDIO_TRACK = "selectedAudioTrack"
-private const val EVENT_PROP_SELECTED_VIDEO_TRACK = "selectedVideoTrack"
-private const val EVENT_PROP_SEEKABLE = "seekable"
-private const val EVENT_PROP_BUFFERED = "buffered"
-private const val EVENT_PROP_START = "start"
-private const val EVENT_PROP_END = "end"
-private const val EVENT_PROP_RETRYCOUNT = "retryCount"
-private const val EVENT_PROP_SEGMENTSTARTTIME = "segmentStartTime"
-private const val EVENT_PROP_TRACK = "track"
-private const val EVENT_PROP_TRACK_UID = "trackUid"
-private const val EVENT_PROP_TRACK_TYPE = "trackType"
-private const val EVENT_PROP_CUE = "cue"
 private const val EVENT_PROP_TYPE = "type"
-private const val EVENT_PROP_QUALITIES = "qualities"
-private const val EVENT_PROP_PRESENTATIONMODE = "presentationMode"
-private const val EVENT_PROP_VOLUME = "volume"
-private const val EVENT_PROP_MUTED = "muted"
+private const val EVENT_PROP_STATE = "state"
 
 @Suppress("UNCHECKED_CAST")
 class PlayerEventEmitter internal constructor(
@@ -183,7 +155,6 @@ class PlayerEventEmitter internal constructor(
   private val audioTrackListeners = HashMap<EventType<*>, EventListener<*>>()
   private val videoTrackListeners = HashMap<EventType<*>, EventListener<*>>()
   private val playerView: ReactTHEOplayerView
-  private val trackListAdapter = TrackListAdapter()
   private var adEventAdapter: AdEventAdapter? = null
   private var castEventAdapter: CastEventAdapter? = null
   private var lastTimeUpdate: Long = 0
@@ -282,73 +253,70 @@ class PlayerEventEmitter internal constructor(
   }
 
   fun emitPresentationModeChange(presentationMode: PresentationMode) {
-    val payload = Arguments.createMap()
-    payload.putString(EVENT_PROP_PRESENTATIONMODE,
-      when (presentationMode) {
-        PresentationMode.PICTURE_IN_PICTURE -> "picture-in-picture"
-        PresentationMode.FULLSCREEN -> "fullscreen"
-        else -> "inline"
-      }
+    receiveEvent(
+      EVENT_PRESENTATIONMODECHANGE,
+      PayloadBuilder().presentationMode(presentationMode).build()
     )
-    receiveEvent(EVENT_PRESENTATIONMODECHANGE, payload)
   }
 
   fun preparePlayer(player: Player) {
     attachListeners(player)
 
+    val payload = Arguments.createMap()
+    payload.putMap(
+      EVENT_PROP_STATE,
+      PayloadBuilder()
+        .source(player.source)
+        .currentTime(player.currentTime)
+        .currentProgramDateTime(player.currentProgramDateTime)
+//        .presentationMode()
+        .paused(player.isPaused)
+        .playbackRate(player.playbackRate)
+        .duration(player.duration)
+        .volume(player.volume, player.isMuted)
+        .seekable(player.seekable)
+        .buffered(player.buffered)
+//        .error(player.error)
+//        .readyState(player.readyState)
+        .textTracks(player.textTracks)
+        .audioTracks(player.audioTracks)
+        .videoTracks(player.videoTracks)
+        .selectedTextTrack(getSelectedTextTrack(player))
+        .selectedAudioTrack(getSelectedAudioTrack(player))
+        .selectedVideoTrack(getSelectedVideoTrack(player))
+        .build()
+    )
+
     // Notify the player is ready
-    receiveEvent(EVENT_PLAYER_READY, null)
+    receiveEvent(EVENT_PLAYER_READY, payload)
   }
 
   private fun emitError(code: String, message: String?) {
-    val error = Arguments.createMap()
-    error.putString(EVENT_PROP_ERROR_CODE, code)
-    error.putString(EVENT_PROP_ERROR_MESSAGE, message ?: "")
-    val payload = Arguments.createMap()
-    payload.putMap(EVENT_PROP_ERROR, error)
-    receiveEvent(EVENT_ERROR, payload)
+    receiveEvent(EVENT_ERROR, PayloadBuilder().error(code, message).build())
   }
 
   private fun onLoadedMetadata() {
-    val payload = Arguments.createMap()
-    payload.putArray(
-      EVENT_PROP_TEXT_TRACKS,
-      trackListAdapter.fromTextTrackList(playerView.player?.textTracks)
-    )
-    payload.putArray(
-      EVENT_PROP_AUDIO_TRACKS,
-      trackListAdapter.fromAudioTrackList(playerView.player?.audioTracks)
-    )
-    payload.putArray(
-      EVENT_PROP_VIDEO_TRACKS,
-      trackListAdapter.fromVideoTrackList(playerView.player?.videoTracks)
-    )
-    val selectedTextTrack = playerView.selectedTextTrack
-    if (selectedTextTrack != null) {
-      payload.putInt(EVENT_PROP_SELECTED_TEXT_TRACK, selectedTextTrack.uid)
+    playerView.player?.let {
+      receiveEvent(
+        EVENT_LOADEDMETADATA, PayloadBuilder()
+          .textTracks(it.textTracks)
+          .audioTracks(it.audioTracks)
+          .videoTracks(it.videoTracks)
+          .selectedTextTrack(getSelectedTextTrack(it))
+          .selectedAudioTrack(getSelectedAudioTrack(it))
+          .selectedVideoTrack(getSelectedVideoTrack(it))
+          .duration(it.duration)
+          .build()
+      )
     }
-    val selectedAudioTrack = playerView.selectedAudioTrack
-    if (selectedAudioTrack != null) {
-      payload.putInt(EVENT_PROP_SELECTED_AUDIO_TRACK, selectedAudioTrack.uid)
-    }
-    val selectedVideoTrack = playerView.selectedVideoTrack
-    if (selectedVideoTrack != null) {
-      payload.putInt(EVENT_PROP_SELECTED_VIDEO_TRACK, selectedVideoTrack.uid)
-    }
-    payload.putDouble(EVENT_PROP_DURATION, playerView.duration)
-    receiveEvent(EVENT_LOADEDMETADATA, payload)
   }
 
   private fun onSeeking(event: SeekingEvent) {
-    val payload = Arguments.createMap()
-    payload.putDouble(EVENT_PROP_CURRENT_TIME, (1e03 * event.currentTime).toLong().toDouble())
-    receiveEvent(EVENT_SEEKING, payload)
+    receiveEvent(EVENT_SEEKING, PayloadBuilder().currentTime(event.currentTime).build())
   }
 
   private fun onSeeked(event: SeekedEvent) {
-    val payload = Arguments.createMap()
-    payload.putDouble(EVENT_PROP_CURRENT_TIME, (1e03 * event.currentTime).toLong().toDouble())
-    receiveEvent(EVENT_SEEKED, payload)
+    receiveEvent(EVENT_SEEKED, PayloadBuilder().currentTime(event.currentTime).build())
   }
 
   private fun shouldSkipTimeUpdate(now: Long, currentTime: Double): Boolean {
@@ -389,64 +357,45 @@ class PlayerEventEmitter internal constructor(
     }
     lastTimeUpdate = now
     lastCurrentTime = currentTime
-    val payload = Arguments.createMap()
-    payload.putDouble(EVENT_PROP_CURRENT_TIME, (1e03 * currentTime).toLong().toDouble())
-    val currentProgramDateTime = event.currentProgramDateTime
-    if (currentProgramDateTime != null) {
-      payload.putDouble(
-        EVENT_PROP_CURRENT_PROGRAM_DATE_TIME,
-        (1e03 * currentProgramDateTime.time).toLong().toDouble()
-      )
-    }
-    receiveEvent(EVENT_TIMEUPDATE, payload)
+    receiveEvent(
+      EVENT_TIMEUPDATE, PayloadBuilder()
+        .currentTime(currentTime)
+        .currentProgramDateTime(event.currentProgramDateTime)
+        .build()
+    )
   }
 
   private fun onReadyState(event: ReadyStateChangeEvent) {
-    val payload = Arguments.createMap()
-    payload.putInt(EVENT_PROP_READYSTATE, event.readyState.ordinal)
-    receiveEvent(EVENT_READYSTATECHANGE, payload)
+    receiveEvent(EVENT_READYSTATECHANGE, PayloadBuilder().readyState(event.readyState).build())
   }
 
   private fun onDurationChange(event: DurationChangeEvent) {
-    val payload = Arguments.createMap()
-    payload.putDouble(EVENT_PROP_DURATION, encodeInfNan(1e03 * event.duration))
-    receiveEvent(EVENT_DURATIONCHANGE, payload)
+    receiveEvent(EVENT_DURATIONCHANGE, PayloadBuilder().duration(event.duration).build())
   }
 
   private fun onRateChange(event: RateChangeEvent) {
-    val payload = Arguments.createMap()
-    payload.putDouble(EVENT_PROP_RATE, event.playbackRate)
-    receiveEvent(EVENT_RATECHANGE, payload)
+    receiveEvent(EVENT_RATECHANGE, PayloadBuilder().playbackRate(event.playbackRate).build())
   }
 
   private fun onError(event: ErrorEvent) {
     emitError(event.errorObject)
   }
 
-  private fun fromTimeRanges(timeRanges: TimeRanges?): WritableArray {
-    val payload = Arguments.createArray()
-    timeRanges?.forEach { timeRange ->
-      val range = Arguments.createMap()
-      range.putDouble(EVENT_PROP_START, 1e03 * timeRange.start)
-      range.putDouble(EVENT_PROP_END, 1e03 * timeRange.end)
-      payload.pushMap(range)
-    }
-    return payload
-  }
-
   private fun onProgress() {
-    val payload = Arguments.createMap()
-    payload.putArray(EVENT_PROP_SEEKABLE, fromTimeRanges(playerView.player?.seekable))
-    payload.putArray(EVENT_PROP_BUFFERED, fromTimeRanges(playerView.player?.buffered))
-    receiveEvent(EVENT_PROGRESS, payload)
+    receiveEvent(
+      EVENT_PROGRESS, PayloadBuilder()
+        .seekable(playerView.player?.seekable)
+        .buffered(playerView.player?.buffered)
+        .build()
+    )
   }
 
   private fun onSegmentNotFound(event: SegmentNotFoundEvent) {
-    val payload = Arguments.createMap()
-    payload.putDouble(EVENT_PROP_SEGMENTSTARTTIME, 1e03 * event.segmentStartTime)
-    payload.putString(EVENT_PROP_ERROR, event.error)
-    payload.putInt(EVENT_PROP_RETRYCOUNT, event.retryCount)
-    receiveEvent(EVENT_SEGMENTNOTFOUND, payload)
+    receiveEvent(
+      EVENT_SEGMENTNOTFOUND,
+      PayloadBuilder().segmentNotFound(event.segmentStartTime, event.error, event.retryCount)
+        .build()
+    )
   }
 
   private fun onPresentationModeChange(event: PresentationModeChange) {
@@ -454,50 +403,44 @@ class PlayerEventEmitter internal constructor(
   }
 
   private fun onVolumeChange(event: VolumeChangeEvent) {
-    val payload = Arguments.createMap()
-    payload.putDouble(EVENT_PROP_VOLUME, event.volume)
-    payload.putBoolean(EVENT_PROP_MUTED, playerView.player?.isMuted ?: false)
-    receiveEvent(EVENT_VOLUMECHANGE, payload)
+    receiveEvent(
+      EVENT_VOLUMECHANGE,
+      PayloadBuilder().volume(event.volume, playerView.player?.isMuted ?: false).build()
+    )
   }
 
   private val onTextTrackAddCue = EventListener<AddCueEvent> { event ->
-    val payload = Arguments.createMap()
-    payload.putInt(EVENT_PROP_TRACK_UID, event.track.uid)
-    payload.putInt(EVENT_PROP_TYPE, TextTrackCueEventType.ADD_CUE.type)
-    payload.putMap(EVENT_PROP_CUE, trackListAdapter.fromTextTrackCue(event.cue))
+    val payload = PayloadBuilder().textTrackCue(event.cue, event.track).build().apply {
+      putInt(EVENT_PROP_TYPE, TextTrackCueEventType.ADD_CUE.type)
+    }
     receiveEvent(EVENT_TEXTTRACK_EVENT, payload)
   }
 
   private val onTextTrackRemoveCue = EventListener<RemoveCueEvent> { event ->
-    val payload = Arguments.createMap()
-    payload.putInt(EVENT_PROP_TRACK_UID, event.track.uid)
-    payload.putInt(EVENT_PROP_TYPE, TextTrackCueEventType.REMOVE_CUE.type)
-    payload.putMap(EVENT_PROP_CUE, trackListAdapter.fromTextTrackCue(event.cue))
+    val payload = PayloadBuilder().textTrackCue(event.cue, event.track).build().apply {
+      putInt(EVENT_PROP_TYPE, TextTrackCueEventType.REMOVE_CUE.type)
+    }
     receiveEvent(EVENT_TEXTTRACK_EVENT, payload)
   }
 
   private val onTextTrackEnterCue = EventListener<EnterCueEvent> { event ->
-    val payload = Arguments.createMap()
-    // TODO
-    // payload.putInt(EVENT_PROP_TRACK_UID, event.track.uid)
-    payload.putInt(EVENT_PROP_TYPE, TextTrackCueEventType.ENTER_CUE.type)
-    payload.putMap(EVENT_PROP_CUE, trackListAdapter.fromTextTrackCue(event.cue))
+    val payload = PayloadBuilder().textTrackCue(event.cue, null /*TODO*/).build().apply {
+      putInt(EVENT_PROP_TYPE, TextTrackCueEventType.ENTER_CUE.type)
+    }
     receiveEvent(EVENT_TEXTTRACK_EVENT, payload)
   }
 
   private val onTextTrackExitCue = EventListener<ExitCueEvent> { event ->
-    val payload = Arguments.createMap()
-    // TODO
-    // payload.putInt(EVENT_PROP_TRACK_UID, event.track.uid)
-    payload.putInt(EVENT_PROP_TYPE, TextTrackCueEventType.EXIT_CUE.type)
-    payload.putMap(EVENT_PROP_CUE, trackListAdapter.fromTextTrackCue(event.cue))
+    val payload = PayloadBuilder().textTrackCue(event.cue, null /*TODO*/).build().apply {
+      putInt(EVENT_PROP_TYPE, TextTrackCueEventType.EXIT_CUE.type)
+    }
     receiveEvent(EVENT_TEXTTRACK_EVENT, payload)
   }
 
   private fun dispatchTextTrackEvent(eventType: TrackEventType, textTrack: TextTrack) {
-    val payload = Arguments.createMap()
-    payload.putMap(EVENT_PROP_TRACK, trackListAdapter.fromTextTrack(textTrack))
-    payload.putInt(EVENT_PROP_TYPE, eventType.type)
+    val payload = PayloadBuilder().textTrack(textTrack).build().apply {
+      putInt(EVENT_PROP_TYPE, eventType.type)
+    }
     when (eventType) {
       TrackEventType.ADD_TRACK -> {
         textTrack.addEventListener(TextTrackEventTypes.ADDCUE, onTextTrackAddCue)
@@ -554,15 +497,11 @@ class PlayerEventEmitter internal constructor(
   private val onActiveQualityChanged = EventListener<QualityChangedEvent<*, *>> { event ->
     val quality = event.quality
     val trackType = if (quality is AudioQuality) MediaTrackType.AUDIO else MediaTrackType.VIDEO
-    val payload = Arguments.createMap()
-    payload.putInt(EVENT_PROP_TYPE, MediaTrackEventType.ACTIVE_QUALITY_CHANGED.type)
-    payload.putInt(EVENT_PROP_TRACK_TYPE, trackType.type)
     val activeTrack =
       if (trackType === MediaTrackType.AUDIO) activeAudioTrack() else activeVideoTrack()
-    if (activeTrack != null) {
-      payload.putInt(EVENT_PROP_TRACK_UID, activeTrack.uid)
+    val payload = PayloadBuilder().mediaTrackQualities(event.quality, activeTrack).build().apply {
+      putInt(EVENT_PROP_TYPE, MediaTrackEventType.ACTIVE_QUALITY_CHANGED.type)
     }
-    payload.putMap(EVENT_PROP_QUALITIES, trackListAdapter.fromQuality(quality))
     receiveEvent(EVENT_MEDIATRACK_EVENT, payload)
   }
 
@@ -571,10 +510,9 @@ class PlayerEventEmitter internal constructor(
     trackType: MediaTrackType,
     track: MediaTrack<Q>
   ) {
-    val payload = Arguments.createMap()
-    payload.putInt(EVENT_PROP_TYPE, eventType.type)
-    payload.putInt(EVENT_PROP_TRACK_TYPE, trackType.type)
-    payload.putMap(EVENT_PROP_TRACK, trackListAdapter.fromMediaTrack(track, trackType))
+    val payload = PayloadBuilder().mediaTrack(trackType, track).build().apply {
+      putInt(EVENT_PROP_TYPE, eventType.type)
+    }
     val qualityChangedEventType =
       (if (trackType === MediaTrackType.AUDIO)
         AudioTrackEventTypes.ACTIVEQUALITYCHANGEDEVENT
@@ -592,6 +530,33 @@ class PlayerEventEmitter internal constructor(
       }
     }
     receiveEvent(EVENT_MEDIATRACK_LIST_EVENT, payload)
+  }
+
+  private fun getSelectedTextTrack(player: Player): TextTrack? {
+    for (track in player.textTracks) {
+      if (track.mode == TextTrackMode.SHOWING) {
+        return track
+      }
+    }
+    return null
+  }
+
+  private fun getSelectedAudioTrack(player: Player): MediaTrack<AudioQuality>? {
+    for (track in player.audioTracks) {
+      if (track.isEnabled) {
+        return track
+      }
+    }
+    return null
+  }
+
+  private fun getSelectedVideoTrack(player: Player): MediaTrack<VideoQuality>? {
+    for (track in player.videoTracks) {
+      if (track.isEnabled) {
+        return track
+      }
+    }
+    return null
   }
 
   private fun onAudioTrackAdd(event: com.theoplayer.android.api.event.track.mediatrack.audio.list.AddTrackEvent) {
@@ -680,10 +645,10 @@ class PlayerEventEmitter internal constructor(
     }
   }
 
-  fun removeListeners(player: Player) {
+  fun removeListeners(player: Player?) {
     // Remove player listeners
     for ((key, value) in playerListeners) {
-      player.removeEventListener(
+      player?.removeEventListener(
         key as EventType<PlayerEvent<*>>,
         value as EventListener<PlayerEvent<*>>
       )
@@ -691,7 +656,7 @@ class PlayerEventEmitter internal constructor(
 
     // Remove text track listeners
     for ((key, value) in textTrackListeners) {
-      player.textTracks.removeEventListener(
+      player?.textTracks?.removeEventListener(
         key as EventType<TrackListEvent<*, *>>,
         value as EventListener<TrackListEvent<*, *>>
       )
@@ -699,7 +664,7 @@ class PlayerEventEmitter internal constructor(
 
     // Remove audio track listeners
     for ((key, value) in audioTrackListeners) {
-      player.audioTracks.removeEventListener(
+      player?.audioTracks?.removeEventListener(
         key as EventType<TrackListEvent<*, *>>,
         value as EventListener<TrackListEvent<*, *>>
       )
@@ -707,7 +672,7 @@ class PlayerEventEmitter internal constructor(
 
     // Remove video track listeners
     for ((key, value) in videoTrackListeners) {
-      player.videoTracks.removeEventListener(
+      player?.videoTracks?.removeEventListener(
         key as EventType<TrackListEvent<*, *>>,
         value as EventListener<TrackListEvent<*, *>>
       )
