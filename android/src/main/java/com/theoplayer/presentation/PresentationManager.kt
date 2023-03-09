@@ -27,7 +27,6 @@ class PresentationManager(
   private val view: THEOplayerView,
   private val reactContext: ThemedReactContext,
   private val eventEmitter: PlayerEventEmitter,
-  private val config: PresentationConfig,
 ) {
   private var fullscreen = false
   private var canDoPip = false
@@ -35,11 +34,13 @@ class PresentationManager(
   private var onUserLeaveHintReceiver: BroadcastReceiver? = null
   private var onPictureInPictureModeChanged: BroadcastReceiver? = null
 
+  var pipConfig: PipConfig = PipConfig()
+
   init {
     onUserLeaveHintReceiver = object : BroadcastReceiver() {
       override fun onReceive(context: Context?, intent: Intent?) {
         // Optionally into PiP mode when the app goes to background.
-        if (config.canStartPictureInPictureAutomaticallyFromInline == true) {
+        if (pipConfig.startsAutomatically == true) {
           setPresentation(PresentationMode.PICTURE_IN_PICTURE)
         }
       }
@@ -77,7 +78,7 @@ class PresentationManager(
     get() =
       Build.VERSION.SDK_INT < Build.VERSION_CODES.N ||
         (reactContext.currentActivity?.isInPictureInPictureMode != true &&
-          config.canStartPictureInPictureAutomaticallyFromInline != true)
+          pipConfig.startsAutomatically != true)
 
   fun onDestroy() {
     try {
