@@ -20,7 +20,6 @@ import type {
   TextTrackListEvent,
   THEOplayer,
   THEOplayerView,
-  TimeRange,
   TimeUpdateEvent,
 } from 'react-native-theoplayer';
 import {
@@ -41,40 +40,45 @@ import { AbrAdapter } from './abr/AbrAdapter';
 import { NativeModules, Platform } from 'react-native';
 import { TextTrackStyleAdapter } from './track/TextTrackStyleAdapter';
 import type { BackgroundAudioConfiguration } from 'src/api/backgroundAudio/BackgroundAudioConfiguration';
+import type { NativePlayerState } from './NativePlayerState';
+
+const defaultPlayerState: NativePlayerState = {
+  source: undefined,
+  autoplay: false,
+  paused: false,
+  seekable: [],
+  buffered: [],
+  pipConfig: { startsAutomatically: false, requiresLinearPlayback: false },
+  backgroundAudioConfig: { enabled: false },
+  presentationMode: 'inline',
+  muted: false,
+  seeking: false,
+  volume: 1,
+  currentTime: 0,
+  duration: NaN,
+  playbackRate: 1,
+  preload: 'none',
+  audioTracks: [],
+  videoTracks: [],
+  textTracks: [],
+  targetVideoQuality: undefined,
+  selectedVideoTrack: undefined,
+  selectedAudioTrack: undefined,
+  selectedTextTrack: undefined,
+};
 
 export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayer {
   private readonly _view: THEOplayerView;
+  private readonly _state: NativePlayerState;
   private readonly _adsAdapter: THEOplayerNativeAdsAdapter;
   private readonly _castAdapter: THEOplayerNativeCastAdapter;
   private readonly _abrAdapter: AbrAdapter;
   private readonly _textTrackStyleAdapter: TextTrackStyleAdapter;
 
-  private _source: SourceDescription | undefined = undefined;
-  private _autoplay = false;
-  private _paused = false;
-  private _seekable: TimeRange[] = [];
-  private _buffered: TimeRange[] = [];
-  private _pipConfig: PiPConfiguration = { startsAutomatically: false, requiresLinearPlayback: false }
-  private _backgroundAudioConfig: BackgroundAudioConfiguration = { enabled: false }
-  private _presentationMode: PresentationMode = 'inline';
-  private _muted = false;
-  private _seeking = false;
-  private _volume = 1;
-  private _currentTime = 0;
-  private _duration = NaN;
-  private _playbackRate = 1;
-  private _preload: PreloadType = 'none';
-  private _audioTracks: MediaTrack[] = [];
-  private _videoTracks: MediaTrack[] = [];
-  private _textTracks: TextTrack[] = [];
-  private _targetVideoQuality: number | number[] | undefined = undefined;
-  private _selectedVideoTrack: number | undefined = undefined;
-  private _selectedAudioTrack: number | undefined = undefined;
-  private _selectedTextTrack: number | undefined = undefined;
-
-  constructor(view: THEOplayerView) {
+  constructor(view: THEOplayerView, initialState: NativePlayerState = defaultPlayerState) {
     super();
     this._view = view;
+    this._state = { ...initialState };
     this._adsAdapter = new THEOplayerNativeAdsAdapter(this._view);
     this._castAdapter = new THEOplayerNativeCastAdapter(this._view);
     this._abrAdapter = new AbrAdapter(this._view);
@@ -97,7 +101,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   }
 
   private onSourceChange = () => {
-    if (this._autoplay) {
+    if (this._state.autoplay) {
       this.play();
     } else {
       this.pause();
@@ -105,72 +109,71 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   };
 
   private onPause = () => {
-    this._paused = true;
+    this._state.paused = true;
   };
 
   private onPlaying = () => {
-    this._paused = false;
+    this._state.paused = false;
   };
 
   private onPresentationModeChange = (event: PresentationModeChangeEvent) => {
-    this._presentationMode = event.presentationMode;
-    console.log(JSON.stringify(event, null, 4));
+    this._state.presentationMode = event.presentationMode;
   };
 
   private onTimeupdate = (event: TimeUpdateEvent) => {
-    this._currentTime = event.currentTime;
+    this._state.currentTime = event.currentTime;
   };
 
   private onLoadedMetadata = (event: LoadedMetadataEvent) => {
-    this._duration = event.duration;
-    this._audioTracks = event.audioTracks;
-    this._videoTracks = event.videoTracks;
-    this._textTracks = event.textTracks;
-    this._selectedAudioTrack = event.selectedAudioTrack;
-    this._selectedVideoTrack = event.selectedVideoTrack;
-    this._selectedTextTrack = event.selectedTextTrack;
+    this._state.duration = event.duration;
+    this._state.audioTracks = event.audioTracks;
+    this._state.videoTracks = event.videoTracks;
+    this._state.textTracks = event.textTracks;
+    this._state.selectedAudioTrack = event.selectedAudioTrack;
+    this._state.selectedVideoTrack = event.selectedVideoTrack;
+    this._state.selectedTextTrack = event.selectedTextTrack;
   };
 
   private onDurationChange = (event: DurationChangeEvent) => {
-    this._duration = event.duration;
+    this._state.duration = event.duration;
   };
 
   private onRateChange = (event: RateChangeEvent) => {
-    this._playbackRate = event.playbackRate;
+    this._state.playbackRate = event.playbackRate;
   };
 
   private onSeeking = () => {
-    this._seeking = true;
+    this._state.seeking = true;
   };
 
   private onSeeked = () => {
-    this._seeking = false;
+    this._state.seeking = false;
   };
 
   private onProgress = (event: ProgressEvent) => {
-    this._seekable = event.seekable;
-    this._buffered = event.buffered;
+    this._state.seekable = event.seekable;
+    this._state.buffered = event.buffered;
   };
 
   private onTextTrackList = (event: TextTrackListEvent) => {
     const { subType, track } = event;
     switch (subType) {
       case TrackListEventType.ADD_TRACK:
-        this._textTracks = addTrack(this._textTracks, track);
+        this._state.textTracks = addTrack(this._state.textTracks, track);
         break;
       case TrackListEventType.REMOVE_TRACK:
-        this._textTracks = removeTrack(this._textTracks, track);
+        this._state.textTracks = removeTrack(this._state.textTracks, track);
         break;
       case TrackListEventType.CHANGE_TRACK:
-        this._textTracks = removeTrack(this._textTracks, track);
-        this._textTracks = addTrack(this._textTracks, track);
+        this._state.textTracks = removeTrack(this._state.textTracks, track);
+        this._state.textTracks = addTrack(this._state.textTracks, track);
         break;
     }
   };
 
   private onMediaTrack = (event: MediaTrackEvent) => {
     const { subType, trackType, trackUid } = event;
-    const tracks = trackType === MediaTrackType.VIDEO ? this._videoTracks : this._audioTracks;
+    const tracks = trackType === MediaTrackType.VIDEO ? this._state.videoTracks : this._state.audioTracks;
     const track = findMediaTrackByUid(tracks, trackUid);
     switch (subType) {
       case MediaTrackEventType.ACTIVE_QUALITY_CHANGED:
@@ -188,25 +191,25 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     switch (subType) {
       case TrackListEventType.ADD_TRACK:
         if (isAudio) {
-          this._audioTracks = addTrack(this._audioTracks, track);
+          this._state.audioTracks = addTrack(this._state.audioTracks, track);
         } else {
-          this._videoTracks = addTrack(this._videoTracks, track);
+          this._state.videoTracks = addTrack(this._state.videoTracks, track);
         }
         break;
       case TrackListEventType.REMOVE_TRACK:
         if (isAudio) {
-          this._audioTracks = removeTrack(this._audioTracks, track);
+          this._state.audioTracks = removeTrack(this._state.audioTracks, track);
         } else {
-          this._videoTracks = removeTrack(this._videoTracks, track);
+          this._state.videoTracks = removeTrack(this._state.videoTracks, track);
         }
         break;
       case TrackListEventType.CHANGE_TRACK:
         if (isAudio) {
-          this._audioTracks = removeTrack(this._audioTracks, track);
-          this._audioTracks = addTrack(this._audioTracks, track);
+          this._state.audioTracks = removeTrack(this._state.audioTracks, track);
+          this._state.audioTracks = addTrack(this._state.audioTracks, track);
         } else {
-          this._videoTracks = removeTrack(this._videoTracks, track);
-          this._videoTracks = addTrack(this._videoTracks, track);
+          this._state.videoTracks = removeTrack(this._state.videoTracks, track);
+          this._state.videoTracks = addTrack(this._state.videoTracks, track);
         }
         break;
     }
@@ -221,29 +224,29 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   }
 
   set autoplay(autoplay: boolean) {
-    this._autoplay = autoplay;
+    this._state.autoplay = autoplay;
     NativeModules.PlayerModule.setPaused(this._view.nativeHandle, !autoplay);
   }
 
   get autoplay(): boolean {
-    return this._autoplay;
+    return this._state.autoplay;
   }
 
   set preload(type: PreloadType) {
-    this._preload = type;
+    this._state.preload = type;
     NativeModules.PlayerModule.setPreload(this._view.nativeHandle, type);
   }
 
   get preload(): PreloadType {
-    return this._preload;
+    return this._state.preload;
   }
 
   get seekable() {
-    return this._seekable;
+    return this._state.seekable;
   }
 
   get buffered() {
-    return this._buffered;
+    return this._state.buffered;
   }
 
   get cast(): CastAPI {
@@ -251,108 +254,108 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   }
 
   get currentTime(): number {
-    return this._currentTime;
+    return this._state.currentTime;
   }
 
   set currentTime(currentTime: number) {
-    this._currentTime = currentTime;
+    this._state.currentTime = currentTime;
     NativeModules.PlayerModule.setCurrentTime(this._view.nativeHandle, currentTime);
   }
 
   get duration(): number {
-    return this._duration;
+    return this._state.duration;
   }
 
   get pipConfiguration(): PiPConfiguration {
-    return this._pipConfig;
+    return this._state.pipConfig;
   }
 
   set pipConfiguration(pipConfiguration: PiPConfiguration) {
-    this._pipConfig = pipConfiguration;
+    this._state.pipConfig = pipConfiguration;
     NativeModules.PlayerModule.setPipConfig(this._view.nativeHandle, pipConfiguration);
   }
 
   get backgroundAudioConfiguration(): BackgroundAudioConfiguration {
-    return this._backgroundAudioConfig;
+    return this._state.backgroundAudioConfig;
   }
 
   set backgroundAudioConfiguration(backgroundAudioConfiguration: BackgroundAudioConfiguration) {
-    this._backgroundAudioConfig = backgroundAudioConfiguration;
+    this._state.backgroundAudioConfig = backgroundAudioConfiguration;
     NativeModules.PlayerModule.setBackgroundAudioConfig(this._view.nativeHandle, backgroundAudioConfiguration);
   }
 
   get presentationMode(): PresentationMode {
-    return this._presentationMode;
+    return this._state.presentationMode;
   }
 
   set presentationMode(presentationMode: PresentationMode) {
-    this._presentationMode = presentationMode;
+    this._state.presentationMode = presentationMode;
     NativeModules.PlayerModule.setPresentationMode(this._view.nativeHandle, presentationMode);
   }
 
   get muted(): boolean {
-    return this._muted;
+    return this._state.muted;
   }
 
   set muted(muted: boolean) {
-    this._muted = muted;
+    this._state.muted = muted;
     NativeModules.PlayerModule.setMuted(this._view.nativeHandle, muted);
   }
 
   get seeking(): boolean {
-    return this._seeking;
+    return this._state.seeking;
   }
 
   get paused(): boolean {
-    return this._paused;
+    return this._state.paused;
   }
 
   get playbackRate(): number {
-    return this._playbackRate;
+    return this._state.playbackRate;
   }
 
   set playbackRate(playbackRate: number) {
-    this._playbackRate = playbackRate;
+    this._state.playbackRate = playbackRate;
     NativeModules.PlayerModule.setPlaybackRate(this._view.nativeHandle, playbackRate);
   }
 
   get audioTracks(): MediaTrack[] {
-    return this._audioTracks;
+    return this._state.audioTracks;
   }
 
   get selectedAudioTrack(): number | undefined {
-    return this._selectedAudioTrack;
+    return this._state.selectedAudioTrack;
   }
 
   set selectedAudioTrack(trackUid: number | undefined) {
-    this._selectedAudioTrack = trackUid;
+    this._state.selectedAudioTrack = trackUid;
     NativeModules.PlayerModule.setSelectedAudioTrack(this._view.nativeHandle, trackUid || -1);
   }
 
   get videoTracks(): MediaTrack[] {
-    return this._videoTracks;
+    return this._state.videoTracks;
   }
 
   get selectedVideoTrack(): number | undefined {
-    return this._selectedVideoTrack;
+    return this._state.selectedVideoTrack;
   }
 
   set selectedVideoTrack(trackUid: number | undefined) {
-    this._selectedVideoTrack = trackUid;
-    this._targetVideoQuality = undefined;
+    this._state.selectedVideoTrack = trackUid;
+    this._state.targetVideoQuality = undefined;
     NativeModules.PlayerModule.setSelectedVideoTrack(this._view.nativeHandle, trackUid || -1);
   }
 
   get textTracks(): TextTrack[] {
-    return this._textTracks;
+    return this._state.textTracks;
   }
 
   get selectedTextTrack(): number | undefined {
-    return this._selectedTextTrack;
+    return this._state.selectedTextTrack;
   }
 
   set selectedTextTrack(trackUid: number | undefined) {
-    this._selectedTextTrack = trackUid;
+    this._state.selectedTextTrack = trackUid;
     this.textTracks.forEach((track) => {
       if (track.uid == trackUid) {
         track.mode = TextTrackMode.showing;
@@ -368,64 +371,70 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   }
 
   get source(): SourceDescription | undefined {
-    return this._source;
+    return this._state.source;
   }
 
   set source(source: SourceDescription | undefined) {
     // This is to correctly reset autoplay during a source change.
     this.pause();
-    this._source = source;
+    this._state.source = source;
     NativeModules.PlayerModule.setSource(this._view.nativeHandle, source);
-    // Reset state for playout of new source
-    this._playbackRate = 1;
-    this._seeking = false;
-    this._audioTracks = [];
-    this._videoTracks = [];
-    this._textTracks = [];
-    this._seekable = [];
-    this._buffered = [];
-    this._selectedTextTrack = undefined;
-    this._selectedVideoTrack = undefined;
-    this._selectedAudioTrack = undefined;
-    this._targetVideoQuality = undefined;
+    // Reset state for play-out of new source
+    Object.assign(this._state, {
+      playbackRate: 1,
+      seeking: false,
+      audioTracks: [],
+      videoTracks: [],
+      textTracks: [],
+      seekable: [],
+      buffered: [],
+      selectedTextTrack: undefined,
+      selectedVideoTrack: undefined,
+      selectedAudioTrack: undefined,
+      targetVideoQuality: undefined,
+    });
   }
 
   get targetVideoQuality(): number | number[] | undefined {
-    return this._targetVideoQuality;
+    return this._state.targetVideoQuality;
   }
 
   set targetVideoQuality(target: number | number[] | undefined) {
     // Always pass an array for targetVideoQuality.
-    this._targetVideoQuality = !target ? [] : Array.isArray(target) ? target : [target];
+    this._state.targetVideoQuality = !target ? [] : Array.isArray(target) ? target : [target];
 
     // Update local state
-    const track = findMediaTrackByUid(this._videoTracks, this.selectedVideoTrack);
+    const track = findMediaTrackByUid(this._state.videoTracks, this.selectedVideoTrack);
     if (track) {
-      Object.assign(track, { ...track, targetQuality: this._targetVideoQuality });
+      Object.assign(track, { ...track, targetQuality: this._state.targetVideoQuality });
     }
-    NativeModules.PlayerModule.setTargetVideoQuality(this._view.nativeHandle, this._targetVideoQuality);
+    NativeModules.PlayerModule.setTargetVideoQuality(this._view.nativeHandle, this._state.targetVideoQuality);
   }
 
   get volume(): number {
-    return this._volume;
+    return this._state.volume;
   }
 
   set volume(volume: number) {
-    this._volume = volume;
+    this._state.volume = volume;
     NativeModules.PlayerModule.setVolume(this._view.nativeHandle, volume);
   }
 
   pause(): void {
-    this._paused = true;
+    this._state.paused = true;
     NativeModules.PlayerModule.setPaused(this._view.nativeHandle, true);
   }
 
   play(): void {
-    this._paused = false;
+    this._state.paused = false;
     NativeModules.PlayerModule.setPaused(this._view.nativeHandle, false);
   }
 
   get nativeHandle(): NativeHandleType {
     return this._view.nativeHandle;
+  }
+
+  applyNativeState(state: NativePlayerState) {
+    Object.assign(this._state, state);
   }
 }
