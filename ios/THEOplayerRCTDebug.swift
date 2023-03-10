@@ -35,3 +35,6 @@ let DEBUG_NOWINFO = DEBUG && false
 
 // Debug flag to monitor Remote Commands updates
 let DEBUG_REMOTECOMMANDS = DEBUG && true
+
+// Debug flag to monitor PIP Controls updates
+let DEBUG_PIPCONTROLS = DEBUG && true
