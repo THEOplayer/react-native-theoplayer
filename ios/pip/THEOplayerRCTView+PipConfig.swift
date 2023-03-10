@@ -9,6 +9,7 @@ struct PipConfig {
     var canStartPictureInPictureAutomaticallyFromInline: Bool = false   // external config
 }
 
+
 extension THEOplayerRCTView: AVPictureInPictureControllerDelegate {
     
 #if os(iOS)
@@ -36,15 +37,16 @@ extension THEOplayerRCTView: AVPictureInPictureControllerDelegate {
         }
     }
     
+    // MARK: - AVPictureInPictureControllerDelegate
     @available(tvOS 14.0, *)
     public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         self.presentationModeContext.pipContext = .PIP_CLOSED
-        if #available(iOS 14.0, *) {
-            if let player = self.player,
-               let duration = player.duration {
-                pictureInPictureController.requiresLinearPlayback = duration.isInfinite
-            }
-        }
+        self.pipControlsManager.setNativePictureInPictureController(pictureInPictureController)
+    }
+    
+    @available(tvOS 14.0, *)
+    public func pictureInPictureControllerWillStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        self.pipControlsManager.setNativePictureInPictureController(nil)
     }
     
     @available(tvOS 14.0, *)

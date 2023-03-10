@@ -14,6 +14,7 @@ public class THEOplayerRCTView: UIView {
     var castEventHandler: THEOplayerRCTCastEventHandler
     var nowPlayingManager: THEOplayerRCTNowPlayingManager
     var remoteCommandsManager: THEOplayerRCTRemoteCommandsManager
+    var pipControlsManager: THEOplayerRCTPipControlsManager
     var adsConfig = AdsConfig()
     var castConfig = CastConfig()
     var pipConfig = PipConfig()
@@ -39,6 +40,7 @@ public class THEOplayerRCTView: UIView {
         self.castEventHandler = THEOplayerRCTCastEventHandler()
         self.nowPlayingManager = THEOplayerRCTNowPlayingManager()
         self.remoteCommandsManager = THEOplayerRCTRemoteCommandsManager()
+        self.pipControlsManager = THEOplayerRCTPipControlsManager()
         
         super.init(frame: .zero)
     }
@@ -68,6 +70,7 @@ public class THEOplayerRCTView: UIView {
             self.castEventHandler.setPlayer(player)
             self.nowPlayingManager.setPlayer(player)
             self.remoteCommandsManager.setPlayer(player)
+            self.pipControlsManager.setPlayer(player)
             // Attach player to view
             player.addAsSubview(of: self)
         }
@@ -119,6 +122,7 @@ public class THEOplayerRCTView: UIView {
         self.castEventHandler.destroy()
         self.nowPlayingManager.destroy()
         self.remoteCommandsManager.destroy()
+        self.pipControlsManager.destroy()
         
         self.player?.destroy()
         self.player = nil
