@@ -14,7 +14,10 @@ const playerConfig: PlayerConfiguration = {
       appID: 'CC1AD845',
     },
     strategy: 'auto',
-  }
+  },
+  mediaControl: {
+    mediaSessionEnabled: true,
+  },
 };
 
 export default function App() {

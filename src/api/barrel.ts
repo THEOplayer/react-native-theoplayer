@@ -5,6 +5,7 @@ export * from './pip/barrel';
 export * from './config/barrel';
 export * from './error/barrel';
 export * from './event/barrel';
+export * from './media/barrel';
 export * from './drm/barrel';
 export * from './source/barrel';
 export * from './timeranges/barrel';
