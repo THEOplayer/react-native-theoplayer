@@ -178,7 +178,8 @@ class PresentationManager(
           reactContext.packageName
         ) == AppOpsManager.MODE_ALLOWED
       } else {
-        @Suppress("DEPRECATION") appOps?.checkOpNoThrow(
+        @Suppress("DEPRECATION")
+        appOps?.checkOpNoThrow(
           AppOpsManager.OPSTR_PICTURE_IN_PICTURE,
           reactContext.applicationInfo.uid,
           reactContext.packageName
