@@ -30,24 +30,15 @@
     <!-- Allow background audio playback by registering this service. -->
     <service
       android:name="com.theoplayer.audio.MediaPlaybackService"
-      android:foregroundServiceType="mediaPlayback"
+      android:description="THEOplayer service providing background playback."
       android:enabled="true"
-      android:exported="false">
+      android:exported="false"
+      android:foregroundServiceType="mediaPlayback">
       <intent-filter>
         <action android:name="android.media.browse.MediaBrowserService" />
         <action android:name="android.intent.action.MEDIA_BUTTON" />
       </intent-filter>
     </service>
-
-    <!-- A media button receiver receives and helps translate hardware media playback buttons,
-such as those found on wired and wireless headsets, into the appropriate callbacks. -->
-    <receiver
-      android:name="androidx.media.session.MediaButtonReceiver"
-      android:exported="false">
-      <intent-filter>
-        <action android:name="android.intent.action.MEDIA_BUTTON" />
-      </intent-filter>
-    </receiver>
 
   </application>
 
