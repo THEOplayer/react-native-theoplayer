@@ -3,6 +3,7 @@
   <string name="pause">Pause</string>
   <string name="play">Play</string>
 
+  <string name="background_playback_service_description">THEOplayer service providing background playback.</string>
   <string name="notification_channel_id">theoplayer_default_channel</string>
   <string name="notification_channel_name" translatable="true">THEOplayer default channel</string>
 </resources>
