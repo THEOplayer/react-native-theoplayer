@@ -9,10 +9,14 @@ let DEFAULT_SKIP_INTERVAL: UInt = 15
 class THEOplayerRCTRemoteCommandsManager: NSObject {
     // MARK: Members
     private weak var player: THEOplayer?
+    private var isLive: Bool = false
+    private var inAd: Bool = false
     
     // MARK: player Listeners
     private var durationChangeListener: EventListener?
     private var sourceChangeListener: EventListener?
+    private var adBreakBeginListener: EventListener?
+    private var adBreakEndListener: EventListener?
     
     // MARK: - destruction
     func destroy() {
@@ -30,6 +34,8 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     }
     
     private func initRemoteCommands() {
+        self.isLive = false
+        self.inAd = false
         let commandCenter = MPRemoteCommandCenter.shared()
         
         commandCenter.playCommand.isEnabled = true
@@ -45,35 +51,25 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         commandCenter.togglePlayPauseCommand.addTarget(self, action: #selector(onTogglePlayPauseCommand(_:)))
         // STOP
         commandCenter.stopCommand.addTarget(self, action: #selector(onStopCommand(_:)))
+        // ADD SEEK FORWARD
+        commandCenter.skipForwardCommand.preferredIntervals = [NSNumber(value: DEFAULT_SKIP_INTERVAL)]
+        commandCenter.skipForwardCommand.addTarget(self, action: #selector(onSkipForwardCommand(_:)))
+        // ADD SEEK BACKWARD
+        commandCenter.skipBackwardCommand.preferredIntervals = [NSNumber(value: DEFAULT_SKIP_INTERVAL)]
+        commandCenter.skipBackwardCommand.addTarget(self, action: #selector(onSkipBackwardCommand(_:)))
         
         if DEBUG_REMOTECOMMANDS { print("[NATIVE] Remote commands initialised.") }
     }
     
-    private func updateRemoteCommands(isLive: Bool = false) {
+    private func updateRemoteCommands() {
         let commandCenter = MPRemoteCommandCenter.shared()
-        
-        // enable triackplay commands only for non-linear playback
-        commandCenter.skipForwardCommand.isEnabled = !isLive
-        commandCenter.skipBackwardCommand.isEnabled = !isLive
-        
-        if isLive {
-            // REMOVE SKIP FORWARD
-            commandCenter.skipForwardCommand.removeTarget(self)
-            // REMOVE SKIP BACKWARD
-            commandCenter.skipBackwardCommand.removeTarget(self)
-            
-            if DEBUG_REMOTECOMMANDS { print("[NATIVE] Remote commands updated to linear playback") }
-        } else {
-            // ADD SEEK FORWARD
-            commandCenter.skipForwardCommand.preferredIntervals = [NSNumber(value: DEFAULT_SKIP_INTERVAL)]
-            commandCenter.skipForwardCommand.addTarget(self, action: #selector(onSkipForwardCommand(_:)))
-            // ADD SEEK BACKWARD
-            commandCenter.skipBackwardCommand.preferredIntervals = [NSNumber(value: DEFAULT_SKIP_INTERVAL)]
-            commandCenter.skipBackwardCommand.addTarget(self, action: #selector(onSkipBackwardCommand(_:)))
-            
-            
-            if DEBUG_REMOTECOMMANDS { print("[NATIVE] Remote commands updated to non-linear playback") }
-        }
+        commandCenter.playCommand.isEnabled = !self.inAd
+        commandCenter.pauseCommand.isEnabled = !self.inAd
+        commandCenter.togglePlayPauseCommand.isEnabled = !self.inAd
+        commandCenter.stopCommand.isEnabled = !self.inAd
+        commandCenter.skipForwardCommand.isEnabled = !isLive && !self.inAd
+        commandCenter.skipBackwardCommand.isEnabled = !isLive && !self.inAd
+        if DEBUG_REMOTECOMMANDS { print("[NATIVE] Remote commands updated for \(self.isLive ? "LIVE" : "VOD") (\(self.inAd ? "AD IS PLAYING" : "NO AD PLAYING")).") }
     }
     
     @objc private func onPlayCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
@@ -160,14 +156,32 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         // DURATION_CHANGE
         self.durationChangeListener = player.addEventListener(type: PlayerEventTypes.DURATION_CHANGE) { [weak self] event in
             if let duration = event.duration {
-                self?.updateRemoteCommands(isLive: duration.isInfinite)
+                self?.isLive = duration.isInfinite
+                self?.updateRemoteCommands()
             }
         }
         
         // SOURCE_CHANGE
         self.sourceChangeListener = player.addEventListener(type: PlayerEventTypes.SOURCE_CHANGE) { [weak self] event in
+            self?.isLive = false
+            self?.inAd = false
             self?.updateRemoteCommands()
         }
+        
+#if (GOOGLE_IMA || GOOGLE_DAI) || canImport(GoogleIMAIntegration)
+        
+        // ADBREAK_BEGIN
+        self.adBreakBeginListener = player.ads.addEventListener(type: AdsEventTypes.AD_BREAK_BEGIN) { [weak self] event in
+            self?.inAd = true
+        }
+        
+        // ADBREAK_END
+        self.adBreakEndListener = player.ads.addEventListener(type: AdsEventTypes.AD_BREAK_END) { [weak self] event in
+            self?.inAd = false
+        }
+        
+#endif
+        
     }
     
     private func dettachListeners() {
@@ -184,6 +198,21 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         if let sourceChangeListener = self.sourceChangeListener {
             player.removeEventListener(type: PlayerEventTypes.SOURCE_CHANGE, listener: sourceChangeListener)
         }
+        
+#if (GOOGLE_IMA || GOOGLE_DAI) || canImport(GoogleIMAIntegration)
+        
+        // ADBREAK_BEGIN
+        if let adBreakBeginListener = self.adBreakBeginListener {
+            player.ads.removeEventListener(type: AdsEventTypes.AD_BREAK_BEGIN, listener: adBreakBeginListener)
+        }
+        
+        // ADBREAK_END
+        if let adBreakEndListener = self.adBreakEndListener {
+            player.ads.removeEventListener(type: AdsEventTypes.AD_BREAK_END, listener: adBreakEndListener)
+        }
+        
+#endif
+        
     }
     
 }
