@@ -1,5 +1,6 @@
 import type { AdsConfiguration } from '../ads/AdsConfiguration';
 import type { CastConfiguration } from '../cast/CastConfiguration';
+import type { MediaControlConfiguration } from '../media/MediaControlConfiguration';
 
 export interface PlayerConfiguration {
   /**
@@ -33,6 +34,11 @@ export interface PlayerConfiguration {
    * The cast configuration for the player.
    */
   cast?: CastConfiguration;
+
+  /**
+   * The configuration of media controls and media sessions across platforms.
+   */
+  mediaControl?: MediaControlConfiguration;
 
   /**
    * The license for the player
