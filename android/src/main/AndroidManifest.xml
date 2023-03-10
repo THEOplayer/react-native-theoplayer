@@ -30,7 +30,7 @@
     <!-- Allow background audio playback by registering this service. -->
     <service
       android:name="com.theoplayer.audio.MediaPlaybackService"
-      android:description="THEOplayer service providing background playback."
+      android:description="@string/background_playback_service_description"
       android:enabled="true"
       android:exported="false"
       android:foregroundServiceType="mediaPlayback">
