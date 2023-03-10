@@ -33,6 +33,7 @@ class THEOplayerRCTNowPlayingManager {
     
     func updateNowPlaying() {
         // Reset any existing playing info
+        self.nowPlayingInfo = [:]
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
         
         // Gather new playing info
@@ -123,10 +124,10 @@ class THEOplayerRCTNowPlayingManager {
     private func updateCurrentTime(completion: (() -> Void)?) {
         if let player = self.player {
             player.requestCurrentTime(completionHandler: { [weak self] time, error in
-                DispatchQueue.main.async {
-                    if let welf = self,
-                       let currentTime = time {
-                        welf.nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = NSNumber(value: currentTime)
+                if let welf = self,
+                   let currentTime = time {
+                    welf.nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = NSNumber(value: currentTime)
+                    DispatchQueue.main.async {
                         completion?()
                     }
                 }
