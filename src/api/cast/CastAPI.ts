@@ -1,16 +1,15 @@
-import type {Airplay} from "./Airplay";
-import type {Chromecast} from "./Chromecast";
+import type { Airplay } from './Airplay';
+import type { Chromecast } from './Chromecast';
 
 /**
  * The API for casting.
  */
 
-
 export interface CastAPI {
   /**
    * Whether the player is connected with a casting device.
    */
-  casting(): Promise<boolean>;
+  readonly casting: boolean;
 
   /**
    * The Chromecast API.
