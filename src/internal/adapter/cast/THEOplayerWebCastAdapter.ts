@@ -9,8 +9,8 @@ export class THEOplayerWebCastAdapter implements CastAPI {
     this._player = player;
   }
 
-  casting(): Promise<boolean> {
-    return Promise.resolve(false);
+  get casting(): boolean {
+    return false;
   }
 
   get chromecast(): Chromecast | undefined {
