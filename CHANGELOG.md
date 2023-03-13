@@ -10,10 +10,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed an issue where the media session connector for Web would report an error when passing an Infinite duration for live streams.
+- Fixed an issue on iOS where ID3 metadata content would not be correctly passed to cue instances.
+- Fixed an issue on Android where the `'picture-in-picture'` permission was not checked.
+- Fixed an issue on Android where the aspect ratio of the `'picture-in-picture'` window could be outside the valid range.
 
 ### Changed
 
 - Replaced deprecated systemUiVisibility code in Android's PresentationManager.
+- Use `enum` types for `TextTrackMode`, `TextTrackType` and `TextTrackKind`.
+
+### Added
+
+- Added a `mediaControl` property to `PlayerConfiguration` to configure Media Session, Now Playing and Remote Command Center functionality across all platforms. It currently only contains a media session toggle for Web.
+- Added a `backgroundAudioConfiguration` property to `THEOplayer` to allow dynamically configuring background audio functionality.
+- Added a `pipConfiguration` property to `THEOplayer` to allow dynamically configuring picture-in-picture behavior.
+- Added support for background audio playback on iOS.
+- Added `keepScreenOn` as a default player view property on Android to keep the device awake.
 
 ## [Unreleased 2.0.0-pre6]
 

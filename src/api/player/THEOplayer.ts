@@ -154,12 +154,12 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
   currentTime: number;
 
   /**
-   * The avtive configuration for PiP.
+   * The active configuration for PiP.
    */
   pipConfiguration: PiPConfiguration;
 
   /**
-   * The avtive configuration for PiP.
+   * The active configuration for PiP.
    */
   backgroundAudioConfiguration: BackgroundAudioConfiguration;
 
