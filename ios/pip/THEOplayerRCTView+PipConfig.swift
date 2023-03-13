@@ -1,45 +1,56 @@
 // THEOplayerRCTView+Ads.swift
 
 import Foundation
+import AVKit
 import THEOplayerSDK
 
 struct PipConfig {
-    var retainPresentationModeOnSourceChange: Bool = false
-    var canStartPictureInPictureAutomaticallyFromInline: Bool = false
+    var retainPresentationModeOnSourceChange: Bool = false              // external config
+    var canStartPictureInPictureAutomaticallyFromInline: Bool = false   // external config
 }
 
-#if os(iOS)
 
-extension THEOplayerRCTView {
+extension THEOplayerRCTView: AVPictureInPictureControllerDelegate {
     
-    func parsePipConfig(configDict: NSDictionary) {
-        if let pipConfig = configDict["pip"] as? NSDictionary {
-            self.pipConfig.retainPresentationModeOnSourceChange = pipConfig["retainPresentationModeOnSourceChange"] as? Bool ?? false
-            self.pipConfig.canStartPictureInPictureAutomaticallyFromInline = pipConfig["canStartPictureInPictureAutomaticallyFromInline"] as? Bool ?? false
-        }
-    }
-
+#if os(iOS)
+    
     func playerPipConfiguration() -> PiPConfiguration? {
         return PiPConfiguration(retainPresentationModeOnSourceChange: self.pipConfig.retainPresentationModeOnSourceChange,
                                 nativePictureInPicture: true,
                                 canStartPictureInPictureAutomaticallyFromInline: self.pipConfig.canStartPictureInPictureAutomaticallyFromInline)
     }
-}
-
-#elseif os(tvOS)
-
-extension THEOplayerRCTView {
     
-    func parsePipConfig(configDict: NSDictionary) {
-        if let pipConfig = configDict["pip"] as? NSDictionary {
-            self.pipConfig.retainPresentationModeOnSourceChange = pipConfig["retainPresentationModeOnSourceChange"] as? Bool ?? false
-        }
-    }
+#elseif os(tvOS)
     
     func playerPipConfiguration() -> PiPConfiguration? {
         return PiPConfiguration(retainPresentationModeOnSourceChange: self.pipConfig.retainPresentationModeOnSourceChange)
     }
     
-}
-
 #endif
+    
+    func initPip() {
+        if let player = self.player,
+           var pipController = player.pip {
+            if #available(iOS 14.0, tvOS 14.0, *) {
+                pipController.nativePictureInPictureDelegate = self
+            }
+        }
+    }
+    
+    // MARK: - AVPictureInPictureControllerDelegate
+    @available(tvOS 14.0, *)
+    public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        self.presentationModeContext.pipContext = .PIP_CLOSED
+        self.pipControlsManager.setNativePictureInPictureController(pictureInPictureController)
+    }
+    
+    @available(tvOS 14.0, *)
+    public func pictureInPictureControllerWillStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        self.pipControlsManager.setNativePictureInPictureController(nil)
+    }
+    
+    @available(tvOS 14.0, *)
+    public func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
+        self.presentationModeContext.pipContext = .PIP_RESTORED
+    }
+}

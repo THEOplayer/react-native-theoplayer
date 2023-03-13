@@ -27,7 +27,6 @@ private const val PROP_AUDIO_SAMPLING_RATE = "audioSamplingRate"
 private const val PROP_BANDWIDTH = "bandwidth"
 private const val PROP_QUALITIES = "qualities"
 private const val PROP_ACTIVE_QUALITY = "activeQuality"
-private const val PROP_TARGET_QUALITY = "targetQuality"
 private const val PROP_WIDTH = "width"
 private const val PROP_HEIGHT = "height"
 private const val PROP_FRAMERATE = "frameRate"
@@ -36,12 +35,12 @@ private const val PROP_ENDTIME = "endTime"
 private const val PROP_CUES = "cues"
 private const val PROP_CUE_CONTENT = "content"
 
-class TrackListAdapter {
+object TrackListAdapter {
 
   fun fromTextTrackList(textTrackList: TextTrackList?): WritableArray {
     val textTracks = Arguments.createArray()
     textTrackList?.forEach { track ->
-        textTracks.pushMap(fromTextTrack(track))
+      textTracks.pushMap(fromTextTrack(track))
     }
     return textTracks
   }
@@ -76,11 +75,14 @@ class TrackListAdapter {
     val cuePayload = Arguments.createMap()
     cuePayload.putString(PROP_ID, cue.id)
     cuePayload.putDouble(PROP_UID, cue.uid.toDouble())
-    cuePayload.putDouble(PROP_STARTTIME, (1e03 * cue.startTime).toLong().toDouble())
-    cuePayload.putDouble(PROP_ENDTIME, (1e03 * cue.endTime).toLong().toDouble())
+    cuePayload.putDouble(PROP_STARTTIME, (1e3 * cue.startTime).toLong().toDouble())
+    cuePayload.putDouble(PROP_ENDTIME, (1e3 * cue.endTime).toLong().toDouble())
     val content = cue.content
     if (content != null) {
-      cuePayload.putString(PROP_CUE_CONTENT, content.optString("content"))
+      cuePayload.putString(
+        PROP_CUE_CONTENT,
+        content.optString("content") ?: content.optString("contentString")
+      )
     }
     return cuePayload
   }
@@ -103,6 +105,7 @@ class TrackListAdapter {
     return audioQualityPayload
   }
 
+  @Suppress("UNCHECKED_CAST")
   fun <Q : Quality?> fromMediaTrack(
     track: MediaTrack<Q>,
     trackType: MediaTrackType

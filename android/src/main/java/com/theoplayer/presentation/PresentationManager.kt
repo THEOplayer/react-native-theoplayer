@@ -23,11 +23,14 @@ import com.theoplayer.android.api.error.ErrorCode
 import com.theoplayer.android.api.error.THEOplayerException
 import com.theoplayer.android.api.player.PresentationMode
 
+private val PIP_ASPECT_RATIO_DEFAULT = Rational(16, 9)
+private val PIP_ASPECT_RATIO_MIN = Rational(100, 239)
+private val PIP_ASPECT_RATIO_MAX = Rational(239, 100)
+
 class PresentationManager(
   private val view: THEOplayerView,
   private val reactContext: ThemedReactContext,
   private val eventEmitter: PlayerEventEmitter,
-  private val config: PresentationConfig,
 ) {
   private var fullscreen = false
   private var canDoPip = false
@@ -35,11 +38,13 @@ class PresentationManager(
   private var onUserLeaveHintReceiver: BroadcastReceiver? = null
   private var onPictureInPictureModeChanged: BroadcastReceiver? = null
 
+  var pipConfig: PipConfig = PipConfig()
+
   init {
     onUserLeaveHintReceiver = object : BroadcastReceiver() {
       override fun onReceive(context: Context?, intent: Intent?) {
         // Optionally into PiP mode when the app goes to background.
-        if (config.canStartPictureInPictureAutomaticallyFromInline == true) {
+        if (pipConfig.startsAutomatically == true) {
           setPresentation(PresentationMode.PICTURE_IN_PICTURE)
         }
       }
@@ -56,12 +61,10 @@ class PresentationManager(
         reactContext.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
     }
     reactContext.currentActivity?.registerReceiver(
-      onUserLeaveHintReceiver,
-      IntentFilter("onUserLeaveHint")
+      onUserLeaveHintReceiver, IntentFilter("onUserLeaveHint")
     )
     reactContext.currentActivity?.registerReceiver(
-      onPictureInPictureModeChanged,
-      IntentFilter("onPictureInPictureModeChanged")
+      onPictureInPictureModeChanged, IntentFilter("onPictureInPictureModeChanged")
     )
   }
 
@@ -74,10 +77,8 @@ class PresentationManager(
    * - Not configured to automatically go into PiP when going to the background.
    */
   val shouldPauseOnHostPause: Boolean
-    get() =
-      Build.VERSION.SDK_INT < Build.VERSION_CODES.N ||
-        (reactContext.currentActivity?.isInPictureInPictureMode != true &&
-          config.canStartPictureInPictureAutomaticallyFromInline != true)
+    get() = Build.VERSION.SDK_INT < Build.VERSION_CODES.N ||
+      (reactContext.currentActivity?.isInPictureInPictureMode != true && pipConfig.startsAutomatically != true)
 
   fun onDestroy() {
     try {
@@ -139,23 +140,32 @@ class PresentationManager(
     }
 
     val visibleRect = getContentViewRect(view)
-    val aspectRatio = if (view.player.videoHeight > 0) {
-      Rational(view.player.videoWidth, view.player.videoHeight)
-    } else {
-      // Default aspect ratio
-      Rational(16, 9)
-    }
     try {
       reactContext.currentActivity?.enterPictureInPictureMode(
-        PictureInPictureParams.Builder()
-          .setSourceRectHint(visibleRect)
-          .setAspectRatio(aspectRatio)
+        PictureInPictureParams.Builder().setSourceRectHint(visibleRect)
+          // Must be between 2.39:1 and 1:2.39 (inclusive)
+          .setAspectRatio(getSafeAspectRatio(view.player.videoWidth, view.player.videoHeight))
           // The active MediaSession will connect the controls
           .build()
       )
     } catch (_: Exception) {
       onPipError()
     }
+  }
+
+  private fun getSafeAspectRatio(width: Int, height: Int): Rational {
+    val aspectRatio = Rational(width, height)
+    if (aspectRatio.isNaN || aspectRatio.isInfinite || aspectRatio.isZero) {
+      // Default aspect ratio
+      return PIP_ASPECT_RATIO_DEFAULT
+    }
+    if (aspectRatio > PIP_ASPECT_RATIO_MAX) {
+      return PIP_ASPECT_RATIO_MAX
+    }
+    if (aspectRatio < PIP_ASPECT_RATIO_MIN) {
+      return PIP_ASPECT_RATIO_MIN
+    }
+    return aspectRatio
   }
 
   private fun hasPipPermission(): Boolean {
@@ -200,7 +210,8 @@ class PresentationManager(
       eventEmitter.emitPresentationModeChange(PresentationMode.FULLSCREEN)
     } else {
       WindowInsetsControllerCompat(window, window.decorView).show(
-        WindowInsetsCompat.Type.systemBars())
+        WindowInsetsCompat.Type.systemBars()
+      )
       eventEmitter.emitPresentationModeChange(PresentationMode.INLINE)
     }
   }

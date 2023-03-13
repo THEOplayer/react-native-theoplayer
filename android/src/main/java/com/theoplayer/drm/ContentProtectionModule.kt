@@ -130,7 +130,10 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
         EVENT_CERTIFICATE_REQUEST_PROCESSED_AS_REQUEST to { result ->
           request.url = result.getString(PROP_URL)!!
           request.method = RequestMethodAdapter.fromString(result.getString(PROP_METHOD))
-          request.headers = result.getMap(PROP_HEADERS)?.toHashMap() as HashMap<String, String>
+          val headers = result.getMap(PROP_HEADERS)?.toHashMap()?.mapValues { entry -> entry.value as? String }
+          if (headers != null) {
+            request.headers = headers
+          }
           request.body = Base64.decode(result.getString(PROP_BASE64_BODY), Base64.DEFAULT)
           callback.request(request)
         },
@@ -176,7 +179,10 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
         EVENT_LICENSE_REQUEST_PROCESSED_AS_REQUEST to { result ->
           request.url = result.getString(PROP_URL)!!
           request.method = RequestMethodAdapter.fromString(result.getString(PROP_METHOD))
-          request.headers = result.getMap(PROP_HEADERS)?.toHashMap() as HashMap<String, String>
+          val headers = result.getMap(PROP_HEADERS)?.toHashMap()?.mapValues { entry -> entry.value as? String }
+          if (headers != null) {
+            request.headers = headers
+          }
           request.body = Base64.decode(result.getString(PROP_BASE64_BODY), Base64.DEFAULT)
           callback.request(request)
         },

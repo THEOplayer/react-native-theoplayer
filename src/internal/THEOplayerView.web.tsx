@@ -32,8 +32,10 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
       // Adapt native player to react-native player.
       adapter.current = new THEOplayerWebAdapter(player.current);
 
-      // Create media session connector
-      mediaSession.current = new WebMediaSession(player.current);
+      // Optionally create a media session connector
+      if (config?.mediaControl?.mediaSessionEnabled !== false) {
+        mediaSession.current = new WebMediaSession(player.current);
+      }
 
       // Expose players for easy access
       // @ts-ignore

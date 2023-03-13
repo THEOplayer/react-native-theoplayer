@@ -9,6 +9,8 @@ import type { TextTrack } from '../track/TextTrack';
 import type { TimeRange } from '../timeranges/TimeRange';
 import type { TextTrackStyle } from '../track/TextTrackStyle';
 import type { PresentationMode } from '../presentation/PresentationMode';
+import type { PiPConfiguration } from '../pip/PiPConfiguration';
+import type { BackgroundAudioConfiguration } from '../backgroundAudio/BackgroundAudioConfiguration';
 
 export type PreloadType = 'none' | 'metadata' | 'auto' | '';
 
@@ -99,7 +101,7 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
   readonly seeking: boolean;
 
   /**
-   * The PresentationMode of theplayer. Can be switched to: pictureinpicture, fullscreen or inline
+   * The PresentationMode of the player. Can be switched to: `picture-in-picture`, `fullscreen` or `inline`
    */
   presentationMode: PresentationMode;
 
@@ -150,6 +152,16 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
    * The current playback position of the media, in milliseconds.
    */
   currentTime: number;
+
+  /**
+   * The avtive configuration for PiP.
+   */
+  pipConfiguration: PiPConfiguration;
+
+  /**
+   * The avtive configuration for PiP.
+   */
+  backgroundAudioConfiguration: BackgroundAudioConfiguration;
 
   /**
    * The duration of the media, in milliseconds.

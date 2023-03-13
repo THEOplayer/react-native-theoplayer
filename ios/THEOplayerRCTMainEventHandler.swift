@@ -6,7 +6,7 @@ import THEOplayerSDK
 class THEOplayerRCTMainEventHandler {
     // MARK: Members
     private weak var player: THEOplayer?
-    private var currentPresentationMode = THEOplayerSDK.PresentationMode.inline // TheoPlayer's initial presentationMode
+    private weak var presentationModeContext: THEOplayerRCTPresentationModeContext?
         
     // MARK: Events
     var onNativePlay: RCTDirectEventBlock?
@@ -59,23 +59,16 @@ class THEOplayerRCTMainEventHandler {
     }
     
     // MARK: - player setup / breakdown
-    func setPlayer(_ player: THEOplayer) {
-        self.player = player;
+    func setPlayer(_ player: THEOplayer, presentationModeContext: THEOplayerRCTPresentationModeContext) {
+        self.player = player
+        self.presentationModeContext = presentationModeContext
         
         // attach listeners
         self.attachListeners()
     }
     
-    private func attachListeners() {
-        self.attachMainPlayerListeners()
-    }
-    
-    private func dettachListeners() {
-        self.dettachMainPlayerListeners()
-    }
-    
     // MARK: - attach/dettach main player Listeners
-    private func attachMainPlayerListeners() {
+    private func attachListeners() {
         guard let player = self.player else {
             return
         }
@@ -309,19 +302,16 @@ class THEOplayerRCTMainEventHandler {
         
         // PRESENTATION_MODE_CHANGE
         self.presentationModeChangeListener = player.addEventListener(type: PlayerEventTypes.PRESENTATION_MODE_CHANGE) { [weak self] event in
-            if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received PRESENTATION_MODE_CHANGE event from THEOplayer (to \(event.presentationMode._rawValue))") }
-            if let forwardedPresentationModeChangeEvent = self?.onNativePresentationModeChange {
-                forwardedPresentationModeChangeEvent(
-                    [
-                        "presentationMode": THEOplayerRCTTypeUtils.presentationModeToString(event.presentationMode)
-                    ]
-                )
+            if DEBUG_THEOPLAYER_EVENTS || true { print("[NATIVE] Received PRESENTATION_MODE_CHANGE event from THEOplayer (to \(event.presentationMode._rawValue))") }
+            if let forwardedPresentationModeChangeEvent = self?.onNativePresentationModeChange,
+               let presentationModeContext = self?.presentationModeContext {
+                forwardedPresentationModeChangeEvent(presentationModeContext.eventContextForNewPresentationMode(event.presentationMode))
             }
         }
         if DEBUG_EVENTHANDLER { print("[NATIVE] PresentationModeChange listener attached to THEOplayer") }
     }
     
-    private func dettachMainPlayerListeners() {
+    private func dettachListeners() {
         guard let player = self.player else {
             return
         }

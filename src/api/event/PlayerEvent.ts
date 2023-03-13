@@ -35,11 +35,30 @@ export interface DurationChangeEvent extends Event<PlayerEventType.DURATION_CHAN
   readonly duration: number;
 }
 
+export type PresentationModeChangePipContext = 'closed' | 'restored';
+
+export interface PresentationModeChangeContext {
+  /**
+   * The PiP context for presentationMode change.
+   */
+  readonly pip: PresentationModeChangePipContext;
+}
+
 export interface PresentationModeChangeEvent extends Event<PlayerEventType.PRESENTATIONMODE_CHANGE> {
   /**
    * The player's new presentationMode.
    */
   readonly presentationMode: PresentationMode;
+
+  /**
+   * The player's previous presentationMode.
+   */
+  readonly previousPresentationMode: PresentationMode;
+
+  /**
+   * The context for presentationMode change.
+   */
+  readonly context?: PresentationModeChangeContext;
 }
 
 export interface RateChangeEvent extends Event<PlayerEventType.RATE_CHANGE> {

@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.platforms    = { :ios => "11.0", :tvos => "12.0" }
   s.source       = { :git => "https://www.theoplayer.com/.git", :tag => "#{s.version}" }
 
-  s.source_files = 'ios/*.{h,m,swift}', 'ios/ads/*.swift', 'ios/casting/*.swift', 'ios/contentprotection/*.swift', 'ios/pip/*.swift'
+  s.source_files = 'ios/*.{h,m,swift}', 'ios/ads/*.swift', 'ios/casting/*.swift', 'ios/contentprotection/*.swift', 'ios/pip/*.swift', 'ios/backgroundAudio/*.swift'
   s.resources = ['ios/*.css']
 
   s.dependency "React-Core"

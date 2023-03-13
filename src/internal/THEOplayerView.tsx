@@ -49,6 +49,7 @@ import type {
   NativeDurationChangeEvent,
   NativeErrorEvent,
   NativeLoadedMetadataEvent,
+  NativePlayerStateEvent,
   NativePresentationModeChangeEvent,
   NativeProgressEvent,
   NativeRateChangeEvent,
@@ -64,7 +65,7 @@ interface THEOplayerRCTViewProps {
   ref: React.RefObject<THEOplayerViewNativeComponent>;
   style?: StyleProp<ViewStyle>;
   config?: PlayerConfiguration;
-  onNativePlayerReady: () => void;
+  onNativePlayerReady: (event: NativeSyntheticEvent<NativePlayerStateEvent>) => void;
   onNativeSourceChange: () => void;
   onNativeLoadStart: () => void;
   onNativeLoadedData: () => void;
@@ -72,7 +73,7 @@ interface THEOplayerRCTViewProps {
   onNativeReadyStateChange?: (event: NativeSyntheticEvent<NativeReadyStateChangeEvent>) => void;
   onNativeError: (event: NativeSyntheticEvent<NativeErrorEvent>) => void;
   onNativeProgress: (event: NativeSyntheticEvent<NativeProgressEvent>) => void;
-  onNativeVolumeChange:  (event: NativeSyntheticEvent<NativeVolumeChangeEvent>) => void;
+  onNativeVolumeChange: (event: NativeSyntheticEvent<NativeVolumeChangeEvent>) => void;
   onNativeCanPlay: () => void;
   onNativePlay: () => void;
   onNativePlaying: () => void;
@@ -133,7 +134,12 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
     this.setState(THEOplayerView.initialState);
   }
 
-  private _onNativePlayerReady = () => {
+  private _onNativePlayerReady = (event: NativeSyntheticEvent<NativePlayerStateEvent>) => {
+    // Optionally apply an initial player state
+    const { state } = event?.nativeEvent;
+    if (state) {
+      this._facade.applyNativeState(state);
+    }
     this.props.onPlayerReady?.(this._facade);
   };
 
@@ -281,7 +287,13 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
   };
 
   private _onPresentationModeChange = (event: NativeSyntheticEvent<NativePresentationModeChangeEvent>) => {
-    this._facade.dispatchEvent(new DefaultPresentationModeChangeEvent(event.nativeEvent.presentationMode));
+    this._facade.dispatchEvent(
+      new DefaultPresentationModeChangeEvent(
+        event.nativeEvent.presentationMode,
+        event.nativeEvent.previousPresentationMode,
+        event.nativeEvent.context,
+      ),
+    );
   };
 
   public render(): JSX.Element {

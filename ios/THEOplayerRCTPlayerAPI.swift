@@ -42,10 +42,10 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
     func setSource(_ node: NSNumber, src: NSDictionary) -> Void {
         DispatchQueue.main.async {
             if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
-               let src = THEOplayerRCTSourceDescriptionBuilder.buildSourceDescription(src) {
+               let srcDescription = THEOplayerRCTSourceDescriptionBuilder.buildSourceDescription(src) {
                 if let player = theView.player {
                     if DEBUG_PLAYER_API { print("[NATIVE] Setting new source on TheoPlayer") }
-                    player.source = src
+                    player.source = srcDescription
                 }
             } else {
                 if DEBUG_PLAYER_API { print("[NATIVE] Failed to update THEOplayer source.") }
@@ -119,6 +119,41 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
             }
         }
         return
+    }
+    
+    @objc(setPipConfig:pipConfig:)
+    func setPipConfig(_ node: NSNumber, pipConfig: NSDictionary) -> Void {
+        DispatchQueue.main.async {
+            let newPipConfig: PipConfig = self.parsePipConfig(configDict: pipConfig)
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView {
+                theView.pipConfig = newPipConfig
+            }
+        }
+        return
+    }
+    
+    private func parsePipConfig(configDict: NSDictionary) -> PipConfig {
+        var pipConfig = PipConfig()
+        pipConfig.retainPresentationModeOnSourceChange = configDict["retainPresentationModeOnSourceChange"] as? Bool ?? false
+        pipConfig.canStartPictureInPictureAutomaticallyFromInline = configDict["startsAutomatically"] as? Bool ?? false
+        return pipConfig
+    }
+    
+    @objc(setBackgroundAudioConfig:backgroundAudioConfig:)
+    func setBackgroundAudioConfig(_ node: NSNumber, backgroundAudioConfig: NSDictionary) -> Void {
+        DispatchQueue.main.async {
+            let newBackgroundAudioConfig: BackgroundAudioConfig = self.parseBackgroundAudioConfig(configDict: backgroundAudioConfig)
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView {
+               theView.backgroundAudioConfig = newBackgroundAudioConfig
+            }
+        }
+        return
+    }
+    
+    private func parseBackgroundAudioConfig(configDict: NSDictionary) -> BackgroundAudioConfig {
+        var backgroundAudio = BackgroundAudioConfig()
+        backgroundAudio.enabled = configDict["enabled"] as? Bool ?? false
+        return backgroundAudio
     }
     
     @objc(setSelectedTextTrack:uid:)

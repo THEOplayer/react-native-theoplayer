@@ -224,7 +224,7 @@ export class WebEventForwarder {
   };
 
   private readonly onPresentationModeChange = (event: PresentationModeChangeEvent) => {
-    this._facade.dispatchEvent(new DefaultPresentationModeChangeEvent(event.presentationMode));
+    this._facade.dispatchEvent(new DefaultPresentationModeChangeEvent(event.presentationMode, 'inline')); // TODO: move to extended event
   };
 
   private readonly onAddTextTrack = (event: AddTrackEvent) => {

@@ -1,6 +1,6 @@
 import type { AdsConfiguration } from '../ads/AdsConfiguration';
 import type { CastConfiguration } from '../cast/CastConfiguration';
-import type { PiPConfiguration } from '../pip/PiPConfiguration';
+import type { MediaControlConfiguration } from '../media/MediaControlConfiguration';
 
 export interface PlayerConfiguration {
   /**
@@ -36,9 +36,9 @@ export interface PlayerConfiguration {
   cast?: CastConfiguration;
 
   /**
-   * The pip configuration for the player.
+   * The configuration of media controls and media sessions across platforms.
    */
-  pip?: PiPConfiguration;
+  mediaControl?: MediaControlConfiguration;
 
   /**
    * The license for the player

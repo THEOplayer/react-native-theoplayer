@@ -1,7 +1,7 @@
 // THEOplayerRCTDebug.swift
 
 // General debug flag, if set to false none of the debug prints will appear
-let DEBUG = false
+let DEBUG = true
 
 // Debug flag to monitor incoming Theoplayer events
 let DEBUG_THEOPLAYER_EVENTS = DEBUG && false
@@ -29,3 +29,12 @@ let DEBUG_CAST_API = DEBUG && false
 
 // Debug flag to monitor player API usage
 let DEBUG_PLAYER_API = DEBUG && false
+
+// Debug flag to monitor Now Playing Info updates
+let DEBUG_NOWINFO = DEBUG && false
+
+// Debug flag to monitor Remote Commands updates
+let DEBUG_REMOTECOMMANDS = DEBUG && true
+
+// Debug flag to monitor PIP Controls updates
+let DEBUG_PIPCONTROLS = DEBUG && true

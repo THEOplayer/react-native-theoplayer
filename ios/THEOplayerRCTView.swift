@@ -12,9 +12,14 @@ public class THEOplayerRCTView: UIView {
     var mediaTrackEventHandler: THEOplayerRCTMediaTrackEventHandler
     var adEventHandler: THEOplayerRCTAdsEventHandler
     var castEventHandler: THEOplayerRCTCastEventHandler
+    var nowPlayingManager: THEOplayerRCTNowPlayingManager
+    var remoteCommandsManager: THEOplayerRCTRemoteCommandsManager
+    var pipControlsManager: THEOplayerRCTPipControlsManager
     var adsConfig = AdsConfig()
     var castConfig = CastConfig()
     var pipConfig = PipConfig()
+    var presentationModeContext = THEOplayerRCTPresentationModeContext()
+    var backgroundAudioConfig = BackgroundAudioConfig()
     
     // MARK: Events
     var onNativePlayerReady: RCTDirectEventBlock?
@@ -33,6 +38,9 @@ public class THEOplayerRCTView: UIView {
         self.mediaTrackEventHandler = THEOplayerRCTMediaTrackEventHandler()
         self.adEventHandler = THEOplayerRCTAdsEventHandler()
         self.castEventHandler = THEOplayerRCTCastEventHandler()
+        self.nowPlayingManager = THEOplayerRCTNowPlayingManager()
+        self.remoteCommandsManager = THEOplayerRCTRemoteCommandsManager()
+        self.pipControlsManager = THEOplayerRCTPipControlsManager()
         
         super.init(frame: .zero)
     }
@@ -55,11 +63,14 @@ public class THEOplayerRCTView: UIView {
         // Create new player instance
         if let player = self.initPlayer() {
             // Attach player instance to event handlers
-            self.mainEventHandler.setPlayer(player)
+            self.mainEventHandler.setPlayer(player, presentationModeContext: self.presentationModeContext)
             self.textTrackEventHandler.setPlayer(player)
             self.mediaTrackEventHandler.setPlayer(player)
             self.adEventHandler.setPlayer(player)
             self.castEventHandler.setPlayer(player)
+            self.nowPlayingManager.setPlayer(player)
+            self.remoteCommandsManager.setPlayer(player)
+            self.pipControlsManager.setPlayer(player)
             // Attach player to view
             player.addAsSubview(of: self)
         }
@@ -84,6 +95,8 @@ public class THEOplayerRCTView: UIView {
                                                                         cast: self.playerCastConfiguration(),
                                                                         license: self.license,
                                                                         licenseUrl: self.licenseUrl))
+        self.initBackgroundAudio()
+        self.initPip()
         return self.player
     }
 #else
@@ -93,6 +106,8 @@ public class THEOplayerRCTView: UIView {
                                                                         license: self.license,
                                                                         licenseUrl: self.licenseUrl,
                                                                         pip: self.playerPipConfiguration()))
+        self.initBackgroundAudio()
+        self.initPip()
         return self.player
     }
 #endif
@@ -105,6 +120,9 @@ public class THEOplayerRCTView: UIView {
         self.mediaTrackEventHandler.destroy()
         self.adEventHandler.destroy()
         self.castEventHandler.destroy()
+        self.nowPlayingManager.destroy()
+        self.remoteCommandsManager.destroy()
+        self.pipControlsManager.destroy()
         
         self.player?.destroy()
         self.player = nil
@@ -121,7 +139,6 @@ public class THEOplayerRCTView: UIView {
         self.chromeless = configDict["chromeless"] as? Bool ?? true
         self.parseAdsConfig(configDict: configDict)
         self.parseCastConfig(configDict: configDict)
-        self.parsePipConfig(configDict: configDict)
         if DEBUG_VIEW { print("[NATIVE] config prop updated.") }
         
         // Given the bridged config, create the initial THEOplayer instance
