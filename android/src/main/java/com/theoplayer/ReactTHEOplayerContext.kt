@@ -143,6 +143,10 @@ class ReactTHEOplayerContext private constructor(
         mainHandler.post { measureAndLayout() }
       }
     }
+
+    // By default, the screen should remain on.
+    playerView.keepScreenOn = true
+
     addIntegrations(playerConfig)
     addListeners()
     initDefaultMediaSession()
