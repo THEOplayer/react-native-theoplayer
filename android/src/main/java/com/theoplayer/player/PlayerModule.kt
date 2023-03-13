@@ -8,6 +8,7 @@ import com.theoplayer.android.api.player.PresentationMode
 import com.theoplayer.android.api.player.track.mediatrack.MediaTrack
 import com.theoplayer.android.api.player.track.mediatrack.quality.VideoQuality
 import com.theoplayer.android.api.player.track.texttrack.TextTrackMode
+import com.theoplayer.audio.BackgroundAudioConfigAdapter
 import com.theoplayer.presentation.PipConfigAdapter
 import com.theoplayer.track.QualityListFilter
 import com.theoplayer.track.emptyQualityList
@@ -170,8 +171,8 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
 
   @ReactMethod
   fun setBackgroundAudioConfig(tag: Int, config: ReadableMap) {
-    viewResolver.resolveViewByTag(tag) {
-      // TODO
+    viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
+      view?.playerContext?.backgroundAudioConfig = BackgroundAudioConfigAdapter.fromProps(config)
     }
   }
 }
