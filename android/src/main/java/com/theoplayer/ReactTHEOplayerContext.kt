@@ -7,6 +7,8 @@ import android.content.ServiceConnection
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.support.v4.media.session.MediaSessionCompat
+import android.support.v4.media.session.PlaybackStateCompat
 import com.facebook.react.uimanager.ThemedReactContext
 import com.google.ads.interactivemedia.v3.api.AdsRenderingSettings
 import com.google.ads.interactivemedia.v3.api.ImaSdkFactory
@@ -18,26 +20,32 @@ import com.theoplayer.android.api.ads.ima.GoogleImaIntegration
 import com.theoplayer.android.api.ads.ima.GoogleImaIntegrationFactory
 import com.theoplayer.android.api.cast.CastIntegration
 import com.theoplayer.android.api.cast.CastIntegrationFactory
-import com.theoplayer.android.api.event.player.PlayEvent
-import com.theoplayer.android.api.event.player.PlayerEventTypes
+import com.theoplayer.android.api.event.EventListener
+import com.theoplayer.android.api.event.player.*
 import com.theoplayer.android.api.player.Player
-import com.theoplayer.audio.AudioBecomingNoisyManager
+import com.theoplayer.android.connector.mediasession.MediaSessionConnector
+import com.theoplayer.audio.BackgroundAudioConfig
 import com.theoplayer.audio.MediaPlaybackService
-import com.theoplayer.mediasession.MediaSessionIntegration
 import java.util.concurrent.atomic.AtomicBoolean
+
+private const val TAG = "ReactTHEOplayerContext"
 
 class ReactTHEOplayerContext private constructor(
   private val reactContext: ThemedReactContext,
-  playerConfig: THEOplayerConfig,
-  private var backgroundAudioMode: Boolean
+  playerConfig: THEOplayerConfig
 ) {
   private val mainHandler = Handler(Looper.getMainLooper())
   private var isBound = AtomicBoolean()
   private var binder: MediaPlaybackService.MediaPlaybackBinder? = null
+  private var mediaSessionConnector: MediaSessionConnector? = null
+
+  var backgroundAudioConfig: BackgroundAudioConfig = BackgroundAudioConfig(false)
+    set(value) {
+      updateBackgroundPlayback(value, field)
+      field = value
+    }
 
   lateinit var playerView: THEOplayerView
-  lateinit var mediaSessionIntegration: MediaSessionIntegration
-  lateinit var audioBecomingNoisyManager: AudioBecomingNoisyManager
 
   val player: Player
     get() = playerView.player
@@ -47,20 +55,15 @@ class ReactTHEOplayerContext private constructor(
   var castIntegration: CastIntegration? = null
 
   companion object {
-    var instance: ReactTHEOplayerContext? = null
+    private var bgInstance: ReactTHEOplayerContext? = null
 
     fun create(
       reactContext: ThemedReactContext,
-      playerConfig: THEOplayerConfig,
-      backgroundAudioMode: Boolean
+      playerConfig: THEOplayerConfig
     ): ReactTHEOplayerContext {
-      // Reuse existing context, if available
-      val ctx = instance ?: ReactTHEOplayerContext(reactContext, playerConfig, backgroundAudioMode)
-
-      // Optionally keep this instance for background playback
-      if (backgroundAudioMode) {
-        instance = ctx
-      }
+      // Reuse existing background instance, if available
+      val ctx = bgInstance ?: ReactTHEOplayerContext(reactContext, playerConfig)
+      ctx.createPlayerView(reactContext, playerConfig)
       return ctx
     }
   }
@@ -68,9 +71,18 @@ class ReactTHEOplayerContext private constructor(
   private val connection = object : ServiceConnection {
     override fun onServiceConnected(className: ComponentName, service: IBinder) {
       binder = service as MediaPlaybackService.MediaPlaybackBinder
+
+      // Get media session
+      mediaSessionConnector = binder?.mediaSessionConnector
+      mediaSessionConnector?.player = player
+      mediaSessionConnector?.setMediaSessionMetadata(player.source)
+
+      // Pass player context
+      binder?.setPlayerContext(this@ReactTHEOplayerContext)
     }
 
-    override fun onServiceDisconnected(arg0: ComponentName) {
+    override fun onServiceDisconnected(p0: ComponentName?) {
+      binder = null
     }
   }
 
@@ -78,13 +90,24 @@ class ReactTHEOplayerContext private constructor(
     createPlayerView(reactContext, playerConfig)
   }
 
-  private fun bindMediaPlaybackService(reactContext: ThemedReactContext) {
+  private fun updateBackgroundPlayback(
+    config: BackgroundAudioConfig,
+    oldConfig: BackgroundAudioConfig
+  ) {
+    if (config.enabled == oldConfig.enabled) {
+      return
+    }
+    // TODO
+  }
+
+  private fun bindMediaPlaybackService() {
     // Bind to an existing service, if available
     // A bound service runs only as long as another application component is bound to it.
     // Multiple components can bind to the service at once, but when all of them unbind, the
     // service is destroyed.
     if (!isBound.get()) {
-      isBound.set(reactContext.bindService(
+      isBound.set(
+        reactContext.bindService(
           Intent(reactContext, MediaPlaybackService::class.java),
           connection,
           Context.BIND_AUTO_CREATE
@@ -120,16 +143,32 @@ class ReactTHEOplayerContext private constructor(
         mainHandler.post { measureAndLayout() }
       }
     }
-    addIntegrations(reactContext, playerConfig)
+    addIntegrations(playerConfig)
     addListeners()
-    audioBecomingNoisyManager = AudioBecomingNoisyManager(reactContext) {
-      player.pause()
+    initDefaultMediaSession()
+  }
+
+  private fun initDefaultMediaSession() {
+    // Destroy any existent media session
+    mediaSessionConnector?.destroy()
+
+    // Create and initialize the media session
+    val mediaSession = MediaSessionCompat(reactContext, TAG)
+
+    // Do not let MediaButtons restart the player when the app is not visible
+    mediaSession.setMediaButtonReceiver(null)
+
+    // Create a MediaSessionConnector and attach the THEOplayer instance.
+    mediaSessionConnector = MediaSessionConnector(mediaSession).apply {
+      debug = BuildConfig.LOG_MEDIASESSION_EVENTS
+      player = this@ReactTHEOplayerContext.player
+
+      // Set mediaSession active
+      setActive(true)
     }
   }
 
-  private fun addIntegrations(reactContext: ThemedReactContext, playerConfig: THEOplayerConfig) {
-    mediaSessionIntegration = MediaSessionIntegration(reactContext, playerView.player)
-
+  private fun addIntegrations(playerConfig: THEOplayerConfig) {
     try {
       if (BuildConfig.EXTENSION_GOOGLE_IMA) {
         imaIntegration = GoogleImaIntegrationFactory.createGoogleImaIntegration(playerView).apply {
@@ -159,21 +198,45 @@ class ReactTHEOplayerContext private constructor(
     }
   }
 
+  private val onSourceChange = EventListener<SourceChangeEvent> {
+    if (backgroundAudioConfig.enabled) {
+      binder?.updateNotification()
+    }
+  }
+
+  private val onLoadedMetadata = EventListener<LoadedMetadataEvent> {
+    if (backgroundAudioConfig.enabled) {
+      binder?.updateNotification()
+    }
+  }
+
+  private val onPlay = EventListener<PlayEvent> {
+    if (backgroundAudioConfig.enabled) {
+      binder?.updateNotification(PlaybackStateCompat.STATE_PLAYING)
+    }
+  }
+
+  private val onPause = EventListener<PauseEvent> {
+    if (backgroundAudioConfig.enabled) {
+      binder?.updateNotification(PlaybackStateCompat.STATE_PAUSED)
+    }
+  }
+
   private fun addListeners() {
     player.apply {
-      addEventListener(PlayerEventTypes.PLAY, this@ReactTHEOplayerContext::onPlay)
+      addEventListener(PlayerEventTypes.SOURCECHANGE, onSourceChange)
+      addEventListener(PlayerEventTypes.LOADEDMETADATA, onLoadedMetadata)
+      addEventListener(PlayerEventTypes.PAUSE, onPause)
+      addEventListener(PlayerEventTypes.PLAY, onPlay)
     }
   }
 
   private fun removeListeners() {
     player.apply {
-      removeEventListener(PlayerEventTypes.PLAY, this@ReactTHEOplayerContext::onPlay)
-    }
-  }
-
-  private fun onPlay(event: PlayEvent) {
-    if (backgroundAudioMode) {
-      bindMediaPlaybackService(reactContext)
+      removeEventListener(PlayerEventTypes.SOURCECHANGE, onSourceChange)
+      removeEventListener(PlayerEventTypes.LOADEDMETADATA, onLoadedMetadata)
+      removeEventListener(PlayerEventTypes.PAUSE, onPause)
+      removeEventListener(PlayerEventTypes.PLAY, onPlay)
     }
   }
 
@@ -190,8 +253,8 @@ class ReactTHEOplayerContext private constructor(
    * The host activity is paused.
    */
   fun onHostPause() {
-    if (!backgroundAudioMode) {
-      mediaSessionIntegration.onPause()
+    if (!backgroundAudioConfig.enabled) {
+      mediaSessionConnector?.setActive(false)
       playerView.onPause()
     }
   }
@@ -200,8 +263,8 @@ class ReactTHEOplayerContext private constructor(
    * The host activity is resumed.
    */
   fun onHostResume() {
-    if (!backgroundAudioMode) {
-      mediaSessionIntegration.onResume()
+    if (!backgroundAudioConfig.enabled) {
+      mediaSessionConnector?.setActive(true)
       playerView.onResume()
     }
   }
@@ -213,7 +276,7 @@ class ReactTHEOplayerContext private constructor(
    * - with backgroundAudioMode: unbind from the MediaPlaybackService.
    */
   fun onHostDestroy() {
-    if (!backgroundAudioMode) {
+    if (!backgroundAudioConfig.enabled) {
       destroy()
     } else {
       unbindMediaPlaybackService()
@@ -222,7 +285,7 @@ class ReactTHEOplayerContext private constructor(
 
   private fun destroy() {
     removeListeners()
-    mediaSessionIntegration.onDestroy()
+    mediaSessionConnector?.destroy()
     playerView.onDestroy()
   }
 }

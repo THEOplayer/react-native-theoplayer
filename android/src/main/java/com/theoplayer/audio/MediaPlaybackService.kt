@@ -1,31 +1,33 @@
 package com.theoplayer.audio
 
-import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.support.v4.media.MediaBrowserCompat
+import android.support.v4.media.session.MediaSessionCompat
+import android.support.v4.media.session.PlaybackStateCompat
 import android.text.TextUtils
-import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.media.MediaBrowserServiceCompat
 import androidx.media.session.MediaButtonReceiver
-import com.theoplayer.R
+import com.theoplayer.BuildConfig
 import com.theoplayer.ReactTHEOplayerContext
-import com.theoplayer.android.api.event.player.PlayEvent
-import com.theoplayer.android.api.event.player.PlayerEvent
-import com.theoplayer.android.api.event.player.PlayerEventTypes
 import com.theoplayer.android.api.player.Player
-import com.theoplayer.android.connector.mediasession.event.MediaSessionEvent
+import com.theoplayer.android.connector.mediasession.MediaSessionConnector
+import com.theoplayer.android.connector.mediasession.MediaSessionListener
 
 private const val BROWSABLE_ROOT = "/"
 private const val EMPTY_ROOT = "@empty@"
+private const val STOP_SERVICE_IF_APP_REMOVED = false
 
 private const val NOTIFICATION_ID = 1
+
+private const val TAG = "MediaPlaybackService"
 
 class MediaPlaybackService : MediaBrowserServiceCompat() {
 
@@ -37,21 +39,51 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
   private val player: Player?
     get() = playerContext?.player
 
+  private lateinit var mediaSessionConnector: MediaSessionConnector
+  private val mediaSession: MediaSessionCompat
+    get() =  mediaSessionConnector.mediaSession
+
   inner class MediaPlaybackBinder : Binder() {
     private val service: MediaPlaybackService
       get() = this@MediaPlaybackService
+
+    val mediaSessionConnector: MediaSessionConnector
+      get() = service.mediaSessionConnector
+
+    fun setPlayerContext(playerContext: ReactTHEOplayerContext) {
+      service.connectPlayerContext(playerContext)
+    }
+
+    fun updateNotification() {
+      service.updateNotification()
+    }
+
+    fun updateNotification(@PlaybackStateCompat.State playbackState: Int) {
+      service.updateNotification(playbackState)
+    }
+
+    fun stopService() {
+      service.stopService()
+    }
   }
 
   private val binder: MediaPlaybackBinder by lazy { MediaPlaybackBinder() }
 
   override fun onCreate() {
     super.onCreate()
-    notificationManager = (getSystemService(NOTIFICATION_SERVICE) as NotificationManager)
+    initMediaSession()
 
-    // Apply existing player context
-    if (ReactTHEOplayerContext.instance != null) {
-      connectPlayerContext(ReactTHEOplayerContext.instance!!)
-    }
+    notificationManager = (getSystemService(NOTIFICATION_SERVICE) as NotificationManager)
+    notificationBuilder = MediaNotificationBuilder(this, notificationManager, mediaSession)
+
+    // This ensures that the service starts and continues to run, even when all
+    // UI MediaBrowser activities that are bound to it unbind.
+    ContextCompat.startForegroundService(
+      applicationContext,
+      Intent(applicationContext, MediaPlaybackService::class.java)
+    )
+
+    updateNotification(PlaybackStateCompat.STATE_PLAYING)
   }
 
   override fun onBind(intent: Intent): IBinder {
@@ -59,27 +91,31 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
   }
 
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-
-    playerContext?.mediaSessionIntegration?.mediaSession?.let { mediaSession ->
-      MediaButtonReceiver.handleIntent(mediaSession, intent)
-    }
+    MediaButtonReceiver.handleIntent(mediaSession, intent)
     return super.onStartCommand(intent, flags, startId)
+  }
+
+  override fun onTaskRemoved(rootIntent: Intent?) {
+    super.onTaskRemoved(rootIntent)
+    if (STOP_SERVICE_IF_APP_REMOVED) {
+      notificationManager.cancel(NOTIFICATION_ID)
+      stopSelf()
+    }
   }
 
   override fun onDestroy() {
     super.onDestroy()
     removeListeners()
+    mediaSessionConnector.destroy()
+    playerContext = null
   }
 
-  private fun connectPlayerContext(playerContext: ReactTHEOplayerContext) {
-    this.playerContext = playerContext
-
+  private fun initMediaSession() {
     // Sets an intent for launching UI for this Session. This can be used as a quick link to
     // an ongoing media screen. The intent should be for an activity that may be started using
     // Activity.startActivity(Intent).
     val intentFlags =
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
-
     val sessionActivityPendingIntent = packageManager
       ?.getLaunchIntentForPackage(packageName)
       ?.let { sessionIntent ->
@@ -106,72 +142,48 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
       }
     )
 
-    playerContext.mediaSessionIntegration.connector.let {
-      notificationBuilder = MediaNotificationBuilder(this@MediaPlaybackService, it)
-      it.mediaSession.apply {
-        setSessionActivity(sessionActivityPendingIntent)
-        setMediaButtonReceiver(mediaButtonPendingIntent)
-      }
+    // Create and initialize the media session
+    val mediaSession = MediaSessionCompat(this, TAG).apply {
+      setSessionActivity(sessionActivityPendingIntent)
+      setMediaButtonReceiver(mediaButtonPendingIntent)
     }
 
+    // Create a MediaSessionConnector and attach the THEOplayer instance.
+    mediaSessionConnector = MediaSessionConnector(mediaSession).apply {
+      debug = BuildConfig.LOG_MEDIASESSION_EVENTS
+
+      // Set mediaSession active
+      setActive(true)
+    }
+  }
+
+  private fun stopService() {
+    player?.pause()
+    updateNotification(PlaybackStateCompat.STATE_STOPPED)
+    stopSelf()
+  }
+
+  private fun connectPlayerContext(playerContext: ReactTHEOplayerContext) {
+    if (this.playerContext != null) {
+      removeListeners()
+    }
+    this.playerContext = playerContext
     addListeners()
+    updateNotification()
+  }
 
-    // This ensures that the service starts and continues to run, even when all
-    // UI MediaBrowser activities that are bound to it unbind.
-    ContextCompat.startForegroundService(
-      applicationContext,
-      Intent(applicationContext, MediaPlaybackService::class.java)
-    )
-
-    updateNotification(false)
+  private val mediaSessionListener = object : MediaSessionListener {
+    override fun onStop() {
+      stopService()
+    }
   }
 
   private fun addListeners() {
-    player?.apply {
-      addEventListener(PlayerEventTypes.SOURCECHANGE, this@MediaPlaybackService::handlePlayerEvent)
-      addEventListener(
-        PlayerEventTypes.LOADEDMETADATA,
-        this@MediaPlaybackService::handlePlayerEvent
-      )
-      addEventListener(PlayerEventTypes.ENDED, this@MediaPlaybackService::handlePlayerEvent)
-      addEventListener(PlayerEventTypes.PAUSE, this@MediaPlaybackService::handlePlayerEvent)
-      addEventListener(PlayerEventTypes.PLAY, this@MediaPlaybackService::handlePlayerEvent)
-    }
-
-    playerContext?.mediaSessionIntegration?.connector?.apply {
-      addEventListener<MediaSessionEvent.StopEvent> {
-        // Stop the service
-        player?.pause()
-        stopForeground(true)
-        stopSelf()
-      }
-    }
+    mediaSessionConnector.addListener(mediaSessionListener)
   }
 
   private fun removeListeners() {
-    player?.apply {
-      removeEventListener(
-        PlayerEventTypes.SOURCECHANGE,
-        this@MediaPlaybackService::handlePlayerEvent
-      )
-      removeEventListener(
-        PlayerEventTypes.LOADEDMETADATA,
-        this@MediaPlaybackService::handlePlayerEvent
-      )
-      removeEventListener(PlayerEventTypes.ENDED, this@MediaPlaybackService::handlePlayerEvent)
-      removeEventListener(PlayerEventTypes.PAUSE, this@MediaPlaybackService::handlePlayerEvent)
-      removeEventListener(PlayerEventTypes.PLAY, this@MediaPlaybackService::handlePlayerEvent)
-    }
-
-    // TODO: move mediasession listeners
-  }
-
-  private fun handlePlayerEvent(event: PlayEvent) {
-    updateNotification()
-  }
-
-  private fun handlePlayerEvent(event: PlayerEvent<*>) {
-    updateNotification()
+    mediaSessionConnector.removeListener(mediaSessionListener)
   }
 
   override fun onGetRoot(
@@ -209,46 +221,51 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
   }
 
   private fun updateNotification() {
-    val isPaused = player?.isPaused == true
-    updateNotification(isPaused)
+    player?.let {
+      if (it.isPaused) {
+        updateNotification(PlaybackStateCompat.STATE_PAUSED)
+      } else {
+        updateNotification(PlaybackStateCompat.STATE_PLAYING)
+      }
+    }
   }
 
-  private fun updateNotification(isPaused: Boolean) {
-    val channelId = getString(R.string.notification_channel_id)
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      val channel = NotificationChannel(
-        channelId,
-        getString(R.string.notification_channel_name),
-        NotificationManager.IMPORTANCE_DEFAULT
-      ).apply {
-        setShowBadge(false)
-        lockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC
-        setSound(null, null)
-      }
-      notificationManager.createNotificationChannel(channel)
-    }
-
-    val notification = notificationBuilder.build(channelId, isPaused)
+  private fun updateNotification(@PlaybackStateCompat.State playbackState: Int) {
 
     // When a service is playing, it should be running in the foreground.
     // This lets the system know that the service is performing a useful function and should
     // not be killed if the system is low on memory.
-    if (isPaused) {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+    when (playbackState) {
+      PlaybackStateCompat.STATE_PAUSED -> {
+        // Fetch large icon asynchronously
+        fetchImageFromUri(mediaSession.controller.metadata?.description?.iconUri) { largeIcon ->
+          notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build(playbackState, largeIcon))
+        }
+      }
+      PlaybackStateCompat.STATE_PLAYING -> {
+        // When a service runs in the foreground, it must display a notification, ideally
+        // with one or more transport controls. The notification should also include useful
+        // information from the session's metadata.
+        // Fetch large icon asynchronously
+        fetchImageFromUri(mediaSession.controller.metadata?.description?.iconUri) { largeIcon ->
+          startForeground(NOTIFICATION_ID, notificationBuilder.build(playbackState, largeIcon))
+        }
+      }
+      PlaybackStateCompat.STATE_STOPPED -> {
         // Remove this service from foreground state, allowing it to be killed if more memory is
         // needed. This does not stop the service from running (for that you use stopSelf()
         // or related methods), just takes it out of the foreground state.
-        stopForeground(STOP_FOREGROUND_DETACH)
-      } else {
-        @Suppress("DEPRECATION")
-        stopForeground(false)
+        // Also remove the notification.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+          stopForeground(Service.STOP_FOREGROUND_REMOVE)
+        } else {
+          @Suppress("DEPRECATION")
+          stopForeground(true)
+        }
       }
-      notificationManager.notify(NOTIFICATION_ID, notification)
-    } else {
-      // When a service runs in the foreground, it must display a notification, ideally
-      // with one or more transport controls. The notification should also include useful
-      // information from the session's metadata.
-      startForeground(NOTIFICATION_ID, notification)
+      else -> {
+        // Ignore
+      }
     }
   }
 }
