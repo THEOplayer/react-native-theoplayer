@@ -80,7 +80,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._view = view;
     this._state = { ...initialState };
     this._adsAdapter = new THEOplayerNativeAdsAdapter(this._view);
-    this._castAdapter = new THEOplayerNativeCastAdapter(this._view);
+    this._castAdapter = new THEOplayerNativeCastAdapter(this, this._view);
     this._abrAdapter = new AbrAdapter(this._view);
     this._textTrackStyleAdapter = new TextTrackStyleAdapter(this._view);
 
