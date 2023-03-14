@@ -151,8 +151,8 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   };
 
   private onProgress = (event: ProgressEvent) => {
-    this._state.seekable = event.seekable;
-    this._state.buffered = event.buffered;
+    this._state.seekable = event.seekable?.sort((a, b) => a.end - b.end);
+    this._state.buffered = event.buffered?.sort((a, b) => a.end - b.end);
   };
 
   private onTextTrackList = (event: TextTrackListEvent) => {
@@ -245,6 +245,11 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     return this._state.seekable;
   }
 
+  private seekableEnd(): number {
+    const ranges = this.seekable;
+    return ranges.length === 0 ? 0 : ranges[ranges.length - 1].end;
+  }
+
   get buffered() {
     return this._state.buffered;
   }
@@ -258,8 +263,18 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   }
 
   set currentTime(currentTime: number) {
-    this._state.currentTime = currentTime;
-    NativeModules.PlayerModule.setCurrentTime(this._view.nativeHandle, currentTime);
+    if (isNaN(currentTime)) {
+      return;
+    }
+
+    // Sanitise currentTime
+    let seekTime = currentTime;
+    if (currentTime === Infinity) {
+      seekTime = this.seekableEnd();
+    }
+
+    this._state.currentTime = seekTime;
+    NativeModules.PlayerModule.setCurrentTime(this._view.nativeHandle, seekTime);
   }
 
   get duration(): number {
