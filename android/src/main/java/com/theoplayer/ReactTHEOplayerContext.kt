@@ -29,11 +29,9 @@ import com.theoplayer.audio.MediaPlaybackService
 import java.util.concurrent.atomic.AtomicBoolean
 
 private const val TAG = "ReactTHEOplayerContext"
-private const val USE_PLAYBACK_SERVICE = true
 
-class ReactTHEOplayerContext(
-  private val reactContext: ThemedReactContext,
-  playerConfig: THEOplayerConfig
+class ReactTHEOplayerContext private constructor(
+  private val reactContext: ThemedReactContext
 ) {
   private val mainHandler = Handler(Looper.getMainLooper())
   private var isBound = AtomicBoolean()
@@ -57,6 +55,12 @@ class ReactTHEOplayerContext(
 
   companion object {
     private var mediaControlledInstance: ReactTHEOplayerContext? = null
+
+    fun create(reactContext: ThemedReactContext, playerConfig: THEOplayerConfig): ReactTHEOplayerContext {
+      return ReactTHEOplayerContext(reactContext).apply {
+        initializePlayerView(playerConfig)
+      }
+    }
   }
 
   private val connection = object : ServiceConnection {
@@ -75,10 +79,6 @@ class ReactTHEOplayerContext(
     override fun onServiceDisconnected(className: ComponentName?) {
       binder = null
     }
-  }
-
-  init {
-    createPlayerView(reactContext, playerConfig)
   }
 
   private fun updateBackgroundPlayback(
@@ -117,7 +117,7 @@ class ReactTHEOplayerContext(
     }
   }
 
-  private fun createPlayerView(reactContext: ThemedReactContext, playerConfig: THEOplayerConfig) {
+  private fun initializePlayerView(playerConfig: THEOplayerConfig) {
     playerView = object : THEOplayerView(reactContext.currentActivity!!, playerConfig) {
       private fun measureAndLayout() {
         measure(
@@ -143,7 +143,7 @@ class ReactTHEOplayerContext(
 
     if (mediaControlledInstance == null) {
       mediaControlledInstance = this
-      if (!USE_PLAYBACK_SERVICE) {
+      if (!BuildConfig.USE_PLAYBACK_SERVICE) {
         initDefaultMediaSession()
       }
     }
@@ -200,31 +200,22 @@ class ReactTHEOplayerContext(
   }
 
   private val onSourceChange = EventListener<SourceChangeEvent> {
-    if (backgroundAudioConfig.enabled) {
-      binder?.updateNotification()
-    }
+    binder?.updateNotification()
   }
 
   private val onLoadedMetadata = EventListener<LoadedMetadataEvent> {
-    if (backgroundAudioConfig.enabled) {
-      binder?.updateNotification()
-    }
+    binder?.updateNotification()
   }
 
   private val onPlay = EventListener<PlayEvent> {
-    if (USE_PLAYBACK_SERVICE && mediaControlledInstance == this) {
+    if (BuildConfig.USE_PLAYBACK_SERVICE && mediaControlledInstance == this) {
       bindMediaPlaybackService()
     }
-
-    if (backgroundAudioConfig.enabled) {
-      binder?.updateNotification(PlaybackStateCompat.STATE_PLAYING)
-    }
+    binder?.updateNotification(PlaybackStateCompat.STATE_PLAYING)
   }
 
   private val onPause = EventListener<PauseEvent> {
-    if (backgroundAudioConfig.enabled) {
-      binder?.updateNotification(PlaybackStateCompat.STATE_PAUSED)
-    }
+    binder?.updateNotification(PlaybackStateCompat.STATE_PAUSED)
   }
 
   private fun addListeners() {
@@ -277,8 +268,11 @@ class ReactTHEOplayerContext(
   fun destroy() {
     removeListeners()
     if (mediaControlledInstance == this) {
-      if (USE_PLAYBACK_SERVICE) {
+      if (BuildConfig.USE_PLAYBACK_SERVICE) {
+        // Remove service from foreground
         binder?.stopForegroundService()
+
+        // Unbind client from background service so it can stop
         unbindMediaPlaybackService()
       }
       mediaControlledInstance = null

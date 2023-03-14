@@ -106,7 +106,7 @@ class MediaNotificationBuilder(
 
       // The UI may choose to show these items smaller, or at a different position in the
       // list, compared with your app's PRIORITY_DEFAULT items
-      priority = NotificationCompat.PRIORITY_LOW
+      priority = NotificationCompat.PRIORITY_DEFAULT
 
       // Make the transport controls visible on the lockscreen
       setVisibility(NotificationCompat.VISIBILITY_PUBLIC)

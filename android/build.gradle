@@ -49,6 +49,7 @@ android {
     buildConfigField "boolean", "LOG_PLAYER_EVENTS", "${safeExtGet('THEOplayer_logPlayerEvents', 'false')}"
     buildConfigField "boolean", "LOG_VIEW_EVENTS", "${safeExtGet('THEOplayer_logViewEvents', 'false')}"
     buildConfigField "boolean", "LOG_MEDIASESSION_EVENTS", "${safeExtGet('THEOplayer_logMediaSessionEvents', 'false')}"
+    buildConfigField "boolean", "USE_PLAYBACK_SERVICE", "${safeExtGet('THEOplayer_usePlaybackService', 'true')}"
 
     // Extension buildConfig fields
     buildConfigField "boolean", "EXTENSION_GOOGLE_IMA", "${enabledGoogleIMA}"
