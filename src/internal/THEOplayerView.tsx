@@ -163,7 +163,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
         nativeEvent.textTracks,
         nativeEvent.audioTracks,
         nativeEvent.videoTracks,
-        nativeEvent.duration,
+        decodeNanInf(nativeEvent.duration),
         nativeEvent.selectedTextTrack,
         nativeEvent.selectedVideoTrack,
         nativeEvent.selectedAudioTrack,
