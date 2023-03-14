@@ -62,8 +62,8 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
       service.updateNotification(playbackState)
     }
 
-    fun stopService() {
-      service.stopService()
+    fun stopForegroundService() {
+      service.stopForegroundService()
     }
   }
 
@@ -157,7 +157,7 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
     }
   }
 
-  private fun stopService() {
+  private fun stopForegroundService() {
     player?.pause()
     updateNotification(PlaybackStateCompat.STATE_STOPPED)
     stopSelf()
@@ -174,7 +174,7 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
 
   private val mediaSessionListener = object : MediaSessionListener {
     override fun onStop() {
-      stopService()
+      stopForegroundService()
     }
   }
 
