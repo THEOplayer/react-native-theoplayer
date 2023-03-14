@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed an issue on iOS where ID3 metadata content would not be correctly passed to cue instances.
 - Fixed an issue on Android where the `'picture-in-picture'` permission was not checked.
 - Fixed an issue on Android where the aspect ratio of the `'picture-in-picture'` window could be outside the valid range.
+- Fixed an issue on iOS and Android where for a live stream the `duration` property of a `loadedmetadata` event was not properly passed as being `Infinite`.
 
 ### Changed
 
