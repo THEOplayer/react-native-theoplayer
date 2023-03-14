@@ -5,13 +5,21 @@ import AVKit
 import THEOplayerSDK
 import MediaPlayer
 
-@available(tvOS 14.0, *)
 class THEOplayerRCTPipControlsManager: NSObject {
     // MARK: Members
     private weak var player: THEOplayer?
-    private weak var nativePictureInPictureController: AVPictureInPictureController?
+    private var _nativePictureInPictureController: Any?
     private var isLive: Bool = false
     private var inAd: Bool = false
+    
+    @available(tvOS 14.0, *)
+    private weak var nativePictureInPictureController: AVPictureInPictureController? {
+        get {
+            return _nativePictureInPictureController as? AVPictureInPictureController
+        } set {
+            _nativePictureInPictureController = newValue
+        }
+    }
     
     // MARK: player Listeners
     private var durationChangeListener: EventListener?
@@ -35,6 +43,7 @@ class THEOplayerRCTPipControlsManager: NSObject {
         self.attachListeners()
     }
     
+    @available(tvOS 14.0, *)
     func setNativePictureInPictureController(_ nativePictureInPictureController: AVPictureInPictureController?) {
         self.nativePictureInPictureController = nativePictureInPictureController;
         if self.nativePictureInPictureController != nil,
@@ -52,12 +61,13 @@ class THEOplayerRCTPipControlsManager: NSObject {
         }
     }
 
+    @available(tvOS 14.0, *)
     private func updatePipControls() {
         if let controller = self.nativePictureInPictureController {
             if #available(iOS 14.0, *) {
                 controller.requiresLinearPlayback = self.isLive || self.inAd
+                if DEBUG_PIPCONTROLS { print("[NATIVE] Pip controls updated for \(self.isLive ? "LIVE" : "VOD") (\(self.inAd ? "AD IS PLAYING" : "NO AD PLAYING")).") }
             }
-            if DEBUG_PIPCONTROLS { print("[NATIVE] Pip controls updated for \(self.isLive ? "LIVE" : "VOD") (\(self.inAd ? "AD IS PLAYING" : "NO AD PLAYING")).") }
         }
     }
     
@@ -70,7 +80,9 @@ class THEOplayerRCTPipControlsManager: NSObject {
         self.durationChangeListener = player.addEventListener(type: PlayerEventTypes.DURATION_CHANGE) { [weak self] event in
             if let duration = event.duration {
                 self?.isLive = duration.isInfinite
-                self?.updatePipControls()
+                if #available(iOS 14.0, tvOS 14.0, *) {
+                    self?.updatePipControls()
+                }
             }
         }
         
@@ -78,7 +90,9 @@ class THEOplayerRCTPipControlsManager: NSObject {
         self.sourceChangeListener = player.addEventListener(type: PlayerEventTypes.SOURCE_CHANGE) { [weak self] event in
             self?.isLive = false
             self?.inAd = false
-            self?.updatePipControls()
+            if #available(iOS 14.0, tvOS 14.0, *) {
+                self?.updatePipControls()
+            }
         }
         
 #if (GOOGLE_IMA || GOOGLE_DAI) || canImport(GoogleIMAIntegration)
