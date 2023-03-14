@@ -18,8 +18,8 @@ import { findNativeQualitiesByUid, fromNativeMediaTrackList, fromNativeTextTrack
 import type { ABRConfiguration, SourceDescription } from 'src/api/barrel';
 import { WebEventForwarder } from './WebEventForwarder';
 import type { PresentationMode } from 'src/api/presentation/PresentationMode';
-import type { PiPConfiguration } from 'src/api/pip/PiPConfiguration'
-import type { BackgroundAudioConfiguration } from 'src/api/backgroundAudio/BackgroundAudioConfiguration'
+import type { PiPConfiguration } from 'src/api/pip/PiPConfiguration';
+import type { BackgroundAudioConfiguration } from 'src/api/backgroundAudio/BackgroundAudioConfiguration';
 import { WebPresentationModeManager } from './web/WebPresentationModeManager';
 
 export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayer {
@@ -100,8 +100,8 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
 
   get pipConfiguration(): PiPConfiguration {
     // TODO
-    return { 
-      startsAutomatically: false
+    return {
+      startsAutomatically: false,
     };
   }
 
@@ -215,7 +215,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
 
   set currentTime(currentTime: number) {
     if (isNaN(currentTime)) {
-      throw new Error('Specified time is not a number');
+      return;
     }
     if (this._player) {
       this._player.currentTime = currentTime / 1e3;
