@@ -49,7 +49,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
       return
     }
     isInitialized = true
-    playerContext = ReactTHEOplayerContext(
+    playerContext = ReactTHEOplayerContext.create(
       reactContext,
       PlayerConfigAdapter.theoConfigFromProps(configProps)
     )
