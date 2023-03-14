@@ -80,7 +80,7 @@ class PresentationManager(
     get() = Build.VERSION.SDK_INT < Build.VERSION_CODES.N ||
       (reactContext.currentActivity?.isInPictureInPictureMode != true && pipConfig.startsAutomatically != true)
 
-  fun onDestroy() {
+  fun destroy() {
     try {
       reactContext.currentActivity?.unregisterReceiver(onUserLeaveHintReceiver)
       reactContext.currentActivity?.unregisterReceiver(onPictureInPictureModeChanged)

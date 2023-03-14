@@ -29,8 +29,9 @@ import com.theoplayer.audio.MediaPlaybackService
 import java.util.concurrent.atomic.AtomicBoolean
 
 private const val TAG = "ReactTHEOplayerContext"
+private const val USE_PLAYBACK_SERVICE = true
 
-class ReactTHEOplayerContext private constructor(
+class ReactTHEOplayerContext(
   private val reactContext: ThemedReactContext,
   playerConfig: THEOplayerConfig
 ) {
@@ -55,17 +56,7 @@ class ReactTHEOplayerContext private constructor(
   var castIntegration: CastIntegration? = null
 
   companion object {
-    private var bgInstance: ReactTHEOplayerContext? = null
-
-    fun create(
-      reactContext: ThemedReactContext,
-      playerConfig: THEOplayerConfig
-    ): ReactTHEOplayerContext {
-      // Reuse existing background instance, if available
-      val ctx = bgInstance ?: ReactTHEOplayerContext(reactContext, playerConfig)
-      ctx.createPlayerView(reactContext, playerConfig)
-      return ctx
-    }
+    private var mediaControlledInstance: ReactTHEOplayerContext? = null
   }
 
   private val connection = object : ServiceConnection {
@@ -81,7 +72,7 @@ class ReactTHEOplayerContext private constructor(
       binder?.setPlayerContext(this@ReactTHEOplayerContext)
     }
 
-    override fun onServiceDisconnected(p0: ComponentName?) {
+    override fun onServiceDisconnected(className: ComponentName?) {
       binder = null
     }
   }
@@ -149,7 +140,13 @@ class ReactTHEOplayerContext private constructor(
 
     addIntegrations(playerConfig)
     addListeners()
-    initDefaultMediaSession()
+
+    if (mediaControlledInstance == null) {
+      mediaControlledInstance = this
+      if (!USE_PLAYBACK_SERVICE) {
+        initDefaultMediaSession()
+      }
+    }
   }
 
   private fun initDefaultMediaSession() {
@@ -215,6 +212,10 @@ class ReactTHEOplayerContext private constructor(
   }
 
   private val onPlay = EventListener<PlayEvent> {
+    if (USE_PLAYBACK_SERVICE && mediaControlledInstance == this) {
+      bindMediaPlaybackService()
+    }
+
     if (backgroundAudioConfig.enabled) {
       binder?.updateNotification(PlaybackStateCompat.STATE_PLAYING)
     }
@@ -273,22 +274,15 @@ class ReactTHEOplayerContext private constructor(
     }
   }
 
-  /**
-   * The host activity is destroyed.
-   *
-   * - without backgroundAudioMode: destroy the player.
-   * - with backgroundAudioMode: unbind from the MediaPlaybackService.
-   */
-  fun onHostDestroy() {
-    if (!backgroundAudioConfig.enabled) {
-      destroy()
-    } else {
-      unbindMediaPlaybackService()
-    }
-  }
-
-  private fun destroy() {
+  fun destroy() {
     removeListeners()
+    if (mediaControlledInstance == this) {
+      if (USE_PLAYBACK_SERVICE) {
+        binder?.stopForegroundService()
+        unbindMediaPlaybackService()
+      }
+      mediaControlledInstance = null
+    }
     mediaSessionConnector?.destroy()
     playerView.onDestroy()
   }

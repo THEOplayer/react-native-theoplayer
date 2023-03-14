@@ -49,7 +49,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
       return
     }
     isInitialized = true
-    playerContext = ReactTHEOplayerContext.create(
+    playerContext = ReactTHEOplayerContext(
       reactContext,
       PlayerConfigAdapter.theoConfigFromProps(configProps)
     )
@@ -122,8 +122,8 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
 
     if (isInitialized) {
       eventEmitter.removeListeners(player)
-      presentationManager?.onDestroy()
-      playerContext?.onHostDestroy()
+      presentationManager?.destroy()
+      playerContext?.destroy()
       isInitialized = false
     }
   }
