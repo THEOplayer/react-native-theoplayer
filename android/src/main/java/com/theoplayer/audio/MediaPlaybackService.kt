@@ -62,8 +62,8 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
       service.updateNotification(playbackState)
     }
 
-    fun stopService() {
-      service.stopService()
+    fun stopForegroundService() {
+      service.stopForegroundService()
     }
   }
 
@@ -83,7 +83,7 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
       Intent(applicationContext, MediaPlaybackService::class.java)
     )
 
-    updateNotification(PlaybackStateCompat.STATE_PLAYING)
+    updateNotification(PlaybackStateCompat.STATE_NONE)
   }
 
   override fun onBind(intent: Intent): IBinder {
@@ -157,7 +157,7 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
     }
   }
 
-  private fun stopService() {
+  private fun stopForegroundService() {
     player?.pause()
     updateNotification(PlaybackStateCompat.STATE_STOPPED)
     stopSelf()
@@ -172,9 +172,9 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
     updateNotification()
   }
 
-  private val mediaSessionListener = object : MediaSessionListener {
+  private val mediaSessionListener = object : MediaSessionListener() {
     override fun onStop() {
-      stopService()
+      stopForegroundService()
     }
   }
 

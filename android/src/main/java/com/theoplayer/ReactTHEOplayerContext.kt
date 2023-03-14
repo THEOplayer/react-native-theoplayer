@@ -31,8 +31,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 private const val TAG = "ReactTHEOplayerContext"
 
 class ReactTHEOplayerContext private constructor(
-  private val reactContext: ThemedReactContext,
-  playerConfig: THEOplayerConfig
+  private val reactContext: ThemedReactContext
 ) {
   private val mainHandler = Handler(Looper.getMainLooper())
   private var isBound = AtomicBoolean()
@@ -55,16 +54,12 @@ class ReactTHEOplayerContext private constructor(
   var castIntegration: CastIntegration? = null
 
   companion object {
-    private var bgInstance: ReactTHEOplayerContext? = null
+    private var mediaControlledInstance: ReactTHEOplayerContext? = null
 
-    fun create(
-      reactContext: ThemedReactContext,
-      playerConfig: THEOplayerConfig
-    ): ReactTHEOplayerContext {
-      // Reuse existing background instance, if available
-      val ctx = bgInstance ?: ReactTHEOplayerContext(reactContext, playerConfig)
-      ctx.createPlayerView(reactContext, playerConfig)
-      return ctx
+    fun create(reactContext: ThemedReactContext, playerConfig: THEOplayerConfig): ReactTHEOplayerContext {
+      return ReactTHEOplayerContext(reactContext).apply {
+        initializePlayerView(playerConfig)
+      }
     }
   }
 
@@ -79,15 +74,13 @@ class ReactTHEOplayerContext private constructor(
 
       // Pass player context
       binder?.setPlayerContext(this@ReactTHEOplayerContext)
+
+      addListeners()
     }
 
-    override fun onServiceDisconnected(p0: ComponentName?) {
+    override fun onServiceDisconnected(className: ComponentName?) {
       binder = null
     }
-  }
-
-  init {
-    createPlayerView(reactContext, playerConfig)
   }
 
   private fun updateBackgroundPlayback(
@@ -126,7 +119,7 @@ class ReactTHEOplayerContext private constructor(
     }
   }
 
-  private fun createPlayerView(reactContext: ThemedReactContext, playerConfig: THEOplayerConfig) {
+  private fun initializePlayerView(playerConfig: THEOplayerConfig) {
     playerView = object : THEOplayerView(reactContext.currentActivity!!, playerConfig) {
       private fun measureAndLayout() {
         measure(
@@ -148,8 +141,15 @@ class ReactTHEOplayerContext private constructor(
     playerView.keepScreenOn = true
 
     addIntegrations(playerConfig)
-    addListeners()
-    initDefaultMediaSession()
+
+    if (mediaControlledInstance == null) {
+      mediaControlledInstance = this
+      if (BuildConfig.USE_PLAYBACK_SERVICE) {
+        bindMediaPlaybackService()
+      } else {
+        initDefaultMediaSession()
+      }
+    }
   }
 
   private fun initDefaultMediaSession() {
@@ -203,27 +203,19 @@ class ReactTHEOplayerContext private constructor(
   }
 
   private val onSourceChange = EventListener<SourceChangeEvent> {
-    if (backgroundAudioConfig.enabled) {
-      binder?.updateNotification()
-    }
+    binder?.updateNotification()
   }
 
   private val onLoadedMetadata = EventListener<LoadedMetadataEvent> {
-    if (backgroundAudioConfig.enabled) {
-      binder?.updateNotification()
-    }
+    binder?.updateNotification()
   }
 
   private val onPlay = EventListener<PlayEvent> {
-    if (backgroundAudioConfig.enabled) {
-      binder?.updateNotification(PlaybackStateCompat.STATE_PLAYING)
-    }
+    binder?.updateNotification(PlaybackStateCompat.STATE_PLAYING)
   }
 
   private val onPause = EventListener<PauseEvent> {
-    if (backgroundAudioConfig.enabled) {
-      binder?.updateNotification(PlaybackStateCompat.STATE_PAUSED)
-    }
+    binder?.updateNotification(PlaybackStateCompat.STATE_PAUSED)
   }
 
   private fun addListeners() {
@@ -273,22 +265,19 @@ class ReactTHEOplayerContext private constructor(
     }
   }
 
-  /**
-   * The host activity is destroyed.
-   *
-   * - without backgroundAudioMode: destroy the player.
-   * - with backgroundAudioMode: unbind from the MediaPlaybackService.
-   */
-  fun onHostDestroy() {
-    if (!backgroundAudioConfig.enabled) {
-      destroy()
-    } else {
-      unbindMediaPlaybackService()
-    }
-  }
+  fun destroy() {
+    if (mediaControlledInstance == this) {
+      if (BuildConfig.USE_PLAYBACK_SERVICE) {
+        removeListeners()
 
-  private fun destroy() {
-    removeListeners()
+        // Remove service from foreground
+        binder?.stopForegroundService()
+
+        // Unbind client from background service so it can stop
+        unbindMediaPlaybackService()
+      }
+      mediaControlledInstance = null
+    }
     mediaSessionConnector?.destroy()
     playerView.onDestroy()
   }
