@@ -42,6 +42,7 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         commandCenter.pauseCommand.isEnabled = true
         commandCenter.togglePlayPauseCommand.isEnabled = true
         commandCenter.stopCommand.isEnabled = true
+        commandCenter.changePlaybackPositionCommand.isEnabled = true
         
         // PLAY
         commandCenter.playCommand.addTarget(self, action: #selector(onPlayCommand(_:)))
@@ -51,6 +52,8 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         commandCenter.togglePlayPauseCommand.addTarget(self, action: #selector(onTogglePlayPauseCommand(_:)))
         // STOP
         commandCenter.stopCommand.addTarget(self, action: #selector(onStopCommand(_:)))
+        // SCRUBBER
+        commandCenter.changePlaybackPositionCommand.addTarget(self, action: #selector(onScrubCommand(_:)))
         // ADD SEEK FORWARD
         commandCenter.skipForwardCommand.preferredIntervals = [NSNumber(value: DEFAULT_SKIP_INTERVAL)]
         commandCenter.skipForwardCommand.addTarget(self, action: #selector(onSkipForwardCommand(_:)))
@@ -67,6 +70,7 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         commandCenter.pauseCommand.isEnabled = !self.inAd
         commandCenter.togglePlayPauseCommand.isEnabled = !self.inAd
         commandCenter.stopCommand.isEnabled = !self.inAd
+        commandCenter.changePlaybackPositionCommand.isEnabled = !isLive && !self.inAd
         commandCenter.skipForwardCommand.isEnabled = !isLive && !self.inAd
         commandCenter.skipBackwardCommand.isEnabled = !isLive && !self.inAd
         if DEBUG_REMOTECOMMANDS { print("[NATIVE] Remote commands updated for \(self.isLive ? "LIVE" : "VOD") (\(self.inAd ? "AD IS PLAYING" : "NO AD PLAYING")).") }
@@ -117,6 +121,16 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
             return .success
         }
         if DEBUG_REMOTECOMMANDS { print("[NATIVE] Stop command Failed.") }
+        return .commandFailed
+    }
+    
+    @objc private func onScrubCommand(_ event: MPChangePlaybackPositionCommandEvent) -> MPRemoteCommandHandlerStatus {
+        if let player = self.player {
+            player.setCurrentTime(event.positionTime)
+            if DEBUG_REMOTECOMMANDS { print("[NATIVE] Scrub command triggered.") }
+            return .success
+        }
+        if DEBUG_REMOTECOMMANDS { print("[NATIVE] Scrub command Failed.") }
         return .commandFailed
     }
     
