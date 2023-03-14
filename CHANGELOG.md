@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Replaced deprecated systemUiVisibility code in Android's PresentationManager.
 - Use `enum` types for `TextTrackMode`, `TextTrackType` and `TextTrackKind`.
+- Allow go-to-live on iOS and Android by setting `currentTime` to `Infinity`.
 
 ### Added
 
