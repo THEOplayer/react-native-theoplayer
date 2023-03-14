@@ -25,7 +25,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added a `mediaControl` property to `PlayerConfiguration` to configure Media Session, Now Playing and Remote Command Center functionality across all platforms. It currently only contains a media session toggle for Web.
 - Added a `backgroundAudioConfiguration` property to `THEOplayer` to allow dynamically configuring background audio functionality.
 - Added a `pipConfiguration` property to `THEOplayer` to allow dynamically configuring picture-in-picture behavior.
-- Added support for background audio playback on iOS.
+- Added support for background audio playback on iOS and Android.
 - Added `keepScreenOn` as a default player view property on Android to keep the device awake.
 
 ## [Unreleased 2.0.0-pre6]
