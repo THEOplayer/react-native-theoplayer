@@ -83,7 +83,7 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
       Intent(applicationContext, MediaPlaybackService::class.java)
     )
 
-    updateNotification(PlaybackStateCompat.STATE_NONE)
+    updateNotification(PlaybackStateCompat.STATE_PLAYING)
   }
 
   override fun onBind(intent: Intent): IBinder {

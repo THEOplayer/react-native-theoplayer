@@ -74,8 +74,6 @@ class ReactTHEOplayerContext private constructor(
 
       // Pass player context
       binder?.setPlayerContext(this@ReactTHEOplayerContext)
-
-      addListeners()
     }
 
     override fun onServiceDisconnected(className: ComponentName?) {
@@ -141,12 +139,11 @@ class ReactTHEOplayerContext private constructor(
     playerView.keepScreenOn = true
 
     addIntegrations(playerConfig)
+    addListeners()
 
     if (mediaControlledInstance == null) {
       mediaControlledInstance = this
-      if (BuildConfig.USE_PLAYBACK_SERVICE) {
-        bindMediaPlaybackService()
-      } else {
+      if (!BuildConfig.USE_PLAYBACK_SERVICE) {
         initDefaultMediaSession()
       }
     }
@@ -203,6 +200,7 @@ class ReactTHEOplayerContext private constructor(
   }
 
   private val onSourceChange = EventListener<SourceChangeEvent> {
+    mediaSessionConnector?.setMediaSessionMetadata(player.source)
     binder?.updateNotification()
   }
 
@@ -211,6 +209,9 @@ class ReactTHEOplayerContext private constructor(
   }
 
   private val onPlay = EventListener<PlayEvent> {
+    if (BuildConfig.USE_PLAYBACK_SERVICE) {
+      bindMediaPlaybackService()
+    }
     binder?.updateNotification(PlaybackStateCompat.STATE_PLAYING)
   }
 
