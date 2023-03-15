@@ -57,7 +57,8 @@ extension THEOplayerRCTSourceDescriptionBuilder {
         if let integration = adsData[SD_PROP_INTEGRATION] as? String,
            integration == AdIntegration.google_ima._rawValue {
             // timeOffset can be Int or String: 10, "01:32:54.78", "1234.56", "start", "end", "10%", ...
-            let timeOffset = adsData[SD_PROP_TIME_OFFSET] as? String ?? String(adsData[SD_PROP_TIME_OFFSET] as? Int ?? 0)
+            // timeOffset is received in msec
+            let timeOffset = THEOplayerRCTSourceDescriptionBuilder.extractTimeOffset(adsData)
             var srcString: String?
             if let sourcesData = adsData[SD_PROP_SOURCES] as? [String:Any] {
                 srcString = sourcesData[SD_PROP_SRC] as? String
@@ -74,6 +75,28 @@ extension THEOplayerRCTSourceDescriptionBuilder {
 #endif
         
         return nil
+    }
+    
+    private static func extractTimeOffset(_ adsData: [String:Any]) -> String? {
+        // if string
+        if let stringValue = adsData[SD_PROP_TIME_OFFSET] as? String {
+            if let intValue = Int(stringValue) {
+                return String(Double(intValue) * 0.001)
+            } else if let doubleValue = Double(stringValue) {
+                return String(doubleValue * 0.001)
+            } else {
+                return stringValue
+            }
+        } // if int
+        else if let intValue = adsData[SD_PROP_TIME_OFFSET] as? Int {
+            return String(Double(intValue) * 0.001)
+        } // if double
+        else if let doubleValue = adsData[SD_PROP_TIME_OFFSET] as? Double {
+            return String(doubleValue * 0.001)
+        } // otherwise
+        else {
+            return nil
+        }
     }
     
     static func buildDAITypedSource(_ typedSourceData: [String:Any]) -> TypedSource? {
