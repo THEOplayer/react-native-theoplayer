@@ -53,3 +53,10 @@ properties:
 | ![notification_android](./notification_android.png) | ![notification_ios](./notification_ios.png) |  ![notification_web](./notification_web.png)   |
 |-----------------------------------------------------|:-------------------------------------------:|:---:|
 | Android                             |                     iOS                     | Web |
+
+#### Configuration
+
+The `mediaControl` property of `PlayerConfiguration` hosts properties that affect the notifications, media sessions and
+controls on each platform. Currently, it only contains a property `mediaSessionEnabled`
+that toggles the Media Session API on web. If it is disabled, no media session properties or actions will be set.
+
