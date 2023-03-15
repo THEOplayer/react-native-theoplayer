@@ -16,16 +16,13 @@ This page describes how to configure PiP with react-native-theoplayer.
 
 #### Transitioning to PiP automatically
 
-The `PlayerConfiguration` object that is passed when creating a `THEOplayerView` component
-allows native mobile apps on iOS and Android to automatically go into PiP presentation mode when
+The `pipConfiguration` property that is set on the player instance
+allows native mobile apps on iOS and Android to automatically transition into PiP presentation mode when
+the app goes to the background. The property can be changed at run-time, allowing to change the
+behaviour depending on the active media asset.
 
 ```typescript
-const playerConfig: PlayerConfiguration = {
-  pip: {
-    // Automatically switch to PiP when the app goes to background.
-    canStartPictureInPictureAutomaticallyFromInline: true,
-  },
-};
+player.pipConfiguration = { startsAutomatically: true }
 ```
 
 #### Using presentationMode
@@ -96,12 +93,6 @@ override fun onPictureInPictureModeChanged(
     val intent = Intent("onPictureInPictureModeChanged")
     intent.putExtra("isInPictureInPictureMode", isInPictureInPictureMode)
     this.sendBroadcast(intent)
-}
-
-public override fun onStop() {
-    super.onStop()
-    // The activity is done and should be closed and its task should be completely removed.
-    finishAndRemoveTask()
 }
 ```
 
