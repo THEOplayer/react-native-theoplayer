@@ -134,7 +134,7 @@
           "sources": {
             "src": "https://contentserver.prudentgiraffe.com/ads/vast-skippable.xml"
           },
-          "timeOffset": 10
+          "timeOffset": 10000
         }
       ]
     }
@@ -257,7 +257,7 @@
           "sources": {
             "src": "https://contentserver.prudentgiraffe.com/ads/vast-skippable.xml"
           },
-          "timeOffset": 10
+          "timeOffset": "10000"
         }
       ]
     }
