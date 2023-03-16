@@ -13,7 +13,6 @@ export class THEOplayerNativeChromecast implements Chromecast {
     this._player = player;
     this._view = view;
     this._player.addEventListener(PlayerEventType.CAST_EVENT, this._onCastStateChange);
-    void this.init_();
   }
 
   async init_(): Promise<void> {

@@ -11,7 +11,6 @@ export class THEOplayerNativeAirplay implements Airplay {
   public constructor(player: THEOplayer) {
     this._player = player;
     this._player.addEventListener(PlayerEventType.CAST_EVENT, this._onCastStateChange);
-    void this.init_();
   }
 
   async init_(): Promise<void> {
