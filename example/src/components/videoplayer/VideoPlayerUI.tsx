@@ -376,14 +376,13 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
   private toggleAirplay = () => {
     const { player } = this.props;
     if (Platform.OS === 'ios' && !Platform.isTV) {
-      player.cast.airplay?.state().then((airplayCastState) => {
-        const inConnection = airplayCastState === 'connected' || airplayCastState === 'connecting';
-        if (inConnection) {
-          player.cast.airplay?.stop();
-        } else {
-          player.cast.airplay?.start();
-        }
-      });
+      const airplayCastState = player.cast.airplay?.state;
+      const inConnection = airplayCastState === 'connected' || airplayCastState === 'connecting';
+      if (inConnection) {
+        player.cast.airplay?.stop();
+      } else {
+        player.cast.airplay?.start();
+      }
     }
   };
 
