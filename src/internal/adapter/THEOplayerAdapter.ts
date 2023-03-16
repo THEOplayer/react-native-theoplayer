@@ -449,7 +449,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     return this._view.nativeHandle;
   }
 
-  applyNativeState(state: NativePlayerState) {
+  initializeWithNativePlayerState_(state: NativePlayerState) {
     Object.assign(this._state, state);
     this._castAdapter.init_();
   }

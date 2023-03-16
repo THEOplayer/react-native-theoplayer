@@ -138,7 +138,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
     // Optionally apply an initial player state
     const { state } = event?.nativeEvent;
     if (state) {
-      this._facade.applyNativeState(state);
+      this._facade.initializeWithNativePlayerState_(state);
     }
     this.props.onPlayerReady?.(this._facade);
   };
