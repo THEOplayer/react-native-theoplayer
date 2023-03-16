@@ -11,6 +11,7 @@ export enum TextTrackType {
 
 export enum TextTrackKind {
   captions = 'captions',
+  chapters = 'chapters',
   descriptions = 'descriptions',
   metadata = 'metadata',
   subtitles = 'subtitles',
