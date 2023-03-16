@@ -1,13 +1,13 @@
 import { DefaultEventDispatcher } from '../event/DefaultEventDispatcher';
 import type { PlayerEventMap } from 'react-native-theoplayer';
 import type * as THEOplayerWeb from 'theoplayer';
-import type { PresentationMode } from 'src/api/presentation/PresentationMode';
+import { PresentationMode } from 'src/api/presentation/PresentationMode';
 import { DefaultPresentationModeChangeEvent } from '../event/PlayerEvents';
 import { browserDetection } from '../../../web/platform/BrowserDetection';
 
 export class WebPresentationModeManager extends DefaultEventDispatcher<PlayerEventMap> {
   private readonly _player: THEOplayerWeb.ChromelessPlayer;
-  private _presentationMode: PresentationMode = 'inline';
+  private _presentationMode: PresentationMode = PresentationMode.inline;
   private _element: HTMLVideoElement | undefined = undefined;
 
   constructor(player: THEOplayerWeb.ChromelessPlayer) {
@@ -28,25 +28,26 @@ export class WebPresentationModeManager extends DefaultEventDispatcher<PlayerEve
 
     // on iOS Safari requestFullscreen isn't supported (https://caniuse.com/?search=requestFullscreen), where we need to use webkit methods on the video element
     if (/*browserDetection.IS_IOS_ && */ browserDetection.IS_SAFARI_) {
-      if (presentationMode === 'fullscreen') {
+      if (presentationMode === PresentationMode.fullscreen) {
         this._element?.webkitEnterFullscreen?.();
-      } else if (presentationMode === 'picture-in-picture') {
-        this._element?.webkitSetPresentationMode?.('picture-in-picture');
+      } else if (presentationMode === PresentationMode.pip) {
+        this._element?.webkitSetPresentationMode?.(PresentationMode.pip);
       } else {
-        this._element?.webkitSetPresentationMode?.('inline');
+        this._element?.webkitSetPresentationMode?.(PresentationMode.inline);
       }
     } else {
-      // other web-platforms
-      if (presentationMode === 'fullscreen') {
+      // other web-platformsyarn
+      
+      if (presentationMode === PresentationMode.fullscreen) {
         const appElement = document.getElementById('app');
         void appElement?.requestFullscreen();
-      } else if (presentationMode === 'picture-in-picture') {
+      } else if (presentationMode === PresentationMode.pip) {
         void this._element?.requestPictureInPicture?.();
       } else {
-        if (this._presentationMode === 'fullscreen') {
+        if (this._presentationMode === PresentationMode.fullscreen) {
           void document.exitFullscreen();
         }
-        if (this._presentationMode === 'picture-in-picture') {
+        if (this._presentationMode === PresentationMode.pip) {
           void document.exitPictureInPicture();
         }
       }
@@ -77,11 +78,11 @@ export class WebPresentationModeManager extends DefaultEventDispatcher<PlayerEve
 
   private updatePresentationMode() {
     // detect new presentation mode
-    let newPresentationMode: PresentationMode = 'inline';
+    let newPresentationMode: PresentationMode = PresentationMode.inline;
     if (document.fullscreenElement !== null) {
-      newPresentationMode = 'fullscreen';
+      newPresentationMode = PresentationMode.fullscreen;
     } else if (document.pictureInPictureElement !== null) {
-      newPresentationMode = 'picture-in-picture';
+      newPresentationMode = PresentationMode.pip;
     }
 
     // when changed, notify by dispatching presentationModeChange event
