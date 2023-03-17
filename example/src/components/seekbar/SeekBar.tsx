@@ -96,12 +96,13 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
 
   render() {
     const { seekable, currentTime, duration } = this.state;
+    const { style } = this.props;
     return (
       <PlayerContext.Consumer>
         {(context: UiContext) => (
           <Slider
             disabled={!(duration > 0) && seekable.length > 0}
-            style={[StyleSheet.absoluteFill]}
+            style={[StyleSheet.absoluteFill, style]}
             minimumValue={seekable.length > 0 ? seekable[0].start : 0}
             maximumValue={seekable.length > 0 ? seekable[0].end : 0}
             step={1000}
