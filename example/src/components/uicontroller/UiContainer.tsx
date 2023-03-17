@@ -78,6 +78,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
     player.removeEventListener(PlayerEventType.PAUSE, this.onPause);
     player.removeEventListener(PlayerEventType.SOURCE_CHANGE, this.onSourceChange);
     player.removeEventListener(PlayerEventType.CAST_EVENT, this.onCastEvent);
+    player.removeEventListener(PlayerEventType.ENDED, this.onEnded);
   }
 
   private onPlay = () => {
