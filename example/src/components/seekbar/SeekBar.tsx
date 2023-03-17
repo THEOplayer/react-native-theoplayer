@@ -35,6 +35,8 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
     pausedDueToScrubbing: false,
   };
 
+  private _seekBlockingTimeout: NodeJS.Timeout | undefined;
+
   constructor(props: SeekBarProps) {
     super(props);
     this.state = SeekBar.initialState;
@@ -73,18 +75,20 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
       player.pause();
       this.setState({ pausedDueToScrubbing: true });
     }
-    this.setState({ isScrubbing: true });
-    player.currentTime = value;
+    this.setState({ currentTime: value, isScrubbing: true });
+    this.debounceSeek();
   };
 
   private _onValueChange = (value: number) => {
+    this.setState({ currentTime: value });
     if (this.state.isScrubbing) {
-      const player = (this.context as UiContext).player;
-      player.currentTime = value;
+      this.debounceSeek();
     }
   };
 
   private _onSlidingComplete = (value: number) => {
+    clearTimeout(this._seekBlockingTimeout);
+    this._seekBlockingTimeout = undefined;
     const player = (this.context as UiContext).player;
     player.currentTime = value;
     this.setState({ isScrubbing: false });
@@ -94,17 +98,33 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
     }
   };
 
+  private debounceSeek = () => {
+    // Don't bombard the player with seeks when seeking. Allow only one seek ever X milliseconds:
+    const MAX_SEEK_INTERVAL = 200;
+    if (this._seekBlockingTimeout === undefined) {
+      const { currentTime } = this.state;
+      const player = (this.context as UiContext).player;
+      player.currentTime = currentTime;
+      const allowSeeks = () => {
+        this._seekBlockingTimeout = undefined;
+      };
+      this._seekBlockingTimeout = setTimeout(allowSeeks, MAX_SEEK_INTERVAL);
+    }
+  };
+
   render() {
     const { seekable, currentTime, duration } = this.state;
     const { style } = this.props;
+    const seekableStart = seekable.length > 0 ? seekable[0].start : 0;
+    const seekableEnd = seekable.length > 0 ? seekable[seekable.length - 1].end : 0; // TODO what if it's fragmented?
     return (
       <PlayerContext.Consumer>
         {(context: UiContext) => (
           <Slider
             disabled={!(duration > 0) && seekable.length > 0}
             style={[StyleSheet.absoluteFill, style]}
-            minimumValue={seekable.length > 0 ? seekable[0].start : 0}
-            maximumValue={seekable.length > 0 ? seekable[0].end : 0}
+            minimumValue={seekableStart}
+            maximumValue={seekableEnd}
             step={1000}
             onSlidingStart={this._onSlidingStart}
             onValueChange={this._onValueChange}
