@@ -1,235 +1,53 @@
 import React, { PureComponent } from 'react';
 import 'react-native/tvos-types.d';
-import {
-  Dimensions,
-  findNodeHandle,
-  GestureResponderEvent,
-  PanResponder,
-  PanResponderGestureState,
-  PanResponderInstance,
-  Platform,
-  TouchableOpacity,
-  TVEventHandler,
-  View,
-} from 'react-native';
-import {
-  SEEK_TIMER_DELAY_MSEC,
-  SeekBarProps,
-  SKIP_BACKWARD_MSEC_DEFAULT,
-  SKIP_FORWARD_MSEC_DEFAULT,
-  TIMEUPDATES_AFTER_SEEKING,
-} from './SeekBarProps';
-import type { SeekBarPosition } from './SeekBarPosition';
-import {
-  DurationChangeEvent,
-  filterThumbnailTracks,
-  LoadedMetadataEvent,
-  PlayerEventType,
-  ProgressEvent,
-  TextTrack,
-  TimeRange,
-  TimeUpdateEvent,
-} from 'react-native-theoplayer';
-import { ThumbnailView } from './thumbnail/ThumbnailView';
+import { StyleProp, StyleSheet, ViewStyle } from 'react-native';
+import { DurationChangeEvent, LoadedMetadataEvent, PlayerEventType, ProgressEvent, TimeRange, TimeUpdateEvent } from 'react-native-theoplayer';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
+import Slider from '@react-native-community/slider';
+import type { ThumbnailMode } from './ThumbnailRendering';
+
+export interface SeekBarProps {
+  /**
+   * Optional style applied to the SeekBar.
+   */
+  style?: StyleProp<ViewStyle>;
+
+  /**
+   * Thumbnail view mode.
+   */
+  thumbnailMode?: ThumbnailMode;
+}
 
 interface SeekBarState {
-  focused: boolean;
   isScrubbing: boolean;
-  waitForTimeUpdates: number;
-  seekTime: number;
+  pausedDueToScrubbing: boolean;
   seekable: TimeRange[];
   duration: number;
   currentTime: number;
-  textTracks: TextTrack[];
 }
 
-// default thumbnail size (width).
-export const THUMBNAIL_SIZE = 0.19 * Math.max(Dimensions.get('window').width, Dimensions.get('window').height);
-// carousel mode
-export type ThumbnailMode = 'single' | 'carousel';
-export const THUMBNAIL_MODE: ThumbnailMode = 'carousel';
-
-// TODO: This component will be completely reworked in a follow-up to change the look and feel, aligning it with other THEOplayer SDKs.
-/**
- * SeekBar provides an interactive progress component that supports both touch-based and remote-controlled devices.
- *
- * On TV platforms, a TVEventHandlers listens for left/right press events to skip forward/backward, only
- * if the SeekBar is focused.
- * When pressing 'OK', the onDotPress callback is invoked.
- *
- * On mobile devices supporting touch interaction, a PanResponder captures the scrubbing gestures.
- * Touch events on the SeekBar are interpreted as skip forward/backward.
- */
 export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
-  private _width = 0;
-  private _offset = 0;
-  private _scrubberArea: TouchableOpacity | null = null;
-  private _tvEventHandler: TVEventHandler | undefined;
-  private _seekPanResponder!: PanResponderInstance;
-  private _seekTimer: NodeJS.Timeout | null = null;
-
-  private animationPauseId: number | undefined = undefined;
-
   private static initialState: SeekBarState = {
-    textTracks: [],
-    focused: false,
-    waitForTimeUpdates: 0,
-    seekTime: 0,
     isScrubbing: false,
-    currentTime: 0.0,
+    currentTime: 0,
     duration: 0,
     seekable: [],
+    pausedDueToScrubbing: false,
   };
 
   constructor(props: SeekBarProps) {
     super(props);
     this.state = SeekBar.initialState;
-    if (!Platform.isTV) {
-      this.initSeekPanResponder();
-    }
-  }
-
-  private onSeek = (time: number) => {
-    const player = (this.context as UiContext).player;
-    if (!isNaN(time)) {
-      player.currentTime = time;
-    }
-  };
-
-  private onProgress = (event: ProgressEvent) => {
-    const { seekable } = event;
-    this.setState({ seekable });
-  };
-
-  private initSeekPanResponder() {
-    this._seekPanResponder = PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onMoveShouldSetPanResponder: () => true,
-      onPanResponderTerminationRequest: () => false,
-      onPanResponderGrant: () => {
-        this.setState({ isScrubbing: false });
-        const { onStartScrubbing } = this.props;
-        if (onStartScrubbing) {
-          onStartScrubbing();
-        }
-        if (this.animationPauseId === undefined) {
-          const uiController = (this.context as UiContext).ui;
-          this.animationPauseId = uiController.setUserActive_();
-        }
-      },
-      onPanResponderMove: (_evt: GestureResponderEvent, gestureState: PanResponderGestureState) => {
-        const seekTime = this.seekableStart + (this.duration * (gestureState.moveX - this._offset)) / this._width;
-        this.onSeekingPositionChanged(seekTime);
-      },
-      onPanResponderRelease: () => {
-        // Note: isScrubbing state is disabled after a number of time updates.
-        const { onStopScrubbing } = this.props;
-        if (onStopScrubbing) {
-          onStopScrubbing();
-        }
-        if (this.animationPauseId !== undefined) {
-          const uiController = (this.context as UiContext).ui;
-          uiController.setUserIdle_(this.animationPauseId);
-          this.animationPauseId = undefined;
-        }
-      },
-    });
-  }
-
-  private enableTVEventHandler() {
-    this._tvEventHandler = new TVEventHandler();
-    this._tvEventHandler.enable(this, (_cmp, evt) => {
-      const { focused } = this.state;
-      if (!focused) {
-        return;
-      }
-      if (Platform.OS == 'ios' && Platform.isTVOS) {
-        if (evt && evt.eventType === 'swipeRight') {
-          this.seekForward();
-        } else if (evt && evt.eventType === 'swipeLeft') {
-          this.seekBackward();
-        }
-      } else {
-        if (evt && evt.eventType === 'right') {
-          if (evt.eventKeyAction === 1) {
-            this.seekForward();
-          }
-        } else if (evt && evt.eventType === 'left') {
-          if (evt.eventKeyAction === 1) {
-            this.seekBackward();
-          }
-        }
-      }
-    });
-  }
-
-  private disableTVEventHandler() {
-    if (this._tvEventHandler) {
-      this._tvEventHandler.disable();
-      delete this._tvEventHandler;
-    }
-  }
-
-  private onSeekingPositionChanged = (seekTime: number) => {
-    const { onScrubbingPositionChanged } = this.props;
-    const { currentTime: prevTime } = this.state;
-
-    // clamp seekTime within seekable range.
-    const clampedSeekTime = Math.max(this.seekableStart, Math.min(this.duration, seekTime));
-    this.setState({ isScrubbing: true, seekTime: clampedSeekTime });
-
-    if (this._seekTimer) {
-      clearTimeout(this._seekTimer);
-      this._seekTimer = null;
-    }
-
-    // avoid hammering the player with seek events, so add delay before actually notifying seek.
-    this._seekTimer = setTimeout(() => {
-      this.notifyDelayedSeek(clampedSeekTime);
-    }, SEEK_TIMER_DELAY_MSEC);
-
-    // optionally notify change in position.
-    if (onScrubbingPositionChanged) {
-      onScrubbingPositionChanged(clampedSeekTime, prevTime);
-    }
-  };
-
-  private notifyDelayedSeek(seekTime: number) {
-    this.onSeek(seekTime);
-    this.setState({ isScrubbing: false, waitForTimeUpdates: TIMEUPDATES_AFTER_SEEKING });
-  }
-
-  private seekForward() {
-    const { isScrubbing, seekTime, currentTime } = this.state;
-    const { skipForwardMsec } = this.props;
-    const skip = skipForwardMsec ?? SKIP_FORWARD_MSEC_DEFAULT;
-    const newSeekTime = isScrubbing ? seekTime + skip : currentTime + skip;
-    this.onSeekingPositionChanged(newSeekTime);
-  }
-
-  private seekBackward() {
-    const { isScrubbing, seekTime, currentTime } = this.state;
-    const { skipBackwardMsec } = this.props;
-    const skip = skipBackwardMsec ?? SKIP_BACKWARD_MSEC_DEFAULT;
-    const newSeekTime = isScrubbing ? seekTime - skip : currentTime - skip;
-    this.onSeekingPositionChanged(newSeekTime);
   }
 
   componentDidMount() {
-    if (Platform.isTV) {
-      this.enableTVEventHandler();
-    }
     const player = (this.context as UiContext).player;
-    player.addEventListener(PlayerEventType.PROGRESS, this.onProgress);
-    player.addEventListener(PlayerEventType.TIME_UPDATE, this.onTimeUpdate);
-    player.addEventListener(PlayerEventType.TEXT_TRACK_LIST, this.onTextTrackListEvent);
-    player.addEventListener(PlayerEventType.TEXT_TRACK, this.onTextTrackEvent);
-    player.addEventListener(PlayerEventType.DURATION_CHANGE, this.onDurationChange);
-    player.addEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
+    player.addEventListener(PlayerEventType.LOADED_METADATA, this._onLoadedMetadata);
+    player.addEventListener(PlayerEventType.DURATION_CHANGE, this._onDurationChange);
+    player.addEventListener(PlayerEventType.TIME_UPDATE, this._onTimeUpdate);
+    player.addEventListener(PlayerEventType.PROGRESS, this._onProgress);
     this.setState({
       ...SeekBar.initialState,
-      textTracks: player.textTracks,
       currentTime: player.currentTime,
       duration: player.duration,
       seekable: player.seekable,
@@ -237,291 +55,69 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
   }
 
   componentWillUnmount() {
-    if (Platform.isTV) {
-      this.disableTVEventHandler();
-    }
     const context = this.context as UiContext;
-    context.player.removeEventListener(PlayerEventType.PROGRESS, this.onProgress);
-    context.player.removeEventListener(PlayerEventType.TIME_UPDATE, this.onTimeUpdate);
-    context.player.removeEventListener(PlayerEventType.TEXT_TRACK_LIST, this.onTextTrackListEvent);
-    context.player.removeEventListener(PlayerEventType.TEXT_TRACK, this.onTextTrackEvent);
-    context.player.removeEventListener(PlayerEventType.DURATION_CHANGE, this.onDurationChange);
-    context.player.removeEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
-    if (this.animationPauseId !== undefined) {
-      context.ui.setUserIdle_(this.animationPauseId);
-    }
+    context.player.removeEventListener(PlayerEventType.LOADED_METADATA, this._onLoadedMetadata);
+    context.player.removeEventListener(PlayerEventType.DURATION_CHANGE, this._onDurationChange);
+    context.player.removeEventListener(PlayerEventType.TIME_UPDATE, this._onTimeUpdate);
+    context.player.removeEventListener(PlayerEventType.PROGRESS, this._onProgress);
   }
 
-  componentDidUpdate(_: Readonly<SeekBarProps>, prevState: Readonly<SeekBarState>) {
-    const { isScrubbing: wasScrubbing } = prevState;
-    const { isScrubbing } = this.state;
-    const { onStartScrubbing, onStopScrubbing } = this.props;
+  private _onTimeUpdate = (event: TimeUpdateEvent) => this.setState({ currentTime: event.currentTime });
+  private _onLoadedMetadata = (event: LoadedMetadataEvent) => this.setState({ duration: event.duration });
+  private _onDurationChange = (event: DurationChangeEvent) => this.setState({ duration: event.duration });
+  private _onProgress = (event: ProgressEvent) => this.setState({ seekable: event.seekable });
 
-    if (!isScrubbing && wasScrubbing && onStartScrubbing) {
-      onStartScrubbing();
-    } else if (isScrubbing && !wasScrubbing && onStopScrubbing) {
-      onStopScrubbing();
-    }
-  }
-
-  setScrubberArea = (ref: TouchableOpacity | null) => {
-    this._scrubberArea = ref;
-    if (Platform.isTV && ref) {
-      // on TV platforms we don't want to change focus when navigation left/right.
-      ref.setNativeProps({
-        nextFocusLeft: findNodeHandle(ref),
-        nextFocusRight: findNodeHandle(ref),
-      });
-    }
-  };
-
-  private get seekableStart(): number {
-    const { seekable } = this.state;
-    return seekable.length > 0 ? seekable[0].start : 0;
-  }
-
-  private get duration(): number {
-    const { seekable, duration } = this.state;
-    const validDuration = isNaN(duration) ? 0 : duration;
-    return seekable.length > 0 ? seekable[seekable.length - 1].end - seekable[0].start : validDuration;
-  }
-
-  private get currentProgress(): number {
-    const { currentTime } = this.state;
-    const { waitForTimeUpdates, isScrubbing, seekTime } = this.state;
-    // use seekTime while waiting for time updates
-    if (isScrubbing || waitForTimeUpdates > 0) {
-      return seekTime;
-    }
-    return currentTime;
-  }
-
-  private get currentProgressPercentage(): number {
-    const duration = this.duration;
-    return duration > 0 ? (this.currentProgress - this.seekableStart) / duration : 0;
-  }
-
-  private get seekBarPosition(): SeekBarPosition {
-    const { isScrubbing } = this.state;
-    return {
-      currentProgress: this.currentProgress,
-      currentProgressPercentage: this.currentProgressPercentage,
-      duration: this.duration,
-      isScrubbing,
-      seekBarWidth: this._width,
-    };
-  }
-
-  measureScrubber = () => {
-    if (this._scrubberArea) {
-      this._scrubberArea.measure((_x: number, _y: number, width: number, _height: number, pageX: number) => {
-        this._width = width;
-        this._offset = pageX;
-      });
-    }
-  };
-
-  onTouchScrubber = (event: GestureResponderEvent) => {
-    const { isScrubbing, seekTime, currentTime } = this.state;
-    const offsetX = Platform.select({
-      default: event.nativeEvent.locationX,
-      web: (event.nativeEvent as unknown as PointerEvent).offsetX,
-    });
-    // check whether the use is touch before or after the current time.
-    const newSeekTime = (this.duration * offsetX) / this._width;
-    const scrubberTime = isScrubbing ? seekTime : currentTime;
-    if (newSeekTime > scrubberTime) {
-      this.seekForward();
-    } else {
-      this.seekBackward();
-    }
-    const uiController = (this.context as UiContext).ui;
-    uiController.onUserAction_();
-  };
-
-  onFocus = () => {
-    this.setState({ focused: true });
-  };
-
-  onBlur = () => {
-    this.setState({ focused: false });
-  };
-
-  onDotPress = () => {
-    // On TV platforms we use the progress dot to play/pause
+  private _onSlidingStart = (value: number) => {
     const player = (this.context as UiContext).player;
-    if (player.paused) {
-      player.play();
-    } else {
+    if (!player.paused) {
       player.pause();
+      this.setState({ pausedDueToScrubbing: true });
+    }
+    this.setState({ isScrubbing: true });
+    player.currentTime = value;
+  };
+
+  private _onValueChange = (value: number) => {
+    if (this.state.isScrubbing) {
+      const player = (this.context as UiContext).player;
+      player.currentTime = value;
     }
   };
 
-  private onTextTrackListEvent = () => {
+  private _onSlidingComplete = (value: number) => {
     const player = (this.context as UiContext).player;
-    this.setState({ textTracks: player.textTracks });
-  };
-
-  private onTextTrackEvent = () => {
-    const player = (this.context as UiContext).player;
-    this.setState({ textTracks: player.textTracks });
-  };
-
-  private onTimeUpdate = (event: TimeUpdateEvent) => {
-    const { currentTime } = event;
-    const { currentTime: prevTime, waitForTimeUpdates } = this.state;
-
-    if (waitForTimeUpdates > 0 && currentTime !== prevTime) {
-      this.setState({ waitForTimeUpdates: waitForTimeUpdates - 1 });
+    player.currentTime = value;
+    this.setState({ isScrubbing: false });
+    if (this.state.pausedDueToScrubbing) {
+      player.play();
+      this.setState({ pausedDueToScrubbing: false });
     }
-
-    this.setState({ currentTime });
-  };
-
-  private onLoadedMetadata = (event: LoadedMetadataEvent) => {
-    this.setState({
-      duration: event.duration,
-      textTracks: event.textTracks,
-    });
-  };
-
-  private onDurationChange = (event: DurationChangeEvent) => {
-    const { duration } = event;
-    this.setState({ duration });
   };
 
   render() {
-    const currentProgressPercentage = this.currentProgressPercentage;
-    const flexCompleted = currentProgressPercentage * 100;
-    const flexRemaining = (1 - currentProgressPercentage) * 100;
-    const { focused } = this.state;
-    const { style, progressDotStyle, thumbnailMode } = this.props;
-
+    const { seekable, currentTime, duration } = this.state;
     return (
       <PlayerContext.Consumer>
         {(context: UiContext) => (
-          <View style={{ flex: 1, flexDirection: 'column', paddingHorizontal: 10 }}>
-            {/*TODO enable thumbnail rendering.*/}
-            {/*{thumbnailMode === 'carousel' ? this.renderThumbnailCarousel(this.seekBarPosition) : this.renderSingleThumbnail(this.seekBarPosition)}*/}
-            <View style={[context.style.seekBar.container, style]}>
-              {Platform.isTV && (
-                <TouchableOpacity
-                  ref={this.setScrubberArea}
-                  hasTVPreferredFocus={true}
-                  tvParallaxProperties={{ enabled: false }}
-                  activeOpacity={1.0}
-                  style={context.style.seekBar.progress}
-                  onFocus={this.onFocus}
-                  onBlur={this.onBlur}
-                  onPress={this.onDotPress}
-                  onLayout={this.measureScrubber}>
-                  <View
-                    style={[
-                      context.style.seekBar.innerProgressCompleted,
-                      { flex: flexCompleted, backgroundColor: focused ? context.style.colors.accent : context.style.colors.primary },
-                    ]}
-                  />
-                  <View
-                    style={[
-                      context.style.seekBar.progressDot,
-                      { zIndex: 1, backgroundColor: focused ? context.style.colors.accent : context.style.colors.primary },
-                      progressDotStyle,
-                    ]}
-                  />
-                  <View style={[context.style.seekBar.innerProgressRemaining, { flex: flexRemaining }]} />
-                </TouchableOpacity>
-              )}
-
-              {!Platform.isTV && (
-                <View style={context.style.seekBar.progress}>
-                  <View
-                    style={[context.style.seekBar.innerProgressCompleted, { flex: flexCompleted, backgroundColor: context.style.colors.primary }]}
-                  />
-                  <View
-                    style={[context.style.seekBar.progressDot, { zIndex: 1, backgroundColor: context.style.colors.primary }, progressDotStyle]}
-                    hitSlop={context.style.seekBar.progressHitSlop}
-                    {...this._seekPanResponder.panHandlers}
-                  />
-                  <View
-                    style={[context.style.seekBar.innerProgressRemaining, { flex: flexRemaining, backgroundColor: context.style.colors.secondary }]}
-                  />
-                  <TouchableOpacity
-                    ref={this.setScrubberArea}
-                    style={context.style.seekBar.touchable}
-                    hitSlop={context.style.seekBar.progressHitSlop}
-                    onPress={this.onTouchScrubber}
-                    onLayout={this.measureScrubber}
-                  />
-                </View>
-              )}
-            </View>
-
-            {/* TODO: render bot component? {renderBottomComponent && renderBottomComponent(this.seekBarPosition)}*/}
-          </View>
+          <Slider
+            disabled={!(duration > 0) && seekable.length > 0}
+            style={[StyleSheet.absoluteFill]}
+            minimumValue={seekable.length > 0 ? seekable[0].start : 0}
+            maximumValue={seekable.length > 0 ? seekable[0].end : 0}
+            step={1000}
+            onSlidingStart={this._onSlidingStart}
+            onValueChange={this._onValueChange}
+            onSlidingComplete={this._onSlidingComplete}
+            value={currentTime}
+            focusable={true}
+            minimumTrackTintColor={context.style.colors.primary}
+            maximumTrackTintColor="#000000"
+            thumbTintColor={context.style.colors.primary}
+          />
         )}
       </PlayerContext.Consumer>
     );
   }
-
-  private renderThumbnailCarousel = (seekBarPosition: SeekBarPosition) => {
-    const { textTracks } = this.state;
-    const thumbnailTrack = filterThumbnailTracks(textTracks);
-    if (!thumbnailTrack) {
-      return;
-    }
-    return (
-      <PlayerContext.Consumer>
-        {(context: UiContext) => (
-          // TODO: Improve layout
-          <View style={{ position: 'absolute', top: -(THUMBNAIL_SIZE * 0.75), left: 0, right: 0 }}>
-            <ThumbnailView
-              visible={seekBarPosition.isScrubbing}
-              containerStyle={context.style.seekBar.thumbnail.containerCarousel}
-              thumbnailStyleCurrent={[context.style.seekBar.thumbnail.currentCarousel, { borderColor: context.style.colors.primary }]}
-              thumbnailStyleCarousel={context.style.seekBar.thumbnail.carousel}
-              thumbnailTrack={thumbnailTrack}
-              time={seekBarPosition.currentProgress}
-              duration={seekBarPosition.duration}
-              size={THUMBNAIL_SIZE}
-              carouselCount={2}
-              // Optionally scale down the thumbnails when further from currentTime.
-              // carouselThumbnailScale={(index: number) => 1.0 - Math.abs(index) * 0.15}
-            />
-          </View>
-        )}
-      </PlayerContext.Consumer>
-    );
-  };
-
-  private renderSingleThumbnail = (seekBarPosition: SeekBarPosition) => {
-    const { textTracks } = this.state;
-    const thumbnailTrack = filterThumbnailTracks(textTracks);
-    if (!thumbnailTrack) {
-      return;
-    }
-    return (
-      <PlayerContext.Consumer>
-        {(styleContext: UiContext) => (
-          <View style={{ position: 'absolute', top: -(THUMBNAIL_SIZE * 0.75), left: 0, right: 0 }}>
-            <ThumbnailView
-              visible={seekBarPosition.isScrubbing}
-              containerStyle={styleContext.style.seekBar.thumbnail.containerSingle}
-              thumbnailStyleCurrent={styleContext.style.seekBar.thumbnail.currentSingle}
-              thumbnailTrack={thumbnailTrack}
-              duration={seekBarPosition.duration}
-              time={seekBarPosition.currentProgress}
-              size={THUMBNAIL_SIZE}
-              showTimeLabel={false}
-              offset={Math.min(
-                seekBarPosition.seekBarWidth - THUMBNAIL_SIZE,
-                Math.max(0, seekBarPosition.currentProgressPercentage * seekBarPosition.seekBarWidth - 0.5 * THUMBNAIL_SIZE),
-              )}
-            />
-          </View>
-        )}
-      </PlayerContext.Consumer>
-    );
-  };
 }
 
 SeekBar.contextType = PlayerContext;
