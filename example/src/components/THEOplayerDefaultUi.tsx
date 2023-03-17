@@ -14,7 +14,6 @@ import { CenteredDelayedActivityIndicator } from './activityindicator/CenteredDe
 import { CENTER_BUTTON_SIZE, defaultPlayerStyle, THEOplayerStyle } from './THEOplayerStyle';
 import { View } from 'react-native';
 import { UiContainer } from './uicontroller/UiContainer';
-import { SourceMenuButton } from './menu/SourceMenuButton';
 import { PlayButton } from './button/PlayButton';
 import { THUMBNAIL_MODE } from './seekbar/ThumbnailRendering';
 
@@ -80,7 +79,6 @@ export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
                 <LanguageMenuButton />
                 {/*Note: quality selection is not available on iOS */}
                 <SettingsMenuButton />
-                <SourceMenuButton />
                 <FullscreenButton />
               </ControlBar>
             </>
