@@ -16,16 +16,13 @@ export class CastMessage extends PureComponent<unknown, CastMessageState> {
   componentDidMount() {
     const player = (this.context as UiContext).player;
     player.addEventListener(PlayerEventType.CAST_EVENT, this.onCastEvent);
-    player.cast.chromecast?.state().then((state: CastState) => {
-      if (state === 'connecting' || state === 'connected') {
-        this._processCastState(state, 'Chromecast');
-      }
-    });
-    player.cast.airplay?.state().then((state: CastState) => {
-      if (state === 'connecting' || state === 'connected') {
-        this._processCastState(state, 'Airplay');
-      }
-    });
+    const chromecastState = player.cast.chromecast?.state;
+    const airplayState = player.cast.airplay?.state;
+    if (chromecastState === 'connecting' || chromecastState === 'connected') {
+      this._processCastState(chromecastState, 'Chromecast');
+    } else if (airplayState === 'connecting' || airplayState === 'connected') {
+      this._processCastState(airplayState, 'Airplay');
+    }
   }
 
   componentWillUnmount() {
