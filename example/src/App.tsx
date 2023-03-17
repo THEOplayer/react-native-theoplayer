@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { PlayerConfiguration, PlayerEventType, THEOplayer } from 'react-native-theoplayer';
 import { THEOplayerDefaultUi } from './components/THEOplayerDefaultUi';
-import { SOURCES } from './components/menu/SourceMenuButton';
+import { SourceMenuButton, SOURCES } from './components/menu/SourceMenuButton';
 import { StyleSheet, View } from 'react-native';
 
 const playerConfig: PlayerConfiguration = {
@@ -40,7 +40,7 @@ export default function App() {
 
   return (
     <View style={StyleSheet.absoluteFill}>
-      <THEOplayerDefaultUi config={playerConfig} onPlayerReady={onPlayerReady} />
+      <THEOplayerDefaultUi config={playerConfig} onPlayerReady={onPlayerReady} bottomSlot={<SourceMenuButton />} />
     </View>
   );
 }
