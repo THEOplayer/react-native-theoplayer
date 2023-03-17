@@ -2,6 +2,7 @@ import * as React from 'react';
 import { PlayerConfiguration, PlayerEventType, THEOplayer } from 'react-native-theoplayer';
 import { THEOplayerDefaultUi } from './components/THEOplayerDefaultUi';
 import { SOURCES } from './components/menu/SourceMenuButton';
+import { StyleSheet, View } from 'react-native';
 
 const playerConfig: PlayerConfiguration = {
   // Get your THEOplayer license from https://portal.theoplayer.com/
@@ -37,5 +38,9 @@ export default function App() {
     player.source = SOURCES[0].source;
   };
 
-  return <THEOplayerDefaultUi config={playerConfig} onPlayerReady={onPlayerReady} />;
+  return (
+    <View style={StyleSheet.absoluteFill}>
+      <THEOplayerDefaultUi config={playerConfig} onPlayerReady={onPlayerReady} />
+    </View>
+  );
 }

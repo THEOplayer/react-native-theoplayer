@@ -12,7 +12,7 @@ import { MuteButton } from './button/MuteButton';
 import { CastMessage } from './message/CastMessage';
 import { CenteredDelayedActivityIndicator } from './activityindicator/CenteredDelayedActivityIndicator';
 import { CENTER_BUTTON_SIZE, defaultPlayerStyle, THEOplayerStyle } from './THEOplayerStyle';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { UiContainer } from './uicontroller/UiContainer';
 import { SourceMenuButton } from './menu/SourceMenuButton';
 import { PlayButton } from './button/PlayButton';
