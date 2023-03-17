@@ -95,7 +95,6 @@ public class THEOplayerRCTView: UIView {
                                                                         cast: self.playerCastConfiguration(),
                                                                         license: self.license,
                                                                         licenseUrl: self.licenseUrl))
-        self.initBackgroundAudio()
         self.initPip()
         return self.player
     }
@@ -106,7 +105,6 @@ public class THEOplayerRCTView: UIView {
                                                                         license: self.license,
                                                                         licenseUrl: self.licenseUrl,
                                                                         pip: self.playerPipConfiguration()))
-        self.initBackgroundAudio()
         self.initPip()
         return self.player
     }
