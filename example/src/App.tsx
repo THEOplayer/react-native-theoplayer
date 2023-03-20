@@ -41,16 +41,7 @@ export default function App() {
 
   return (
     <View style={StyleSheet.absoluteFill}>
-      <THEOplayerDefaultUi
-        config={playerConfig}
-        onPlayerReady={onPlayerReady}
-        bottomSlot={
-          <>
-            <SourceMenuButton />
-            <PipButton />
-          </>
-        }
-      />
+      <THEOplayerDefaultUi config={playerConfig} onPlayerReady={onPlayerReady} topSlot={<SourceMenuButton />} bottomSlot={<PipButton />} />
     </View>
   );
 }
