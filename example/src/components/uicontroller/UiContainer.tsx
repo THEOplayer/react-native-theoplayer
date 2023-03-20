@@ -2,7 +2,7 @@ import React, { PureComponent, ReactNode } from 'react';
 import { Animated, Platform, View } from 'react-native';
 import { PlayerContext } from '../util/PlayerContext';
 import { arrayRemoveElement } from '../../utils/ArrayUtils';
-import type { THEOplayer } from 'react-native-theoplayer';
+import type { PresentationModeChangeEvent, THEOplayer } from 'react-native-theoplayer';
 import { CastEvent, CastEventType, ErrorEvent, PlayerError, PlayerEventType } from 'react-native-theoplayer';
 import type { THEOplayerStyle } from '../THEOplayerStyle';
 import type { MenuConstructor, UiControls } from './UiControls';
@@ -25,6 +25,7 @@ interface UiContainerState {
   firstPlay: boolean;
   paused: boolean;
   casting: boolean;
+  pip: boolean;
 }
 
 const DEBUG_USER_IDLE_FADE = false;
@@ -45,6 +46,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
     firstPlay: false,
     paused: true,
     casting: false,
+    pip: false,
   };
 
   constructor(props: UiContainerProps) {
@@ -63,9 +65,11 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
     player.addEventListener(PlayerEventType.SOURCE_CHANGE, this.onSourceChange);
     player.addEventListener(PlayerEventType.CAST_EVENT, this.onCastEvent);
     player.addEventListener(PlayerEventType.ENDED, this.onEnded);
+    player.addEventListener(PlayerEventType.PRESENTATIONMODE_CHANGE, this.onPresentationModeChange);
     if (player.source !== undefined && player.currentTime !== 0) {
       this.onPlay();
     }
+    this.setState({ pip: player.presentationMode === 'picture-in-picture' });
   }
 
   componentWillUnmount() {
@@ -79,6 +83,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
     player.removeEventListener(PlayerEventType.SOURCE_CHANGE, this.onSourceChange);
     player.removeEventListener(PlayerEventType.CAST_EVENT, this.onCastEvent);
     player.removeEventListener(PlayerEventType.ENDED, this.onEnded);
+    player.removeEventListener(PlayerEventType.PRESENTATIONMODE_CHANGE, this.onPresentationModeChange);
   }
 
   private onPlay = () => {
@@ -112,6 +117,10 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
 
   private onEnded = () => {
     this.stopAnimationsAndShowUi_();
+  };
+
+  private onPresentationModeChange = (event: PresentationModeChangeEvent) => {
+    this.setState({ pip: event.presentationMode === 'picture-in-picture' });
   };
 
   get buttonsEnabled_(): boolean {
@@ -211,10 +220,14 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
 
   render() {
     const { player, style, top, center, bottom, children } = this.props;
-    const { fadeAnimation, currentMenu, error, firstPlay } = this.state;
+    const { fadeAnimation, currentMenu, error, firstPlay, pip } = this.state;
 
     if (error !== undefined) {
       return <ErrorDisplay error={error} />;
+    }
+
+    if (Platform.OS !== 'web' && pip) {
+      return <></>;
     }
 
     return (
