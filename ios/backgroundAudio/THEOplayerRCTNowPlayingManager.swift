@@ -50,6 +50,8 @@ class THEOplayerRCTNowPlayingManager {
                 self.updateMediaType() // video
                 self.updateArtWork(artWorkUrlString)
                 self.updatePlaybackRate(player.playbackRate)
+                self.updateServiceIdentifier(metadata.metadataKeys?["nowPlayingServiceIdentifier"] as? String)
+                self.updateContentIdentifier(metadata.metadataKeys?["nowPlayingContentIdentifier"] as? String)
                 self.updateCurrentTime { [weak self] in
                     if let welf = self {
                         MPNowPlayingInfoCenter.default().nowPlayingInfo = welf.nowPlayingInfo
@@ -91,6 +93,18 @@ class THEOplayerRCTNowPlayingManager {
             if (!duration.isInfinite) {
                 self.nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = duration
             }
+        }
+    }
+    
+    private func updateServiceIdentifier(_ serviceId: String?) {
+        if let id = serviceId {
+            self.nowPlayingInfo[MPNowPlayingInfoPropertyServiceIdentifier] = id
+        }
+    }
+    
+    private func updateContentIdentifier(_ contentId: String?) {
+        if let id = contentId {
+            self.nowPlayingInfo[MPNowPlayingInfoPropertyExternalContentIdentifier] = id
         }
     }
     
