@@ -33,21 +33,47 @@ During play-out of a media asset, a notification is displayed that provides some
 enables basic control. The source description passed to the player should provide the necessary metadata
 properties:
 
-```json
+```typescript
 {
-  "sources": [
-    {
-      "src": "https://cdn.theoplayer.com/video/big_buck_bunny/big_buck_bunny.m3u8",
-      "type": "application/x-mpegurl"
-    }
-  ],
-  "poster": "https://cdn.theoplayer.com/video/big_buck_bunny/poster.jpg",
-  "metadata": {
-    "title": "Big Buck Bunny",
-    "subtitle": "A THEOplayer demo stream",
-    "artist": "THEOplayer"
-  }
+	sources: [{
+    	src: manifestUrl,
+        type: type,
+        contentProtection: {
+        	integration: '...',
+        	fairplay: {
+        		certificate: '...',
+				licenseAcquisitionURL: licenseUrl
+			}
+		}
+	}],
+	poster: 'https://static.clubs.nfl.com/image/private/t_landscape_tablet/seahawks/nvbiygyqt9ccucmys0hr.jpg',
+	metadata: {
+		title: 'My stream title',
+		subtitle: 'A subtitle or artist',
+		nowPlayingServiceIdentifier: 'serviceId',
+		nowPlayingContentIdentifier: 'contentId'
+	}
 }
+```
+
+The following fields from the sourceDescription are used to display information in the lockscreen:
+- *lockscreen title* field: **source.metadata.title**
+- *lockscreen artist* field: **source.metadata.artist**, with a fallback to **source.metadata.subtitle**
+- *lockscreen image*: **source.poster**, with a fallback to **source.metadata.displayIconUri**
+The following fields can be setup to do additional configuration for the lockscreen behaviour on iOS:
+- Info property service identifier: **source.metadata.nowPlayingServiceIdentifier**
+- Info property content identifier: **source.metadata.nowPlayingContentIdentifier**
+
+As a result, the following setup will result in the same lockscreen info being displayed:
+```typescript
+	...
+	metadata: {
+		title: 'My stream title',
+		artist: 'A subtitle or artist',
+		nowPlayingServiceIdentifier: 'serviceId',
+		nowPlayingContentIdentifier: 'contentId',
+		displayIconUri: 'https://static.clubs.nfl.com/image/private/t_landscape_tablet/seahawks/nvbiygyqt9ccucmys0hr.jpg',
+	}
 ```
 
 | ![notification_android](./notification_android.png) | ![notification_ios](./notification_ios.png) |  ![notification_web](./notification_web.png)   |
