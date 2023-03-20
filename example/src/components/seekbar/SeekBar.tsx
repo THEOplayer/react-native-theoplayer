@@ -19,23 +19,26 @@ export interface SeekBarProps {
 }
 
 interface SeekBarState {
-  isScrubbing: boolean;
+  ignoreTimeupdate: boolean;
+  isSeeking: boolean;
   pausedDueToScrubbing: boolean;
   seekable: TimeRange[];
   duration: number;
-  currentTime: number;
+  sliderTime: number;
 }
 
 export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
   private static initialState: SeekBarState = {
-    isScrubbing: false,
-    currentTime: 0,
+    ignoreTimeupdate: false,
+    isSeeking: false,
+    sliderTime: 0,
     duration: 0,
     seekable: [],
     pausedDueToScrubbing: false,
   };
 
   private _seekBlockingTimeout: NodeJS.Timeout | undefined;
+  private _clearIsScrubbingTimout: NodeJS.Timeout | undefined;
 
   constructor(props: SeekBarProps) {
     super(props);
@@ -50,7 +53,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
     player.addEventListener(PlayerEventType.PROGRESS, this._onProgress);
     this.setState({
       ...SeekBar.initialState,
-      currentTime: player.currentTime,
+      sliderTime: player.currentTime,
       duration: player.duration,
       seekable: player.seekable,
     });
@@ -64,56 +67,77 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
     context.player.removeEventListener(PlayerEventType.PROGRESS, this._onProgress);
   }
 
-  private _onTimeUpdate = (event: TimeUpdateEvent) => this.setState({ currentTime: event.currentTime });
+  private _onTimeUpdate = (event: TimeUpdateEvent) => {
+    if (!this.state.ignoreTimeupdate) {
+      this.setState({ sliderTime: event.currentTime });
+    }
+  };
   private _onLoadedMetadata = (event: LoadedMetadataEvent) => this.setState({ duration: event.duration });
   private _onDurationChange = (event: DurationChangeEvent) => this.setState({ duration: event.duration });
   private _onProgress = (event: ProgressEvent) => this.setState({ seekable: event.seekable });
 
   private _onSlidingStart = (value: number) => {
+    this.setState({ sliderTime: value });
+    this._prepareSeekStart();
     const player = (this.context as UiContext).player;
     if (!player.paused) {
+      this.debounceSeek(value);
       player.pause();
       this.setState({ pausedDueToScrubbing: true });
     }
-    this.setState({ currentTime: value, isScrubbing: true });
-    this.debounceSeek();
   };
 
   private _onValueChange = (value: number) => {
-    this.setState({ currentTime: value });
-    if (this.state.isScrubbing) {
-      this.debounceSeek();
+    this.setState({ sliderTime: value });
+    if (this.state.ignoreTimeupdate) {
+      this.debounceSeek(value);
     }
   };
 
   private _onSlidingComplete = (value: number) => {
-    clearTimeout(this._seekBlockingTimeout);
-    this._seekBlockingTimeout = undefined;
+    this.setState({ sliderTime: value });
+    this.debounceSeek(value, true);
     const player = (this.context as UiContext).player;
-    player.currentTime = value;
-    this.setState({ isScrubbing: false });
-    if (this.state.pausedDueToScrubbing) {
+    const isEnded = player.currentTime === player.duration;
+    if (this.state.pausedDueToScrubbing && !isEnded) {
       player.play();
       this.setState({ pausedDueToScrubbing: false });
     }
+    this._finishSeek();
   };
 
-  private debounceSeek = () => {
+  private readonly _prepareSeekStart = () => {
+    this.setState({ isSeeking: true, ignoreTimeupdate: true });
+    clearTimeout(this._clearIsScrubbingTimout);
+  };
+
+  private readonly _finishSeek = () => {
+    this.setState({ isSeeking: false });
+    // Wait for timeupdate events to settle after seeking, so the Slider does not jump back and forth.
+    this._clearIsScrubbingTimout = setTimeout(() => {
+      this.setState({ ignoreTimeupdate: false });
+    }, 1000);
+  };
+
+  private debounceSeek = (value: number, force = false) => {
     // Don't bombard the player with seeks when seeking. Allow only one seek ever X milliseconds:
     const MAX_SEEK_INTERVAL = 200;
-    if (this._seekBlockingTimeout === undefined) {
-      const { currentTime } = this.state;
-      const player = (this.context as UiContext).player;
-      player.currentTime = currentTime;
-      const allowSeeks = () => {
+    if (force || this._seekBlockingTimeout === undefined) {
+      if (force) {
+        clearTimeout(this._seekBlockingTimeout);
         this._seekBlockingTimeout = undefined;
-      };
-      this._seekBlockingTimeout = setTimeout(allowSeeks, MAX_SEEK_INTERVAL);
+      }
+      this._seekBlockingTimeout = setTimeout(() => {
+        this._seekBlockingTimeout = undefined;
+      }, MAX_SEEK_INTERVAL);
+      // Do seek
+      const player = (this.context as UiContext).player;
+      player.currentTime = value;
     }
   };
 
   render() {
-    const { seekable, currentTime, duration } = this.state;
+    const { seekable, sliderTime, duration } = this.state;
     const { style } = this.props;
     const seekableStart = seekable.length > 0 ? seekable[0].start : 0;
     const seekableEnd = seekable.length > 0 ? seekable[seekable.length - 1].end : 0; // TODO what if it's fragmented?
@@ -129,7 +153,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
             onSlidingStart={this._onSlidingStart}
             onValueChange={this._onValueChange}
             onSlidingComplete={this._onSlidingComplete}
-            value={currentTime}
+            value={sliderTime}
             focusable={true}
             minimumTrackTintColor={context.style.colors.primary}
             maximumTrackTintColor="#000000"
