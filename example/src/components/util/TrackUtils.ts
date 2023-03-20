@@ -35,7 +35,7 @@ export function filterRenderableTracks(textTracks: TextTrack[]): TextTrack[] {
   return textTracks.filter((textTrack) => textTrack.kind === 'subtitles' || textTrack.kind === 'captions');
 }
 
-export function getVideoQualityLabel(quality: VideoQuality | undefined): string {
+export function getVideoQualityLabel(quality: VideoQuality | undefined, withBandWidth = true): string {
   if (!quality) {
     return 'auto';
   }
@@ -46,7 +46,7 @@ export function getVideoQualityLabel(quality: VideoQuality | undefined): string 
   if (quality.height) {
     label = quality.height + 'p';
   }
-  if (!quality.bandwidth) {
+  if (!withBandWidth || !quality.bandwidth) {
     return label;
   }
   let bandwidth;
