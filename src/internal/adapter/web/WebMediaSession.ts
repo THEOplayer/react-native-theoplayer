@@ -14,8 +14,8 @@ export const defaultWebMediaSessionConfig: WebMediaSessionConfig = {
 // This prevents unnecessary errors when Media Session API is not available.
 const mediaSession = (function () {
   const mediaSession = navigator.mediaSession || {};
-  mediaSession.setActionHandler = navigator.mediaSession.setActionHandler || function () {};
-  mediaSession.setPositionState = navigator.mediaSession.setPositionState || function () {};
+  mediaSession.setActionHandler = navigator.mediaSession?.setActionHandler || function () {};
+  mediaSession.setPositionState = navigator.mediaSession?.setPositionState || function () {};
   window.MediaMetadata = window.MediaMetadata || function () {};
   return mediaSession;
 })();
