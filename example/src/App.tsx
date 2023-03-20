@@ -3,6 +3,7 @@ import { PlayerConfiguration, PlayerEventType, THEOplayer } from 'react-native-t
 import { THEOplayerDefaultUi } from './components/THEOplayerDefaultUi';
 import { SourceMenuButton, SOURCES } from './components/menu/SourceMenuButton';
 import { StyleSheet, View } from 'react-native';
+import { PipButton } from './components/button/PipButton';
 
 const playerConfig: PlayerConfiguration = {
   // Get your THEOplayer license from https://portal.theoplayer.com/
@@ -40,7 +41,16 @@ export default function App() {
 
   return (
     <View style={StyleSheet.absoluteFill}>
-      <THEOplayerDefaultUi config={playerConfig} onPlayerReady={onPlayerReady} bottomSlot={<SourceMenuButton />} />
+      <THEOplayerDefaultUi
+        config={playerConfig}
+        onPlayerReady={onPlayerReady}
+        bottomSlot={
+          <>
+            <SourceMenuButton />
+            <PipButton />
+          </>
+        }
+      />
     </View>
   );
 }
