@@ -16,6 +16,8 @@ import { View } from 'react-native';
 import { UiContainer } from './uicontroller/UiContainer';
 import { PlayButton } from './button/PlayButton';
 import { THUMBNAIL_MODE } from './seekbar/ThumbnailRendering';
+import { QualitySubMenu } from './menu/QualitySubMenu';
+import { PlaybackRateSubMenu } from './menu/PlaybackRateSubMenu';
 
 export interface THEOplayerDefaultUiProps {
   style?: Partial<THEOplayerStyle>;
@@ -77,8 +79,11 @@ export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
 
                 {bottomSlot}
                 <LanguageMenuButton />
-                {/*Note: quality selection is not available on iOS */}
-                <SettingsMenuButton />
+                <SettingsMenuButton>
+                  {/*Note: quality selection is not available on iOS */}
+                  <QualitySubMenu />
+                  <PlaybackRateSubMenu />
+                </SettingsMenuButton>
                 <FullscreenButton />
               </ControlBar>
             </>
