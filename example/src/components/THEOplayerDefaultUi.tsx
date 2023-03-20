@@ -52,6 +52,12 @@ export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
                   <ChromecastButton />
                 </>
               )}
+              <LanguageMenuButton />
+              <SettingsMenuButton>
+                {/*Note: quality selection is not available on iOS */}
+                <QualitySubMenu />
+                <PlaybackRateSubMenu />
+              </SettingsMenuButton>
             </ControlBar>
           }
           center={
@@ -78,12 +84,6 @@ export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
                 <View style={{ flexGrow: 1 }} />
 
                 {bottomSlot}
-                <LanguageMenuButton />
-                <SettingsMenuButton>
-                  {/*Note: quality selection is not available on iOS */}
-                  <QualitySubMenu />
-                  <PlaybackRateSubMenu />
-                </SettingsMenuButton>
                 <FullscreenButton />
               </ControlBar>
             </>
