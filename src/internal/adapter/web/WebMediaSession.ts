@@ -3,13 +3,13 @@ import type { ChromelessPlayer } from 'theoplayer';
 
 interface WebMediaSessionConfig {
   skipTime: number;
-  supportTrickPlay: boolean;
 }
 
 export const defaultWebMediaSessionConfig: WebMediaSessionConfig = {
   skipTime: 15,
-  supportTrickPlay: true,
 };
+
+const NoOp = () => {};
 
 // This prevents unnecessary errors when Media Session API is not available.
 const mediaSession = (function () {
@@ -34,22 +34,17 @@ export class WebMediaSession {
     this._player = player;
     this._config = config;
     this._player.addEventListener('sourcechange', this.onSourceChange);
+    this._player.addEventListener('loadedmetadata', this.onLoadedMetadata);
+    this._player.addEventListener('durationchange', this.onDurationChange);
     this._player.addEventListener('play', this.onPlay);
     this._player.addEventListener('pause', this.onPause);
     this._player.ads?.addEventListener('adbreakbegin', this.onAdbreakBegin);
     this._player.ads?.addEventListener('adbreakend', this.onAdbreakEnd);
-
-    mediaSession.setActionHandler('play', () => {
-      player.play();
-    });
-    mediaSession?.setActionHandler('pause', () => {
-      player.pause();
-    });
-    this.setTrickPlay(config.supportTrickPlay);
+    this.updateActionHandlers();
   }
 
-  setTrickPlay(enabled: boolean) {
-    if (enabled) {
+  updateActionHandlers() {
+    if (this.isTrickplayEnabled()) {
       mediaSession.setActionHandler('seekbackward', (event) => {
         const skipTime = event.seekOffset || this._config.skipTime;
         this._player.currentTime = Math.max(this._player.currentTime - skipTime, 0);
@@ -61,39 +56,63 @@ export class WebMediaSession {
         this.updatePositionState();
       });
     } else {
-      mediaSession.setActionHandler('seekbackward', null);
-      mediaSession.setActionHandler('seekforward', null);
+      mediaSession.setActionHandler('seekbackward', NoOp);
+      mediaSession.setActionHandler('seekforward', NoOp);
+    }
+
+    if (this.isPlayPauseEnabled()) {
+      mediaSession.setActionHandler('play', () => {
+        this._player?.play();
+      });
+      mediaSession?.setActionHandler('pause', () => {
+        this._player?.pause();
+      });
+    } else {
+      mediaSession.setActionHandler('play', NoOp);
+      mediaSession.setActionHandler('pause', NoOp);
     }
   }
 
   destroy() {
     this._player.removeEventListener('sourcechange', this.onSourceChange);
+    this._player.removeEventListener('loadedmetadata', this.onLoadedMetadata);
+    this._player.removeEventListener('durationchange', this.onDurationChange);
     this._player.removeEventListener('play', this.onPlay);
     this._player.removeEventListener('pause', this.onPause);
     this._player.ads?.removeEventListener('adbreakbegin', this.onAdbreakBegin);
     this._player.ads?.removeEventListener('adbreakend', this.onAdbreakEnd);
-    mediaSession.setActionHandler('play', null);
-    mediaSession.setActionHandler('pause', null);
-    mediaSession.setActionHandler('seekbackward', null);
-    mediaSession.setActionHandler('seekforward', null);
+    mediaSession.setActionHandler('play', NoOp);
+    mediaSession.setActionHandler('pause', NoOp);
+    mediaSession.setActionHandler('seekbackward', NoOp);
+    mediaSession.setActionHandler('seekforward', NoOp);
   }
 
   private onSourceChange = () => {
     const source = this._player.source;
     const metadata = source?.metadata;
-    const images = (source?.poster ? [source?.poster] : metadata?.images) || [];
-    mediaSession.metadata = new MediaMetadata({
-      title: metadata?.title,
-      artist: metadata?.artist,
-      album: metadata?.album,
-      artwork: images.map((image) => {
+    const artwork = [source?.poster, metadata?.displayIconUri, ...(metadata?.images ? metadata?.images : [])]
+      .filter((image) => image !== undefined)
+      .map((image) => {
         if (typeof image === 'string') {
           return { src: image };
         }
         return image;
-      }) as [],
+      });
+    mediaSession.metadata = new MediaMetadata({
+      title: metadata?.title,
+      artist: metadata?.artist,
+      album: metadata?.album,
+      artwork,
     });
     this.updatePositionState();
+  };
+
+  private onLoadedMetadata = () => {
+    this.updateActionHandlers();
+  };
+
+  private onDurationChange = () => {
+    this.updateActionHandlers();
   };
 
   private updatePositionState = () => {
@@ -125,10 +144,28 @@ export class WebMediaSession {
   };
 
   private onAdbreakBegin = () => {
-    this.setTrickPlay(false);
+    this.updateActionHandlers();
   };
 
   private onAdbreakEnd = () => {
-    this.setTrickPlay(this._config.supportTrickPlay);
+    this.updateActionHandlers();
   };
+
+  private isLive(): boolean {
+    return !isFinite(this._player?.duration);
+  }
+
+  private isPlayingAd(): boolean {
+    return this._player?.ads?.playing == true;
+  }
+
+  private isTrickplayEnabled(): boolean {
+    // By default, disable trick-play for live and ads.
+    return !(this.isLive() || this.isPlayingAd());
+  }
+
+  private isPlayPauseEnabled(): boolean {
+    // By default, disable play/pause during ads.
+    return !this.isPlayingAd();
+  }
 }
