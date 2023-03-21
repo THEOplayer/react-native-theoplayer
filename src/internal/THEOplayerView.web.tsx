@@ -77,6 +77,8 @@ const styles = {
     position: 'relative',
     width: '100%',
     height: '100%',
+    maxHeight: '100vh',
+    maxWidth: '100vw',
     aspectRatio: '16 / 9',
   } as React.CSSProperties,
 };
