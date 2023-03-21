@@ -2,7 +2,7 @@ import { PlayerContext, UiContext } from '../../util/PlayerContext';
 import { StyleProp, Text, View, ViewStyle } from 'react-native';
 import React from 'react';
 import { MenuButton } from './MenuButton';
-import { ForwardSvg } from '../../button/svg/ForwardSvg';
+import { ArrowForwardSvg } from '../../button/svg/ArrowForwardSvg';
 import type { MenuConstructor } from '../../uicontroller/UiControls';
 
 export interface SubMenuButtonProps {
@@ -22,7 +22,7 @@ export const SubMenuWithButton = (props: SubMenuButtonProps) => {
           <View style={{ flexDirection: 'row', width: '60%', justifyContent: 'center' }}>
             <View style={{ flexDirection: 'row' }}>
               <Text style={[context.style.menu.row, { color: context.style.colors.text }]}>{preview}</Text>
-              <MenuButton svg={<ForwardSvg />} menuConstructor={menuConstructor} />
+              <MenuButton svg={<ArrowForwardSvg />} menuConstructor={menuConstructor} />
             </View>
           </View>
         </View>

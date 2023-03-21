@@ -3,7 +3,7 @@ import Svg, { Path } from 'react-native-svg';
 import React from 'react';
 import { SvgContext } from './SvgUtils';
 
-export const ForwardSvg = (props: SvgProps) => {
+export const ArrowForwardSvg = (props: SvgProps) => {
   return (
     <SvgContext.Consumer>
       {(context) => (
