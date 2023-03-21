@@ -89,15 +89,17 @@ export const defaultPlayerStyle: THEOplayerStyle = {
       overflow: 'hidden',
     },
     topSlot: {
+      zIndex: 2,
       paddingTop: 10,
       paddingLeft: 10,
       paddingRight: 10,
     },
     centerSlot: {
       alignItems: 'center',
-      zIndex: 2,
+      zIndex: 1,
     },
     bottomSlot: {
+      zIndex: 2,
       paddingBottom: 10,
       paddingLeft: 10,
       paddingRight: 10,
@@ -107,7 +109,6 @@ export const defaultPlayerStyle: THEOplayerStyle = {
     container: {
       flexDirection: 'row',
       justifyContent: 'flex-end',
-      zIndex: 1,
       height: BUTTON_SIZE,
     },
     buttonContainer: {
