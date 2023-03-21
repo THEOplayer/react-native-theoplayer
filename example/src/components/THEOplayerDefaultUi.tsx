@@ -17,6 +17,8 @@ import { UiContainer } from './uicontroller/UiContainer';
 import { PlayButton } from './button/PlayButton';
 import { QualitySubMenu } from './menu/QualitySubMenu';
 import { PlaybackRateSubMenu } from './menu/PlaybackRateSubMenu';
+import { SkipButton } from './button/SkipButton';
+import { Spacer } from './controlbar/Spacer';
 
 export interface THEOplayerDefaultUiProps {
   style?: Partial<THEOplayerStyle>;
@@ -61,7 +63,13 @@ export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
           }
           center={
             <ControlBar style={{ height: CENTER_BUTTON_SIZE }}>
+              <Spacer grow={3} />
+              <SkipButton skip={-10} style={{ height: CENTER_BUTTON_SIZE, width: CENTER_BUTTON_SIZE }} />
+              <Spacer />
               <PlayButton style={{ height: CENTER_BUTTON_SIZE, width: CENTER_BUTTON_SIZE }} />
+              <Spacer />
+              <SkipButton skip={30} style={{ height: CENTER_BUTTON_SIZE, width: CENTER_BUTTON_SIZE }} />
+              <Spacer grow={3} />
               <CenteredDelayedActivityIndicator />
             </ControlBar>
           }
@@ -79,8 +87,7 @@ export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
                 <MuteButton />
                 <TimeLabel showDuration={true} />
 
-                {/*Spacer*/}
-                <View style={{ flexGrow: 1 }} />
+                <Spacer />
 
                 {bottomSlot}
                 <FullscreenButton />
