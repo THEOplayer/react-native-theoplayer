@@ -3,7 +3,7 @@ import { PlayerConfiguration, THEOplayer, THEOplayerView } from 'react-native-th
 import { SeekBar } from './seekbar/SeekBar';
 import { AirplayButton } from './button/AirplayButton';
 import { ChromecastButton, ENABLE_CAST_BUTTON } from './button/ChromecastButton';
-import { ControlBar } from './controlbar/ControlBar';
+import { CenteredControlBar, ControlBar } from './controlbar/ControlBar';
 import { TimeLabel } from './timelabel/TimeLabel';
 import { FullscreenButton } from './button/FullscreenButton';
 import { LanguageMenuButton } from './menu/LanguageMenuButton';
@@ -62,16 +62,16 @@ export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
             </ControlBar>
           }
           center={
-            <ControlBar style={{ height: CENTER_BUTTON_SIZE }}>
-              <Spacer grow={3} />
-              <SkipButton skip={-10} style={{ height: CENTER_BUTTON_SIZE, width: CENTER_BUTTON_SIZE }} />
-              <Spacer />
-              <PlayButton style={{ height: CENTER_BUTTON_SIZE, width: CENTER_BUTTON_SIZE }} />
-              <Spacer />
-              <SkipButton skip={30} style={{ height: CENTER_BUTTON_SIZE, width: CENTER_BUTTON_SIZE }} />
-              <Spacer grow={3} />
-              <CenteredDelayedActivityIndicator />
-            </ControlBar>
+            <CenteredControlBar
+              left={<SkipButton skip={-10} style={{ height: CENTER_BUTTON_SIZE, width: CENTER_BUTTON_SIZE }} />}
+              middle={
+                <>
+                  <PlayButton style={{ height: CENTER_BUTTON_SIZE, width: CENTER_BUTTON_SIZE }} />
+                  <CenteredDelayedActivityIndicator />
+                </>
+              }
+              right={<SkipButton skip={30} style={{ height: CENTER_BUTTON_SIZE, width: CENTER_BUTTON_SIZE }} />}
+            />
           }
           bottom={
             <>
