@@ -1,21 +1,16 @@
 import React, { PureComponent } from 'react';
 import 'react-native/tvos-types.d';
-import { StyleProp, StyleSheet, ViewStyle } from 'react-native';
+import { LayoutChangeEvent, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { DurationChangeEvent, LoadedMetadataEvent, PlayerEventType, ProgressEvent, TimeRange, TimeUpdateEvent } from 'react-native-theoplayer';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
 import Slider from '@react-native-community/slider';
-import type { ThumbnailMode } from './ThumbnailRendering';
+import { SingleThumbnailView } from './thumbnail/SingleThumbnailView';
 
 export interface SeekBarProps {
   /**
    * Optional style applied to the SeekBar.
    */
   style?: StyleProp<ViewStyle>;
-
-  /**
-   * Thumbnail view mode.
-   */
-  thumbnailMode?: ThumbnailMode;
 }
 
 interface SeekBarState {
@@ -25,6 +20,7 @@ interface SeekBarState {
   seekable: TimeRange[];
   duration: number;
   sliderTime: number;
+  width: number;
 }
 
 export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
@@ -35,6 +31,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
     duration: 0,
     seekable: [],
     pausedDueToScrubbing: false,
+    width: 0,
   };
 
   private _seekBlockingTimeout: NodeJS.Timeout | undefined;
@@ -137,28 +134,39 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
   };
 
   render() {
-    const { seekable, sliderTime, duration } = this.state;
+    const { seekable, sliderTime, duration, isSeeking, width } = this.state;
     const { style } = this.props;
     const seekableStart = seekable.length > 0 ? seekable[0].start : 0;
     const seekableEnd = seekable.length > 0 ? seekable[seekable.length - 1].end : 0; // TODO what if it's fragmented?
     return (
       <PlayerContext.Consumer>
         {(context: UiContext) => (
-          <Slider
-            disabled={!(duration > 0) && seekable.length > 0}
+          <View
             style={[StyleSheet.absoluteFill, style]}
-            minimumValue={seekableStart}
-            maximumValue={seekableEnd}
-            step={1000}
-            onSlidingStart={this._onSlidingStart}
-            onValueChange={this._onValueChange}
-            onSlidingComplete={this._onSlidingComplete}
-            value={sliderTime}
-            focusable={true}
-            minimumTrackTintColor={context.style.colors.primary}
-            maximumTrackTintColor="#000000"
-            thumbTintColor={context.style.colors.primary}
-          />
+            onLayout={(event: LayoutChangeEvent) => {
+              const { width } = event.nativeEvent.layout;
+              console.log('width', width);
+              this.setState({ width });
+            }}>
+            {isSeeking && (
+              <SingleThumbnailView seekableStart={seekableStart} seekableEnd={seekableEnd} currentTime={sliderTime} seekBarWidth={width} />
+            )}
+            <Slider
+              disabled={!(duration > 0) && seekable.length > 0}
+              style={[StyleSheet.absoluteFill, style]}
+              minimumValue={seekableStart}
+              maximumValue={seekableEnd}
+              step={1000}
+              onSlidingStart={this._onSlidingStart}
+              onValueChange={this._onValueChange}
+              onSlidingComplete={this._onSlidingComplete}
+              value={sliderTime}
+              focusable={true}
+              minimumTrackTintColor={context.style.colors.primary}
+              maximumTrackTintColor="#000000"
+              thumbTintColor={context.style.colors.primary}
+            />
+          </View>
         )}
       </PlayerContext.Consumer>
     );
