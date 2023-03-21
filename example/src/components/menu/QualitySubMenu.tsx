@@ -14,17 +14,7 @@ export const QualitySubMenu = () => {
     return <></>;
   }
   const createMenu = () => {
-    return (
-      <PlayerContext.Consumer>
-        {(context: UiContext) => (
-          <QualitySelectionView
-            videoTracks={context.player.videoTracks}
-            selectedVideoTrack={context.player.selectedVideoTrack}
-            targetVideoTrackQuality={context.player.targetVideoQuality}
-          />
-        )}
-      </PlayerContext.Consumer>
-    );
+    return <QualitySelectionView />;
   };
   const player = useContext(PlayerContext).player;
 
@@ -44,25 +34,30 @@ export const QualitySubMenu = () => {
   return <SubMenuWithButton menuConstructor={createMenu} label={'Quality'} preview={selectedQualityLabel} />;
 };
 
-export interface QualitySelectionViewProps {
+export interface QualitySelectionViewState {
   videoTracks: MediaTrack[];
   selectedVideoTrack: number | undefined;
   targetVideoTrackQuality: number | number[] | undefined;
 }
 
-export class QualitySelectionView extends PureComponent<QualitySelectionViewProps, QualitySelectionViewProps> {
-  constructor(props: QualitySelectionViewProps) {
+export class QualitySelectionView extends PureComponent<unknown, QualitySelectionViewState> {
+  constructor(props: unknown) {
     super(props);
     this.state = {
-      videoTracks: props.videoTracks,
-      selectedVideoTrack: props.selectedVideoTrack,
-      targetVideoTrackQuality: props.targetVideoTrackQuality,
+      videoTracks: [],
+      selectedVideoTrack: undefined,
+      targetVideoTrackQuality: undefined,
     };
   }
 
   componentDidMount() {
     const player = (this.context as UiContext).player;
     player.addEventListener(PlayerEventType.MEDIA_TRACK_LIST, this.onTrackListChanged);
+    this.setState({
+      videoTracks: player.videoTracks,
+      selectedVideoTrack: player.selectedVideoTrack,
+      targetVideoTrackQuality: player.targetVideoQuality,
+    });
   }
 
   componentWillUnmount() {
