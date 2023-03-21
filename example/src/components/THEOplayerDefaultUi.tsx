@@ -15,7 +15,6 @@ import { CENTER_BUTTON_SIZE, defaultPlayerStyle, THEOplayerStyle } from './THEOp
 import { View } from 'react-native';
 import { UiContainer } from './uicontroller/UiContainer';
 import { PlayButton } from './button/PlayButton';
-import { THUMBNAIL_MODE } from './seekbar/ThumbnailRendering';
 import { QualitySubMenu } from './menu/QualitySubMenu';
 import { PlaybackRateSubMenu } from './menu/PlaybackRateSubMenu';
 
@@ -73,7 +72,7 @@ export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
                 <View style={{ flexGrow: 1 }} />
               </ControlBar>
               <ControlBar>
-                <SeekBar thumbnailMode={THUMBNAIL_MODE} />
+                <SeekBar />
               </ControlBar>
 
               <ControlBar>

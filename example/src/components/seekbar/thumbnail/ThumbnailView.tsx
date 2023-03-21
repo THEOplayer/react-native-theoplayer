@@ -1,8 +1,7 @@
 import React, { PureComponent } from 'react';
-import { Image, View } from 'react-native';
+import { Image, StyleProp, View, ViewStyle } from 'react-native';
 import type { TextTrackCue } from 'react-native-theoplayer';
-import { isThumbnailTrack } from 'react-native-theoplayer';
-import type { ThumbnailViewProps } from './ThumbnailViewProps';
+import { isThumbnailTrack, TextTrack } from 'react-native-theoplayer';
 import type { Thumbnail } from './Thumbnail';
 import { isTileMapThumbnail } from './Thumbnail';
 import { URL as URLPolyfill } from 'react-native-url-polyfill';
@@ -17,6 +16,40 @@ interface ThumbnailViewState {
   imageHeight: number;
   renderWidth: number;
   renderHeight: number;
+}
+
+export interface ThumbnailViewProps {
+  /**
+   * Thumbnail track. A valid thumbnail track should have properties:
+   * <br/> - `'kind'` equals `'metadata'`.
+   * <br/> - `'label'` equals `'thumbnails'`.
+   */
+  thumbnailTrack: TextTrack;
+
+  /**
+   * Current time.
+   */
+  time: number;
+
+  /**
+   * Stream duration
+   */
+  duration: number;
+
+  /**
+   * Whether to show a time label.
+   */
+  showTimeLabel: boolean;
+
+  /**
+   * Used to set the width of the rendered thumbnail. The height will be calculated according to the image's aspect ratio.
+   */
+  size: number;
+
+  /**
+   * Optional style applied to the time label.
+   */
+  timeLabelStyle?: StyleProp<ViewStyle>;
 }
 
 export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailViewState> {
@@ -122,30 +155,17 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
     });
   };
 
-  private renderPlaceHolderThumbnail = (index: number) => {
-    const { size, thumbnailStyleCurrent, thumbnailStyleCarousel } = this.props;
-    const style = index === 0 ? thumbnailStyleCurrent : thumbnailStyleCarousel;
-    return (
-      <PlayerContext.Consumer>
-        {(context: UiContext) => <View key={index} style={[context.style.seekBar.thumbnail.thumbnail, { width: size, height: 1 }, style]} />}
-      </PlayerContext.Consumer>
-    );
-  };
-
   private renderThumbnail = (thumbnail: Thumbnail, index: number) => {
     const { imageWidth, imageHeight, renderWidth, renderHeight } = this.state;
-    const { size, carouselThumbnailScale, thumbnailStyleCurrent, thumbnailStyleCarousel } = this.props;
-    const scale = carouselThumbnailScale ? carouselThumbnailScale(index) : 1.0;
-    const style = index === 0 ? thumbnailStyleCurrent : thumbnailStyleCarousel;
+    const { size } = this.props;
+    const scale = 1.0;
 
     if (isTileMapThumbnail(thumbnail)) {
       const ratio = thumbnail.tileWidth == 0 ? 0 : (scale * size) / thumbnail.tileWidth;
       return (
         <PlayerContext.Consumer>
           {(context: UiContext) => (
-            <View
-              key={index}
-              style={[context.style.seekBar.thumbnail.thumbnail, { width: scale * renderWidth, height: scale * renderHeight }, style]}>
+            <View key={index} style={[context.style.seekBar.thumbnail.thumbnail, { width: scale * renderWidth, height: scale * renderHeight }]}>
               <Image
                 resizeMode={'cover'}
                 style={{
@@ -167,9 +187,7 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
       return (
         <PlayerContext.Consumer>
           {(context: UiContext) => (
-            <View
-              key={index}
-              style={[context.style.seekBar.thumbnail.thumbnail, { width: scale * renderWidth, height: scale * renderHeight }, style]}>
+            <View key={index} style={[context.style.seekBar.thumbnail.thumbnail, { width: scale * renderWidth, height: scale * renderHeight }]}>
               <Image
                 resizeMode={'contain'}
                 style={{ width: scale * size, height: scale * renderHeight }}
@@ -185,8 +203,8 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
   };
 
   render() {
-    const { time, duration, thumbnailTrack, carouselCount, offset, containerStyle, visible, showTimeLabel, timeLabelStyle } = this.props;
-    if (!visible || !thumbnailTrack || !thumbnailTrack.cues || thumbnailTrack.cues.length === 0) {
+    const { time, duration, thumbnailTrack, showTimeLabel, timeLabelStyle } = this.props;
+    if (!thumbnailTrack || !thumbnailTrack.cues || thumbnailTrack.cues.length === 0) {
       // No thumbnails to render.
       return <></>;
     }
@@ -197,22 +215,11 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
       return <></>;
     }
 
-    const carouselThumbCount = carouselCount ?? 0;
-    const before: Thumbnail[] = [];
-    const after: Thumbnail[] = [];
-    for (let i = 0; i < carouselThumbCount; i++) {
-      const beforeIndex = nowCueIndex - carouselThumbCount + i;
-      const beforeThumbnail = beforeIndex >= 0 ? this.getThumbnailImageForCue(thumbnailTrack.cues[beforeIndex]) : null;
-      if (beforeThumbnail !== null) {
-        before.push(beforeThumbnail);
-      }
-      const afterIndex = nowCueIndex + i + 1;
-      const afterThumbnail = afterIndex < thumbnailTrack.cues.length ? this.getThumbnailImageForCue(thumbnailTrack.cues[afterIndex]) : null;
-      if (afterThumbnail !== null) {
-        after.push(afterThumbnail);
-      }
-    }
     const current = this.getThumbnailImageForCue(thumbnailTrack.cues[nowCueIndex]);
+    if (current === null) {
+      // No thumbnail for current time
+      return <></>;
+    }
     const { renderHeight } = this.state;
     return (
       <PlayerContext.Consumer>
@@ -221,13 +228,7 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
             {showTimeLabel && (
               <StaticTimeLabel style={[context.style.timeLabel.container, timeLabelStyle]} time={time} duration={duration} showDuration={false} />
             )}
-            <View style={[context.style.seekBar.thumbnail.containerThumbnail, { height: renderHeight, marginLeft: offset ?? 0 }, containerStyle]}>
-              {[...before, current, ...after].map((thumbnail, index) => {
-                return thumbnail
-                  ? this.renderThumbnail(thumbnail, carouselThumbCount - index)
-                  : this.renderPlaceHolderThumbnail(carouselThumbCount - index);
-              })}
-            </View>
+            <View style={[context.style.seekBar.thumbnail.containerThumbnail, { height: renderHeight }]}>{this.renderThumbnail(current, 0)}</View>
           </View>
         )}
       </PlayerContext.Consumer>
