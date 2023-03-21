@@ -104,6 +104,13 @@ export class QualitySelectionView extends PureComponent<QualitySelectionViewProp
     const availableVideoQualities = findMediaTrackByUid(videoTracks, selectedVideoTrack)?.qualities || [];
     availableVideoQualities.sort((q1, q2) => q2.bandwidth - q1.bandwidth);
 
+    let selectedTarget: number | undefined;
+    if (targetVideoTrackQuality === undefined || typeof targetVideoTrackQuality === 'number') {
+      selectedTarget = targetVideoTrackQuality;
+    } else {
+      selectedTarget = targetVideoTrackQuality.length > 0 ? targetVideoTrackQuality[0] : undefined;
+    }
+
     return (
       <MenuView
         menu={
@@ -116,7 +123,7 @@ export class QualitySelectionView extends PureComponent<QualitySelectionViewProp
                 uid={id}
                 onSelect={this.selectTargetVideoQuality}
                 selected={
-                  (track === undefined && targetVideoTrackQuality === undefined) || (track !== undefined && track.uid === targetVideoTrackQuality)
+                  (track === undefined && selectedTarget === undefined) || (track !== undefined && track.uid === selectedTarget)
                 }></MenuRadioButton>
             ))}
           />
