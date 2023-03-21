@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
 import { ForwardSvg } from './svg/ForwardSvg';
 import type { StyleProp, ViewStyle } from 'react-native';
-import { Text, View } from 'react-native';
+import { Animated, Easing, Text } from 'react-native';
 import { BackwardSvg } from './svg/BackwardSvg';
 import { PlayerEventType, ProgressEvent } from 'react-native-theoplayer';
 
@@ -14,12 +14,13 @@ interface SkipButtonProps {
 
 interface SkipButtonState {
   enabled: boolean;
+  spinValue: Animated.Value;
 }
 
 export class SkipButton extends PureComponent<SkipButtonProps, SkipButtonState> {
   constructor(props: SkipButtonProps) {
     super(props);
-    this.state = { enabled: false };
+    this.state = { enabled: false, spinValue: new Animated.Value(0) };
   }
 
   componentDidMount() {
@@ -37,36 +38,57 @@ export class SkipButton extends PureComponent<SkipButtonProps, SkipButtonState> 
     this.setState({ enabled: event.seekable.length > 0 });
   };
 
+  private readonly onPress = () => {
+    const { skip } = this.props;
+    const { spinValue } = this.state;
+    const player = (this.context as UiContext).player;
+    console.log(player.currentTime);
+    player.currentTime = player.currentTime + skip * 1e3;
+
+    Animated.timing(spinValue, {
+      toValue: 0.1,
+      duration: 100,
+      easing: Easing.linear,
+      useNativeDriver: true,
+    }).start(() => {
+      Animated.timing(spinValue, {
+        toValue: 0,
+        duration: 100,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }).start();
+    });
+  };
+
   render() {
     const { style, skip } = this.props;
-    const { enabled } = this.state;
+    const { enabled, spinValue } = this.state;
 
     if (!enabled) {
       return <></>;
     }
 
-    const onPress = () => {
-      const player = (this.context as UiContext).player;
-      console.log(player.currentTime);
-      player.currentTime = player.currentTime + skip * 1e3;
-    };
+    const spin = spinValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: skip >= 0 ? ['0deg', '360deg'] : ['360deg', '0deg'],
+    });
     return (
       <>
         <PlayerContext.Consumer>
           {(context: UiContext) => (
-            <View style={style}>
+            <Animated.View style={[style, { transform: [{ rotate: spin }] }]}>
               <ActionButton
-                style={context.style.controlBar.buttonIcon}
+                style={[context.style.controlBar.buttonIcon]}
                 touchable={true}
                 svg={skip < 0 ? <BackwardSvg /> : <ForwardSvg />}
                 // @ts-ignore
                 iconStyle={[style]}
-                onPress={onPress}
+                onPress={this.onPress}
               />
               <Text style={[context.style.text, { position: 'absolute', paddingTop: '33%', color: context.style.colors.text, zIndex: -1 }]}>
                 {Math.abs(skip)}
               </Text>
-            </View>
+            </Animated.View>
           )}
         </PlayerContext.Consumer>
       </>
