@@ -166,7 +166,7 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
   };
 
   private onPresentationModeChange = (event: PresentationModeChangeEvent) => {
-    console.log(TAG, 'presentationModeChange', event.presentationMode);
+    console.log(TAG, `presentationModeChange: ${event.previousPresentationMode} -> ${event.presentationMode}`);
     if (event.presentationMode === 'fullscreen') {
       this.setState({ pip: false, fullscreen: true });
     } else if (event.presentationMode === 'picture-in-picture') {
