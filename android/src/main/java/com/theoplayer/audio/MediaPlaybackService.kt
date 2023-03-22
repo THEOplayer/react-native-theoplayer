@@ -23,7 +23,7 @@ import com.theoplayer.android.connector.mediasession.MediaSessionListener
 
 private const val BROWSABLE_ROOT = "/"
 private const val EMPTY_ROOT = "@empty@"
-private const val STOP_SERVICE_IF_APP_REMOVED = false
+private const val STOP_SERVICE_IF_APP_REMOVED = true
 
 private const val NOTIFICATION_ID = 1
 
