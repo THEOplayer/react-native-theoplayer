@@ -252,10 +252,13 @@ class PlayerEventEmitter internal constructor(
     emitError(exception.code.name, exception.message)
   }
 
-  fun emitPresentationModeChange(presentationMode: PresentationMode) {
+  fun emitPresentationModeChange(
+    presentationMode: PresentationMode,
+    prevPresentationMode: PresentationMode?
+  ) {
     receiveEvent(
       EVENT_PRESENTATIONMODECHANGE,
-      PayloadBuilder().presentationMode(presentationMode).build()
+      PayloadBuilder().presentationMode(presentationMode, prevPresentationMode).build()
     )
   }
 
@@ -399,7 +402,10 @@ class PlayerEventEmitter internal constructor(
   }
 
   private fun onPresentationModeChange(event: PresentationModeChange) {
-    emitPresentationModeChange(event.presentationMode)
+    emitPresentationModeChange(
+      event.presentationMode,
+      playerView.presentationManager?.currentPresentationMode
+    )
   }
 
   private fun onVolumeChange(event: VolumeChangeEvent) {
