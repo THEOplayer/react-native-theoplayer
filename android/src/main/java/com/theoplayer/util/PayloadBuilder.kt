@@ -21,7 +21,8 @@ import java.util.*
 
 private const val EVENT_PROP_SOURCE = "source"
 private const val EVENT_PROP_CURRENT_TIME = "currentTime"
-private const val EVENT_PROP_PRESENTATIONMODE = "presentationMode"
+private const val EVENT_PROP_PRESENTATION_MODE = "presentationMode"
+private const val EVENT_PROP_PREV_PRESENTATION_MODE = "previousPresentationMode"
 private const val EVENT_PROP_CURRENT_PROGRAM_DATE_TIME = "currentProgramDateTime"
 private const val EVENT_PROP_SEEKABLE = "seekable"
 private const val EVENT_PROP_BUFFERED = "buffered"
@@ -74,15 +75,24 @@ class PayloadBuilder {
     }
   }
 
-  fun presentationMode(presentationMode: PresentationMode) = apply {
-    payload.putString(
-      EVENT_PROP_PRESENTATIONMODE,
-      when (presentationMode) {
-        PresentationMode.PICTURE_IN_PICTURE -> "picture-in-picture"
-        PresentationMode.FULLSCREEN -> "fullscreen"
-        else -> "inline"
-      }
-    )
+  fun presentationMode(presentationMode: PresentationMode, prevPresentationMode: PresentationMode?) =
+    apply {
+      payload.putString(
+        EVENT_PROP_PRESENTATION_MODE,
+        presentationModeToString(presentationMode)
+      )
+      payload.putString(
+        EVENT_PROP_PREV_PRESENTATION_MODE,
+        presentationModeToString(prevPresentationMode ?: PresentationMode.INLINE)
+      )
+    }
+
+  private fun presentationModeToString(presentationMode: PresentationMode): String {
+    return when (presentationMode) {
+      PresentationMode.PICTURE_IN_PICTURE -> "picture-in-picture"
+      PresentationMode.FULLSCREEN -> "fullscreen"
+      else -> "inline"
+    }
   }
 
   fun paused(paused: Boolean) = apply {
