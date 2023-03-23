@@ -19,8 +19,12 @@ public class THEOplayerRCTView: UIView {
     var castConfig = CastConfig()
     var pipConfig = PipConfig()
     var presentationModeContext = THEOplayerRCTPresentationModeContext()
-    var backgroundAudioConfig = BackgroundAudioConfig()
-    
+    var backgroundAudioConfig = BackgroundAudioConfig() {
+        didSet {
+            self.remoteCommandsManager.setBackGroundAudioConfig(backgroundAudioConfig)
+        }
+    }
+
     // MARK: Events
     var onNativePlayerReady: RCTDirectEventBlock?
     

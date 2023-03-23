@@ -11,6 +11,7 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     private weak var player: THEOplayer?
     private var isLive: Bool = false
     private var inAd: Bool = false
+    private var backgroundaudioConfig = BackgroundAudioConfig()
     
     // MARK: player Listeners
     private var durationChangeListener: EventListener?
@@ -31,6 +32,11 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         
         // attach listeners
         self.attachListeners()
+    }
+    
+    func setBackGroundAudioConfig(_ newBackgroundAudioConfig: BackgroundAudioConfig) {
+        self.backgroundaudioConfig = newBackgroundAudioConfig
+        self.updateRemoteCommands()
     }
     
     private func initRemoteCommands() {
@@ -64,16 +70,16 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         if DEBUG_REMOTECOMMANDS { print("[NATIVE] Remote commands initialised.") }
     }
     
-    private func updateRemoteCommands() {
+    func updateRemoteCommands() {
         let commandCenter = MPRemoteCommandCenter.shared()
-        commandCenter.playCommand.isEnabled = !self.inAd
-        commandCenter.pauseCommand.isEnabled = !self.inAd
-        commandCenter.togglePlayPauseCommand.isEnabled = !self.inAd
-        commandCenter.stopCommand.isEnabled = !self.inAd
-        commandCenter.changePlaybackPositionCommand.isEnabled = !isLive && !self.inAd
-        commandCenter.skipForwardCommand.isEnabled = !isLive && !self.inAd
-        commandCenter.skipBackwardCommand.isEnabled = !isLive && !self.inAd
-        if DEBUG_REMOTECOMMANDS { print("[NATIVE] Remote commands updated for \(self.isLive ? "LIVE" : "VOD") (\(self.inAd ? "AD IS PLAYING" : "NO AD PLAYING")).") }
+        commandCenter.playCommand.isEnabled = !self.inAd && self.backgroundaudioConfig.enabled
+        commandCenter.pauseCommand.isEnabled = !self.inAd && self.backgroundaudioConfig.enabled
+        commandCenter.togglePlayPauseCommand.isEnabled = !self.inAd && self.backgroundaudioConfig.enabled
+        commandCenter.stopCommand.isEnabled = !self.inAd && self.backgroundaudioConfig.enabled
+        commandCenter.changePlaybackPositionCommand.isEnabled = !isLive && !self.inAd && self.backgroundaudioConfig.enabled
+        commandCenter.skipForwardCommand.isEnabled = !isLive && !self.inAd && self.backgroundaudioConfig.enabled
+        commandCenter.skipBackwardCommand.isEnabled = !isLive && !self.inAd && self.backgroundaudioConfig.enabled
+        if DEBUG_REMOTECOMMANDS { print("[NATIVE] Remote commands updated for \(self.isLive ? "LIVE" : "VOD") (\(self.inAd ? "AD IS PLAYING" : "NO AD PLAYING"), \(self.backgroundaudioConfig.enabled ? "BGAUDIO ENABLED" : "BGAUDIO DISABLED") ).") }
     }
     
     @objc private func onPlayCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
