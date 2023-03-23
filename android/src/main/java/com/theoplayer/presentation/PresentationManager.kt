@@ -14,8 +14,10 @@ import android.view.SurfaceView
 import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.ComponentActivity
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.Lifecycle
 import com.facebook.react.uimanager.ThemedReactContext
 import com.theoplayer.PlayerEventEmitter
 import com.theoplayer.android.api.THEOplayerView
@@ -32,7 +34,7 @@ class PresentationManager(
   private val reactContext: ThemedReactContext,
   private val eventEmitter: PlayerEventEmitter,
 ) {
-  private var canDoPip = false
+  private var supportsPip = false
   private var onUserLeaveHintReceiver: BroadcastReceiver? = null
   private var onPictureInPictureModeChanged: BroadcastReceiver? = null
 
@@ -54,11 +56,21 @@ class PresentationManager(
       override fun onReceive(context: Context?, intent: Intent?) {
         // Dispatch event on every PiP mode change
         val inPip = intent?.getBooleanExtra("isInPictureInPictureMode", false) ?: false
-        updatePresentationMode(if (inPip) PresentationMode.PICTURE_IN_PICTURE else PresentationMode.INLINE)
+        if (inPip) {
+          updatePresentationMode(PresentationMode.PICTURE_IN_PICTURE)
+        } else {
+          val pipCtx: PresentationModeChangePipContext = if ((reactContext.currentActivity as? ComponentActivity)
+            ?.lifecycle?.currentState == Lifecycle.State.CREATED) {
+            PresentationModeChangePipContext.CLOSED
+          } else {
+            PresentationModeChangePipContext.RESTORED
+          }
+          updatePresentationMode(PresentationMode.INLINE, PresentationModeChangeContext(pipCtx))
+        }
       }
     }
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      canDoPip =
+      supportsPip =
         reactContext.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
     }
     reactContext.currentActivity?.registerReceiver(
@@ -120,7 +132,7 @@ class PresentationManager(
 
   private fun enterPip() {
     // PiP not supported
-    if (!canDoPip || Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+    if (!supportsPip || Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
       return
     }
 
@@ -198,7 +210,8 @@ class PresentationManager(
 
   private fun setFullscreen(fullscreen: Boolean) {
     if ((fullscreen && currentPresentationMode == PresentationMode.FULLSCREEN) ||
-      (!fullscreen && currentPresentationMode == PresentationMode.INLINE)) {
+      (!fullscreen && currentPresentationMode == PresentationMode.INLINE)
+    ) {
       return
     }
     val activity = reactContext.currentActivity ?: return
@@ -216,12 +229,15 @@ class PresentationManager(
     }
   }
 
-  private fun updatePresentationMode(presentationMode: PresentationMode) {
+  private fun updatePresentationMode(
+    presentationMode: PresentationMode,
+    context: PresentationModeChangeContext? = null
+  ) {
     if (presentationMode == currentPresentationMode) {
       return
     }
     val prevPresentationMode = currentPresentationMode
     currentPresentationMode = presentationMode
-    eventEmitter.emitPresentationModeChange(presentationMode, prevPresentationMode)
+    eventEmitter.emitPresentationModeChange(presentationMode, prevPresentationMode, context)
   }
 }
