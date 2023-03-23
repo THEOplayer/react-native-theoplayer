@@ -15,6 +15,8 @@ import com.theoplayer.android.api.player.track.texttrack.TextTrackList
 import com.theoplayer.android.api.player.track.texttrack.cue.TextTrackCue
 import com.theoplayer.android.api.source.SourceDescription
 import com.theoplayer.android.api.timerange.TimeRanges
+import com.theoplayer.presentation.PresentationModeChangeContext
+import com.theoplayer.presentation.PresentationModeChangePipContext
 import com.theoplayer.track.MediaTrackType
 import com.theoplayer.track.TrackListAdapter
 import java.util.*
@@ -23,6 +25,8 @@ private const val EVENT_PROP_SOURCE = "source"
 private const val EVENT_PROP_CURRENT_TIME = "currentTime"
 private const val EVENT_PROP_PRESENTATION_MODE = "presentationMode"
 private const val EVENT_PROP_PREV_PRESENTATION_MODE = "previousPresentationMode"
+private const val EVENT_PROP_CONTEXT = "context"
+private const val EVENT_PROP_PIP = "pip"
 private const val EVENT_PROP_CURRENT_PROGRAM_DATE_TIME = "currentProgramDateTime"
 private const val EVENT_PROP_SEEKABLE = "seekable"
 private const val EVENT_PROP_BUFFERED = "buffered"
@@ -75,7 +79,7 @@ class PayloadBuilder {
     }
   }
 
-  fun presentationMode(presentationMode: PresentationMode, prevPresentationMode: PresentationMode?) =
+  fun presentationMode(presentationMode: PresentationMode, prevPresentationMode: PresentationMode?, context: PresentationModeChangeContext?) =
     apply {
       payload.putString(
         EVENT_PROP_PRESENTATION_MODE,
@@ -85,6 +89,9 @@ class PayloadBuilder {
         EVENT_PROP_PREV_PRESENTATION_MODE,
         presentationModeToString(prevPresentationMode ?: PresentationMode.INLINE)
       )
+      if (context != null) {
+        presentationModeChangedContext(context)
+      }
     }
 
   private fun presentationModeToString(presentationMode: PresentationMode): String {
@@ -93,6 +100,17 @@ class PayloadBuilder {
       PresentationMode.FULLSCREEN -> "fullscreen"
       else -> "inline"
     }
+  }
+
+  private fun presentationModeChangedContext(context: PresentationModeChangeContext) = apply {
+    val contextPayload = Arguments.createMap()
+    context.pip?.let { pipCtx ->
+      contextPayload.putString(EVENT_PROP_PIP, when (pipCtx) {
+        PresentationModeChangePipContext.RESTORED -> "restored"
+        else -> "closed"
+      })
+    }
+    payload.putMap(EVENT_PROP_CONTEXT, contextPayload)
   }
 
   fun paused(paused: Boolean) = apply {
