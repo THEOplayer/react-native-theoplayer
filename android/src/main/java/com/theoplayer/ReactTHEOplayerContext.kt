@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
@@ -38,9 +39,12 @@ class ReactTHEOplayerContext private constructor(
   private var binder: MediaPlaybackService.MediaPlaybackBinder? = null
   private var mediaSessionConnector: MediaSessionConnector? = null
 
-  var backgroundAudioConfig: BackgroundAudioConfig = BackgroundAudioConfig(false)
+  var backgroundAudioConfig: BackgroundAudioConfig = BackgroundAudioConfig(
+    enabled = false,
+    mediaPlaybackServiceEnabled = true
+  )
     set(value) {
-      updateBackgroundPlayback(value, field)
+      applyBackgroundPlaybackConfig(value)
       field = value
     }
 
@@ -52,6 +56,9 @@ class ReactTHEOplayerContext private constructor(
   var daiIntegration: GoogleDaiIntegration? = null
   var imaIntegration: GoogleImaIntegration? = null
   var castIntegration: CastIntegration? = null
+
+  private val isBackgroundAudioEnabled: Boolean
+    get() = backgroundAudioConfig.enabled && backgroundAudioConfig.mediaPlaybackServiceEnabled
 
   companion object {
     private var mediaControlledInstance: ReactTHEOplayerContext? = null
@@ -81,14 +88,15 @@ class ReactTHEOplayerContext private constructor(
     }
   }
 
-  private fun updateBackgroundPlayback(
-    config: BackgroundAudioConfig,
-    oldConfig: BackgroundAudioConfig
-  ) {
-    if (config.enabled == oldConfig.enabled) {
-      return
+  private fun applyBackgroundPlaybackConfig(config: BackgroundAudioConfig) {
+    if (BuildConfig.USE_PLAYBACK_SERVICE) {
+      reactContext.applicationContext.packageManager.setComponentEnabledSetting(
+        ComponentName(reactContext.applicationContext, MediaPlaybackService::class.java),
+        if (config.mediaPlaybackServiceEnabled) PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+        else PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+        PackageManager.DONT_KILL_APP
+      )
     }
-    // TODO
   }
 
   private fun bindMediaPlaybackService() {
@@ -147,6 +155,9 @@ class ReactTHEOplayerContext private constructor(
         initDefaultMediaSession()
       }
     }
+
+    // Apply initial backgroundPlayback config
+    applyBackgroundPlaybackConfig(backgroundAudioConfig)
   }
 
   private fun initDefaultMediaSession() {
@@ -250,7 +261,7 @@ class ReactTHEOplayerContext private constructor(
    * The host activity is paused.
    */
   fun onHostPause() {
-    if (!backgroundAudioConfig.enabled) {
+    if (!isBackgroundAudioEnabled) {
       mediaSessionConnector?.setActive(false)
       playerView.onPause()
     }
@@ -260,7 +271,7 @@ class ReactTHEOplayerContext private constructor(
    * The host activity is resumed.
    */
   fun onHostResume() {
-    if (!backgroundAudioConfig.enabled) {
+    if (!isBackgroundAudioEnabled) {
       mediaSessionConnector?.setActive(true)
       playerView.onResume()
     }

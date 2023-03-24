@@ -6,5 +6,12 @@ data class BackgroundAudioConfig(
    *
    * @defaultValue `false`
    */
-  val enabled: Boolean
+  val enabled: Boolean,
+
+  /**
+   * Set whether the mediaPlaybackService is enabled.
+   *
+   * @defaultValue `true`
+   */
+  val mediaPlaybackServiceEnabled: Boolean
 )
