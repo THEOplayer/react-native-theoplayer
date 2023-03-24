@@ -6,6 +6,7 @@ import {
   AirplayStateChangeEvent,
   CastEvent,
   CastEventType,
+  CastState,
   ChromecastChangeEvent,
   ChromecastErrorEvent,
   DurationChangeEvent,
@@ -292,17 +293,17 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
     let message = undefined;
     const castTarget = event.subType === CastEventType.CHROMECAST_STATE_CHANGE ? 'chromecast' : 'airplay';
     switch (stateEvent.state) {
-      case 'connecting':
+      case CastState.connecting:
         message = `Connecting to ${castTarget} ...`;
         break;
-      case 'connected':
+      case CastState.connected:
         message = `Connected to ${castTarget} ...`;
         break;
     }
     this.setState({
       message,
-      airplayIsConnected: castTarget === 'airplay' && (stateEvent.state === 'connecting' || stateEvent.state === 'connected'),
-      chromecastIsConnected: castTarget === 'chromecast' && (stateEvent.state === 'connecting' || stateEvent.state === 'connected'),
+      airplayIsConnected: castTarget === 'airplay' && (stateEvent.state === CastState.connecting || stateEvent.state === CastState.connected),
+      chromecastIsConnected: castTarget === 'chromecast' && (stateEvent.state === CastState.connecting || stateEvent.state === CastState.connected),
     });
   };
 
