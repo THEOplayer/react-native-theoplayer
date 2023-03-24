@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Set the player container on Web to by default have a width and height not larger than the devices width and height.
 
+### Added
+
+- Added `enableMediaPlaybackService` option to `backgroundAudioConfiguration` to optionally disable the MediaBrowserService that provides background audio support on Android.
+
 ## [Unreleased 2.0.0-pre7]
 
 ### Fixed
