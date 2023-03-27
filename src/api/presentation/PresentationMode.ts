@@ -8,7 +8,7 @@
  */
 
 export enum PresentationMode {
-    fullscreen = "fullscreen",
-    inline = "inline",
-    pip = "picture-in-picture",
+  fullscreen = 'fullscreen',
+  inline = 'inline',
+  pip = 'picture-in-picture',
 }
