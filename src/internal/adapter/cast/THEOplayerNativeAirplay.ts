@@ -1,12 +1,12 @@
-import type { Airplay, CastState } from 'react-native-theoplayer';
-import { CastEvent, CastEventType, PlayerEventType, THEOplayer } from 'react-native-theoplayer';
+import type { Airplay } from 'react-native-theoplayer';
+import { CastEvent, CastEventType, CastState, PlayerEventType, THEOplayer } from 'react-native-theoplayer';
 import { NativeModules } from 'react-native';
 
 export class THEOplayerNativeAirplay implements Airplay {
   private readonly _player: THEOplayer;
 
   private _casting = false;
-  private _state: CastState = 'available';
+  private _state: CastState = CastState.available;
 
   public constructor(player: THEOplayer) {
     this._player = player;
@@ -21,7 +21,7 @@ export class THEOplayerNativeAirplay implements Airplay {
   private readonly _onCastStateChange = (event: CastEvent) => {
     if (event.subType === CastEventType.AIRPLAY_STATE_CHANGE) {
       this._state = event.state;
-      this._casting = event.state === 'connected';
+      this._casting = event.state === CastState.connected;
     }
   };
 
