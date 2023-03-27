@@ -1,5 +1,5 @@
-import type { CastEvent, CastState, Chromecast, THEOplayerView } from 'react-native-theoplayer';
-import { CastEventType, PlayerEventType, THEOplayer } from 'react-native-theoplayer';
+import type { CastEvent, Chromecast, THEOplayerView } from 'react-native-theoplayer';
+import { CastEventType, CastState, PlayerEventType, THEOplayer } from 'react-native-theoplayer';
 import { NativeModules } from 'react-native';
 
 export class THEOplayerNativeChromecast implements Chromecast {
@@ -7,7 +7,7 @@ export class THEOplayerNativeChromecast implements Chromecast {
   private readonly _view: THEOplayerView;
 
   private _casting = false;
-  private _state: CastState = 'available';
+  private _state: CastState = CastState.available;
 
   public constructor(player: THEOplayer, view: THEOplayerView) {
     this._player = player;
