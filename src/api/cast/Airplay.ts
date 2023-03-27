@@ -3,18 +3,18 @@
  *
  * @public
  */
-import type {CastState} from "./CastState";
+import type { CastState } from './CastState';
 
 export interface Airplay {
   /**
    * Whether the player is connected with an airplay device.
    */
-  casting(): Promise<boolean>;
+  readonly casting: boolean;
 
   /**
    * The state of the casting process.
    */
-  state(): Promise<CastState>;
+  readonly state: CastState;
 
   /**
    * Start a casting session with the player's source.
