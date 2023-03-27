@@ -21,7 +21,7 @@ export class AirplayButton extends PureComponent<unknown, AirplayButtonState> {
   componentDidMount() {
     const player = (this.context as UiContext).player;
     player.addEventListener(PlayerEventType.CAST_EVENT, this.onCastStateChangeEvent);
-    player.cast.airplay?.casting().then((casting) => this.setState({ connected: casting }));
+    this.setState({ connected: player.cast.airplay?.casting === true });
   }
 
   componentWillUnmount() {
@@ -41,14 +41,13 @@ export class AirplayButton extends PureComponent<unknown, AirplayButtonState> {
   private onUIAirplayToggled = () => {
     const player = (this.context as UiContext).player;
     if (Platform.OS === 'ios' && !Platform.isTV) {
-      player.cast.airplay?.state().then((airplayCastState) => {
-        const inConnection = airplayCastState === 'connected' || airplayCastState === 'connecting';
-        if (inConnection) {
-          player.cast.airplay?.stop();
-        } else {
-          player.cast.airplay?.start();
-        }
-      });
+      const airplayCastState = player.cast.airplay?.state;
+      const inConnection = airplayCastState === 'connected' || airplayCastState === 'connecting';
+      if (inConnection) {
+        player.cast.airplay?.stop();
+      } else {
+        player.cast.airplay?.start();
+      }
     }
   };
 
