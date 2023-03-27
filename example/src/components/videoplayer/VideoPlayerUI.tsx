@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import {
-  addTrack,
   addTextTrackCue,
+  addTrack,
   AdEvent,
   AirplayStateChangeEvent,
   CastEvent,
@@ -14,22 +14,23 @@ import {
   filterThumbnailTracks,
   findTextTrackByUid,
   LoadedMetadataEvent,
-  RateChangeEvent,
   MediaTrackEvent,
   MediaTrackEventType,
   MediaTrackListEvent,
   MediaTrackType,
   PlayerEventType,
+  PresentationMode,
+  PresentationModeChangeEvent,
   ProgressEvent,
+  RateChangeEvent,
   ReadyStateChangeEvent,
-  removeTrack,
   removeTextTrackCue,
+  removeTrack,
   TextTrackEvent,
   TextTrackEventType,
   TextTrackListEvent,
   TimeUpdateEvent,
   TrackListEventType,
-  PresentationModeChangeEvent,
   VolumeChangeEvent,
 } from 'react-native-theoplayer';
 
@@ -37,7 +38,7 @@ import { Image, Platform, Text, TouchableOpacity, View } from 'react-native';
 import { SeekBar } from '../seekbar/SeekBar';
 import styles from './VideoPlayerUI.style';
 import { DelayedActivityIndicator } from '../delayedactivityindicator/DelayedActivityIndicator';
-import { AirplayIcon, FullScreenExitIcon, FullScreenIcon, PipExitIcon, PipIcon, MutedIcon, PlayButton, UnMutedIcon } from '../../res/images';
+import { AirplayIcon, FullScreenExitIcon, FullScreenIcon, MutedIcon, PipExitIcon, PipIcon, PlayButton, UnMutedIcon } from '../../res/images';
 import { ActionButton } from '../actionbutton/ActionButton';
 import { TimeLabel } from '../timelabel/TimeLabel';
 import {
@@ -400,16 +401,16 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
   private toggleFullScreen = () => {
     const { player } = this.props;
     console.log(TAG, 'toggle fullscreen');
-    const wasFullscreen = player.presentationMode == 'fullscreen';
-    player.presentationMode = wasFullscreen ? 'inline' : 'fullscreen';
+    const wasFullscreen = player.presentationMode == PresentationMode.fullscreen;
+    player.presentationMode = wasFullscreen ? PresentationMode.inline : PresentationMode.fullscreen;
     this.setState({ fullscreen: !wasFullscreen, pip: false });
   };
 
   private togglePip = () => {
     const { player } = this.props;
     console.log(TAG, 'toggle pip');
-    const wasPip = player.presentationMode == 'picture-in-picture';
-    player.presentationMode = wasPip ? 'inline' : 'picture-in-picture';
+    const wasPip = player.presentationMode == PresentationMode.pip;
+    player.presentationMode = wasPip ? PresentationMode.inline : PresentationMode.pip;
   };
 
   private toggleMuted = () => {
@@ -597,7 +598,6 @@ export class VideoPlayerUI extends PureComponent<VideoPlayerUIProps, VideoPlayer
 
               {/*Fullscreen*/}
               <ActionButton icon={fullscreen ? FullScreenExitIcon : FullScreenIcon} onPress={this.toggleFullScreen} iconStyle={styles.menuIcon} />
-              
             </View>
           </View>
         )}
