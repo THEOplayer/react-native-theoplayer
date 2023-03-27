@@ -1,9 +1,9 @@
 import { DefaultEventDispatcher } from '../event/DefaultEventDispatcher';
 import type { PlayerEventMap } from 'react-native-theoplayer';
 import type * as THEOplayerWeb from 'theoplayer';
-import { PresentationMode } from 'src/api/presentation/PresentationMode';
 import { DefaultPresentationModeChangeEvent } from '../event/PlayerEvents';
 import { browserDetection } from '../../../web/platform/BrowserDetection';
+import { PresentationMode } from 'react-native-theoplayer';
 
 export class WebPresentationModeManager extends DefaultEventDispatcher<PlayerEventMap> {
   private readonly _player: THEOplayerWeb.ChromelessPlayer;
@@ -37,7 +37,7 @@ export class WebPresentationModeManager extends DefaultEventDispatcher<PlayerEve
       }
     } else {
       // other web-platformsyarn
-      
+
       if (presentationMode === PresentationMode.fullscreen) {
         const appElement = document.getElementById('app');
         void appElement?.requestFullscreen();
