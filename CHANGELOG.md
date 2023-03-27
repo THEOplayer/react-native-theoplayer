@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 - Set the player container on Web to by default have a width and height not larger than the devices width and height.
+- Use `enum` type for `PresentationMode`.
 
 ### Added
 

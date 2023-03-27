@@ -6,4 +6,9 @@
  *
  * @public
  */
-export type PresentationMode = 'inline' | 'fullscreen' | 'picture-in-picture';
+
+export enum PresentationMode {
+  fullscreen = 'fullscreen',
+  inline = 'inline',
+  pip = 'picture-in-picture',
+}
