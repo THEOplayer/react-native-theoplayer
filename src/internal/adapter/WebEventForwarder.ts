@@ -16,7 +16,15 @@ import type {
   VolumeChangeEvent as NativeVolumeChangeEvent,
 } from 'theoplayer';
 import type { AdEvent, MediaTrack, TextTrack, TimeRange } from 'react-native-theoplayer';
-import { AdEventType, MediaTrackEventType, MediaTrackType, PlayerEventType, TextTrackEventType, TrackListEventType } from 'react-native-theoplayer';
+import {
+  AdEventType,
+  MediaTrackEventType,
+  MediaTrackType,
+  PlayerEventType,
+  PresentationMode,
+  TextTrackEventType,
+  TrackListEventType,
+} from 'react-native-theoplayer';
 import type { THEOplayerWebAdapter } from './THEOplayerWebAdapter';
 import { BaseEvent } from './event/BaseEvent';
 import {
@@ -224,7 +232,7 @@ export class WebEventForwarder {
   };
 
   private readonly onPresentationModeChange = (event: PresentationModeChangeEvent) => {
-    this._facade.dispatchEvent(new DefaultPresentationModeChangeEvent(event.presentationMode, 'inline')); // TODO: move to extended event
+    this._facade.dispatchEvent(new DefaultPresentationModeChangeEvent(event.presentationMode as PresentationMode, PresentationMode.inline)); // TODO: move to extended event
   };
 
   private readonly onAddTextTrack = (event: AddTrackEvent) => {
