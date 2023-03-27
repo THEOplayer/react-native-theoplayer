@@ -13,10 +13,10 @@ export class THEOplayerWebCastAdapter implements CastAPI {
   }
 
   get chromecast(): Chromecast | undefined {
-    return this._player.cast?.chromecast;
+    return this._player.cast?.chromecast as Chromecast | undefined;
   }
 
   get airplay(): Airplay | undefined {
-    return this._player.cast?.airplay;
+    return this._player.cast?.airplay as Airplay | undefined;
   }
 }
