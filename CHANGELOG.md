@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Set the player container on Web to by default have a width and height not larger than the devices width and height.
 - Use `enum` type for `PresentationMode`.
+- Use `enum` type for `CastState`.
 - Changed the methods of the Cast API, such as `casting` and `state`, to be synchronous.
 
 ### Added
