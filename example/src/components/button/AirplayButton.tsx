@@ -1,18 +1,14 @@
 import React, { PureComponent } from 'react';
 import { Platform } from 'react-native';
-import { CastEvent, CastEventType, PlayerEventType } from 'react-native-theoplayer';
+import { CastEvent, CastEventType, CastState, PlayerEventType } from 'react-native-theoplayer';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
-import { isConnected } from './ChromecastButton';
+import { CastButtonState, isConnected } from './ChromecastButton';
 import { ActionButton } from './actionbutton/ActionButton';
 import { AirplaySvg } from './svg/AirplaySvg';
 
-interface AirplayButtonState {
-  connected: boolean;
-}
-
-export class AirplayButton extends PureComponent<unknown, AirplayButtonState> {
-  private static initialState: AirplayButtonState = {
-    connected: false,
+export class AirplayButton extends PureComponent<unknown, CastButtonState> {
+  private static initialState: CastButtonState = {
+    castState: CastState.unavailable,
   };
 
   constructor(props: unknown) {
@@ -23,7 +19,7 @@ export class AirplayButton extends PureComponent<unknown, AirplayButtonState> {
   componentDidMount() {
     const player = (this.context as UiContext).player;
     player.addEventListener(PlayerEventType.CAST_EVENT, this.onCastStateChangeEvent);
-    this.setState({ connected: player.cast.airplay?.casting === true });
+    this.setState({ castState: player.cast.airplay?.state ?? CastState.unavailable });
   }
 
   componentWillUnmount() {
@@ -35,12 +31,12 @@ export class AirplayButton extends PureComponent<unknown, AirplayButtonState> {
     if (event.subType != CastEventType.AIRPLAY_STATE_CHANGE) {
       return;
     }
-    this.setState({ connected: isConnected(event.state) });
+    this.setState({ castState: event.state });
   };
 
   private onUIAirplayToggled = () => {
     const player = (this.context as UiContext).player;
-    if (Platform.OS === 'ios' && !Platform.isTV) {
+    if (player.cast.airplay?.state !== CastState.unavailable) {
       if (isConnected(player.cast.airplay?.state)) {
         player.cast.airplay?.stop();
       } else {
@@ -50,11 +46,11 @@ export class AirplayButton extends PureComponent<unknown, AirplayButtonState> {
   };
 
   render() {
-    const { connected } = this.state;
-    if (Platform.OS !== 'ios' || Platform.isTV) {
+    const { castState } = this.state;
+    if (castState === CastState.unavailable || Platform.isTV) {
       return <></>;
     }
-    return <ActionButton svg={<AirplaySvg />} touchable={true} onPress={this.onUIAirplayToggled} highlighted={connected} />;
+    return <ActionButton svg={<AirplaySvg />} touchable={true} onPress={this.onUIAirplayToggled} highlighted={isConnected(castState)} />;
   }
 }
 
