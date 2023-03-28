@@ -20,6 +20,7 @@ import type {
 import type { AdEvent, MediaTrack, TextTrack, TimeRange } from 'react-native-theoplayer';
 import {
   AdEventType,
+  CastState,
   MediaTrackEventType,
   MediaTrackType,
   PlayerEventType,
@@ -312,7 +313,7 @@ export class WebEventForwarder {
   };
 
   private readonly onChromecastStateChange = (event: CastStateChangeEvent) => {
-    this._facade.dispatchEvent(new DefaultChromecastChangeEvent(event.state));
+    this._facade.dispatchEvent(new DefaultChromecastChangeEvent(event.state as CastState));
   };
 
   private readonly onChromecastError = (event: ChromecastErrorEvent) => {
@@ -320,7 +321,7 @@ export class WebEventForwarder {
   };
 
   private readonly onAirplayStateChange = (event: CastStateChangeEvent) => {
-    this._facade.dispatchEvent(new DefaultAirplayStateChangeEvent(event.state));
+    this._facade.dispatchEvent(new DefaultAirplayStateChangeEvent(event.state as CastState));
   };
 
   private readonly onAdEvent = (event: NativeEvent) => {
