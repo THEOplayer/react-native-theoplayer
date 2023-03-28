@@ -3,6 +3,7 @@ import { Image, Platform, TouchableOpacity } from 'react-native';
 import { AirplayIcon } from '../../res/images';
 import { CastEvent, CastEventType, PlayerEventType } from 'react-native-theoplayer';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
+import { isConnected } from './svg/ChromecastButton';
 
 interface AirplayButtonState {
   connected: boolean;
@@ -33,17 +34,13 @@ export class AirplayButton extends PureComponent<unknown, AirplayButtonState> {
     if (event.subType != CastEventType.AIRPLAY_STATE_CHANGE) {
       return;
     }
-    this.setState({
-      connected: event.state === 'connecting' || event.state === 'connected',
-    });
+    this.setState({ connected: isConnected(event.state) });
   };
 
   private onUIAirplayToggled = () => {
     const player = (this.context as UiContext).player;
     if (Platform.OS === 'ios' && !Platform.isTV) {
-      const airplayCastState = player.cast.airplay?.state;
-      const inConnection = airplayCastState === 'connected' || airplayCastState === 'connecting';
-      if (inConnection) {
+      if (isConnected(player.cast.airplay?.state)) {
         player.cast.airplay?.stop();
       } else {
         player.cast.airplay?.start();
