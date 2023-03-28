@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react';
-import { Image, Platform, TouchableOpacity } from 'react-native';
-import { AirplayIcon } from '../../res/images';
+import { Platform } from 'react-native';
 import { CastEvent, CastEventType, PlayerEventType } from 'react-native-theoplayer';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
 import { isConnected } from './ChromecastButton';
+import { ActionButton } from './actionbutton/ActionButton';
+import { AirplaySvg } from './svg/AirplaySvg';
 
 interface AirplayButtonState {
   connected: boolean;
@@ -53,18 +54,7 @@ export class AirplayButton extends PureComponent<unknown, AirplayButtonState> {
     if (Platform.OS !== 'ios' || Platform.isTV) {
       return <></>;
     }
-    return (
-      <PlayerContext.Consumer>
-        {(context: UiContext) => (
-          <TouchableOpacity style={context.style.controlBar.buttonIcon} onPress={this.onUIAirplayToggled}>
-            <Image
-              style={[context.style.controlBar.buttonIcon, { tintColor: connected ? context.style.colors.accent : context.style.colors.primary }]}
-              source={AirplayIcon}
-            />
-          </TouchableOpacity>
-        )}
-      </PlayerContext.Consumer>
-    );
+    return <ActionButton svg={<AirplaySvg />} touchable={true} onPress={this.onUIAirplayToggled} highlighted={connected} />;
   }
 }
 
