@@ -2,7 +2,6 @@ import React, { ReactNode, useState } from 'react';
 import { PlayerConfiguration, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
 import { SeekBar } from './seekbar/SeekBar';
 import { AirplayButton } from './button/AirplayButton';
-import { GoogleCastButton, ENABLE_CAST_BUTTON } from './button/GoogleCastButton';
 import { CenteredControlBar, ControlBar } from './controlbar/ControlBar';
 import { TimeLabel } from './timelabel/TimeLabel';
 import { FullscreenButton } from './button/FullscreenButton';
@@ -12,13 +11,14 @@ import { MuteButton } from './button/MuteButton';
 import { CastMessage } from './message/CastMessage';
 import { CenteredDelayedActivityIndicator } from './activityindicator/CenteredDelayedActivityIndicator';
 import { CENTER_BUTTON_SIZE, defaultPlayerStyle, THEOplayerStyle } from './THEOplayerStyle';
-import { View } from 'react-native';
+import { Platform, View } from 'react-native';
 import { UiContainer } from './uicontroller/UiContainer';
 import { PlayButton } from './button/PlayButton';
 import { QualitySubMenu } from './menu/QualitySubMenu';
 import { PlaybackRateSubMenu } from './menu/PlaybackRateSubMenu';
 import { SkipButton } from './button/SkipButton';
 import { Spacer } from './controlbar/Spacer';
+import { ChromecastButton } from './button/ChromecastButton';
 
 export interface THEOplayerDefaultUiProps {
   style?: Partial<THEOplayerStyle>;
@@ -27,6 +27,8 @@ export interface THEOplayerDefaultUiProps {
   topSlot?: ReactNode;
   bottomSlot?: ReactNode;
 }
+
+const ENABLE_CAST_BUTTON = !Platform.isTV;
 
 export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
   const { style, config, topSlot, bottomSlot } = props;
@@ -50,7 +52,7 @@ export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
               {ENABLE_CAST_BUTTON && (
                 <>
                   <AirplayButton />
-                  <GoogleCastButton />
+                  <ChromecastButton />
                 </>
               )}
               <LanguageMenuButton />

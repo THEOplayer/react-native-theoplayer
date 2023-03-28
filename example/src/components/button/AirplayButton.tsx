@@ -3,7 +3,7 @@ import { Image, Platform, TouchableOpacity } from 'react-native';
 import { AirplayIcon } from '../../res/images';
 import { CastEvent, CastEventType, PlayerEventType } from 'react-native-theoplayer';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
-import { isConnected } from './svg/ChromecastButton';
+import { isConnected } from './ChromecastButton';
 
 interface AirplayButtonState {
   connected: boolean;
