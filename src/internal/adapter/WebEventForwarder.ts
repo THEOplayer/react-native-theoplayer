@@ -1,6 +1,8 @@
 import type * as THEOplayer from 'theoplayer';
 import type {
   AddTrackEvent,
+  CastStateChangeEvent,
+  ChromecastErrorEvent,
   DurationChangeEvent as NativeDurationChangeEvent,
   ErrorEvent as NativeErrorEvent,
   Event as NativeEvent,
@@ -29,6 +31,9 @@ import type { THEOplayerWebAdapter } from './THEOplayerWebAdapter';
 import { BaseEvent } from './event/BaseEvent';
 import {
   DefaultAdEvent,
+  DefaultAirplayStateChangeEvent,
+  DefaultChromecastChangeEvent,
+  DefaultChromecastErrorEvent,
   DefaultDurationChangeEvent,
   DefaultErrorEvent,
   DefaultLoadedMetadataEvent,
@@ -91,6 +96,10 @@ export class WebEventForwarder {
     this._player.videoTracks.addEventListener('removetrack', this.onRemoveVideoTrack);
     this._player.videoTracks.addEventListener('change', this.onChangeVideoTrack);
 
+    this._player.cast?.chromecast?.addEventListener('statechange', this.onChromecastStateChange);
+    this._player.cast?.chromecast?.addEventListener('error', this.onChromecastError);
+    this._player.cast?.airplay?.addEventListener('statechange', this.onAirplayStateChange);
+
     this._player.ads?.addEventListener(FORWARDED_AD_EVENTS, this.onAdEvent);
   }
 
@@ -132,6 +141,10 @@ export class WebEventForwarder {
     this._player.videoTracks.removeEventListener('addtrack', this.onAddVideoTrack);
     this._player.videoTracks.removeEventListener('removetrack', this.onRemoveVideoTrack);
     this._player.videoTracks.removeEventListener('change', this.onChangeVideoTrack);
+
+    this._player.cast?.chromecast?.removeEventListener('statechange', this.onChromecastStateChange);
+    this._player.cast?.chromecast?.removeEventListener('error', this.onChromecastError);
+    this._player.cast?.airplay?.removeEventListener('statechange', this.onAirplayStateChange);
 
     this._player.ads?.removeEventListener(FORWARDED_AD_EVENTS, this.onAdEvent);
   }
@@ -296,6 +309,18 @@ export class WebEventForwarder {
   private onChangeMediaTrack = (event: TrackChangeEvent, trackType: MediaTrackType) => {
     const track = event.track as NativeMediaTrack;
     this._facade.dispatchEvent(new DefaultMediaTrackListEvent(TrackListEventType.CHANGE_TRACK, trackType, track as MediaTrack));
+  };
+
+  private readonly onChromecastStateChange = (event: CastStateChangeEvent) => {
+    this._facade.dispatchEvent(new DefaultChromecastChangeEvent(event.state));
+  };
+
+  private readonly onChromecastError = (event: ChromecastErrorEvent) => {
+    this._facade.dispatchEvent(new DefaultChromecastErrorEvent(event.error));
+  };
+
+  private readonly onAirplayStateChange = (event: CastStateChangeEvent) => {
+    this._facade.dispatchEvent(new DefaultAirplayStateChangeEvent(event.state));
   };
 
   private readonly onAdEvent = (event: NativeEvent) => {
