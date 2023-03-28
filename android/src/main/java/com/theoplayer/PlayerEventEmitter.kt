@@ -516,7 +516,7 @@ class PlayerEventEmitter internal constructor(
     val qualityChangedEventType =
       (if (trackType === MediaTrackType.AUDIO)
         AudioTrackEventTypes.ACTIVEQUALITYCHANGEDEVENT
-      else VideoTrackEventTypes.ACTIVEQUALITYCHANGEDEVENT) as EventType<QualityChangedEvent<Q, ActiveQualityChangedEvent>>
+      else VideoTrackEventTypes.ACTIVEQUALITYCHANGEDEVENT) as EventType<ActiveQualityChangedEvent>
     when (eventType) {
       TrackEventType.ADD_TRACK -> track.addEventListener(
         qualityChangedEventType,
