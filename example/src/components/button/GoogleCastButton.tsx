@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
-import { CastButton as GoogleCastButton } from 'react-native-google-cast';
+import { CastButton } from 'react-native-google-cast';
 import type { CastEvent } from 'react-native-theoplayer';
-import { CastEventType, PlayerEventType } from 'react-native-theoplayer';
+import { CastEventType, CastState, PlayerEventType } from 'react-native-theoplayer';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
 import { Platform } from 'react-native';
 
@@ -14,14 +14,14 @@ interface ChromecastButtonState {
   connected: boolean;
 }
 
-export class ChromecastButton extends PureComponent<unknown, ChromecastButtonState> {
+export class GoogleCastButton extends PureComponent<unknown, ChromecastButtonState> {
   private static initialState: ChromecastButtonState = {
     connected: false,
   };
 
   constructor(props: unknown) {
     super(props);
-    this.state = ChromecastButton.initialState;
+    this.state = GoogleCastButton.initialState;
   }
 
   componentDidMount() {
@@ -52,7 +52,7 @@ export class ChromecastButton extends PureComponent<unknown, ChromecastButtonSta
     return (
       <PlayerContext.Consumer>
         {(context: UiContext) => (
-          <GoogleCastButton
+          <CastButton
             style={context.style.controlBar.buttonIcon}
             tintColor={connected ? context.style.colors.accent : context.style.colors.primary}
           />
@@ -62,4 +62,4 @@ export class ChromecastButton extends PureComponent<unknown, ChromecastButtonSta
   }
 }
 
-ChromecastButton.contextType = PlayerContext;
+GoogleCastButton.contextType = PlayerContext;
