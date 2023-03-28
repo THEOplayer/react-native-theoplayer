@@ -51,7 +51,6 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
   private var paused = false
   private var muted = false
   private var fullscreen = false
-  private var aspectRatio: String? = null
   private var playbackRate = 1.0
   private var volume = 1.0
   private var seekTime = TIME_UNSET.toDouble()
@@ -77,6 +76,17 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
     get() = if (player != null) {
       trackListAdapter.fromTextTrackList(player!!.textTracks)
     } else Arguments.createArray()
+
+  var aspectRatio: String? = null
+    set(value) {
+      if (field == value) {
+        return
+      }
+      field = value
+      getAspectRatioFromString(field).let {
+        playerView?.player?.setAspectRatio(it)
+      }
+    }
 
   fun initialize(configProps: ReadableMap?) {
     createViews(PlayerConfigAdapter.fromProps(configProps))
@@ -445,15 +455,6 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
       decorView.systemUiVisibility = uiOptions
       eventEmitter.onFullscreenDidDismiss()
     }
-  }
-
-  fun setAspectRatio(aspectRatio: String?) {
-    if (aspectRatio == this.aspectRatio) {
-      return
-    }
-    this.aspectRatio = aspectRatio
-    val value = getAspectRatioFromString(aspectRatio)
-    playerView?.player?.setAspectRatio(value)
   }
 
   private fun getAspectRatioFromString(value: String?): AspectRatio {
