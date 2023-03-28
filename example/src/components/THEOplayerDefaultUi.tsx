@@ -2,7 +2,7 @@ import React, { ReactNode, useState } from 'react';
 import { PlayerConfiguration, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
 import { SeekBar } from './seekbar/SeekBar';
 import { AirplayButton } from './button/AirplayButton';
-import { ChromecastButton, ENABLE_CAST_BUTTON } from './button/ChromecastButton';
+import { GoogleCastButton, ENABLE_CAST_BUTTON } from './button/GoogleCastButton';
 import { CenteredControlBar, ControlBar } from './controlbar/ControlBar';
 import { TimeLabel } from './timelabel/TimeLabel';
 import { FullscreenButton } from './button/FullscreenButton';
@@ -50,7 +50,7 @@ export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
               {ENABLE_CAST_BUTTON && (
                 <>
                   <AirplayButton />
-                  <ChromecastButton />
+                  <GoogleCastButton />
                 </>
               )}
               <LanguageMenuButton />
