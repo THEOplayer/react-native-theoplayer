@@ -3,18 +3,13 @@ import { CastButton } from 'react-native-google-cast';
 import type { CastEvent } from 'react-native-theoplayer';
 import { CastEventType, PlayerEventType } from 'react-native-theoplayer';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
-import { Platform } from 'react-native';
 import { isConnected } from './ChromecastButton';
-
-// whether to show a cast button.
-// NOTE: react-native-google-cast does not support web yet.
-// TODO: create own cast button for web.
-export const ENABLE_CAST_BUTTON = Platform.OS !== 'web' && !Platform.isTV;
 
 interface ChromecastButtonState {
   connected: boolean;
 }
 
+// NOTE: react-native-google-cast does not support web yet.
 export class GoogleCastButton extends PureComponent<unknown, ChromecastButtonState> {
   private static initialState: ChromecastButtonState = {
     connected: false,
@@ -45,9 +40,6 @@ export class GoogleCastButton extends PureComponent<unknown, ChromecastButtonSta
 
   render() {
     const { connected } = this.state;
-    if (!ENABLE_CAST_BUTTON) {
-      return <></>;
-    }
     return (
       <PlayerContext.Consumer>
         {(context: UiContext) => (
