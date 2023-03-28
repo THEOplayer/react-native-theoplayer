@@ -95,8 +95,8 @@ class THEOplayerRCTTrackMetadataAggregator {
         var entry: [String:Any] = [:]
         entry[PROP_ID] = textTrackCue.id
         entry[PROP_UID] = textTrackCue.uid
-        entry[PROP_STARTTIME] = (textTrackCue.startTime ?? 0) * 1000
-        entry[PROP_ENDTIME] = (textTrackCue.endTime ?? 0) * 1000
+        entry[PROP_STARTTIME] = THEOplayerRCTTypeUtils.encodeInfNan((textTrackCue.startTime ?? 0) * 1000)
+        entry[PROP_ENDTIME] = THEOplayerRCTTypeUtils.encodeInfNan((textTrackCue.endTime ?? 0) * 1000)
         if let content = textTrackCue.content {
             entry[PROP_CUE_CONTENT] = content
         } else if let contentString = textTrackCue.contentString {
