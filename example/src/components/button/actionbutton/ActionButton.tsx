@@ -10,14 +10,15 @@ export interface ActionButtonProps {
   onPress?: () => void;
   style?: StyleProp<ViewStyle>;
   iconStyle?: StyleProp<ImageStyle>;
+  highlighted?: boolean;
 }
 
 export const ActionButton = (props: ActionButtonProps) => {
-  const { icon, style, iconStyle, touchable, svg, onPress } = props;
+  const { icon, style, iconStyle, touchable, svg, onPress, highlighted } = props;
   const [focused, setFocused] = useState<boolean>(false);
   const context = useContext(PlayerContext);
 
-  const shouldChangeTintColor = focused && Platform.isTV;
+  const shouldChangeTintColor = highlighted || (focused && Platform.isTV);
 
   if (!touchable) {
     return <View style={style}>{svg}</View>;
