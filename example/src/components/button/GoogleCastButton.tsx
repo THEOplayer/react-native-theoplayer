@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react';
 import { CastButton } from 'react-native-google-cast';
 import type { CastEvent } from 'react-native-theoplayer';
-import { CastEventType, CastState, PlayerEventType } from 'react-native-theoplayer';
+import { CastEventType, PlayerEventType } from 'react-native-theoplayer';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
 import { Platform } from 'react-native';
+import { isConnected } from './ChromecastButton';
 
 // whether to show a cast button.
 // NOTE: react-native-google-cast does not support web yet.
@@ -39,9 +40,7 @@ export class GoogleCastButton extends PureComponent<unknown, ChromecastButtonSta
     if (event.subType != CastEventType.CHROMECAST_STATE_CHANGE) {
       return;
     }
-    this.setState({
-      connected: event.state === 'connecting' || event.state === 'connected',
-    });
+    this.setState({ connected: isConnected(event.state) });
   };
 
   render() {
