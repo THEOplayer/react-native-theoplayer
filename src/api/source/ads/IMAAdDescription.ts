@@ -1,4 +1,4 @@
-import type { AdDescription, AdSource } from "./Ads";
+import type { AdDescription, AdIntegrationKind, AdSource } from "./Ads";
 
 /**
  * Describes a Google IMA ad break request.
@@ -9,7 +9,7 @@ export interface IMAAdDescription extends AdDescription {
   /**
    * The integration of this ad break.
    */
-  integration: 'google-ima';
+  integration: AdIntegrationKind.google_ima;
 
   /**
    * The source of the ad
