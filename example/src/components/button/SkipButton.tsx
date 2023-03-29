@@ -42,7 +42,6 @@ export class SkipButton extends PureComponent<SkipButtonProps, SkipButtonState> 
     const { skip } = this.props;
     const { spinValue } = this.state;
     const player = (this.context as UiContext).player;
-    console.log(player.currentTime);
     player.currentTime = player.currentTime + skip * 1e3;
 
     Animated.timing(spinValue, {

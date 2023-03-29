@@ -41,7 +41,6 @@ export class CenteredDelayedActivityIndicator extends PureComponent<DelayedActiv
   }
 
   private onReadyStateChange = (event: ReadyStateChangeEvent) => {
-    console.log(event);
     this.maybeShowLoadingIndicator(event.readyState < 3);
   };
 
