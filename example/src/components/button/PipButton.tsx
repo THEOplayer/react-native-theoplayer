@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
-import type { PresentationMode, PresentationModeChangeEvent } from 'react-native-theoplayer';
-import { PlayerEventType } from 'react-native-theoplayer';
+import type { PresentationModeChangeEvent } from 'react-native-theoplayer';
+import { PlayerEventType, PresentationMode } from 'react-native-theoplayer';
 import { Platform } from 'react-native';
 import { ActionButton } from './actionbutton/ActionButton';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
@@ -14,7 +14,7 @@ interface PipButtonState {
 export class PipButton extends PureComponent<unknown, PipButtonState> {
   constructor(props: unknown) {
     super(props);
-    this.state = { presentationMode: 'inline' };
+    this.state = { presentationMode: PresentationMode.inline };
   }
 
   componentDidMount() {
@@ -37,10 +37,10 @@ export class PipButton extends PureComponent<unknown, PipButtonState> {
     switch (player.presentationMode) {
       case 'inline':
       case 'fullscreen':
-        player.presentationMode = 'picture-in-picture';
+        player.presentationMode = PresentationMode.pip;
         break;
       case 'picture-in-picture':
-        player.presentationMode = 'inline';
+        player.presentationMode = PresentationMode.inline;
         break;
     }
   };
