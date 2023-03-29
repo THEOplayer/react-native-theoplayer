@@ -50,17 +50,7 @@ export class FullscreenButton extends PureComponent<unknown, FullscreenButtonSta
     if (Platform.isTV) {
       return <></>;
     }
-    return (
-      <PlayerContext.Consumer>
-        {(context: UiContext) => (
-          <ActionButton
-            svg={presentationMode === 'fullscreen' ? <FullscreenExitSvg /> : <FullscreenEnterSvg />}
-            onPress={this.toggleFullScreen}
-            iconStyle={context.style.controlBar.buttonIcon}
-          />
-        )}
-      </PlayerContext.Consumer>
-    );
+    return <ActionButton svg={presentationMode === 'fullscreen' ? <FullscreenExitSvg /> : <FullscreenEnterSvg />} onPress={this.toggleFullScreen} />;
   }
 }
 

@@ -9,19 +9,24 @@ export interface ActionButtonProps {
   touchable: boolean;
   onPress?: () => void;
   style?: StyleProp<ViewStyle>;
-  iconStyle?: StyleProp<ImageStyle>;
   highlighted?: boolean;
 }
 
+export const DEFAULT_ACTION_BUTTON_STYLE: ViewStyle = {
+  height: '100%',
+  aspectRatio: 1,
+  padding: 5,
+};
+
 export const ActionButton = (props: ActionButtonProps) => {
-  const { icon, style, iconStyle, touchable, svg, onPress, highlighted } = props;
+  const { icon, style, touchable, svg, onPress, highlighted } = props;
   const [focused, setFocused] = useState<boolean>(false);
   const context = useContext(PlayerContext);
 
   const shouldChangeTintColor = highlighted || (focused && Platform.isTV);
 
   if (!touchable) {
-    return <View style={style}>{svg}</View>;
+    return <View style={[DEFAULT_ACTION_BUTTON_STYLE, style]}>{svg}</View>;
   }
 
   const onTouch = () => {
@@ -36,7 +41,7 @@ export const ActionButton = (props: ActionButtonProps) => {
       {(context: UiContext) => (
         <TouchableOpacity
           activeOpacity={1.0}
-          style={context.style.controlBar.buttonContainer}
+          style={[DEFAULT_ACTION_BUTTON_STYLE, style]}
           tvParallaxProperties={{ enabled: false }}
           onPress={onTouch}
           onFocus={() => {
@@ -55,14 +60,13 @@ export const ActionButton = (props: ActionButtonProps) => {
                 height: '100%',
                 width: '100%',
               }}>
-              <View style={[context.style.controlBar.buttonIcon, iconStyle]}>{svg}</View>
+              <View>{svg}</View>
             </SvgContext.Provider>
           )}
           {svg === undefined && icon && (
             <Image
               style={[
-                context.style.controlBar.buttonIcon,
-                iconStyle,
+                { height: '100%', width: '100%' },
                 { tintColor: shouldChangeTintColor ? context.style.colors.accent : context.style.colors.primary },
               ]}
               source={icon}

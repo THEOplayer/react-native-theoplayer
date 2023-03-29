@@ -77,14 +77,7 @@ export class SkipButton extends PureComponent<SkipButtonProps, SkipButtonState> 
         <PlayerContext.Consumer>
           {(context: UiContext) => (
             <Animated.View style={[style, { transform: [{ rotate: spin }] }]}>
-              <ActionButton
-                style={[context.style.controlBar.buttonIcon]}
-                touchable={true}
-                svg={skip < 0 ? <BackwardSvg /> : <ForwardSvg />}
-                // @ts-ignore
-                iconStyle={[style]}
-                onPress={this.onPress}
-              />
+              <ActionButton touchable={true} svg={skip < 0 ? <BackwardSvg /> : <ForwardSvg />} onPress={this.onPress} />
               <Text style={[context.style.text, { position: 'absolute', paddingTop: '33%', color: context.style.colors.text, zIndex: -1 }]}>
                 {Math.abs(skip)}
               </Text>

@@ -1,15 +1,28 @@
 import React, { ReactNode, useContext } from 'react';
 import { PlayerContext, UiContext } from '../../util/PlayerContext';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 import { ControlBar } from '../../controlbar/ControlBar';
 import { BackButton } from '../../button/BackButton';
 
 interface MenuViewProps {
   menu: ReactNode;
+  style?: StyleProp<ViewStyle>;
 }
 
+export const DEFAULT_MENU_VIEW_STYLE: ViewStyle = {
+  flex: 1,
+  flexDirection: 'row',
+  left: 0,
+  right: 0,
+  top: 0,
+  bottom: 0,
+  paddingVertical: 20,
+  paddingLeft: 50,
+  paddingRight: 40,
+};
+
 export const MenuView = (props: MenuViewProps) => {
-  const { menu } = props;
+  const { menu, style } = props;
   const context = useContext(PlayerContext);
   const onClose = () => {
     context.ui.closeCurrentMenu_();
@@ -23,7 +36,7 @@ export const MenuView = (props: MenuViewProps) => {
             <Text style={{ color: context.style.colors.text, fontSize: 16, lineHeight: 30 }}>Back</Text>
             <View style={{ flexGrow: 1 }} />
           </ControlBar>
-          <View style={[context.style.menu.container]}>{menu}</View>
+          <View style={[DEFAULT_MENU_VIEW_STYLE, style]}>{menu}</View>
         </View>
       )}
     </PlayerContext.Consumer>

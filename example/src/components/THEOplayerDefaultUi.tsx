@@ -69,7 +69,7 @@ export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
               middle={
                 <>
                   <PlayButton style={{ height: CENTER_BUTTON_SIZE, width: CENTER_BUTTON_SIZE }} />
-                  <CenteredDelayedActivityIndicator />
+                  <CenteredDelayedActivityIndicator size={50} />
                 </>
               }
               right={<SkipButton skip={30} style={{ height: CENTER_BUTTON_SIZE, width: CENTER_BUTTON_SIZE }} />}

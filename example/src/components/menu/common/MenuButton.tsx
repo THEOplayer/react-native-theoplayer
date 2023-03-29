@@ -15,21 +15,18 @@ export const MenuButton = (props: NewMenuButtonProps) => {
   const { icon, svg, style, menuConstructor } = props;
 
   return (
-    <>
-      <PlayerContext.Consumer>
-        {(context: UiContext) => (
-          <ActionButton
-            svg={svg}
-            icon={icon}
-            iconStyle={context.style.controlBar.buttonIcon}
-            onPress={() => {
-              context.ui.openMenu_(menuConstructor);
-            }}
-            style={style}
-            touchable={true}
-          />
-        )}
-      </PlayerContext.Consumer>
-    </>
+    <PlayerContext.Consumer>
+      {(context: UiContext) => (
+        <ActionButton
+          svg={svg}
+          icon={icon}
+          onPress={() => {
+            context.ui.openMenu_(menuConstructor);
+          }}
+          style={style}
+          touchable={true}
+        />
+      )}
+    </PlayerContext.Consumer>
   );
 };

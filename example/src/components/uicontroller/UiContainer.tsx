@@ -1,5 +1,5 @@
 import React, { PureComponent, ReactNode } from 'react';
-import { Animated, Platform, View } from 'react-native';
+import { Animated, Platform, View, ViewStyle } from 'react-native';
 import { PlayerContext } from '../util/PlayerContext';
 import { arrayRemoveElement } from '../../utils/ArrayUtils';
 import type { PresentationModeChangeEvent, THEOplayer } from 'react-native-theoplayer';
@@ -29,6 +29,16 @@ interface UiContainerState {
 }
 
 const DEBUG_USER_IDLE_FADE = false;
+
+export const FULLSCREEN_CENTER_STYLE: ViewStyle = {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  bottom: 0,
+  right: 0,
+  alignItems: 'center',
+  justifyContent: 'center',
+};
 
 export class UiContainer extends PureComponent<React.PropsWithChildren<UiContainerProps>, UiContainerState> implements UiControls {
   private _userActiveIds: number[] = [];
@@ -248,7 +258,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
             {currentMenu === undefined && (
               <View style={[style.slotView.container]}>
                 {firstPlay && <View style={style.slotView.topSlot}>{top}</View>}
-                <View style={style.fullScreenCenter}>
+                <View style={FULLSCREEN_CENTER_STYLE}>
                   <View style={[style.slotView.centerSlot]}>{center}</View>
                 </View>
                 {firstPlay && <View style={style.slotView.bottomSlot}>{bottom}</View>}

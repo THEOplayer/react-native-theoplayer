@@ -226,7 +226,19 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
         {(context: UiContext) => (
           <View style={{ flexDirection: 'column' }}>
             {showTimeLabel && (
-              <StaticTimeLabel style={[context.style.timeLabel.container, timeLabelStyle]} time={time} duration={duration} showDuration={false} />
+              <StaticTimeLabel
+                style={[
+                  {
+                    marginLeft: 20,
+                    height: 20,
+                    alignSelf: 'center',
+                  },
+                  timeLabelStyle,
+                ]}
+                time={time}
+                duration={duration}
+                showDuration={false}
+              />
             )}
             <View style={[context.style.seekBar.thumbnail.containerThumbnail, { height: renderHeight }]}>{this.renderThumbnail(current, 0)}</View>
           </View>

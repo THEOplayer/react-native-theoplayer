@@ -93,18 +93,7 @@ export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> 
     const { style } = this.props;
 
     return (
-      <PlayerContext.Consumer>
-        {(context: UiContext) => (
-          <ActionButton
-            style={context.style.controlBar.buttonIcon}
-            touchable={true}
-            svg={ended ? <ReplaySvg /> : paused ? <PlaySvg /> : <PauseSvg />}
-            // @ts-ignore
-            iconStyle={[style]}
-            onPress={this.togglePlayPause}
-          />
-        )}
-      </PlayerContext.Consumer>
+      <ActionButton style={style} touchable={true} svg={ended ? <ReplaySvg /> : paused ? <PlaySvg /> : <PauseSvg />} onPress={this.togglePlayPause} />
     );
   }
 }
