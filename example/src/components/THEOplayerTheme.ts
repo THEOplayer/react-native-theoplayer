@@ -20,7 +20,7 @@ export const defaultTheme: THEOplayerTheme = {
     primary: 'white',
     secondary: '#2C2C2C',
     accent: '#ffc50f',
-    background: '#00000066',
+    background: '#00000075',
     text: 'white',
   },
   text: {
