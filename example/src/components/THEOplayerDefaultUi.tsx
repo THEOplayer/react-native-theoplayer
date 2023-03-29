@@ -10,7 +10,7 @@ import { SettingsMenuButton } from './menu/SettingsMenuButton';
 import { MuteButton } from './button/MuteButton';
 import { CastMessage } from './message/CastMessage';
 import { CenteredDelayedActivityIndicator } from './activityindicator/CenteredDelayedActivityIndicator';
-import { CENTER_BUTTON_SIZE, defaultPlayerStyle, THEOplayerStyle } from './THEOplayerStyle';
+import { CENTER_BUTTON_SIZE, defaultTheme, THEOplayerTheme } from './THEOplayerTheme';
 import { Platform, View } from 'react-native';
 import { UiContainer } from './uicontroller/UiContainer';
 import { PlayButton } from './button/PlayButton';
@@ -21,7 +21,7 @@ import { Spacer } from './controlbar/Spacer';
 import { ChromecastButton } from './button/ChromecastButton';
 
 export interface THEOplayerDefaultUiProps {
-  style?: Partial<THEOplayerStyle>;
+  theme?: Partial<THEOplayerTheme>;
   config?: PlayerConfiguration;
   onPlayerReady?: (player: THEOplayer) => void;
   topSlot?: ReactNode;
@@ -31,7 +31,7 @@ export interface THEOplayerDefaultUiProps {
 const ENABLE_CAST_BUTTON = !Platform.isTV;
 
 export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
-  const { style, config, topSlot, bottomSlot } = props;
+  const { theme, config, topSlot, bottomSlot } = props;
   const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);
   const chromeless = config?.chromeless ?? false;
 
@@ -44,7 +44,7 @@ export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
     <THEOplayerView config={config} onPlayerReady={onPlayerReady}>
       {player !== undefined && chromeless && (
         <UiContainer
-          style={{ ...defaultPlayerStyle, ...style }}
+          theme={{ ...defaultTheme, ...theme }}
           player={player}
           top={
             <ControlBar>
