@@ -1,4 +1,4 @@
-import { Image, ImageSourcePropType, ImageStyle, Platform, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { Image, ImageSourcePropType, Platform, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 import React, { ReactNode, useContext, useState } from 'react';
 import { SvgContext } from '../svg/SvgUtils';
 import { PlayerContext, UiContext } from '../../util/PlayerContext';

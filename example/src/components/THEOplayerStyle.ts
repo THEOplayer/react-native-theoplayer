@@ -1,4 +1,4 @@
-import type { TextStyle, ViewStyle } from 'react-native';
+import type { TextStyle } from 'react-native';
 
 export interface ColorTheme {
   primary: string;
@@ -10,12 +10,6 @@ export interface ColorTheme {
 
 export interface THEOplayerStyle {
   colors: ColorTheme;
-  slotView: {
-    container: ViewStyle;
-    topSlot: ViewStyle;
-    centerSlot: ViewStyle;
-    bottomSlot: ViewStyle;
-  };
   text: TextStyle;
 }
 
@@ -29,35 +23,6 @@ export const defaultPlayerStyle: THEOplayerStyle = {
     accent: '#ffc50f',
     background: '#00000066',
     text: 'white',
-  },
-  slotView: {
-    container: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      bottom: 0,
-      right: 0,
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-      zIndex: 1,
-      overflow: 'hidden',
-    },
-    topSlot: {
-      zIndex: 2,
-      paddingTop: 10,
-      paddingLeft: 10,
-      paddingRight: 10,
-    },
-    centerSlot: {
-      alignItems: 'center',
-      zIndex: 1,
-    },
-    bottomSlot: {
-      zIndex: 2,
-      paddingBottom: 10,
-      paddingLeft: 10,
-      paddingRight: 10,
-    },
   },
   text: {
     textAlignVertical: 'center',
