@@ -18,6 +18,7 @@ interface UiContainerProps {
   top?: ReactNode;
   center?: ReactNode;
   bottom?: ReactNode;
+  behind?: ReactNode;
 }
 
 interface UiContainerState {
@@ -264,7 +265,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
   };
 
   render() {
-    const { player, theme, top, center, bottom, children, style, topStyle, centerStyle, bottomStyle } = this.props;
+    const { player, theme, top, center, bottom, children, style, topStyle, centerStyle, bottomStyle, behind } = this.props;
     const { fadeAnimation, currentMenu, error, firstPlay, pip } = this.state;
 
     if (error !== undefined) {
@@ -279,6 +280,8 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
 
     return (
       <PlayerContext.Provider value={{ player, style: theme, ui: this }}>
+        {/* The View behind the UI, that is always visible.*/}
+        <View style={FULLSCREEN_CENTER_STYLE}>{behind}</View>
         {/* The Animated.View is for showing and hiding the UI*/}
         <Animated.View
           style={[combinedContainerStyle, { opacity: fadeAnimation }]}
