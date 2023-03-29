@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
-import type { PresentationMode, PresentationModeChangeEvent } from 'react-native-theoplayer';
-import { PlayerEventType } from 'react-native-theoplayer';
+import type { PresentationModeChangeEvent } from 'react-native-theoplayer';
+import { PlayerEventType, PresentationMode } from 'react-native-theoplayer';
 import { Platform } from 'react-native';
 import { ActionButton } from './actionbutton/ActionButton';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
@@ -14,7 +14,7 @@ interface FullscreenButtonState {
 export class FullscreenButton extends PureComponent<unknown, FullscreenButtonState> {
   constructor(props: unknown) {
     super(props);
-    this.state = { presentationMode: 'inline' };
+    this.state = { presentationMode: PresentationMode.inline };
   }
 
   componentDidMount() {
@@ -35,12 +35,12 @@ export class FullscreenButton extends PureComponent<unknown, FullscreenButtonSta
   private toggleFullScreen = () => {
     const player = (this.context as UiContext).player;
     switch (player.presentationMode) {
-      case 'picture-in-picture': // TODO
+      case 'picture-in-picture':
       case 'inline':
-        player.presentationMode = 'fullscreen';
+        player.presentationMode = PresentationMode.fullscreen;
         break;
       case 'fullscreen':
-        player.presentationMode = 'inline';
+        player.presentationMode = PresentationMode.inline;
         break;
     }
   };
