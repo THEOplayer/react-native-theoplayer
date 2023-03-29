@@ -5,7 +5,6 @@ import { isThumbnailTrack, TextTrack } from 'react-native-theoplayer';
 import type { Thumbnail } from './Thumbnail';
 import { isTileMapThumbnail } from './Thumbnail';
 import { URL as URLPolyfill } from 'react-native-url-polyfill';
-import { PlayerContext, UiContext } from '../../util/PlayerContext';
 import { StaticTimeLabel } from '../../timelabel/StaticTimeLabel';
 
 const SPRITE_REGEX = /^([^#]*)#xywh=(\d+),(\d+),(\d+),(\d+)\s*$/;
@@ -50,6 +49,22 @@ export interface ThumbnailViewProps {
    * Optional style applied to the time label.
    */
   timeLabelStyle?: StyleProp<ViewStyle>;
+}
+
+export const DEFAULT_THUMBNAIL_VIEW_STYLE: ThumbnailStyle = {
+  containerThumbnail: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  thumbnail: {
+    overflow: 'hidden',
+    backgroundColor: 'transparent',
+  },
+};
+
+export interface ThumbnailStyle {
+  containerThumbnail: ViewStyle;
+  thumbnail: ViewStyle;
 }
 
 export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailViewState> {
@@ -163,41 +178,33 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
     if (isTileMapThumbnail(thumbnail)) {
       const ratio = thumbnail.tileWidth == 0 ? 0 : (scale * size) / thumbnail.tileWidth;
       return (
-        <PlayerContext.Consumer>
-          {(context: UiContext) => (
-            <View key={index} style={[context.style.seekBar.thumbnail.thumbnail, { width: scale * renderWidth, height: scale * renderHeight }]}>
-              <Image
-                resizeMode={'cover'}
-                style={{
-                  position: 'absolute',
-                  top: -ratio * thumbnail.tileY,
-                  left: -ratio * thumbnail.tileX,
-                  width: ratio * imageWidth,
-                  height: ratio * imageHeight,
-                }}
-                source={{ uri: thumbnail.url }}
-                onError={this.onImageLoadError}
-                onLoad={this.onTileImageLoad(thumbnail)}
-              />
-            </View>
-          )}
-        </PlayerContext.Consumer>
+        <View key={index} style={[DEFAULT_THUMBNAIL_VIEW_STYLE.thumbnail, { width: scale * renderWidth, height: scale * renderHeight }]}>
+          <Image
+            resizeMode={'cover'}
+            style={{
+              position: 'absolute',
+              top: -ratio * thumbnail.tileY,
+              left: -ratio * thumbnail.tileX,
+              width: ratio * imageWidth,
+              height: ratio * imageHeight,
+            }}
+            source={{ uri: thumbnail.url }}
+            onError={this.onImageLoadError}
+            onLoad={this.onTileImageLoad(thumbnail)}
+          />
+        </View>
       );
     } else {
       return (
-        <PlayerContext.Consumer>
-          {(context: UiContext) => (
-            <View key={index} style={[context.style.seekBar.thumbnail.thumbnail, { width: scale * renderWidth, height: scale * renderHeight }]}>
-              <Image
-                resizeMode={'contain'}
-                style={{ width: scale * size, height: scale * renderHeight }}
-                source={{ uri: thumbnail.url }}
-                onError={this.onImageLoadError}
-                onLoad={this.onImageLoad(thumbnail)}
-              />
-            </View>
-          )}
-        </PlayerContext.Consumer>
+        <View key={index} style={[DEFAULT_THUMBNAIL_VIEW_STYLE.thumbnail, { width: scale * renderWidth, height: scale * renderHeight }]}>
+          <Image
+            resizeMode={'contain'}
+            style={{ width: scale * size, height: scale * renderHeight }}
+            source={{ uri: thumbnail.url }}
+            onError={this.onImageLoadError}
+            onLoad={this.onImageLoad(thumbnail)}
+          />
+        </View>
       );
     }
   };
@@ -222,28 +229,24 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
     }
     const { renderHeight } = this.state;
     return (
-      <PlayerContext.Consumer>
-        {(context: UiContext) => (
-          <View style={{ flexDirection: 'column' }}>
-            {showTimeLabel && (
-              <StaticTimeLabel
-                style={[
-                  {
-                    marginLeft: 20,
-                    height: 20,
-                    alignSelf: 'center',
-                  },
-                  timeLabelStyle,
-                ]}
-                time={time}
-                duration={duration}
-                showDuration={false}
-              />
-            )}
-            <View style={[context.style.seekBar.thumbnail.containerThumbnail, { height: renderHeight }]}>{this.renderThumbnail(current, 0)}</View>
-          </View>
+      <View style={{ flexDirection: 'column' }}>
+        {showTimeLabel && (
+          <StaticTimeLabel
+            style={[
+              {
+                marginLeft: 20,
+                height: 20,
+                alignSelf: 'center',
+              },
+              timeLabelStyle,
+            ]}
+            time={time}
+            duration={duration}
+            showDuration={false}
+          />
         )}
-      </PlayerContext.Consumer>
+        <View style={[DEFAULT_THUMBNAIL_VIEW_STYLE.containerThumbnail, { height: renderHeight }]}>{this.renderThumbnail(current, 0)}</View>
+      </View>
     );
   }
 }

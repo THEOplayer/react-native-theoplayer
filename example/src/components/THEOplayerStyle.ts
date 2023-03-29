@@ -17,12 +17,6 @@ export interface THEOplayerStyle {
     bottomSlot: ViewStyle;
   };
   text: TextStyle;
-  seekBar: {
-    thumbnail: {
-      thumbnail: ViewStyle;
-      containerThumbnail: ViewStyle;
-    };
-  };
 }
 
 export const BUTTON_SIZE = 40;
@@ -70,17 +64,5 @@ export const defaultPlayerStyle: THEOplayerStyle = {
     textAlign: 'center',
     alignSelf: 'center',
     fontSize: 16,
-  },
-  seekBar: {
-    thumbnail: {
-      containerThumbnail: {
-        alignItems: 'center',
-        flexDirection: 'row',
-      },
-      thumbnail: {
-        overflow: 'hidden',
-        backgroundColor: 'transparent',
-      },
-    },
   },
 };
