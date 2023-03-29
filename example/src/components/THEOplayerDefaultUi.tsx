@@ -10,7 +10,7 @@ import { SettingsMenuButton } from './menu/SettingsMenuButton';
 import { MuteButton } from './button/MuteButton';
 import { CastMessage } from './message/CastMessage';
 import { CenteredDelayedActivityIndicator } from './activityindicator/CenteredDelayedActivityIndicator';
-import { CENTER_BUTTON_SIZE, defaultTheme, THEOplayerTheme } from './THEOplayerTheme';
+import { defaultTheme, THEOplayerTheme } from './THEOplayerTheme';
 import { Platform, View } from 'react-native';
 import { UiContainer } from './uicontroller/UiContainer';
 import { PlayButton } from './button/PlayButton';
@@ -65,14 +65,14 @@ export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
           }
           center={
             <CenteredControlBar
-              left={<SkipButton skip={-10} style={{ height: CENTER_BUTTON_SIZE, width: CENTER_BUTTON_SIZE }} />}
+              left={<SkipButton skip={-10} />}
               middle={
                 <>
-                  <PlayButton style={{ height: CENTER_BUTTON_SIZE, width: CENTER_BUTTON_SIZE }} />
+                  <PlayButton />
                   <CenteredDelayedActivityIndicator size={50} />
                 </>
               }
-              right={<SkipButton skip={30} style={{ height: CENTER_BUTTON_SIZE, width: CENTER_BUTTON_SIZE }} />}
+              right={<SkipButton skip={30} />}
             />
           }
           bottom={
