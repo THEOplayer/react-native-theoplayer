@@ -14,7 +14,6 @@ export interface THEOplayerTheme {
 }
 
 export const BUTTON_SIZE = 40;
-export const CENTER_BUTTON_SIZE = 52;
 
 export const defaultTheme: THEOplayerTheme = {
   colors: {

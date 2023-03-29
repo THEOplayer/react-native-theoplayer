@@ -64,11 +64,6 @@ export const TOP_CONTAINER_STYLE: ViewStyle = {
   paddingRight: 10,
 };
 
-export const CENTER_CONTAINER_STYLE: ViewStyle = {
-  alignItems: 'center',
-  zIndex: 1,
-};
-
 export const BOTTOM_CONTAINER_STYLE: ViewStyle = {
   zIndex: 2,
   paddingBottom: 10,
@@ -265,7 +260,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
   };
 
   render() {
-    const { player, theme, top, center, bottom, children, style, topStyle, centerStyle, bottomStyle, behind } = this.props;
+    const { player, theme, top, center, bottom, children, style, topStyle, bottomStyle, behind } = this.props;
     const { fadeAnimation, currentMenu, error, firstPlay, pip } = this.state;
 
     if (error !== undefined) {
@@ -298,9 +293,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
             {currentMenu === undefined && (
               <View style={[combinedContainerStyle]}>
                 {firstPlay && <View style={[TOP_CONTAINER_STYLE, topStyle]}>{top}</View>}
-                <View style={FULLSCREEN_CENTER_STYLE}>
-                  <View style={[CENTER_CONTAINER_STYLE, centerStyle]}>{center}</View>
-                </View>
+                <View style={FULLSCREEN_CENTER_STYLE}>{center}</View>
                 {firstPlay && <View style={[BOTTOM_CONTAINER_STYLE, bottomStyle]}>{bottom}</View>}
                 {children}
               </View>
