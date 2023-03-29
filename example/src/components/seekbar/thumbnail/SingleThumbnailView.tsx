@@ -1,11 +1,8 @@
-// default thumbnail size (width).
 import { Dimensions, View } from 'react-native';
 import { filterThumbnailTracks } from 'react-native-theoplayer';
 import { PlayerContext } from '../../util/PlayerContext';
 import { ThumbnailView } from './ThumbnailView';
 import React, { useContext } from 'react';
-
-export const THUMBNAIL_SIZE = 0.15 * Math.max(Dimensions.get('window').width, Dimensions.get('window').height);
 
 // TODO introduce additional thumbnail rendering modes.
 export type ThumbnailMode = 'single' | 'carousel';
@@ -24,17 +21,20 @@ export function SingleThumbnailView(props: ThumbnailViewProps) {
   if (!thumbnailTrack) {
     return <></>;
   }
+  const thumbnailSize = 0.35 * Dimensions.get('window').height;
+
   const { seekableStart, seekableEnd, currentTime, seekBarWidth } = props;
   const percentageOffset = (currentTime - seekableStart) / (seekableEnd - seekableStart);
+
   return (
     <View
       style={{
         position: 'absolute',
-        top: -(THUMBNAIL_SIZE * 0.6),
-        left: Math.max(0, Math.min(seekBarWidth - THUMBNAIL_SIZE, percentageOffset * seekBarWidth - 0.5 * THUMBNAIL_SIZE)),
+        top: -(thumbnailSize * 0.6),
+        left: Math.max(0, Math.min(seekBarWidth - thumbnailSize, percentageOffset * seekBarWidth - 0.5 * thumbnailSize)),
         marginLeft: 10,
       }}>
-      <ThumbnailView thumbnailTrack={thumbnailTrack} duration={player.duration} time={currentTime} size={THUMBNAIL_SIZE} showTimeLabel={false} />
+      <ThumbnailView thumbnailTrack={thumbnailTrack} duration={player.duration} time={currentTime} size={thumbnailSize} showTimeLabel={false} />
     </View>
   );
 }
