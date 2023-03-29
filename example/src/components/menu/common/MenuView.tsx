@@ -3,6 +3,7 @@ import { PlayerContext, UiContext } from '../../util/PlayerContext';
 import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 import { ControlBar } from '../../controlbar/ControlBar';
 import { BackButton } from '../../button/BackButton';
+import { TOP_CONTAINER_STYLE } from '../../uicontroller/UiContainer';
 
 interface MenuViewProps {
   menu: ReactNode;
@@ -31,7 +32,7 @@ export const MenuView = (props: MenuViewProps) => {
     <PlayerContext.Consumer>
       {(context: UiContext) => (
         <View style={StyleSheet.absoluteFill}>
-          <ControlBar style={context.style.slotView.topSlot}>
+          <ControlBar style={TOP_CONTAINER_STYLE}>
             <BackButton onClose={onClose} />
             <Text style={{ color: context.style.colors.text, fontSize: 16, lineHeight: 30 }}>Back</Text>
             <View style={{ flexGrow: 1 }} />

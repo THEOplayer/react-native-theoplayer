@@ -1,5 +1,5 @@
 import React, { PureComponent, ReactNode } from 'react';
-import { Animated, Platform, View, ViewStyle } from 'react-native';
+import { Animated, Platform, StyleProp, View, ViewStyle } from 'react-native';
 import { PlayerContext } from '../util/PlayerContext';
 import { arrayRemoveElement } from '../../utils/ArrayUtils';
 import type { PresentationModeChangeEvent, THEOplayer } from 'react-native-theoplayer';
@@ -11,6 +11,10 @@ import { ErrorDisplay } from '../message/ErrorDisplay';
 interface UiContainerProps {
   player: THEOplayer;
   style: THEOplayerStyle;
+  containerStyle?: StyleProp<ViewStyle>;
+  topStyle?: StyleProp<ViewStyle>;
+  centerStyle?: StyleProp<ViewStyle>;
+  bottomStyle?: StyleProp<ViewStyle>;
   top?: ReactNode;
   center?: ReactNode;
   bottom?: ReactNode;
@@ -38,6 +42,37 @@ export const FULLSCREEN_CENTER_STYLE: ViewStyle = {
   right: 0,
   alignItems: 'center',
   justifyContent: 'center',
+};
+
+export const CONTAINER_STYLE: ViewStyle = {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  bottom: 0,
+  right: 0,
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  zIndex: 1,
+  overflow: 'hidden',
+};
+
+export const TOP_CONTAINER_STYLE: ViewStyle = {
+  zIndex: 2,
+  paddingTop: 10,
+  paddingLeft: 10,
+  paddingRight: 10,
+};
+
+export const CENTER_CONTAINER_STYLE: ViewStyle = {
+  alignItems: 'center',
+  zIndex: 1,
+};
+
+export const BOTTOM_CONTAINER_STYLE: ViewStyle = {
+  zIndex: 2,
+  paddingBottom: 10,
+  paddingLeft: 10,
+  paddingRight: 10,
 };
 
 export class UiContainer extends PureComponent<React.PropsWithChildren<UiContainerProps>, UiContainerState> implements UiControls {
@@ -229,7 +264,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
   };
 
   render() {
-    const { player, style, top, center, bottom, children } = this.props;
+    const { player, style, top, center, bottom, children, containerStyle, topStyle, centerStyle, bottomStyle } = this.props;
     const { fadeAnimation, currentMenu, error, firstPlay, pip } = this.state;
 
     if (error !== undefined) {
@@ -240,28 +275,30 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
       return <></>;
     }
 
+    const combinedContainerStyle = [CONTAINER_STYLE, containerStyle];
+
     return (
       <PlayerContext.Provider value={{ player, style: style, ui: this }}>
         {/* The Animated.View is for showing and hiding the UI*/}
         <Animated.View
-          style={[style.slotView.container, { opacity: fadeAnimation }]}
+          style={[combinedContainerStyle, { opacity: fadeAnimation }]}
           onTouchStart={this.onUserAction_}
           {...(Platform.OS === 'web' ? { onMouseMove: this.onUserAction_ } : {})}>
           <>
             {/* The UI background */}
-            <View style={[style.slotView.container, { backgroundColor: style.colors.background }]} />
+            <View style={[combinedContainerStyle, { backgroundColor: style.colors.background }]} />
 
             {/* The Settings Menu */}
-            {currentMenu !== undefined && <View style={[style.slotView.container]}>{currentMenu}</View>}
+            {currentMenu !== undefined && <View style={[combinedContainerStyle]}>{currentMenu}</View>}
 
             {/* The UI control bars*/}
             {currentMenu === undefined && (
-              <View style={[style.slotView.container]}>
-                {firstPlay && <View style={style.slotView.topSlot}>{top}</View>}
+              <View style={[combinedContainerStyle]}>
+                {firstPlay && <View style={[TOP_CONTAINER_STYLE, topStyle]}>{top}</View>}
                 <View style={FULLSCREEN_CENTER_STYLE}>
-                  <View style={[style.slotView.centerSlot]}>{center}</View>
+                  <View style={[CENTER_CONTAINER_STYLE, centerStyle]}>{center}</View>
                 </View>
-                {firstPlay && <View style={style.slotView.bottomSlot}>{bottom}</View>}
+                {firstPlay && <View style={[BOTTOM_CONTAINER_STYLE, bottomStyle]}>{bottom}</View>}
                 {children}
               </View>
             )}
