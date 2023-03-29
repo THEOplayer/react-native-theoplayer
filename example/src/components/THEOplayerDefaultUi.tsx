@@ -9,7 +9,6 @@ import { LanguageMenuButton } from './menu/LanguageMenuButton';
 import { SettingsMenuButton } from './menu/SettingsMenuButton';
 import { MuteButton } from './button/MuteButton';
 import { CastMessage } from './message/CastMessage';
-import { CenteredDelayedActivityIndicator } from './activityindicator/CenteredDelayedActivityIndicator';
 import { defaultTheme, THEOplayerTheme } from './THEOplayerTheme';
 import { Platform, View } from 'react-native';
 import { UiContainer } from './uicontroller/UiContainer';
@@ -19,6 +18,7 @@ import { PlaybackRateSubMenu } from './menu/PlaybackRateSubMenu';
 import { SkipButton } from './button/SkipButton';
 import { Spacer } from './controlbar/Spacer';
 import { ChromecastButton } from './button/ChromecastButton';
+import { CenteredDelayedActivityIndicator } from './activityindicator/CenteredDelayedActivityIndicator';
 
 export interface THEOplayerDefaultUiProps {
   theme?: Partial<THEOplayerTheme>;
@@ -46,6 +46,7 @@ export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
         <UiContainer
           theme={{ ...defaultTheme, ...theme }}
           player={player}
+          behind={<CenteredDelayedActivityIndicator size={50} />}
           top={
             <ControlBar>
               {topSlot}
@@ -63,18 +64,7 @@ export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
               </SettingsMenuButton>
             </ControlBar>
           }
-          center={
-            <CenteredControlBar
-              left={<SkipButton skip={-10} />}
-              middle={
-                <>
-                  <PlayButton />
-                  <CenteredDelayedActivityIndicator size={50} />
-                </>
-              }
-              right={<SkipButton skip={30} />}
-            />
-          }
+          center={<CenteredControlBar left={<SkipButton skip={-10} />} middle={<PlayButton />} right={<SkipButton skip={30} />} />}
           bottom={
             <>
               <ControlBar>
@@ -95,7 +85,8 @@ export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
                 <FullscreenButton />
               </ControlBar>
             </>
-          }></UiContainer>
+          }
+        />
       )}
     </THEOplayerView>
   );
