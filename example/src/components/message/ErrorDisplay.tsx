@@ -4,6 +4,8 @@ import type { PlayerError } from 'react-native-theoplayer';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
 import { SvgContext } from '../button/svg/SvgUtils';
 import { ErrorSvg } from '../button/svg/ErrorSvg';
+import { FULLSCREEN_CENTER_STYLE } from '../uicontroller/UiContainer';
+import { BUTTON_SIZE } from '../THEOplayerStyle';
 
 interface ErrorDisplayProps {
   error: PlayerError;
@@ -14,7 +16,7 @@ export function ErrorDisplay(props: ErrorDisplayProps) {
   return (
     <PlayerContext.Consumer>
       {(context: UiContext) => (
-        <View style={[context.style.fullScreenCenter, { backgroundColor: context.style.colors.secondary }]}>
+        <View style={[FULLSCREEN_CENTER_STYLE, { backgroundColor: context.style.colors.secondary }]}>
           <View style={{ flexDirection: 'row' }}>
             <SvgContext.Provider
               value={{
@@ -22,7 +24,7 @@ export function ErrorDisplay(props: ErrorDisplayProps) {
                 height: '100%',
                 width: '100%',
               }}>
-              <View style={[context.style.controlBar.buttonIcon]}>
+              <View style={{ width: BUTTON_SIZE, height: BUTTON_SIZE, padding: 5 }}>
                 <ErrorSvg />
               </View>
             </SvgContext.Provider>

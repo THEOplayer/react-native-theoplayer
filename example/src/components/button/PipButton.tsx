@@ -51,17 +51,7 @@ export class PipButton extends PureComponent<unknown, PipButtonState> {
     }
     const { presentationMode } = this.state;
 
-    return (
-      <PlayerContext.Consumer>
-        {(context: UiContext) => (
-          <ActionButton
-            svg={presentationMode === 'picture-in-picture' ? <PipExitSvg /> : <PipEnterSvg />}
-            onPress={this.togglePip}
-            iconStyle={context.style.controlBar.buttonIcon}
-          />
-        )}
-      </PlayerContext.Consumer>
-    );
+    return <ActionButton svg={presentationMode === 'picture-in-picture' ? <PipExitSvg /> : <PipEnterSvg />} onPress={this.togglePip} />;
   }
 }
 

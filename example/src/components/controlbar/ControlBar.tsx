@@ -1,25 +1,21 @@
 import React, { ReactNode } from 'react';
 import { StyleProp, View, ViewStyle } from 'react-native';
-import { PlayerContext, UiContext } from '../util/PlayerContext';
-import { CENTER_BUTTON_SIZE } from '../THEOplayerStyle';
+import { BUTTON_SIZE, CENTER_BUTTON_SIZE } from '../THEOplayerStyle';
 import { Spacer } from './Spacer';
 
-export type SlotType = 'top' | 'bottom' | 'center';
+export const DEFAULT_CONTROL_BAR_STYLE: ViewStyle = {
+  flexDirection: 'row',
+  justifyContent: 'flex-end',
+  height: BUTTON_SIZE,
+};
 
 interface ControlBarProps {
   style?: StyleProp<ViewStyle>;
-  slot?: SlotType;
-  left?: ReactNode;
-  right?: ReactNode;
 }
 
 export const ControlBar = (props: React.PropsWithChildren<ControlBarProps>) => {
   const { style, children } = props;
-  return (
-    <PlayerContext.Consumer>
-      {(context: UiContext) => <View style={[context.style.controlBar.container, style]}>{children}</View>}
-    </PlayerContext.Consumer>
-  );
+  return <View style={[DEFAULT_CONTROL_BAR_STYLE, style]}>{children}</View>;
 };
 
 interface CenteredControlBarProps {

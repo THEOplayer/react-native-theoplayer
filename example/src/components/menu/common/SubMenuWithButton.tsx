@@ -1,27 +1,29 @@
 import { PlayerContext, UiContext } from '../../util/PlayerContext';
-import { StyleProp, Text, View, ViewStyle } from 'react-native';
+import { StyleProp, Text, TextStyle, View, ViewStyle } from 'react-native';
 import React from 'react';
 import { MenuButton } from './MenuButton';
 import { ArrowForwardSvg } from '../../button/svg/ArrowForwardSvg';
 import type { MenuConstructor } from '../../uicontroller/UiControls';
+import { DEFAULT_MENU_BUTTON_STYLE } from './MenuRadioButton';
 
 export interface SubMenuButtonProps {
   style?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
   menuConstructor: MenuConstructor;
   label: string;
   preview: string;
 }
 
 export const SubMenuWithButton = (props: SubMenuButtonProps) => {
-  const { style, menuConstructor, label, preview } = props;
+  const { style, textStyle, menuConstructor, label, preview } = props;
   return (
     <PlayerContext.Consumer>
       {(context: UiContext) => (
-        <View style={[style, { flexDirection: 'row', width: '100%', justifyContent: 'center' }]}>
-          <Text style={[context.style.menu.row, { color: context.style.colors.text, width: '30%' }]}>{label}</Text>
+        <View style={[{ height: 44, flexDirection: 'row', width: '100%', justifyContent: 'center' }, style]}>
+          <Text style={[DEFAULT_MENU_BUTTON_STYLE, { color: context.style.colors.text, width: '30%' }, textStyle]}>{label}</Text>
           <View style={{ flexDirection: 'row', width: '60%', justifyContent: 'center' }}>
             <View style={{ flexDirection: 'row' }}>
-              <Text style={[context.style.menu.row, { color: context.style.colors.text }]}>{preview}</Text>
+              <Text style={[DEFAULT_MENU_BUTTON_STYLE, { color: context.style.colors.text }, textStyle]}>{preview}</Text>
               <MenuButton svg={<ArrowForwardSvg />} menuConstructor={menuConstructor} />
             </View>
           </View>

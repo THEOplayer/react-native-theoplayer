@@ -4,6 +4,7 @@ import type { CastEvent } from 'react-native-theoplayer';
 import { CastEventType, PlayerEventType } from 'react-native-theoplayer';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
 import { isConnected } from './ChromecastButton';
+import { DEFAULT_ACTION_BUTTON_STYLE } from './actionbutton/ActionButton';
 
 interface ChromecastButtonState {
   connected: boolean;
@@ -43,10 +44,7 @@ export class GoogleCastButton extends PureComponent<unknown, ChromecastButtonSta
     return (
       <PlayerContext.Consumer>
         {(context: UiContext) => (
-          <CastButton
-            style={context.style.controlBar.buttonIcon}
-            tintColor={connected ? context.style.colors.accent : context.style.colors.primary}
-          />
+          <CastButton style={DEFAULT_ACTION_BUTTON_STYLE} tintColor={connected ? context.style.colors.accent : context.style.colors.primary} />
         )}
       </PlayerContext.Consumer>
     );

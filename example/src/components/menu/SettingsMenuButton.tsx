@@ -3,11 +3,16 @@ import { MenuButton } from './common/MenuButton';
 import { SettingsSvg } from '../button/svg/SettingsSvg';
 import { MenuView } from './common/MenuView';
 import { ScrollableMenu } from './common/ScrollableMenu';
+import type { StyleProp, ViewStyle } from 'react-native';
 
-export const SettingsMenuButton = (props: React.PropsWithChildren<unknown>) => {
-  const { children } = props;
+export interface SettingsMenuButtonProps {
+  menuStyle?: StyleProp<ViewStyle>;
+}
+
+export const SettingsMenuButton = (props: React.PropsWithChildren<SettingsMenuButtonProps>) => {
+  const { children, menuStyle } = props;
   const createMenu = () => {
-    return <MenuView menu={<ScrollableMenu title={'Settings'} items={children} />} />;
+    return <MenuView style={menuStyle} menu={<ScrollableMenu title={'Settings'} items={children} />} />;
   };
 
   return <MenuButton svg={<SettingsSvg />} menuConstructor={createMenu} />;

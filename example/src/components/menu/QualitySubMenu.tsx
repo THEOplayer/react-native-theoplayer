@@ -1,7 +1,7 @@
 import type { VideoQuality } from 'react-native-theoplayer';
 import { findMediaTrackByUid, MediaTrack, PlayerEventType } from 'react-native-theoplayer';
 import React, { PureComponent, useContext } from 'react';
-import { Platform } from 'react-native';
+import { Platform, StyleProp, ViewStyle } from 'react-native';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
 import { getVideoQualityLabel } from '../util/TrackUtils';
 import { MenuView } from './common/MenuView';
@@ -9,12 +9,17 @@ import { ScrollableMenu } from './common/ScrollableMenu';
 import { MenuRadioButton } from './common/MenuRadioButton';
 import { SubMenuWithButton } from './common/SubMenuWithButton';
 
-export const QualitySubMenu = () => {
+export interface QualitySubMenuProps {
+  menuStyle?: StyleProp<ViewStyle>;
+}
+
+export const QualitySubMenu = (props: QualitySubMenuProps) => {
+  const { menuStyle } = props;
   if (Platform.OS === 'ios') {
     return <></>;
   }
   const createMenu = () => {
-    return <QualitySelectionView />;
+    return <QualitySelectionView style={menuStyle} />;
   };
   const player = useContext(PlayerContext).player;
 
@@ -40,8 +45,12 @@ export interface QualitySelectionViewState {
   targetVideoTrackQuality: number | number[] | undefined;
 }
 
-export class QualitySelectionView extends PureComponent<unknown, QualitySelectionViewState> {
-  constructor(props: unknown) {
+export interface QualitySelectionViewProps {
+  style?: StyleProp<ViewStyle>;
+}
+
+export class QualitySelectionView extends PureComponent<QualitySelectionViewProps, QualitySelectionViewState> {
+  constructor(props: QualitySelectionViewProps) {
     super(props);
     this.state = {
       videoTracks: [],
@@ -95,6 +104,7 @@ export class QualitySelectionView extends PureComponent<unknown, QualitySelectio
   };
 
   render() {
+    const { style } = this.props;
     const { videoTracks, selectedVideoTrack, targetVideoTrackQuality } = this.state;
     const availableVideoQualities = findMediaTrackByUid(videoTracks, selectedVideoTrack)?.qualities || [];
     availableVideoQualities.sort((q1, q2) => q2.bandwidth - q1.bandwidth);
@@ -108,6 +118,7 @@ export class QualitySelectionView extends PureComponent<unknown, QualitySelectio
 
     return (
       <MenuView
+        style={style}
         menu={
           <ScrollableMenu
             title={'Video quality'}

@@ -14,6 +14,13 @@ export interface TimeLabelState {
   duration: number;
 }
 
+export const DEFAULT_TIME_LABEL_STYLE: TextStyle = {
+  marginLeft: 10,
+  marginRight: 10,
+  height: 20,
+  alignSelf: 'center',
+};
+
 export class TimeLabel extends PureComponent<TimeLabelProps, TimeLabelState> {
   private static initialState: TimeLabelState = {
     currentTime: 0.0,
@@ -52,11 +59,7 @@ export class TimeLabel extends PureComponent<TimeLabelProps, TimeLabelState> {
     const { currentTime, duration } = this.state;
     const { style, showDuration } = this.props;
     return (
-      <StaticTimeLabel
-        showDuration={showDuration}
-        time={currentTime}
-        duration={duration}
-        style={[this.context.style.timeLabel.container, style]}></StaticTimeLabel>
+      <StaticTimeLabel showDuration={showDuration} time={currentTime} duration={duration} style={[DEFAULT_TIME_LABEL_STYLE, style]}></StaticTimeLabel>
     );
   }
 }

@@ -42,18 +42,7 @@ export class MuteButton extends PureComponent<unknown, MuteButtonState> {
     if (Platform.isTV) {
       return <></>;
     }
-    return (
-      <PlayerContext.Consumer>
-        {(context: UiContext) => (
-          <ActionButton
-            svg={muted ? <VolumeOffSvg /> : <VolumeUpSvg />}
-            onPress={this.toggleMuted}
-            iconStyle={context.style.controlBar.buttonIcon}
-            touchable={true}
-          />
-        )}
-      </PlayerContext.Consumer>
-    );
+    return <ActionButton svg={muted ? <VolumeOffSvg /> : <VolumeUpSvg />} onPress={this.toggleMuted} touchable={true} />;
   }
 }
 

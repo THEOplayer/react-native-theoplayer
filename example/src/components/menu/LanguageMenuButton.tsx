@@ -8,14 +8,19 @@ import { MenuRadioButton } from './common/MenuRadioButton';
 import { MenuButton } from './common/MenuButton';
 import { filterRenderableTracks, getTrackLabel } from '../util/TrackUtils';
 import { MenuView } from './common/MenuView';
+import type { StyleProp, ViewStyle } from 'react-native';
 
 export interface LanguageMenuButtonState {
   audioTracks: MediaTrack[];
   textTracks: TextTrack[];
 }
 
-export class LanguageMenuButton extends PureComponent<unknown, LanguageMenuButtonState> {
-  constructor(props: unknown) {
+export interface LanguageMenuButtonProps {
+  menuStyle?: StyleProp<ViewStyle>;
+}
+
+export class LanguageMenuButton extends PureComponent<LanguageMenuButtonProps, LanguageMenuButtonState> {
+  constructor(props: LanguageMenuButtonProps) {
     super(props);
     this.state = { audioTracks: [], textTracks: [] };
   }
@@ -43,6 +48,7 @@ export class LanguageMenuButton extends PureComponent<unknown, LanguageMenuButto
 
   render() {
     const { audioTracks, textTracks } = this.state;
+    const { menuStyle } = this.props;
 
     const selectableTextTracks = filterRenderableTracks(textTracks);
 
@@ -51,7 +57,7 @@ export class LanguageMenuButton extends PureComponent<unknown, LanguageMenuButto
     }
 
     const createMenu = () => {
-      return <LanguageMenuView />;
+      return <LanguageMenuView style={menuStyle} />;
     };
 
     return <MenuButton svg={<LanguageSvg />} menuConstructor={createMenu} />;
@@ -63,8 +69,12 @@ export interface LanguageMenuViewState extends LanguageMenuButtonState {
   selectedTextTrack: number | undefined;
 }
 
-export class LanguageMenuView extends PureComponent<unknown, LanguageMenuViewState> {
-  constructor(props: unknown) {
+export interface LanguageMenuViewProps {
+  style?: StyleProp<ViewStyle>;
+}
+
+export class LanguageMenuView extends PureComponent<LanguageMenuViewProps, LanguageMenuViewState> {
+  constructor(props: LanguageMenuViewProps) {
     super(props);
     this.state = {
       audioTracks: [],
@@ -117,12 +127,14 @@ export class LanguageMenuView extends PureComponent<unknown, LanguageMenuViewSta
   };
 
   render() {
+    const { style } = this.props;
     const { audioTracks, textTracks, selectedAudioTrack, selectedTextTrack } = this.state;
     // The sort is needed because tracks are returned in different order on the native SDKs.
     const selectableTextTracks = filterRenderableTracks(textTracks).sort((first, second) => first.uid - second.uid);
     const selectableAudioTracks = audioTracks.sort((first, second) => first.uid - second.uid);
     return (
       <MenuView
+        style={style}
         menu={
           <>
             {selectableAudioTracks.length > 1 && (

@@ -4,6 +4,7 @@ import { DelayedActivityIndicator } from './DelayedActivityIndicator';
 import { View } from 'react-native';
 import { ErrorEvent, PlayerError, PlayerEventType, ReadyStateChangeEvent } from 'react-native-theoplayer';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
+import { FULLSCREEN_CENTER_STYLE } from '../uicontroller/UiContainer';
 
 interface CenteredDelayedActivityIndicatorState {
   showLoadingIndicator: boolean;
@@ -72,7 +73,6 @@ export class CenteredDelayedActivityIndicator extends PureComponent<DelayedActiv
   }
 
   render() {
-    const { delay } = this.props;
     const { showLoadingIndicator } = this.state;
     const player = (this.context as UiContext).player;
     return (
@@ -80,8 +80,8 @@ export class CenteredDelayedActivityIndicator extends PureComponent<DelayedActiv
       !player.paused && (
         <PlayerContext.Consumer>
           {(context: UiContext) => (
-            <View style={context.style.fullScreenCenter}>
-              <DelayedActivityIndicator color={context.style.colors.primary} delay={delay} {...context.style.activityIndicator} />
+            <View style={FULLSCREEN_CENTER_STYLE}>
+              <DelayedActivityIndicator color={context.style.colors.primary} {...this.props} />
             </View>
           )}
         </PlayerContext.Consumer>
