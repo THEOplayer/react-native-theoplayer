@@ -4,14 +4,14 @@ import { PlayerContext } from '../util/PlayerContext';
 import { arrayRemoveElement } from '../../utils/ArrayUtils';
 import type { PresentationModeChangeEvent, THEOplayer } from 'react-native-theoplayer';
 import { CastEvent, CastEventType, ErrorEvent, PlayerError, PlayerEventType } from 'react-native-theoplayer';
-import type { THEOplayerStyle } from '../THEOplayerStyle';
+import type { THEOplayerTheme } from '../THEOplayerTheme';
 import type { MenuConstructor, UiControls } from './UiControls';
 import { ErrorDisplay } from '../message/ErrorDisplay';
 
 interface UiContainerProps {
   player: THEOplayer;
-  style: THEOplayerStyle;
-  containerStyle?: StyleProp<ViewStyle>;
+  theme: THEOplayerTheme;
+  style?: StyleProp<ViewStyle>;
   topStyle?: StyleProp<ViewStyle>;
   centerStyle?: StyleProp<ViewStyle>;
   bottomStyle?: StyleProp<ViewStyle>;
@@ -264,7 +264,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
   };
 
   render() {
-    const { player, style, top, center, bottom, children, containerStyle, topStyle, centerStyle, bottomStyle } = this.props;
+    const { player, theme, top, center, bottom, children, style, topStyle, centerStyle, bottomStyle } = this.props;
     const { fadeAnimation, currentMenu, error, firstPlay, pip } = this.state;
 
     if (error !== undefined) {
@@ -275,10 +275,10 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
       return <></>;
     }
 
-    const combinedContainerStyle = [CONTAINER_STYLE, containerStyle];
+    const combinedContainerStyle = [CONTAINER_STYLE, style];
 
     return (
-      <PlayerContext.Provider value={{ player, style: style, ui: this }}>
+      <PlayerContext.Provider value={{ player, style: theme, ui: this }}>
         {/* The Animated.View is for showing and hiding the UI*/}
         <Animated.View
           style={[combinedContainerStyle, { opacity: fadeAnimation }]}
@@ -286,7 +286,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
           {...(Platform.OS === 'web' ? { onMouseMove: this.onUserAction_ } : {})}>
           <>
             {/* The UI background */}
-            <View style={[combinedContainerStyle, { backgroundColor: style.colors.background }]} />
+            <View style={[combinedContainerStyle, { backgroundColor: theme.colors.background }]} />
 
             {/* The Settings Menu */}
             {currentMenu !== undefined && <View style={[combinedContainerStyle]}>{currentMenu}</View>}

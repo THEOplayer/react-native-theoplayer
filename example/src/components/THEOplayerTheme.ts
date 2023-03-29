@@ -8,7 +8,7 @@ export interface ColorTheme {
   text: string;
 }
 
-export interface THEOplayerStyle {
+export interface THEOplayerTheme {
   colors: ColorTheme;
   text: TextStyle;
 }
@@ -16,7 +16,7 @@ export interface THEOplayerStyle {
 export const BUTTON_SIZE = 40;
 export const CENTER_BUTTON_SIZE = 52;
 
-export const defaultPlayerStyle: THEOplayerStyle = {
+export const defaultTheme: THEOplayerTheme = {
   colors: {
     primary: 'white',
     secondary: '#2C2C2C',

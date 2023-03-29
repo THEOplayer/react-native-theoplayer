@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { StyleProp, View, ViewStyle } from 'react-native';
-import { BUTTON_SIZE, CENTER_BUTTON_SIZE } from '../THEOplayerStyle';
+import { BUTTON_SIZE, CENTER_BUTTON_SIZE } from '../THEOplayerTheme';
 import { Spacer } from './Spacer';
 
 export const DEFAULT_CONTROL_BAR_STYLE: ViewStyle = {

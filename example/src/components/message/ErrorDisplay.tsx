@@ -5,7 +5,7 @@ import { PlayerContext, UiContext } from '../util/PlayerContext';
 import { SvgContext } from '../button/svg/SvgUtils';
 import { ErrorSvg } from '../button/svg/ErrorSvg';
 import { FULLSCREEN_CENTER_STYLE } from '../uicontroller/UiContainer';
-import { BUTTON_SIZE } from '../THEOplayerStyle';
+import { BUTTON_SIZE } from '../THEOplayerTheme';
 
 interface ErrorDisplayProps {
   error: PlayerError;
