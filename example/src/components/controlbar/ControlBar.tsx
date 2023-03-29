@@ -1,7 +1,8 @@
 import React, { ReactNode } from 'react';
 import { StyleProp, View, ViewStyle } from 'react-native';
-import { BUTTON_SIZE, CENTER_BUTTON_SIZE } from '../THEOplayerTheme';
-import { Spacer } from './Spacer';
+import { BUTTON_SIZE } from '../THEOplayerTheme';
+
+const CENTER_CONTROL_BAR_HEIGHT = 52;
 
 export const DEFAULT_CONTROL_BAR_STYLE: ViewStyle = {
   flexDirection: 'row',
@@ -28,14 +29,10 @@ interface CenteredControlBarProps {
 export const CenteredControlBar = (props: CenteredControlBarProps) => {
   const { style, middle, left, right } = props;
   return (
-    <ControlBar style={[{ height: CENTER_BUTTON_SIZE }, style]}>
-      <Spacer grow={3} />
-      {left}
-      <Spacer />
+    <ControlBar style={[{ height: CENTER_CONTROL_BAR_HEIGHT, width: '100%', justifyContent: 'space-between' }, style]}>
+      <ControlBar style={[{ height: CENTER_CONTROL_BAR_HEIGHT, justifyContent: 'center', flexGrow: 1 }, style]}>{left}</ControlBar>
       {middle}
-      <Spacer />
-      {right}
-      <Spacer grow={3} />
+      <ControlBar style={[{ height: CENTER_CONTROL_BAR_HEIGHT, justifyContent: 'center', flexGrow: 1 }, style]}>{right}</ControlBar>
     </ControlBar>
   );
 };
