@@ -144,9 +144,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
           <View
             style={[StyleSheet.absoluteFill, style]}
             onLayout={(event: LayoutChangeEvent) => {
-              const { width } = event.nativeEvent.layout;
-              console.log('width', width);
-              this.setState({ width });
+              this.setState({ width: event.nativeEvent.layout.width });
             }}>
             {isSeeking && (
               <SingleThumbnailView seekableStart={seekableStart} seekableEnd={seekableEnd} currentTime={sliderTime} seekBarWidth={width} />

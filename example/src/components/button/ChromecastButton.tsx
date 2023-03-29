@@ -27,7 +27,6 @@ export class ChromecastButton extends PureComponent<unknown, CastButtonState> {
     const player = (this.context as UiContext).player;
     player.addEventListener(PlayerEventType.CAST_EVENT, this.onCastStateChangeEvent);
     this.setState({ castState: player.cast.chromecast?.state ?? CastState.unavailable });
-    console.log('castState', this.state.castState);
   }
 
   componentWillUnmount() {
@@ -39,7 +38,6 @@ export class ChromecastButton extends PureComponent<unknown, CastButtonState> {
     if (event.subType != CastEventType.CHROMECAST_STATE_CHANGE) {
       return;
     }
-    console.log('castState', event.state);
     this.setState({ castState: event.state });
   };
 
