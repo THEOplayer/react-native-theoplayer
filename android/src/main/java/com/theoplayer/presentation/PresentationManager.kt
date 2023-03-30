@@ -14,8 +14,10 @@ import android.view.SurfaceView
 import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.ComponentActivity
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.Lifecycle
 import com.facebook.react.uimanager.ThemedReactContext
 import com.theoplayer.PlayerEventEmitter
 import com.theoplayer.android.api.THEOplayerView
@@ -32,11 +34,12 @@ class PresentationManager(
   private val reactContext: ThemedReactContext,
   private val eventEmitter: PlayerEventEmitter,
 ) {
-  private var fullscreen = false
-  private var canDoPip = false
-  private var pip = false
+  private var supportsPip = false
   private var onUserLeaveHintReceiver: BroadcastReceiver? = null
   private var onPictureInPictureModeChanged: BroadcastReceiver? = null
+
+  var currentPresentationMode: PresentationMode = PresentationMode.INLINE
+    private set
 
   var pipConfig: PipConfig = PipConfig()
 
@@ -52,12 +55,22 @@ class PresentationManager(
     onPictureInPictureModeChanged = object : BroadcastReceiver() {
       override fun onReceive(context: Context?, intent: Intent?) {
         // Dispatch event on every PiP mode change
-        pip = intent?.getBooleanExtra("isInPictureInPictureMode", false) ?: false
-        eventEmitter.emitPresentationModeChange(if (pip) PresentationMode.PICTURE_IN_PICTURE else PresentationMode.INLINE)
+        val inPip = intent?.getBooleanExtra("isInPictureInPictureMode", false) ?: false
+        if (inPip) {
+          updatePresentationMode(PresentationMode.PICTURE_IN_PICTURE)
+        } else {
+          val pipCtx: PresentationModeChangePipContext = if ((reactContext.currentActivity as? ComponentActivity)
+            ?.lifecycle?.currentState == Lifecycle.State.CREATED) {
+            PresentationModeChangePipContext.CLOSED
+          } else {
+            PresentationModeChangePipContext.RESTORED
+          }
+          updatePresentationMode(PresentationMode.INLINE, PresentationModeChangeContext(pipCtx))
+        }
       }
     }
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      canDoPip =
+      supportsPip =
         reactContext.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
     }
     reactContext.currentActivity?.registerReceiver(
@@ -119,12 +132,12 @@ class PresentationManager(
 
   private fun enterPip() {
     // PiP not supported
-    if (!canDoPip || Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+    if (!supportsPip || Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
       return
     }
 
     // Already in right PiP state?
-    if (pip) {
+    if (currentPresentationMode == PresentationMode.PICTURE_IN_PICTURE) {
       return
     }
 
@@ -196,23 +209,35 @@ class PresentationManager(
   }
 
   private fun setFullscreen(fullscreen: Boolean) {
-    if (fullscreen == this.fullscreen) {
-      // Already in right fullscreen state
+    if ((fullscreen && currentPresentationMode == PresentationMode.FULLSCREEN) ||
+      (!fullscreen && currentPresentationMode == PresentationMode.INLINE)
+    ) {
       return
     }
-    this.fullscreen = fullscreen
     val activity = reactContext.currentActivity ?: return
     val window = activity.window
     if (fullscreen) {
       WindowInsetsControllerCompat(window, window.decorView).apply {
         systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
       }.hide(WindowInsetsCompat.Type.systemBars())
-      eventEmitter.emitPresentationModeChange(PresentationMode.FULLSCREEN)
+      updatePresentationMode(PresentationMode.FULLSCREEN)
     } else {
       WindowInsetsControllerCompat(window, window.decorView).show(
         WindowInsetsCompat.Type.systemBars()
       )
-      eventEmitter.emitPresentationModeChange(PresentationMode.INLINE)
+      updatePresentationMode(PresentationMode.INLINE)
     }
+  }
+
+  private fun updatePresentationMode(
+    presentationMode: PresentationMode,
+    context: PresentationModeChangeContext? = null
+  ) {
+    if (presentationMode == currentPresentationMode) {
+      return
+    }
+    val prevPresentationMode = currentPresentationMode
+    currentPresentationMode = presentationMode
+    eventEmitter.emitPresentationModeChange(presentationMode, prevPresentationMode, context)
   }
 }

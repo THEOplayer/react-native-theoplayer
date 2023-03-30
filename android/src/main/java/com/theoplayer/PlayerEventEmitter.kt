@@ -39,6 +39,7 @@ import com.theoplayer.android.api.player.track.mediatrack.quality.VideoQuality
 import com.theoplayer.android.api.player.track.texttrack.TextTrack
 import com.theoplayer.android.api.player.track.texttrack.TextTrackMode
 import com.theoplayer.cast.CastEventAdapter
+import com.theoplayer.presentation.PresentationModeChangeContext
 import com.theoplayer.track.*
 import com.theoplayer.util.PayloadBuilder
 import kotlin.math.floor
@@ -252,10 +253,14 @@ class PlayerEventEmitter internal constructor(
     emitError(exception.code.name, exception.message)
   }
 
-  fun emitPresentationModeChange(presentationMode: PresentationMode) {
+  fun emitPresentationModeChange(
+    presentationMode: PresentationMode,
+    prevPresentationMode: PresentationMode?,
+    context: PresentationModeChangeContext? = null
+  ) {
     receiveEvent(
       EVENT_PRESENTATIONMODECHANGE,
-      PayloadBuilder().presentationMode(presentationMode).build()
+      PayloadBuilder().presentationMode(presentationMode, prevPresentationMode, context).build()
     )
   }
 
@@ -399,7 +404,10 @@ class PlayerEventEmitter internal constructor(
   }
 
   private fun onPresentationModeChange(event: PresentationModeChange) {
-    emitPresentationModeChange(event.presentationMode)
+    emitPresentationModeChange(
+      event.presentationMode,
+      playerView.presentationManager?.currentPresentationMode
+    )
   }
 
   private fun onVolumeChange(event: VolumeChangeEvent) {
