@@ -11,7 +11,7 @@ import type { DRMConfiguration } from './drm/DRMConfiguration';
 import type { HlsPlaybackConfiguration } from './hls/HlsPlaybackConfiguration';
 import type { AdDescription } from './ads/Ads';
 import type { MetadataDescription } from './metadata/MetadataDescription';
-import type { ServerSideAdInsertionConfiguration } from "./ads/ssai/ServerSideAdInsertionConfiguration";
+import type { ServerSideAdInsertionConfiguration } from './ads/ssai/ServerSideAdInsertionConfiguration';
 
 export type Source = TypedSource;
 
@@ -218,11 +218,29 @@ export interface TextTrackDescription {
 }
 
 /**
+ * The integration identifier of a source specific to a pre-integration, represented by a value from the following list:
+ * <br/> - `'mediatailor'`: The source contains the MediaTailor initialization url
+ *
+ * @public
+ */
+export enum SourceIntegrationId {
+  mediatailor = 'mediatailor',
+}
+
+/**
  * Represents the common properties of a media resource.
  *
  * @public
  */
 export interface BaseSource {
+  /**
+   * The integration ID of the source.
+   *
+   * @remarks
+   * <br/> - This can be used to signal that a source is specific to an integration.
+   */
+  integration?: SourceIntegrationId;
+
   /**
    * The URL of a time server used by the player to synchronise the time in DASH sources.
    *
