@@ -5,7 +5,7 @@ import { isThumbnailTrack, TextTrack } from 'react-native-theoplayer';
 import type { Thumbnail } from './Thumbnail';
 import { isTileMapThumbnail } from './Thumbnail';
 import { URL as URLPolyfill } from './Urlpolyfill';
-import { StaticTimeLabel } from '../../timelabel/StaticTimeLabel';
+import { StaticTimeLabel } from 'react-native-theoplayer';
 
 const SPRITE_REGEX = /^([^#]*)#xywh=(\d+),(\d+),(\d+),(\d+)\s*$/;
 const TAG = 'ThumbnailView';
