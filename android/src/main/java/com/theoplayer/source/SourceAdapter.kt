@@ -24,6 +24,8 @@ import com.theoplayer.android.api.source.metadata.ChromecastMetadataImage
 import com.facebook.react.bridge.ReadableArray
 import com.theoplayer.BuildConfig
 import com.theoplayer.android.api.error.ErrorCode
+import com.theoplayer.android.api.source.mediatailor.MediaTailorSource
+import com.theoplayer.android.internal.source.SourceIntegration
 import com.theoplayer.drm.ContentProtectionAdapter
 import org.json.JSONArray
 import org.json.JSONException
@@ -52,6 +54,7 @@ private const val PROP_POSTER = "poster"
 private const val PROP_ADS = "ads"
 private const val PROP_AVAILABILITY_TYPE = "availabilityType"
 private const val ERROR_DAI_NOT_ENABLED = "Google DAI support not enabled."
+private const val ERROR_UNSUPPORTED_INTEGRATION = "Unsupported integration"
 private const val ERROR_UNSUPPORTED_SSAI_INTEGRATION = "Unsupported SSAI integration"
 private const val ERROR_MISSING_SSAI_INTEGRATION = "Missing SSAI integration"
 private const val ERROR_IMA_NOT_ENABLED = "Google IMA support not enabled."
@@ -139,8 +142,15 @@ class SourceAdapter {
   @Throws(THEOplayerException::class)
   private fun parseTypedSource(jsonTypedSource: JSONObject): TypedSource? {
     try {
+      // Check for specific source integration
+      if (jsonTypedSource.has(PROP_INTEGRATION)) {
+        return parseTypedSourceWithIntegration(jsonTypedSource, jsonTypedSource.getString(PROP_INTEGRATION))
+      }
+
       var tsBuilder = TypedSource.Builder(jsonTypedSource.optString(PROP_SRC))
       val sourceType = parseSourceType(jsonTypedSource)
+
+      // SSAI integration
       if (jsonTypedSource.has(PROP_SSAI)) {
         val ssaiJson = jsonTypedSource.getJSONObject(PROP_SSAI)
 
@@ -183,6 +193,7 @@ class SourceAdapter {
           throw THEOplayerException(ErrorCode.AD_ERROR, ERROR_MISSING_SSAI_INTEGRATION)
         }
       }
+
       if (sourceType != null) {
         tsBuilder.type(sourceType)
       }
@@ -215,6 +226,23 @@ class SourceAdapter {
       e.printStackTrace()
     }
     return null
+  }
+
+  @Throws(THEOplayerException::class)
+  private fun parseTypedSourceWithIntegration(jsonTypedSource: JSONObject, integrationStr: String): TypedSource? {
+    val integrationId = SourceIntegration.from(integrationStr) ?: throw THEOplayerException(
+      ErrorCode.CONFIGURATION_ERROR,
+      "$ERROR_UNSUPPORTED_INTEGRATION: $integrationStr"
+    )
+    when (integrationId) {
+      SourceIntegration.MEDIATAILOR -> {
+        return MediaTailorSource.Builder().src(jsonTypedSource.optString(PROP_SRC)).build()
+      }
+      else -> throw THEOplayerException(
+        ErrorCode.CONFIGURATION_ERROR,
+        "$ERROR_UNSUPPORTED_INTEGRATION: $integrationStr"
+      )
+    }
   }
 
   @Throws(THEOplayerException::class)
