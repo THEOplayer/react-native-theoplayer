@@ -48,3 +48,6 @@ Run **pod install** to update the SDK dependencies in your application. This wil
 > cd [YourProjectFolder]/ios
 > pod install
 ```
+
+## 4.x SDK Feature flags
+When using a custom 4.x SDK for THEOplayer, the react-native-theoplayer package needs to be notified of the features that were added to that custom build. This is done by a script that evaluates the generated xcframeworks. This script targets by default the above mentioned TheoSDK folder. If you move your custom frameworks to a different location (than the suggested TheoSDK folder), you must update that location in the react-native-theoplayer.podspec in your react-native-theoplayer node_module folder. 
