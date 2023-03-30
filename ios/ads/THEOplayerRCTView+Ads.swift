@@ -3,8 +3,8 @@
 import Foundation
 import THEOplayerSDK
 
-#if canImport(GoogleIMAIntegration)
-import GoogleIMAIntegration
+#if canImport(THEOplayerGoogleIMAIntegration)
+import THEOplayerGoogleIMAIntegration
 #endif
 
 extension THEOplayerRCTView {
@@ -20,7 +20,7 @@ extension THEOplayerRCTView {
         guard let player = self.player else {
             return
         }
-#if canImport(GoogleIMAIntegration)
+#if canImport(THEOplayerGoogleIMAIntegration)
         let imaIntegration = GoogleIMAIntegrationFactory.createIntegration(on: player)
         player.addIntegration(imaIntegration)
 #endif

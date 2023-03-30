@@ -54,7 +54,7 @@ class THEOplayerRCTAdsEventHandler {
             return
         }
         
-#if (GOOGLE_IMA || GOOGLE_DAI) || canImport(GoogleIMAIntegration)
+#if (GOOGLE_IMA || GOOGLE_DAI) || canImport(THEOplayerGoogleIMAIntegration)
         // AD_BEGIN
         self.adBeginListener = player.ads.addEventListener(type: AdsEventTypes.AD_BEGIN) { [weak self] event in
             if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received AD_BEGIN event from THEOplayer Ads") }
@@ -180,7 +180,7 @@ class THEOplayerRCTAdsEventHandler {
             return
         }
         
-#if (GOOGLE_IMA || GOOGLE_DAI) || canImport(GoogleIMAIntegration)
+#if (GOOGLE_IMA || GOOGLE_DAI) || canImport(THEOplayerGoogleIMAIntegration)
         // AD_BEGIN
         if let adBeginListener = self.adBeginListener {
             player.ads.removeEventListener(type: AdsEventTypes.AD_BEGIN, listener: adBeginListener)

@@ -8,8 +8,8 @@
 
 import Foundation
 import UIKit
-#if canImport(GoogleIMAIntegration)
-import GoogleIMAIntegration
+#if canImport(THEOplayerGoogleIMAIntegration)
+import THEOplayerGoogleIMAIntegration
 #endif
 
 let ERROR_CODE_ADS_ACCESS_FAILURE = "ads_access_failure"
@@ -38,7 +38,7 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
         return false
     }
 
-#if (GOOGLE_IMA || GOOGLE_DAI) || canImport(GoogleIMAIntegration)
+#if (GOOGLE_IMA || GOOGLE_DAI) || canImport(THEOplayerGoogleIMAIntegration)
     @objc(skip:)
     func skip(_ node: NSNumber) -> Void {
         

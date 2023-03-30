@@ -25,7 +25,7 @@ extension THEOplayerRCTView {
         }
     }
 
-#if (GOOGLE_IMA || GOOGLE_DAI) || canImport(GoogleIMAIntegration)
+#if (GOOGLE_IMA || GOOGLE_DAI) || canImport(THEOplayerGoogleIMAIntegration)
     func playerAdsConfiguration() -> AdsConfiguration? {
         let googleBuilder = GoogleIMAConfigurationBuilder()
         googleBuilder.useNativeIMA = self.adsConfig.googleImaUsesNativeIma
@@ -72,7 +72,7 @@ extension THEOplayerRCTView {
     
     func parseAdsConfig(configDict: NSDictionary) {}
     
-#if GOOGLE_IMA || canImport(GoogleIMAIntegration)
+#if GOOGLE_IMA || canImport(THEOplayerGoogleIMAIntegration)
     func playerAdsConfiguration() -> AdsConfiguration? { return AdsConfiguration() }
 #else
     func playerAdsConfiguration() -> AdsConfiguration? { return nil }

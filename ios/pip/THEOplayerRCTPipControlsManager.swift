@@ -50,7 +50,7 @@ class THEOplayerRCTPipControlsManager: NSObject {
            let player = self.player,
            let duration = player.duration {
             self.isLive = duration.isInfinite
-#if (GOOGLE_IMA || GOOGLE_DAI) || canImport(GoogleIMAIntegration)
+#if (GOOGLE_IMA || GOOGLE_DAI) || canImport(THEOplayerGoogleIMAIntegration)
             player.ads.requestPlaying(completionHandler: { adIsPlaying, error in
                 self.inAd = adIsPlaying ?? false
                 self.updatePipControls()
@@ -95,7 +95,7 @@ class THEOplayerRCTPipControlsManager: NSObject {
             }
         }
         
-#if (GOOGLE_IMA || GOOGLE_DAI) || canImport(GoogleIMAIntegration)
+#if (GOOGLE_IMA || GOOGLE_DAI) || canImport(THEOplayerGoogleIMAIntegration)
         
         // ADBREAK_BEGIN
         self.adBreakBeginListener = player.ads.addEventListener(type: AdsEventTypes.AD_BREAK_BEGIN) { [weak self] event in
@@ -126,7 +126,7 @@ class THEOplayerRCTPipControlsManager: NSObject {
             player.removeEventListener(type: PlayerEventTypes.SOURCE_CHANGE, listener: sourceChangeListener)
         }
         
-#if (GOOGLE_IMA || GOOGLE_DAI) || canImport(GoogleIMAIntegration)
+#if (GOOGLE_IMA || GOOGLE_DAI) || canImport(THEOplayerGoogleIMAIntegration)
         
         // ADBREAK_BEGIN
         if let adBreakBeginListener = self.adBreakBeginListener {

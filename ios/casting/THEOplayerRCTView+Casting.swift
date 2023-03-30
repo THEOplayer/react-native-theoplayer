@@ -2,8 +2,8 @@
 
 import Foundation
 import THEOplayerSDK
-#if canImport(GoogleCastIntegration)
-import GoogleCastIntegration
+#if canImport(THEOplayerGoogleCastIntegration)
+import THEOplayerGoogleCastIntegration
 #endif
 
 extension THEOplayerRCTView {
@@ -21,7 +21,7 @@ extension THEOplayerRCTView {
         guard let player = self.player else {
             return
         }
-#if os(iOS) && canImport(GoogleCastIntegration)
+#if os(iOS) && canImport(THEOplayerGoogleCastIntegration)
         if let castConfiguration = self.playerCastConfiguration() {
             let castIntegration = CastIntegrationFactory.createCastIntegration(on: player, with: castConfiguration)
             player.addIntegration(castIntegration)
