@@ -35,7 +35,17 @@ export interface DurationChangeEvent extends Event<PlayerEventType.DURATION_CHAN
   readonly duration: number;
 }
 
-export type PresentationModeChangePipContext = 'closed' | 'restored';
+export enum PresentationModeChangePipContext {
+  /**
+   * The PiP window was explicitly closed.
+   */
+  CLOSED = 'closed',
+
+  /**
+   * The PiP window was restored/maximized.
+   */
+  RESTORED = 'restored',
+}
 
 export interface PresentationModeChangeContext {
   /**
