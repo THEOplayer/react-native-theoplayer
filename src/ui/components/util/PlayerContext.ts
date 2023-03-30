@@ -1,7 +1,7 @@
 import React from 'react';
 import type { THEOplayer } from 'react-native-theoplayer';
-import type { THEOplayerTheme } from '../THEOplayerTheme';
-import { defaultTheme } from '../THEOplayerTheme';
+import type { THEOplayerTheme } from '../../THEOplayerTheme';
+import { defaultTheme } from '../../THEOplayerTheme';
 import type { UiControls } from '../uicontroller/UiControls';
 
 export interface UiContext {
