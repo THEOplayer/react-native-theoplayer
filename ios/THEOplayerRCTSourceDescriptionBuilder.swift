@@ -146,6 +146,16 @@ class THEOplayerRCTSourceDescriptionBuilder {
                 let sanitisedContentProtectionData = THEOplayerRCTSourceDescriptionBuilder.sanitiseContentProtectionData(contentProtectionData)
                 contentProtection = THEOplayerRCTSourceDescriptionBuilder.buildContentProtection(sanitisedContentProtectionData)
             }
+            
+            // check for specific integration
+            if let integration = typedSourceData[SD_PROP_INTEGRATION] as? String {
+                // MEDIATAILOR
+                if integration == SourceIntegration.MEDIATAILOR._rawValue {
+                    return MediaTailorSource(src: src,
+                                             type: type,
+                                             drm: contentProtection)
+                }
+            }
 
             return TypedSource(src: src,
                                type: type,
