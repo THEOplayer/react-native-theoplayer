@@ -149,12 +149,13 @@ class THEOplayerRCTSourceDescriptionBuilder {
             
             // check for specific integration
             if let integration = typedSourceData[SD_PROP_INTEGRATION] as? String {
-                // MEDIATAILOR
+#if MEDIATAILOR
                 if integration == SourceIntegration.MEDIATAILOR._rawValue {
                     return MediaTailorSource(src: src,
                                              type: type,
                                              drm: contentProtection)
                 }
+#endif
             }
 
             return TypedSource(src: src,
