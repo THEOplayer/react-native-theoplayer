@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { StyleProp, View, ViewStyle } from 'react-native';
-import { BUTTON_SIZE } from '../THEOplayerTheme';
+import { BUTTON_SIZE } from '../../THEOplayerTheme';
 
 const CENTER_CONTROL_BAR_HEIGHT = 52;
 

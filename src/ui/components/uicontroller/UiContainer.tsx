@@ -4,7 +4,7 @@ import { PlayerContext } from '../util/PlayerContext';
 import { arrayRemoveElement } from '../../utils/ArrayUtils';
 import type { PresentationModeChangeEvent, THEOplayer } from 'react-native-theoplayer';
 import { CastEvent, CastEventType, ErrorEvent, PlayerError, PlayerEventType } from 'react-native-theoplayer';
-import type { THEOplayerTheme } from '../THEOplayerTheme';
+import type { THEOplayerTheme } from '../../THEOplayerTheme';
 import type { MenuConstructor, UiControls } from './UiControls';
 import { ErrorDisplay } from '../message/ErrorDisplay';
 

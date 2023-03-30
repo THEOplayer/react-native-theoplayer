@@ -4,7 +4,7 @@ import { PlayerContext, UiContext } from '../../util/PlayerContext';
 
 export interface MenuTitleProps {
   label: string;
-  style: StyleProp<TextStyle>;
+  style?: StyleProp<TextStyle>;
 }
 
 export const DEFAULT_MENU_TITLE_STYLE: TextStyle = {

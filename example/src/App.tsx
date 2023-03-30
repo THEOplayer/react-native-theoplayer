@@ -1,9 +1,7 @@
 import * as React from 'react';
-import { PlayerConfiguration, PlayerEventType, THEOplayer } from 'react-native-theoplayer';
-import { THEOplayerDefaultUi } from './components/THEOplayerDefaultUi';
-import { SourceMenuButton, SOURCES } from './components/menu/SourceMenuButton';
+import { PlayerConfiguration, PlayerEventType, THEOplayer, THEOplayerDefaultUi, PipButton } from 'react-native-theoplayer';
 import { StyleSheet, View } from 'react-native';
-import { PipButton } from './components/button/PipButton';
+import { SourceMenuButton, SOURCES } from './custom/SourceMenuButton';
 
 const playerConfig: PlayerConfiguration = {
   // Get your THEOplayer license from https://portal.theoplayer.com/

@@ -1,13 +1,13 @@
 import React, { useContext, useState } from 'react';
-import type { Source } from '../../utils/source/Source';
+import type { Source } from '../../../src/ui/utils/source/Source';
 import { Platform } from 'react-native';
-import ALL_SOURCES from '../../res/sources.json';
-import { PlayerContext } from '../util/PlayerContext';
-import { ListSvg } from '../button/svg/ListSvg';
-import { MenuButton } from './common/MenuButton';
-import { MenuRadioButton } from './common/MenuRadioButton';
-import { ScrollableMenu } from './common/ScrollableMenu';
-import { MenuView } from './common/MenuView';
+import ALL_SOURCES from './sources.json';
+import { PlayerContext } from '../../../src/ui/components/util/PlayerContext';
+import { ListSvg } from '../../../src/ui/components/button/svg/ListSvg';
+import { MenuButton } from '../../../src/ui/components/menu/common/MenuButton';
+import { MenuRadioButton } from '../../../src/ui/components/menu/common/MenuRadioButton';
+import { ScrollableMenu } from '../../../src/ui/components/menu/common/ScrollableMenu';
+import { MenuView } from '../../../src/ui/components/menu/common/MenuView';
 
 export const SOURCES = ALL_SOURCES.filter((source) => source.os.indexOf(Platform.OS) >= 0) as Source[];
 

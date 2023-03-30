@@ -2,7 +2,7 @@ import { StyleProp, Text, TextStyle } from 'react-native';
 import React from 'react';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
 
-export interface TimeLabelProps {
+export interface StaticTimeLabelProps {
   showDuration: boolean;
   style?: StyleProp<TextStyle>;
   time: number;
@@ -11,7 +11,7 @@ export interface TimeLabelProps {
 
 const LIVE_LABEL = 'LIVE';
 
-export function StaticTimeLabel(props: TimeLabelProps) {
+export function StaticTimeLabel(props: StaticTimeLabelProps) {
   const { style, showDuration, time, duration } = props;
 
   // An unknown duration is reported as NaN.

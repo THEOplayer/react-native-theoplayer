@@ -1,4 +1,4 @@
-import { CastEvent, CastEventType, CastState, PlayerEventType } from 'react-native-theoplayer';
+import { CastEvent, CastEventType, CastState, PlayerEventType } from './../../../api/barrel';
 import React, { PureComponent } from 'react';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
 import { ActionButton } from './actionbutton/ActionButton';
