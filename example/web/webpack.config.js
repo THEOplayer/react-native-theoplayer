@@ -86,7 +86,6 @@ module.exports = {
     extensions: ['.web.js', '.web.ts', '.web.tsx', '.js', '.ts', '.tsx'],
     alias: {
       'react-native$': 'react-native-web',
-      'react-native-url-polyfill': 'url-polyfill',
       'react-native-google-cast': path.resolve(stubDirectory, 'CastButtonStub'),
       'react-native-web': path.resolve(appDirectory, 'node_modules/react-native-web'),
 

@@ -4,7 +4,7 @@ import type { TextTrackCue } from 'react-native-theoplayer';
 import { isThumbnailTrack, TextTrack } from 'react-native-theoplayer';
 import type { Thumbnail } from './Thumbnail';
 import { isTileMapThumbnail } from './Thumbnail';
-import { URL as URLPolyfill } from 'react-native-url-polyfill';
+import { URL as URLPolyfill } from './Urlpolyfill';
 import { StaticTimeLabel } from '../../timelabel/StaticTimeLabel';
 
 const SPRITE_REGEX = /^([^#]*)#xywh=(\d+),(\d+),(\d+),(\d+)\s*$/;
