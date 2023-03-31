@@ -6,7 +6,7 @@ buildscript {
 
   dependencies {
     classpath 'com.android.tools.build:gradle:4.2.2'
-    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10'
+    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.21'
   }
 }
 
@@ -17,7 +17,7 @@ def safeExtGet(prop, fallback) {
   rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
 }
 
-def versionString(version) {
+static def versionString(version) {
   return "${version == '+' ? 'latest' : version}"
 }
 
@@ -101,8 +101,9 @@ repositories {
 dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"  // From node_modules
-  implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
+  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
   implementation "com.theoplayer.theoplayer-sdk-android:ads-wrapper:4.8.0"
+  implementation "androidx.appcompat:appcompat:1.6.1"
 
   def theoplayer_sdk_version = safeExtGet('THEOplayer_sdk', '+')
 //  def theoplayer_mediasession_version = safeExtGet('THEOplayer_mediasession', theoplayer_sdk_version)
