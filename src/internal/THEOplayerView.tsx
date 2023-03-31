@@ -61,6 +61,8 @@ import type {
 import type { NativeAdEvent } from './adapter/event/native/NativeAdEvent';
 import { THEOplayerAdapter } from './adapter/THEOplayerAdapter';
 
+const INVALID_HANDLE = -1;
+
 interface THEOplayerRCTViewProps {
   ref: React.RefObject<THEOplayerViewNativeComponent>;
   style?: StyleProp<ViewStyle>;
@@ -126,8 +128,8 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
     this._facade.clearEventListeners();
   }
 
-  public get nativeHandle(): number | null {
-    return findNodeHandle(this._root.current);
+  public get nativeHandle(): number {
+    return findNodeHandle(this._root.current) || INVALID_HANDLE;
   }
 
   private reset() {
