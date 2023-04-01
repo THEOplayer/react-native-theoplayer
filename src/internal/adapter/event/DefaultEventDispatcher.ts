@@ -20,7 +20,8 @@ export class DefaultEventDispatcher<TMap extends EventMap<StringKeyOf<TMap>>> im
   }
 
   dispatchEvent = <K extends StringKeyOf<TMap>>(event: TMap[K]): void => {
-    for (const listener of this._eventListeners.get(event.type) ?? []) {
+    const listeners = (this._eventListeners.get(event.type) ?? []).slice();
+    for (const listener of listeners) {
       listener.call(this, event);
     }
   };
