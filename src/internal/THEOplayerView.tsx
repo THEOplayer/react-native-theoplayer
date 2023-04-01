@@ -124,6 +124,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
     if (onPlayerDestroy) {
       onPlayerDestroy(this._facade);
     }
+    this._facade.dispatchEvent(new BaseEvent(PlayerEventType.DESTROY));
 
     if (Platform.OS === 'ios') {
       // TODO: move to native module
