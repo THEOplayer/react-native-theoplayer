@@ -3,6 +3,8 @@ import type { THEOplayerViewProps } from 'react-native-theoplayer';
 import * as THEOplayer from 'theoplayer';
 import { THEOplayerWebAdapter } from './adapter/THEOplayerWebAdapter';
 import { WebMediaSession } from './adapter/web/WebMediaSession';
+import { BaseEvent } from './adapter/event/BaseEvent';
+import { PlayerEventType } from 'react-native-theoplayer';
 
 export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProps>) {
   const { config, children } = props;
@@ -56,6 +58,7 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
       if (adapter?.current && onPlayerDestroy) {
         onPlayerDestroy(adapter?.current);
       }
+      adapter?.current?.dispatchEvent(new BaseEvent(PlayerEventType.DESTROY));
 
       adapter?.current?.destroy();
       mediaSession?.current?.destroy();

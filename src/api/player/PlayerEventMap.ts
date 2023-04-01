@@ -42,118 +42,119 @@ export enum PlayerEventType {
   CAST_EVENT = 'castevent',
   VOLUME_CHANGE = 'volumechange',
   WAITING = 'waiting',
-  PRESENTATIONMODE_CHANGE = 'presentationmodechange'
+  PRESENTATIONMODE_CHANGE = 'presentationmodechange',
+  DESTROY = 'destroy',
 }
 
 /**
- * The events fired by THEOplayer.
+ * The events dispatched by THEOplayer.
  *
  */
 export interface PlayerEventMap {
   /**
-   * Fired when the player can resume playback of the media data.
+   * Dispatched when the player can resume playback of the media data.
    */
   [PlayerEventType.CANPLAY]: Event<PlayerEventType.CANPLAY>;
 
   /**
-   * Fired when the player's internal paused state changes to `false`.
+   * Dispatched when the player's internal paused state changes to `false`.
    */
   [PlayerEventType.PLAY]: Event<PlayerEventType.PLAY>;
 
   /**
-   * Fired when playback is ready to start after having been paused or delayed due to lack of media data.
+   * Dispatched when playback is ready to start after having been paused or delayed due to lack of media data.
    */
   [PlayerEventType.PLAYING]: Event<PlayerEventType.PLAYING>;
 
   /**
-   * Fired when the presentationMode of the player changes.
+   * Dispatched when the presentationMode of the player changes.
    */
   [PlayerEventType.PRESENTATIONMODE_CHANGE]: PresentationModeChangeEvent;
 
   /**
-   * Fired when the player's source changes.
+   * Dispatched when the player's source changes.
    */
   [PlayerEventType.SOURCE_CHANGE]: Event<PlayerEventType.SOURCE_CHANGE>;
 
   /**
-   * Fired when the player starts loading the manifest.
+   * Dispatched when the player starts loading the manifest.
    */
   [PlayerEventType.LOAD_START]: Event<PlayerEventType.LOAD_START>;
 
   /**
-   * Fired when the player determines the metadata for its source.
+   * Dispatched when the player determines the metadata for its source.
    */
   [PlayerEventType.LOADED_METADATA]: LoadedMetadataEvent;
 
   /**
-   * Fired when the player can render the media data at the current playback position for the first time.
+   * Dispatched when the player can render the media data at the current playback position for the first time.
    */
   [PlayerEventType.LOADED_DATA]: Event<PlayerEventType.LOADED_DATA>;
 
   /**
-   * Fired when the player's readyState has changed.
+   * Dispatched when the player's readyState has changed.
    */
   [PlayerEventType.READYSTATE_CHANGE]: ReadyStateChangeEvent;
 
   /**
-   * Fired when the player's volume changes.
+   * Dispatched when the player's volume changes.
    */
   [PlayerEventType.VOLUME_CHANGE]: VolumeChangeEvent;
 
   /**
-   * Fired when an error occurs.
+   * Dispatched when an error occurs.
    */
   [PlayerEventType.ERROR]: ErrorEvent;
 
   /**
-   * Fired each time the player has loaded media data.
+   * Dispatched each time the player has loaded media data.
    */
   [PlayerEventType.PROGRESS]: ProgressEvent;
 
   /**
-   * Fired when the player's internal paused state changes to `true`.
+   * Dispatched when the player's internal paused state changes to `true`.
    */
   [PlayerEventType.PAUSE]: Event<PlayerEventType.PAUSE>;
 
   /**
-   * Fired when a seek operation starts and the player is seeking a new position.
+   * Dispatched when a seek operation starts and the player is seeking a new position.
    */
   [PlayerEventType.SEEKING]: Event<PlayerEventType.SEEKING>;
 
   /**
-   * Fired when a seek operation completed and the current playback position has changed.
+   * Dispatched when a seek operation completed and the current playback position has changed.
    */
   [PlayerEventType.SEEKED]: Event<PlayerEventType.SEEKED>;
 
   /**
-   * Fired when playback has stopped because the end of the media was reached or because
+   * Dispatched when playback has stopped because the end of the media was reached or because
    * no further data is available.
    */
   [PlayerEventType.ENDED]: Event<PlayerEventType.ENDED>;
 
   /**
-   * Fired when playback has stopped because the next frame is not available, but the
+   * Dispatched when playback has stopped because the next frame is not available, but the
    * player expects that frame to become available in due course.
    */
   [PlayerEventType.WAITING]: Event<PlayerEventType.WAITING>;
 
   /**
-   * Fired each time the current playback position changed.
+   * Dispatched each time the current playback position changed.
    */
   [PlayerEventType.TIME_UPDATE]: TimeUpdateEvent;
 
   /**
-   * Fired when the player's duration attribute has been updated.
+   * Dispatched when the player's duration attribute has been updated.
    */
   [PlayerEventType.DURATION_CHANGE]: DurationChangeEvent;
 
   /**
-   * Fired when the player's playbackRate changes.
+   * Dispatched when the player's playbackRate changes.
    */
   [PlayerEventType.RATE_CHANGE]: RateChangeEvent;
 
   /**
-   * Fired when a segment can not be found.
+   * Dispatched when a segment can not be found.
    *
    * @remarks
    * <br/> - Only dispatched on DASH streams.
@@ -161,32 +162,37 @@ export interface PlayerEventMap {
   [PlayerEventType.SEGMENT_NOT_FOUND]: SegmentNotFoundEvent;
 
   /**
-   * Fired when a text track list event occurs.
+   * Dispatched when a text track list event occurs.
    */
   [PlayerEventType.TEXT_TRACK_LIST]: TextTrackListEvent;
 
   /**
-   * Fired when a text track event occurs.
+   * Dispatched when a text track event occurs.
    */
   [PlayerEventType.TEXT_TRACK]: TextTrackEvent;
 
   /**
-   * Fired when a media track list event occurs.
+   * Dispatched when a media track list event occurs.
    */
   [PlayerEventType.MEDIA_TRACK_LIST]: MediaTrackListEvent;
 
   /**
-   * Fired when a media track event occurs.
+   * Dispatched when a media track event occurs.
    */
   [PlayerEventType.MEDIA_TRACK]: MediaTrackEvent;
 
   /**
-   * Fired when an ad event occurs.
+   * Dispatched when an ad event occurs.
    */
   [PlayerEventType.AD_EVENT]: AdEvent;
 
   /**
-   * Fired when a cast event occurs, either for Chromecast or Airplay.
+   * Dispatched when a cast event occurs, either for Chromecast or Airplay.
    */
   [PlayerEventType.CAST_EVENT]: CastEvent;
+
+  /**
+   * Dispatched when the player will be destroyed.
+   */
+  [PlayerEventType.DESTROY]: Event<PlayerEventType.DESTROY>;
 }
