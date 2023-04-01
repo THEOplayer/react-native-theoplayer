@@ -17,4 +17,9 @@ export interface THEOplayerViewProps {
    * Callback for when the internal THEOplayer is ready.
    */
   onPlayerReady?: (player: THEOplayer) => void;
+
+  /**
+   * Callback for when the internal THEOplayer will be destroyed.
+   */
+  onPlayerDestroy?: (player: THEOplayer) => void;
 }

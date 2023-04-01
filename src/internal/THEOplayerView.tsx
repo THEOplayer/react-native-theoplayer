@@ -119,6 +119,12 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
   }
 
   componentWillUnmount() {
+    // Notify the player will be destroyed.
+    const { onPlayerDestroy } = this.props;
+    if (onPlayerDestroy) {
+      onPlayerDestroy(this._facade);
+    }
+
     if (Platform.OS === 'ios') {
       // TODO: move to native module
       // on iOS, we trigger an explicit 'destroy' to clean up the underlying THEOplayer
