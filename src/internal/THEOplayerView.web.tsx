@@ -10,6 +10,7 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
   const adapter = useRef<THEOplayerWebAdapter | null>(null);
   const mediaSession = useRef<WebMediaSession | null>(null);
   const container = useRef<null | HTMLDivElement>(null);
+
   useEffect(() => {
     // Create player inside container.
     if (container.current) {
@@ -50,6 +51,12 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
 
     // Clean-up
     return () => {
+      // Notify the player will be destroyed.
+      const { onPlayerDestroy } = props;
+      if (adapter?.current && onPlayerDestroy) {
+        onPlayerDestroy(adapter?.current);
+      }
+
       adapter?.current?.destroy();
       mediaSession?.current?.destroy();
       player?.current?.destroy();
