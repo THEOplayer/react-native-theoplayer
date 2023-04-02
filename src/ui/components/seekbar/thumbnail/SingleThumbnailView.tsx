@@ -25,14 +25,15 @@ export function SingleThumbnailView(props: ThumbnailViewProps) {
 
   const { seekableStart, seekableEnd, currentTime, seekBarWidth } = props;
   const percentageOffset = (currentTime - seekableStart) / (seekableEnd - seekableStart);
+  const marginHorizontal = 10;
 
   return (
     <View
       style={{
         position: 'absolute',
         top: -(thumbnailSize * 0.6),
-        left: Math.max(0, Math.min(seekBarWidth - thumbnailSize, percentageOffset * seekBarWidth - 0.5 * thumbnailSize)),
-        marginLeft: 10,
+        left: Math.max(0, Math.min(seekBarWidth - thumbnailSize - marginHorizontal, percentageOffset * seekBarWidth - 0.5 * thumbnailSize)),
+        marginHorizontal,
       }}>
       <ThumbnailView thumbnailTrack={thumbnailTrack} duration={player.duration} time={currentTime} size={thumbnailSize} showTimeLabel={false} />
     </View>
