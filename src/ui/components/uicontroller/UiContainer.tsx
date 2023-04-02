@@ -1,7 +1,6 @@
 import React, { PureComponent, ReactNode } from 'react';
 import { Animated, Platform, StyleProp, View, ViewStyle } from 'react-native';
 import { PlayerContext } from '../util/PlayerContext';
-import { arrayRemoveElement } from '../../utils/ArrayUtils';
 import type { PresentationModeChangeEvent, THEOplayer } from 'react-native-theoplayer';
 import { CastEvent, CastEventType, ErrorEvent, PlayerError, PlayerEventType } from 'react-native-theoplayer';
 import type { THEOplayerTheme } from '../../THEOplayerTheme';
@@ -32,8 +31,6 @@ interface UiContainerState {
   casting: boolean;
   pip: boolean;
 }
-
-const DEBUG_USER_IDLE_FADE = false;
 
 export const FULLSCREEN_CENTER_STYLE: ViewStyle = {
   position: 'absolute',
@@ -72,8 +69,6 @@ export const BOTTOM_CONTAINER_STYLE: ViewStyle = {
 };
 
 export class UiContainer extends PureComponent<React.PropsWithChildren<UiContainerProps>, UiContainerState> implements UiControls {
-  private _userActiveIds: number[] = [];
-  private _idCounter = 0;
   private _currentFadeOutTimeout: number | undefined = undefined;
 
   private _menus: MenuConstructor[] = [];
@@ -173,37 +168,10 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
    * Request to show the UI due to user input.
    */
   public onUserAction_ = () => {
-    if (DEBUG_USER_IDLE_FADE) {
-      console.log('onUserAction_', this._userActiveIds);
-    }
     if (!this.state.firstPlay) {
       return;
     }
     this.stopAnimationsAndShowUi_();
-    this.resumeAnimationsIfPossible_();
-  };
-
-  /**
-   * Request to show the UI until releaseLock_() is called.
-   */
-  public setUserActive_ = () => {
-    this.stopAnimationsAndShowUi_();
-    const id = this._idCounter++;
-    this._userActiveIds.push(id);
-    if (DEBUG_USER_IDLE_FADE) {
-      console.log('setUserActive_', this._userActiveIds);
-    }
-    return id;
-  };
-
-  /**
-   * Request to release the lock and start fading out again.
-   */
-  public setUserIdle_ = (id?: number) => {
-    arrayRemoveElement(this._userActiveIds, id);
-    if (DEBUG_USER_IDLE_FADE) {
-      console.log('setUserIdle_', this._userActiveIds);
-    }
     this.resumeAnimationsIfPossible_();
   };
 
@@ -264,7 +232,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
   };
 
   private get userIsBusy_(): boolean {
-    return this._userActiveIds.length !== 0 || this._menus.length !== 0 || this.state.paused || this.state.casting;
+    return this._menus.length !== 0 || this.state.paused || this.state.casting;
   }
 
   render() {
