@@ -40,5 +40,5 @@ export const DEFAULT_THEOPLAYER_THEME: THEOplayerTheme = {
     alignSelf: 'center',
     fontSize: 16,
   },
-  fadeAnimationTimoutMs: 1500,
+  fadeAnimationTimoutMs: 2500,
 };
