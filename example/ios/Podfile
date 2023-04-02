@@ -13,7 +13,7 @@ target 'ReactNativeTHEOplayer' do
   use_react_native!(:path => config[:reactNativePath])
   
   pod 'react-native-theoplayer', :path => '../..'
-  pod 'react-native-google-cast/NoBluetoothArm', path: '../node_modules/react-native-google-cast/'
+  pod 'react-native-google-cast/NoBluetoothArm', path: '../../node_modules/react-native-google-cast/'
 
   target 'ReactNativeTHEOplayerTests' do
     inherit! :complete

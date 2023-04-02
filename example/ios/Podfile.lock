@@ -11,6 +11,8 @@ PODS:
     - ReactCommon/turbomodule/core (= 0.66.3-0)
   - fmt (7.1.3)
   - glog (0.3.5)
+  - google-cast-sdk-dynamic-xcframework-no-bluetooth (4.7.1)
+  - PromisesObjC (2.1.1)
   - RCT-Folly (2021.06.28.00-v2):
     - boost
     - DoubleConversion
@@ -187,7 +189,16 @@ PODS:
   - React-jsinspector (0.66.3-0)
   - React-logger (0.66.3-0):
     - glog
-  - react-native-theoplayer (1.6.1):
+  - react-native-google-cast/NoBluetoothArm (4.6.2):
+    - google-cast-sdk-dynamic-xcframework-no-bluetooth
+    - React
+    - react-native-google-cast/RNGoogleCast
+  - react-native-google-cast/RNGoogleCast (4.6.2):
+    - PromisesObjC
+    - React
+  - react-native-slider (4.4.2):
+    - React-Core
+  - react-native-theoplayer (2.0.0-pre8):
     - React-Core
     - THEOplayerSDK-basic
   - React-perflogger (0.66.3-0)
@@ -247,6 +258,8 @@ PODS:
     - React-jsi (= 0.66.3-0)
     - React-logger (= 0.66.3-0)
     - React-perflogger (= 0.66.3-0)
+  - RNSVG (13.9.0):
+    - React-Core
   - THEOplayerSDK-basic (4.3.1)
   - Yoga (1.14.0)
 
@@ -271,6 +284,8 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
+  - react-native-google-cast/NoBluetoothArm (from `../../node_modules/react-native-google-cast/`)
+  - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
   - react-native-theoplayer (from `../..`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -282,10 +297,13 @@ DEPENDENCIES:
   - React-RCTText (from `../node_modules/react-native/Libraries/Text`)
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - RNSVG (from `../node_modules/react-native-svg`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
   trunk:
+    - google-cast-sdk-dynamic-xcframework-no-bluetooth
+    - PromisesObjC
     - THEOplayerSDK-basic
 
 EXTERNAL SOURCES:
@@ -325,6 +343,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
+  react-native-google-cast:
+    :path: "../../node_modules/react-native-google-cast/"
+  react-native-slider:
+    :path: "../node_modules/@react-native-community/slider"
   react-native-theoplayer:
     :path: "../.."
   React-perflogger:
@@ -347,6 +369,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/runtimeexecutor"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNSVG:
+    :path: "../node_modules/react-native-svg"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -357,6 +381,8 @@ SPEC CHECKSUMS:
   FBReactNativeSpec: 417b77be7b8ec953a22d53f38d8e129822b1a5f3
   fmt: 135c0c55547979f715b56dfa54037ececa96d07a
   glog: 1c24d0cb9571f9d51d9f9344be9ddadea3e624de
+  google-cast-sdk-dynamic-xcframework-no-bluetooth: 1fa9e267df3fd6f8a1c6e3345142ca5286297968
+  PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
   RCT-Folly: f90447a52f6e45543a46742098fcec67a7818844
   RCTRequired: 5f14321d8e55016ded8f560dd6fbc7caa5fadab8
   RCTTypeSafety: 7d43cbd3412c792e1ba5b87e1b00b5866033a45a
@@ -369,7 +395,9 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 50e1e965f7df835844bb363055a596a2f00782ab
   React-jsinspector: 961bca344b37d028fa31147b3ee92f973066376a
   React-logger: 2ede08149c5cfd3b57d1151639196d64c80bcf58
-  react-native-theoplayer: 4a5f82700970abdf93c5ce7cd0a1ad7f026b1ea5
+  react-native-google-cast: 18b9b2fc518caabfa65d309409e160b3fc6d1733
+  react-native-slider: 33b8d190b59d4f67a541061bb91775d53d617d9d
+  react-native-theoplayer: 25eeb1919cc05ea0f1af42e40c9f315a232af663
   React-perflogger: 7db35d04efa01f6afa9e43eb58a07f8950b62129
   React-RCTAnimation: b382e08174c554128723a2dcd0fafb896000217e
   React-RCTBlob: 80cc190a6271aa59c2af27e36395e5228d9de95e
@@ -380,9 +408,10 @@ SPEC CHECKSUMS:
   React-RCTText: 3be60cc1ef044a6c80425bf9ad9960b876712066
   React-runtimeexecutor: 7bbeb13e7750d45f93fdb7cb5546a1eb5ffaa5c7
   ReactCommon: 6fc4f9a125b2d5aa354f573f328086b737e5102f
+  RNSVG: 53c661b76829783cdaf9b7a57258f3d3b4c28315
   THEOplayerSDK-basic: a0d6984cb5117130f6ad7798de77a10e9f2024ea
   Yoga: 9efca3331f0d4023de2b109f4cc685b5394288ab
 
-PODFILE CHECKSUM: 999492198646b8b3b66bcba768e564831fda0e1b
+PODFILE CHECKSUM: 5bd50305f8ab5150ff540ae05d727c752c83558f
 
 COCOAPODS: 1.11.3
