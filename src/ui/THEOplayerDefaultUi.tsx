@@ -10,7 +10,7 @@ import { SettingsMenuButton } from './components/menu/SettingsMenuButton';
 import { MuteButton } from './components/button/MuteButton';
 import { CastMessage } from './components/message/CastMessage';
 import { DEFAULT_THEOPLAYER_THEME, THEOplayerTheme } from './THEOplayerTheme';
-import { Platform, View } from 'react-native';
+import { Platform, StyleProp, View, ViewStyle } from 'react-native';
 import { UiContainer } from './components/uicontroller/UiContainer';
 import { PlayButton } from './components/button/PlayButton';
 import { QualitySubMenu } from './components/menu/QualitySubMenu';
@@ -21,6 +21,7 @@ import { ChromecastButton } from './components/button/ChromecastButton';
 import { CenteredDelayedActivityIndicator } from './components/activityindicator/CenteredDelayedActivityIndicator';
 
 export interface THEOplayerDefaultUiProps {
+  style?: StyleProp<ViewStyle>;
   theme?: Partial<THEOplayerTheme>;
   config?: PlayerConfiguration;
   onPlayerReady?: (player: THEOplayer) => void;
@@ -31,7 +32,7 @@ export interface THEOplayerDefaultUiProps {
 const ENABLE_CAST_BUTTON = !Platform.isTV;
 
 export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
-  const { theme, config, topSlot, bottomSlot } = props;
+  const { theme, config, topSlot, bottomSlot, style } = props;
   const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);
   const chromeless = config?.chromeless ?? false;
 
@@ -41,52 +42,54 @@ export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
   };
 
   return (
-    <THEOplayerView config={config} onPlayerReady={onPlayerReady}>
-      {player !== undefined && chromeless && (
-        <UiContainer
-          theme={{ ...DEFAULT_THEOPLAYER_THEME, ...theme }}
-          player={player}
-          behind={<CenteredDelayedActivityIndicator size={50} />}
-          top={
-            <ControlBar>
-              {topSlot}
-              {ENABLE_CAST_BUTTON && (
-                <>
-                  <AirplayButton />
-                  <ChromecastButton />
-                </>
-              )}
-              <LanguageMenuButton />
-              <SettingsMenuButton>
-                {/*Note: quality selection is not available on iOS */}
-                <QualitySubMenu />
-                <PlaybackRateSubMenu />
-              </SettingsMenuButton>
-            </ControlBar>
-          }
-          center={<CenteredControlBar left={<SkipButton skip={-10} />} middle={<PlayButton />} right={<SkipButton skip={30} />} />}
-          bottom={
-            <>
-              <ControlBar style={{ justifyContent: 'flex-start' }}>
-                <CastMessage />
-              </ControlBar>
+    <View style={style}>
+      <THEOplayerView config={config} onPlayerReady={onPlayerReady}>
+        {player !== undefined && chromeless && (
+          <UiContainer
+            theme={{ ...DEFAULT_THEOPLAYER_THEME, ...theme }}
+            player={player}
+            behind={<CenteredDelayedActivityIndicator size={50} />}
+            top={
               <ControlBar>
-                <SeekBar />
+                {topSlot}
+                {ENABLE_CAST_BUTTON && (
+                  <>
+                    <AirplayButton />
+                    <ChromecastButton />
+                  </>
+                )}
+                <LanguageMenuButton />
+                <SettingsMenuButton>
+                  {/*Note: quality selection is not available on iOS */}
+                  <QualitySubMenu />
+                  <PlaybackRateSubMenu />
+                </SettingsMenuButton>
               </ControlBar>
+            }
+            center={<CenteredControlBar left={<SkipButton skip={-10} />} middle={<PlayButton />} right={<SkipButton skip={30} />} />}
+            bottom={
+              <>
+                <ControlBar style={{ justifyContent: 'flex-start' }}>
+                  <CastMessage />
+                </ControlBar>
+                <ControlBar>
+                  <SeekBar />
+                </ControlBar>
 
-              <ControlBar>
-                <MuteButton />
-                <TimeLabel showDuration={true} />
+                <ControlBar>
+                  <MuteButton />
+                  <TimeLabel showDuration={true} />
 
-                <Spacer />
+                  <Spacer />
 
-                {bottomSlot}
-                <FullscreenButton />
-              </ControlBar>
-            </>
-          }
-        />
-      )}
-    </THEOplayerView>
+                  {bottomSlot}
+                  <FullscreenButton />
+                </ControlBar>
+              </>
+            }
+          />
+        )}
+      </THEOplayerView>
+    </View>
   );
 }
