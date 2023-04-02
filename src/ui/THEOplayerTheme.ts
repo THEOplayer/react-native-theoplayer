@@ -1,11 +1,16 @@
 import type { TextStyle } from 'react-native';
 
 export interface ColorTheme {
-  primary: string;
-  secondary: string;
-  accent: string;
-  background: string;
+  uiBackground: string;
+  errorBackground: string;
+  icon: string;
+  iconSelected: string;
   text: string;
+  textSelected: string;
+  textSelectedBackground: string;
+  seekBarMinimum: string;
+  seekBarMaximum: string;
+  seekBarDot: string;
 }
 
 export interface THEOplayerTheme {
@@ -17,11 +22,16 @@ export const BUTTON_SIZE = 40;
 
 export const DEFAULT_THEOPLAYER_THEME: THEOplayerTheme = {
   colors: {
-    primary: 'white',
-    secondary: '#2C2C2C',
-    accent: '#ffc50f',
-    background: '#00000075',
-    text: 'white',
+    uiBackground: '#00000080',
+    errorBackground: '#2C2C2C',
+    icon: '#FFFFFF',
+    iconSelected: '#FFC50F',
+    text: '#FFFFFF',
+    textSelected: '#2C2C2C',
+    textSelectedBackground: '#FFFFFF',
+    seekBarMinimum: '#FFFFFF',
+    seekBarMaximum: '#000000',
+    seekBarDot: '#FFFFFF',
   },
   text: {
     textAlignVertical: 'center',

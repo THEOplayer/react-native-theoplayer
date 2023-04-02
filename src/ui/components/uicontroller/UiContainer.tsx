@@ -284,7 +284,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
           {...(Platform.OS === 'web' ? { onMouseMove: this.onUserAction_ } : {})}>
           <>
             {/* The UI background */}
-            <View style={[combinedContainerStyle, { backgroundColor: theme.colors.background }]} />
+            <View style={[combinedContainerStyle, { backgroundColor: theme.colors.uiBackground }]} />
 
             {/* The Settings Menu */}
             {currentMenu !== undefined && <View style={[combinedContainerStyle]}>{currentMenu}</View>}

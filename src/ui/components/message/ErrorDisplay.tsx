@@ -16,11 +16,11 @@ export function ErrorDisplay(props: ErrorDisplayProps) {
   return (
     <PlayerContext.Consumer>
       {(context: UiContext) => (
-        <View style={[FULLSCREEN_CENTER_STYLE, { backgroundColor: context.style.colors.secondary }]}>
+        <View style={[FULLSCREEN_CENTER_STYLE, { backgroundColor: context.style.colors.errorBackground }]}>
           <View style={{ flexDirection: 'row' }}>
             <SvgContext.Provider
               value={{
-                fill: context.style.colors.primary,
+                fill: context.style.colors.icon,
                 height: '100%',
                 width: '100%',
               }}>
@@ -30,9 +30,7 @@ export function ErrorDisplay(props: ErrorDisplayProps) {
             </SvgContext.Provider>
             <Text style={[context.style.text, { color: context.style.colors.text, alignSelf: 'center', paddingLeft: 5 }]}>Error:</Text>
           </View>
-          <Text style={[context.style.text, { color: context.style.colors.text, backgroundColor: context.style.colors.secondary }]}>
-            {error.errorMessage}
-          </Text>
+          <Text style={[context.style.text, { color: context.style.colors.text }]}>{error.errorMessage}</Text>
         </View>
       )}
     </PlayerContext.Consumer>

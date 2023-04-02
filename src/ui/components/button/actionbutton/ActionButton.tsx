@@ -56,7 +56,7 @@ export const ActionButton = (props: ActionButtonProps) => {
           {svg && (
             <SvgContext.Provider
               value={{
-                fill: shouldChangeTintColor ? context.style.colors.accent : context.style.colors.primary,
+                fill: shouldChangeTintColor ? context.style.colors.iconSelected : context.style.colors.icon,
                 height: '100%',
                 width: '100%',
               }}>
@@ -67,7 +67,7 @@ export const ActionButton = (props: ActionButtonProps) => {
             <Image
               style={[
                 { height: '100%', width: '100%' },
-                { tintColor: shouldChangeTintColor ? context.style.colors.accent : context.style.colors.primary },
+                { tintColor: shouldChangeTintColor ? context.style.colors.iconSelected : context.style.colors.icon },
               ]}
               source={icon}
             />
