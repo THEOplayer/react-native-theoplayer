@@ -8,7 +8,7 @@ export interface NewMenuButtonProps {
   icon?: ImageSourcePropType;
   svg?: ReactNode;
   style?: StyleProp<ViewStyle>;
-  menuConstructor: MenuConstructor;
+  menuConstructor?: MenuConstructor;
 }
 
 export const MenuButton = (props: NewMenuButtonProps) => {
@@ -21,7 +21,9 @@ export const MenuButton = (props: NewMenuButtonProps) => {
           svg={svg}
           icon={icon}
           onPress={() => {
-            context.ui.openMenu_(menuConstructor);
+            if (menuConstructor) {
+              context.ui.openMenu_(menuConstructor);
+            }
           }}
           style={style}
           touchable={true}
