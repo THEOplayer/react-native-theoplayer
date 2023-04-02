@@ -229,7 +229,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
   };
 
   private doFadeOut_ = (force?: boolean) => {
-    if (force === false && this.userIsBusy_) {
+    if (!force && this.userIsBusy_) {
       return;
     }
     clearTimeout(this._currentFadeOutTimeout);
