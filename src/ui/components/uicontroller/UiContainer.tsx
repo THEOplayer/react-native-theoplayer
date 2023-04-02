@@ -249,7 +249,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
     return this._menus.length !== 0 || this.state.paused || this.state.casting;
   }
 
-  private onTouchBackground = () => {
+  private onUserRequestUiFadeOut = () => {
     const { firstPlay, buttonsEnabled, casting } = this.state;
     if (firstPlay && buttonsEnabled && !casting) {
       this.doFadeOut_(true);
@@ -278,10 +278,10 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
         <Animated.View
           style={[combinedContainerStyle, { opacity: fadeAnimation }]}
           onTouchStart={this.onUserAction_}
-          {...(Platform.OS === 'web' ? { onMouseMove: this.onUserAction_ } : {})}>
+          {...(Platform.OS === 'web' ? { onMouseMove: this.onUserAction_, onMouseLeave: this.onUserRequestUiFadeOut } : {})}>
           <>
             {/* The UI background */}
-            <View style={[combinedContainerStyle, { backgroundColor: theme.colors.uiBackground }]} onTouchStart={this.onTouchBackground} />
+            <View style={[combinedContainerStyle, { backgroundColor: theme.colors.uiBackground }]} onTouchStart={this.onUserRequestUiFadeOut} />
 
             {/* The Settings Menu */}
             {currentMenu !== undefined && <View style={[combinedContainerStyle]}>{currentMenu}</View>}
