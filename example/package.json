@@ -20,6 +20,8 @@
     "react-native": "npm:react-native-tvos@0.66.3-0",
     "react-native-web": "^0.17.5",
     "react-native-web-image-loader": "^0.1.1",
+    "react-native-svg": "^13.8.0",
+    "@react-native-community/slider": "^4.4.2",
     "ts-loader": "^8.2.0",
     "url-polyfill": "^1.1.12"
   },
