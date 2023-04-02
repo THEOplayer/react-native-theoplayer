@@ -15,7 +15,7 @@ export interface THEOplayerTheme {
 
 export const BUTTON_SIZE = 40;
 
-export const defaultTheme: THEOplayerTheme = {
+export const DEFAULT_THEOPLAYER_THEME: THEOplayerTheme = {
   colors: {
     primary: 'white',
     secondary: '#2C2C2C',

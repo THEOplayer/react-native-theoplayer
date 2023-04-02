@@ -9,7 +9,7 @@ import { LanguageMenuButton } from './components/menu/LanguageMenuButton';
 import { SettingsMenuButton } from './components/menu/SettingsMenuButton';
 import { MuteButton } from './components/button/MuteButton';
 import { CastMessage } from './components/message/CastMessage';
-import { defaultTheme, THEOplayerTheme } from './THEOplayerTheme';
+import { DEFAULT_THEOPLAYER_THEME, THEOplayerTheme } from './THEOplayerTheme';
 import { Platform, View } from 'react-native';
 import { UiContainer } from './components/uicontroller/UiContainer';
 import { PlayButton } from './components/button/PlayButton';
@@ -44,7 +44,7 @@ export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
     <THEOplayerView config={config} onPlayerReady={onPlayerReady}>
       {player !== undefined && chromeless && (
         <UiContainer
-          theme={{ ...defaultTheme, ...theme }}
+          theme={{ ...DEFAULT_THEOPLAYER_THEME, ...theme }}
           player={player}
           behind={<CenteredDelayedActivityIndicator size={50} />}
           top={
