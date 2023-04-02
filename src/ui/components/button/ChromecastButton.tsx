@@ -47,7 +47,7 @@ export class ChromecastButton extends PureComponent<unknown, CastButtonState> {
     return (
       <PlayerContext.Consumer>
         {(context: UiContext) => (
-          <CastButton style={DEFAULT_ACTION_BUTTON_STYLE} tintColor={connected ? context.style.colors.accent : context.style.colors.primary} />
+          <CastButton style={DEFAULT_ACTION_BUTTON_STYLE} tintColor={connected ? context.style.colors.iconSelected : context.style.colors.icon} />
         )}
       </PlayerContext.Consumer>
     );

@@ -159,9 +159,9 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
               onSlidingComplete={this._onSlidingComplete}
               value={sliderTime}
               focusable={true}
-              minimumTrackTintColor={context.style.colors.primary}
-              maximumTrackTintColor="#000000"
-              thumbTintColor={context.style.colors.primary}
+              minimumTrackTintColor={context.style.colors.seekBarMinimum}
+              maximumTrackTintColor={context.style.colors.seekBarMaximum}
+              thumbTintColor={context.style.colors.seekBarDot}
             />
           </View>
         )}

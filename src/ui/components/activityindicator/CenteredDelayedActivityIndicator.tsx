@@ -80,7 +80,7 @@ export class CenteredDelayedActivityIndicator extends PureComponent<DelayedActiv
         <PlayerContext.Consumer>
           {(context: UiContext) => (
             <View style={FULLSCREEN_CENTER_STYLE}>
-              <DelayedActivityIndicator color={context.style.colors.primary} {...this.props} />
+              <DelayedActivityIndicator color={context.style.colors.icon} {...this.props} />
             </View>
           )}
         </PlayerContext.Consumer>
