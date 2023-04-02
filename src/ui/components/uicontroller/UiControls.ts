@@ -14,16 +14,6 @@ export interface UiControls {
   onUserAction_: () => void;
 
   /*
-   * Sets the user as "active" and does not allow the UI to be faded out.
-   */
-  setUserActive_: () => number;
-
-  /*
-   * Sets the user as "idle" and allows the UI to fade out again.
-   */
-  setUserIdle_: (id: number) => void;
-
-  /*
    * Opens a new menu on top of the player.
    */
   openMenu_: (menuConstructor: MenuConstructor) => void;
