@@ -1,4 +1,4 @@
-import languages from '../../res/languages.json';
+import languages from './languages.json';
 
 export interface ISO639Language {
   name: string;
