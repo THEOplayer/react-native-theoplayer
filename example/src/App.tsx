@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { PlayerConfiguration, PlayerEventType, THEOplayer, THEOplayerDefaultUi, PipButton } from 'react-native-theoplayer';
-import { StyleSheet, View } from 'react-native';
+import { PipButton, PlayerConfiguration, PlayerEventType, THEOplayer, THEOplayerDefaultUi } from 'react-native-theoplayer';
+import { StyleSheet } from 'react-native';
 import { SourceMenuButton, SOURCES } from './custom/SourceMenuButton';
 
 const playerConfig: PlayerConfiguration = {
@@ -38,8 +38,12 @@ export default function App() {
   };
 
   return (
-    <View style={StyleSheet.absoluteFill}>
-      <THEOplayerDefaultUi config={playerConfig} onPlayerReady={onPlayerReady} topSlot={<SourceMenuButton />} bottomSlot={<PipButton />} />
-    </View>
+    <THEOplayerDefaultUi
+      style={StyleSheet.absoluteFill}
+      config={playerConfig}
+      onPlayerReady={onPlayerReady}
+      topSlot={<SourceMenuButton />}
+      bottomSlot={<PipButton />}
+    />
   );
 }
