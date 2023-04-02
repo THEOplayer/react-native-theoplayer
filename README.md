@@ -23,7 +23,8 @@ following platforms:
 - Web (currently only HTML5 browsers are tested)
 
 This document covers the creation of a minimal app including a `THEOplayerView` component,
-and an overview of the included example app with its basic UI.
+and an overview of the included example app with the `DefaultTHEOplayerUi`.
+
 It also gives a description of the properties of the `THEOplayerView` component, and
 a list of features and known limitations.
 
@@ -60,8 +61,9 @@ and discussed in the next section. Finally, an overview of features, limitations
     - [Getting started on Android](./doc/creating-minimal-app.md#getting-started-on-android)
     - [Getting started on iOS](./doc/creating-minimal-app.md#getting-started-on-ios-and-tvos)
     - [Getting started on Web](./doc/creating-minimal-app.md#getting-started-on-web)
+- [Getting started with the UI](./doc/ui.md)
 - [The THEOplayerView component](./doc/theoplayerview-component.md)
-- [The example application with React Native UI](./doc/example-app.md)
+- [The example application](./doc/example-app.md)
 - [Features](./doc/features.md)
 - Knowledge Base
   - [Adaptive Bitrate (ABR)](./doc/abr.md)
