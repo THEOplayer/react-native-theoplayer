@@ -136,7 +136,7 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
     const { seekable, sliderTime, duration, isSeeking, width } = this.state;
     const { style } = this.props;
     const seekableStart = seekable.length > 0 ? seekable[0].start : 0;
-    const seekableEnd = seekable.length > 0 ? seekable[seekable.length - 1].end : 0; // TODO what if it's fragmented?
+    const seekableEnd = seekable.length > 0 ? seekable[0].end : 0;
     return (
       <PlayerContext.Consumer>
         {(context: UiContext) => (
