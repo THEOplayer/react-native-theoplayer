@@ -61,6 +61,8 @@ export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
     context.player.removeEventListener(PlayerEventType.DURATION_CHANGE, this._onDurationChange);
     context.player.removeEventListener(PlayerEventType.TIME_UPDATE, this._onTimeUpdate);
     context.player.removeEventListener(PlayerEventType.PROGRESS, this._onProgress);
+    clearTimeout(this._seekBlockingTimeout);
+    clearTimeout(this._clearIsScrubbingTimout);
   }
 
   private _onTimeUpdate = (event: TimeUpdateEvent) => {
