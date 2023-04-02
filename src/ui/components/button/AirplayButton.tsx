@@ -1,10 +1,14 @@
 import React, { PureComponent } from 'react';
 import { Platform } from 'react-native';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
-import { CastButtonState, isConnected } from './ChromecastButton';
+import { isConnected } from './ChromecastButton';
 import { ActionButton } from './actionbutton/ActionButton';
 import { AirplaySvg } from './svg/AirplaySvg';
 import { CastEvent, CastEventType, CastState, PlayerEventType } from './../../../api/barrel';
+
+interface CastButtonState {
+  castState: CastState;
+}
 
 export class AirplayButton extends PureComponent<unknown, CastButtonState> {
   private static initialState: CastButtonState = {
