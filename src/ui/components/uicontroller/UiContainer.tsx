@@ -48,21 +48,33 @@ export const CONTAINER_STYLE: ViewStyle = {
   left: 0,
   bottom: 0,
   right: 0,
-  flexDirection: 'column',
-  justifyContent: 'space-between',
-  zIndex: 1,
+  zIndex: 0,
+  justifyContent: 'center',
   overflow: 'hidden',
 };
 
 export const TOP_CONTAINER_STYLE: ViewStyle = {
-  zIndex: 2,
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  zIndex: 1,
   paddingTop: 10,
   paddingLeft: 10,
   paddingRight: 10,
 };
 
+export const CENTER_CONTAINER_STYLE: ViewStyle = {
+  alignSelf: 'center',
+  width: '60%',
+};
+
 export const BOTTOM_CONTAINER_STYLE: ViewStyle = {
-  zIndex: 2,
+  position: 'absolute',
+  left: 0,
+  right: 0,
+  bottom: 0,
+  zIndex: 1,
   paddingBottom: 10,
   paddingLeft: 10,
   paddingRight: 10,
@@ -216,10 +228,11 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
     });
   };
 
-  private doFadeOut_ = () => {
-    if (this.userIsBusy_) {
+  private doFadeOut_ = (force?: boolean) => {
+    if (force === false && this.userIsBusy_) {
       return;
     }
+    clearTimeout(this._currentFadeOutTimeout);
     const { fadeAnimation } = this.state;
     this.setState({ buttonsEnabled: false });
     Animated.timing(fadeAnimation, {
@@ -235,8 +248,15 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
     return this._menus.length !== 0 || this.state.paused || this.state.casting;
   }
 
+  private onTouchBackground = () => {
+    const { firstPlay, buttonsEnabled, casting } = this.state;
+    if (firstPlay && buttonsEnabled && !casting) {
+      this.doFadeOut_(true);
+    }
+  };
+
   render() {
-    const { player, theme, top, center, bottom, children, style, topStyle, bottomStyle, behind } = this.props;
+    const { player, theme, top, center, bottom, children, style, topStyle, centerStyle, bottomStyle, behind } = this.props;
     const { fadeAnimation, currentMenu, error, firstPlay, pip } = this.state;
 
     if (error !== undefined) {
@@ -260,19 +280,19 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
           {...(Platform.OS === 'web' ? { onMouseMove: this.onUserAction_ } : {})}>
           <>
             {/* The UI background */}
-            <View style={[combinedContainerStyle, { backgroundColor: theme.colors.uiBackground }]} />
+            <View style={[combinedContainerStyle, { backgroundColor: theme.colors.uiBackground }]} onTouchStart={this.onTouchBackground} />
 
             {/* The Settings Menu */}
             {currentMenu !== undefined && <View style={[combinedContainerStyle]}>{currentMenu}</View>}
 
             {/* The UI control bars*/}
             {currentMenu === undefined && (
-              <View style={[combinedContainerStyle]}>
+              <>
                 {firstPlay && <View style={[TOP_CONTAINER_STYLE, topStyle]}>{top}</View>}
-                <View style={FULLSCREEN_CENTER_STYLE}>{center}</View>
+                <View style={[CENTER_CONTAINER_STYLE, centerStyle]}>{center}</View>
                 {firstPlay && <View style={[BOTTOM_CONTAINER_STYLE, bottomStyle]}>{bottom}</View>}
                 {children}
-              </View>
+              </>
             )}
           </>
         </Animated.View>
