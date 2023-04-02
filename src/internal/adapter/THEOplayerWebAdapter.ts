@@ -5,6 +5,7 @@ import type {
   MediaTrack,
   NativeHandleType,
   PlayerEventMap,
+  PresentationMode,
   PreloadType,
   TextTrack,
   TextTrackStyle,
@@ -17,10 +18,17 @@ import type { MediaTrack as NativeMediaTrack, TextTrack as NativeTextTrack } fro
 import { findNativeQualitiesByUid, fromNativeMediaTrackList, fromNativeTextTrackList } from './web/TrackUtils';
 import type { ABRConfiguration, SourceDescription } from 'src/api/barrel';
 import { WebEventForwarder } from './WebEventForwarder';
-import type { PresentationMode } from 'src/api/presentation/PresentationMode';
 import type { PiPConfiguration } from 'src/api/pip/PiPConfiguration';
 import type { BackgroundAudioConfiguration } from 'src/api/backgroundAudio/BackgroundAudioConfiguration';
 import { WebPresentationModeManager } from './web/WebPresentationModeManager';
+
+const defaultBackgroundAudioConfiguration: BackgroundAudioConfiguration = {
+  enabled: false,
+};
+
+const defaultPipConfiguration: PiPConfiguration = {
+  startsAutomatically: false,
+};
 
 export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayer {
   private readonly _player: THEOplayerWeb.ChromelessPlayer;
@@ -29,6 +37,8 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   private readonly _eventForwarder: WebEventForwarder;
   private _targetVideoQuality: number | number[] | undefined = undefined;
   private _presentationModeManager: WebPresentationModeManager;
+  private _backgroundAudioConfiguration: BackgroundAudioConfiguration = defaultBackgroundAudioConfiguration;
+  private _pipConfiguration: PiPConfiguration = defaultPipConfiguration;
 
   constructor(player: THEOplayerWeb.ChromelessPlayer) {
     super();
@@ -37,6 +47,8 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     this._castAdapter = new THEOplayerWebCastAdapter(this._player);
     this._eventForwarder = new WebEventForwarder(this._player, this);
     this._presentationModeManager = new WebPresentationModeManager(this._player);
+
+    document.addEventListener('visibilitychange', this.onVisibilityChange);
   }
 
   get abr(): ABRConfiguration | undefined {
@@ -99,23 +111,19 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   }
 
   get pipConfiguration(): PiPConfiguration {
-    // TODO
-    return {
-      startsAutomatically: false,
-    };
+    return this._pipConfiguration;
   }
 
-  set pipConfiguration(_pipConfiguration: PiPConfiguration) {
-    // TODO
+  set pipConfiguration(config: PiPConfiguration) {
+    this._pipConfiguration = config;
   }
 
   get backgroundAudioConfiguration(): BackgroundAudioConfiguration {
-    // TODO
-    return { enabled: false };
+    return this._backgroundAudioConfiguration;
   }
 
-  set backgroundAudioConfiguration(_backgroundAudioConfiguration: BackgroundAudioConfiguration) {
-    // TODO
+  set backgroundAudioConfiguration(config: BackgroundAudioConfiguration) {
+    this._backgroundAudioConfiguration = config;
   }
 
   get volume(): number {
@@ -236,9 +244,19 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
 
   destroy(): void {
     this._eventForwarder.unload();
+    document.removeEventListener('visibilitychange', this.onVisibilityChange);
   }
 
   get nativeHandle(): NativeHandleType {
     return this._player;
   }
+
+  private readonly onVisibilityChange = () => {
+    if (document.visibilityState !== 'visible') {
+      // Apply background configuration
+      if (!this.backgroundAudioConfiguration.enabled) {
+        this._player.pause();
+      }
+    }
+  };
 }
