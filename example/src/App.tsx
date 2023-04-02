@@ -1,5 +1,14 @@
 import * as React from 'react';
-import { PipButton, PlayerConfiguration, PlayerEventType, THEOplayer, THEOplayerDefaultUi } from 'react-native-theoplayer';
+import {
+  PipButton,
+  PlaybackRateSubMenu,
+  PlayerConfiguration,
+  PlayerEventType,
+  QualitySubMenu,
+  SettingsMenuButton,
+  THEOplayer,
+  THEOplayerDefaultUi,
+} from 'react-native-theoplayer';
 import { StyleSheet } from 'react-native';
 import { SourceMenuButton, SOURCES } from './custom/SourceMenuButton';
 
@@ -42,7 +51,17 @@ export default function App() {
       style={StyleSheet.absoluteFill}
       config={playerConfig}
       onPlayerReady={onPlayerReady}
-      topSlot={<SourceMenuButton />}
+      // Optionally add additional buttons/menus to the default UI:
+      topSlot={
+        <>
+          <SourceMenuButton />
+          <SettingsMenuButton>
+            {/*Note: quality selection is not available on iOS */}
+            <QualitySubMenu />
+            <PlaybackRateSubMenu />
+          </SettingsMenuButton>
+        </>
+      }
       bottomSlot={<PipButton />}
     />
   );

@@ -6,15 +6,12 @@ import { CenteredControlBar, ControlBar } from './components/controlbar/ControlB
 import { TimeLabel } from './components/timelabel/TimeLabel';
 import { FullscreenButton } from './components/button/FullscreenButton';
 import { LanguageMenuButton } from './components/menu/LanguageMenuButton';
-import { SettingsMenuButton } from './components/menu/SettingsMenuButton';
 import { MuteButton } from './components/button/MuteButton';
 import { CastMessage } from './components/message/CastMessage';
 import { DEFAULT_THEOPLAYER_THEME, THEOplayerTheme } from './THEOplayerTheme';
 import { Platform, StyleProp, View, ViewStyle } from 'react-native';
 import { UiContainer } from './components/uicontroller/UiContainer';
 import { PlayButton } from './components/button/PlayButton';
-import { QualitySubMenu } from './components/menu/QualitySubMenu';
-import { PlaybackRateSubMenu } from './components/menu/PlaybackRateSubMenu';
 import { SkipButton } from './components/button/SkipButton';
 import { Spacer } from './components/controlbar/Spacer';
 import { ChromecastButton } from './components/button/ChromecastButton';
@@ -59,11 +56,6 @@ export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
                   </>
                 )}
                 <LanguageMenuButton />
-                <SettingsMenuButton>
-                  {/*Note: quality selection is not available on iOS */}
-                  <QualitySubMenu />
-                  <PlaybackRateSubMenu />
-                </SettingsMenuButton>
               </ControlBar>
             }
             center={<CenteredControlBar left={<SkipButton skip={-10} />} middle={<PlayButton />} right={<SkipButton skip={30} />} />}
