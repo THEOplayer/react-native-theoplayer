@@ -30,9 +30,9 @@ export const CenteredControlBar = (props: CenteredControlBarProps) => {
   const { style, middle, left, right } = props;
   return (
     <ControlBar style={[{ height: CENTER_CONTROL_BAR_HEIGHT, width: '100%', justifyContent: 'space-between' }, style]}>
-      <ControlBar style={[{ height: CENTER_CONTROL_BAR_HEIGHT, justifyContent: 'center', flexGrow: 1 }, style]}>{left}</ControlBar>
+      <View style={{ height: CENTER_CONTROL_BAR_HEIGHT }}>{left}</View>
       {middle}
-      <ControlBar style={[{ height: CENTER_CONTROL_BAR_HEIGHT, justifyContent: 'center', flexGrow: 1 }, style]}>{right}</ControlBar>
+      <View style={{ height: CENTER_CONTROL_BAR_HEIGHT }}>{right}</View>
     </ControlBar>
   );
 };
