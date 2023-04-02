@@ -21,7 +21,8 @@ export function SingleThumbnailView(props: ThumbnailViewProps) {
   if (!thumbnailTrack) {
     return <></>;
   }
-  const thumbnailSize = 0.35 * Dimensions.get('window').height;
+  const window = Dimensions.get('window');
+  const thumbnailSize = 0.35 * Math.min(window.height, window.width);
 
   const { seekableStart, seekableEnd, currentTime, seekBarWidth } = props;
   const percentageOffset = (currentTime - seekableStart) / (seekableEnd - seekableStart);
