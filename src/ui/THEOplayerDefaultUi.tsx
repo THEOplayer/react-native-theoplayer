@@ -67,9 +67,8 @@ export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
           center={<CenteredControlBar left={<SkipButton skip={-10} />} middle={<PlayButton />} right={<SkipButton skip={30} />} />}
           bottom={
             <>
-              <ControlBar>
+              <ControlBar style={{ justifyContent: 'flex-start' }}>
                 <CastMessage />
-                <View style={{ flexGrow: 1 }} />
               </ControlBar>
               <ControlBar>
                 <SeekBar />
