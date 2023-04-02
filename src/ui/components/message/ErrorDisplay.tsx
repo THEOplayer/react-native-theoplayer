@@ -5,7 +5,7 @@ import { PlayerContext, UiContext } from '../util/PlayerContext';
 import { SvgContext } from '../button/svg/SvgUtils';
 import { ErrorSvg } from '../button/svg/ErrorSvg';
 import { FULLSCREEN_CENTER_STYLE } from '../uicontroller/UiContainer';
-import { BUTTON_SIZE } from '../../THEOplayerTheme';
+import { DEFAULT_ICON_SIZE } from '../../THEOplayerTheme';
 
 interface ErrorDisplayProps {
   error: PlayerError;
@@ -24,7 +24,7 @@ export function ErrorDisplay(props: ErrorDisplayProps) {
                 height: '100%',
                 width: '100%',
               }}>
-              <View style={{ width: BUTTON_SIZE, height: BUTTON_SIZE, padding: 5 }}>
+              <View style={{ width: DEFAULT_ICON_SIZE, height: DEFAULT_ICON_SIZE, padding: 5 }}>
                 <ErrorSvg />
               </View>
             </SvgContext.Provider>
