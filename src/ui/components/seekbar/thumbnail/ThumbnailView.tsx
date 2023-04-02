@@ -1,11 +1,10 @@
 import React, { PureComponent } from 'react';
 import { Image, StyleProp, View, ViewStyle } from 'react-native';
 import type { TextTrackCue } from 'react-native-theoplayer';
-import { isThumbnailTrack, TextTrack } from 'react-native-theoplayer';
+import { isThumbnailTrack, StaticTimeLabel, TextTrack } from 'react-native-theoplayer';
 import type { Thumbnail } from './Thumbnail';
 import { isTileMapThumbnail } from './Thumbnail';
 import { URL as URLPolyfill } from './Urlpolyfill';
-import { StaticTimeLabel } from 'react-native-theoplayer';
 
 const SPRITE_REGEX = /^([^#]*)#xywh=(\d+),(\d+),(\d+),(\d+)\s*$/;
 const TAG = 'ThumbnailView';
@@ -71,11 +70,20 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
   static defaultProps = {
     showTimeLabel: true,
   };
+  private _ismounted = false;
 
   constructor(props: ThumbnailViewProps) {
     super(props);
     const { size } = props;
     this.state = { imageWidth: size, imageHeight: size, renderWidth: size, renderHeight: 1 };
+  }
+
+  componentDidMount() {
+    this._ismounted = true;
+  }
+
+  componentWillUnmount() {
+    this._ismounted = false;
   }
 
   private getCueIndexAtTime(time: number): number | undefined {
@@ -140,6 +148,9 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
   }
 
   private onTileImageLoad = (thumbnail: Thumbnail) => () => {
+    if (!this._ismounted) {
+      return;
+    }
     const { size } = this.props;
     const { tileWidth, tileHeight } = thumbnail;
     if (tileWidth && tileHeight) {
@@ -159,6 +170,9 @@ export class ThumbnailView extends PureComponent<ThumbnailViewProps, ThumbnailVi
   };
 
   private onImageLoad = (thumbnail: Thumbnail) => () => {
+    if (!this._ismounted) {
+      return;
+    }
     const { size } = this.props;
     Image.getSize(thumbnail.url, (width: number, height: number) => {
       this.setState({
