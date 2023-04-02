@@ -26,8 +26,6 @@ export interface THEOplayerDefaultUiProps {
   bottomSlot?: ReactNode;
 }
 
-const ENABLE_CAST_BUTTON = !Platform.isTV;
-
 export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
   const { theme, config, topSlot, bottomSlot, style } = props;
   const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);
@@ -49,7 +47,7 @@ export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
             top={
               <ControlBar>
                 {topSlot}
-                {ENABLE_CAST_BUTTON && (
+                {!Platform.isTV && (
                   <>
                     <AirplayButton />
                     <ChromecastButton />
