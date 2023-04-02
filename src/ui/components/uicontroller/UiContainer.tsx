@@ -153,6 +153,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
   private onCastEvent = (event: CastEvent) => {
     if (event.subType === CastEventType.CHROMECAST_STATE_CHANGE || event.subType === CastEventType.AIRPLAY_STATE_CHANGE) {
       this.setState({ casting: event.state === 'connecting' || event.state === 'connected' });
+      this.resumeAnimationsIfPossible_();
     }
   };
 
@@ -228,8 +229,8 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
   }
 
   private resumeAnimationsIfPossible_() {
-    if (this._userActiveIds.length === 0 && this._menus.length === 0 && !this.state.paused && !this.state.casting) {
-      clearTimeout(this._currentFadeOutTimeout);
+    clearTimeout(this._currentFadeOutTimeout);
+    if (!this.userIsBusy_) {
       // @ts-ignore
       this._currentFadeOutTimeout = setTimeout(this.doFadeOut_, 2500);
     }
@@ -248,6 +249,9 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
   };
 
   private doFadeOut_ = () => {
+    if (this.userIsBusy_) {
+      return;
+    }
     const { fadeAnimation } = this.state;
     this.setState({ buttonsEnabled: false });
     Animated.timing(fadeAnimation, {
@@ -258,6 +262,10 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
       this.setState({ showing: false });
     });
   };
+
+  private get userIsBusy_(): boolean {
+    return this._userActiveIds.length !== 0 || this._menus.length !== 0 || this.state.paused || this.state.casting;
+  }
 
   render() {
     const { player, theme, top, center, bottom, children, style, topStyle, bottomStyle, behind } = this.props;
