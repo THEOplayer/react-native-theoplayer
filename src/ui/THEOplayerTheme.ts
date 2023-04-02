@@ -19,7 +19,7 @@ export interface THEOplayerTheme {
   fadeAnimationTimoutMs: number;
 }
 
-export const BUTTON_SIZE = 40;
+export const DEFAULT_ICON_SIZE = 40;
 
 export const DEFAULT_THEOPLAYER_THEME: THEOplayerTheme = {
   colors: {

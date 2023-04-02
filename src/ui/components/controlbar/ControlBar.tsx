@@ -1,13 +1,13 @@
 import React, { ReactNode } from 'react';
 import { StyleProp, View, ViewStyle } from 'react-native';
-import { BUTTON_SIZE } from '../../THEOplayerTheme';
+import { DEFAULT_ICON_SIZE } from '../../THEOplayerTheme';
 
 const CENTER_CONTROL_BAR_HEIGHT = 52;
 
 export const DEFAULT_CONTROL_BAR_STYLE: ViewStyle = {
   flexDirection: 'row',
   justifyContent: 'flex-end',
-  height: BUTTON_SIZE,
+  height: DEFAULT_ICON_SIZE,
 };
 
 interface ControlBarProps {
