@@ -145,7 +145,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
   };
 
   private onSourceChange = () => {
-    this.setState({ firstPlay: false, paused: this.props.player.paused });
+    this.setState({ paused: this.props.player.paused });
   };
 
   private onLoadStart = () => {
