@@ -16,6 +16,7 @@ export interface ColorTheme {
 export interface THEOplayerTheme {
   colors: ColorTheme;
   text: TextStyle;
+  fadeAnimationTimoutMs: number;
 }
 
 export const BUTTON_SIZE = 40;
@@ -39,4 +40,5 @@ export const DEFAULT_THEOPLAYER_THEME: THEOplayerTheme = {
     alignSelf: 'center',
     fontSize: 16,
   },
+  fadeAnimationTimoutMs: 1500,
 };

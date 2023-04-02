@@ -232,7 +232,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
     clearTimeout(this._currentFadeOutTimeout);
     if (!this.userIsBusy_) {
       // @ts-ignore
-      this._currentFadeOutTimeout = setTimeout(this.doFadeOut_, 2500);
+      this._currentFadeOutTimeout = setTimeout(this.doFadeOut_, this.props.theme.fadeAnimationTimoutMs);
     }
   }
 
