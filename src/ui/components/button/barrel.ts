@@ -4,7 +4,6 @@ export * from './AirplayButton';
 export * from './BackButton';
 export * from './ChromecastButton';
 export * from './FullscreenButton';
-export * from './GoogleCastButton';
 export * from './MuteButton';
 export * from './PipButton';
 export * from './PlayButton';
