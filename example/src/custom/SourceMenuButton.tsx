@@ -1,13 +1,8 @@
 import React, { useContext, useState } from 'react';
-import type { Source } from '../../../src/ui/utils/source/Source';
 import { Platform } from 'react-native';
+import { ListSvg, MenuButton, MenuRadioButton, MenuView, PlayerContext, ScrollableMenu } from 'react-native-theoplayer';
+import type { Source } from './Source';
 import ALL_SOURCES from './sources.json';
-import { PlayerContext } from '../../../src/ui/components/util/PlayerContext';
-import { ListSvg } from '../../../src/ui/components/button/svg/ListSvg';
-import { MenuButton } from '../../../src/ui/components/menu/common/MenuButton';
-import { MenuRadioButton } from '../../../src/ui/components/menu/common/MenuRadioButton';
-import { ScrollableMenu } from '../../../src/ui/components/menu/common/ScrollableMenu';
-import { MenuView } from '../../../src/ui/components/menu/common/MenuView';
 
 export const SOURCES = ALL_SOURCES.filter((source) => source.os.indexOf(Platform.OS) >= 0) as Source[];
 
@@ -22,6 +17,7 @@ export const SourceMenuButton = () => {
 };
 
 export const SourceMenuView = () => {
+  // @ts-ignore
   const context = useContext(PlayerContext);
   const selectedSource = SOURCES.find((source) => source.source === context.player.source);
   const [localSourceId, setLocalSourceId] = useState<number | undefined>(selectedSource ? SOURCES.indexOf(selectedSource) : undefined);
