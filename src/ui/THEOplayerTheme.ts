@@ -31,7 +31,7 @@ export const DEFAULT_THEOPLAYER_THEME: THEOplayerTheme = {
     textSelected: '#2C2C2C',
     textSelectedBackground: '#FFFFFF',
     seekBarMinimum: '#FFFFFF',
-    seekBarMaximum: '#000000',
+    seekBarMaximum: '#FFFFFF50',
     seekBarDot: '#FFFFFF',
   },
   text: {
