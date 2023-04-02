@@ -1,6 +1,6 @@
 import React, { ReactNode, useContext } from 'react';
 import { PlayerContext, UiContext } from '../../util/PlayerContext';
-import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
+import { Platform, StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { ControlBar } from '../../controlbar/ControlBar';
 import { BackButton } from '../../button/BackButton';
 import { TOP_CONTAINER_STYLE } from '../../uicontroller/UiContainer';
@@ -33,8 +33,13 @@ export const MenuView = (props: MenuViewProps) => {
       {(context: UiContext) => (
         <View style={StyleSheet.absoluteFill}>
           <ControlBar style={TOP_CONTAINER_STYLE}>
-            <BackButton onClose={onClose} />
-            <Text style={{ color: context.style.colors.text, fontSize: 16, lineHeight: 30 }}>Back</Text>
+            <View style={{ flexDirection: 'row' }}>
+              <TouchableOpacity style={{ flexDirection: 'row' }} onPress={onClose} {...(Platform.OS === 'web' ? { onClick: onClose } : {})}>
+                <BackButton onClose={onClose} />
+                <Text style={{ color: context.style.colors.text, fontSize: 16, lineHeight: 30 }}>Back</Text>
+              </TouchableOpacity>
+            </View>
+
             <View style={{ flexGrow: 1 }} />
           </ControlBar>
           <View style={[DEFAULT_MENU_VIEW_STYLE, style]}>{menu}</View>
