@@ -78,7 +78,13 @@ export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
                 <LanguageMenuButton />
               </ControlBar>
             }
-            center={<CenteredControlBar left={<SkipButton skip={-10} />} middle={<PlayButton />} right={<SkipButton skip={30} />} />}
+            center={
+              <CenteredControlBar
+                left={<SkipButton skip={-10} rotate={true} />}
+                middle={<PlayButton />}
+                right={<SkipButton skip={30} rotate={true} />}
+              />
+            }
             bottom={
               <>
                 <ControlBar style={{ justifyContent: 'flex-start' }}>

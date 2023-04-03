@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
 import { ForwardSvg } from './svg/ForwardSvg';
 import type { StyleProp, ViewStyle } from 'react-native';
-import { Animated, Easing, Text } from 'react-native';
+import { Animated, Easing, Text, TouchableOpacity } from 'react-native';
 import { BackwardSvg } from './svg/BackwardSvg';
 import { PlayerEventType, ProgressEvent } from 'react-native-theoplayer';
 
@@ -16,6 +16,10 @@ interface SkipButtonProps {
    * The skip value for the skip button. This can be set to negative to skip backwards.
    */
   skip: number;
+  /**
+   * Whether the skip button should do a rotation animation when pressed instead of fading.
+   */
+  rotate?: boolean;
 }
 
 interface SkipButtonState {
@@ -48,28 +52,30 @@ export class SkipButton extends PureComponent<SkipButtonProps, SkipButtonState> 
   };
 
   private readonly onPress = () => {
-    const { skip } = this.props;
+    const { skip, rotate } = this.props;
     const { spinValue } = this.state;
     const player = (this.context as UiContext).player;
     player.currentTime = player.currentTime + skip * 1e3;
 
-    Animated.timing(spinValue, {
-      toValue: 0.1,
-      duration: 100,
-      easing: Easing.linear,
-      useNativeDriver: true,
-    }).start(() => {
+    if (rotate === true) {
       Animated.timing(spinValue, {
-        toValue: 0,
+        toValue: 0.1,
         duration: 100,
         easing: Easing.linear,
         useNativeDriver: true,
-      }).start();
-    });
+      }).start(() => {
+        Animated.timing(spinValue, {
+          toValue: 0,
+          duration: 100,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }).start();
+      });
+    }
   };
 
   render() {
-    const { style, skip } = this.props;
+    const { style, skip, rotate } = this.props;
     const { enabled, spinValue } = this.state;
 
     if (!enabled) {
@@ -80,15 +86,18 @@ export class SkipButton extends PureComponent<SkipButtonProps, SkipButtonState> 
       inputRange: [0, 1],
       outputRange: skip >= 0 ? ['0deg', '360deg'] : ['360deg', '0deg'],
     });
+
     return (
       <>
         <PlayerContext.Consumer>
           {(context: UiContext) => (
             <Animated.View style={[{ height: '100%', aspectRatio: 1 }, style, { transform: [{ rotate: spin }] }]}>
-              <ActionButton touchable={true} svg={skip < 0 ? <BackwardSvg /> : <ForwardSvg />} onPress={this.onPress} />
-              <Text style={[context.style.text, { position: 'absolute', paddingTop: '33%', color: context.style.colors.text, zIndex: -1 }]}>
-                {Math.abs(skip)}
-              </Text>
+              <TouchableOpacity activeOpacity={rotate === true ? 1 : 0.2} style={[{ height: '100%', aspectRatio: 1 }, style]} onPress={this.onPress}>
+                <ActionButton touchable={false} svg={skip < 0 ? <BackwardSvg /> : <ForwardSvg />} />
+                <Text style={[context.style.text, { position: 'absolute', paddingTop: '33%', color: context.style.colors.text, zIndex: -1 }]}>
+                  {Math.abs(skip)}
+                </Text>
+              </TouchableOpacity>
             </Animated.View>
           )}
         </PlayerContext.Consumer>
