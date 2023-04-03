@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Added `enableMediaPlaybackService` option to `backgroundAudioConfiguration` to optionally disable the MediaBrowserService that provides background audio support on Android.
+- Added support for the `enabled` flag of `BackgroundAudioConfiguration` for Web.
 
 ## [Unreleased 2.0.0-pre7]
 
