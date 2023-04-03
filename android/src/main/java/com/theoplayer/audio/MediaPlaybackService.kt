@@ -36,6 +36,8 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
 
   private var playerContext: ReactTHEOplayerContext? = null
 
+  private var enableMediaControls: Boolean = true
+
   private val player: Player?
     get() = playerContext?.player
 
@@ -52,6 +54,11 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
 
     fun setPlayerContext(playerContext: ReactTHEOplayerContext) {
       service.connectPlayerContext(playerContext)
+    }
+
+    fun setEnablePlaybackControls(enable: Boolean) {
+      enableMediaControls = enable
+      updateNotification()
     }
 
     fun updateNotification() {
@@ -239,7 +246,7 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
       PlaybackStateCompat.STATE_PAUSED -> {
         // Fetch large icon asynchronously
         fetchImageFromUri(mediaSession.controller.metadata?.description?.iconUri) { largeIcon ->
-          notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build(playbackState, largeIcon))
+          notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build(playbackState, largeIcon, enableMediaControls))
         }
       }
       PlaybackStateCompat.STATE_PLAYING -> {
@@ -248,7 +255,7 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
         // information from the session's metadata.
         // Fetch large icon asynchronously
         fetchImageFromUri(mediaSession.controller.metadata?.description?.iconUri) { largeIcon ->
-          startForeground(NOTIFICATION_ID, notificationBuilder.build(playbackState, largeIcon))
+          startForeground(NOTIFICATION_ID, notificationBuilder.build(playbackState, largeIcon, enableMediaControls))
         }
       }
       PlaybackStateCompat.STATE_STOPPED -> {
