@@ -64,7 +64,6 @@ export const ActionButton = (props: ActionButtonProps) => {
     <PlayerContext.Consumer>
       {(context: UiContext) => (
         <TouchableOpacity
-          activeOpacity={1.0}
           style={[DEFAULT_ACTION_BUTTON_STYLE, style]}
           tvParallaxProperties={{ enabled: false }}
           onPress={onTouch}
