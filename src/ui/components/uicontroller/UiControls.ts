@@ -1,7 +1,13 @@
 import type { ReactNode } from 'react';
 
+/**
+ * A callback function to render a menu when needed.
+ */
 export type MenuConstructor = () => ReactNode;
 
+/**
+ * The API provided to all UI components in `react-native-theoplayer` so they can communicate with the UI.
+ */
 export interface UiControls {
   /*
    * Whether the UI buttons are enabled.

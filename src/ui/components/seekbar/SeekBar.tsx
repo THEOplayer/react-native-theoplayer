@@ -22,6 +22,9 @@ interface SeekBarState {
   width: number;
 }
 
+/**
+ * The default seek bar component for the `react-native-theoplayer` UI.
+ */
 export class SeekBar extends PureComponent<SeekBarProps, SeekBarState> {
   private static initialState: SeekBarState = {
     ignoreTimeupdate: false,

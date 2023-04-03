@@ -3,7 +3,7 @@ import { PlayerContext, UiContext } from '../../util/PlayerContext';
 import { Platform, StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { ControlBar } from '../../controlbar/ControlBar';
 import { BackButton } from '../../button/BackButton';
-import { TOP_CONTAINER_STYLE } from '../../uicontroller/UiContainer';
+import { TOP_UI_CONTAINER_STYLE } from '../../uicontroller/UiContainer';
 
 interface MenuViewProps {
   /**
@@ -44,7 +44,7 @@ export const MenuView = (props: MenuViewProps) => {
     <PlayerContext.Consumer>
       {(context: UiContext) => (
         <View style={StyleSheet.absoluteFill}>
-          <ControlBar style={TOP_CONTAINER_STYLE}>
+          <ControlBar style={TOP_UI_CONTAINER_STYLE}>
             <View style={{ flexDirection: 'row' }}>
               <TouchableOpacity style={{ flexDirection: 'row' }} onPress={onClose} {...(Platform.OS === 'web' ? { onClick: onClose } : {})}>
                 <BackButton onClose={onClose} />
