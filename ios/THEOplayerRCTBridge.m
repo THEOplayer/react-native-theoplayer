@@ -31,6 +31,7 @@ RCT_EXPORT_VIEW_PROPERTY(onNativePlay, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeSourceChange, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeLoadStart, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeReadyStateChange, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeWaiting, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeDurationChange, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeProgress, RCTBubblingEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeTimeUpdate, RCTBubblingEventBlock);

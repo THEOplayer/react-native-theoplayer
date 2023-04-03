@@ -372,6 +372,7 @@ export class VideoPlayer extends PureComponent<VideoPlayerProps, VideoPlayerStat
           onLoadedMetadata={this.onLoadedMetadata}
           onLoadedData={this.logEvent('loadeddata')}
           onReadyStateChange={this.logEvent('readystatechange')}
+          onWaiting={this.logEvent('waiting')}
           onError={this.onError}
           onProgress={this.onProgress}
           onPlay={this.logEvent('play')}

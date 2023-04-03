@@ -14,6 +14,7 @@ class THEOplayerRCTMainEventHandler {
     var onNativeSourceChange: RCTDirectEventBlock?
     var onNativeLoadStart: RCTDirectEventBlock?
     var onNativeReadyStateChange: RCTDirectEventBlock?
+    var onNativeWaiting: RCTDirectEventBlock?
     var onNativeDurationChange: RCTDirectEventBlock?
     var onNativeProgress: RCTBubblingEventBlock?
     var onNativeTimeUpdate: RCTBubblingEventBlock?
@@ -35,6 +36,7 @@ class THEOplayerRCTMainEventHandler {
     private var sourceChangeListener: EventListener?
     private var loadStartListener: EventListener?
     private var readyStateChangeListener: EventListener?
+    private var waitingListener: EventListener?
     private var durationChangeListener: EventListener?
     private var progressListener: EventListener?
     private var timeUpdateListener: EventListener?
@@ -119,6 +121,15 @@ class THEOplayerRCTMainEventHandler {
             }
         }
         if DEBUG_EVENTHANDLER { print("[NATIVE] ReadyStateChange listener attached to THEOplayer") }
+        
+        self.waitingListener = player.addEventListener(type: PlayerEventTypes.WAITING) { [weak self] event in
+            if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Waiting listener attached to THEOplayer") }
+            if let forwardedWaitingEvent = self?.onNativeWaiting {
+                forwardedWaitingEvent([:])
+            }
+        }
+        if DEBUG_EVENTHANDLER { print("[NATIVE] Waiting listener attached to THEOplayer") }
+
         
         // DURATION_CHANGE
         self.durationChangeListener = player.addEventListener(type: PlayerEventTypes.DURATION_CHANGE) { [weak self] event in
@@ -310,6 +321,12 @@ class THEOplayerRCTMainEventHandler {
         if let readyStateChangeListener = self.readyStateChangeListener {
             player.removeEventListener(type: PlayerEventTypes.READY_STATE_CHANGE, listener: readyStateChangeListener)
             if DEBUG_EVENTHANDLER { print("[NATIVE] ReadyStateChange listener dettached from THEOplayer") }
+        }
+        
+        // WAITING
+        if let waitingListener = self.waitingListener {
+            player.removeEventListener(type: PlayerEventTypes.WAITING, listener: waitingListener)
+            if DEBUG_EVENTHANDLER { print("[NATIVE] Waiting listener dettached from THEOplayer") }
         }
         
         // DURATION_CHANGE

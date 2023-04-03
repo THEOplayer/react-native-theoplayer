@@ -369,6 +369,13 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
       }
     });
 
+    player.addEventListener('waiting', () => {
+      const { onWaiting } = this.props;
+      if (onWaiting) {
+        onWaiting();
+      }
+    })
+
     player.addEventListener('timeupdate', () => {
       const { onTimeUpdate } = this.props;
       if (onTimeUpdate) {
