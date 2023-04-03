@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Use `enum` type for `PresentationMode`.
 - Use `enum` type for `CastState`.
 - Changed the methods of the Cast API, such as `casting` and `state`, to be synchronous.
+- Applied `backgroundAudioConfig` properties on Android when closing picture-in-picture window.
+- Applied `backgroundAudioConfig` properties on Android when showing Notifications.
 
 ### Added
 
