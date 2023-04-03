@@ -7,13 +7,31 @@ import { DEFAULT_MENU_BUTTON_STYLE } from './MenuRadioButton';
 import { ActionButton } from '../../button/actionbutton/ActionButton';
 
 export interface SubMenuButtonProps {
+  /**
+   * The style overrides.
+   */
   style?: StyleProp<ViewStyle>;
+  /**
+   * The style overrides for the text components.
+   */
   textStyle?: StyleProp<TextStyle>;
+  /**
+   * The sub menu that will be opened.
+   */
   menuConstructor: MenuConstructor;
+  /**
+   * The label for the sub menu button.
+   */
   label: string;
+  /**
+   * A preview for the currently selected value before opening the sub menu.
+   */
   preview: string;
 }
 
+/**
+ * A component that can be put inside a SettingsMenuButton to create a sub menu.
+ */
 export const SubMenuWithButton = (props: SubMenuButtonProps) => {
   const { style, textStyle, menuConstructor, label, preview } = props;
   const context = useContext(PlayerContext);

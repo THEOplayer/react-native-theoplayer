@@ -6,9 +6,15 @@ import { ScrollableMenu } from './common/ScrollableMenu';
 import type { StyleProp, ViewStyle } from 'react-native';
 
 export interface SettingsMenuButtonProps {
+  /**
+   * Overrides for the style of the menu.
+   */
   menuStyle?: StyleProp<ViewStyle>;
 }
 
+/**
+ * A button component that opens a settings menu containing all children for the `react-native-theoplayer` UI.
+ */
 export const SettingsMenuButton = (props: React.PropsWithChildren<SettingsMenuButtonProps>) => {
   const { children, menuStyle } = props;
   const createMenu = () => {

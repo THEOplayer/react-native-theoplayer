@@ -10,9 +10,15 @@ import { MenuRadioButton } from './common/MenuRadioButton';
 import { SubMenuWithButton } from './common/SubMenuWithButton';
 
 export interface QualitySubMenuProps {
+  /**
+   * Overrides for the style of the menu.
+   */
   menuStyle?: StyleProp<ViewStyle>;
 }
 
+/**
+ * A button component that opens a playbackRate selection menu for the `react-native-theoplayer` UI.
+ */
 export const QualitySubMenu = (props: QualitySubMenuProps) => {
   const { menuStyle } = props;
   if (Platform.OS === 'ios') {

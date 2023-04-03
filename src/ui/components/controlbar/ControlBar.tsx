@@ -4,6 +4,9 @@ import { DEFAULT_ICON_SIZE } from '../../THEOplayerTheme';
 
 const CENTER_CONTROL_BAR_HEIGHT = 52;
 
+/**
+ * The default style for the control bar.
+ */
 export const DEFAULT_CONTROL_BAR_STYLE: ViewStyle = {
   flexDirection: 'row',
   justifyContent: 'flex-end',

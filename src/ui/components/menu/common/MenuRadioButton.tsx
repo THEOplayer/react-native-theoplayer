@@ -26,6 +26,9 @@ export interface MenuRadioButtonProps {
   style?: StyleProp<TextStyle>;
 }
 
+/**
+ * The default style for the menu button.
+ */
 export const DEFAULT_MENU_BUTTON_STYLE: TextStyle = {
   fontSize: 16,
   lineHeight: 24,

@@ -16,9 +16,15 @@ export interface LanguageMenuButtonState {
 }
 
 export interface LanguageMenuButtonProps {
+  /**
+   * The style overrides.
+   */
   menuStyle?: StyleProp<ViewStyle>;
 }
 
+/**
+ * A button component that opens a language selection menu (audio/text) for the `react-native-theoplayer` UI.
+ */
 export class LanguageMenuButton extends PureComponent<LanguageMenuButtonProps, LanguageMenuButtonState> {
   constructor(props: LanguageMenuButtonProps) {
     super(props);
