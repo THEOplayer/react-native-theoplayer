@@ -68,9 +68,9 @@ class MediaNotificationBuilder(
   fun build(
     @PlaybackStateCompat.State playbackState: Int,
     largeIcon: Bitmap?,
-    allowContentIntent: Boolean = true,
-    showActions: Boolean = true,
-    showCancelButton: Boolean = true
+    enableMediaControls: Boolean = true,
+    enableContentIntent: Boolean = true,
+    enableCancelButton: Boolean = true
   ): Notification {
     val builder = channelId.let {
       if (it != null) {
@@ -89,7 +89,7 @@ class MediaNotificationBuilder(
       }
 
       // Enable launching the session activity by clicking the notification
-      if (allowContentIntent) {
+      if (enableContentIntent) {
         setContentIntent(mediaSession.controller.sessionActivity)
       }
 
@@ -124,17 +124,31 @@ class MediaNotificationBuilder(
       // on the eyes and avoid extremely bright or fluorescent colors.
       color = ContextCompat.getColor(context, R.color.app_primary_color)
 
+      // Add a play/pause button
+      if (enableMediaControls) {
+        if (playbackState == PlaybackStateCompat.STATE_PAUSED) {
+          addAction(playAction)
+        } else if (playbackState == PlaybackStateCompat.STATE_PLAYING) {
+          addAction(pauseAction)
+        }
+      } else {
+        // Add empty placeholder action as clearActions() does not work.
+        addAction(0, null, null)
+      }
+
       // Take advantage of MediaStyle features
       val style = androidx.media.app.NotificationCompat.MediaStyle()
-        // Associate the notification with your session. This allows third-party apps and
-        // companion devices to access and control the session.
-        .setMediaSession(mediaSession.sessionToken)
 
-      if (showActions) {
-        // Add up to 3 actions to be shown in the notification's standard-sized contentView.
-        style.setShowActionsInCompactView(0)
+      // Associate the notification with your session. This allows third-party apps and
+      // companion devices to access and control the session.
+      if (enableMediaControls) {
+        style.setMediaSession(mediaSession.sessionToken)
       }
-      if (showCancelButton) {
+
+      // Add up to 3 actions to be shown in the notification's standard-sized contentView.
+      style.setShowActionsInCompactView(0)
+
+      if (enableCancelButton) {
         // In Android 5.0 (API level 21) and later you can swipe away a notification to
         // stop the player once the service is no longer running in the foreground.
         style.setShowCancelButton(true)
@@ -146,13 +160,6 @@ class MediaNotificationBuilder(
         )
       }
       setStyle(style)
-
-      // Add a play/pause button
-      if (playbackState == PlaybackStateCompat.STATE_PAUSED) {
-        addAction(playAction)
-      } else if (playbackState == PlaybackStateCompat.STATE_PLAYING) {
-        addAction(pauseAction)
-      }
     }
     return builder.build()
   }
