@@ -11,6 +11,10 @@ interface CenteredDelayedActivityIndicatorState {
   error: PlayerError | undefined;
 }
 
+/**
+ * The default spinner for the `react-native-theoplayer` UI. It renders a ActivityIndicator when the player's playback is stalling due
+ * readystate changes.
+ */
 export class CenteredDelayedActivityIndicator extends PureComponent<DelayedActivityIndicatorProps, CenteredDelayedActivityIndicatorState> {
   private static initialState: CenteredDelayedActivityIndicatorState = {
     showLoadingIndicator: false,

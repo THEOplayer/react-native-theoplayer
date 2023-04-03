@@ -13,6 +13,9 @@ export function isConnected(state: CastState | undefined): boolean {
   return state === 'connecting' || state === 'connected';
 }
 
+/**
+ * The button to enable Chromecast for web for the `react-native-theoplayer` UI
+ */
 export class ChromecastButton extends PureComponent<unknown, CastButtonState> {
   private static initialState: CastButtonState = {
     castState: CastState.unavailable,

@@ -9,6 +9,9 @@ import { PauseSvg } from './svg/PauseSvg';
 import { ReplaySvg } from './svg/ReplaySvg';
 
 interface PlayButtonProps {
+  /**
+   * The style overrides for the play/pause button.
+   */
   style?: StyleProp<ViewStyle>;
 }
 
@@ -17,6 +20,9 @@ interface PlayButtonState {
   ended: boolean;
 }
 
+/**
+ * The default play/pause button for the `react-native-theoplayer` UI.
+ */
 export class PlayButton extends PureComponent<PlayButtonProps, PlayButtonState> {
   constructor(props: PlayButtonProps) {
     super(props);

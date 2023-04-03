@@ -11,6 +11,9 @@ interface FullscreenButtonState {
   presentationMode: PresentationMode;
 }
 
+/**
+ * The button to enable/disable fullscreen for the `react-native-theoplayer` UI.
+ */
 export class FullscreenButton extends PureComponent<unknown, FullscreenButtonState> {
   constructor(props: unknown) {
     super(props);

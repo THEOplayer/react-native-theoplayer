@@ -11,6 +11,9 @@ interface PipButtonState {
   presentationMode: PresentationMode;
 }
 
+/**
+ * The default button to enable picture-in-picture for the `react-native-theoplayer` UI.
+ */
 export class PipButton extends PureComponent<unknown, PipButtonState> {
   constructor(props: unknown) {
     super(props);
