@@ -3,14 +3,29 @@ import React from 'react';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
 
 export interface StaticTimeLabelProps {
+  /**
+   * Whether to show the duration of the current source.
+   */
   showDuration: boolean;
+  /**
+   * The style overrides.
+   */
   style?: StyleProp<TextStyle>;
+  /**
+   * The current time of the player
+   */
   time: number;
+  /**
+   * The duration of the current source.
+   */
   duration: number;
 }
 
 const LIVE_LABEL = 'LIVE';
 
+/**
+ * A static time label for the `react-native-theoplayer` UI.
+ */
 export function StaticTimeLabel(props: StaticTimeLabelProps) {
   const { style, showDuration, time, duration } = props;
 

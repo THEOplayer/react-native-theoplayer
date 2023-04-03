@@ -1,8 +1,6 @@
 import React, { ReactNode } from 'react';
 import { StyleProp, View, ViewStyle } from 'react-native';
-import { DEFAULT_ICON_SIZE } from '../../THEOplayerTheme';
-
-const CENTER_CONTROL_BAR_HEIGHT = 52;
+import { DEFAULT_CENTER_CONTROL_BAR_HEIGHT, DEFAULT_CONTROL_BAR_HEIGHT } from '../../THEOplayerTheme';
 
 /**
  * The default style for the control bar.
@@ -10,7 +8,7 @@ const CENTER_CONTROL_BAR_HEIGHT = 52;
 export const DEFAULT_CONTROL_BAR_STYLE: ViewStyle = {
   flexDirection: 'row',
   justifyContent: 'flex-end',
-  height: DEFAULT_ICON_SIZE,
+  height: DEFAULT_CONTROL_BAR_HEIGHT,
 };
 
 interface ControlBarProps {
@@ -53,10 +51,10 @@ interface CenteredControlBarProps {
 export const CenteredControlBar = (props: CenteredControlBarProps) => {
   const { style, middle, left, right } = props;
   return (
-    <ControlBar style={[{ height: CENTER_CONTROL_BAR_HEIGHT, width: '100%', justifyContent: 'space-between' }, style]}>
-      <View style={{ height: CENTER_CONTROL_BAR_HEIGHT }}>{left}</View>
+    <ControlBar style={[{ height: DEFAULT_CENTER_CONTROL_BAR_HEIGHT, width: '100%', justifyContent: 'space-between' }, style]}>
+      <View style={{ height: DEFAULT_CENTER_CONTROL_BAR_HEIGHT }}>{left}</View>
       {middle}
-      <View style={{ height: CENTER_CONTROL_BAR_HEIGHT }}>{right}</View>
+      <View style={{ height: DEFAULT_CENTER_CONTROL_BAR_HEIGHT }}>{right}</View>
     </ControlBar>
   );
 };

@@ -7,6 +7,9 @@ interface CastMessageState {
   message: string | undefined;
 }
 
+/**
+ * A simple cast message showing the current state of casting for the `react-native-theoplayer` UI.
+ */
 export class CastMessage extends PureComponent<unknown, CastMessageState> {
   constructor(props: unknown) {
     super(props);

@@ -18,14 +18,36 @@ import { ChromecastButton } from './components/button/ChromecastButton';
 import { CenteredDelayedActivityIndicator } from './components/activityindicator/CenteredDelayedActivityIndicator';
 
 export interface THEOplayerDefaultUiProps {
+  /**
+   * The style for the container.
+   */
   style?: StyleProp<ViewStyle>;
+  /**
+   * The theme for all components.
+   */
   theme?: Partial<THEOplayerTheme>;
+  /**
+   * The player configuration with THEOplayer license.
+   */
   config?: PlayerConfiguration;
+  /**
+   * The callback that is called when the internal THEOplayer is created.
+   * @param player the internal THEOplayer
+   */
   onPlayerReady?: (player: THEOplayer) => void;
+  /**
+   * A slot in the top right to add additional UI components.
+   */
   topSlot?: ReactNode;
+  /**
+   * A slot in the bottom right to add additional UI components.
+   */
   bottomSlot?: ReactNode;
 }
 
+/**
+ * A default UI layout which uses UI components from `react-native-theoplayer` to create a basic playback UI around a THEOplayerView.
+ */
 export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
   const { theme, config, topSlot, bottomSlot, style } = props;
   const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);

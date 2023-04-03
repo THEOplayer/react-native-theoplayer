@@ -8,17 +8,110 @@ import type { MenuConstructor, UiControls } from './UiControls';
 import { ErrorDisplay } from '../message/ErrorDisplay';
 
 interface UiContainerProps {
+  /**
+   * The player that is provided to all children using PlayerContext.
+   */
   player: THEOplayer;
+  /**
+   * The theme that is provided to all children using PlayerContext.
+   */
   theme: THEOplayerTheme;
+  /**
+   * The style of the container.
+   */
   style?: StyleProp<ViewStyle>;
+  /**
+   * The style of the top slot.
+   */
   topStyle?: StyleProp<ViewStyle>;
+  /**
+   * The style of the center slot.
+   */
   centerStyle?: StyleProp<ViewStyle>;
+  /**
+   * The style of the button slot.
+   */
   bottomStyle?: StyleProp<ViewStyle>;
+  /**
+   * The components to be put in the top slot.
+   */
   top?: ReactNode;
+  /**
+   * The components to be put in the center slot.
+   */
   center?: ReactNode;
+  /**
+   * The components to be put in the bottom slot.
+   */
   bottom?: ReactNode;
+  /**
+   * A slot to put components behind the UI background.
+   */
   behind?: ReactNode;
 }
+
+/**
+ * The default style for a fullscreen centered view.
+ */
+export const FULLSCREEN_CENTER_STYLE: ViewStyle = {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  bottom: 0,
+  right: 0,
+  alignItems: 'center',
+  justifyContent: 'center',
+};
+
+/**
+ * The default style for the center container.
+ */
+export const UI_CONTAINER_STYLE: ViewStyle = {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  bottom: 0,
+  right: 0,
+  zIndex: 0,
+  justifyContent: 'center',
+  overflow: 'hidden',
+};
+
+/**
+ * The default style for the top container.
+ */
+export const TOP_UI_CONTAINER_STYLE: ViewStyle = {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  zIndex: 1,
+  paddingTop: 10,
+  paddingLeft: 10,
+  paddingRight: 10,
+};
+
+/**
+ * The default style for the center container.
+ */
+export const CENTER_UI_CONTAINER_STYLE: ViewStyle = {
+  alignSelf: 'center',
+  width: '60%',
+};
+
+/**
+ * The default style for the bottom container.
+ */
+export const BOTTOM_UI_CONTAINER_STYLE: ViewStyle = {
+  position: 'absolute',
+  left: 0,
+  right: 0,
+  bottom: 0,
+  zIndex: 1,
+  paddingBottom: 10,
+  paddingLeft: 10,
+  paddingRight: 10,
+};
 
 interface UiContainerState {
   fadeAnimation: Animated.Value;
@@ -32,54 +125,12 @@ interface UiContainerState {
   pip: boolean;
 }
 
-export const FULLSCREEN_CENTER_STYLE: ViewStyle = {
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  bottom: 0,
-  right: 0,
-  alignItems: 'center',
-  justifyContent: 'center',
-};
-
-export const CONTAINER_STYLE: ViewStyle = {
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  bottom: 0,
-  right: 0,
-  zIndex: 0,
-  justifyContent: 'center',
-  overflow: 'hidden',
-};
-
-export const TOP_CONTAINER_STYLE: ViewStyle = {
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  right: 0,
-  zIndex: 1,
-  paddingTop: 10,
-  paddingLeft: 10,
-  paddingRight: 10,
-};
-
-export const CENTER_CONTAINER_STYLE: ViewStyle = {
-  alignSelf: 'center',
-  width: '60%',
-};
-
-export const BOTTOM_CONTAINER_STYLE: ViewStyle = {
-  position: 'absolute',
-  left: 0,
-  right: 0,
-  bottom: 0,
-  zIndex: 1,
-  paddingBottom: 10,
-  paddingLeft: 10,
-  paddingRight: 10,
-};
-
+/**
+ * A component that does all the coordination between UI components.
+ * - It provides all UI components with the PlayerContext, so they can access the styling and player.
+ * - It provides slots for UI components to be places in the top/center/bottom positions.
+ * - It uses animations to fade the UI in and out when applicable.
+ */
 export class UiContainer extends PureComponent<React.PropsWithChildren<UiContainerProps>, UiContainerState> implements UiControls {
   private _currentFadeOutTimeout: number | undefined = undefined;
 
@@ -268,7 +319,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
       return <></>;
     }
 
-    const combinedContainerStyle = [CONTAINER_STYLE, style];
+    const combinedContainerStyle = [UI_CONTAINER_STYLE, style];
 
     return (
       <PlayerContext.Provider value={{ player, style: theme, ui: this }}>
@@ -289,9 +340,9 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
             {/* The UI control bars*/}
             {currentMenu === undefined && (
               <>
-                {firstPlay && <View style={[TOP_CONTAINER_STYLE, topStyle]}>{top}</View>}
-                <View style={[CENTER_CONTAINER_STYLE, centerStyle]}>{center}</View>
-                {firstPlay && <View style={[BOTTOM_CONTAINER_STYLE, bottomStyle]}>{bottom}</View>}
+                {firstPlay && <View style={[TOP_UI_CONTAINER_STYLE, topStyle]}>{top}</View>}
+                <View style={[CENTER_UI_CONTAINER_STYLE, centerStyle]}>{center}</View>
+                {firstPlay && <View style={[BOTTOM_UI_CONTAINER_STYLE, bottomStyle]}>{bottom}</View>}
                 {children}
               </>
             )}

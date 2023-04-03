@@ -5,7 +5,13 @@ import { PlayerContext, UiContext } from '../util/PlayerContext';
 import { StaticTimeLabel } from './StaticTimeLabel';
 
 export interface TimeLabelProps {
+  /**
+   * Whether to show the duration of the player.
+   */
   showDuration: boolean;
+  /**
+   * The style overrides.
+   */
   style?: StyleProp<TextStyle>;
 }
 
@@ -14,6 +20,9 @@ export interface TimeLabelState {
   duration: number;
 }
 
+/**
+ * The default style for the time label.
+ */
 export const DEFAULT_TIME_LABEL_STYLE: TextStyle = {
   marginLeft: 10,
   marginRight: 10,
@@ -21,6 +30,9 @@ export const DEFAULT_TIME_LABEL_STYLE: TextStyle = {
   alignSelf: 'center',
 };
 
+/**
+ * The default time label component for the `react-native-theoplayer` UI.
+ */
 export class TimeLabel extends PureComponent<TimeLabelProps, TimeLabelState> {
   private static initialState: TimeLabelState = {
     currentTime: 0.0,
