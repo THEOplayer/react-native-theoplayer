@@ -10,8 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 - Set the player container on Web to by default have a width and height not larger than the devices width and height.
-- Use `enum` type for `PresentationMode`.
-- Use `enum` type for `CastState`.
+- Use `enum` type for `PresentationMode`, `CastState` and`AdIntegrationKind`.
 - Changed the methods of the Cast API, such as `casting` and `state`, to be synchronous.
 - Applied `backgroundAudioConfig` properties on Android when closing picture-in-picture window.
 - Applied `backgroundAudioConfig` properties on Android when showing Notifications.
@@ -23,6 +22,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added support for the `enabled` flag of `BackgroundAudioConfiguration` for Web.
 - Added serviceId and contentId to NowPlayingInfo
 - Feature flag extraction from custom iOS builds
+
+### Fixed
+
+- Fixed an issue on Android where the media session would become inactive when going to picture-in-picture mode, removing all transport controls.
+- Fixed an issue where removing a player listener within a listener callback would sometimes result in events not being dispatched.
 
 ## [Unreleased 2.0.0-pre7]
 
