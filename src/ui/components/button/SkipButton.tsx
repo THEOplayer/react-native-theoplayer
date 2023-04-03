@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import { PlayerContext, UiContext } from '../util/PlayerContext';
 import { ForwardSvg } from './svg/ForwardSvg';
 import type { StyleProp, ViewStyle } from 'react-native';
-import { Animated, Easing, Text, TouchableOpacity } from 'react-native';
+import { Animated, Easing, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { BackwardSvg } from './svg/BackwardSvg';
 import { PlayerEventType, ProgressEvent } from 'react-native-theoplayer';
 
@@ -92,11 +92,14 @@ export class SkipButton extends PureComponent<SkipButtonProps, SkipButtonState> 
         <PlayerContext.Consumer>
           {(context: UiContext) => (
             <Animated.View style={[{ height: '100%', aspectRatio: 1 }, style, { transform: [{ rotate: spin }] }]}>
-              <TouchableOpacity activeOpacity={rotate === true ? 1 : 0.2} style={[{ height: '100%', aspectRatio: 1 }, style]} onPress={this.onPress}>
+              <TouchableOpacity
+                activeOpacity={rotate === true ? 1 : 0.2}
+                style={[{ height: '100%', aspectRatio: 1, justifyContent: 'center' }, style]}
+                onPress={this.onPress}>
                 <ActionButton touchable={false} svg={skip < 0 ? <BackwardSvg /> : <ForwardSvg />} />
-                <Text style={[context.style.text, { position: 'absolute', paddingTop: '33%', color: context.style.colors.text, zIndex: -1 }]}>
-                  {Math.abs(skip)}
-                </Text>
+                <View style={[StyleSheet.absoluteFill, { justifyContent: 'center' }]}>
+                  <Text style={[context.style.text, { color: context.style.colors.text }]}>{Math.abs(skip)}</Text>
+                </View>
               </TouchableOpacity>
             </Animated.View>
           )}
