@@ -15,11 +15,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Changed the methods of the Cast API, such as `casting` and `state`, to be synchronous.
 - Applied `backgroundAudioConfig` properties on Android when closing picture-in-picture window.
 - Applied `backgroundAudioConfig` properties on Android when showing Notifications.
+- Disable iOS lockscreen controls when backgroundAudioConfig is set to `disabled`.
 
 ### Added
 
 - Added `enableMediaPlaybackService` option to `backgroundAudioConfiguration` to optionally disable the MediaBrowserService that provides background audio support on Android.
 - Added support for the `enabled` flag of `BackgroundAudioConfiguration` for Web.
+- Added serviceId and contentId to NowPlayingInfo
+- Feature flag extraction from custom iOS builds
 
 ## [Unreleased 2.0.0-pre7]
 
