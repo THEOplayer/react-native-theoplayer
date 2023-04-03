@@ -20,7 +20,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.Lifecycle
 import com.facebook.react.uimanager.ThemedReactContext
 import com.theoplayer.PlayerEventEmitter
-import com.theoplayer.android.api.THEOplayerView
+import com.theoplayer.ReactTHEOplayerContext
 import com.theoplayer.android.api.error.ErrorCode
 import com.theoplayer.android.api.error.THEOplayerException
 import com.theoplayer.android.api.player.PresentationMode
@@ -30,7 +30,7 @@ private val PIP_ASPECT_RATIO_MIN = Rational(100, 239)
 private val PIP_ASPECT_RATIO_MAX = Rational(239, 100)
 
 class PresentationManager(
-  private val view: THEOplayerView,
+  private val viewCtx: ReactTHEOplayerContext,
   private val reactContext: ThemedReactContext,
   private val eventEmitter: PlayerEventEmitter,
 ) {
@@ -152,8 +152,9 @@ class PresentationManager(
       return
     }
 
-    val visibleRect = getContentViewRect(view)
     try {
+      val view = viewCtx.playerView
+      val visibleRect = getContentViewRect(view)
       reactContext.currentActivity?.enterPictureInPictureMode(
         PictureInPictureParams.Builder().setSourceRectHint(visibleRect)
           // Must be between 2.39:1 and 1:2.39 (inclusive)
@@ -239,5 +240,10 @@ class PresentationManager(
     val prevPresentationMode = currentPresentationMode
     currentPresentationMode = presentationMode
     eventEmitter.emitPresentationModeChange(presentationMode, prevPresentationMode, context)
+
+    // Apply background audio config when closing PiP window
+    if (context?.pip == PresentationModeChangePipContext.CLOSED && !viewCtx.backgroundAudioConfig.enabled) {
+      viewCtx.player.pause()
+    }
   }
 }

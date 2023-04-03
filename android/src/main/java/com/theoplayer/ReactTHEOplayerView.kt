@@ -63,7 +63,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
       addView(it.playerView, 0, layoutParams)
 
       presentationManager = PresentationManager(
-        it.playerView,
+        it,
         reactContext,
         eventEmitter
       )
