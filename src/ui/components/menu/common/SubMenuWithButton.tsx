@@ -1,5 +1,5 @@
 import { PlayerContext, UiContext } from '../../util/PlayerContext';
-import { Platform, StyleProp, Text, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { StyleProp, Text, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
 import React, { useContext } from 'react';
 import { ArrowForwardSvg } from '../../button/svg/ArrowForwardSvg';
 import type { MenuConstructor } from '../../uicontroller/UiControls';
@@ -46,9 +46,9 @@ export const SubMenuWithButton = (props: SubMenuButtonProps) => {
         <View style={[{ height: 44, flexDirection: 'row', width: '100%', justifyContent: 'center' }, style]}>
           <Text style={[DEFAULT_MENU_BUTTON_STYLE, { color: context.style.colors.text, width: '30%' }, textStyle]}>{label}</Text>
           <View style={{ flexDirection: 'row', width: '60%', justifyContent: 'center' }}>
-            <TouchableOpacity style={{ flexDirection: 'row' }} onPress={onTouch} {...(Platform.OS === 'web' ? { onClick: onTouch } : {})}>
+            <TouchableOpacity style={{ flexDirection: 'row' }} onPress={onTouch}>
               <Text style={[DEFAULT_MENU_BUTTON_STYLE, { color: context.style.colors.text }, textStyle]}>{preview}</Text>
-              <ActionButton svg={<ArrowForwardSvg />} onPress={onTouch} />
+              <ActionButton touchable={false} svg={<ArrowForwardSvg />} />
             </TouchableOpacity>
           </View>
         </View>
