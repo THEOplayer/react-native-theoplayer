@@ -107,7 +107,7 @@ dependencies {
 
   def theoplayer_sdk_version = safeExtGet('THEOplayer_sdk', '+')
 //  def theoplayer_mediasession_version = safeExtGet('THEOplayer_mediasession', theoplayer_sdk_version)
-  def theoplayer_mediasession_version = "4.9.3-local"
+  def theoplayer_mediasession_version = "4.11.0-local"
 
   println("Using THEOplayer (${versionString(theoplayer_sdk_version)})")
   implementation "com.theoplayer.theoplayer-sdk-android:unified:${theoplayer_sdk_version}"
