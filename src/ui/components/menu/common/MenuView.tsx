@@ -6,10 +6,19 @@ import { BackButton } from '../../button/BackButton';
 import { TOP_CONTAINER_STYLE } from '../../uicontroller/UiContainer';
 
 interface MenuViewProps {
+  /**
+   * The menu to render inside the menu view.
+   */
   menu: ReactNode;
+  /**
+   * The style overrides for the menu view.
+   */
   style?: StyleProp<ViewStyle>;
 }
 
+/**
+ * The default style for the menu view.
+ */
 export const DEFAULT_MENU_VIEW_STYLE: ViewStyle = {
   flex: 1,
   flexDirection: 'row',
@@ -22,6 +31,9 @@ export const DEFAULT_MENU_VIEW_STYLE: ViewStyle = {
   paddingRight: 40,
 };
 
+/**
+ * A component to render a fullscreen menu with a title and back button for the `react-native-theoplayer` UI.
+ */
 export const MenuView = (props: MenuViewProps) => {
   const { menu, style } = props;
   const context = useContext(PlayerContext);

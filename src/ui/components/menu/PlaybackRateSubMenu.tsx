@@ -7,11 +7,20 @@ import { SubMenuWithButton } from './common/SubMenuWithButton';
 import type { StyleProp, ViewStyle } from 'react-native';
 
 export interface PlaybackRateValue {
+  /**
+   * The playbackRate value.
+   */
   readonly value: number;
+  /**
+   * The label of the playbackRate value.
+   */
   readonly label: string;
 }
 
-const DEFAULT_VALUES: PlaybackRateValue[] = [
+/**
+ * The default playback rate values for the menu.
+ */
+export const DEFAULT_PLAYBACK_RATE_MENU_VALUES: PlaybackRateValue[] = [
   { value: 0.25, label: '0.25x' },
   { value: 0.5, label: '0.5x' },
   { value: 1, label: 'Normal' },
@@ -21,13 +30,22 @@ const DEFAULT_VALUES: PlaybackRateValue[] = [
 ];
 
 interface PlaybackRateSubMenuProps {
+  /**
+   * Overrides for the default playbackRate values.
+   */
   values?: PlaybackRateValue[];
+  /**
+   * Overrides for the style of the menu.
+   */
   menuStyle?: StyleProp<ViewStyle>;
 }
 
+/**
+ * A button component that opens a playbackRate selection menu for the `react-native-theoplayer` UI.
+ */
 export const PlaybackRateSubMenu = (props: PlaybackRateSubMenuProps) => {
   const { values, menuStyle } = props;
-  const selectedValues: PlaybackRateValue[] = values ?? DEFAULT_VALUES;
+  const selectedValues: PlaybackRateValue[] = values ?? DEFAULT_PLAYBACK_RATE_MENU_VALUES;
   const player = useContext(PlayerContext).player;
 
   const createMenu = () => {
