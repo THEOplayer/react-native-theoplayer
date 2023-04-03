@@ -13,7 +13,10 @@ export function isConnected(state: CastState | undefined): boolean {
   return state === 'connecting' || state === 'connected';
 }
 
-// NOTE: react-native-google-cast does not support web yet.
+/**
+ * The native button to enable Chromecast for the `react-native-theoplayer` UI.
+ * This component uses the button from `react-native-google-cast` and is not supported on web.
+ */
 export class ChromecastButton extends PureComponent<unknown, CastButtonState> {
   private static initialState: CastButtonState = {
     connected: false,

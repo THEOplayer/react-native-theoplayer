@@ -8,7 +8,13 @@ import { BackwardSvg } from './svg/BackwardSvg';
 import { PlayerEventType, ProgressEvent } from 'react-native-theoplayer';
 
 interface SkipButtonProps {
+  /**
+   * The style overrides for the skip button.
+   */
   style?: StyleProp<ViewStyle>;
+  /**
+   * The skip value for the skip button. This can be set to negative to skip backwards.
+   */
   skip: number;
 }
 
@@ -17,6 +23,9 @@ interface SkipButtonState {
   spinValue: Animated.Value;
 }
 
+/**
+ * The default skip button for the `react-native-theoplayer` UI.
+ */
 export class SkipButton extends PureComponent<SkipButtonProps, SkipButtonState> {
   constructor(props: SkipButtonProps) {
     super(props);

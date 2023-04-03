@@ -7,6 +7,9 @@ export interface DelayedActivityIndicatorProps extends ActivityIndicatorProps {
 
 const DEFAULT_DELAY = 200;
 
+/**
+ * The DelayedActivityIndicator renders a native ActivityIndicator after a certain delay.
+ */
 export const DelayedActivityIndicator = (props: DelayedActivityIndicatorProps) => {
   const [showing, setShowing] = useState(false);
 

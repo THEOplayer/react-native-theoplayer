@@ -10,6 +10,9 @@ interface MuteButtonState {
   muted: boolean;
 }
 
+/**
+ * The default mute button for the `react-native-theoplayer` UI.
+ */
 export class MuteButton extends PureComponent<unknown, MuteButtonState> {
   constructor(props: unknown) {
     super(props);

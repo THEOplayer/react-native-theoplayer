@@ -10,6 +10,9 @@ interface CastButtonState {
   castState: CastState;
 }
 
+/**
+ * The default button to enable Airplay for the `react-native-theoplayer` UI.
+ */
 export class AirplayButton extends PureComponent<unknown, CastButtonState> {
   private static initialState: CastButtonState = {
     castState: CastState.unavailable,
