@@ -73,8 +73,7 @@ export const ActionButton = (props: ActionButtonProps) => {
           }}
           onBlur={() => {
             setFocused(false);
-          }}
-          {...(Platform.OS === 'web' ? { onClick: onTouch } : {})}>
+          }}>
           {/* Give priority to SVG over image sources.*/}
           {svg && (
             <SvgContext.Provider
