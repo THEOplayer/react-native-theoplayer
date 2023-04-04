@@ -2,7 +2,7 @@ import React, { PureComponent, ReactNode } from 'react';
 import { Animated, Platform, StyleProp, View, ViewStyle } from 'react-native';
 import { PlayerContext } from '../util/PlayerContext';
 import type { PresentationModeChangeEvent, THEOplayer } from 'react-native-theoplayer';
-import { CastEvent, CastEventType, ErrorEvent, PlayerError, PlayerEventType } from 'react-native-theoplayer';
+import { CastEvent, CastEventType, ErrorEvent, PlayerError, PlayerEventType, PresentationMode } from 'react-native-theoplayer';
 import type { THEOplayerTheme } from '../../THEOplayerTheme';
 import type { MenuConstructor, UiControls } from './UiControls';
 import { ErrorDisplay } from '../message/ErrorDisplay';
@@ -221,7 +221,7 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
   };
 
   private onPresentationModeChange = (event: PresentationModeChangeEvent) => {
-    this.setState({ pip: event.presentationMode === 'picture-in-picture' });
+    this.setState({ pip: event.presentationMode === PresentationMode.pip });
   };
 
   get buttonsEnabled_(): boolean {
