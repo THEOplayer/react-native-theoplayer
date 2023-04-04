@@ -4,10 +4,6 @@ import { PlayerContext } from '../../util/PlayerContext';
 import { ThumbnailView } from './ThumbnailView';
 import React, { useContext } from 'react';
 
-// TODO introduce additional thumbnail rendering modes.
-export type ThumbnailMode = 'single' | 'carousel';
-export const THUMBNAIL_MODE: ThumbnailMode = 'single';
-
 export interface ThumbnailViewProps {
   seekableStart: number;
   seekableEnd: number;
