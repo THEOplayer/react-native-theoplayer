@@ -301,8 +301,8 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
   }
 
   private onUserRequestUiFadeOut = () => {
-    const { firstPlay, buttonsEnabled, casting } = this.state;
-    if (firstPlay && buttonsEnabled && !casting) {
+    const { firstPlay, buttonsEnabled, casting, currentMenu, pip } = this.state;
+    if (firstPlay && buttonsEnabled && !casting && currentMenu === undefined && !pip) {
       this.doFadeOut_(true);
     }
   };
