@@ -1,5 +1,5 @@
 import React, { ReactNode, useState } from 'react';
-import { PlayerConfiguration, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
+import { FULLSCREEN_CENTER_STYLE, PlayerConfiguration, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
 import { SeekBar } from './components/seekbar/SeekBar';
 import { AirplayButton } from './components/button/AirplayButton';
 import { CenteredControlBar, ControlBar } from './components/controlbar/ControlBar';
@@ -60,6 +60,7 @@ export function THEOplayerDefaultUi(props: THEOplayerDefaultUiProps) {
 
   return (
     <View style={style}>
+      <View style={[FULLSCREEN_CENTER_STYLE, { backgroundColor: '#000000' }]} />
       <THEOplayerView config={config} onPlayerReady={onPlayerReady}>
         {player !== undefined && chromeless && (
           <UiContainer
