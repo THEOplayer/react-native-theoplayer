@@ -5,7 +5,7 @@ import { PlayerContext, UiContext } from '../../util/PlayerContext';
 
 export interface ActionButtonProps {
   /**
-   * The image to but in the button.
+   * The image to put in the button.
    */
   icon?: ImageSourcePropType;
   /**
