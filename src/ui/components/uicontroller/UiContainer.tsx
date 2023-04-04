@@ -262,7 +262,12 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
 
   private resumeAnimationsIfPossible_() {
     clearTimeout(this._currentFadeOutTimeout);
-    if (!this.userIsBusy_) {
+    if (this.animationsBlocked_) {
+      return;
+    }
+    // Only resume animation when paused except for web.
+    // This is because mobile users can tap away the UI when paused, but desktop users can't.
+    if (Platform.OS === 'web' || !this.state.paused) {
       // @ts-ignore
       this._currentFadeOutTimeout = setTimeout(this.doFadeOut_, this.props.theme.fadeAnimationTimoutMs);
     }
@@ -280,8 +285,8 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
     });
   };
 
-  private doFadeOut_ = (force?: boolean) => {
-    if (!force && this.userIsBusy_) {
+  private doFadeOut_ = () => {
+    if (this.animationsBlocked_) {
       return;
     }
     clearTimeout(this._currentFadeOutTimeout);
@@ -296,16 +301,10 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
     });
   };
 
-  private get userIsBusy_(): boolean {
-    return this._menus.length !== 0 || this.state.paused || this.state.casting;
+  private get animationsBlocked_(): boolean {
+    const { firstPlay, currentMenu, casting, pip } = this.state;
+    return !firstPlay || currentMenu !== undefined || casting || pip;
   }
-
-  private onUserRequestUiFadeOut = () => {
-    const { firstPlay, buttonsEnabled, casting, currentMenu, pip } = this.state;
-    if (firstPlay && buttonsEnabled && !casting && currentMenu === undefined && !pip) {
-      this.doFadeOut_(true);
-    }
-  };
 
   render() {
     const { player, theme, top, center, bottom, children, style, topStyle, centerStyle, bottomStyle, behind } = this.props;
@@ -329,10 +328,10 @@ export class UiContainer extends PureComponent<React.PropsWithChildren<UiContain
         <Animated.View
           style={[combinedContainerStyle, { opacity: fadeAnimation }]}
           onTouchStart={this.onUserAction_}
-          {...(Platform.OS === 'web' ? { onMouseMove: this.onUserAction_, onMouseLeave: this.onUserRequestUiFadeOut } : {})}>
+          {...(Platform.OS === 'web' ? { onMouseMove: this.onUserAction_, onMouseLeave: this.doFadeOut_ } : {})}>
           <>
             {/* The UI background */}
-            <View style={[combinedContainerStyle, { backgroundColor: theme.colors.uiBackground }]} onTouchStart={this.onUserRequestUiFadeOut} />
+            <View style={[combinedContainerStyle, { backgroundColor: theme.colors.uiBackground }]} onTouchStart={this.doFadeOut_} />
 
             {/* The Settings Menu */}
             {currentMenu !== undefined && <View style={[combinedContainerStyle]}>{currentMenu}</View>}
