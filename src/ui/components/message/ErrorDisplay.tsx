@@ -5,7 +5,6 @@ import { PlayerContext, UiContext } from '../util/PlayerContext';
 import { SvgContext } from '../button/svg/SvgUtils';
 import { ErrorSvg } from '../button/svg/ErrorSvg';
 import { FULLSCREEN_CENTER_STYLE } from '../uicontroller/UiContainer';
-import { DEFAULT_CONTROL_BAR_HEIGHT } from '../../THEOplayerTheme';
 
 export interface ErrorDisplayProps {
   /**
@@ -30,7 +29,7 @@ export function ErrorDisplay(props: ErrorDisplayProps) {
                 height: '100%',
                 width: '100%',
               }}>
-              <View style={{ width: DEFAULT_CONTROL_BAR_HEIGHT, height: DEFAULT_CONTROL_BAR_HEIGHT, padding: 5 }}>
+              <View style={{ height: context.style.dimensions.controlBarHeight, aspectRatio: 1, padding: 5 }}>
                 <ErrorSvg />
               </View>
             </SvgContext.Provider>

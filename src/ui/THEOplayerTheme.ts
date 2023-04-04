@@ -47,6 +47,20 @@ export interface ColorTheme {
 }
 
 /**
+ * The dimensions of various UI components.
+ */
+export interface Dimensions {
+  /**
+   * The height of the center control bar.
+   */
+  centerControlBarHeight: number;
+  /**
+   * The height of all other control bars.
+   */
+  controlBarHeight: number;
+}
+
+/**
  * The theme used by `react-native-theoplayer` UI components.
  */
 export interface THEOplayerTheme {
@@ -62,17 +76,11 @@ export interface THEOplayerTheme {
    * The amount of time after a user action where UI animations will resume.
    */
   fadeAnimationTimoutMs: number;
+  /**
+   * The dimensions of various UI components.
+   */
+  dimensions: Dimensions;
 }
-
-/**
- * The default control bar size.
- */
-export const DEFAULT_CONTROL_BAR_HEIGHT = 40;
-
-/**
- * The default center control bar size.
- */
-export const DEFAULT_CENTER_CONTROL_BAR_HEIGHT = 52;
 
 /**
  * The default theme for the UI.
@@ -97,4 +105,8 @@ export const DEFAULT_THEOPLAYER_THEME: THEOplayerTheme = {
     fontSize: 16,
   },
   fadeAnimationTimoutMs: 2500,
+  dimensions: {
+    controlBarHeight: 40,
+    centerControlBarHeight: 52,
+  },
 };
