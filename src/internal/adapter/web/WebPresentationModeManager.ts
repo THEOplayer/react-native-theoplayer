@@ -1,18 +1,19 @@
-import { DefaultEventDispatcher } from '../event/DefaultEventDispatcher';
 import type { PlayerEventMap } from 'react-native-theoplayer';
+import { PresentationMode } from 'react-native-theoplayer';
 import type * as THEOplayerWeb from 'theoplayer';
 import { DefaultPresentationModeChangeEvent } from '../event/PlayerEvents';
 import { browserDetection } from '../../../web/platform/BrowserDetection';
-import { PresentationMode } from 'react-native-theoplayer';
+import type { DefaultEventDispatcher } from '../event/DefaultEventDispatcher';
 
-export class WebPresentationModeManager extends DefaultEventDispatcher<PlayerEventMap> {
+export class WebPresentationModeManager {
   private readonly _player: THEOplayerWeb.ChromelessPlayer;
   private _presentationMode: PresentationMode = PresentationMode.inline;
   private _element: HTMLVideoElement | undefined = undefined;
+  private _eventForwarder: DefaultEventDispatcher<PlayerEventMap>;
 
-  constructor(player: THEOplayerWeb.ChromelessPlayer) {
-    super();
+  constructor(player: THEOplayerWeb.ChromelessPlayer, eventForwarder: DefaultEventDispatcher<PlayerEventMap>) {
     this._player = player;
+    this._eventForwarder = eventForwarder;
   }
 
   get presentationMode(): PresentationMode {
@@ -89,7 +90,7 @@ export class WebPresentationModeManager extends DefaultEventDispatcher<PlayerEve
     const previousPresentationMode = this._presentationMode;
     if (newPresentationMode !== previousPresentationMode) {
       this._presentationMode = newPresentationMode;
-      this.dispatchEvent(new DefaultPresentationModeChangeEvent(this._presentationMode, previousPresentationMode)); // TODO: add context
+      this._eventForwarder.dispatchEvent(new DefaultPresentationModeChangeEvent(this._presentationMode, previousPresentationMode));
     }
   }
 }
