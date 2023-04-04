@@ -6,6 +6,7 @@ import type {
   NativeHandleType,
   PlayerEventMap,
   PreloadType,
+  PresentationMode,
   TextTrack,
   TextTrackStyle,
   THEOplayer,
@@ -49,8 +50,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     this._adsAdapter = new THEOplayerWebAdsAdapter(this._player);
     this._castAdapter = new THEOplayerWebCastAdapter(this._player);
     this._eventForwarder = new WebEventForwarder(this._player, this);
-    this._presentationModeManager = new WebPresentationModeManager(this._player);
-
+    this._presentationModeManager = new WebPresentationModeManager(this._player, this);
     document.addEventListener('visibilitychange', this.onVisibilityChange);
 
     // Optionally create a media session connector
