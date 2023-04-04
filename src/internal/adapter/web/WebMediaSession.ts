@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import type { ChromelessPlayer } from 'theoplayer';
+import type { THEOplayerWebAdapter } from '../THEOplayerWebAdapter';
+import { PresentationMode } from 'react-native-theoplayer';
 
 interface WebMediaSessionConfig {
   skipTime: number;
@@ -29,15 +31,16 @@ const mediaSession = (function () {
 export class WebMediaSession {
   private readonly _config: WebMediaSessionConfig;
   private readonly _player: ChromelessPlayer;
+  private readonly _webAdapter: THEOplayerWebAdapter;
 
-  constructor(player: ChromelessPlayer, config: WebMediaSessionConfig = defaultWebMediaSessionConfig) {
+  constructor(adapter: THEOplayerWebAdapter, player: ChromelessPlayer, config: WebMediaSessionConfig = defaultWebMediaSessionConfig) {
     this._player = player;
+    this._webAdapter = adapter;
     this._config = config;
+
     this._player.addEventListener('sourcechange', this.onSourceChange);
     this._player.addEventListener('loadedmetadata', this.onLoadedMetadata);
     this._player.addEventListener('durationchange', this.onDurationChange);
-    this._player.addEventListener('play', this.onPlay);
-    this._player.addEventListener('pause', this.onPause);
     this._player.ads?.addEventListener('adbreakbegin', this.onAdbreakBegin);
     this._player.ads?.addEventListener('adbreakend', this.onAdbreakEnd);
     this.updateActionHandlers();
@@ -48,12 +51,10 @@ export class WebMediaSession {
       mediaSession.setActionHandler('seekbackward', (event) => {
         const skipTime = event.seekOffset || this._config.skipTime;
         this._player.currentTime = Math.max(this._player.currentTime - skipTime, 0);
-        this.updatePositionState();
       });
       mediaSession.setActionHandler('seekforward', (event) => {
         const skipTime = event.seekOffset || this._config.skipTime;
         this._player.currentTime = Math.min(this._player.currentTime + skipTime, this._player.duration);
-        this.updatePositionState();
       });
     } else {
       mediaSession.setActionHandler('seekbackward', NoOp);
@@ -77,8 +78,6 @@ export class WebMediaSession {
     this._player.removeEventListener('sourcechange', this.onSourceChange);
     this._player.removeEventListener('loadedmetadata', this.onLoadedMetadata);
     this._player.removeEventListener('durationchange', this.onDurationChange);
-    this._player.removeEventListener('play', this.onPlay);
-    this._player.removeEventListener('pause', this.onPause);
     this._player.ads?.removeEventListener('adbreakbegin', this.onAdbreakBegin);
     this._player.ads?.removeEventListener('adbreakend', this.onAdbreakEnd);
     mediaSession.setActionHandler('play', NoOp);
@@ -88,6 +87,20 @@ export class WebMediaSession {
   }
 
   private onSourceChange = () => {
+    this.updateMetadata();
+    this.updatePositionState();
+    this.updateActionHandlers();
+  };
+
+  private onLoadedMetadata = () => {
+    this.updateActionHandlers();
+  };
+
+  private onDurationChange = () => {
+    this.updateActionHandlers();
+  };
+
+  private updateMetadata = () => {
     const source = this._player.source;
     const metadata = source?.metadata;
     const artwork = [source?.poster, metadata?.displayIconUri, ...(metadata?.images ? metadata?.images : [])]
@@ -100,19 +113,10 @@ export class WebMediaSession {
       });
     mediaSession.metadata = new MediaMetadata({
       title: metadata?.title,
-      artist: metadata?.artist,
+      artist: metadata?.artist || metadata?.subtitle,
       album: metadata?.album,
       artwork,
     });
-    this.updatePositionState();
-  };
-
-  private onLoadedMetadata = () => {
-    this.updateActionHandlers();
-  };
-
-  private onDurationChange = () => {
-    this.updateActionHandlers();
   };
 
   private updatePositionState = () => {
@@ -135,14 +139,6 @@ export class WebMediaSession {
     }
   };
 
-  private onPlay = () => {
-    mediaSession.playbackState = 'playing';
-  };
-
-  private onPause = () => {
-    mediaSession.playbackState = 'paused';
-  };
-
   private onAdbreakBegin = () => {
     this.updateActionHandlers();
   };
@@ -152,20 +148,46 @@ export class WebMediaSession {
   };
 
   private isLive(): boolean {
-    return !isFinite(this._player?.duration);
+    return !isFinite(this._player.duration);
   }
 
-  private isPlayingAd(): boolean {
-    return this._player?.ads?.playing == true;
+  private isAd(): boolean {
+    return this._player.ads?.playing == true;
+  }
+
+  private isInBackground(): boolean {
+    return document.visibilityState !== 'visible';
   }
 
   private isTrickplayEnabled(): boolean {
-    // By default, disable trick-play for live and ads.
-    return !(this.isLive() || this.isPlayingAd());
+    // By default, no trickplay for live
+    if (this.isLive()) {
+      return false;
+    }
+
+    // In PiP mode, disable trick-play for ads.
+    if (this._webAdapter.presentationMode === PresentationMode.pip) {
+      return !this.isAd();
+    }
+    // During background playback
+    if (this.isInBackground()) {
+      // Disable trick-play for ads.
+      return !(this.isAd() || this.isLive());
+    }
+    return true;
   }
 
   private isPlayPauseEnabled(): boolean {
-    // By default, disable play/pause during ads.
-    return !this.isPlayingAd();
+    // In PiP mode
+    if (this._webAdapter.presentationMode === PresentationMode.pip) {
+      // Disable play/pause for ads
+      return !this.isAd();
+    }
+    // During background playback
+    if (this.isInBackground()) {
+      // Disable play/pause for ads & live content.
+      return !(this.isAd() || this.isLive());
+    }
+    return true;
   }
 }

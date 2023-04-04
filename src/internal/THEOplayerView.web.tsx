@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from 'react';
 import type { THEOplayerViewProps } from 'react-native-theoplayer';
 import * as THEOplayer from 'theoplayer';
 import { THEOplayerWebAdapter } from './adapter/THEOplayerWebAdapter';
-import { WebMediaSession } from './adapter/web/WebMediaSession';
 import { BaseEvent } from './adapter/event/BaseEvent';
 import { PlayerEventType } from 'react-native-theoplayer';
 
@@ -10,7 +9,6 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
   const { config, children } = props;
   const player = useRef<THEOplayer.ChromelessPlayer | null>(null);
   const adapter = useRef<THEOplayerWebAdapter | null>(null);
-  const mediaSession = useRef<WebMediaSession | null>(null);
   const container = useRef<null | HTMLDivElement>(null);
 
   useEffect(() => {
@@ -33,12 +31,7 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
       player.current.prepareWithUserAction();
 
       // Adapt native player to react-native player.
-      adapter.current = new THEOplayerWebAdapter(player.current);
-
-      // Optionally create a media session connector
-      if (config?.mediaControl?.mediaSessionEnabled !== false) {
-        mediaSession.current = new WebMediaSession(player.current);
-      }
+      adapter.current = new THEOplayerWebAdapter(player.current, config);
 
       // Expose players for easy access
       // @ts-ignore
@@ -59,9 +52,7 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
         onPlayerDestroy(adapter?.current);
       }
       adapter?.current?.dispatchEvent(new BaseEvent(PlayerEventType.DESTROY));
-
       adapter?.current?.destroy();
-      mediaSession?.current?.destroy();
       player?.current?.destroy();
     };
   }, [container]);

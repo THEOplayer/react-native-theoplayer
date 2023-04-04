@@ -5,11 +5,11 @@ import type {
   MediaTrack,
   NativeHandleType,
   PlayerEventMap,
-  PresentationMode,
   PreloadType,
   TextTrack,
   TextTrackStyle,
   THEOplayer,
+  PlayerConfiguration,
 } from 'react-native-theoplayer';
 import { THEOplayerWebAdsAdapter } from './ads/THEOplayerWebAdsAdapter';
 import { THEOplayerWebCastAdapter } from './cast/THEOplayerWebCastAdapter';
@@ -21,6 +21,8 @@ import { WebEventForwarder } from './WebEventForwarder';
 import type { PiPConfiguration } from 'src/api/pip/PiPConfiguration';
 import type { BackgroundAudioConfiguration } from 'src/api/backgroundAudio/BackgroundAudioConfiguration';
 import { WebPresentationModeManager } from './web/WebPresentationModeManager';
+import { WebMediaSession } from './web/WebMediaSession';
+import { PresentationMode } from 'react-native-theoplayer';
 
 const defaultBackgroundAudioConfiguration: BackgroundAudioConfiguration = {
   enabled: false,
@@ -35,12 +37,13 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   private readonly _adsAdapter: THEOplayerWebAdsAdapter;
   private readonly _castAdapter: THEOplayerWebCastAdapter;
   private readonly _eventForwarder: WebEventForwarder;
+  private readonly _presentationModeManager: WebPresentationModeManager;
+  private readonly _mediaSession: WebMediaSession | undefined = undefined;
   private _targetVideoQuality: number | number[] | undefined = undefined;
-  private _presentationModeManager: WebPresentationModeManager;
   private _backgroundAudioConfiguration: BackgroundAudioConfiguration = defaultBackgroundAudioConfiguration;
   private _pipConfiguration: PiPConfiguration = defaultPipConfiguration;
 
-  constructor(player: THEOplayerWeb.ChromelessPlayer) {
+  constructor(player: THEOplayerWeb.ChromelessPlayer, config?: PlayerConfiguration) {
     super();
     this._player = player;
     this._adsAdapter = new THEOplayerWebAdsAdapter(this._player);
@@ -49,6 +52,11 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     this._presentationModeManager = new WebPresentationModeManager(this._player);
 
     document.addEventListener('visibilitychange', this.onVisibilityChange);
+
+    // Optionally create a media session connector
+    if (config?.mediaControl?.mediaSessionEnabled !== false) {
+      this._mediaSession = new WebMediaSession(this, player);
+    }
   }
 
   get abr(): ABRConfiguration | undefined {
@@ -124,6 +132,9 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
 
   set backgroundAudioConfiguration(config: BackgroundAudioConfiguration) {
     this._backgroundAudioConfiguration = config;
+
+    // Notify media session
+    this._mediaSession?.updateActionHandlers();
   }
 
   get volume(): number {
@@ -244,6 +255,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
 
   destroy(): void {
     this._eventForwarder.unload();
+    this._mediaSession?.destroy();
     document.removeEventListener('visibilitychange', this.onVisibilityChange);
   }
 
@@ -253,10 +265,12 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
 
   private readonly onVisibilityChange = () => {
     if (document.visibilityState !== 'visible') {
-      // Apply background configuration
-      if (!this.backgroundAudioConfiguration.enabled) {
+      // Apply background configuration: by default, pause when going to background, unless in pip
+      if (this.presentationMode !== PresentationMode.pip && !this.backgroundAudioConfiguration.enabled) {
         this._player.pause();
       }
     }
+    // Apply media session controls
+    this._mediaSession?.updateActionHandlers();
   };
 }
