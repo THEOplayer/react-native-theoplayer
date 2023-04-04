@@ -55,7 +55,7 @@ custom [SourceMenuButton](../example/src/custom/SourceMenuButton.tsx).
 
 ### Available components
 
-The available UI components with their documentation can be found [here](./src/ui).
+The available UI components with their documentation can be found [here](../src/ui).
 
 ### Creating your own custom UI
 
