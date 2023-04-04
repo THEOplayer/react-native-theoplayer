@@ -26,8 +26,6 @@ export const DEFAULT_MENU_TITLE_STYLE: TextStyle = {
 
 /**
  * The title placed at the top of the fullscreen menu.
- * @param props
- * @constructor
  */
 export const MenuTitle = (props: MenuTitleProps) => {
   const { label, style } = props;
