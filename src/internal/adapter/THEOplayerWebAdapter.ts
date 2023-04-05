@@ -6,7 +6,6 @@ import type {
   NativeHandleType,
   PlayerEventMap,
   PreloadType,
-  PresentationMode,
   TextTrack,
   TextTrackStyle,
   THEOplayer,
