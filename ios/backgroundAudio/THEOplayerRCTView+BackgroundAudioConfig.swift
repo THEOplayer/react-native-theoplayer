@@ -7,6 +7,15 @@ struct BackgroundAudioConfig {
     var enabled: Bool = false
 }
 
+#if WEB
+
+extension THEOplayerRCTView {
+    func initBackgroundAudio() {}
+    public func shouldContinueAudioPlaybackInBackground() -> Bool { return false }
+}
+
+#else
+
 extension THEOplayerRCTView: BackgroundPlaybackDelegate {
 
     func initBackgroundAudio() {
@@ -20,3 +29,5 @@ extension THEOplayerRCTView: BackgroundPlaybackDelegate {
         return self.backgroundAudioConfig.enabled
     }
 }
+
+#endif
