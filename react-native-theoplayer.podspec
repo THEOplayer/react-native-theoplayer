@@ -36,12 +36,10 @@ Pod::Spec.new do |s|
   else 
     s.dependency "THEOplayerSDK-core"
     if theofeatures.include?("GOOGLE_IMA") 
-      s.dependency "THEOplayerGoogleIMAIntegration"
-      s.ios.dependency "GoogleAds-IMA-iOS-SDK", "3.18.4"
-      s.tvos.dependency "GoogleAds-IMA-tvOS-SDK", "4.8.2"
+      s.dependency "THEOplayer-Integration-GoogleIMA"
     end
     if theofeatures.include?("CHROMECAST")
-      s.ios.dependency "THEOplayerGoogleCastIntegration"
+      s.ios.dependency "THEOplayer-Integration-GoogleCast"
       s.ios.dependency "google-cast-sdk-dynamic-xcframework-no-bluetooth"
     end
   end
