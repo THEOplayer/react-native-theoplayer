@@ -27,6 +27,7 @@ def enabledGoogleDAI = safeExtGet("THEOplayer_extensionGoogleDAI", 'false').toBo
 def enabledAds = enabledGoogleIMA || enabledGoogleDAI
 def enabledCast = safeExtGet("THEOplayer_extensionCast", 'false').toBoolean()
 def enabledMediaSession = safeExtGet("THEOplayer_extensionMediaSession", 'true').toBoolean()
+def enabledV4 = safeExtGet("THEOplayer_enabledV4", 'false').toBoolean()
 
 android {
   compileSdkVersion safeExtGet('THEOplayer_compileSdkVersion', 31)
@@ -108,9 +109,10 @@ dependencies {
   def theoplayer_sdk_version = safeExtGet('THEOplayer_sdk', '+')
 //  def theoplayer_mediasession_version = safeExtGet('THEOplayer_mediasession', theoplayer_sdk_version)
   def theoplayer_mediasession_version = "4.11.0-local"
+  def integration_prefix = enabledV4 ? 'unified-' : 'integration-'
 
   println("Using THEOplayer (${versionString(theoplayer_sdk_version)})")
-  implementation "com.theoplayer.theoplayer-sdk-android:unified:${theoplayer_sdk_version}"
+  implementation "com.theoplayer.theoplayer-sdk-android:${enabledV4 ? 'unified' : 'core'}:${theoplayer_sdk_version}"
 
   if (enabledMediaSession) {
     println("Enable THEOplayer MediaSession extension (${versionString(theoplayer_mediasession_version)})")
@@ -122,30 +124,30 @@ dependencies {
 
   if (enabledGoogleIMA) {
     println('Enable THEOplayer IMA extension.')
-    implementation "com.theoplayer.theoplayer-sdk-android:unified-ads:${theoplayer_sdk_version}"
-    implementation "com.theoplayer.theoplayer-sdk-android:unified-ads-ima:${theoplayer_sdk_version}"
+    implementation "com.theoplayer.theoplayer-sdk-android:${integration_prefix}ads:${theoplayer_sdk_version}"
+    implementation "com.theoplayer.theoplayer-sdk-android:${integration_prefix}ads-ima:${theoplayer_sdk_version}"
   } else {
     println('Disable THEOplayer IMA extension.')
-    compileOnly "com.theoplayer.theoplayer-sdk-android:unified-ads:${theoplayer_sdk_version}"
-    compileOnly "com.theoplayer.theoplayer-sdk-android:unified-ads-ima:${theoplayer_sdk_version}"
+    compileOnly "com.theoplayer.theoplayer-sdk-android:${integration_prefix}ads:${theoplayer_sdk_version}"
+    compileOnly "com.theoplayer.theoplayer-sdk-android:${integration_prefix}ads-ima:${theoplayer_sdk_version}"
   }
 
   // NOTE: The DAI extension module is available on Maven as of SDK v4.3.0
   if (enabledGoogleDAI) {
     println('Enable THEOplayer DAI extension.')
-    implementation "com.theoplayer.theoplayer-sdk-android:unified-ads:${theoplayer_sdk_version}"
-    implementation "com.theoplayer.theoplayer-sdk-android:unified-ads-dai:${theoplayer_sdk_version}"
+    implementation "com.theoplayer.theoplayer-sdk-android:${integration_prefix}ads:${theoplayer_sdk_version}"
+    implementation "com.theoplayer.theoplayer-sdk-android:${integration_prefix}ads-dai:${theoplayer_sdk_version}"
   } else {
     println('Disable THEOplayer DAI extension.')
-    compileOnly "com.theoplayer.theoplayer-sdk-android:unified-ads:${theoplayer_sdk_version}"
-    compileOnly "com.theoplayer.theoplayer-sdk-android:unified-ads-dai:${theoplayer_sdk_version}"
+    compileOnly "com.theoplayer.theoplayer-sdk-android:${integration_prefix}ads:${theoplayer_sdk_version}"
+    compileOnly "com.theoplayer.theoplayer-sdk-android:${integration_prefix}ads-dai:${theoplayer_sdk_version}"
   }
 
   if (enabledCast) {
     println('Enable THEOplayer cast extension.')
-    implementation "com.theoplayer.theoplayer-sdk-android:unified-cast:${theoplayer_sdk_version}"
+    implementation "com.theoplayer.theoplayer-sdk-android:${integration_prefix}cast:${theoplayer_sdk_version}"
   } else {
     println('Disable THEOplayer cast extension.')
-    compileOnly "com.theoplayer.theoplayer-sdk-android:unified-cast:${theoplayer_sdk_version}"
+    compileOnly "com.theoplayer.theoplayer-sdk-android:${integration_prefix}cast:${theoplayer_sdk_version}"
   }
 }
