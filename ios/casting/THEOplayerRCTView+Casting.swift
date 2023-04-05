@@ -23,7 +23,7 @@ extension THEOplayerRCTView {
         }
 #if os(iOS) && canImport(THEOplayerGoogleCastIntegration)
         if let castConfiguration = self.playerCastConfiguration() {
-            let castIntegration = CastIntegrationFactory.createCastIntegration(on: player, with: castConfiguration)
+            let castIntegration = GoogleCastIntegrationFactory.createIntegration(on: player, with: castConfiguration)
             player.addIntegration(castIntegration)
         }
 #endif
