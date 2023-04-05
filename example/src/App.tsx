@@ -1,15 +1,33 @@
 import * as React from 'react';
+import { useState } from 'react';
 import {
+  AirplayButton,
+  CastMessage,
+  CenteredControlBar,
+  CenteredDelayedActivityIndicator,
+  ChromecastButton,
+  ControlBar,
+  DEFAULT_THEOPLAYER_THEME,
+  FULLSCREEN_CENTER_STYLE,
+  FullscreenButton,
+  LanguageMenuButton,
+  MuteButton,
   PipButton,
   PlaybackRateSubMenu,
+  PlayButton,
   PlayerConfiguration,
   PlayerEventType,
   QualitySubMenu,
+  SeekBar,
   SettingsMenuButton,
+  SkipButton,
+  Spacer,
   THEOplayer,
-  THEOplayerDefaultUi,
+  THEOplayerView,
+  TimeLabel,
+  UiContainer,
 } from 'react-native-theoplayer';
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { SourceMenuButton, SOURCES } from './custom/SourceMenuButton';
 
 const playerConfig: PlayerConfiguration = {
@@ -29,8 +47,15 @@ const playerConfig: PlayerConfiguration = {
   },
 };
 
+/**
+ * The example app demonstrates the use of the THEOplayerView with a custom UI using the provided UI components.
+ * If you don't want to create a custom UI, you can just use the THEOplayerDefaultUi component instead.
+ */
 export default function App() {
+  const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);
+  const chromeless = playerConfig?.chromeless ?? false;
   const onPlayerReady = (player: THEOplayer) => {
+    setPlayer(player);
     // optional debug logs
     player.addEventListener(PlayerEventType.SOURCE_CHANGE, console.log);
     player.addEventListener(PlayerEventType.LOADED_DATA, console.log);
@@ -42,27 +67,57 @@ export default function App() {
     player.addEventListener(PlayerEventType.SEEKING, console.log);
     player.addEventListener(PlayerEventType.SEEKED, console.log);
     player.addEventListener(PlayerEventType.ENDED, console.log);
-
     player.source = SOURCES[0].source;
   };
 
   return (
-    <THEOplayerDefaultUi
-      style={StyleSheet.absoluteFill}
-      config={playerConfig}
-      onPlayerReady={onPlayerReady}
-      // Optionally add additional buttons/menus to the default UI:
-      topSlot={
-        <>
-          <SourceMenuButton />
-          <SettingsMenuButton>
-            {/*Note: quality selection is not available on iOS */}
-            <QualitySubMenu />
-            <PlaybackRateSubMenu />
-          </SettingsMenuButton>
-        </>
-      }
-      bottomSlot={<PipButton />}
-    />
+    <View style={StyleSheet.absoluteFill}>
+      <View style={[FULLSCREEN_CENTER_STYLE, { backgroundColor: '#000000' }]} />
+      <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady}>
+        {player !== undefined && chromeless && (
+          <UiContainer
+            theme={{ ...DEFAULT_THEOPLAYER_THEME }}
+            player={player}
+            behind={<CenteredDelayedActivityIndicator size={50} />}
+            top={
+              <ControlBar>
+                {/*This is a custom menu for source selection.*/}
+                <SourceMenuButton />
+                {!Platform.isTV && (
+                  <>
+                    <AirplayButton />
+                    <ChromecastButton />
+                  </>
+                )}
+                <LanguageMenuButton />
+                <SettingsMenuButton>
+                  {/*Note: quality selection is not available on iOS */}
+                  <QualitySubMenu />
+                  <PlaybackRateSubMenu />
+                </SettingsMenuButton>
+              </ControlBar>
+            }
+            center={<CenteredControlBar left={<SkipButton skip={-10} />} middle={<PlayButton />} right={<SkipButton skip={30} />} />}
+            bottom={
+              <>
+                <ControlBar style={{ justifyContent: 'flex-start' }}>
+                  <CastMessage />
+                </ControlBar>
+                <ControlBar>
+                  <SeekBar />
+                </ControlBar>
+                <ControlBar>
+                  <MuteButton />
+                  <TimeLabel showDuration={true} />
+                  <Spacer />
+                  <PipButton />
+                  <FullscreenButton />
+                </ControlBar>
+              </>
+            }
+          />
+        )}
+      </THEOplayerView>
+    </View>
   );
 }
