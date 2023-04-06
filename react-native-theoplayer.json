@@ -1,0 +1,8 @@
+{
+	"ios": {
+		"features": [
+			"GOOGLE_IMA",
+			"CHROMECAST"
+		]
+	}
+}

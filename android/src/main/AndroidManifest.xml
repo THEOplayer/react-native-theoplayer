@@ -1,6 +1,51 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.theoplayer">
+  package="com.theoplayer">
 
+  <!--
+    In order to play online streams or ads it is needed to add permissions below.
+    Protection level: normal.
+  -->
+  <uses-permission android:name="android.permission.INTERNET" />
+
+  <!--
+    Allows using PowerManager WakeLocks to keep processor from sleeping or screen from dimming.
+    Protection level: normal
+   -->
   <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+  <!--
+    Allows a regular application to use Service.startForeground.
+    Protection level: normal
+    -->
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+  <!--
+    Allows an app to post notifications.
+    Protection level: dangerous
+    -->
+  <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+  <application>
+
+    <!-- Allow background audio playback by registering this service. -->
+    <service
+      android:name="com.theoplayer.audio.MediaPlaybackService"
+      android:description="@string/background_playback_service_description"
+      android:exported="false"
+      android:foregroundServiceType="mediaPlayback">
+      <intent-filter>
+        <action android:name="android.media.browse.MediaBrowserService" />
+        <action android:name="android.intent.action.MEDIA_BUTTON" />
+      </intent-filter>
+    </service>
+
+    <receiver android:name="androidx.media.session.MediaButtonReceiver"
+      android:exported="false">
+      <intent-filter>
+        <action android:name="android.intent.action.MEDIA_BUTTON" />
+      </intent-filter>
+    </receiver>
+
+  </application>
 
 </manifest>

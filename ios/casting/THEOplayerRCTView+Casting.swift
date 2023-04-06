@@ -2,6 +2,9 @@
 
 import Foundation
 import THEOplayerSDK
+#if canImport(THEOplayerGoogleCastIntegration)
+import THEOplayerGoogleCastIntegration
+#endif
 
 extension THEOplayerRCTView {
     
@@ -13,5 +16,17 @@ extension THEOplayerRCTView {
         return player.cast
     }
 #endif
+    
+    func initCastIntegration() {
+        guard let player = self.player else {
+            return
+        }
+#if os(iOS) && canImport(THEOplayerGoogleCastIntegration)
+        if let castConfiguration = self.playerCastConfiguration() {
+            let castIntegration = GoogleCastIntegrationFactory.createIntegration(on: player, with: castConfiguration)
+            player.addIntegration(castIntegration)
+        }
+#endif
+    }
     
 }

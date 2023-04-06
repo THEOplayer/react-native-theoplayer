@@ -15,17 +15,8 @@
 // ----------------------------------------------------------------------------
 @interface RCT_EXTERN_MODULE(THEOplayerRCTViewManager, RCTViewManager)
 
-RCT_EXPORT_VIEW_PROPERTY(src, NSDictionary);
 RCT_EXPORT_VIEW_PROPERTY(config, NSDictionary);
-RCT_EXPORT_VIEW_PROPERTY(paused, BOOL);
-RCT_EXPORT_VIEW_PROPERTY(volume, NSNumber);
-RCT_EXPORT_VIEW_PROPERTY(muted, BOOL);
-RCT_EXPORT_VIEW_PROPERTY(playbackRate, NSNumber);
-RCT_EXPORT_VIEW_PROPERTY(selectedTextTrack, NSNumber);
-RCT_EXPORT_VIEW_PROPERTY(selectedAudioTrack, NSNumber);
-RCT_EXPORT_VIEW_PROPERTY(selectedVideoTrack, NSNumber);
-RCT_EXPORT_VIEW_PROPERTY(seek, NSNumber);
-RCT_EXPORT_VIEW_PROPERTY(fullscreen, BOOL);
+
 RCT_EXPORT_VIEW_PROPERTY(onNativePause, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativePlay, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeSourceChange, RCTDirectEventBlock);
@@ -40,22 +31,79 @@ RCT_EXPORT_VIEW_PROPERTY(onNativeSeeked, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeEnded, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeError, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeLoadedData, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeRateChange, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeVolumeChange, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeLoadedMetadata, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeFullscreenPlayerWillPresent, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeFullscreenPlayerDidPresent, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeFullscreenPlayerWillDismiss, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeFullscreenPlayerDidDismiss, RCTDirectEventBlock);
-
+RCT_EXPORT_VIEW_PROPERTY(onNativeWaiting, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeCanPlay, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeTextTrackListEvent, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeTextTrackEvent, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeMediaTrackListEvent, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeMediaTrackEvent, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativePlayerReady, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativePresentationModeChange, RCTDirectEventBlock);
 
 RCT_EXPORT_VIEW_PROPERTY(onNativeAdEvent, RCTDirectEventBlock);
 
 RCT_EXPORT_VIEW_PROPERTY(onNativeCastEvent, RCTDirectEventBlock);
 
 RCT_EXTERN_METHOD(destroy:(nonnull NSNumber *)node);
+
+@end
+
+// ----------------------------------------------------------------------------
+// Player Module
+// ----------------------------------------------------------------------------
+@interface RCT_EXTERN_REMAP_MODULE(PlayerModule, THEOplayerRCTPlayerAPI, NSObject)
+
+RCT_EXTERN_METHOD(setPaused:(nonnull NSNumber *)node
+                  paused:(BOOL)paused)
+
+RCT_EXTERN_METHOD(setSource:(nonnull NSNumber *)node
+                  src:(NSDictionary)src)
+
+RCT_EXTERN_METHOD(setABRConfig:(nonnull NSNumber *)node
+                  abrConfig:(NSDictionary)abrConfig)
+
+RCT_EXTERN_METHOD(setCurrentTime:(nonnull NSNumber *)node
+                  time:(nonnull NSNumber *)time)
+
+RCT_EXTERN_METHOD(setMuted:(nonnull NSNumber *)node
+                  muted:(BOOL)muted)
+
+RCT_EXTERN_METHOD(setVolume:(nonnull NSNumber *)node
+                  volume:(nonnull NSNumber *)volume)
+
+RCT_EXTERN_METHOD(setPlaybackRate:(nonnull NSNumber *)node
+                  playbackRate:(nonnull NSNumber *)playbackRate)
+
+RCT_EXTERN_METHOD(setPresentationMode:(nonnull NSNumber *)node
+                  presentationMode:(nonnull NSString *)presentationMode)
+
+RCT_EXTERN_METHOD(setPipConfig:(nonnull NSNumber *)node
+                  pipConfig:(NSDictionary)pipConfig)
+
+RCT_EXTERN_METHOD(setBackgroundAudioConfig:(nonnull NSNumber *)node
+                  backgroundAudioConfig:(NSDictionary)backgroundAudioConfig)
+
+RCT_EXTERN_METHOD(setSelectedTextTrack:(nonnull NSNumber *)node
+                  uid:(nonnull NSNumber *)uid)
+
+RCT_EXTERN_METHOD(setSelectedAudioTrack:(nonnull NSNumber *)node
+                  uid:(nonnull NSNumber *)uid)
+
+RCT_EXTERN_METHOD(setSelectedVideoTrack:(nonnull NSNumber *)node
+                  uid:(nonnull NSNumber *)uid)
+
+RCT_EXTERN_METHOD(setTargetVideoQuality:(nonnull NSNumber *)node
+                  uid:(nonnull NSNumber *)uid)
+
+RCT_EXTERN_METHOD(setPreload:(nonnull NSNumber *)node
+                  type:(nonnull NSString *)type)
 
 @end
 
@@ -84,7 +132,7 @@ RCT_EXTERN_METHOD(scheduledAdBreaks:(nonnull NSNumber *)node
                   rejecter:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(schedule:(nonnull NSNumber *)node
-                  ad: NSDictionary)
+                  ad:(NSDictionary)ad)
 
 RCT_EXTERN_METHOD(daiSnapback:(nonnull NSNumber *)node
                   resolver:(RCTPromiseResolveBlock)resolve

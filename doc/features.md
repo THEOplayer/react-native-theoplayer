@@ -12,23 +12,25 @@ please reach out to us for support.
 | HLS (ts)                                          |         as of v3.6.1 (*)         |        V        |        V        |
 | HLS (fmp4)                                        |                V                 |        V        |        V        |
 | plain MP4                                         |         as of v3.6.1 (*)         |        V        |        V        |
-| MP3                               		        |         as of v3.6.1 (*)         |        V        |        V        |
+| MP3                               		              |         as of v3.6.1 (*)         |        V        |        V        |
 | DRM protection (Widevine)                         |                V                 |        V        |                 |
 | DRM protection (PlayReady)                        |                V                 |        V        |                 |
-| DRM protection (FairPlay)                         |                                  |     Safari      |        V        |
+| DRM protection (FairPlay)                         |               N/A                |     Safari      |        V        |
 | Text tracks (TTML, WebVTT, CEA608 / 608 over 708) |                V                 |        V        |        V        |
 | Text track selection                              |                V                 |        V        |        V        |
 | Text track events                                 |                V                 |        V        |        V        |
 | Media track selection                             |                V                 |        V        |        V        |
-| Media track events                                |                V                 |        V        |        V (**)   |
-| Google IMA CSAI                                   |                V                 |        V        |        V (***)  |
-| Google DAI SSAI                                   |                V                 |        V        |        V (****) |
+| Media track events                                |                V                 |        V        |     V (**)      |
+| Google IMA CSAI                                   |                V                 |        V        |     V (***)     |
+| Google DAI SSAI                                   |                V                 |        V        |    V (****)     |
 | Chromeless                                        |                V                 |        V        |        V        |
-| Chromefull (default SDK UI)                       |                                  |        V        |        V        |
+| Chromefull (default SDK UI)                       |               N/A                |        V        |        V        |
 | Fullscreen                                        |                V                 | with default UI | with default UI |
 | Preview thumbnails                                |                V                 |        V        |  as of v3.6.0*  |
-| Chromecast                                        |               N/A                | with default UI |        V (***)  |
+| Chromecast                                        |                V                 | with default UI |     V (***)     |
 | Airplay                                           |               N/A                |     Safari      | with default UI |
+| Picture-in-Picture                                |                V                 |        V        |        V        |
+| Background playback                               |                V                 |        V        |        V        |
 
 (*) This refers to the underlying platform's THEOplayer SDK.
 

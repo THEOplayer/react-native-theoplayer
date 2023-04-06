@@ -25,12 +25,13 @@ extension THEOplayerRCTView {
         }
     }
 
-#if (GOOGLE_IMA || GOOGLE_DAI)
+#if (GOOGLE_IMA || GOOGLE_DAI) || canImport(THEOplayerGoogleIMAIntegration)
     func playerAdsConfiguration() -> AdsConfiguration? {
-        // NOTE: GoogleIMAAdsConfiguration, GoogleDAIAdsConfigurationBuilder, GoogleDAIAdsConfigurationBuilder require iOS SDK 4.5.1 or higher
-        let googleIMAAdsConfiguration = GoogleIMAAdsConfiguration()
-        googleIMAAdsConfiguration.useNativeIma = self.adsConfig.googleImaUsesNativeIma
-        googleIMAAdsConfiguration.disableUI = !self.adsConfig.adSUIEnabled
+        let googleBuilder = GoogleIMAConfigurationBuilder()
+        googleBuilder.useNativeIMA = self.adsConfig.googleImaUsesNativeIma
+        googleBuilder.disableUI = !self.adsConfig.adSUIEnabled
+        googleBuilder.enableBackgroundPlayback = true
+        let googleIMAAdsConfiguration = googleBuilder.build()
         let daiBuilder = GoogleDAIAdsConfigurationBuilder()
         daiBuilder.disableUI = !self.adsConfig.adSUIEnabled
         daiBuilder.enableBackgroundPlayback = true
@@ -40,7 +41,7 @@ extension THEOplayerRCTView {
                                 googleIma: googleIMAAdsConfiguration,
                                 googleDai: googleDaiAdsConfiguration)
         
-        // For lower iOS SDK versions replace the above with:
+        // For older iOS SDK versions replace the above with:
         /*let googleIMAConfiguration = GoogleIMAConfiguration()
          googleIMAConfiguration.useNativeIma = self.googleImaUsesNativeIma
          googleIMAConfiguration.disableUI = !self.adSUIEnabled
@@ -71,7 +72,7 @@ extension THEOplayerRCTView {
     
     func parseAdsConfig(configDict: NSDictionary) {}
     
-#if GOOGLE_IMA
+#if GOOGLE_IMA || canImport(THEOplayerGoogleIMAIntegration)
     func playerAdsConfiguration() -> AdsConfiguration? { return AdsConfiguration() }
 #else
     func playerAdsConfiguration() -> AdsConfiguration? { return nil }

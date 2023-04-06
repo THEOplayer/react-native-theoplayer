@@ -98,4 +98,9 @@ export interface AdDescription {
  *
  * @public
  */
-export type AdIntegrationKind = '' | 'theo' | 'google-ima' | 'spotx' | 'freewheel';
+export enum AdIntegrationKind {
+  freewheel = 'freewheel',
+  google_ima = 'google-ima',
+  spotx = 'spotx',
+  theo = 'theo',
+}

@@ -7,10 +7,12 @@ import com.facebook.react.uimanager.ViewManager
 import com.theoplayer.ads.AdsModule
 import com.theoplayer.drm.ContentProtectionModule
 import com.theoplayer.cast.CastModule
+import com.theoplayer.player.PlayerModule
 
 class ReactTHEOplayerPackage : ReactPackage {
   override fun createNativeModules(reactContext: ReactApplicationContext): List<NativeModule> {
     return listOf(
+      PlayerModule(reactContext),
       AdsModule(reactContext),
       ContentProtectionModule(reactContext),
       CastModule(reactContext)

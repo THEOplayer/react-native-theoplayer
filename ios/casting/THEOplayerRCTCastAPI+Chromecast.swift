@@ -8,7 +8,7 @@ let ERROR_MESSAGE_CHROMECAST_ACCESS_FAILURE = "Could not access THEOplayer Chrom
 
 extension THEOplayerRCTCastAPI {
    
-#if os(iOS) && CHROMECAST
+#if os(iOS) && (CHROMECAST || canImport(THEOplayerGoogleCastIntegration))
     
     @objc(chromecastCasting:resolver:rejecter:)
     func chromecastCasting(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
