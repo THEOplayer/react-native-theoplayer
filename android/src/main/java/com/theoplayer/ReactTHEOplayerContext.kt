@@ -108,15 +108,18 @@ class ReactTHEOplayerContext private constructor(
     config: BackgroundAudioConfig,
     prevConfig: BackgroundAudioConfig?
   ) {
+    if (prevConfig?.enabled == config.enabled) {
+      // No changes
+      return
+    }
+
     if (BuildConfig.USE_PLAYBACK_SERVICE) {
-      // Enabling background playback
       if (prevConfig?.enabled != true && config.enabled) {
+        // Enabling background playback
         setPlaybackServiceEnabled(true)
         bindMediaPlaybackService()
-      }
-
-      // Disabling background playback
-      if (prevConfig?.enabled == true && !config.enabled) {
+      } else if (prevConfig?.enabled == true) {
+        // Disabling background playback
         binder?.stopForegroundService()
         unbindMediaPlaybackService()
         setPlaybackServiceEnabled(false)
