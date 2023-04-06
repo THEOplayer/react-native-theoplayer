@@ -39,12 +39,9 @@ class ReactTHEOplayerContext private constructor(
   private var binder: MediaPlaybackService.MediaPlaybackBinder? = null
   private var mediaSessionConnector: MediaSessionConnector? = null
 
-  var backgroundAudioConfig: BackgroundAudioConfig = BackgroundAudioConfig(
-    enabled = false,
-    mediaPlaybackServiceEnabled = true
-  )
+  var backgroundAudioConfig: BackgroundAudioConfig = BackgroundAudioConfig(enabled = false)
     set(value) {
-      applyBackgroundPlaybackConfig(value)
+      applyBackgroundPlaybackConfig(value, field)
       field = value
     }
 
@@ -58,7 +55,7 @@ class ReactTHEOplayerContext private constructor(
   var castIntegration: CastIntegration? = null
 
   private val isBackgroundAudioEnabled: Boolean
-    get() = backgroundAudioConfig.enabled && backgroundAudioConfig.mediaPlaybackServiceEnabled
+    get() = backgroundAudioConfig.enabled
 
   companion object {
     private var mediaControlledInstance: ReactTHEOplayerContext? = null
@@ -162,7 +159,7 @@ class ReactTHEOplayerContext private constructor(
     }
 
     // Apply initial backgroundPlayback config
-    applyBackgroundPlaybackConfig(backgroundAudioConfig)
+    applyBackgroundPlaybackConfig(backgroundAudioConfig, null)
   }
 
   private fun initDefaultMediaSession() {
