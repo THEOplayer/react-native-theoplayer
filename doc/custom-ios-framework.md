@@ -1,4 +1,4 @@
-# React Native THEOplayer - custom THEOplayer portal build for iOS
+# React Native THEOplayer - custom 4.x THEOplayer portal build for iOS
 
 To use a custom THEOplayerSDK xcframework for iOS, you need to change the dependency of the react-native-package on the THEOplayerSDK-basic pod into a dependency on a custom xcframework build.
 
@@ -11,7 +11,7 @@ Generate the custom xcframeworks (with the required features) on [portal.theopla
 - copy the generated xcframework for tvOS to **[YourApplicationFolder]/ios/TheoSdk/Frameworks/tvos/THEOplayerSDK.xcframework**. 
 
 ### Prepare TheoSDK/THEOplayerSDK-basic.podscpec
-Add a new THEOplayerSDK-basic.podspec file to the new TheoSDK folder (**[YourApplicationFolder]/ios/THEOplayerSDK-basic.podspec**) with the following contents:
+Add a new THEOplayerSDK-basic.podspec file to the new TheoSDK folder (**[YourApplicationFolder]/ios/THEOplayerSDK-basic.podspec**) with the following example contents (below has Ads feature added in the custom build):
 ```
 Pod::Spec.new do |s|
 
@@ -34,7 +34,7 @@ Pod::Spec.new do |s|
   s.tvos.dependency "GoogleAds-IMA-tvOS-SDK", "4.8.2"
 end
 ```
-Make sure the paths in the podspec point to your downloaded xcframeworks, which should be good after following the above steps.
+Make sure the paths in the podspec point to your downloaded xcframeworks, which should be good when following the above steps.
 
 ### Update your Podfile
 In your application's Podfile, located at **[YourApplicationFolder]/ios/Podfile**, add the following line to redirect all dependencies for the THEOplayerSDK-basic within your project to the newly created podspec:
@@ -42,12 +42,34 @@ In your application's Podfile, located at **[YourApplicationFolder]/ios/Podfile*
 pod 'THEOplayerSDK-basic', :path => './TheoSDK'
 ```
 
-## Link to new SDK
-Run **pod install** to update the SDK dependencies in your application. This will regenerate the pod project for your application that now depends on the generated xcframeworks
+## Mark your custom 4.x SDK Features
+When using a custom 4.x SDK for THEOplayer, the react-native-theoplayer package needs to be notified of the features that were added to that custom build. You can specify the features that were added to the custom build in a file in your application folder:
+
+Create/modify the json file located at **[YourApplicationFolder]/react-native-theoplayer.json** (Should be same level as the node_modules folder)
+
+Edit the file to reflect your custom features (all uppercase, with dashes replaced by underscores):
+```
+{
+	"ios": {
+		"features": [
+			"WEB",
+			"GOOGLE_IMA",
+			"GOOGLE_DAI",
+			"CHROMECAST"
+		]
+	}
+}
+```
+- **WEB** Indicates a 4.x custom build is used
+- **GOOGLE_IMA** enables the Google IMA functionality in the 4.x SDK
+- **GOOGLE_DAI** enables the Google DAI functionality in the 4.x SDK
+- **CHROMECAST** enables the chromecsting functionality in the 4.x SDK
+
+Make sure to add the **'WEB'** feature to indicate a custom **4.x** build is being used. Otherwise a more recent 5.x player is expected which could support a different set of features.
+
+## Finalize the project
+Run **pod install** to update the SDK dependencies in your application. This will regenerate the pod project for your application that now depends on the generated xcframeworks and supports the indicated features.
 ```
 > cd [YourProjectFolder]/ios
 > pod install
 ```
-
-## 4.x SDK Feature flags
-When using a custom 4.x SDK for THEOplayer, the react-native-theoplayer package needs to be notified of the features that were added to that custom build. This is done by a script that evaluates the generated xcframeworks. This script targets by default the above mentioned TheoSDK folder. If you move your custom frameworks to a different location (than the suggested TheoSDK folder), you must update that location in the react-native-theoplayer.podspec in your react-native-theoplayer node_module folder. 

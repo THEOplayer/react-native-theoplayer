@@ -147,9 +147,25 @@ React Native component updates and could affect performance in negative way.
 
 ### Getting started on iOS and tvOS
 
-After completing the [initial project setup](#setting-up-a-new-project), which is shared for all platforms,
-for iOS/tvOS set the source to the following HLS stream:
+To define which extra THEOplayer integrations need to be loaded for additionl features (currently: IMA ads and/or chromecast) a config file needs to be added to you application folder:
 
+Create a json file at **[YourApplicationFolder]/react-native-theoplayer.json** (Should be on the same level as the node_modules folder)
+
+Edit the file to reflect the features required for your application. The following example adds both Google IMA and Chromecast to the setup. If one of these is out of your applications scope, you can leave it out to reduce the app's size. When using only basic functionality, leave the features array empty. Example:
+```
+{
+	"ios": {
+		"features": [
+			"GOOGLE_IMA",
+			"CHROMECAST"
+		]
+	}
+}
+```
+- **GOOGLE_IMA**: adds an additional dependency to the THEOplayer-Integration-GoogleIMA cocoapod that delivers the IMA functionality
+- **CHROMECAST**: adds an additional dependency to the THEOplayer-Integration-GoogleCast cocoapod that delivers the chromecast functionality
+
+Once the project has been setup correctly, set the source to a valid HLS stream, eg.
 ```typescript
 const source = {
   sources: [
@@ -160,8 +176,18 @@ const source = {
   ],
 };
 ```
+Some RN templates miss a specific Swift version setting for tvOS. To fix this add a custom build setting to your tvOS app target:
+```
+SWIFT_VERSION 5.0
+```
 
-You need an additional change for tvOS, since the tvOS SDK needs to be prepared before it can be used in a RN context. First, include TheoplayerSDK into your project's AppDelegate:
+Run pod install in your app's ios folder
+```bash
+pod install
+```
+
+### When working with a 4.x tvOS THEOplayer SDK
+When using a 4.x SDK, you need an additional change for tvOS, since the tvOS SDK needs to be prepared before it can be used in a RN context. First, include TheoplayerSDK into your project's AppDelegate:
 ```swift
 #if TARGET_OS_TV
 #import <THEOplayerSDK/THEOplayerSDK-Swift.h>
@@ -172,16 +198,6 @@ Next, prepare the THEOplayer right after the creation of the rootViewController 
 #if TARGET_OS_TV
   [THEOplayer prepareWithFirstViewController: [UIViewController new]];
 #endif
-```
-
-Some RN templates miss a specific Swift version setting for tvOS. To fix this add a custom build setting to your tvOS app target:
-```
-SWIFT_VERSION 5.0
-```
-
-Run pod install in your app's ios folder
-```bash
-pod install
 ```
 
 ### Getting started on Web
