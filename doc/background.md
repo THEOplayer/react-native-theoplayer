@@ -23,9 +23,17 @@ player.backgroundAudioConfiguration = { enabled: true };
 
 On Android, a [service](https://developer.android.com/guide/components/services) is used to
 continue playback in the background while the user is not interacting with the app.
-It is possible to disable the service by setting the build config field `'THEOplayer_usePlaybackService = false'`.
+
+It is possible to disable the service at build time by setting the build config field `'THEOplayer_usePlaybackService = false'`.
 In that case the background playback feature is disabled, no notifications are displayed, and the
 player will always pause when the hosting app goes to the background.
+
+It is also possible to toggle the service at run-time by setting the `mediaPlaybackServiceEnabled` flag on
+`backgroundAudioConfiguration`:
+
+```typescript
+player.backgroundAudioConfiguration = { enabled: false, mediaPlaybackServiceEnabled: false };
+```
 
 ### Notifications, Metadata and Lockscreen Controls
 
