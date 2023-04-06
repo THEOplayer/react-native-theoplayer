@@ -13,7 +13,6 @@ import com.theoplayer.android.api.error.THEOplayerException
 import com.theoplayer.android.api.event.EventListener
 import com.theoplayer.android.api.event.EventType
 import com.theoplayer.android.api.event.player.*
-import com.theoplayer.android.api.event.track.mediatrack.audio.ActiveQualityChangedEvent
 import com.theoplayer.android.api.event.track.mediatrack.audio.AudioTrackEventTypes
 import com.theoplayer.android.api.event.track.mediatrack.audio.QualityChangedEvent
 import com.theoplayer.android.api.event.track.mediatrack.audio.list.AudioTrackListEventTypes
@@ -524,7 +523,7 @@ class PlayerEventEmitter internal constructor(
     val qualityChangedEventType =
       (if (trackType === MediaTrackType.AUDIO)
         AudioTrackEventTypes.ACTIVEQUALITYCHANGEDEVENT
-      else VideoTrackEventTypes.ACTIVEQUALITYCHANGEDEVENT) as EventType<ActiveQualityChangedEvent>
+      else VideoTrackEventTypes.ACTIVEQUALITYCHANGEDEVENT)
     when (eventType) {
       TrackEventType.ADD_TRACK -> track.addEventListener(
         qualityChangedEventType,
