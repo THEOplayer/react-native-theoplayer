@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
+- Fixed an issue on Android where building the SDK would fail when depending on player SDK v5.x.
+
+## [1.8.2]
+
+### Fixed
+
 - Fixed an issue on Android where building the SDK would fail when depending on player SDK v4.12.0.
 
 ## [1.8.1]
