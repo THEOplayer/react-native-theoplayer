@@ -6,7 +6,7 @@ if File.exists?(theoconfigpath)
   theoconfig = JSON.parse(File.read(theoconfigpath))
   theofeatures = theoconfig["ios"]["features"]
 else
-  theofeatures = []
+  theofeatures = ["NONE"]
 end
 
 Pod::Spec.new do |s|
@@ -28,17 +28,21 @@ Pod::Spec.new do |s|
   
   # THEOplayer Dependencies
   if theofeatures.include?("WEB") 
+  	puts "Using THEOplayer-basic SDK, marked features: #{theofeatures.join(' ')}"
     s.dependency "THEOplayerSDK-basic"
     s.pod_target_xcconfig = {
       'SWIFT_ACTIVE_COMPILATION_CONDITIONS[config=Release]' => theofeatures.join(' '),
       'SWIFT_ACTIVE_COMPILATION_CONDITIONS[config=Debug]' => theofeatures.join(' ')
     }
   else 
+  	puts "Using THEOplayer-core SDK"
     s.dependency "THEOplayerSDK-core"
     if theofeatures.include?("GOOGLE_IMA") 
+	  puts "Adding THEOplayer-Integration-GoogleIMA"
       s.dependency "THEOplayer-Integration-GoogleIMA"
     end
     if theofeatures.include?("CHROMECAST")
+	  puts "Adding THEOplayer-Integration-GoogleCast"
       s.ios.dependency "THEOplayer-Integration-GoogleCast"
       s.ios.dependency "google-cast-sdk-dynamic-xcframework-no-bluetooth"
     end
