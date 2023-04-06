@@ -45,23 +45,14 @@ export interface MediaTrack extends Track {
   readonly language: string;
 
   /**
-   * The uid of the active quality of the media track, i.e. the quality that is currently being played.
+   * The active quality of the media track, i.e. the quality that is currently being played.
    */
-  readonly activeQuality: number | undefined;
+  readonly activeQuality: Quality | undefined;
 
   /**
    * The qualities of the media track.
    */
   readonly qualities: Quality[];
-
-  /**
-   * One or more desired uids of qualities of the media track.
-   *
-   * @remarks
-   * <br/> - If desired qualities are present, the Adaptive Bitrate mechanism of the player will limit itself to these qualities.
-   * <br/> - If one desired quality is present, the Adaptive Bitrate mechanism of the player will be disabled and the desired quality will be played back.
-   */
-  readonly targetQuality: number | number[] | undefined;
 }
 
 export function findMediaTrackByUid(mediaTracks: MediaTrack[], uid: number | undefined): MediaTrack | undefined {

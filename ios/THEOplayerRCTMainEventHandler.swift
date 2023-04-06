@@ -6,7 +6,7 @@ import THEOplayerSDK
 class THEOplayerRCTMainEventHandler {
     // MARK: Members
     private weak var player: THEOplayer?
-    private var currentPresentationMode = THEOplayerSDK.PresentationMode.inline // TheoPlayer's initial presentationMode
+    private weak var presentationModeContext: THEOplayerRCTPresentationModeContext?
         
     // MARK: Events
     var onNativePlay: RCTDirectEventBlock?
@@ -15,6 +15,7 @@ class THEOplayerRCTMainEventHandler {
     var onNativeLoadStart: RCTDirectEventBlock?
     var onNativeReadyStateChange: RCTDirectEventBlock?
     var onNativeDurationChange: RCTDirectEventBlock?
+    var onNativeVolumeChange: RCTDirectEventBlock?
     var onNativeProgress: RCTBubblingEventBlock?
     var onNativeTimeUpdate: RCTBubblingEventBlock?
     var onNativePlaying: RCTDirectEventBlock?
@@ -24,10 +25,10 @@ class THEOplayerRCTMainEventHandler {
     var onNativeError: RCTDirectEventBlock?
     var onNativeLoadedData: RCTDirectEventBlock?
     var onNativeLoadedMetadata: RCTDirectEventBlock?
-    var onNativeFullscreenPlayerWillPresent: RCTDirectEventBlock?
-    var onNativeFullscreenPlayerDidPresent: RCTDirectEventBlock?
-    var onNativeFullscreenPlayerWillDismiss: RCTDirectEventBlock?
-    var onNativeFullscreenPlayerDidDismiss: RCTDirectEventBlock?
+    var onNativeRateChange: RCTDirectEventBlock?
+    var onNativeWaiting: RCTDirectEventBlock?
+    var onNativeCanPlay: RCTDirectEventBlock?
+    var onNativePresentationModeChange: RCTDirectEventBlock?
     
     // MARK: player Listeners
     private var playListener: EventListener?
@@ -36,6 +37,7 @@ class THEOplayerRCTMainEventHandler {
     private var loadStartListener: EventListener?
     private var readyStateChangeListener: EventListener?
     private var durationChangeListener: EventListener?
+    private var volumeChangeListener: EventListener?
     private var progressListener: EventListener?
     private var timeUpdateListener: EventListener?
     private var playingListener: EventListener?
@@ -45,6 +47,9 @@ class THEOplayerRCTMainEventHandler {
     private var errorListener: EventListener?
     private var loadedDataListener: EventListener?
     private var loadedMetadataListener: EventListener?
+    private var rateChangeListener: EventListener?
+    private var waitingListener: EventListener?
+    private var canPlayListener: EventListener?
     private var presentationModeChangeListener: EventListener?
     
     // MARK: - destruction
@@ -54,23 +59,16 @@ class THEOplayerRCTMainEventHandler {
     }
     
     // MARK: - player setup / breakdown
-    func setPlayer(_ player: THEOplayer) {
-        self.player = player;
+    func setPlayer(_ player: THEOplayer, presentationModeContext: THEOplayerRCTPresentationModeContext) {
+        self.player = player
+        self.presentationModeContext = presentationModeContext
         
         // attach listeners
         self.attachListeners()
     }
     
-    private func attachListeners() {
-        self.attachMainPlayerListeners()
-    }
-    
-    private func dettachListeners() {
-        self.dettachMainPlayerListeners()
-    }
-    
     // MARK: - attach/dettach main player Listeners
-    private func attachMainPlayerListeners() {
+    private func attachListeners() {
         guard let player = self.player else {
             return
         }
@@ -133,25 +131,51 @@ class THEOplayerRCTMainEventHandler {
         }
         if DEBUG_EVENTHANDLER { print("[NATIVE] DurationChange listener attached to THEOplayer") }
         
+        // VOLUME_CHANGE
+        self.volumeChangeListener = player.addEventListener(type: PlayerEventTypes.VOLUME_CHANGE) { [weak self] event in
+            if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received VOLUME_CHANGE event from THEOplayer") }
+            if let forwardedVolumeChangeEvent = self?.onNativeVolumeChange {
+                forwardedVolumeChangeEvent(
+                    [
+                        "volume": event.volume,
+                        "muted": player.muted
+                    ]
+                )
+            }
+        }
+        if DEBUG_EVENTHANDLER { print("[NATIVE] VolumeChange listener attached to THEOplayer") }
+        
         // PROGRESS
         self.progressListener = player.addEventListener(type: PlayerEventTypes.PROGRESS) { [weak self] event in
             //if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received PROGRESS event from THEOplayer") }
             if let forwardedProgressEvent = self?.onNativeProgress {
-                player.requestSeekable(completionHandler: { timeRanges, error in
-                    var seekable: [[String:Double]] = []
-                    timeRanges?.forEach({ timeRange in
-                        seekable.append(
+                player.requestSeekable(completionHandler: { seekableTimeRanges, error in
+                    player.requestBuffered(completionHandler: { bufferedTimeRanges, error in
+                        var seekable: [[String:Double]] = []
+                        seekableTimeRanges?.forEach({ timeRange in
+                            seekable.append(
+                                [
+                                    "start": timeRange.start * 1000,            // sec -> msec
+                                    "end": timeRange.end * 1000                 // sec -> msec
+                                ]
+                            )
+                        })
+                        var buffered: [[String:Double]] = []
+                        bufferedTimeRanges?.forEach({ timeRange in
+                            buffered.append(
+                                [
+                                    "start": timeRange.start * 1000,            // sec -> msec
+                                    "end": timeRange.end * 1000                 // sec -> msec
+                                ]
+                            )
+                        })
+                        forwardedProgressEvent(
                             [
-                                "start": timeRange.start * 1000,            // sec -> msec
-                                "end": timeRange.end * 1000                 // sec -> msec
+                                "seekable":seekable,
+                                "buffered":buffered
                             ]
                         )
                     })
-                    forwardedProgressEvent(
-                        [
-                            "seekable":seekable
-                        ]
-                    )
                 })
             }
         }
@@ -249,35 +273,45 @@ class THEOplayerRCTMainEventHandler {
         }
         if DEBUG_EVENTHANDLER { print("[NATIVE] LoadedMetadata listener attached to THEOplayer") }
         
+        // RATE_CHANGE
+        self.rateChangeListener = player.addEventListener(type: PlayerEventTypes.RATE_CHANGE) { [weak self] event in
+            if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received RATE_CHANGE event from THEOplayer") }
+            if let forwardedRateChangeEvent = self?.onNativeRateChange {
+                forwardedRateChangeEvent(["playbackRate": event.playbackRate])
+            }
+        }
+        if DEBUG_EVENTHANDLER { print("[NATIVE] RateChange listener attached to THEOplayer") }
+        
+        // WAITING
+        self.waitingListener = player.addEventListener(type: PlayerEventTypes.WAITING) { [weak self] event in
+            if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received WAITING event from THEOplayer") }
+            if let forwardedWaitingEvent = self?.onNativeWaiting {
+                forwardedWaitingEvent([:])
+            }
+        }
+        if DEBUG_EVENTHANDLER { print("[NATIVE] Waiting listener attached to THEOplayer") }
+        
+        // CAN_PLAY
+        self.canPlayListener = player.addEventListener(type: PlayerEventTypes.CAN_PLAY) { [weak self] event in
+            if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received CAN_PLAY event from THEOplayer") }
+            if let forwardedCanPlayEvent = self?.onNativeCanPlay {
+                forwardedCanPlayEvent([:])
+            }
+        }
+        if DEBUG_EVENTHANDLER { print("[NATIVE] Waiting listener attached to THEOplayer") }
+        
         // PRESENTATION_MODE_CHANGE
         self.presentationModeChangeListener = player.addEventListener(type: PlayerEventTypes.PRESENTATION_MODE_CHANGE) { [weak self] event in
-            if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received PRESENTATION_MODE_CHANGE event from THEOplayer") }
-            if event.presentationMode != self?.currentPresentationMode {
-                // entering fullscreen
-                if event.presentationMode == .fullscreen ,
-                   let forwardedFullscreenPlayerWillPresentEvent = self?.onNativeFullscreenPlayerWillPresent {
-                    forwardedFullscreenPlayerWillPresentEvent([:])
-                }
-                if event.presentationMode == .fullscreen,
-                   let forwardedFullscreenPlayerDidPresentEvent = self?.onNativeFullscreenPlayerDidPresent {
-                    forwardedFullscreenPlayerDidPresentEvent([:])
-                }
-                // exiting fullscreen
-                if self?.currentPresentationMode == .fullscreen,
-                   let forwardedFullscreenPlayerWillDismissEvent = self?.onNativeFullscreenPlayerWillDismiss {
-                    forwardedFullscreenPlayerWillDismissEvent([:])
-                }
-                if self?.currentPresentationMode == .fullscreen,
-                   let forwardedFullscreenPlayerDidDismissEvent = self?.onNativeFullscreenPlayerDidDismiss {
-                    forwardedFullscreenPlayerDidDismissEvent([:])
-                }
-                self?.currentPresentationMode = event.presentationMode
+            if DEBUG_THEOPLAYER_EVENTS || true { print("[NATIVE] Received PRESENTATION_MODE_CHANGE event from THEOplayer (to \(event.presentationMode._rawValue))") }
+            if let forwardedPresentationModeChangeEvent = self?.onNativePresentationModeChange,
+               let presentationModeContext = self?.presentationModeContext {
+                forwardedPresentationModeChangeEvent(presentationModeContext.eventContextForNewPresentationMode(event.presentationMode))
             }
         }
         if DEBUG_EVENTHANDLER { print("[NATIVE] PresentationModeChange listener attached to THEOplayer") }
     }
     
-    private func dettachMainPlayerListeners() {
+    private func dettachListeners() {
         guard let player = self.player else {
             return
         }
@@ -370,6 +404,24 @@ class THEOplayerRCTMainEventHandler {
         if let loadedMetadataListener = self.loadedMetadataListener {
             player.removeEventListener(type: PlayerEventTypes.LOADED_META_DATA, listener: loadedMetadataListener)
             if DEBUG_EVENTHANDLER { print("[NATIVE] LoadedMetadata listener dettached from THEOplayer") }
+        }
+        
+        // RATE_CHANGE
+        if let rateChangeListener = self.rateChangeListener {
+            player.removeEventListener(type: PlayerEventTypes.RATE_CHANGE, listener: rateChangeListener)
+            if DEBUG_EVENTHANDLER { print("[NATIVE] RateChange listener dettached from THEOplayer") }
+        }
+        
+        // WAITING
+        if let waitingListener = self.waitingListener {
+            player.removeEventListener(type: PlayerEventTypes.WAITING, listener: waitingListener)
+            if DEBUG_EVENTHANDLER { print("[NATIVE] Waiting listener dettached from THEOplayer") }
+        }
+        
+        // CAN_PLAY
+        if let canPlayListener = self.canPlayListener {
+            player.removeEventListener(type: PlayerEventTypes.CAN_PLAY, listener: canPlayListener)
+            if DEBUG_EVENTHANDLER { print("[NATIVE] CanPlay listener dettached from THEOplayer") }
         }
         
         // PRESENTATION_MODE_CHANGE

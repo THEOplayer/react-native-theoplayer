@@ -1,4 +1,4 @@
-import type { AdDescription } from "./Ads";
+import type { AdDescription, AdIntegrationKind } from "./Ads";
 
 /**
  * The possible ad unit types, represented by a value from the following list:
@@ -40,7 +40,7 @@ export interface FreeWheelAdDescription extends AdDescription {
   /**
    * The integration of this ad break.
    */
-  integration: 'freewheel';
+  integration: AdIntegrationKind.freewheel;
 
   /**
    * The FreeWheel ad server URL.

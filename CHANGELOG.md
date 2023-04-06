@@ -5,7 +5,114 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [1.8.3]
+## [Unreleased 2.0.0-pre9]
+
+### Changed
+
+- Set the player container on Web to by default have a width and height not larger than the devices width and height.
+- Use `enum` type for `PresentationMode`, `CastState` and`AdIntegrationKind`.
+- Changed the methods of the Cast API, such as `casting` and `state`, to be synchronous.
+- Applied `backgroundAudioConfig` properties on Android when closing picture-in-picture window.
+- Applied `backgroundAudioConfig` properties on Android when showing Notifications.
+- Disable iOS lockscreen controls when backgroundAudioConfig is set to `disabled`.
+
+### Added
+
+- Added `enableMediaPlaybackService` option to `backgroundAudioConfiguration` to optionally disable the MediaBrowserService that provides background audio support on Android.
+- Added support for the `enabled` flag of `BackgroundAudioConfiguration` for Web.
+- Added serviceId and contentId to NowPlayingInfo
+- Feature flag extraction from custom iOS builds
+
+### Fixed
+
+- Fixed an issue on Android where the media session would become inactive when going to picture-in-picture mode, removing all transport controls.
+- Fixed an issue where removing a player listener within a listener callback would sometimes result in events not being dispatched.
+
+## [Unreleased 2.0.0-pre7]
+
+### Fixed
+
+- Fixed an issue where the media session connector for Web would report an error when passing an Infinite duration for live streams.
+- Fixed an issue on iOS where ID3 metadata content would not be correctly passed to cue instances.
+- Fixed an issue on Android where the `'picture-in-picture'` permission was not checked.
+- Fixed an issue on Android where the aspect ratio of the `'picture-in-picture'` window could be outside the valid range.
+- Fixed an issue on iOS and Android where for a live stream the `duration` property of a `loadedmetadata` event was not properly passed as being `Infinite`.
+
+### Changed
+
+- Replaced deprecated systemUiVisibility code in Android's PresentationManager.
+- Use `enum` types for `TextTrackMode`, `TextTrackType` and `TextTrackKind`.
+- Allow go-to-live on iOS and Android by setting `currentTime` to `Infinity`.
+
+### Added
+
+- Added a `mediaControl` property to `PlayerConfiguration` to configure Media Session, Now Playing and Remote Command Center functionality across all platforms. It currently only contains a media session toggle for Web.
+- Added a `backgroundAudioConfiguration` property to `THEOplayer` to allow dynamically configuring background audio functionality.
+- Added a `pipConfiguration` property to `THEOplayer` to allow dynamically configuring picture-in-picture behavior.
+- Added support for background audio playback on iOS and Android.
+- Added `keepScreenOn` as a default player view property on Android to keep the device awake.
+
+## [Unreleased 2.0.0-pre6]
+
+### Fixed
+
+- Fixed an issue where the IMA player container would be rendered collapsed on Web.
+- Fixed a missing check for picture-in-picture permission on Android.
+
+### Added
+
+- Added media session connector for Web.
+
+## [Unreleased 2.0.0-pre5]
+
+### Added
+
+- Added `onPlayerReady` callback on `THEOplayerView` to pass a `THEOplayer` instance once it is ready for access. More info on the [migration documentation](./doc/migrating_v2.md) page.
+- Added `canplay` event, which is dispatched when the player can start play-out.
+- Added `waiting` event, which is dispatched when the player has stopped play-out because of a temporary lack of data.
+- Added `nativeHandle` property on `THEOplayer` to access the native player instance on web, and view id on mobile.
+- Added `entercue` and `exitcue` events for text tracks, which are dispatched when a cue becomes (in)active.
+- Added `ratechange` event, which is dispatched when the player's playback rate was changed.
+- Added `seekable` property on `THEOplayer`, containing the time ranges of the media the player is able to seek to.
+- Added `buffered` property on `THEOplayer`, containing the time ranges of the media the player has currently buffered.
+- Added `buffered` property to the payload of the `onprogress` event.
+- Added `duration`, `seeking`, `preload`, `textTrack`, `videoTracks` and `audioTracks` properties to `THEOplayer`.
+- Added `libraryLocation` property to `PlayerConfiguration` to allow passing custom location for web workers.
+- Added `mutedAutoplay` property to `PlayerConfiguration` to allow autoplay on web browsers with different autoplay policies.
+- Added mode `hidden` as a value for a text track's `TextTrackMode` property, which is typically used for metadata tracks.
+- Added `TextTrackStyle` API to support text track styling. This feature is currently supported on web only.
+- Added support for 'picture-in-picture' presentation mode. More information on the [documentation page](./doc/pip.md)
+- Added `muted` state in `volumechange` event payload.
+- Added media session connector for Android.
+- Added public accessor on the `THEOplayerRCTView` that exposes the underlying iOS `THEOplayer` instance. So you can use the underlying THEOplayer from other packages.
+
+### Changed
+
+- Moved all player properties such as `paused`, `muted` and `volume`, from  `THEOplayerView` component to `THEOplayer` instance. More info on the [migration documentation](./doc/migrating_v2.md) page.
+- Removed `onEventName` callback methods from `THEOplayerView` component in favor of `THEOplayer` event listener's interface. More info on the [migration documentation](./doc/migrating_v2.md) page.
+- Changed documentation sample code to reflect API changes.
+- Exposed the `activeQuality` of a `MediaTrack` as a `Quality` instance instead of the quality's `uid`.
+- Set the default container style for web to let the player cover the whole container.
+
+### Removed
+
+- Removed `seek` method on `THEOplayer`. It is replaced with a `currentTime` setter.
+- Removed `fullscreen` setter and getter in favor of `presentationMode`.
+
+### Fixed
+
+- Fixed an issue on Android where an exception is thrown when an empty source description would be passed.
+- Fixed the Webpack configuration in the sample application to copy web workers to `libraryLocation`.
+- Fixed an issue on web where in case multiple player instances are created, the players would overlap.
+- Fixed an issue on iOS Safari where switching to fullscreen presentation would not work.
+- Fixed an issue on Android where passing an invalid empty source description would result in a crash.
+- Fixed an issue on Android where the `framerate` property of a `VideoQuality` instance would not be filled in.
+- Fixed an issue on iOS where the `TextTrackMode` property of a text track would be incorrect.
+- Fixed an issue on iOS where after enabling/disabling a text track, metadata tracks would be set to `disabled` as well.
+- Fixed missing `volumechange` events on mobile platforms.
+- Fixed an issue on iOS where after toggling the mute state during an ad playout, succeeding mute toggles had no effect.
+
+## [1.8.2]
 
 ### Fixed
 

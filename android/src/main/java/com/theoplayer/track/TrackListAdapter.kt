@@ -27,21 +27,20 @@ private const val PROP_AUDIO_SAMPLING_RATE = "audioSamplingRate"
 private const val PROP_BANDWIDTH = "bandwidth"
 private const val PROP_QUALITIES = "qualities"
 private const val PROP_ACTIVE_QUALITY = "activeQuality"
-private const val PROP_TARGET_QUALITY = "targetQuality"
 private const val PROP_WIDTH = "width"
 private const val PROP_HEIGHT = "height"
-private const val PROP_FRAMERATE = "framerate"
+private const val PROP_FRAMERATE = "frameRate"
 private const val PROP_STARTTIME = "startTime"
 private const val PROP_ENDTIME = "endTime"
 private const val PROP_CUES = "cues"
 private const val PROP_CUE_CONTENT = "content"
 
-class TrackListAdapter {
+object TrackListAdapter {
 
-  fun fromTextTrackList(textTrackList: TextTrackList): WritableArray {
+  fun fromTextTrackList(textTrackList: TextTrackList?): WritableArray {
     val textTracks = Arguments.createArray()
-    for (i in 0 until textTrackList.length()) {
-      textTracks.pushMap(fromTextTrack(textTrackList.getItem(i)))
+    textTrackList?.forEach { track ->
+      textTracks.pushMap(fromTextTrack(track))
     }
     return textTracks
   }
@@ -76,11 +75,14 @@ class TrackListAdapter {
     val cuePayload = Arguments.createMap()
     cuePayload.putString(PROP_ID, cue.id)
     cuePayload.putDouble(PROP_UID, cue.uid.toDouble())
-    cuePayload.putDouble(PROP_STARTTIME, (1e03 * cue.startTime).toLong().toDouble())
-    cuePayload.putDouble(PROP_ENDTIME, (1e03 * cue.endTime).toLong().toDouble())
+    cuePayload.putDouble(PROP_STARTTIME, (1e3 * cue.startTime).toLong().toDouble())
+    cuePayload.putDouble(PROP_ENDTIME, (1e3 * cue.endTime).toLong().toDouble())
     val content = cue.content
     if (content != null) {
-      cuePayload.putString(PROP_CUE_CONTENT, content.optString("content"))
+      cuePayload.putString(
+        PROP_CUE_CONTENT,
+        content.optString("content") ?: content.optString("contentString")
+      )
     }
     return cuePayload
   }
@@ -103,6 +105,7 @@ class TrackListAdapter {
     return audioQualityPayload
   }
 
+  @Suppress("UNCHECKED_CAST")
   fun <Q : Quality?> fromMediaTrack(
     track: MediaTrack<Q>,
     trackType: MediaTrackType
@@ -120,37 +123,21 @@ class TrackListAdapter {
     audioTrackPayload.putString(PROP_LANGUAGE, audioTrack.language)
     val qualityList = audioTrack.qualities
     val qualities = Arguments.createArray()
-    if (qualityList != null) {
-      for (j in 0 until qualityList.length()) {
-        qualities.pushMap(fromAudioQuality(qualityList.getItem(j)))
-      }
+    qualityList?.forEach { quality ->
+      qualities.pushMap(fromAudioQuality(quality))
     }
     audioTrackPayload.putArray(PROP_QUALITIES, qualities)
-    val targetQualityList = audioTrack.targetQualities
-    val targetQualities = Arguments.createArray()
-    if (targetQualityList != null) {
-      for (j in 0 until targetQualityList.length()) {
-        val quality = targetQualityList.getItem(j)
-        val audioQualityPayload = Arguments.createMap()
-        audioQualityPayload.putInt(PROP_UID, quality.uid)
-        targetQualities.pushMap(audioQualityPayload)
-      }
-    }
     val activeQuality = audioTrack.activeQuality
     if (activeQuality != null) {
-      audioTrackPayload.putInt(PROP_ACTIVE_QUALITY, activeQuality.uid)
-    }
-    val targetQuality = audioTrack.targetQuality
-    if (targetQuality != null) {
-      audioTrackPayload.putInt(PROP_TARGET_QUALITY, targetQuality.uid)
+      audioTrackPayload.putMap(PROP_ACTIVE_QUALITY, fromQuality(activeQuality))
     }
     return audioTrackPayload
   }
 
-  fun fromAudioTrackList(audioTrackList: MediaTrackList<AudioQuality>): WritableArray {
+  fun fromAudioTrackList(audioTrackList: MediaTrackList<AudioQuality>?): WritableArray {
     val audioTracks = Arguments.createArray()
-    for (i in 0 until audioTrackList.length()) {
-      audioTracks.pushMap(fromAudioTrack(audioTrackList.getItem(i)))
+    audioTrackList?.forEach { track ->
+      audioTracks.pushMap(fromAudioTrack(track))
     }
     return audioTracks
   }
@@ -188,31 +175,17 @@ class TrackListAdapter {
       }
     }
     videoTrackPayload.putArray(PROP_QUALITIES, qualities)
-    val targetQualityList = videoTrack.targetQualities
-    val targetQualities = Arguments.createArray()
-    if (targetQualityList != null) {
-      for (j in 0 until targetQualityList.length()) {
-        val quality = targetQualityList.getItem(j)
-        val videoQualityPayload = Arguments.createMap()
-        videoQualityPayload.putInt(PROP_UID, quality.uid)
-        targetQualities.pushMap(videoQualityPayload)
-      }
-    }
     val activeQuality = videoTrack.activeQuality
     if (activeQuality != null) {
-      videoTrackPayload.putInt(PROP_ACTIVE_QUALITY, activeQuality.uid)
-    }
-    val targetQuality = videoTrack.targetQuality
-    if (targetQuality != null) {
-      videoTrackPayload.putInt(PROP_TARGET_QUALITY, targetQuality.uid)
+      videoTrackPayload.putMap(PROP_ACTIVE_QUALITY, fromQuality(activeQuality))
     }
     return videoTrackPayload
   }
 
-  fun fromVideoTrackList(videoTrackList: MediaTrackList<VideoQuality>): WritableArray {
+  fun fromVideoTrackList(videoTrackList: MediaTrackList<VideoQuality>?): WritableArray {
     val videoTracks = Arguments.createArray()
-    for (i in 0 until videoTrackList.length()) {
-      videoTracks.pushMap(fromVideoTrack(videoTrackList.getItem(i)))
+    videoTrackList?.forEach { track ->
+      videoTracks.pushMap(fromVideoTrack(track))
     }
     return videoTracks
   }

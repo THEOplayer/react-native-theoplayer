@@ -7,4 +7,9 @@
  *
  * @public
  */
-export type CastState = 'unavailable' | 'available' | 'connecting' | 'connected';
+export enum CastState {
+    unavailable = "unavailable",
+    available = "available",
+    connecting = "connecting",
+    connected = "connected",
+}

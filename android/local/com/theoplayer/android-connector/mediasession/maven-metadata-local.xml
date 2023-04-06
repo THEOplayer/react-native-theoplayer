@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>com.theoplayer.android-connector</groupId>
+  <artifactId>mediasession</artifactId>
+  <versioning>
+    <latest>4.11.0-local</latest>
+    <release>4.11.0-local</release>
+    <versions>
+      <version>4.11.0-local</version>
+    </versions>
+    <lastUpdated>20230403121710</lastUpdated>
+  </versioning>
+</metadata>

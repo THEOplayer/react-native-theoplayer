@@ -18,15 +18,15 @@ enum ProxyIntegrationError: Error {
 
 let CERTIFICATE_MARKER: String = "https://certificatemarker/"
 let PROXY_INTEGRATION_TAG: String = "[ProxyContentProtectionIntegration]"
-let BRIDGE_TIMEOUT = 10.0
 
 class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProtectionIntegration {
     private weak var contentProtectionAPI: THEOplayerRCTContentProtectionAPI?
     private var integrationId: String!
     private var keySystemId: String!
-    private var buildIntegrationSemaphore = DispatchSemaphore(value: 0)
-    private var contentIdExtractionSemaphore = DispatchSemaphore(value: 0)
+    private var skdUrl: String?
     private var drmConfig: THEOplayerSDK.DRMConfiguration
+    private var certificateResponseFinal = false
+    private var licenseResponseFinal = false
     
     init(contentProtectionAPI: THEOplayerRCTContentProtectionAPI?, integrationId: String, keySystemId: String, drmConfig: THEOplayerSDK.DRMConfiguration) {
         self.contentProtectionAPI = contentProtectionAPI
@@ -39,13 +39,12 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
             } else {
                 print(PROXY_INTEGRATION_TAG, "WARNING: Failed to create a THEOplayer ContentProtectionIntegration for \(integrationId) - \(keySystemId)")
             }
-            self.buildIntegrationSemaphore.signal()
         })
-        _ = self.buildIntegrationSemaphore.wait(timeout: .now() + BRIDGE_TIMEOUT)
     }
     
     func onCertificateRequest(request: CertificateRequest, callback: CertificateRequestCallback) {
         if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "THEOplayer triggered an onCertificateRequest") }
+        self.certificateResponseFinal = false
         let processedLocally = self.handleCertificateRequestLocally(drmConfig: drmConfig, callback: callback)
         if !processedLocally {
             if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "Handling certificate request through content protection integration.") }
@@ -55,6 +54,7 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
                     return
                 }
                 if let data = certificateData {
+                    self.certificateResponseFinal = true
                     callback.respond(certificate: data)
                 } else {
                     callback.error(error: ProxyIntegrationError.certificateRequestHandlingFailed)
@@ -65,67 +65,86 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
     
     func onCertificateResponse(response: CertificateResponse, callback: CertificateResponseCallback) {
         if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "THEOplayer triggered an onCertificateResponse") }
-        self.contentProtectionAPI?.handleCertificateResponse(integrationId: self.integrationId, keySystemId: self.keySystemId, certificateResponse: response) { certificateData, error in
-            if let error = error {
-                callback.error(error: error)
-                return
-            }
-            if let data = certificateData {
-                callback.respond(certificate: data)
-            } else {
-                callback.error(error: ProxyIntegrationError.certificateResponseHandlingFailed)
+        if self.certificateResponseFinal {
+            if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "Certificate response was already final.") }
+            callback.respond(certificate: response.body)
+        } else {
+            if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "Certificate response was not final, processing...") }
+            self.contentProtectionAPI?.handleCertificateResponse(integrationId: self.integrationId, keySystemId: self.keySystemId, certificateResponse: response) { certificateData, error in
+                if let error = error {
+                    callback.error(error: error)
+                    return
+                }
+                if let data = certificateData {
+                    self.certificateResponseFinal = true
+                    callback.respond(certificate: data)
+                } else {
+                    callback.error(error: ProxyIntegrationError.certificateResponseHandlingFailed)
+                }
             }
         }
     }
     
     func onLicenseRequest(request: LicenseRequest, callback: LicenseRequestCallback) {
         if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "THEOplayer triggered an onLicenseRequest") }
-        self.contentProtectionAPI?.handleLicenseRequest(integrationId: self.integrationId, keySystemId: self.keySystemId, licenseRequest: request) { licenseData, error in
+        guard let skdUrl = self.skdUrl else {
+            callback.error(error: ProxyIntegrationError.licenseRequestHandlingFailed)
+            return
+        }
+        self.licenseResponseFinal = false
+        
+        // First, extract contentId
+        self.contentProtectionAPI?.handleExtractFairplayContentId(integrationId: self.integrationId, keySystemId: self.keySystemId, skdUrl: skdUrl) { contentId, error in
             if let error = error {
-                callback.error(error: error)
-                return
-            }
-            if let data = licenseData {
-                callback.respond(license: data)
-            } else {
+                print(PROXY_INTEGRATION_TAG, "We encountered an issue while extracting the fairplay contentId: \(error.localizedDescription)")
                 callback.error(error: ProxyIntegrationError.licenseRequestHandlingFailed)
+            } else {
+                // Next, handle onLicenseRequest
+                if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "Received extracted fairplay contentId \(contentId) on RN bridge") }
+                self.contentProtectionAPI?.handleLicenseRequest(integrationId: self.integrationId, keySystemId: self.keySystemId, licenseRequest: request) { licenseData, error in
+                    if let error = error {
+                        callback.error(error: error)
+                        return
+                    }
+                    if let data = licenseData {
+                        self.licenseResponseFinal = true
+                        callback.respond(license: data)
+                    } else {
+                        callback.error(error: ProxyIntegrationError.licenseRequestHandlingFailed)
+                    }
+                }
             }
         }
     }
     
     func onLicenseResponse(response: LicenseResponse, callback: LicenseResponseCallback) {
         if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "THEOplayer triggered an onLicenseResponse") }
-        self.contentProtectionAPI?.handleLicenseResponse(integrationId: self.integrationId, keySystemId: self.keySystemId, licenseResponse: response) { licenseData, error in
-            if let error = error {
-                callback.error(error: error)
-                return
-            }
-            if let data = licenseData {
-                callback.respond(license: data)
-            } else {
-                callback.error(error: ProxyIntegrationError.licenseResponseHandlingFailed)
+        if self.licenseResponseFinal {
+            if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "License response was already final.") }
+            callback.respond(license: response.body)
+        } else {
+            if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "License response was not final, processing...") }
+            self.contentProtectionAPI?.handleLicenseResponse(integrationId: self.integrationId, keySystemId: self.keySystemId, licenseResponse: response) { licenseData, error in
+                if let error = error {
+                    callback.error(error: error)
+                    return
+                }
+                if let data = licenseData {
+                    self.licenseResponseFinal = true
+                    callback.respond(license: data)
+                } else {
+                    callback.error(error: ProxyIntegrationError.licenseResponseHandlingFailed)
+                }
             }
         }
     }
     
     func extractFairplayContentId(skdUrl: String) -> String {
         if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "THEOplayer triggered an extractFairplayContentId") }
-        var extractedContentId = skdUrl
-        self.contentProtectionAPI?.handleExtractFairplayContentId(integrationId: self.integrationId, keySystemId: self.keySystemId, skdUrl: skdUrl) { contentId, error in
-            if let error = error {
-                extractedContentId = skdUrl
-                print(PROXY_INTEGRATION_TAG, "We encountered an issue while extracting the fairplay contentId: \(error.localizedDescription)")
-                self.contentIdExtractionSemaphore.signal()
-                return
-            }
-            extractedContentId = contentId
-            if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "Received extracted fairplay contentId \(extractedContentId) on RN bridge") }
-            self.contentIdExtractionSemaphore.signal()
-        }
-        // TODO: make extractFairplayContentId async on THEOplayer SDK
-        // FOR NOW: We temporarily block (topped to max 5 sec) the flow to retrieve the extracted contentId asynchronously.
-        _ = self.contentIdExtractionSemaphore.wait(timeout: .now() + BRIDGE_TIMEOUT)
-        return extractedContentId
+        if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "Storing skdUrl: \(skdUrl)") }
+        // We cannot handle this synchronously  and store the skdUrl for later, asynchronous contentId extraction
+        self.skdUrl = skdUrl
+        return skdUrl
     }
     
     // MARK: local certificate handling
@@ -145,6 +164,7 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
             let certificateBase64 = String(certificateUrl.suffix(from: CERTIFICATE_MARKER.endIndex))
             if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "Using provided base64 certificate: \(certificateBase64)") }
             if let certificateData = Data(base64Encoded: certificateBase64, options: .ignoreUnknownCharacters) {
+                self.certificateResponseFinal = true
                 callback.respond(certificate: certificateData)
                 return true
             }

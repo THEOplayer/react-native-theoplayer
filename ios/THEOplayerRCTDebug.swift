@@ -16,7 +16,7 @@ let DEBUG_THEOPLAYER_INTERACTION = DEBUG && false
 let DEBUG_CONTENT_PROTECTION_API = DEBUG && false
 
 // Debug flag to monitor all updates made  on bridged properties
-let DEBUG_PROP_UPDATES = DEBUG && false
+let DEBUG_VIEW = DEBUG && false
 
 // Debug flag to monitor correct SourceDescription buildup
 let DEBUG_SOURCE_DESCRIPTION_BUIDER = DEBUG && false
@@ -26,3 +26,15 @@ let DEBUG_ADS_API = DEBUG && false
 
 // Debug flag to monitor cast API usage
 let DEBUG_CAST_API = DEBUG && false
+
+// Debug flag to monitor player API usage
+let DEBUG_PLAYER_API = DEBUG && false
+
+// Debug flag to monitor Now Playing Info updates
+let DEBUG_NOWINFO = DEBUG && false
+
+// Debug flag to monitor Remote Commands updates
+let DEBUG_REMOTECOMMANDS = DEBUG && false
+
+// Debug flag to monitor PIP Controls updates
+let DEBUG_PIPCONTROLS = DEBUG && false

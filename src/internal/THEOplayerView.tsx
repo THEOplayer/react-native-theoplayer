@@ -1,361 +1,338 @@
 import React, { PureComponent } from 'react';
-import { findNodeHandle, StyleSheet, requireNativeComponent, View, UIManager, Platform, NativeSyntheticEvent, HostComponent } from 'react-native';
-import type {
-  DurationChangeEvent,
-  ErrorEvent,
-  LoadedMetadataEvent,
-  ReadyStateChangeEvent,
-  THEOplayerViewComponent,
-  THEOplayerViewProps,
-  TimeUpdateEvent,
-  ProgressEvent,
-  PlayerError,
-  SegmentNotFoundEvent,
-  TextTrackListEvent,
-  TextTrackEvent,
-  AdEvent,
-  AdsAPI,
-  MediaTrackEvent,
-  MediaTrackListEvent,
-  CastAPI,
-  CastEvent,
-} from 'react-native-theoplayer';
+import {
+  findNodeHandle,
+  HostComponent,
+  NativeSyntheticEvent,
+  Platform,
+  requireNativeComponent,
+  StyleProp,
+  StyleSheet,
+  UIManager,
+  View,
+  ViewStyle,
+} from 'react-native';
+import type { PlayerConfiguration, PlayerError, THEOplayerViewProps } from 'react-native-theoplayer';
+import { CastEventType, PlayerEventType } from 'react-native-theoplayer';
 
 import styles from './THEOplayerView.style';
-import type { SourceDescription } from 'react-native-theoplayer';
-import { THEOplayerNativeAdsAPI } from './ads/THEOplayerNativeAdsAPI';
-import { THEOplayerNativeCastAPI } from './cast/THEOplayerNativeCastApi';
 import { decodeNanInf } from './utils/TypeUtils';
+import { BaseEvent } from './adapter/event/BaseEvent';
+import {
+  DefaultAdEvent,
+  DefaultAirplayStateChangeEvent,
+  DefaultChromecastChangeEvent,
+  DefaultChromecastErrorEvent,
+  DefaultDurationChangeEvent,
+  DefaultErrorEvent,
+  DefaultLoadedMetadataEvent,
+  DefaultMediaTrackEvent,
+  DefaultMediaTrackListEvent,
+  DefaultPresentationModeChangeEvent,
+  DefaultProgressEvent,
+  DefaultRateChangeEvent,
+  DefaultReadyStateChangeEvent,
+  DefaultSegmentNotFoundEvent,
+  DefaultTextTrackEvent,
+  DefaultTextTrackListEvent,
+  DefaultVolumeChangeEvent,
+  DefaultTimeupdateEvent,
+} from './adapter/event/PlayerEvents';
+import type { NativeCastEvent } from './adapter/event/native/NativeCastEvent';
+import type {
+  NativeMediaTrackEvent,
+  NativeMediaTrackListEvent,
+  NativeTextTrackEvent,
+  NativeTextTrackListEvent,
+} from './adapter/event/native/NativeTrackEvent';
+import { toMediaTrackType, toMediaTrackTypeEventType, toTextTrackEventType, toTrackListEventType } from './adapter/event/native/NativeTrackEvent';
+import type {
+  NativeDurationChangeEvent,
+  NativeErrorEvent,
+  NativeLoadedMetadataEvent,
+  NativePlayerStateEvent,
+  NativePresentationModeChangeEvent,
+  NativeProgressEvent,
+  NativeRateChangeEvent,
+  NativeReadyStateChangeEvent,
+  NativeSegmentNotFoundEvent,
+  NativeTimeUpdateEvent,
+  NativeVolumeChangeEvent,
+} from './adapter/event/native/NativePlayerEvent';
+import type { NativeAdEvent } from './adapter/event/native/NativeAdEvent';
+import { THEOplayerAdapter } from './adapter/THEOplayerAdapter';
 
-interface THEOplayerRCTViewProps extends THEOplayerViewProps {
+const INVALID_HANDLE = -1;
+
+interface THEOplayerRCTViewProps {
   ref: React.RefObject<THEOplayerViewNativeComponent>;
-  src: SourceDescription;
-  seek?: number;
-
+  style?: StyleProp<ViewStyle>;
+  config?: PlayerConfiguration;
+  onNativePlayerReady: (event: NativeSyntheticEvent<NativePlayerStateEvent>) => void;
   onNativeSourceChange: () => void;
   onNativeLoadStart: () => void;
   onNativeLoadedData: () => void;
-  onNativeLoadedMetadata: (event: NativeSyntheticEvent<LoadedMetadataEvent>) => void;
-  onNativeReadyStateChange?: (event: NativeSyntheticEvent<ReadyStateChangeEvent>) => void;
-  onNativeError: (event: NativeSyntheticEvent<ErrorEvent>) => void;
-  onNativeProgress: (event: NativeSyntheticEvent<ProgressEvent>) => void;
+  onNativeLoadedMetadata: (event: NativeSyntheticEvent<NativeLoadedMetadataEvent>) => void;
+  onNativeReadyStateChange?: (event: NativeSyntheticEvent<NativeReadyStateChangeEvent>) => void;
+  onNativeError: (event: NativeSyntheticEvent<NativeErrorEvent>) => void;
+  onNativeProgress: (event: NativeSyntheticEvent<NativeProgressEvent>) => void;
+  onNativeVolumeChange: (event: NativeSyntheticEvent<NativeVolumeChangeEvent>) => void;
+  onNativeCanPlay: () => void;
   onNativePlay: () => void;
   onNativePlaying: () => void;
   onNativePause: () => void;
   onNativeSeeking: () => void;
   onNativeSeeked: () => void;
   onNativeEnded: () => void;
-  onNativeTimeUpdate: (event: NativeSyntheticEvent<TimeUpdateEvent>) => void;
-  onNativeDurationChange: (event: NativeSyntheticEvent<DurationChangeEvent>) => void;
-  onNativeSegmentNotFound: (event: NativeSyntheticEvent<SegmentNotFoundEvent>) => void;
-  onNativeTextTrackListEvent: (event: NativeSyntheticEvent<TextTrackListEvent>) => void;
-  onNativeTextTrackEvent: (event: NativeSyntheticEvent<TextTrackEvent>) => void;
-  onNativeMediaTrackListEvent: (event: NativeSyntheticEvent<MediaTrackListEvent>) => void;
-  onNativeMediaTrackEvent: (event: NativeSyntheticEvent<MediaTrackEvent>) => void;
-  onNativeAdEvent: (event: NativeSyntheticEvent<AdEvent>) => void;
-  onNativeCastEvent: (event: NativeSyntheticEvent<CastEvent>) => void;
-  onNativeFullscreenPlayerWillPresent?: () => void;
-  onNativeFullscreenPlayerDidPresent?: () => void;
-  onNativeFullscreenPlayerWillDismiss?: () => void;
-  onNativeFullscreenPlayerDidDismiss?: () => void;
+  onNativeWaiting: () => void;
+  onNativeTimeUpdate: (event: NativeSyntheticEvent<NativeTimeUpdateEvent>) => void;
+  onNativeDurationChange: (event: NativeSyntheticEvent<NativeDurationChangeEvent>) => void;
+  onNativeRateChange: (event: NativeSyntheticEvent<NativeRateChangeEvent>) => void;
+  onNativeSegmentNotFound: (event: NativeSyntheticEvent<NativeSegmentNotFoundEvent>) => void;
+  onNativeTextTrackListEvent: (event: NativeSyntheticEvent<NativeTextTrackListEvent>) => void;
+  onNativeTextTrackEvent: (event: NativeSyntheticEvent<NativeTextTrackEvent>) => void;
+  onNativeMediaTrackListEvent: (event: NativeSyntheticEvent<NativeMediaTrackListEvent>) => void;
+  onNativeMediaTrackEvent: (event: NativeSyntheticEvent<NativeMediaTrackEvent>) => void;
+  onNativeAdEvent: (event: NativeSyntheticEvent<NativeAdEvent>) => void;
+  onNativeCastEvent: (event: NativeSyntheticEvent<NativeCastEvent>) => void;
+  onNativePresentationModeChange: (event: NativeSyntheticEvent<NativePresentationModeChangeEvent>) => void;
 }
 
 interface THEOplayerRCTViewState {
-  isBuffering: boolean;
   error?: PlayerError;
 }
 
-interface THEOplayerViewNativeComponent extends THEOplayerViewComponent, HostComponent<THEOplayerViewProps> {
-  setNativeProps: (props: Partial<THEOplayerRCTViewProps>) => void;
-}
+type THEOplayerViewNativeComponent = HostComponent<THEOplayerRCTViewProps>;
 
-export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplayerRCTViewState> implements THEOplayerViewComponent {
+export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOplayerViewProps>, THEOplayerRCTViewState> {
   private readonly _root: React.RefObject<THEOplayerViewNativeComponent>;
-  private readonly _adsApi: THEOplayerNativeAdsAPI;
-  private readonly _castApi: THEOplayerNativeCastAPI;
+  private readonly _facade: THEOplayerAdapter;
 
   private static initialState: THEOplayerRCTViewState = {
-    isBuffering: false,
     error: undefined,
   };
 
-  constructor(props: THEOplayerRCTViewProps) {
+  constructor(props: THEOplayerViewProps) {
     super(props);
     this._root = React.createRef();
     this.state = THEOplayerView.initialState;
-    this._adsApi = new THEOplayerNativeAdsAPI(this);
-    this._castApi = new THEOplayerNativeCastAPI(this);
+    this._facade = new THEOplayerAdapter(this);
   }
 
   componentWillUnmount() {
+    // Notify the player will be destroyed.
+    const { onPlayerDestroy } = this.props;
+    if (onPlayerDestroy) {
+      onPlayerDestroy(this._facade);
+    }
+    this._facade.dispatchEvent(new BaseEvent(PlayerEventType.DESTROY));
+
     if (Platform.OS === 'ios') {
+      // TODO: move to native module
       // on iOS, we trigger an explicit 'destroy' to clean up the underlying THEOplayer
-      this.destroyTheoPlayer();
+      const command = (UIManager as { [index: string]: any })['THEOplayerRCTView'].Commands.destroy;
+      UIManager.dispatchViewManagerCommand(findNodeHandle(this._root.current), command, []);
     }
+    this._facade.clearEventListeners();
   }
 
-  private destroyTheoPlayer() {
-    const node = findNodeHandle(this._root.current);
-    const command = (UIManager as { [index: string]: any })['THEOplayerRCTView'].Commands.destroy;
-    const params: any[] = [];
-    UIManager.dispatchViewManagerCommand(node, command, params);
-  }
-
-  public seek(time: number): void {
-    if (isNaN(time)) {
-      throw new Error('Specified time is not a number');
-    }
-    this.setNativeProps({ seek: time });
-  }
-
-  public get nativeHandle(): number | null {
-    return findNodeHandle(this._root.current);
-  }
-
-  public get ads(): AdsAPI {
-    return this._adsApi;
-  }
-
-  public get cast(): CastAPI {
-    return this._castApi;
+  public get nativeHandle(): number {
+    return findNodeHandle(this._root.current) || INVALID_HANDLE;
   }
 
   private reset() {
     this.setState(THEOplayerView.initialState);
   }
 
-  private setNativeProps(nativeProps: Partial<THEOplayerRCTViewProps>) {
-    if (this._root?.current) {
-      this._root.current.setNativeProps(nativeProps);
+  private _onNativePlayerReady = (event: NativeSyntheticEvent<NativePlayerStateEvent>) => {
+    // Optionally apply an initial player state
+    const { state } = event?.nativeEvent;
+    if (state) {
+      this._facade.initializeWithNativePlayerState_(state);
     }
-  }
-
-  private maybeChangeBufferingState(isBuffering: boolean) {
-    const { isBuffering: wasBuffering, error } = this.state;
-    const { paused } = this.props;
-
-    // do not change state to buffering in case of an error or if the player is paused
-    const newIsBuffering = isBuffering && !error && !paused;
-    this.setState({ isBuffering: newIsBuffering });
-
-    // notify change in buffering state
-    if (newIsBuffering !== wasBuffering && this.props.onBufferingStateChange) {
-      this.props.onBufferingStateChange(isBuffering);
-    }
-  }
+    this.props.onPlayerReady?.(this._facade);
+  };
 
   private _onSourceChange = () => {
     this.reset();
-
-    if (this.props.onSourceChange) {
-      this.props.onSourceChange();
-    }
+    this._facade.dispatchEvent(new BaseEvent(PlayerEventType.SOURCE_CHANGE));
   };
 
   private _onLoadStart = () => {
-    // potentially notify change in buffering state
-    this.maybeChangeBufferingState(true);
-
-    if (this.props.onLoadStart) {
-      this.props.onLoadStart();
-    }
+    this._facade.dispatchEvent(new BaseEvent(PlayerEventType.LOAD_START));
   };
 
   private _onLoadedData = () => {
-    if (this.props.onLoadedData) {
-      this.props.onLoadedData();
-    }
+    this._facade.dispatchEvent(new BaseEvent(PlayerEventType.LOADED_DATA));
   };
 
-  private _onLoadedMetadata = (event: NativeSyntheticEvent<LoadedMetadataEvent>) => {
-    if (this.props.onLoadedMetadata) {
-      this.props.onLoadedMetadata({
-        ...event.nativeEvent,
-        duration: decodeNanInf(event.nativeEvent.duration),
-      });
-    }
+  private _onLoadedMetadata = (event: NativeSyntheticEvent<NativeLoadedMetadataEvent>) => {
+    const nativeEvent = event.nativeEvent;
+    this._facade.dispatchEvent(
+      new DefaultLoadedMetadataEvent(
+        nativeEvent.textTracks,
+        nativeEvent.audioTracks,
+        nativeEvent.videoTracks,
+        decodeNanInf(nativeEvent.duration),
+        nativeEvent.selectedTextTrack,
+        nativeEvent.selectedVideoTrack,
+        nativeEvent.selectedAudioTrack,
+      ),
+    );
   };
 
-  private _onError = (event: NativeSyntheticEvent<ErrorEvent>) => {
+  private _onVolumeChange = (event: NativeSyntheticEvent<NativeVolumeChangeEvent>) => {
+    this._facade.dispatchEvent(new DefaultVolumeChangeEvent(event.nativeEvent.volume, event.nativeEvent.muted));
+  };
+
+  private _onError = (event: NativeSyntheticEvent<NativeErrorEvent>) => {
     const { error } = event.nativeEvent;
     this.setState({ error });
-
-    // potentially notify change in buffering state
-    this.maybeChangeBufferingState(false);
-
-    if (this.props.onError) {
-      this.props.onError(event.nativeEvent);
-    }
+    this._facade.dispatchEvent(new DefaultErrorEvent(event.nativeEvent.error));
   };
 
-  private _onProgress = (event: NativeSyntheticEvent<ProgressEvent>) => {
-    if (this.props.onProgress) {
-      this.props.onProgress(event.nativeEvent);
-    }
+  private _onProgress = (event: NativeSyntheticEvent<NativeProgressEvent>) => {
+    this._facade.dispatchEvent(new DefaultProgressEvent(event.nativeEvent.seekable, event.nativeEvent.buffered));
+  };
+
+  private _onCanPlay = () => {
+    this._facade.dispatchEvent(new BaseEvent(PlayerEventType.CANPLAY));
   };
 
   private _onPlay = () => {
-    if (this.props.onPlay) {
-      this.props.onPlay();
-    }
+    this._facade.dispatchEvent(new BaseEvent(PlayerEventType.PLAY));
   };
 
   private _onPlaying = () => {
-    // potentially notify change in buffering state
-    this.maybeChangeBufferingState(false);
-
-    if (this.props.onPlaying) {
-      this.props.onPlaying();
-    }
+    this._facade.dispatchEvent(new BaseEvent(PlayerEventType.PLAYING));
   };
 
   private _onPause = () => {
-    if (this.props.onPause) {
-      this.props.onPause();
-    }
+    this._facade.dispatchEvent(new BaseEvent(PlayerEventType.PAUSE));
   };
 
   private _onSeeking = () => {
-    if (this.props.onSeeking) {
-      this.props.onSeeking();
-    }
+    this._facade.dispatchEvent(new BaseEvent(PlayerEventType.SEEKING));
   };
 
   private _onSeeked = () => {
-    if (this.props.onSeeked) {
-      this.props.onSeeked();
-    }
+    this._facade.dispatchEvent(new BaseEvent(PlayerEventType.SEEKED));
+  };
+
+  private _onWaiting = () => {
+    this._facade.dispatchEvent(new BaseEvent(PlayerEventType.WAITING));
   };
 
   private _onEnded = () => {
-    if (this.props.onEnded) {
-      this.props.onEnded();
-    }
+    this._facade.dispatchEvent(new BaseEvent(PlayerEventType.ENDED));
   };
 
-  private _onReadStateChange = (event: NativeSyntheticEvent<ReadyStateChangeEvent>) => {
-    // potentially notify change in buffering state
-    this.maybeChangeBufferingState(event.nativeEvent.readyState < 3);
-
-    if (this.props.onReadyStateChange) {
-      this.props.onReadyStateChange(event.nativeEvent);
-    }
+  private _onReadStateChange = (event: NativeSyntheticEvent<NativeReadyStateChangeEvent>) => {
+    this._facade.dispatchEvent(new DefaultReadyStateChangeEvent(event.nativeEvent.readyState));
   };
 
-  private _onTimeUpdate = (event: NativeSyntheticEvent<TimeUpdateEvent>) => {
-    if (this.props.onTimeUpdate) {
-      this.props.onTimeUpdate(event.nativeEvent);
-    }
+  private _onTimeUpdate = (event: NativeSyntheticEvent<NativeTimeUpdateEvent>) => {
+    this._facade.dispatchEvent(new DefaultTimeupdateEvent(event.nativeEvent.currentTime, event.nativeEvent.currentProgramDateTime));
   };
 
-  private _onDurationChange = (event: NativeSyntheticEvent<DurationChangeEvent>) => {
-    if (this.props.onDurationChange) {
-      this.props.onDurationChange({
-        duration: decodeNanInf(event.nativeEvent.duration),
-      });
-    }
+  private _onDurationChange = (event: NativeSyntheticEvent<NativeDurationChangeEvent>) => {
+    this._facade.dispatchEvent(new DefaultDurationChangeEvent(decodeNanInf(event.nativeEvent.duration)));
   };
 
-  private _onSegmentNotFound = (event: NativeSyntheticEvent<SegmentNotFoundEvent>) => {
-    if (this.props.onSegmentNotFound) {
-      this.props.onSegmentNotFound(event.nativeEvent);
-    }
+  private _onRateChange = (event: NativeSyntheticEvent<NativeRateChangeEvent>) => {
+    this._facade.dispatchEvent(new DefaultRateChangeEvent(event.nativeEvent.playbackRate));
   };
 
-  private _onTextTrackListEvent = (event: NativeSyntheticEvent<TextTrackListEvent>) => {
-    if (this.props.onTextTrackListEvent) {
-      this.props.onTextTrackListEvent(event.nativeEvent);
-    }
+  private _onSegmentNotFound = (event: NativeSyntheticEvent<NativeSegmentNotFoundEvent>) => {
+    const nativeEvent = event.nativeEvent;
+    this._facade.dispatchEvent(new DefaultSegmentNotFoundEvent(nativeEvent.segmentStartTime, nativeEvent.error, nativeEvent.retryCount));
   };
 
-  private _onTextTrackEvent = (event: NativeSyntheticEvent<TextTrackEvent>) => {
-    if (this.props.onTextTrackEvent) {
-      this.props.onTextTrackEvent(event.nativeEvent);
-    }
+  private _onTextTrackListEvent = (event: NativeSyntheticEvent<NativeTextTrackListEvent>) => {
+    const nativeEvent = event.nativeEvent;
+    this._facade.dispatchEvent(new DefaultTextTrackListEvent(toTrackListEventType(nativeEvent.type), nativeEvent.track));
   };
 
-  private _onMediaTrackListEvent = (event: NativeSyntheticEvent<MediaTrackListEvent>) => {
-    if (this.props.onMediaTrackListEvent) {
-      this.props.onMediaTrackListEvent(event.nativeEvent);
-    }
+  private _onTextTrackEvent = (event: NativeSyntheticEvent<NativeTextTrackEvent>) => {
+    const nativeEvent = event.nativeEvent;
+    this._facade.dispatchEvent(new DefaultTextTrackEvent(toTextTrackEventType(nativeEvent.type), nativeEvent.trackUid, nativeEvent.cue));
   };
 
-  private _onMediaTrackEvent = (event: NativeSyntheticEvent<MediaTrackEvent>) => {
-    if (this.props.onMediaTrackEvent) {
-      this.props.onMediaTrackEvent(event.nativeEvent);
-    }
-  };
-
-  private _onAdEvent = (event: NativeSyntheticEvent<AdEvent>) => {
-    if (this.props.onAdEvent) {
-      this.props.onAdEvent(event.nativeEvent);
-    }
-  };
-
-  private _onCastEvent = (event: NativeSyntheticEvent<CastEvent>) => {
-    if (this.props.onCastEvent) {
-      this.props.onCastEvent(event.nativeEvent);
-    }
-  };
-
-  private _onFullscreenPlayerWillPresent = () => {
-    if (this.props.onFullscreenPlayerWillPresent) {
-      this.props.onFullscreenPlayerWillPresent();
-    }
-  };
-
-  private _onFullscreenPlayerDidPresent = () => {
-    if (this.props.onFullscreenPlayerDidPresent) {
-      this.props.onFullscreenPlayerDidPresent();
-    }
-  };
-
-  private _onFullscreenPlayerWillDismiss = () => {
-    if (this.props.onFullscreenPlayerWillDismiss) {
-      this.props.onFullscreenPlayerWillDismiss();
-    }
-  };
-
-  private _onFullscreenPlayerDidDismiss = () => {
-    if (this.props.onFullscreenPlayerDidDismiss) {
-      this.props.onFullscreenPlayerDidDismiss();
-    }
-  };
-
-  private buildWrapperProps(): THEOplayerViewProps {
-    const { targetVideoQuality } = this.props;
-    return Object.assign(
-      {},
-      {
-        ...this.props,
-        // Always pass an array for targetVideoQuality.
-        targetVideoQuality: !targetVideoQuality ? [] : Array.isArray(targetVideoQuality) ? targetVideoQuality : [targetVideoQuality],
-      },
+  private _onMediaTrackListEvent = (event: NativeSyntheticEvent<NativeMediaTrackListEvent>) => {
+    const nativeEvent = event.nativeEvent;
+    this._facade.dispatchEvent(
+      new DefaultMediaTrackListEvent(toTrackListEventType(nativeEvent.type), toMediaTrackType(nativeEvent.trackType), nativeEvent.track),
     );
-  }
+  };
+
+  private _onMediaTrackEvent = (event: NativeSyntheticEvent<NativeMediaTrackEvent>) => {
+    const nativeEvent = event.nativeEvent;
+    this._facade.dispatchEvent(
+      new DefaultMediaTrackEvent(
+        toMediaTrackTypeEventType(nativeEvent.type),
+        toMediaTrackType(nativeEvent.trackType),
+        nativeEvent.trackUid,
+        nativeEvent.qualities,
+      ),
+    );
+  };
+
+  private _onAdEvent = (event: NativeSyntheticEvent<NativeAdEvent>) => {
+    const nativeEvent = event.nativeEvent;
+    this._facade.dispatchEvent(new DefaultAdEvent(nativeEvent.type, nativeEvent.ad));
+  };
+
+  private _onCastEvent = (event: NativeSyntheticEvent<NativeCastEvent>) => {
+    switch (event.nativeEvent.type) {
+      case CastEventType.CHROMECAST_STATE_CHANGE:
+        this._facade.dispatchEvent(new DefaultChromecastChangeEvent(event.nativeEvent.state));
+        break;
+      case CastEventType.AIRPLAY_STATE_CHANGE:
+        this._facade.dispatchEvent(new DefaultAirplayStateChangeEvent(event.nativeEvent.state));
+        break;
+      case CastEventType.CHROMECAST_ERROR:
+        this._facade.dispatchEvent(new DefaultChromecastErrorEvent(event.nativeEvent.error));
+        break;
+    }
+  };
+
+  private _onPresentationModeChange = (event: NativeSyntheticEvent<NativePresentationModeChangeEvent>) => {
+    this._facade.dispatchEvent(
+      new DefaultPresentationModeChangeEvent(
+        event.nativeEvent.presentationMode,
+        event.nativeEvent.previousPresentationMode,
+        event.nativeEvent.context,
+      ),
+    );
+  };
 
   public render(): JSX.Element {
-    const wrapperProps = this.buildWrapperProps();
+    const { config, style, children } = this.props;
     return (
-      <View style={[styles.base, wrapperProps.style]}>
+      <View style={[styles.base, style]}>
         <THEOplayerRCTView
           ref={this._root}
-          src={this.props.source || {}}
+          style={StyleSheet.absoluteFill}
+          config={config || {}}
+          onNativePlayerReady={this._onNativePlayerReady}
           onNativeSourceChange={this._onSourceChange}
           onNativeLoadStart={this._onLoadStart}
           onNativeLoadedData={this._onLoadedData}
           onNativeLoadedMetadata={this._onLoadedMetadata}
+          onNativeVolumeChange={this._onVolumeChange}
           onNativeError={this._onError}
           onNativeProgress={this._onProgress}
+          onNativeCanPlay={this._onCanPlay}
           onNativePlay={this._onPlay}
           onNativePlaying={this._onPlaying}
           onNativePause={this._onPause}
           onNativeSeeking={this._onSeeking}
           onNativeSeeked={this._onSeeked}
+          onNativeWaiting={this._onWaiting}
           onNativeEnded={this._onEnded}
           onNativeReadyStateChange={this._onReadStateChange}
           onNativeTimeUpdate={this._onTimeUpdate}
           onNativeDurationChange={this._onDurationChange}
+          onNativeRateChange={this._onRateChange}
           onNativeSegmentNotFound={this._onSegmentNotFound}
           onNativeTextTrackListEvent={this._onTextTrackListEvent}
           onNativeTextTrackEvent={this._onTextTrackEvent}
@@ -363,13 +340,9 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
           onNativeMediaTrackEvent={this._onMediaTrackEvent}
           onNativeAdEvent={this._onAdEvent}
           onNativeCastEvent={this._onCastEvent}
-          onNativeFullscreenPlayerWillPresent={this._onFullscreenPlayerWillPresent}
-          onNativeFullscreenPlayerDidPresent={this._onFullscreenPlayerDidPresent}
-          onNativeFullscreenPlayerWillDismiss={this._onFullscreenPlayerWillDismiss}
-          onNativeFullscreenPlayerDidDismiss={this._onFullscreenPlayerDidDismiss}
-          style={StyleSheet.absoluteFill}
-          {...wrapperProps}
+          onNativePresentationModeChange={this._onPresentationModeChange}
         />
+        {children}
       </View>
     );
   }

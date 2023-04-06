@@ -62,7 +62,7 @@ class THEOplayerRCTTrackMetadataAggregator {
         entry[PROP_UID] = textTrack.uid
         entry[PROP_KIND] = textTrack.kind
         entry[PROP_LANGUAGE] = textTrack.language
-        entry[PROP_MODE] = String(describing: textTrack.mode)
+        entry[PROP_MODE] = textTrack.mode._rawValue
         entry[PROP_LABEL] = textTrack.label
         entry[PROP_TYPE] = textTrack.type
         entry[PROP_SRC] = textTrack.src
@@ -97,7 +97,11 @@ class THEOplayerRCTTrackMetadataAggregator {
         entry[PROP_UID] = textTrackCue.uid
         entry[PROP_STARTTIME] = (textTrackCue.startTime ?? 0) * 1000
         entry[PROP_ENDTIME] = (textTrackCue.endTime ?? 0) * 1000
-        entry[PROP_CUE_CONTENT] = textTrackCue.contentString
+        if let content = textTrackCue.content {
+            entry[PROP_CUE_CONTENT] = content
+        } else if let contentString = textTrackCue.contentString {
+            entry[PROP_CUE_CONTENT] = contentString
+        }
         return entry
     }
 
@@ -108,14 +112,13 @@ class THEOplayerRCTTrackMetadataAggregator {
             return audioTrackEntries
         }
         for i in 0...audioTracks.count-1 {
-            if let audioTrack: AudioTrack = audioTracks.get(i) as? AudioTrack {
-                audioTrackEntries.append(THEOplayerRCTTrackMetadataAggregator.aggregatedAudioTrackInfo(audioTrack: audioTrack))
-            }
+            let audioTrack: MediaTrack = audioTracks.get(i) // should be casted to AudioTrack
+            audioTrackEntries.append(THEOplayerRCTTrackMetadataAggregator.aggregatedAudioTrackInfo(audioTrack: audioTrack))
         }
         return audioTrackEntries
     }
     
-    class func aggregatedAudioTrackInfo(audioTrack: AudioTrack) -> [String:Any] {
+    class func aggregatedAudioTrackInfo(audioTrack: MediaTrack) -> [String:Any] {
         var entry: [String:Any] = [:]
         entry[PROP_ID] = audioTrack.id
         entry[PROP_UID] = audioTrack.uid
