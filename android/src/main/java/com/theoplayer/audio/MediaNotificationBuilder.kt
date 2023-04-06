@@ -141,9 +141,7 @@ class MediaNotificationBuilder(
 
       // Associate the notification with your session. This allows third-party apps and
       // companion devices to access and control the session.
-      if (enableMediaControls) {
-        style.setMediaSession(mediaSession.sessionToken)
-      }
+      style.setMediaSession(mediaSession.sessionToken)
 
       // Add up to 3 actions to be shown in the notification's standard-sized contentView.
       style.setShowActionsInCompactView(0)
