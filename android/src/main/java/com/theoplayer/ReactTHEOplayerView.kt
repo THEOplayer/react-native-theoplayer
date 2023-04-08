@@ -85,9 +85,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
     if (BuildConfig.LOG_VIEW_EVENTS) {
       Log.d(TAG, "onHostPause")
     }
-    if (presentationManager?.shouldPauseOnHostPause != false) {
-      playerContext?.onHostPause()
-    }
+    playerContext?.onHostPause()
   }
 
   /**

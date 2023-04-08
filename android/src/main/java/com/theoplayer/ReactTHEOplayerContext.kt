@@ -53,6 +53,7 @@ class ReactTHEOplayerContext private constructor(
   var daiIntegration: GoogleDaiIntegration? = null
   var imaIntegration: GoogleImaIntegration? = null
   var castIntegration: CastIntegration? = null
+  var wasPlayingOnHostPause: Boolean = false
 
   private val isBackgroundAudioEnabled: Boolean
     get() = backgroundAudioConfig.enabled
@@ -290,8 +291,10 @@ class ReactTHEOplayerContext private constructor(
    * The host activity is paused.
    */
   fun onHostPause() {
+    // Keep current playing state when going to background
+    wasPlayingOnHostPause = !player.isPaused
+
     if (!isBackgroundAudioEnabled) {
-      mediaSessionConnector?.setActive(false)
       playerView.onPause()
     }
   }
