@@ -81,18 +81,6 @@ class PresentationManager(
     )
   }
 
-  /**
-   * Whether playback should be allowed to continue when the activity is paused.
-   *
-   * Pause if:
-   * - No PiP available: Build.VERSION.SDK_INT < Build.VERSION_CODES.N (API 24), or;
-   * - Not in PiP mode, and;
-   * - Not configured to automatically go into PiP when going to the background.
-   */
-  val shouldPauseOnHostPause: Boolean
-    get() = Build.VERSION.SDK_INT < Build.VERSION_CODES.N ||
-      (reactContext.currentActivity?.isInPictureInPictureMode != true && pipConfig.startsAutomatically != true)
-
   fun destroy() {
     try {
       reactContext.currentActivity?.unregisterReceiver(onUserLeaveHintReceiver)
@@ -240,6 +228,11 @@ class PresentationManager(
     val prevPresentationMode = currentPresentationMode
     currentPresentationMode = presentationMode
     eventEmitter.emitPresentationModeChange(presentationMode, prevPresentationMode, context)
+
+    // Resume playing when going to PiP and player was playing
+    if (presentationMode == PresentationMode.PICTURE_IN_PICTURE && viewCtx.wasPlayingOnHostPause) {
+      viewCtx.player.play()
+    }
 
     // Apply background audio config when closing PiP window
     if (context?.pip == PresentationModeChangePipContext.CLOSED && !viewCtx.backgroundAudioConfig.enabled) {
