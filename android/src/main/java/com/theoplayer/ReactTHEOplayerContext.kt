@@ -81,7 +81,6 @@ class ReactTHEOplayerContext private constructor(
       mediaSessionConnector = binder?.mediaSessionConnector
       mediaSessionConnector?.player = player
       mediaSessionConnector?.setMediaSessionMetadata(player.source)
-      mediaSessionConnector?.invalidatePlaybackState()
 
       // Pass player context
       binder?.setPlayerContext(this@ReactTHEOplayerContext)

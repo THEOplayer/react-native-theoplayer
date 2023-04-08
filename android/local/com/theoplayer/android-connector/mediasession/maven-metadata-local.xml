@@ -3,11 +3,11 @@
   <groupId>com.theoplayer.android-connector</groupId>
   <artifactId>mediasession</artifactId>
   <versioning>
-    <latest>4.11.0-local</latest>
-    <release>4.11.0-local</release>
+    <latest>4.12.0-local</latest>
+    <release>4.12.0-local</release>
     <versions>
-      <version>4.11.0-local</version>
+      <version>4.12.0-local</version>
     </versions>
-    <lastUpdated>20230403121710</lastUpdated>
+    <lastUpdated>20230408184844</lastUpdated>
   </versioning>
 </metadata>
