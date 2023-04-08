@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed invalid location of the typescript declaration file.
 
+### Changed
+
+- Removed `backgroundAudioConfiguration.mediaPlaybackServiceEnabled` property on Android. Disabling background playback disables the service as well.
+
 ## [2.0.0] - 23-04-06
 
 ### Added
