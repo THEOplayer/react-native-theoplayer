@@ -10,6 +10,7 @@ import com.theoplayer.android.api.ads.GoogleImaConfiguration
 import com.theoplayer.android.api.cast.CastStrategy
 import com.google.android.gms.cast.framework.CastContext
 import com.theoplayer.android.api.pip.PipConfiguration
+import com.theoplayer.android.api.player.NetworkConfiguration
 
 private const val TAG = "PlayerConfigAdapter"
 private const val PROP_ADS_CONFIGURATION = "ads"
@@ -24,6 +25,10 @@ private const val PROP_CAST_CONFIGURATION = "cast"
 private const val PROP_CAST_STRATEGY = "strategy"
 private const val PROP_CHROMECAST_CONFIG = "chromecast"
 private const val PROP_CHROMECAST_APPID = "appID"
+private const val PROP_RETRY_CONFIG = "retryConfiguration"
+private const val PROP_RETRY_MAX_RETRIES = "maxRetries"
+private const val PROP_RETRY_MIN_BACKOFF = "minimumBackoff"
+private const val PROP_RETRY_MAX_BACKOFF = "maximumBackoff"
 
 object PlayerConfigAdapter {
 
@@ -44,6 +49,12 @@ object PlayerConfigAdapter {
       }
       if (configProps.hasKey(PROP_CHROMELESS)) {
         configBuilder.chromeless(configProps.getBoolean(PROP_CHROMELESS))
+      }
+      if (configProps.hasKey(PROP_RETRY_CONFIG)) {
+        val networkConfig = networkConfigurationFromProps(configProps.getMap(PROP_RETRY_CONFIG))
+        if (networkConfig != null) {
+          configBuilder.networkConfiguration(networkConfig)
+        }
       }
       applyCastConfigurationFromProps(configBuilder, configProps.getMap(PROP_CAST_CONFIGURATION))
       configBuilder.pipConfiguration(PipConfiguration.Builder().build())
@@ -68,6 +79,23 @@ object PlayerConfigAdapter {
     )
     if (googleImaConfiguration != null) {
       builder.googleIma(googleImaConfiguration)
+    }
+    return builder.build()
+  }
+
+  private fun networkConfigurationFromProps(configProps: ReadableMap?): NetworkConfiguration? {
+    if (configProps == null) {
+      return null
+    }
+    val builder = NetworkConfiguration.Builder()
+    if (configProps.hasKey(PROP_RETRY_MAX_RETRIES)) {
+      builder.maxRetries(configProps.getInt(PROP_RETRY_MAX_RETRIES))
+    }
+    if (configProps.hasKey(PROP_RETRY_MIN_BACKOFF)) {
+      builder.minimumBackOff(configProps.getDouble(PROP_RETRY_MIN_BACKOFF).toLong())
+    }
+    if (configProps.hasKey(PROP_RETRY_MAX_BACKOFF)) {
+      builder.maximumBackOff(configProps.getDouble(PROP_RETRY_MAX_BACKOFF).toLong())
     }
     return builder.build()
   }

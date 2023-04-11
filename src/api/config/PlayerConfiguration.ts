@@ -1,6 +1,7 @@
 import type { AdsConfiguration } from '../ads/AdsConfiguration';
 import type { CastConfiguration } from '../cast/CastConfiguration';
 import type { MediaControlConfiguration } from '../media/MediaControlConfiguration';
+import type { RetryConfiguration } from '../utils/RetryConfiguration';
 
 export interface PlayerConfiguration {
   /**
@@ -54,6 +55,14 @@ export interface PlayerConfiguration {
    * Sets whether the native player is chromeless (without UI).
    */
   readonly chromeless?: boolean;
+
+  /**
+   * The retry configuration for the player.
+   *
+   * @remarks
+   * <br/> - This parameter only applies to Web and Android platforms.
+   */
+  readonly retryConfiguration?: RetryConfiguration;
 }
 
 /**
