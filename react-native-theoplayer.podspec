@@ -2,7 +2,7 @@ require "json"
 
 package = JSON.parse(File.read(File.join(__dir__, "package.json")))
 theoconfigpath = File.join(__dir__ + "/../../", "react-native-theoplayer.json")
-if File.exists?(theoconfigpath) 
+if File.exist?(theoconfigpath) 
   theoconfig = JSON.parse(File.read(theoconfigpath))
   theofeatures = theoconfig["ios"]["features"]
 else

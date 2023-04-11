@@ -26,8 +26,8 @@ Pod::Spec.new do |s|
   s.platforms    = { :ios => "12.0", :tvos => "12.0" }
 
   ### Set custom player SDK
-  s.ios.vendored_frameworks = 'Frameworks/ios/THEOplayerSDK.xcframework',
-  s.tvos.vendored_frameworks = 'Frameworks/tvos/THEOplayerSDK.xcframework',
+  s.ios.vendored_frameworks = 'Frameworks/ios/THEOplayerSDK.xcframework
+  s.tvos.vendored_frameworks = 'Frameworks/tvos/THEOplayerSDK.xcframework
 
   ### Set Ads dependencies
   s.ios.dependency "GoogleAds-IMA-iOS-SDK", "3.18.4"
