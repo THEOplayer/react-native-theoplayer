@@ -5,25 +5,25 @@ import AVKit
 import THEOplayerSDK
 
 struct PipConfig {
-    var retainPresentationModeOnSourceChange: Bool = false              // external config
-    var canStartPictureInPictureAutomaticallyFromInline: Bool = false   // external config
+    var canStartPictureInPictureAutomaticallyFromInline: Bool = false
 }
-
 
 extension THEOplayerRCTView: AVPictureInPictureControllerDelegate {
     
 #if os(iOS)
     
-    func playerPipConfiguration() -> PiPConfiguration? {
-        return PiPConfiguration(retainPresentationModeOnSourceChange: self.pipConfig.retainPresentationModeOnSourceChange,
+    func playerPipConfiguration() -> PiPConfiguration {
+        return PiPConfiguration(retainPresentationModeOnSourceChange: false,
                                 nativePictureInPicture: true,
-                                canStartPictureInPictureAutomaticallyFromInline: self.pipConfig.canStartPictureInPictureAutomaticallyFromInline)
+                                canStartPictureInPictureAutomaticallyFromInline: self.pipConfig.canStartPictureInPictureAutomaticallyFromInline,
+                                requiresLinearPlayback: false)
     }
     
 #elseif os(tvOS)
     
-    func playerPipConfiguration() -> PiPConfiguration? {
-        return PiPConfiguration(retainPresentationModeOnSourceChange: self.pipConfig.retainPresentationModeOnSourceChange)
+    func playerPipConfiguration() -> PiPConfiguration {
+        return PiPConfiguration(retainPresentationModeOnSourceChange: false,
+                                requiresLinearPlayback: false)
     }
     
 #endif
@@ -41,12 +41,7 @@ extension THEOplayerRCTView: AVPictureInPictureControllerDelegate {
     @available(tvOS 14.0, *)
     public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         self.presentationModeContext.pipContext = .PIP_CLOSED
-        self.pipControlsManager.setNativePictureInPictureController(pictureInPictureController)
-    }
-    
-    @available(tvOS 14.0, *)
-    public func pictureInPictureControllerWillStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        self.pipControlsManager.setNativePictureInPictureController(nil)
+        self.pipControlsManager.willStartPip()
     }
     
     @available(tvOS 14.0, *)
