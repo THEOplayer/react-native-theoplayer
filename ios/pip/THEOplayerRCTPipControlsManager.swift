@@ -58,7 +58,7 @@ class THEOplayerRCTPipControlsManager: NSObject {
         if let player = self.player,
            let pip = player.pip {
             pip.configure(configuration: self.newPipConfiguration())
-            if DEBUG_PIPCONTROLS || true { print("[NATIVE] Pip controls updated for \(self.isLive ? "LIVE" : "VOD") (\(self.inAd ? "AD IS PLAYING" : "NO AD PLAYING")). (requiresLinearPlayback = \(self.isLive || self.inAd), canStartPictureInPictureAutomaticallyFromInline = \(self.pipConfig.canStartPictureInPictureAutomaticallyFromInline))") }
+            if DEBUG_PIPCONTROLS { print("[NATIVE] Pip controls updated for \(self.isLive ? "LIVE" : "VOD") (\(self.inAd ? "AD IS PLAYING" : "NO AD PLAYING")). (requiresLinearPlayback = \(self.isLive || self.inAd), canStartPictureInPictureAutomaticallyFromInline = \(self.pipConfig.canStartPictureInPictureAutomaticallyFromInline))") }
         }
     }
         
@@ -87,7 +87,6 @@ class THEOplayerRCTPipControlsManager: NSObject {
         
         // DURATION_CHANGE
         self.durationChangeListener = player.addEventListener(type: PlayerEventTypes.DURATION_CHANGE) { [weak self] event in
-            print("[NATIVE] Pip controls DURATION_CHANGE")
             if let duration = event.duration {
                 self?.isLive = duration.isInfinite
                 self?.updatePipControls()
@@ -96,7 +95,6 @@ class THEOplayerRCTPipControlsManager: NSObject {
         
         // SOURCE_CHANGE
         self.sourceChangeListener = player.addEventListener(type: PlayerEventTypes.SOURCE_CHANGE) { [weak self] event in
-            print("[NATIVE] Pip controls SOURCE_CHANGE")
             self?.isLive = false
             self?.inAd = false
             self?.updatePipControls()
