@@ -69,6 +69,9 @@ export default function App() {
     player.addEventListener(PlayerEventType.ENDED, console.log);
     player.source = SOURCES[0].source;
 
+    player.backgroundAudioConfiguration = { enabled: true };
+    player.pipConfiguration = { startsAutomatically: true };
+
   };
 
   const PLAYER_CONTAINER_STYLE: ViewStyle = {
