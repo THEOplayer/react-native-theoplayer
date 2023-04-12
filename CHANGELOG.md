@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-- Fixed an issue on Android where error codes were not correctly formatted.
+- Fixed an issue on Android and iOS where error codes were not correctly formatted.
 
 ## [2.1.0] - 23-04-09
 
