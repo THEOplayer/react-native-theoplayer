@@ -2,7 +2,7 @@ require "json"
 
 package = JSON.parse(File.read(File.join(__dir__, "package.json")))
 theoconfigpath = File.join(__dir__ + "/../../", "react-native-theoplayer.json")
-if File.exists?(theoconfigpath) 
+if File.exist?(theoconfigpath) 
   theoconfig = JSON.parse(File.read(theoconfigpath))
   theofeatures = theoconfig["ios"]["features"]
 else
@@ -36,7 +36,7 @@ Pod::Spec.new do |s|
     }
   else 
   	puts "Using THEOplayer-core SDK"
-    s.dependency "THEOplayerSDK-core"
+    s.dependency "THEOplayerSDK-core", "~> 5.0.1"
     if theofeatures.include?("GOOGLE_IMA") 
 	  puts "Adding THEOplayer-Integration-GoogleIMA"
       s.dependency "THEOplayer-Integration-GoogleIMA"

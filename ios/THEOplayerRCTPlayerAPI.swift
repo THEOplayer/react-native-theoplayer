@@ -124,9 +124,9 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
     @objc(setPipConfig:pipConfig:)
     func setPipConfig(_ node: NSNumber, pipConfig: NSDictionary) -> Void {
         DispatchQueue.main.async {
-            let newPipConfig: PipConfig = self.parsePipConfig(configDict: pipConfig)
             if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView {
-                theView.pipConfig = newPipConfig
+                let pipConfig = self.parsePipConfig(configDict: pipConfig)
+                theView.pipConfig = pipConfig
             }
         }
         return
@@ -134,7 +134,6 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
     
     private func parsePipConfig(configDict: NSDictionary) -> PipConfig {
         var pipConfig = PipConfig()
-        pipConfig.retainPresentationModeOnSourceChange = configDict["retainPresentationModeOnSourceChange"] as? Bool ?? false
         pipConfig.canStartPictureInPictureAutomaticallyFromInline = configDict["startsAutomatically"] as? Bool ?? false
         return pipConfig
     }

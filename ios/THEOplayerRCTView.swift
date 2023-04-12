@@ -15,10 +15,15 @@ public class THEOplayerRCTView: UIView {
     var nowPlayingManager: THEOplayerRCTNowPlayingManager
     var remoteCommandsManager: THEOplayerRCTRemoteCommandsManager
     var pipControlsManager: THEOplayerRCTPipControlsManager
+    var presentationModeContext = THEOplayerRCTPresentationModeContext()
     var adsConfig = AdsConfig()
     var castConfig = CastConfig()
-    var pipConfig = PipConfig()
-    var presentationModeContext = THEOplayerRCTPresentationModeContext()
+    
+    var pipConfig = PipConfig() {
+        didSet {
+            self.pipControlsManager.setPipConfig(pipConfig)
+        }
+    }
     var backgroundAudioConfig = BackgroundAudioConfig() {
         didSet {
             self.remoteCommandsManager.setBackGroundAudioConfig(backgroundAudioConfig)

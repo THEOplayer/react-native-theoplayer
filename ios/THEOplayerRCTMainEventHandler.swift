@@ -239,7 +239,7 @@ class THEOplayerRCTMainEventHandler {
             if let forwardedErrorEvent = self?.onNativeError,
                let errorObject = event.errorObject
             {
-                let errorCodeString = String(describing: errorObject.code)
+                let errorCodeString = String(errorObject.code.rawValue)
                 let errorCodeMessage = errorObject.message
                 forwardedErrorEvent(
                     [
