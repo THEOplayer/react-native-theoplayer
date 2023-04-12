@@ -8,7 +8,6 @@ import {
   ChromecastButton,
   ControlBar,
   DEFAULT_THEOPLAYER_THEME,
-  FULLSCREEN_CENTER_STYLE,
   FullscreenButton,
   LanguageMenuButton,
   MuteButton,
@@ -27,7 +26,7 @@ import {
   TimeLabel,
   UiContainer,
 } from 'react-native-theoplayer';
-import { Platform, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View, ViewStyle } from 'react-native';
 import { SourceMenuButton, SOURCES } from './custom/SourceMenuButton';
 
 const playerConfig: PlayerConfiguration = {
@@ -71,7 +70,6 @@ export default function App() {
 
     player.backgroundAudioConfiguration = { enabled: true };
     player.pipConfiguration = { startsAutomatically: true };
-
   };
 
   const PLAYER_CONTAINER_STYLE: ViewStyle = {
@@ -82,7 +80,7 @@ export default function App() {
     right: 5,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#000000'
+    backgroundColor: '#000000',
   };
 
   return (
