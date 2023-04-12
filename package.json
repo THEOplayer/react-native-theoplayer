@@ -116,7 +116,7 @@
     "react-native-svg": "^13.8.0",
     "react-native-svg-web": "^1.0.0",
     "react-native-url-polyfill": "^1.3.0",
-    "theoplayer": "^5.0.0",
+    "theoplayer": ">=5.0.1",
     "url-polyfill": "^1.1.12"
   }
 }
