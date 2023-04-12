@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 - Set minimum THEOplayer dependency version to 5.0.1 for Web, iOS and Android.
+- Set `MediaPlaybackService` disabled by default on Android.
 
 ## [2.1.0] - 23-04-09
 
