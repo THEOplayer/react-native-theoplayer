@@ -249,7 +249,7 @@ class PlayerEventEmitter internal constructor(
   }
 
   fun emitError(exception: THEOplayerException) {
-    emitError(exception.code.name, exception.message)
+    emitError(exception.code.id.toString(), exception.message)
   }
 
   fun emitPresentationModeChange(
