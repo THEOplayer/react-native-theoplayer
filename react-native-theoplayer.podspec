@@ -36,7 +36,7 @@ Pod::Spec.new do |s|
     }
   else 
   	puts "Using THEOplayer-core SDK"
-    s.dependency "THEOplayerSDK-core"
+    s.dependency "THEOplayerSDK-core", "~> 5.0.1"
     if theofeatures.include?("GOOGLE_IMA") 
 	  puts "Adding THEOplayer-Integration-GoogleIMA"
       s.dependency "THEOplayer-Integration-GoogleIMA"
