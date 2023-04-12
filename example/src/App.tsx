@@ -72,12 +72,13 @@ export default function App() {
     player.pipConfiguration = { startsAutomatically: true };
   };
 
+  const needsBorder = Platform.OS === 'ios';
   const PLAYER_CONTAINER_STYLE: ViewStyle = {
     position: 'absolute',
-    top: 20,
-    left: 5,
+    top: needsBorder ? 20 : 0,
+    left: needsBorder ? 5 : 0,
     bottom: 0,
-    right: 5,
+    right: needsBorder ? 5 : 0,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#000000',
