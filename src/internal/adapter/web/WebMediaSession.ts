@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import type { ChromelessPlayer } from 'theoplayer';
 import type { THEOplayerWebAdapter } from '../THEOplayerWebAdapter';
-import { PresentationMode } from 'react-native-theoplayer';
 
 interface WebMediaSessionConfig {
   skipTime: number;
@@ -151,7 +150,7 @@ export class WebMediaSession {
     return !isFinite(this._player.duration);
   }
 
-  private isAd(): boolean {
+  private inAd(): boolean {
     return this._player.ads?.playing == true;
   }
 
@@ -160,34 +159,14 @@ export class WebMediaSession {
   }
 
   private isTrickplayEnabled(): boolean {
-    // By default, no trickplay for live
-    if (this.isLive()) {
-      return false;
-    }
-
-    // In PiP mode, disable trick-play for ads.
-    if (this._webAdapter.presentationMode === PresentationMode.pip) {
-      return !this.isAd();
-    }
-    // During background playback
-    if (this.isInBackground()) {
-      // Disable trick-play for ads.
-      return !(this.isAd() || this.isLive());
-    }
-    return true;
+    return (this.isBackgroundAudioEnabled() || !this.isInBackground()) && !this.isLive() && !this.inAd();
   }
 
   private isPlayPauseEnabled(): boolean {
-    // In PiP mode
-    if (this._webAdapter.presentationMode === PresentationMode.pip) {
-      // Disable play/pause for ads
-      return !this.isAd();
-    }
-    // During background playback
-    if (this.isInBackground()) {
-      // Disable play/pause for ads & live content.
-      return !(this.isAd() || this.isLive());
-    }
-    return true;
+    return (this.isBackgroundAudioEnabled() || !this.isInBackground()) && !this.inAd();
+  }
+
+  private isBackgroundAudioEnabled(): boolean {
+    return this._webAdapter.backgroundAudioConfiguration.enabled == true;
   }
 }
