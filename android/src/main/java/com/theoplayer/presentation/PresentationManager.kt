@@ -1,19 +1,12 @@
 package com.theoplayer.presentation
 
 import android.app.AppOpsManager
-import android.app.PictureInPictureParams
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.graphics.Rect
 import android.os.Build
-import android.util.Rational
-import android.view.SurfaceView
-import android.view.TextureView
-import android.view.View
-import android.view.ViewGroup
 import androidx.activity.ComponentActivity
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -25,10 +18,6 @@ import com.theoplayer.android.api.error.ErrorCode
 import com.theoplayer.android.api.error.THEOplayerException
 import com.theoplayer.android.api.player.PresentationMode
 
-private val PIP_ASPECT_RATIO_DEFAULT = Rational(16, 9)
-private val PIP_ASPECT_RATIO_MIN = Rational(100, 239)
-private val PIP_ASPECT_RATIO_MAX = Rational(239, 100)
-
 class PresentationManager(
   private val viewCtx: ReactTHEOplayerContext,
   private val reactContext: ThemedReactContext,
@@ -37,6 +26,8 @@ class PresentationManager(
   private var supportsPip = false
   private var onUserLeaveHintReceiver: BroadcastReceiver? = null
   private var onPictureInPictureModeChanged: BroadcastReceiver? = null
+
+  private val pipUtils: PipUtils = PipUtils(viewCtx, reactContext)
 
   var currentPresentationMode: PresentationMode = PresentationMode.INLINE
     private set
@@ -59,12 +50,14 @@ class PresentationManager(
         if (inPip) {
           updatePresentationMode(PresentationMode.PICTURE_IN_PICTURE)
         } else {
-          val pipCtx: PresentationModeChangePipContext = if ((reactContext.currentActivity as? ComponentActivity)
-            ?.lifecycle?.currentState == Lifecycle.State.CREATED) {
-            PresentationModeChangePipContext.CLOSED
-          } else {
-            PresentationModeChangePipContext.RESTORED
-          }
+          val pipCtx: PresentationModeChangePipContext =
+            if ((reactContext.currentActivity as? ComponentActivity)
+                ?.lifecycle?.currentState == Lifecycle.State.CREATED
+            ) {
+              PresentationModeChangePipContext.CLOSED
+            } else {
+              PresentationModeChangePipContext.RESTORED
+            }
           updatePresentationMode(PresentationMode.INLINE, PresentationModeChangeContext(pipCtx))
         }
       }
@@ -85,6 +78,7 @@ class PresentationManager(
     try {
       reactContext.currentActivity?.unregisterReceiver(onUserLeaveHintReceiver)
       reactContext.currentActivity?.unregisterReceiver(onPictureInPictureModeChanged)
+      pipUtils.destroy()
     } catch (ignore: Exception) {
     }
   }
@@ -102,20 +96,6 @@ class PresentationManager(
         enterPip()
       }
     }
-  }
-
-  private fun getContentViewRect(view: ViewGroup): Rect? {
-    for (i in 0 until view.childCount) {
-      val child: View = view.getChildAt(i)
-      if (child is ViewGroup) {
-        return getContentViewRect(child)
-      } else if (child as? SurfaceView != null || child as? TextureView != null) {
-        val visibleRect = Rect()
-        child.getGlobalVisibleRect(visibleRect)
-        return visibleRect
-      }
-    }
-    return null
   }
 
   private fun enterPip() {
@@ -141,33 +121,10 @@ class PresentationManager(
     }
 
     try {
-      val view = viewCtx.playerView
-      val visibleRect = getContentViewRect(view)
-      reactContext.currentActivity?.enterPictureInPictureMode(
-        PictureInPictureParams.Builder().setSourceRectHint(visibleRect)
-          // Must be between 2.39:1 and 1:2.39 (inclusive)
-          .setAspectRatio(getSafeAspectRatio(view.player.videoWidth, view.player.videoHeight))
-          // The active MediaSession will connect the controls
-          .build()
-      )
+      reactContext.currentActivity?.enterPictureInPictureMode(pipUtils.getPipParams())
     } catch (_: Exception) {
       onPipError()
     }
-  }
-
-  private fun getSafeAspectRatio(width: Int, height: Int): Rational {
-    val aspectRatio = Rational(width, height)
-    if (aspectRatio.isNaN || aspectRatio.isInfinite || aspectRatio.isZero) {
-      // Default aspect ratio
-      return PIP_ASPECT_RATIO_DEFAULT
-    }
-    if (aspectRatio > PIP_ASPECT_RATIO_MAX) {
-      return PIP_ASPECT_RATIO_MAX
-    }
-    if (aspectRatio < PIP_ASPECT_RATIO_MIN) {
-      return PIP_ASPECT_RATIO_MIN
-    }
-    return aspectRatio
   }
 
   private fun hasPipPermission(): Boolean {
