@@ -166,7 +166,8 @@
     "name": "HLS - VOD - Clear - The Venture Bros",
     "os": [
       "ios",
-      "android"
+      "android",
+      "web"
     ],
     "source": {
       "sources": {
@@ -196,7 +197,8 @@
   {
     "name": "HLS - VOD - Clear - bipbop (id3 meta)",
     "os": [
-      "ios"
+      "ios",
+      "web"
     ],
     "source": {
       "sources": {
