@@ -44,7 +44,6 @@ Pod::Spec.new do |s|
     if theofeatures.include?("CHROMECAST")
 	  puts "Adding THEOplayer-Integration-GoogleCast"
       s.ios.dependency "THEOplayer-Integration-GoogleCast"
-      s.ios.dependency "google-cast-sdk-dynamic-xcframework-no-bluetooth"
     end
   end
   
