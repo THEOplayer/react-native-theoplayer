@@ -19,6 +19,8 @@ import androidx.annotation.RequiresApi
 import com.facebook.react.uimanager.ThemedReactContext
 import com.theoplayer.R
 import com.theoplayer.ReactTHEOplayerContext
+import com.theoplayer.android.api.ads.ima.GoogleImaAdEvent
+import com.theoplayer.android.api.ads.ima.GoogleImaAdEventType
 import com.theoplayer.android.api.event.EventListener
 import com.theoplayer.android.api.event.player.PlayerEvent
 import com.theoplayer.android.api.event.player.PlayerEventTypes
@@ -42,8 +44,11 @@ class PipUtils(
   private val reactContext: ThemedReactContext
 ) {
 
+  private var enabled: Boolean = false
   private var onPlayerAction: EventListener<PlayerEvent<*>>? = null
-  private val playerActions = listOf(PlayerEventTypes.PLAY, PlayerEventTypes.PAUSE)
+  private var onAdAction: EventListener<GoogleImaAdEvent>? = null
+  private val playerEvents = listOf(PlayerEventTypes.PLAY, PlayerEventTypes.PAUSE)
+  private val adEvents = listOf(GoogleImaAdEventType.STARTED, GoogleImaAdEventType.CONTENT_RESUME_REQUESTED)
   private val broadcastReceiver: BroadcastReceiver = buildBroadcastReceiver()
 
   private val player: Player
@@ -51,21 +56,48 @@ class PipUtils(
 
   init {
     onPlayerAction = EventListener {
+      updatePipParams()
     }
-    playerActions.forEach { action ->
+    onAdAction = EventListener {
+      updatePipParams()
+    }
+  }
+
+  fun enable() {
+    if (enabled) {
+      return
+    }
+    playerEvents.forEach { action ->
       player.addEventListener(action, onPlayerAction)
+    }
+    adEvents.forEach { action ->
+      player.ads.addEventListener(action, onAdAction)
     }
     reactContext.currentActivity?.registerReceiver(
       broadcastReceiver,
       IntentFilter(ACTION_MEDIA_CONTROL)
     )
+    enabled = true
+  }
+
+  fun disable() {
+    if (!enabled) {
+      return
+    }
+    playerEvents.forEach { action ->
+      player.removeEventListener(action, onPlayerAction)
+    }
+    adEvents.forEach { action ->
+      player.ads.removeEventListener(action, onAdAction)
+    }
+    try {
+      reactContext.currentActivity?.unregisterReceiver(broadcastReceiver)
+    } catch (ignore: IllegalArgumentException) { /*ignore*/}
+    enabled = false
   }
 
   fun destroy() {
-    playerActions.forEach { action ->
-      player.removeEventListener(action, onPlayerAction)
-    }
-    reactContext.currentActivity?.unregisterReceiver(broadcastReceiver)
+    disable()
   }
 
   @RequiresApi(Build.VERSION_CODES.O)
@@ -89,6 +121,7 @@ class PipUtils(
       }
 
       // Play/pause
+      // Always add this button, but send an ACTION_IGNORE if disabled.
       add(
         if (paused) {
           buildRemoteAction(
@@ -120,7 +153,6 @@ class PipUtils(
       }
     }
   }
-
 
   private fun getSafeAspectRatio(width: Int, height: Int): Rational {
     val aspectRatio = Rational(width, height)
@@ -169,6 +201,12 @@ class PipUtils(
         buildPipActions(player.isPaused, enablePlayPause, enableTrickPlay)
       )
       .build()
+  }
+
+  private fun updatePipParams() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      reactContext.currentActivity?.setPictureInPictureParams(getPipParams())
+    }
   }
 
   private fun buildBroadcastReceiver(): BroadcastReceiver {

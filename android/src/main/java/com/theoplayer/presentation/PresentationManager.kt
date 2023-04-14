@@ -48,17 +48,9 @@ class PresentationManager(
         // Dispatch event on every PiP mode change
         val inPip = intent?.getBooleanExtra("isInPictureInPictureMode", false) ?: false
         if (inPip) {
-          updatePresentationMode(PresentationMode.PICTURE_IN_PICTURE)
+          onEnterPip()
         } else {
-          val pipCtx: PresentationModeChangePipContext =
-            if ((reactContext.currentActivity as? ComponentActivity)
-                ?.lifecycle?.currentState == Lifecycle.State.CREATED
-            ) {
-              PresentationModeChangePipContext.CLOSED
-            } else {
-              PresentationModeChangePipContext.RESTORED
-            }
-          updatePresentationMode(PresentationMode.INLINE, PresentationModeChangeContext(pipCtx))
+          onExitPip()
         }
       }
     }
@@ -121,10 +113,28 @@ class PresentationManager(
     }
 
     try {
+      pipUtils.enable()
       reactContext.currentActivity?.enterPictureInPictureMode(pipUtils.getPipParams())
     } catch (_: Exception) {
       onPipError()
     }
+  }
+
+  private fun onEnterPip() {
+    updatePresentationMode(PresentationMode.PICTURE_IN_PICTURE)
+  }
+
+  private fun onExitPip() {
+    val pipCtx: PresentationModeChangePipContext =
+      if ((reactContext.currentActivity as? ComponentActivity)
+          ?.lifecycle?.currentState == Lifecycle.State.CREATED
+      ) {
+        PresentationModeChangePipContext.CLOSED
+      } else {
+        PresentationModeChangePipContext.RESTORED
+      }
+    updatePresentationMode(PresentationMode.INLINE, PresentationModeChangeContext(pipCtx))
+    pipUtils.disable()
   }
 
   private fun hasPipPermission(): Boolean {
