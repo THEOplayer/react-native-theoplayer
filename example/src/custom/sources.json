@@ -166,7 +166,8 @@
     "name": "HLS - VOD - Clear - The Venture Bros",
     "os": [
       "ios",
-      "android"
+      "android",
+      "web"
     ],
     "source": {
       "sources": {
@@ -181,13 +182,6 @@
         "displayIconUri": "https://cdn.theoplayer.com/video/adultswim/poster.jpg",
         "artist": "THEOplayer",
         "type": "tv-show",
-        "images": [
-          {
-            "src": "https://cdn.theoplayer.com/video/adultswim/poster.jpg",
-            "width": 772,
-            "height": 435
-          }
-        ],
         "releaseDate": "november 29th",
         "releaseYear": 1997
       }
@@ -196,24 +190,42 @@
   {
     "name": "HLS - VOD - Clear - bipbop (id3 meta)",
     "os": [
-      "ios"
+      "ios",
+      "web"
     ],
     "source": {
       "sources": {
         "src": "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8",
         "type": "application/x-mpegurl"
+      },
+      "poster": "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
+      "metadata": {
+        "title": "The Title",
+        "subtitle": "The Subtitle",
+        "album": "Album",
+        "displayIconUri": "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
+        "artist": "Artist"
       }
     }
   },
   {
     "name": "HLS - VOD - Clear - elephants-dream (id3 meta)",
     "os": [
-      "ios"
+      "ios",
+      "web"
     ],
     "source": {
       "sources": {
         "src": "https://cdn.theoplayer.com/video/elephants-dream/playlist-single-audio.m3u8",
         "type": "application/x-mpegurl"
+      },
+      "poster": "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
+      "metadata": {
+        "title": "The Title",
+        "subtitle": "The Subtitle",
+        "album": "Album",
+        "displayIconUri": "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
+        "artist": "Artist"
       }
     }
   },
@@ -235,7 +247,15 @@
           "integration": "google-ima",
           "sources": "https://cdn.theoplayer.com/demos/ads/vast/dfp-preroll-no-skip.xml"
         }
-      ]
+      ],
+      "poster": "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
+      "metadata": {
+        "title": "The Title",
+        "subtitle": "The Subtitle",
+        "album": "Album",
+        "displayIconUri": "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
+        "artist": "Artist"
+      }
     }
   },
   {
@@ -259,7 +279,15 @@
           },
           "timeOffset": 10
         }
-      ]
+      ],
+      "poster": "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
+      "metadata": {
+        "title": "The Title",
+        "subtitle": "The Subtitle",
+        "album": "Album",
+        "displayIconUri": "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
+        "artist": "Artist"
+      }
     }
   },
   {
@@ -325,6 +353,13 @@
         "type": "application/x-mpegurl"
       },
       "poster": "https://cdn.theoplayer.com/video/big_buck_bunny/poster.jpg",
+      "metadata": {
+        "title": "The Title",
+        "subtitle": "The Subtitle",
+        "album": "Album",
+        "displayIconUri": "https://cdn.theoplayer.com/video/big_buck_bunny/poster.jpg",
+        "artist": "Artist"
+      },
       "textTracks": [
         {
           "default": true,
