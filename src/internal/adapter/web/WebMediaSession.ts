@@ -158,10 +158,16 @@ export class WebMediaSession {
     return document.visibilityState !== 'visible';
   }
 
+  // By default, only show trick-play buttons if:
+  // - backgroundAudio is enabled, or the player is in foreground;
+  // - and, the current asset is neither a live stream, nor an ad.
   private isTrickplayEnabled(): boolean {
     return (this.isBackgroundAudioEnabled() || !this.isInBackground()) && !this.isLive() && !this.isInAd();
   }
 
+  // By default, only show a play/pause button if:
+  // - backgroundAudio is enabled, or the player is in foreground;
+  // - and, the current asset is not an ad.
   private isPlayPauseEnabled(): boolean {
     return (this.isBackgroundAudioEnabled() || !this.isInBackground()) && !this.isInAd();
   }
