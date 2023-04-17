@@ -7,7 +7,7 @@ import type {
   TextTracksList as NativeTextTrackList,
 } from 'theoplayer';
 import type { MediaTrack, TextTrack, TextTrackCue } from 'react-native-theoplayer';
-import { decodeNanInf } from 'src/internal/utils/TypeUtils';
+import { decodeNanInf } from '../../utils/TypeUtils';
 
 export function fromNativeCue(cue: NativeTextTrackCue): TextTrackCue {
   return {
