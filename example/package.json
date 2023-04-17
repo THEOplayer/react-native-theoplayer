@@ -34,7 +34,6 @@
     "@types/jest": "^26.0.24",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
-    "@types/react-native": "^0.63.66",
     "@types/react-test-renderer": "18.0.0",
     "babel-jest": "^26.6.3",
     "babel-loader": "^8.2.3",
@@ -50,6 +49,9 @@
     "webpack": "^5.76.0",
     "webpack-cli": "^4.9.1",
     "webpack-dev-server": "^4.7.3"
+  },
+  "overrides": {
+    "@types/react-native": "^0.71.5"
   },
   "jest": {
     "preset": "react-native",
