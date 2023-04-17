@@ -27,9 +27,6 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
         } as THEOplayer.PlayerConfiguration);
       }
 
-      // Prepare the player to ChromelessPlayer.autoplay on platforms where autoplay is restricted without user action.
-      player.current.prepareWithUserAction();
-
       // Adapt native player to react-native player.
       adapter.current = new THEOplayerWebAdapter(player.current, config);
 
