@@ -10,11 +10,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed an issue on iOS and Android where cue event properties `startTime` and `endTime` with value `Infinity` or `NaN` were not passed correctly.
-
-## [2.3.0] - 23-04-14
-
-### Fixed
-
 - Fixed an issue on iOS Safari where switching to fullscreen presentation during an ad would not work.
 - Fixed an issue on iOS Safari where an ad could be skipped during unmuted autoplay.
 
