@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [2.3.0] - 23-04-14
 
+### Fixed
+
+- Fixed an issue on iOS Safari where switching to fullscreen presentation during an ad would not work.
+- Fixed an issue on iOS Safari where an ad could be skipped during unmuted autoplay.
+
+## [2.3.0] - 23-04-14
+
 ### Changed
 
 - Updated picture-in-picture controls on Android to include forward/rewind buttons and disabled pause button for ads.
