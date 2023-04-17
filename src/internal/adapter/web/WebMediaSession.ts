@@ -150,7 +150,7 @@ export class WebMediaSession {
     return !isFinite(this._player.duration);
   }
 
-  private inAd(): boolean {
+  private isInAd(): boolean {
     return this._player.ads?.playing == true;
   }
 
@@ -159,11 +159,11 @@ export class WebMediaSession {
   }
 
   private isTrickplayEnabled(): boolean {
-    return (this.isBackgroundAudioEnabled() || !this.isInBackground()) && !this.isLive() && !this.inAd();
+    return (this.isBackgroundAudioEnabled() || !this.isInBackground()) && !this.isLive() && !this.isInAd();
   }
 
   private isPlayPauseEnabled(): boolean {
-    return (this.isBackgroundAudioEnabled() || !this.isInBackground()) && !this.inAd();
+    return (this.isBackgroundAudioEnabled() || !this.isInBackground()) && !this.isInAd();
   }
 
   private isBackgroundAudioEnabled(): boolean {
