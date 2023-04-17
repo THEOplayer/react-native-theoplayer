@@ -11,6 +11,7 @@ import com.theoplayer.android.api.player.track.mediatrack.quality.Quality
 import com.theoplayer.android.api.player.track.mediatrack.quality.AudioQuality
 import com.theoplayer.android.api.player.track.mediatrack.quality.VideoQuality
 import com.theoplayer.android.api.player.track.mediatrack.MediaTrackList
+import com.theoplayer.util.TypeUtils
 
 private const val PROP_ID = "id"
 private const val PROP_UID = "uid"
@@ -75,8 +76,8 @@ object TrackListAdapter {
     val cuePayload = Arguments.createMap()
     cuePayload.putString(PROP_ID, cue.id)
     cuePayload.putDouble(PROP_UID, cue.uid.toDouble())
-    cuePayload.putDouble(PROP_STARTTIME, (1e3 * cue.startTime).toLong().toDouble())
-    cuePayload.putDouble(PROP_ENDTIME, (1e3 * cue.endTime).toLong().toDouble())
+    cuePayload.putDouble(PROP_STARTTIME, TypeUtils.encodeInfNan(1e3 * cue.startTime))
+    cuePayload.putDouble(PROP_ENDTIME, TypeUtils.encodeInfNan(1e3 * cue.endTime))
     val content = cue.content
     if (content != null) {
       cuePayload.putString(
