@@ -96,12 +96,15 @@ class ReactTHEOplayerContext private constructor(
   }
 
   private fun setPlaybackServiceEnabled(enabled: Boolean) {
-    reactContext.applicationContext.packageManager.setComponentEnabledSetting(
-      ComponentName(reactContext.applicationContext, MediaPlaybackService::class.java),
-      if (enabled) PackageManager.COMPONENT_ENABLED_STATE_ENABLED
-      else PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-      PackageManager.DONT_KILL_APP
-    )
+    // Disable the service after next tick to allow processing any MEDIA_BUTTON events.
+    mainHandler.post {
+      reactContext.applicationContext.packageManager.setComponentEnabledSetting(
+        ComponentName(reactContext.applicationContext, MediaPlaybackService::class.java),
+        if (enabled) PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+        else PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+        PackageManager.DONT_KILL_APP
+      )
+    }
   }
 
   private fun applyBackgroundPlaybackConfig(
