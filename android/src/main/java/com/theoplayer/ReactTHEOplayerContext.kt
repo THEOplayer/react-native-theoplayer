@@ -25,6 +25,7 @@ import com.theoplayer.android.api.event.EventListener
 import com.theoplayer.android.api.event.player.*
 import com.theoplayer.android.api.player.Player
 import com.theoplayer.android.connector.mediasession.MediaSessionConnector
+import com.theoplayer.android.connector.mediasession.PlaybackStateProvider
 import com.theoplayer.audio.BackgroundAudioConfig
 import com.theoplayer.audio.MediaPlaybackService
 import java.util.concurrent.atomic.AtomicBoolean
@@ -128,6 +129,17 @@ class ReactTHEOplayerContext private constructor(
         setPlaybackServiceEnabled(false)
         initDefaultMediaSession()
       }
+    }
+  }
+
+  private fun applyAllowedMediaControls() {
+    // Reduce allowed set of remote control playback actions for ads & live streams.
+    val isLive = player.duration.isInfinite()
+    val isInAd = player.ads.isPlaying
+    mediaSessionConnector?.enabledPlaybackActions = if (isInAd || isLive) {
+      0
+    } else {
+      PlaybackStateProvider.DEFAULT_PLAYBACK_ACTIONS
     }
   }
 
@@ -246,10 +258,12 @@ class ReactTHEOplayerContext private constructor(
   private val onSourceChange = EventListener<SourceChangeEvent> {
     mediaSessionConnector?.setMediaSessionMetadata(player.source)
     binder?.updateNotification()
+    applyAllowedMediaControls()
   }
 
   private val onLoadedMetadata = EventListener<LoadedMetadataEvent> {
     binder?.updateNotification()
+    applyAllowedMediaControls()
   }
 
   private val onPlay = EventListener<PlayEvent> {
@@ -257,10 +271,12 @@ class ReactTHEOplayerContext private constructor(
       bindMediaPlaybackService()
     }
     binder?.updateNotification(PlaybackStateCompat.STATE_PLAYING)
+    applyAllowedMediaControls()
   }
 
   private val onPause = EventListener<PauseEvent> {
     binder?.updateNotification(PlaybackStateCompat.STATE_PAUSED)
+    applyAllowedMediaControls()
   }
 
   private fun addListeners() {
