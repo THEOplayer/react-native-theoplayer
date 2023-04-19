@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import type { ChromelessPlayer } from 'theoplayer';
 import type { THEOplayerWebAdapter } from '../THEOplayerWebAdapter';
-import { PresentationMode } from 'react-native-theoplayer';
 
 interface WebMediaSessionConfig {
   skipTime: number;
@@ -151,43 +150,29 @@ export class WebMediaSession {
     return !isFinite(this._player.duration);
   }
 
-  private isAd(): boolean {
-    return this._player.ads?.playing == true;
+  private isInAd(): boolean {
+    return this._player.ads?.playing === true;
   }
 
   private isInBackground(): boolean {
     return document.visibilityState !== 'visible';
   }
 
+  // By default, only show trick-play buttons if:
+  // - backgroundAudio is enabled, or the player is in foreground;
+  // - and, the current asset is neither a live stream, nor an ad.
   private isTrickplayEnabled(): boolean {
-    // By default, no trickplay for live
-    if (this.isLive()) {
-      return false;
-    }
-
-    // In PiP mode, disable trick-play for ads.
-    if (this._webAdapter.presentationMode === PresentationMode.pip) {
-      return !this.isAd();
-    }
-    // During background playback
-    if (this.isInBackground()) {
-      // Disable trick-play for ads.
-      return !(this.isAd() || this.isLive());
-    }
-    return true;
+    return (this.isBackgroundAudioEnabled() || !this.isInBackground()) && !this.isLive() && !this.isInAd();
   }
 
+  // By default, only show a play/pause button if:
+  // - backgroundAudio is enabled, or the player is in foreground;
+  // - and, the current asset is not an ad.
   private isPlayPauseEnabled(): boolean {
-    // In PiP mode
-    if (this._webAdapter.presentationMode === PresentationMode.pip) {
-      // Disable play/pause for ads
-      return !this.isAd();
-    }
-    // During background playback
-    if (this.isInBackground()) {
-      // Disable play/pause for ads & live content.
-      return !(this.isAd() || this.isLive());
-    }
-    return true;
+    return (this.isBackgroundAudioEnabled() || !this.isInBackground()) && !this.isInAd();
+  }
+
+  private isBackgroundAudioEnabled(): boolean {
+    return this._webAdapter.backgroundAudioConfiguration.enabled === true;
   }
 }

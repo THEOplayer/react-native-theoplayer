@@ -63,7 +63,7 @@ export class WebPresentationModeManager {
       }
     }
     // listen for pip updates on element
-    if (this._element != null) {
+    if (this._element !== undefined) {
       this._element.onenterpictureinpicture = () => {
         this.updatePresentationMode();
       };

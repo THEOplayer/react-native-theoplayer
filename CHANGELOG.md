@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed an issue on iOS Safari where switching to fullscreen presentation during an ad would not work.
 - Fixed an issue on iOS Safari where an ad could be skipped during unmuted autoplay.
 
+### Changed
+
+- Changed Web media session controls to only show trick-play buttons if the player is in foreground, or `backgroundAudioEnabled` is `true`, and never for ads and live stream.
+- Changed Web media session controls to only show a play/pause button if the player is in foreground, or `backgroundAudioEnabled` is `true`, and never for ads.
+
 ## [2.3.0] - 23-04-14
 
 ### Changed
