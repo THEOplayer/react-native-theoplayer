@@ -151,7 +151,7 @@ export class WebMediaSession {
   }
 
   private isInAd(): boolean {
-    return this._player.ads?.playing == true;
+    return this._player.ads?.playing === true;
   }
 
   private isInBackground(): boolean {
@@ -173,6 +173,6 @@ export class WebMediaSession {
   }
 
   private isBackgroundAudioEnabled(): boolean {
-    return this._webAdapter.backgroundAudioConfiguration.enabled == true;
+    return this._webAdapter.backgroundAudioConfiguration.enabled === true;
   }
 }
