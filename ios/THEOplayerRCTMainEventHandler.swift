@@ -132,13 +132,14 @@ class THEOplayerRCTMainEventHandler {
         if DEBUG_EVENTHANDLER { print("[NATIVE] DurationChange listener attached to THEOplayer") }
         
         // VOLUME_CHANGE
-        self.volumeChangeListener = player.addEventListener(type: PlayerEventTypes.VOLUME_CHANGE) { [weak self] event in
+        self.volumeChangeListener = player.addEventListener(type: PlayerEventTypes.VOLUME_CHANGE) { [weak self, weak player] event in
             if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received VOLUME_CHANGE event from THEOplayer") }
-            if let forwardedVolumeChangeEvent = self?.onNativeVolumeChange {
+            if let wplayer = player,
+               let forwardedVolumeChangeEvent = self?.onNativeVolumeChange {
                 forwardedVolumeChangeEvent(
                     [
                         "volume": event.volume,
-                        "muted": player.muted
+                        "muted": wplayer.muted
                     ]
                 )
             }
@@ -146,11 +147,12 @@ class THEOplayerRCTMainEventHandler {
         if DEBUG_EVENTHANDLER { print("[NATIVE] VolumeChange listener attached to THEOplayer") }
         
         // PROGRESS
-        self.progressListener = player.addEventListener(type: PlayerEventTypes.PROGRESS) { [weak self] event in
+        self.progressListener = player.addEventListener(type: PlayerEventTypes.PROGRESS) { [weak self, weak player] event in
             //if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received PROGRESS event from THEOplayer") }
-            if let forwardedProgressEvent = self?.onNativeProgress {
-                player.requestSeekable(completionHandler: { seekableTimeRanges, error in
-                    player.requestBuffered(completionHandler: { bufferedTimeRanges, error in
+            if let wplayer = player,
+               let forwardedProgressEvent = self?.onNativeProgress {
+                wplayer.requestSeekable(completionHandler: { seekableTimeRanges, error in
+                    wplayer.requestBuffered(completionHandler: { bufferedTimeRanges, error in
                         var seekable: [[String:Double]] = []
                         seekableTimeRanges?.forEach({ timeRange in
                             seekable.append(
@@ -263,10 +265,11 @@ class THEOplayerRCTMainEventHandler {
         if DEBUG_EVENTHANDLER { print("[NATIVE] LoadedData listener attached to THEOplayer") }
         
         // LOADED_META_DATA
-        self.loadedMetadataListener = player.addEventListener(type: PlayerEventTypes.LOADED_META_DATA) { [weak self] event in
+        self.loadedMetadataListener = player.addEventListener(type: PlayerEventTypes.LOADED_META_DATA) { [weak self, weak player] event in
             if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received LOADED_META_DATA event from THEOplayer") }
-            if let forwardedLoadedMetadataEvent = self?.onNativeLoadedMetadata {
-                let metadata = THEOplayerRCTTrackMetadataAggregator.aggregateTrackMetadata(player: player)
+            if let wplayer = player,
+               let forwardedLoadedMetadataEvent = self?.onNativeLoadedMetadata {
+                let metadata = THEOplayerRCTTrackMetadataAggregator.aggregateTrackMetadata(player: wplayer)
                 print(metadata)
                 forwardedLoadedMetadataEvent(metadata)
             }
