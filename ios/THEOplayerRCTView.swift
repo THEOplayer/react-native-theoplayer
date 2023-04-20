@@ -136,6 +136,8 @@ public class THEOplayerRCTView: UIView {
         self.remoteCommandsManager.destroy()
         self.pipControlsManager.destroy()
         
+        self.destroyBackgroundAudio()
+        self.player?.removeAllIntegrations()
         self.player?.destroy()
         self.player = nil
         if DEBUG_THEOPLAYER_INTERACTION { print("[NATIVE] THEOplayer instance destroyed.") }
