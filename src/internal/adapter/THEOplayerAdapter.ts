@@ -372,7 +372,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   set selectedTextTrack(trackUid: number | undefined) {
     this._state.selectedTextTrack = trackUid;
     this.textTracks.forEach((track) => {
-      if (track.uid == trackUid) {
+      if (track.uid === trackUid) {
         track.mode = TextTrackMode.showing;
       } else if (track.mode === TextTrackMode.showing) {
         track.mode = TextTrackMode.disabled;

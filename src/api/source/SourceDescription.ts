@@ -223,6 +223,14 @@ export interface TextTrackDescription {
  * @public
  */
 export interface BaseSource {
+
+  /**
+   * The cross-origin setting of the source.
+   *
+   * @defaultValue `''`
+   */
+  crossOrigin?: CrossOriginSetting;
+
   /**
    * The URL of a time server used by the player to synchronise the time in DASH sources.
    *

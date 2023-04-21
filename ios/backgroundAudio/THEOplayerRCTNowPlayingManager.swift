@@ -155,9 +155,10 @@ class THEOplayerRCTNowPlayingManager {
         }
         
         // DURATION_CHANGE
-        self.durationChangeListener = player.addEventListener(type: PlayerEventTypes.DURATION_CHANGE) { [weak self] event in
+        self.durationChangeListener = player.addEventListener(type: PlayerEventTypes.DURATION_CHANGE) { [weak self, weak player] event in
             if let welf = self,
-               let duration = player.duration {
+               let wplayer = player,
+               let duration = wplayer.duration {
                 welf.nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = duration.isInfinite
                 if (!duration.isInfinite) {
                     welf.nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = duration
@@ -191,9 +192,10 @@ class THEOplayerRCTNowPlayingManager {
                                           
         
         // RATE_CHANGE
-        self.rateChangeListener = player.addEventListener(type: PlayerEventTypes.RATE_CHANGE) { [weak self] event in
-            if let welf = self {
-                welf.nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = NSNumber(value: player.playbackRate)
+        self.rateChangeListener = player.addEventListener(type: PlayerEventTypes.RATE_CHANGE) { [weak self, weak player] event in
+            if let welf = self,
+               let wplayer = player {
+                welf.nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = NSNumber(value: wplayer.playbackRate)
                 MPNowPlayingInfoCenter.default().nowPlayingInfo = welf.nowPlayingInfo
                 if DEBUG_NOWINFO { print("[NATIVE] RATE_CHANGE: PlaybackRate updated on NowPlayingInfoCenter.") }
             }

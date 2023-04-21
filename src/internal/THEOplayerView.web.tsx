@@ -15,20 +15,17 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
     // Create player inside container.
     if (container.current) {
       const chromeless = config?.chromeless === true || config?.chromeless === undefined;
+      const updatedConfig = {...config, allowNativeFullscreen: true};
       if (chromeless) {
-        player.current = new THEOplayer.ChromelessPlayer(container.current, config);
+        player.current = new THEOplayer.ChromelessPlayer(container.current, updatedConfig);
       } else {
         player.current = new THEOplayer.Player(container.current, {
-          ...config,
+          ...updatedConfig,
           ui: {
             fluid: true,
-          },
-          allowNativeFullscreen: true,
+          }
         } as THEOplayer.PlayerConfiguration);
       }
-
-      // Prepare the player to ChromelessPlayer.autoplay on platforms where autoplay is restricted without user action.
-      player.current.prepareWithUserAction();
 
       // Adapt native player to react-native player.
       adapter.current = new THEOplayerWebAdapter(player.current, config);

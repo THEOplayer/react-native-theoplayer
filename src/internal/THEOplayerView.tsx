@@ -254,7 +254,12 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
 
   private _onTextTrackEvent = (event: NativeSyntheticEvent<NativeTextTrackEvent>) => {
     const nativeEvent = event.nativeEvent;
-    this._facade.dispatchEvent(new DefaultTextTrackEvent(toTextTrackEventType(nativeEvent.type), nativeEvent.trackUid, nativeEvent.cue));
+    const cue = nativeEvent.cue;
+    if (cue) {
+      cue.startTime = decodeNanInf(cue.startTime);
+      cue.endTime = decodeNanInf(cue.endTime);
+    }
+    this._facade.dispatchEvent(new DefaultTextTrackEvent(toTextTrackEventType(nativeEvent.type), nativeEvent.trackUid, cue));
   };
 
   private _onMediaTrackListEvent = (event: NativeSyntheticEvent<NativeMediaTrackListEvent>) => {

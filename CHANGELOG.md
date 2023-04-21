@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.4.0] - 23-04-21
+
+### Fixed
+
+- Fixed an issue on iOS and Android where cue event properties `startTime` and `endTime` with value `Infinity` or `NaN` were not passed correctly.
+- Fixed an issue on iOS Safari where switching to fullscreen presentation during an ad would not work.
+- Fixed an issue on iOS Safari where an ad could be skipped during unmuted autoplay.
+- Fixed a memory leak on iOS where the player would be allocated after being destroyed.
+- Fixed an issue on Android where building the SDK would require IMA to be enabled.
+
+### Changed
+
+- Changed Web media session controls to only show trick-play buttons if the player is in foreground, or `backgroundAudioEnabled` is `true`, and never for ads and live stream.
+- Changed Web media session controls to only show a play/pause button if the player is in foreground, or `backgroundAudioEnabled` is `true`, and never for ads.
+
+### Added
+
+- Added the `crossOrigin` property to `SourceDescription` for requesting CORS access to content.
+
 ## [2.3.0] - 23-04-14
 
 ### Changed

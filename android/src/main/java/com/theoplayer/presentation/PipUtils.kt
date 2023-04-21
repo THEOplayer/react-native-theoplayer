@@ -17,6 +17,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import com.facebook.react.uimanager.ThemedReactContext
+import com.theoplayer.BuildConfig
 import com.theoplayer.R
 import com.theoplayer.ReactTHEOplayerContext
 import com.theoplayer.android.api.ads.ima.GoogleImaAdEvent
@@ -48,7 +49,7 @@ class PipUtils(
   private var onPlayerAction: EventListener<PlayerEvent<*>>? = null
   private var onAdAction: EventListener<GoogleImaAdEvent>? = null
   private val playerEvents = listOf(PlayerEventTypes.PLAY, PlayerEventTypes.PAUSE)
-  private val adEvents = listOf(GoogleImaAdEventType.STARTED, GoogleImaAdEventType.CONTENT_RESUME_REQUESTED)
+  private var adEvents = listOf<GoogleImaAdEventType>()
   private val broadcastReceiver: BroadcastReceiver = buildBroadcastReceiver()
 
   private val player: Player
@@ -60,6 +61,9 @@ class PipUtils(
     }
     onAdAction = EventListener {
       updatePipParams()
+    }
+    if (BuildConfig.EXTENSION_GOOGLE_IMA) {
+      adEvents = listOf(GoogleImaAdEventType.STARTED, GoogleImaAdEventType.CONTENT_RESUME_REQUESTED)
     }
   }
 
