@@ -3,7 +3,7 @@
 import Foundation
 import THEOplayerSDK
 
-class THEOplayerRCTMainEventHandler {
+public class THEOplayerRCTMainEventHandler {
     // MARK: Members
     private weak var player: THEOplayer?
     private weak var presentationModeContext: THEOplayerRCTPresentationModeContext?
@@ -22,7 +22,7 @@ class THEOplayerRCTMainEventHandler {
     var onNativeSeeking: RCTDirectEventBlock?
     var onNativeSeeked: RCTDirectEventBlock?
     var onNativeEnded: RCTDirectEventBlock?
-    var onNativeError: RCTDirectEventBlock?
+    public internal(set) var onNativeError: RCTDirectEventBlock?
     var onNativeLoadedData: RCTDirectEventBlock?
     var onNativeLoadedMetadata: RCTDirectEventBlock?
     var onNativeRateChange: RCTDirectEventBlock?
