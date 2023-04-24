@@ -3,6 +3,7 @@ package com.theoplayer.player
 import com.facebook.react.bridge.*
 import com.theoplayer.*
 import com.theoplayer.abr.ABRConfigurationAdapter
+import com.theoplayer.android.api.player.AspectRatio
 import com.theoplayer.android.api.player.PreloadType
 import com.theoplayer.android.api.player.PresentationMode
 import com.theoplayer.android.api.player.track.mediatrack.MediaTrack
@@ -173,6 +174,17 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
   fun setBackgroundAudioConfig(tag: Int, config: ReadableMap) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.playerContext?.backgroundAudioConfig = BackgroundAudioConfigAdapter.fromProps(config)
+    }
+  }
+
+  @ReactMethod
+  fun setAspectRatio(tag: Int, ratio: String) {
+    viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
+      view?.player?.setAspectRatio(when (ratio) {
+        "fill" -> AspectRatio.FILL
+        "aspectFill" -> AspectRatio.ASPECT_FILL
+        else -> AspectRatio.FIT
+      })
     }
   }
 }

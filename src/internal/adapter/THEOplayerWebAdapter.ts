@@ -4,13 +4,14 @@ import type {
   CastAPI,
   MediaTrack,
   NativeHandleType,
+  PlayerConfiguration,
   PlayerEventMap,
   PreloadType,
   TextTrack,
   TextTrackStyle,
   THEOplayer,
-  PlayerConfiguration,
 } from 'react-native-theoplayer';
+import { AspectRatio, PresentationMode } from 'react-native-theoplayer';
 import { THEOplayerWebAdsAdapter } from './ads/THEOplayerWebAdsAdapter';
 import { THEOplayerWebCastAdapter } from './cast/THEOplayerWebCastAdapter';
 import type * as THEOplayerWeb from 'theoplayer';
@@ -22,7 +23,6 @@ import type { PiPConfiguration } from 'src/api/pip/PiPConfiguration';
 import type { BackgroundAudioConfiguration } from 'src/api/backgroundAudio/BackgroundAudioConfiguration';
 import { WebPresentationModeManager } from './web/WebPresentationModeManager';
 import { WebMediaSession } from './web/WebMediaSession';
-import { PresentationMode } from 'react-native-theoplayer';
 
 const defaultBackgroundAudioConfiguration: BackgroundAudioConfiguration = {
   enabled: false,
@@ -238,6 +238,14 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     if (this._player) {
       this._player.currentTime = currentTime / 1e3;
     }
+  }
+
+  get aspectRatio(): AspectRatio {
+    return AspectRatio.FIT;
+  }
+
+  set aspectRatio(_ratio: AspectRatio) {
+    // unused
   }
 
   get duration(): number {
