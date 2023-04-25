@@ -1,6 +1,6 @@
 {
   "name": "react-native-theoplayer",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "A THEOplayer video component for react-native.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -25,7 +25,7 @@
   "scripts": {
     "typescript": "tsc --noEmit",
     "lint": "eslint \"**/*.{ts,tsx}\"",
-    "prepare": "bob build",
+    "prepare": "bob build && husky install",
     "release": "release-it",
     "pods": "cd example && pod-install --quiet"
   },
