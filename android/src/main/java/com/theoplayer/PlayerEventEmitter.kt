@@ -338,7 +338,7 @@ class PlayerEventEmitter internal constructor(
 
     // Limit update rate.
     val dt = now - lastTimeUpdate
-    return timeUpdateRate == TimeUpdateRate.LIMITED_ONE_HZ && dt < 1e03 ||
+    return timeUpdateRate == TimeUpdateRate.LIMITED_ONE_HZ && dt < 1e3 ||
       timeUpdateRate == TimeUpdateRate.LIMITED_TWO_HZ && dt < 500 ||
       timeUpdateRate == TimeUpdateRate.LIMITED_THREE_HZ && dt < 333
   }
@@ -481,24 +481,17 @@ class PlayerEventEmitter internal constructor(
   }
 
   private fun activeAudioTrack(): MediaTrack<AudioQuality>? {
-    return if (playerView.player != null) activeTrack(
-      playerView.player!!.audioTracks
-    ) else null
+    return activeTrack(playerView.player?.audioTracks)
   }
 
   private fun activeVideoTrack(): MediaTrack<VideoQuality>? {
-    return if (playerView.player != null) activeTrack(
-      playerView.player!!.videoTracks
-    ) else null
+    return activeTrack(playerView.player?.videoTracks)
   }
 
   private fun <T : Quality?> activeTrack(tracks: MediaTrackList<T>?): MediaTrack<T>? {
-    tracks?.forEach { track ->
-      if (track.isEnabled) {
-        return track
-      }
+    return tracks?.first { track ->
+      track.isEnabled
     }
-    return null
   }
 
   private val onActiveQualityChanged = EventListener<QualityChangedEvent<*, *>> { event ->
@@ -642,13 +635,14 @@ class PlayerEventEmitter internal constructor(
           }
         })
     }
-    if (BuildConfig.EXTENSION_CAST && playerView.castApi != null) {
-      castEventAdapter = CastEventAdapter(playerView.castApi!!,
-        object : CastEventAdapter.Emitter {
+    if (BuildConfig.EXTENSION_CAST) {
+      castEventAdapter = playerView.castApi?.let {
+        CastEventAdapter(it, object : CastEventAdapter.Emitter {
           override fun emit(payload: WritableMap?) {
             receiveEvent(EVENT_CAST_EVENT, payload)
           }
         })
+      }
     }
   }
 
