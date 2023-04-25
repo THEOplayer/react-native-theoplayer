@@ -55,5 +55,9 @@ export function removeTrack<TTrack extends Track>(trackList: TTrack[], track: TT
 }
 
 export function addTrack<TTrack extends Track>(trackList: TTrack[], track: TTrack): TTrack[] {
-  return trackList && track && !hasTrack(trackList, track) ? [...trackList, track] : trackList;
+  return trackList && track && !hasTrack(trackList, track) ? sortTracks([...trackList, track]) : trackList;
+}
+
+export function sortTracks<TTrack extends Track>(trackList?: TTrack[]): TTrack[] {
+  return trackList?.sort((t1: TTrack, t2: TTrack) => t1.uid - t2.uid) || [];
 }
