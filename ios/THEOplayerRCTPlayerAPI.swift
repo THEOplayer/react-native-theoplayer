@@ -121,6 +121,21 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
         return
     }
     
+    @objc(setAspectRatio:ratio:)
+        func setAspectRatio(_ node: NSNumber, ratio: String) -> Void {
+            DispatchQueue.main.async {
+                let newAspectRatio: AspectRatio = THEOplayerRCTTypeUtils.aspectRatioFromString(ratio)
+                if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+                   let player = theView.player {
+                    if player.fullscreen.aspectRatio != newAspectRatio {
+                        if DEBUG_PLAYER_API { print("[NATIVE] Changing TheoPlayer's aspectRatio to \(ratio)") }
+                        player.fullscreen.setAspectRatio(aspectRatio: newAspectRatio)
+                    }
+                }
+            }
+            return
+        }
+    
     @objc(setPipConfig:pipConfig:)
     func setPipConfig(_ node: NSNumber, pipConfig: NSDictionary) -> Void {
         DispatchQueue.main.async {

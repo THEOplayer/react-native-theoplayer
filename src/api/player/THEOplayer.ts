@@ -14,6 +14,22 @@ import type { BackgroundAudioConfiguration } from '../backgroundAudio/Background
 
 export type PreloadType = 'none' | 'metadata' | 'auto' | '';
 
+/**
+ * Specifies an aspect ratio for the player.
+ *
+ * <br/> - `FIT` (default): Scales the player so that all content fits inside its bounding box, keeping the original aspect ratio of the content..
+ * <br/> - `FILL`: Scales the player so that all content fits inside the bounding box, which will be stretched to fill it entirely.
+ * <br/> - `ASPECT_FILL`: Scales the player so that the content fills up the entire bounding box, keeping the original aspect ratio of the content.
+ *
+ * @public
+ * @defaultValue `'FIT'`
+ */
+export enum AspectRatio {
+  FIT = 'fit',
+  FILL = 'fill',
+  ASPECT_FILL = 'aspectFill',
+}
+
 export type NativeHandleType = unknown;
 
 /**
@@ -152,6 +168,14 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
    * The current playback position of the media, in milliseconds.
    */
   currentTime: number;
+
+  /**
+   * Used to set the aspect ratio of the player.
+   *
+   * @remarks
+   * Only available for iOS and Android.
+   */
+  aspectRatio: AspectRatio;
 
   /**
    * The active configuration for PiP.
