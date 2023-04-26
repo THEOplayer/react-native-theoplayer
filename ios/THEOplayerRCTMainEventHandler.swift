@@ -113,7 +113,7 @@ public class THEOplayerRCTMainEventHandler {
         self.readyStateChangeListener = player.addEventListener(type: PlayerEventTypes.READY_STATE_CHANGE) { [weak self] event in
             if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received READY_STATE_CHANGE event from THEOplayer") }
             if let forwardedReadyStateChangeEvent = self?.onNativeReadyStateChange {
-                forwardedReadyStateChangeEvent(["readyState": event.readyState.rawValue])
+                forwardedReadyStateChangeEvent(["readyState": event.readyState.rawValue - 1]) // [1-5] (iOS only) => [0-4] (other platforms + RN)
             }
         }
         if DEBUG_EVENTHANDLER { print("[NATIVE] ReadyStateChange listener attached to THEOplayer") }

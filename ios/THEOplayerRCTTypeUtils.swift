@@ -57,4 +57,30 @@ class THEOplayerRCTTypeUtils {
             return "inline"
         }
     }
+    
+    class func aspectRatioFromString(_ ratio: String) -> AspectRatio {
+        switch ratio {
+        case "fit":
+            return AspectRatio.fit
+        case "fill":
+            return AspectRatio.fill
+        case "aspectFill":
+            return AspectRatio.aspectFill
+        default:
+            return AspectRatio.fit
+        }
+    }
+    
+    class func aspectRatioToString(_ ratio: AspectRatio) -> String {
+        switch ratio {
+        case AspectRatio.fit:
+            return "fit"
+        case AspectRatio.fill:
+            return "fill"
+        case AspectRatio.aspectFill:
+            return "aspectFill"
+        default:
+            return "fit"
+        }
+    }
 }

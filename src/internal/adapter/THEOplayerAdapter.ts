@@ -23,6 +23,7 @@ import type {
 } from 'react-native-theoplayer';
 import {
   addTrack,
+  AspectRatio,
   findMediaTrackByUid,
   MediaTrackEventType,
   MediaTrackType,
@@ -58,6 +59,7 @@ const defaultPlayerState: NativePlayerState = {
   duration: NaN,
   playbackRate: 1,
   preload: 'none',
+  aspectRatio: AspectRatio.FIT,
   audioTracks: [],
   videoTracks: [],
   textTracks: [],
@@ -433,6 +435,15 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   set volume(volume: number) {
     this._state.volume = volume;
     NativeModules.PlayerModule.setVolume(this._view.nativeHandle, volume);
+  }
+
+  get aspectRatio(): AspectRatio {
+    return this._state.aspectRatio;
+  }
+
+  set aspectRatio(ratio: AspectRatio) {
+    this._state.aspectRatio = ratio;
+    NativeModules.PlayerModule.setAspectRatio(this._view.nativeHandle, ratio);
   }
 
   pause(): void {

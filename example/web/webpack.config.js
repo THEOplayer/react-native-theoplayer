@@ -4,6 +4,7 @@ const HTMLWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const projectDirectory = path.resolve(__dirname, '../..');
+
 const appDirectory = path.resolve(__dirname, '..');
 
 // A folder for any stub components we need in case there is no counterpart for it on react-native-web.

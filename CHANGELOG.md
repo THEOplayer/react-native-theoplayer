@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.5.0] - 23-04-26
+
+### Added
+
+- Added an `aspectRatio` property on the `THEOplayer` instance that can be either `FIT` (default), `FILL` or `ASPECT_FILL`.
+
+### Changed
+
+- Set `theoplayer` Web SDK as optional peer dependency.
+
 ## [2.4.0] - 23-04-21
 
 ### Fixed

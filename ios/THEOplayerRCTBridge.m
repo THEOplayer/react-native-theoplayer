@@ -84,6 +84,9 @@ RCT_EXTERN_METHOD(setPlaybackRate:(nonnull NSNumber *)node
 RCT_EXTERN_METHOD(setPresentationMode:(nonnull NSNumber *)node
                   presentationMode:(nonnull NSString *)presentationMode)
 
+RCT_EXTERN_METHOD(setAspectRatio:(nonnull NSNumber *)node
+                  ratio:(nonnull NSString *)ratio)
+
 RCT_EXTERN_METHOD(setPipConfig:(nonnull NSNumber *)node
                   pipConfig:(NSDictionary)pipConfig)
 
