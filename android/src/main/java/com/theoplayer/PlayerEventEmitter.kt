@@ -202,7 +202,7 @@ class PlayerEventEmitter internal constructor(
     }
     playerListeners[PlayerEventTypes.READYSTATECHANGE] =
       EventListener { event: ReadyStateChangeEvent -> onReadyState(event) }
-    playerListeners[PlayerEventTypes.WAITING] = EventListener { event: WaitingEvent -> onWaiting(event) }
+    playerListeners[PlayerEventTypes.WAITING] = EventListener<WaitingEvent> { onWaiting() }
     playerListeners[PlayerEventTypes.SEEKING] =
       EventListener { event: SeekingEvent -> onSeeking(event) }
     playerListeners[PlayerEventTypes.SEEKED] =
@@ -357,8 +357,7 @@ class PlayerEventEmitter internal constructor(
     receiveEvent(EVENT_READYSTATECHANGE, payload)
   }
 
-  private fun onWaiting(event: WaitingEvent) {
-    val payload = Arguments.createMap()
+  private fun onWaiting() {
     receiveEvent(EVENT_WAITING, null)
   }
 
