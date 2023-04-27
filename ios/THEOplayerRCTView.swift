@@ -359,6 +359,12 @@ class THEOplayerRCTView: UIView {
         if DEBUG_PROP_UPDATES  { print("[NATIVE] nativeReadyStateChange prop set.") }
     }
     
+    @objc(setOnNativeWaiting:)
+    func setOnNativeWaiting(nativeWaiting: @escaping RCTDirectEventBlock) {
+        self.mainEventHandler.onNativeWaiting = nativeWaiting
+        if DEBUG_PROP_UPDATES { print("[NATIVE] nativeWaiting prop set.") }
+    }
+    
     @objc(setOnNativeDurationChange:)
     func setOnNativeDurationChange(nativeDurationChange: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeDurationChange = nativeDurationChange

@@ -158,6 +158,11 @@ export interface THEOplayerViewProps {
   onReadyStateChange?: (event: ReadyStateChangeEvent) => void;
 
   /**
+   * Invoked when the player is stalling.
+   */
+  onWaiting?: () => void;
+
+  /**
    * Invoked when an error occurs.
    */
   onError?: (event: ErrorEvent) => void;

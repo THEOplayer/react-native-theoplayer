@@ -53,6 +53,7 @@ private const val EVENT_PROGRESS = "onNativeProgress"
 private const val EVENT_SEEKING = "onNativeSeeking"
 private const val EVENT_SEEKED = "onNativeSeeked"
 private const val EVENT_ENDED = "onNativeEnded"
+private const val EVENT_WAITING = "onNativeWaiting"
 private const val EVENT_READYSTATECHANGE = "onNativeReadyStateChange"
 private const val EVENT_TIMEUPDATE = "onNativeTimeUpdate"
 private const val EVENT_DURATIONCHANGE = "onNativeDurationChange"
@@ -112,6 +113,7 @@ class PlayerEventEmitter internal constructor(
     EVENT_SEEKING,
     EVENT_SEEKED,
     EVENT_ENDED,
+    EVENT_WAITING,
     EVENT_READYSTATECHANGE,
     EVENT_TIMEUPDATE,
     EVENT_DURATIONCHANGE,
@@ -145,6 +147,7 @@ class PlayerEventEmitter internal constructor(
       EVENT_SEEKING,
       EVENT_SEEKED,
       EVENT_ENDED,
+      EVENT_WAITING,
       EVENT_READYSTATECHANGE,
       EVENT_TIMEUPDATE,
       EVENT_DURATIONCHANGE,
@@ -199,6 +202,7 @@ class PlayerEventEmitter internal constructor(
     }
     playerListeners[PlayerEventTypes.READYSTATECHANGE] =
       EventListener { event: ReadyStateChangeEvent -> onReadyState(event) }
+    playerListeners[PlayerEventTypes.WAITING] = EventListener<WaitingEvent> { onWaiting() }
     playerListeners[PlayerEventTypes.SEEKING] =
       EventListener { event: SeekingEvent -> onSeeking(event) }
     playerListeners[PlayerEventTypes.SEEKED] =
@@ -320,7 +324,7 @@ class PlayerEventEmitter internal constructor(
   private fun onPause() {
     val player = playerView.player
     // Do not forward the pause event in case the content player is paused because the ad player starts.
-    if (player != null && !playerView.adsApi.isPlaying) {
+    if (player != null && !(playerView.adsApi.isPlaying && !player.isPaused)) {
       receiveEvent(EVENT_PAUSE, null)
     }
   }
@@ -351,6 +355,10 @@ class PlayerEventEmitter internal constructor(
     val payload = Arguments.createMap()
     payload.putInt(EVENT_PROP_READYSTATE, event.readyState.ordinal)
     receiveEvent(EVENT_READYSTATECHANGE, payload)
+  }
+
+  private fun onWaiting() {
+    receiveEvent(EVENT_WAITING, null)
   }
 
   private fun onDurationChange(event: DurationChangeEvent) {

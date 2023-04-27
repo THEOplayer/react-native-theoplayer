@@ -37,6 +37,7 @@ interface THEOplayerRCTViewProps extends THEOplayerViewProps {
   onNativeLoadedData: () => void;
   onNativeLoadedMetadata: (event: NativeSyntheticEvent<LoadedMetadataEvent>) => void;
   onNativeReadyStateChange?: (event: NativeSyntheticEvent<ReadyStateChangeEvent>) => void;
+  onNativeWaiting: () => void;
   onNativeError: (event: NativeSyntheticEvent<ErrorEvent>) => void;
   onNativeProgress: (event: NativeSyntheticEvent<ProgressEvent>) => void;
   onNativePlay: () => void;
@@ -242,6 +243,12 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
     }
   };
 
+  private _onWaiting = () => {
+    if (this.props.onWaiting) {
+      this.props.onWaiting();
+    }
+  }
+
   private _onTimeUpdate = (event: NativeSyntheticEvent<TimeUpdateEvent>) => {
     if (this.props.onTimeUpdate) {
       this.props.onTimeUpdate(event.nativeEvent);
@@ -354,6 +361,7 @@ export class THEOplayerView extends PureComponent<THEOplayerViewProps, THEOplaye
           onNativeSeeked={this._onSeeked}
           onNativeEnded={this._onEnded}
           onNativeReadyStateChange={this._onReadStateChange}
+          onNativeWaiting={this._onWaiting}
           onNativeTimeUpdate={this._onTimeUpdate}
           onNativeDurationChange={this._onDurationChange}
           onNativeSegmentNotFound={this._onSegmentNotFound}
