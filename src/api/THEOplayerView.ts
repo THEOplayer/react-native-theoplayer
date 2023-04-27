@@ -80,6 +80,9 @@ export interface THEOplayerViewProps {
 
   /**
    * Determines the aspect ratio of the player.
+   *
+   * @remarks
+   * <br/> - Available on iOS and Android only.
    */
   videoAspectRatio?: THEOAspectRatio;
 
