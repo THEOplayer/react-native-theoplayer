@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.8.4] - 23-04-27
+
+### Fixed
+
+- Fixed an issue on Android where the `pause` event was not dispatched during play-out of an ad.
+
+### Added
+
+- Added a `videoAspectRatio` property on the `THEOplayerView` for iOS and Android.
+- Added a `PlayerEventTypes.WAITING` event that is dispatched when play-back stops due to lack of media data.
+
 ## [1.8.3]
 
 ### Fixed
