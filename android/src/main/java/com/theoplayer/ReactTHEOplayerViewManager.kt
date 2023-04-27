@@ -86,7 +86,7 @@ class ReactTHEOplayerViewManager : ViewGroupManager<ReactTHEOplayerView>() {
 
   @ReactProp(name = PROP_VIDEO_ASPECT_RATIO)
   fun setVideoAspectRatio(videoView: ReactTHEOplayerView, videoAspectRatio: String?) {
-    videoView.setAspectRatio(videoAspectRatio)
+    videoView.aspectRatio = videoAspectRatio
   }
 
   @ReactProp(name = PROP_SELECTED_TEXTTRACK, defaultInt = -1)
