@@ -26,6 +26,7 @@ RCT_EXPORT_VIEW_PROPERTY(selectedAudioTrack, NSNumber);
 RCT_EXPORT_VIEW_PROPERTY(selectedVideoTrack, NSNumber);
 RCT_EXPORT_VIEW_PROPERTY(seek, NSNumber);
 RCT_EXPORT_VIEW_PROPERTY(fullscreen, BOOL);
+RCT_EXPORT_VIEW_PROPERTY(videoAspectRatio, NSString);
 RCT_EXPORT_VIEW_PROPERTY(onNativePause, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativePlay, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeSourceChange, RCTDirectEventBlock);

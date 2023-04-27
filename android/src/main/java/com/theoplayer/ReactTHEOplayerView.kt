@@ -8,6 +8,7 @@ import android.util.Log
 import android.widget.FrameLayout
 import com.facebook.react.bridge.*
 import com.theoplayer.util.TypeUtils.encodeInfNan
+import com.theoplayer.android.api.player.AspectRatio
 import com.theoplayer.android.api.ads.ima.GoogleImaIntegrationFactory.createGoogleImaIntegration
 import com.theoplayer.android.api.ads.dai.GoogleDaiIntegrationFactory.createGoogleDaiIntegration
 import com.theoplayer.android.api.cast.CastIntegrationFactory.createCastIntegration
@@ -75,6 +76,17 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
     get() = if (player != null) {
       trackListAdapter.fromTextTrackList(player!!.textTracks)
     } else Arguments.createArray()
+
+  var aspectRatio: String? = null
+    set(value) {
+      if (field == value) {
+        return
+      }
+      field = value
+      getAspectRatioFromString(field).let {
+        playerView?.player?.setAspectRatio(it)
+      }
+    }
 
   fun initialize(configProps: ReadableMap?) {
     createViews(PlayerConfigAdapter.fromProps(configProps))
@@ -442,6 +454,14 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
       eventEmitter.onFullscreenWillDismiss()
       decorView.systemUiVisibility = uiOptions
       eventEmitter.onFullscreenDidDismiss()
+    }
+  }
+
+  private fun getAspectRatioFromString(value: String?): AspectRatio {
+    return when (value) {
+      "aspectFill" -> AspectRatio.ASPECT_FILL
+      "fill" -> AspectRatio.FILL
+      else -> AspectRatio.FIT
     }
   }
 }
