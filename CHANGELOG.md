@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
+- Fixed an issue on Android where the `currentProgramDateTime` property of `TimeUpdateEvent` would not be formatted in milliseconds.
 - Fixed an issue on Android where the order of text and media tracks would change when adding tracks.
 - Fixed an issue on Web where an exception would be thrown when accessing the player API after the player had been destroyed.
 
