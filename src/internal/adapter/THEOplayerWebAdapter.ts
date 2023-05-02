@@ -11,7 +11,7 @@ import type {
   TextTrackStyle,
   THEOplayer,
 } from 'react-native-theoplayer';
-import { AspectRatio, PresentationMode } from 'react-native-theoplayer';
+import { AspectRatio, PlayerEventType, PresentationMode } from 'react-native-theoplayer';
 import { THEOplayerWebAdsAdapter } from './ads/THEOplayerWebAdsAdapter';
 import { THEOplayerWebCastAdapter } from './cast/THEOplayerWebCastAdapter';
 import type * as THEOplayerWeb from 'theoplayer';
@@ -23,6 +23,7 @@ import type { PiPConfiguration } from 'src/api/pip/PiPConfiguration';
 import type { BackgroundAudioConfiguration } from 'src/api/backgroundAudio/BackgroundAudioConfiguration';
 import { WebPresentationModeManager } from './web/WebPresentationModeManager';
 import { WebMediaSession } from './web/WebMediaSession';
+import { BaseEvent } from './event/BaseEvent';
 
 const defaultBackgroundAudioConfiguration: BackgroundAudioConfiguration = {
   enabled: false,
@@ -299,11 +300,13 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   }
 
   destroy(): void {
+    this.dispatchEvent(new BaseEvent(PlayerEventType.DESTROY));
     this._eventForwarder?.unload();
     this._mediaSession?.destroy();
     document.removeEventListener('visibilitychange', this.onVisibilityChange);
     this._eventForwarder = undefined;
     this._mediaSession = undefined;
+    this._player?.destroy();
     this._player = undefined;
   }
 
