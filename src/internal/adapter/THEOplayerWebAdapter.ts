@@ -33,12 +33,12 @@ const defaultPipConfiguration: PiPConfiguration = {
 };
 
 export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayer {
-  private readonly _player: THEOplayerWeb.ChromelessPlayer;
   private readonly _adsAdapter: THEOplayerWebAdsAdapter;
   private readonly _castAdapter: THEOplayerWebCastAdapter;
-  private readonly _eventForwarder: WebEventForwarder;
   private readonly _presentationModeManager: WebPresentationModeManager;
-  private readonly _mediaSession: WebMediaSession | undefined = undefined;
+  private _player: THEOplayerWeb.ChromelessPlayer | undefined;
+  private _eventForwarder: WebEventForwarder | undefined;
+  private _mediaSession: WebMediaSession | undefined = undefined;
   private _targetVideoQuality: number | number[] | undefined = undefined;
   private _backgroundAudioConfiguration: BackgroundAudioConfiguration = defaultBackgroundAudioConfiguration;
   private _pipConfiguration: PiPConfiguration = defaultPipConfiguration;
@@ -59,62 +59,76 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   }
 
   get abr(): ABRConfiguration | undefined {
-    return this._player.abr;
+    return this._player?.abr;
   }
 
   get source(): SourceDescription | undefined {
-    return this._player.source as SourceDescription;
+    return this._player?.source as SourceDescription;
   }
 
   set source(source: SourceDescription | undefined) {
     this._targetVideoQuality = undefined;
-    this._player.source = source;
+    if (this._player) {
+      this._player.source = source;
+    }
   }
 
   play(): void {
-    this._player.play();
+    this._player?.play();
   }
 
   pause(): void {
-    this._player.pause();
+    this._player?.pause();
   }
 
   get paused(): boolean {
-    return this._player.paused;
+    return this._player ? this._player.paused : true;
   }
 
   get autoplay(): boolean {
-    return this._player.autoplay;
+    return this._player ? this._player.autoplay : false;
   }
 
   set autoplay(autoplay: boolean) {
-    this._player.autoplay = autoplay;
+    if (this._player) {
+      this._player.autoplay = autoplay;
+    }
   }
 
   set preload(type: PreloadType) {
-    this._player.preload = type;
+    if (this._player) {
+      this._player.preload = type;
+    }
   }
 
   get preload(): PreloadType {
-    return this._player.preload;
+    return this._player?.preload || 'none';
   }
 
   get seekable() {
+    if (!this._player) {
+      return [];
+    }
     const nativeRange = this._player.seekable;
     return [...Array(nativeRange.length)].map((_, index) => ({ start: 1e3 * nativeRange.start(index), end: 1e3 * nativeRange.end(index) }));
   }
 
   get buffered() {
+    if (!this._player) {
+      return [];
+    }
     const nativeRange = this._player.buffered;
     return [...Array(nativeRange.length)].map((_, index) => ({ start: 1e3 * nativeRange.start(index), end: 1e3 * nativeRange.end(index) }));
   }
 
   get playbackRate(): number {
-    return this._player.playbackRate;
+    return this._player ? this._player.playbackRate : 1;
   }
 
   set playbackRate(playbackRate: number) {
-    this._player.playbackRate = playbackRate;
+    if (this._player) {
+      this._player.playbackRate = playbackRate;
+    }
   }
 
   get pipConfiguration(): PiPConfiguration {
@@ -137,23 +151,27 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   }
 
   get volume(): number {
-    return this._player.volume;
+    return this._player ? this._player.volume : 1;
   }
 
   set volume(volume: number) {
-    this._player.volume = volume;
+    if (this._player) {
+      this._player.volume = volume;
+    }
   }
 
   get muted(): boolean {
-    return this._player.muted;
+    return this._player ? this._player.muted : false;
   }
 
   set muted(muted: boolean) {
-    this._player.muted = muted;
+    if (this._player) {
+      this._player.muted = muted;
+    }
   }
 
   get seeking(): boolean {
-    return this._player.seeking;
+    return this._player ? this._player.seeking : false;
   }
 
   get presentationMode(): PresentationMode {
@@ -165,70 +183,90 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   }
 
   get audioTracks(): MediaTrack[] {
-    return fromNativeMediaTrackList(this._player.audioTracks);
+    return this._player ? fromNativeMediaTrackList(this._player.audioTracks) : [];
   }
 
   get videoTracks(): MediaTrack[] {
-    return fromNativeMediaTrackList(this._player.videoTracks);
+    return this._player ? fromNativeMediaTrackList(this._player.videoTracks) : [];
   }
 
   get textTracks(): TextTrack[] {
-    return fromNativeTextTrackList(this._player.textTracks);
+    return this._player ? fromNativeTextTrackList(this._player.textTracks) : [];
   }
 
   get selectedTextTrack(): number | undefined {
-    return this._player.textTracks.find((textTrack: NativeTextTrack) => {
-      return textTrack.mode === 'showing';
-    })?.uid;
+    if (this._player) {
+      return this._player.textTracks.find((textTrack: NativeTextTrack) => {
+        return textTrack.mode === 'showing';
+      })?.uid;
+    }
+    return undefined;
   }
 
   set selectedTextTrack(selectedTextTrack: number | undefined) {
-    this._player.textTracks.forEach((textTrack: NativeTextTrack) => {
-      textTrack.mode = textTrack.uid === selectedTextTrack ? 'showing' : 'disabled';
-    });
+    if (this._player) {
+      this._player.textTracks.forEach((textTrack: NativeTextTrack) => {
+        textTrack.mode = textTrack.uid === selectedTextTrack ? 'showing' : 'disabled';
+      });
+    }
   }
 
   get textTrackStyle(): TextTrackStyle {
-    return this._player.textTrackStyle as TextTrackStyle;
+    return this._player?.textTrackStyle as TextTrackStyle;
   }
 
   get selectedVideoTrack(): number | undefined {
-    return this._player.videoTracks.find((videoTrack: NativeMediaTrack) => videoTrack.enabled)?.uid;
+    if (this._player) {
+      return this._player.videoTracks.find((videoTrack: NativeMediaTrack) => videoTrack.enabled)?.uid;
+    }
+    return undefined;
   }
 
   set selectedVideoTrack(selectedVideoTrack: number | undefined) {
-    this._targetVideoQuality = undefined;
-    this._player.videoTracks.forEach((videoTrack: NativeMediaTrack) => {
-      videoTrack.enabled = videoTrack.uid === selectedVideoTrack;
-    });
+    if (this._player) {
+      this._targetVideoQuality = undefined;
+      this._player.videoTracks.forEach((videoTrack: NativeMediaTrack) => {
+        videoTrack.enabled = videoTrack.uid === selectedVideoTrack;
+      });
+    }
   }
 
   get selectedAudioTrack(): number | undefined {
-    return this._player.audioTracks.find((audioTrack: NativeMediaTrack) => {
-      return audioTrack.enabled;
-    })?.uid;
+    if (this._player) {
+      return this._player.audioTracks.find((audioTrack: NativeMediaTrack) => {
+        return audioTrack.enabled;
+      })?.uid;
+    }
+    return undefined;
   }
 
   set selectedAudioTrack(selectedAudioTrack: number | undefined) {
-    this._player.audioTracks.forEach((audioTrack: NativeMediaTrack) => {
-      audioTrack.enabled = audioTrack.uid === selectedAudioTrack;
-    });
+    if (this._player) {
+      this._player.audioTracks.forEach((audioTrack: NativeMediaTrack) => {
+        audioTrack.enabled = audioTrack.uid === selectedAudioTrack;
+      });
+    }
   }
 
   get targetVideoQuality(): number | number[] | undefined {
-    return this._targetVideoQuality;
+    if (this._player) {
+      return this._targetVideoQuality;
+    }
+    return undefined;
   }
 
   set targetVideoQuality(targetVideoQuality: number | number[] | undefined) {
-    const enabledVideoTrack = this._player.videoTracks.find((videoTrack: NativeMediaTrack) => videoTrack.enabled);
-    if (enabledVideoTrack) {
-      enabledVideoTrack.targetQuality = findNativeQualitiesByUid(enabledVideoTrack, targetVideoQuality);
+    if (this._player) {
+      const enabledVideoTrack = this._player.videoTracks.find((videoTrack: NativeMediaTrack) => videoTrack.enabled);
+      if (enabledVideoTrack) {
+        enabledVideoTrack.targetQuality = findNativeQualitiesByUid(enabledVideoTrack, targetVideoQuality);
+      }
+      this._targetVideoQuality = targetVideoQuality;
     }
-    this._targetVideoQuality = targetVideoQuality;
   }
 
   get currentTime(): number {
-    return 1e3 * this._player.currentTime;
+    return this._player ? 1e3 * this._player.currentTime : NaN;
   }
 
   set currentTime(currentTime: number) {
@@ -249,7 +287,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   }
 
   get duration(): number {
-    return this._player.duration * 1e3;
+    return this._player ? this._player.duration * 1e3 : NaN;
   }
 
   public get ads(): AdsAPI {
@@ -261,9 +299,12 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   }
 
   destroy(): void {
-    this._eventForwarder.unload();
+    this._eventForwarder?.unload();
     this._mediaSession?.destroy();
     document.removeEventListener('visibilitychange', this.onVisibilityChange);
+    this._eventForwarder = undefined;
+    this._mediaSession = undefined;
+    this._player = undefined;
   }
 
   get nativeHandle(): NativeHandleType {
@@ -271,6 +312,9 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   }
 
   private readonly onVisibilityChange = () => {
+    if (!this._player) {
+      return;
+    }
     if (document.visibilityState !== 'visible') {
       // Apply background configuration: by default, pause when going to background, unless in pip
       if (this.presentationMode !== PresentationMode.pip && !this.backgroundAudioConfiguration.enabled) {
