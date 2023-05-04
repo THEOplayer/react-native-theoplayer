@@ -1,4 +1,4 @@
-// THEOplayerRCTView+BackgroundAudioConfig.swift
+// THEOplayerRCTNowPlayingManager.swift
 
 import Foundation
 import THEOplayerSDK
@@ -41,23 +41,39 @@ class THEOplayerRCTNowPlayingManager {
            let sourceDescription = player.source,
            let metadata = sourceDescription.metadata {
             let artWorkUrlString = self.getArtWorkUrlStringFromSourceDescription(sourceDescription)
-            DispatchQueue.global().async {
-                self.nowPlayingInfo = [String : Any]()
-                self.updatePlaybackState()
-                self.updateTitle(metadata.title)
-                self.updateSubtitle(metadata.metadataKeys?["subtitle"] as? String)
-                self.updateDuration(player.duration)
-                self.updateMediaType() // video
-                self.updateArtWork(artWorkUrlString)
-                self.updatePlaybackRate(player.playbackRate)
-                self.updateServiceIdentifier(metadata.metadataKeys?["nowPlayingServiceIdentifier"] as? String)
-                self.updateContentIdentifier(metadata.metadataKeys?["nowPlayingContentIdentifier"] as? String)
-                self.updateCurrentTime { [weak self] in
-                    if let welf = self {
-                        MPNowPlayingInfoCenter.default().nowPlayingInfo = welf.nowPlayingInfo
-                        if DEBUG_NOWINFO { print("[NATIVE] NowPlayingInfoCenter Updated.") }
-                    }
+            self.updatePlaybackState()
+            self.nowPlayingInfo = [String : Any]()
+            self.updateTitle(metadata.title)
+            self.updateSubtitle(metadata.metadataKeys?["subtitle"] as? String)
+            self.updateDuration(player.duration)
+            self.updateMediaType() // video
+            self.updatePlaybackRate(player.playbackRate)
+            self.updateServiceIdentifier(metadata.metadataKeys?["nowPlayingServiceIdentifier"] as? String)
+            self.updateContentIdentifier(metadata.metadataKeys?["nowPlayingContentIdentifier"] as? String)
+            self.updateArtWork(artWorkUrlString) { [weak self] in
+                self?.updateCurrentTime { [weak self] in
+                    self?.processNowPlayingToInfoCenter()
                 }
+            }
+        }
+    }
+    
+    private func processNowPlayingToInfoCenter() {
+        DispatchQueue.main.async {
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = self.nowPlayingInfo
+        }
+    }
+
+    private func clearNowPlayingOnInfoCenter() {
+        DispatchQueue.main.async {
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
+        }
+    }
+    
+    private func processPlaybackStateToInfoCenter(paused: Bool) {
+        if #available(iOS 13.0, tvOS 13.0, *) {
+            DispatchQueue.main.async {
+                MPNowPlayingInfoCenter.default().playbackState = paused ? MPNowPlayingPlaybackState.paused : MPNowPlayingPlaybackState.playing
             }
         }
     }
@@ -66,7 +82,6 @@ class THEOplayerRCTNowPlayingManager {
         if let posterUrlString = sourceDescription.poster?.absoluteString {
             return posterUrlString
         }
-        
         if let metadata = sourceDescription.metadata,
            let displayIconUrlString = metadata.metadataKeys?["displayIconUri"] as? String {
             return displayIconUrlString
@@ -120,14 +135,24 @@ class THEOplayerRCTNowPlayingManager {
         }
     }
     
-    private func updateArtWork(_ urlString: String?) {
+    private func updateArtWork(_ urlString: String?, completion: (() -> Void)?) {
         if let artUrlString = urlString,
-           let artUrl = URL(string: artUrlString),
-           let displayIconData = try? Data(contentsOf: artUrl),
-           let displayIcon = UIImage(data: displayIconData) {
-            self.nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: displayIcon.size) { size in
-                return displayIcon
+           let artUrl = URL(string: artUrlString) {
+            let dataTask = URLSession.shared.dataTask(with: artUrl) { [weak self] (data, _, _) in
+                if let displayIconData = data,
+                   let displayIcon = UIImage(data: displayIconData) {
+                    self?.nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: displayIcon.size) { size in
+                        return displayIcon
+                    }
+                    if DEBUG_NOWINFO { print("[NATIVE] Artwork updated in nowPlayingInfo.") }
+                } else {
+                    if DEBUG_NOWINFO { print("[NATIVE] Failed to update artwork in nowPlayingInfo.") }
+                }
+                completion?()
             }
+            dataTask.resume()
+        } else {
+            completion?()
         }
     }
     
