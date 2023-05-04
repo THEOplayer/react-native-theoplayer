@@ -6,7 +6,11 @@
  *
  * @public
  */
-export type ABRStrategyType = 'performance' | 'quality' | 'bandwidth';
+export enum ABRStrategyType {
+  performance = 'performance',
+  quality = 'quality',
+  bandwidth = 'bandwidth',
+}
 
 /**
  * Describes the metadata of the adaptive bitrate strategy.
