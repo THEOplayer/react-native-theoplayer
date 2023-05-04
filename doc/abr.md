@@ -21,7 +21,7 @@ on the chosen strategy, as well as various parameters of the playback buffer.
 
 ```tsx
  const onPlayerReady = (player: THEOplayer) => {
-  player.abr.strategy = 'quality';
+  player.abr.strategy = ABRStrategyType.quality;
   player.abr.targetBuffer = 20;
   player.abr.bufferLookbackWindow = 30;
   player.abr.maxBufferLength = 30;
@@ -46,7 +46,7 @@ object can be set with an estimate for the initial bitrate value (in bits per se
 
 ```typescript
 const strategyConfig: ABRStrategyConfiguration = {
-  type: 'bandwidth',
+  type: ABRStrategyType.bandwidth,
   metadata: {
     'bitrate': 1200000
   }

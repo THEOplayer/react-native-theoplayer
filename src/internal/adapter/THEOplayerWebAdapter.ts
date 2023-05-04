@@ -60,7 +60,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   }
 
   get abr(): ABRConfiguration | undefined {
-    return this._player?.abr;
+    return this._player?.abr as ABRConfiguration | undefined;
   }
 
   get source(): SourceDescription | undefined {
