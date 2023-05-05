@@ -2,8 +2,6 @@ import React, { useEffect, useRef } from 'react';
 import type { THEOplayerViewProps } from 'react-native-theoplayer';
 import * as THEOplayer from 'theoplayer';
 import { THEOplayerWebAdapter } from './adapter/THEOplayerWebAdapter';
-import { BaseEvent } from './adapter/event/BaseEvent';
-import { PlayerEventType } from 'react-native-theoplayer';
 
 export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProps>) {
   const { config, children } = props;
@@ -15,7 +13,7 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
     // Create player inside container.
     if (container.current) {
       const chromeless = config?.chromeless === true || config?.chromeless === undefined;
-      const updatedConfig = {...config, allowNativeFullscreen: true};
+      const updatedConfig = { ...config, allowNativeFullscreen: true };
       if (chromeless) {
         player.current = new THEOplayer.ChromelessPlayer(container.current, updatedConfig);
       } else {
@@ -23,7 +21,7 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
           ...updatedConfig,
           ui: {
             fluid: true,
-          }
+          },
         } as THEOplayer.PlayerConfiguration);
       }
 
@@ -48,9 +46,7 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
       if (adapter?.current && onPlayerDestroy) {
         onPlayerDestroy(adapter?.current);
       }
-      adapter?.current?.dispatchEvent(new BaseEvent(PlayerEventType.DESTROY));
       adapter?.current?.destroy();
-      player?.current?.destroy();
     };
   }, [container]);
 

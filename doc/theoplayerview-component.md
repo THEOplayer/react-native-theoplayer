@@ -27,12 +27,12 @@ bridges that map each THEO SDK API to the THEOplayerView component.
 
 The `THEOplayerView` component supports the following list of properties.
 
-| Property        | Description                                                                                                       | Platforms     |
-|-----------------|-------------------------------------------------------------------------------------------------------------------|---------------|
-| `config`        | The player configuration containing the THEOplayer license and other player-setup related properties              | All           |
-| `abrConfig`     | The player's adaptive bitrate (ABR) configuration.                                                                | Android & Web |
-| `style`         | The style applied to the player view.                                                                             | All           |
-| `onPlayerReady` | A callback that provides the [THEOplayer API](../src/api/player/THEOplayer.ts) when the internal player is ready. | All           |
+| Property          | Description                                                                                                       | Platforms     |
+|-------------------|-------------------------------------------------------------------------------------------------------------------|---------------|
+| `config`          | The player configuration containing the THEOplayer license and other player-setup related properties              | All           |
+| `style`           | The style applied to the player view.                                                                             | All           |
+| `onPlayerReady`   | A callback that provides the [THEOplayer API](../src/api/player/THEOplayer.ts) when the player instance is ready. | All           |
+| `onPlayerDestroy` | A callback is called when the internal player instance will be destroyed.                                         | All           |
 
 ### Configuration
 
@@ -63,8 +63,9 @@ CORS rules applied on `theoplayer.com` will also prohibit playing sources from t
 
 #### Adaptive Bitrate (ABR) configuration
 
-On Android and Web platforms, you can control the ABR configuration using `plater.abr` on
+On Android and Web platforms, you can control the ABR configuration using `player.abr` on
 the [THEOplayer API](../src/api/player/THEOplayer.ts).
+We refer to the [Adaptive Bitrate (ABR)](abr.md) page for detailed information, including examples.
 
 #### Chromeless vs. Chromefull
 
@@ -78,10 +79,24 @@ You can set a source using the `source` property on the [THEOplayer API](../src/
 definition of `SourceDescription` maps to the type used in
 the [Web SDK's documentation](https://docs.theoplayer.com/api-reference/web/theoplayer.sourcedescription.md).
 
+```typescript
+player.source = {
+    "sources": {
+        "src": "https://cdn.theoplayer.com/video/elephants-dream/playlist-single-audio.m3u8",
+        "type": "application/x-mpegurl"
+    }
+}
+```
+
 ### Seeking to a position in a stream
 
 Changing the player's current time, or seeking to a specific timestamp, is done by setting `currentTime`
 on the [THEOplayer API](../src/api/player/THEOplayer.ts).
+Timestamps are measured in milliseconds.
+
+```typescript
+player.currentTime = 20_000; // msec
+```
 
 ### Text tracks and media tracks
 
@@ -116,10 +131,13 @@ of a thumbnail viewer.
 
 ### Buffering state changes
 
-The `PlayerEventType.BUFFERING_CHANGE` event is dispatched to indicate changes in the player's buffering state.
-It could be coupled to an activity indicator that is part of the UI, as shown in
-the [example application](./example-app.md).
+The `PlayerEventType.WAITING` event is dispatched to indicate that the player has stopped playback because the next
+frame's data is currently unavailable, but is expected to come in soon.
+It could be coupled to an activity indicator that is part of the UI.
+The `PlayerEventType.PLAYING` event is dispatched once playback continues.
 
-This event partially relies on changes in `readyState`. Since this value can sometimes switch radically, it is advised
-to add a time-out when using `PlayerEventType.BUFFERING_CHANGE` in combination with a UI loading indicator.
-The [example application](./example-app.md) illustrates a possible implementation.
+Alternatively, changes in `readyState` could be observed through the `PlayerEventType.READYSTATE_CHANGE` event.
+Since this value can sometimes switch radically, it is advised
+to add a time-out when using `PlayerEventType.READYSTATE_CHANGE` in combination with a UI loading indicator.
+
+The UI of the [example application](./example-app.md) illustrates a possible implementation.

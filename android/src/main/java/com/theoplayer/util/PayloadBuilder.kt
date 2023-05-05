@@ -74,7 +74,8 @@ class PayloadBuilder {
     currentProgramDateTime?.let {
       payload.putDouble(
         EVENT_PROP_CURRENT_PROGRAM_DATE_TIME,
-        (1e03 * currentProgramDateTime.time).toLong().toDouble()
+        // Date.time is already formatted in msecs.
+        currentProgramDateTime.time.toDouble()
       )
     }
   }

@@ -15,6 +15,8 @@ There is no React Native UI included in this app, as this is covered in the acco
 
 ### Setting up a new project
 
+In the following steps we will be using `npm` as the Node.js package manager.
+
 First initialize a new project with a React Native app template:
 
 ```bash
@@ -46,7 +48,6 @@ $ npm i react-native-theoplayer@<version>
 Note: depending on your node version, an extra `--legacy-peer-deps` option has to be added:
 
 ```bash
-$ npm i
 $ npm i react-native-theoplayer --legacy-peer-deps
 ```
 
@@ -54,8 +55,8 @@ Finally, replace the `App.tsx` with this minimal code:
 
 ```tsx
 import React from 'react';
-import { Platform, View } from 'react-native';
-import { PlayerConfiguration, SourceDescription, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
+import {Platform, View} from 'react-native';
+import {PlayerConfiguration, SourceDescription, PlayerEventType, THEOplayer, THEOplayerView} from 'react-native-theoplayer';
 
 const playerConfig: PlayerConfiguration = {
   license: undefined,     // insert THEOplayer React Native license here
@@ -64,8 +65,8 @@ const playerConfig: PlayerConfiguration = {
 const source: SourceDescription = {
   sources: [
     {
-      src: 'https://contentserver.prudentgiraffe.com/videos/dash/webvtt-embedded-in-isobmff/Manifest.mpd',
-      type: 'application/dash+xml',
+      src: "https://cdn.theoplayer.com/video/elephants-dream/plylist-single-audio.m3u8",
+      type: "application/x-mpegurl"
     },
   ],
 };
@@ -73,20 +74,22 @@ const source: SourceDescription = {
 const onReady = (player: THEOplayer) => {
   player.autoplay = true
   player.source = source;
+  player.addEventListener(PlayerEventType.ERROR, console.log);
 }
 
 const App = () => {
-    return (
-      <View style={{position: 'absolute', top: 0, left: 0, bottom: 0, right: 0}}>
-          <THEOplayerView config={playerConfig} onPlayerReady={onReady}/>
-      </View>
-    );
+  return (
+    <View style={{position: 'absolute', top: 0, left: 0, bottom: 0, right: 0}}>
+      <THEOplayerView config={playerConfig} onPlayerReady={onReady}/>
+    </View>
+  );
 };
 
 export default App;
 ```
 
-A license for the React Native SDK needs to be obtained through the 'Licenses' built in the [THEOplayer portal](https://portal.theoplayer.com/)
+When configuring a stream that is hosted on another server than `cdn.theoplayer.com`,
+a license for the React Native SDK needs to be obtained through the 'Licenses' built in the [THEOplayer portal](https://portal.theoplayer.com/)
 or request a [free trial license](https://www.theoplayer.com/free-trial-theoplayer?hsLang=en-us).
 
 ![license_portal](./license_portal.png)
@@ -94,51 +97,40 @@ or request a [free trial license](https://www.theoplayer.com/free-trial-theoplay
 ### Getting started on Android
 
 After completing the [initial project setup](#setting-up-a-new-project), which is shared for all platforms,
-this packaging option needs to be added to Android's Gradle config `./android/app/build.gradle`.
+the following Gradle buildConfig fields can be used in your `gradle.properties` file to override or
+set various Android-specific react-native-theoplayer options:
 
-```bash
-android {
-    // ...
-    packagingOptions {
-      exclude 'META-INF/kotlin-stdlib.kotlin_module'
-    }
-}
-```
+```groovy
+# Version of the (Android) THEOplayer SDK, if not specified, the latest available version is set.
+#THEOplayer_sdk=5.0.3
 
-The following Gradle buildConfig fields can be used in your Gradle file to override or
-set various react-native-theoplayer options:
+# Override Android sdk versions
+#THEOplayer_compileSdkVersion = 33
+#THEOplayer_minSdkVersion = 21
+#THEOplayer_targetSdkVersion = 33
 
-```
-buildscript {
-  ext {
-    // ...
+# Toggle player event logging using tag 'VideoPlayer' (default: false)
+#THEOplayer_logPlayerEvents = true
 
-    // Override compileSdkVersion
-    THEOplayer_compileSdkVersion = 31
+# Toggle playerView event logging using tag 'ReactTHEOplayerView' (default: false)
+#THEOplayer_logViewEvents = true
 
-    // Override minSdkVersion
-    THEOplayer_minSdkVersion = 21
+# Toggle media session event logging (default: false)
+#THEOplayer_logMediaSessionEvents = true
 
-    // Override targetSdkVersion
-    THEOplayer_targetSdkVersion = 31
+# Enable THEOplayer Extensions (default: disabled)
+#THEOplayer_extensionGoogleIMA = true
+#THEOplayer_extensionGoogleDAI = true
+#THEOplayer_extensionCast = true
+#THEOplayer_extensionMediaSession = true
 
-    // Specify a specfic SDK version (default: the lastest available version).
-    THEOplayer_sdk = "3.5.0"
-
-    // Optionally limit timeUpdate rate, which could improve performance. Possible values:
-    // - "com.theoplayer.TimeUpdateRate.UNLIMITED"
-    // - "com.theoplayer.TimeUpdateRate.LIMITED_ONE_HZ"
-    // - "com.theoplayer.TimeUpdateRate.LIMITED_TWO_HZ"
-    // - "com.theoplayer.TimeUpdateRate.LIMITED_THREE_HZ"
-    THEOplayer_timeUpdateRate = "com.theoplayer.TimeUpdateRate.LIMITED_ONE_HZ"
-
-    // Toggle player event logging
-    THEOplayer_logPlayerEvents = "false"
-
-    // Toggle playerView event logging
-    THEOplayer_logViewEvents = "false"
-  }
-}
+# Optionally limit timeUpdate rate, which could improve performance.
+# Possible values: (default: UNLIMITED)
+# - com.theoplayer.TimeUpdateRate.UNLIMITED
+# - com.theoplayer.TimeUpdateRate.LIMITED_ONE_HZ
+# - com.theoplayer.TimeUpdateRate.LIMITED_TWO_HZ
+# - com.theoplayer.TimeUpdateRate.LIMITED_THREE_HZ
+#THEOplayer_timeUpdateRate = com.theoplayer.TimeUpdateRate.LIMITED_TWO_HZ
 ```
 
 For optimal performance, make sure to build your app in release mode, and  optionally limit the number of `timeupdate`

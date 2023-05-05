@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.6.0] - 23-05-05
+
+### Fixed
+
+- Fixed an issue on Android where the `currentProgramDateTime` property of `TimeUpdateEvent` would not be formatted in milliseconds.
+- Fixed an issue on Android where the order of text and media tracks would change when adding tracks.
+- Fixed an issue on Web where an exception would be thrown when accessing the player API after the player had been destroyed.
+- Fixed an issue with Google IMA where the main content wasn't resumed after a pre-roll ended.
+
+### Changed
+
+- Use `enum` instead of a string union for `ABRStrategyType`.
+- Changed the way artwork is fetched for NowPlayingInfo on the iOS Lockscreen, to prevent a crash caused by threading issues.
+
 ## [2.5.0] - 23-04-26
 
 ### Added
