@@ -14,9 +14,21 @@ This section covers what is possible with the current UI and also documents the 
 - [Available components](#available-components)
 - [Known Limitations](#known-limitations)
 
+### Prerequisites
+
+The UI components have a few non-transitive dependencies that are required to be installed manually:
+
+```bash
+npm install \
+  react-native-svg \
+  @react-native-community/slider
+```
+
 ### Using the DefaultTHEOplayerUi
 
 The `THEOplayerDefaultUi` can be used to provide basic playback controls to the viewer.
+As the default UI also includes Chromecast & Airplay support, make sure to configure these first as explained in the
+[cast documentation](./cast.md).
 
 ```tsx
 const App = () => {
