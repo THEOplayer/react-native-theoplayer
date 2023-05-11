@@ -226,6 +226,9 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   }
 
   private applyAutoplay() {
+    if (!this.hasValidSource()) {
+      return;
+    }
     if (this._state.autoplay) {
       this.play();
     } else {
@@ -238,9 +241,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
     // Apply autoplay in case a source was already set.
     // If autoplay is changed before setting a source, `onSourceChange` applies autoplay.
-    if (this.hasValidSource()) {
-      this.applyAutoplay();
-    }
+    this.applyAutoplay();
   }
 
   get autoplay(): boolean {
