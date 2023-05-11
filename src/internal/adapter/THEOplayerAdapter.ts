@@ -110,6 +110,10 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     }
   };
 
+  private hasValidSource(): boolean {
+    return this._state.source !== undefined;
+  }
+
   private onPause = () => {
     this._state.paused = true;
   };
@@ -227,7 +231,11 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   set autoplay(autoplay: boolean) {
     this._state.autoplay = autoplay;
-    NativeModules.PlayerModule.setPaused(this._view.nativeHandle, !autoplay);
+
+    // Apply autoplay in case a source was already set
+    if (this.hasValidSource()) {
+      NativeModules.PlayerModule.setPaused(this._view.nativeHandle, !autoplay);
+    }
   }
 
   get autoplay(): boolean {
@@ -265,6 +273,10 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   }
 
   set currentTime(currentTime: number) {
+    if (!this.hasValidSource()) {
+      return;
+    }
+
     if (isNaN(currentTime)) {
       return;
     }
@@ -345,6 +357,9 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   }
 
   set selectedAudioTrack(trackUid: number | undefined) {
+    if (!this.hasValidSource()) {
+      return;
+    }
     this._state.selectedAudioTrack = trackUid;
     NativeModules.PlayerModule.setSelectedAudioTrack(this._view.nativeHandle, trackUid || -1);
   }
@@ -358,6 +373,9 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   }
 
   set selectedVideoTrack(trackUid: number | undefined) {
+    if (!this.hasValidSource()) {
+      return;
+    }
     this._state.selectedVideoTrack = trackUid;
     this._state.targetVideoQuality = undefined;
     NativeModules.PlayerModule.setSelectedVideoTrack(this._view.nativeHandle, trackUid || -1);
@@ -372,6 +390,9 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   }
 
   set selectedTextTrack(trackUid: number | undefined) {
+    if (!this.hasValidSource()) {
+      return;
+    }
     this._state.selectedTextTrack = trackUid;
     this.textTracks.forEach((track) => {
       if (track.uid === trackUid) {
@@ -417,6 +438,9 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   }
 
   set targetVideoQuality(target: number | number[] | undefined) {
+    if (!this.hasValidSource()) {
+      return;
+    }
     // Always pass an array for targetVideoQuality.
     this._state.targetVideoQuality = !target ? [] : Array.isArray(target) ? target : [target];
 
@@ -447,13 +471,17 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   }
 
   pause(): void {
-    this._state.paused = true;
-    NativeModules.PlayerModule.setPaused(this._view.nativeHandle, true);
+    if (this.hasValidSource()) {
+      this._state.paused = true;
+      NativeModules.PlayerModule.setPaused(this._view.nativeHandle, true);
+    }
   }
 
   play(): void {
-    this._state.paused = false;
-    NativeModules.PlayerModule.setPaused(this._view.nativeHandle, false);
+    if (this.hasValidSource()) {
+      this._state.paused = false;
+      NativeModules.PlayerModule.setPaused(this._view.nativeHandle, false);
+    }
   }
 
   get nativeHandle(): NativeHandleType {
