@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Approved player behaviour on iOS and Android when doing player operations such as `play` and `pause` in case no source was set.
 
+### Fixed
+
+- Fixed an issue on Android where if an invalid view tag is passed to the native bridge, it would crash the player.
+
 ## [2.6.0] - 23-05-05
 
 ### Fixed
