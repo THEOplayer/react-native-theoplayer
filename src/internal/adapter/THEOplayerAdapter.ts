@@ -103,11 +103,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   }
 
   private onSourceChange = () => {
-    if (this._state.autoplay) {
-      this.play();
-    } else {
-      this.pause();
-    }
+    this.applyAutoplay();
   };
 
   private hasValidSource(): boolean {
@@ -229,12 +225,21 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     return this._adsAdapter;
   }
 
+  private applyAutoplay() {
+    if (this._state.autoplay) {
+      this.play();
+    } else {
+      this.pause();
+    }
+  }
+
   set autoplay(autoplay: boolean) {
     this._state.autoplay = autoplay;
 
-    // Apply autoplay in case a source was already set
+    // Apply autoplay in case a source was already set.
+    // If autoplay is changed before setting a source, `onSourceChange` applies autoplay.
     if (this.hasValidSource()) {
-      NativeModules.PlayerModule.setPaused(this._view.nativeHandle, !autoplay);
+      this.applyAutoplay();
     }
   }
 
