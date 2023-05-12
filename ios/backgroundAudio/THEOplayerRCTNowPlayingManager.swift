@@ -34,7 +34,7 @@ class THEOplayerRCTNowPlayingManager {
     func updateNowPlaying() {
         // Reset any existing playing info
         self.nowPlayingInfo = [:]
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
+        self.clearNowPlayingOnInfoCenter()
         
         // Gather new playing info
         if let player = self.player,
