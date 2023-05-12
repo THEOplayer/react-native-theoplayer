@@ -28,10 +28,10 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
             if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
                let player = theView.player {
                 if paused && !player.paused {
-                    if DEBUG_PLAYER_API { print("[NATIVE] Triggering pause on TheoPlayer") }
+                    if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Triggering pause on TheoPlayer") }
                     player.pause()
                 } else if !paused && player.paused {
-                    if DEBUG_PLAYER_API { print("[NATIVE] Triggering play on TheoPlayer") }
+                    if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Triggering play on TheoPlayer") }
                     player.play()
                 }
             }
@@ -44,11 +44,11 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
             if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
                let srcDescription = THEOplayerRCTSourceDescriptionBuilder.buildSourceDescription(src) {
                 if let player = theView.player {
-                    if DEBUG_PLAYER_API { print("[NATIVE] Setting new source on TheoPlayer") }
+                    if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Setting new source on TheoPlayer") }
                     player.source = srcDescription
                 }
             } else {
-                if DEBUG_PLAYER_API { print("[NATIVE] Failed to update THEOplayer source.") }
+                if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Failed to update THEOplayer source.") }
             }
         }
     }
@@ -65,7 +65,7 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
             if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
                let player = theView.player {
                 let timeValue = time.doubleValue * 0.001
-                if DEBUG_PLAYER_API { print("[NATIVE] Seeking to \(timeValue) on TheoPlayer") }
+                if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Seeking to \(timeValue) on TheoPlayer") }
                 player.setCurrentTime(timeValue)
             }
         }
@@ -77,7 +77,7 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
             if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
                let player = theView.player {
                 if player.muted != muted {
-                    if DEBUG_PLAYER_API { print("[NATIVE] Changing TheoPlayer to \(muted ? "muted" : "not muted")") }
+                    if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Changing TheoPlayer to \(muted ? "muted" : "not muted")") }
                     player.muted = muted
                 }
             }
@@ -86,7 +86,7 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
     
     @objc(setVolume:volume:)
     func setVolume(_ node: NSNumber, volume: NSNumber) -> Void {
-        if DEBUG_PLAYER_API { print("[NATIVE] Setting volume: TheoPlayer does not handle volume changes for iOS. This is handled by the device.") }
+        if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Setting volume: TheoPlayer does not handle volume changes for iOS. This is handled by the device.") }
     }
     
     @objc(setPlaybackRate:playbackRate:)
@@ -96,7 +96,7 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                let player = theView.player {
                 let playbackRateValue = playbackRate.doubleValue
                 if player.playbackRate != playbackRateValue {
-                    if DEBUG_PLAYER_API { print("[NATIVE] Setting playbackRate on TheoPlayer to \(playbackRateValue)") }
+                    if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Setting playbackRate on TheoPlayer to \(playbackRateValue)") }
                     player.setPlaybackRate(playbackRateValue)
                 }
             }
@@ -113,7 +113,7 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
             if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
                let player = theView.player {
                 if player.presentationMode != newPresentationMode {
-                    if DEBUG_PLAYER_API { print("[NATIVE] Changing TheoPlayer to \(presentationMode)") }
+                    if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Changing TheoPlayer to \(presentationMode)") }
                     player.presentationMode = newPresentationMode
                 }
             }
@@ -128,7 +128,7 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                 if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
                    let player = theView.player {
                     if player.fullscreen.aspectRatio != newAspectRatio {
-                        if DEBUG_PLAYER_API { print("[NATIVE] Changing TheoPlayer's aspectRatio to \(ratio)") }
+                        if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Changing TheoPlayer's aspectRatio to \(ratio)") }
                         player.fullscreen.setAspectRatio(aspectRatio: newAspectRatio)
                     }
                 }
@@ -180,7 +180,7 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                 guard textTracks.count > 0 else {
                     return
                 }
-                if DEBUG_PLAYER_API { print("[NATIVE] Showing textTrack \(uidValue) on TheoPlayer") }
+                if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Showing textTrack \(uidValue) on TheoPlayer") }
                 for i in 0...textTracks.count-1 {
                     var textTrack: TextTrack = textTracks.get(i)
                     if textTrack.uid == uidValue {
@@ -203,7 +203,7 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                 guard audioTracks.count > 0 else {
                     return
                 }
-                if DEBUG_PLAYER_API { print("[NATIVE] Enabling audioTrack \(uidValue) on TheoPlayer") }
+                if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Enabling audioTrack \(uidValue) on TheoPlayer") }
                 for i in 0...audioTracks.count-1 {
                     var audioTrack: MediaTrack = audioTracks.get(i)
                     audioTrack.enabled = (audioTrack.uid == uidValue)
@@ -222,7 +222,7 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                 guard videoTracks.count > 0 else {
                     return
                 }
-                if DEBUG_PLAYER_API { print("[NATIVE] Enabling videoTrack \(uidValue) on TheoPlayer") }
+                if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Enabling videoTrack \(uidValue) on TheoPlayer") }
                 for i in 0...videoTracks.count-1 {
                     var videoTrack: MediaTrack = videoTracks.get(i)
                     videoTrack.enabled = (videoTrack.uid == uidValue)
@@ -244,7 +244,7 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                let player = theView.player {
                 let preloadType = THEOplayerRCTTypeUtils.preloadTypeFromString(type)
                 if player.preload != preloadType {
-                    if DEBUG_PLAYER_API { print("[NATIVE] Changing TheoPlayer preload type to \(type)") }
+                    if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Changing TheoPlayer preload type to \(type)") }
                     player.setPreload(preloadType)
                 }
             }

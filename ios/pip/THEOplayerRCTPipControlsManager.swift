@@ -58,7 +58,7 @@ class THEOplayerRCTPipControlsManager: NSObject {
         if let player = self.player,
            let pip = player.pip {
             pip.configure(configuration: self.newPipConfiguration())
-            if DEBUG_PIPCONTROLS { print("[NATIVE] Pip controls updated for \(self.isLive ? "LIVE" : "VOD") (\(self.inAd ? "AD IS PLAYING" : "NO AD PLAYING")). (requiresLinearPlayback = \(self.isLive || self.inAd), canStartPictureInPictureAutomaticallyFromInline = \(self.pipConfig.canStartPictureInPictureAutomaticallyFromInline))") }
+            if DEBUG_PIPCONTROLS { PrintUtils.printLog(logText: "[NATIVE] Pip controls updated for \(self.isLive ? "LIVE" : "VOD") (\(self.inAd ? "AD IS PLAYING" : "NO AD PLAYING")). (requiresLinearPlayback = \(self.isLive || self.inAd), canStartPictureInPictureAutomaticallyFromInline = \(self.pipConfig.canStartPictureInPictureAutomaticallyFromInline))") }
         }
     }
         

@@ -19,7 +19,7 @@ extension THEOplayerRCTCastAPI {
                 resolve(airplay.casting)
             } else {
                 reject(ERROR_CODE_AIRPLAY_ACCESS_FAILURE, ERROR_MESSAGE_AIRPLAY_ACCESS_FAILURE, nil)
-                if DEBUG_CAST_API { print("[NATIVE] Could not retrieve current airplay casting status.") }
+                if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Could not retrieve current airplay casting status.") }
             }
         }
     }
@@ -33,7 +33,7 @@ extension THEOplayerRCTCastAPI {
                 resolve(airplay.state._rawValue)
             } else {
                 reject(ERROR_CODE_AIRPLAY_ACCESS_FAILURE, ERROR_MESSAGE_AIRPLAY_ACCESS_FAILURE, nil)
-                if DEBUG_CAST_API { print("[NATIVE] Could not retrieve current airplay state.") }
+                if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Could not retrieve current airplay state.") }
             }
         }
     }
@@ -44,10 +44,10 @@ extension THEOplayerRCTCastAPI {
             let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
             if let cast = theView.cast(),
                let airplay = cast.airPlay {
-                if DEBUG_CAST_API { print("[NATIVE] Starting airplay session.") }
+                if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Starting airplay session.") }
                 airplay.start()
             } else {
-                if DEBUG_CAST_API { print("[NATIVE] Could not start airplay session.") }
+                if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Could not start airplay session.") }
             }
         }
     }
@@ -58,10 +58,10 @@ extension THEOplayerRCTCastAPI {
             let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
             if let cast = theView.cast(),
                let airplay = cast.airPlay {
-                if DEBUG_CAST_API { print("[NATIVE] Stopping airplay session.") }
+                if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Stopping airplay session.") }
                 airplay.stop()
             } else {
-                if DEBUG_CAST_API { print("[NATIVE] Could not stop airplay session.") }
+                if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Could not stop airplay session.") }
             }
         }
     }

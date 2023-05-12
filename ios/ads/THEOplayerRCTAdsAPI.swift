@@ -47,7 +47,7 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
             if let ads = theView.ads() {
                 ads.skip()
             } else {
-                if DEBUG_ADS_API { print("[NATIVE] Could not skip ad (ads module unavailable).") }
+                if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not skip ad (ads module unavailable).") }
             }
         }
     }
@@ -60,14 +60,14 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
                 ads.requestPlaying { playing, error in
                     if let err = error {
                         reject(ERROR_CODE_ADS_GET_PLAYING_STATE_FAILED, err.localizedDescription, error)
-                        if DEBUG_ADS_API { print("[NATIVE] Retrieving ad playing state failed: \(err.localizedDescription)") }
+                        if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Retrieving ad playing state failed: \(err.localizedDescription)") }
                     } else {
                         resolve(playing)
                     }
                 }
             } else {
                 reject(ERROR_CODE_ADS_ACCESS_FAILURE, ERROR_MESSAGE_ADS_ACCESS_FAILURE, nil)
-                if DEBUG_ADS_API { print("[NATIVE] Could not skip ad (ads module unavailable).") }
+                if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not skip ad (ads module unavailable).") }
             }
         }
     }
@@ -80,17 +80,17 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
                 ads.requestCurrentAdBreak { adBreak, error in
                     if let err = error {
                         reject(ERROR_CODE_ADS_GET_CURRENT_ADBREAK_FAILED, err.localizedDescription, error)
-                        if DEBUG_ADS_API { print("[NATIVE] Retrieving current adbreak failed: \(err.localizedDescription)") }
+                        if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Retrieving current adbreak failed: \(err.localizedDescription)") }
                     } else if let currentAdBreak = adBreak {
                         resolve(THEOplayerRCTAdAggregator.aggregateAdBreak(adBreak:currentAdBreak))
                     } else {
                         reject(ERROR_CODE_ADS_GET_CURRENT_ADBREAK_UNDEFINED, ERROR_MESSAGE_ADS_GET_CURRENT_ADBREAK_UNDEFINED, nil)
-                        if DEBUG_ADS_API { print("[NATIVE] Retrieving current adbreak failed: could not load adbreak.") }
+                        if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Retrieving current adbreak failed: could not load adbreak.") }
                     }
                 }
             } else {
                 reject(ERROR_CODE_ADS_ACCESS_FAILURE, ERROR_MESSAGE_ADS_ACCESS_FAILURE, nil)
-                if DEBUG_ADS_API { print("[NATIVE] Could not retrieve current adbreak (ads module unavailable).") }
+                if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not retrieve current adbreak (ads module unavailable).") }
             }
         }
     }
@@ -103,7 +103,7 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
                 ads.requestCurrentAds { adsArray, error in
                     if let err = error {
                         reject(ERROR_CODE_ADS_GET_CURRENT_ADS_FAILED, err.localizedDescription, error)
-                        if DEBUG_ADS_API { print("[NATIVE] Retrieving current ads failed: \(err.localizedDescription)") }
+                        if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Retrieving current ads failed: \(err.localizedDescription)") }
                     } else if let currentAdsArray = adsArray {
                         var currentAds: [[String:Any]] = []
                         for ad in currentAdsArray {
@@ -112,12 +112,12 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
                         resolve(currentAds)
                     } else {
                         reject(ERROR_CODE_ADS_GET_CURRENT_ADS_UNDEFINED, ERROR_MESSAGE_ADS_GET_CURRENT_ADS_UNDEFINED, nil)
-                        if DEBUG_ADS_API { print("[NATIVE] Retrieving current ads failed: could not load ads.") }
+                        if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Retrieving current ads failed: could not load ads.") }
                     }
                 }
             } else {
                 reject(ERROR_CODE_ADS_ACCESS_FAILURE, ERROR_MESSAGE_ADS_ACCESS_FAILURE, nil)
-                if DEBUG_ADS_API { print("[NATIVE] Could not retrieve current ad (ads module unavailable).") }
+                if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not retrieve current ad (ads module unavailable).") }
             }
         }
     }
@@ -130,7 +130,7 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
                 ads.requestScheduledAdBreaks { adBreaksArray, error in
                     if let err = error {
                         reject(ERROR_CODE_ADS_GET_SCHEDULED_ADBREAKS_FAILED, err.localizedDescription, error)
-                        if DEBUG_ADS_API { print("[NATIVE] Retrieving scheduled adbreaks failed: \(err.localizedDescription)") }
+                        if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Retrieving scheduled adbreaks failed: \(err.localizedDescription)") }
                     } else if let currentAdBreaksArray = adBreaksArray {
                         var currentAdBreaks: [[String:Any]] = []
                         for adbreak in currentAdBreaksArray {
@@ -139,12 +139,12 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
                         resolve(currentAdBreaks)
                     } else {
                         reject(ERROR_CODE_ADS_GET_SCHEDULED_ADBREAKS_UNDEFINED, ERROR_MESSAGE_ADS_GET_SCHEDULED_ADBREAKS_UNDEFINED, nil)
-                        if DEBUG_ADS_API { print("[NATIVE] Retrieving current adbreaks failed: could not load adbreaks.") }
+                        if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Retrieving current adbreaks failed: could not load adbreaks.") }
                     }
                 }
             } else {
                 reject(ERROR_CODE_ADS_ACCESS_FAILURE, ERROR_MESSAGE_ADS_ACCESS_FAILURE, nil)
-                if DEBUG_ADS_API { print("[NATIVE] Could not retrieve current ad (ads module unavailable).") }
+                if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not retrieve current ad (ads module unavailable).") }
             }
         }
     }
@@ -158,7 +158,7 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
                let adDescription = THEOplayerRCTSourceDescriptionBuilder.buildSingleAdDescription(adData) {
                 ads.schedule(adDescription: adDescription)
             } else {
-                if DEBUG_ADS_API { print("[NATIVE] Could not schedule new ad.") }
+                if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not schedule new ad.") }
             }
         }
     }

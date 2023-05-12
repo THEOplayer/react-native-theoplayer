@@ -32,7 +32,7 @@ class THEOplayerRCTNetworkUtils: NSObject, URLSessionDataDelegate {
         request.httpBody = body
         let task = self.defaultUrlSession.dataTask(with: request) { data, response, error in
             if let error = error {
-                print("request Error: \(error.localizedDescription)")
+                PrintUtils.printLog(logText: "request Error: \(error.localizedDescription)")
                 return
             }
             if let urlResponse = response as? HTTPURLResponse {

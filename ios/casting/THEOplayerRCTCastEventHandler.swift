@@ -49,21 +49,21 @@ class THEOplayerRCTCastEventHandler {
 #if os(iOS) && (CHROMECAST || canImport(THEOplayerGoogleCastIntegration))
         // CHROMECAST STATE_CHANGE
         self.chromecastStateChangeListener = player.cast?.chromecast?.addEventListener(type: ChromecastEventTypes.STATE_CHANGE) { [weak self] event in
-            if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received Chromecast STATE_CHANGE event from THEOplayer cast.chromecast") }
+            if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received Chromecast STATE_CHANGE event from THEOplayer cast.chromecast") }
             if let forwardedCastEvent = self?.onNativeCastEvent {
                 let newCastState = event.state._rawValue
-                if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] New Chromecast state: \(newCastState)") }
+                if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] New Chromecast state: \(newCastState)") }
                 forwardedCastEvent([
                     CAST_EVENT_PROP_TYPE: EVENT_TYPE_CHROMECAST_STATE_CHANGE,
                     CAST_EVENT_PROP_STATE: newCastState
                 ])
             }
         }
-        if DEBUG_EVENTHANDLER { print("[NATIVE] Chromecast StateChange listener attached to THEOplayer cast.chromecast") }
+        if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] Chromecast StateChange listener attached to THEOplayer cast.chromecast") }
         
         // CHROMECAST ERROR
         self.chromecastErrorListener = player.cast?.chromecast?.addEventListener(type: ChromecastEventTypes.ERROR) { [weak self] event in
-            if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received Chromecast ERROR event from THEOplayer cast.chromecast") }
+            if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received Chromecast ERROR event from THEOplayer cast.chromecast") }
             if let forwardedCastEvent = self?.onNativeCastEvent {
                 let error = event.error
                 forwardedCastEvent([
@@ -75,23 +75,23 @@ class THEOplayerRCTCastEventHandler {
                 ])
             }
         }
-        if DEBUG_EVENTHANDLER { print("[NATIVE] Chromecast Error listener attached to THEOplayer cast.chromecast") }
+        if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] Chromecast Error listener attached to THEOplayer cast.chromecast") }
 #endif
         
 #if os(iOS)
         // AIRPLAY STATE_CHANGE
         self.airplayStateChangeListener = player.cast?.airPlay?.addEventListener(type: AirPlayEventTypes.STATE_CHANGE) { [weak self] event in
-            if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] Received Airplay STATE_CHANGE event from THEOplayer cast.airplay") }
+            if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received Airplay STATE_CHANGE event from THEOplayer cast.airplay") }
             if let forwardedCastEvent = self?.onNativeCastEvent,
                let castState = event.state {
-                if DEBUG_THEOPLAYER_EVENTS { print("[NATIVE] New Airplay state: \(castState)") }
+                if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] New Airplay state: \(castState)") }
                 forwardedCastEvent([
                     CAST_EVENT_PROP_TYPE: EVENT_TYPE_AIRPLAY_STATE_CHANGE,
                     CAST_EVENT_PROP_STATE: castState._rawValue
                 ])
             }
         }
-        if DEBUG_EVENTHANDLER { print("[NATIVE] Airplay StateChange listener attached to THEOplayer cast.airplay") }
+        if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] Airplay StateChange listener attached to THEOplayer cast.airplay") }
 #endif
     }
 
@@ -105,11 +105,11 @@ class THEOplayerRCTCastEventHandler {
         // CHROMECAST STATE_CHANGE
         if let chromecastStateChangeListener = self.chromecastStateChangeListener {
             player.cast?.chromecast?.removeEventListener(type: ChromecastEventTypes.STATE_CHANGE, listener: chromecastStateChangeListener)
-            if DEBUG_EVENTHANDLER { print("[NATIVE] Chromecast StateChange listener dettached from THEOplayer cast.chromecast") }
+            if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] Chromecast StateChange listener dettached from THEOplayer cast.chromecast") }
         }
         if let chromecastErrorListener = self.chromecastErrorListener {
             player.cast?.chromecast?.removeEventListener(type: ChromecastEventTypes.ERROR, listener: chromecastErrorListener)
-            if DEBUG_EVENTHANDLER { print("[NATIVE] Chromecast Error listener dettached from THEOplayer cast.chromecast") }
+            if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] Chromecast Error listener dettached from THEOplayer cast.chromecast") }
         }
 #endif
         
@@ -117,7 +117,7 @@ class THEOplayerRCTCastEventHandler {
         // AIRPLAY STATE_CHANGE
         if let airplayStateChangeListener = self.airplayStateChangeListener {
             player.cast?.airPlay?.removeEventListener(type: AirPlayEventTypes.STATE_CHANGE, listener: airplayStateChangeListener)
-            if DEBUG_EVENTHANDLER { print("[NATIVE] Airplay StateChange listener dettached from THEOplayer cast.airplay") }
+            if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] Airplay StateChange listener dettached from THEOplayer cast.airplay") }
         }
 #endif
     }
