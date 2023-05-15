@@ -16,21 +16,26 @@ import type {
   RateChangeEvent,
   SourceDescription,
   TextTrack,
+  TextTrackEvent,
   TextTrackListEvent,
   THEOplayer,
   THEOplayerView,
   TimeUpdateEvent,
 } from 'react-native-theoplayer';
 import {
+  addTextTrackCue,
   addTrack,
   AspectRatio,
   findMediaTrackByUid,
+  findTextTrackByUid,
   MediaTrackEventType,
   MediaTrackType,
   PlayerEventType,
   PreloadType,
   PresentationMode,
+  removeTextTrackCue,
   removeTrack,
+  TextTrackEventType,
   TextTrackMode,
   TextTrackStyle,
   TrackListEventType,
@@ -97,6 +102,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this.addEventListener(PlayerEventType.SEEKED, this.onSeeked);
     this.addEventListener(PlayerEventType.PROGRESS, this.onProgress);
     this.addEventListener(PlayerEventType.TEXT_TRACK_LIST, this.onTextTrackList);
+    this.addEventListener(PlayerEventType.TEXT_TRACK, this.onTextTrack);
     this.addEventListener(PlayerEventType.MEDIA_TRACK, this.onMediaTrack);
     this.addEventListener(PlayerEventType.MEDIA_TRACK_LIST, this.onMediaTrackList);
     this.addEventListener(PlayerEventType.PRESENTATIONMODE_CHANGE, this.onPresentationModeChange);
@@ -155,6 +161,19 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   private onProgress = (event: ProgressEvent) => {
     this._state.seekable = event.seekable?.sort((a, b) => a.end - b.end);
     this._state.buffered = event.buffered?.sort((a, b) => a.end - b.end);
+  };
+
+  private onTextTrack = (event: TextTrackEvent) => {
+    const { subType, cue, trackUid } = event;
+    const track = findTextTrackByUid(this._state.textTracks, trackUid);
+    switch (subType) {
+      case TextTrackEventType.ADD_CUE:
+        addTextTrackCue(track, cue);
+        break;
+      case TextTrackEventType.REMOVE_CUE:
+        removeTextTrackCue(track, cue);
+        break;
+    }
   };
 
   private onTextTrackList = (event: TextTrackListEvent) => {
