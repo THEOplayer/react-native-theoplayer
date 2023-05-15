@@ -1,2 +1,3 @@
-// @ts-ignore
-export * from 'url-polyfill';
+import 'url-polyfill';
+const URL = global.URL;
+export { URL };
