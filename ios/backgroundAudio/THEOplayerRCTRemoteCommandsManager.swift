@@ -67,7 +67,7 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         commandCenter.skipBackwardCommand.preferredIntervals = [NSNumber(value: DEFAULT_SKIP_INTERVAL)]
         commandCenter.skipBackwardCommand.addTarget(self, action: #selector(onSkipBackwardCommand(_:)))
         
-        if DEBUG_REMOTECOMMANDS { print("[NATIVE] Remote commands initialised.") }
+        if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Remote commands initialised.") }
     }
     
     func updateRemoteCommands() {
@@ -79,17 +79,17 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         commandCenter.changePlaybackPositionCommand.isEnabled = !isLive && !self.inAd && self.backgroundaudioConfig.enabled
         commandCenter.skipForwardCommand.isEnabled = !isLive && !self.inAd && self.backgroundaudioConfig.enabled
         commandCenter.skipBackwardCommand.isEnabled = !isLive && !self.inAd && self.backgroundaudioConfig.enabled
-        if DEBUG_REMOTECOMMANDS { print("[NATIVE] Remote commands updated for \(self.isLive ? "LIVE" : "VOD") (\(self.inAd ? "AD IS PLAYING" : "NO AD PLAYING"), \(self.backgroundaudioConfig.enabled ? "BGAUDIO ENABLED" : "BGAUDIO DISABLED") ).") }
+        if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Remote commands updated for \(self.isLive ? "LIVE" : "VOD") (\(self.inAd ? "AD IS PLAYING" : "NO AD PLAYING"), \(self.backgroundaudioConfig.enabled ? "BGAUDIO ENABLED" : "BGAUDIO DISABLED") ).") }
     }
     
     @objc private func onPlayCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
         if let player = self.player,
            player.paused {
             player.play()
-            if DEBUG_REMOTECOMMANDS { print("[NATIVE] Play command triggered.") }
+            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Play command triggered.") }
             return .success
         }
-        if DEBUG_REMOTECOMMANDS { print("[NATIVE] Play command Failed.") }
+        if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Play command Failed.") }
         return .commandFailed
     }
     
@@ -97,10 +97,10 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         if let player = self.player,
            !player.paused {
             player.pause()
-            if DEBUG_REMOTECOMMANDS { print("[NATIVE] Pause command triggered.") }
+            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Pause command triggered.") }
             return .success
         }
-        if DEBUG_REMOTECOMMANDS { print("[NATIVE] Pause command Failed.") }
+        if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Pause command Failed.") }
         return .commandFailed
     }
     
@@ -111,10 +111,10 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
             } else {
                 player.pause()
             }
-            if DEBUG_REMOTECOMMANDS { print("[NATIVE] Toggle play/pause command triggered.") }
+            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Toggle play/pause command triggered.") }
             return .success
         }
-        if DEBUG_REMOTECOMMANDS { print("[NATIVE] Toggle play/pause command Failed.") }
+        if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Toggle play/pause command Failed.") }
         return .commandFailed
     }
     
@@ -123,20 +123,20 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
             if !player.paused {
                 player.pause()
             }
-            if DEBUG_REMOTECOMMANDS { print("[NATIVE] Stop command triggered.") }
+            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Stop command triggered.") }
             return .success
         }
-        if DEBUG_REMOTECOMMANDS { print("[NATIVE] Stop command Failed.") }
+        if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Stop command Failed.") }
         return .commandFailed
     }
     
     @objc private func onScrubCommand(_ event: MPChangePlaybackPositionCommandEvent) -> MPRemoteCommandHandlerStatus {
         if let player = self.player {
             player.setCurrentTime(event.positionTime)
-            if DEBUG_REMOTECOMMANDS { print("[NATIVE] Scrub command triggered.") }
+            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Scrub command triggered.") }
             return .success
         }
-        if DEBUG_REMOTECOMMANDS { print("[NATIVE] Scrub command Failed.") }
+        if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Scrub command Failed.") }
         return .commandFailed
     }
     
@@ -147,10 +147,10 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
                     player.setCurrentTime(currentTime + event.interval)
                 }
             })
-            if DEBUG_REMOTECOMMANDS { print("[NATIVE] Skip forward command triggered.") }
+            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Skip forward command triggered.") }
             return .success
         }
-        if DEBUG_REMOTECOMMANDS { print("[NATIVE] Skip forward command Failed.") }
+        if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Skip forward command Failed.") }
         return .commandFailed
     }
     
@@ -161,10 +161,10 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
                     player.setCurrentTime(currentTime - event.interval)
                 }
             })
-            if DEBUG_REMOTECOMMANDS { print("[NATIVE] Skip backward command triggered.") }
+            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Skip backward command triggered.") }
             return .success
         }
-        if DEBUG_REMOTECOMMANDS { print("[NATIVE] Skip backward command Failed.") }
+        if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Skip backward command Failed.") }
         return .commandFailed
     }
     

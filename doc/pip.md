@@ -31,8 +31,8 @@ The picture-in-picture presentation mode can also be triggered explicitly using 
 `THEOplayer` API:
 
 ```typescript
-// Change presentation mode ('inline', 'fullscreen' or 'picture-in-picture').
-player.presentationMode = 'picture-in-picture';
+// Change presentation mode (inline, fullscreen or pip).
+player.presentationMode = PresentationMode.pip;
 ```
 
 #### Listening for presentationMode changes

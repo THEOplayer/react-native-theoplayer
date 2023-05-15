@@ -21,17 +21,17 @@ extension THEOplayerRCTAdsAPI {
                 dai.requestSnapBack { enabled, error in
                     if let err = error {
                         reject(ERROR_CODE_DAI_GET_SNAPBACK_FAILED, err.localizedDescription, error)
-                        if DEBUG_ADS_API { print("[NATIVE] Retrieving dai snapback status failed: \(err.localizedDescription)") }
+                        if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Retrieving dai snapback status failed: \(err.localizedDescription)") }
                     } else if let snapBack = enabled {
                         resolve(snapBack)
                     } else {
                         reject(ERROR_CODE_DAI_GET_SNAPBACK_UNDEFINED, ERROR_MESSAGE_DAI_GET_SNAPBACK_UNDEFINED, nil)
-                        if DEBUG_ADS_API { print("[NATIVE] Retrieving dai snapback status failed.") }
+                        if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Retrieving dai snapback status failed.") }
                     }
                 }
             } else {
                 reject(ERROR_CODE_DAI_ACCESS_FAILURE, ERROR_MESSAGE_DAI_ACCESS_FAILURE, nil)
-                if DEBUG_ADS_API { print("[NATIVE] Could not retrieve dai snapback status (ads DAI module unavailable).") }
+                if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not retrieve dai snapback status (ads DAI module unavailable).") }
             }
         }
     }
@@ -44,7 +44,7 @@ extension THEOplayerRCTAdsAPI {
                let dai = ads.dai {
                 dai.setSnapBack(enabled, completionHandler: nil)
             } else {
-                if DEBUG_ADS_API { print("[NATIVE] Could not update dai snapback status (ads DAI module unavailable).") }
+                if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not update dai snapback status (ads DAI module unavailable).") }
             }
         }
     }
@@ -60,7 +60,7 @@ extension THEOplayerRCTAdsAPI {
                 resolve(contentTime)
             } else {
                 reject(ERROR_CODE_DAI_ACCESS_FAILURE, ERROR_MESSAGE_DAI_ACCESS_FAILURE, nil)
-                if DEBUG_ADS_API { print("[NATIVE] Could not convert stream time to content time (ads DAI module unavailable).") }
+                if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not convert stream time to content time (ads DAI module unavailable).") }
             }
         }
     }
@@ -76,7 +76,7 @@ extension THEOplayerRCTAdsAPI {
                 resolve(streamTime)
             } else {
                 reject(ERROR_CODE_DAI_ACCESS_FAILURE, ERROR_MESSAGE_DAI_ACCESS_FAILURE, nil)
-                if DEBUG_ADS_API { print("[NATIVE] Could not convert content time to stream time (ads DAI module unavailable).") }
+                if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not convert content time to stream time (ads DAI module unavailable).") }
             }
         }
     }

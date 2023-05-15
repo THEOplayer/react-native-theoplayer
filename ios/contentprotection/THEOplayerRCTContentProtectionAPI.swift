@@ -216,7 +216,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
                 if let responseError = error {
                     print(CPI_TAG, "Certificate request failure: error = \(responseError.localizedDescription)")
                 } else if statusCode >= 400 {
-                    print("Certificate request failure: statusCode = \(statusCode)")
+                    PrintUtils.printLog(logText: "Certificate request failure: statusCode = \(statusCode)")
                 } else {
                     if DEBUG_CONTENT_PROTECTION_API {print(CPI_TAG, "Certificate request success: statusCode = \(statusCode)") }
                     let certificateRequest = CertificateRequest(url: urlString, method: method, headers: headers, body: bodyData)

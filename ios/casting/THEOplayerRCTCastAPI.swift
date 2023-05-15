@@ -35,7 +35,7 @@ class THEOplayerRCTCastAPI: NSObject, RCTBridgeModule {
                 resolve(cast.casting)
             } else {
                 reject(ERROR_CODE_CAST_ACCESS_FAILURE, ERROR_MESSAGE_CAST_ACCESS_FAILURE, nil)
-                if DEBUG_CAST_API { print("[NATIVE] Could not retrieve current casting status (cast module unavailable).") }
+                if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Could not retrieve current casting status (cast module unavailable).") }
             }
         }
     }

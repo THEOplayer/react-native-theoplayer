@@ -75,7 +75,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
                     typedSources.append(typedSource)
                 } else {
                     if DEBUG_SOURCE_DESCRIPTION_BUIDER {
-                        print("[NATIVE] Could not create THEOplayer TypedSource from sourceData array")
+                        PrintUtils.printLog(logText: "[NATIVE] Could not create THEOplayer TypedSource from sourceData array")
                     }
                     return nil
                 }
@@ -87,7 +87,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
                 typedSources.append(typedSource)
             } else {
                 if DEBUG_SOURCE_DESCRIPTION_BUIDER {
-                    print("[NATIVE] Could not create THEOplayer TypedSource from sourceData")
+                    PrintUtils.printLog(logText: "[NATIVE] Could not create THEOplayer TypedSource from sourceData")
                 }
                 return nil
             }
@@ -105,7 +105,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
                     textTrackDescriptions?.append(textTrackDescription)
                 } else {
                     if DEBUG_SOURCE_DESCRIPTION_BUIDER {
-                        print("[NATIVE] Could not create THEOplayer TextTrackDescription from textTrackData array")
+                        PrintUtils.printLog(logText: "[NATIVE] Could not create THEOplayer TextTrackDescription from textTrackData array")
                     }
                     return nil
                 }
@@ -152,7 +152,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
         }
 
         if DEBUG_SOURCE_DESCRIPTION_BUIDER {
-            print("[NATIVE] THEOplayer TypedSource requires 'src' property in 'sources' description")
+            PrintUtils.printLog(logText: "[NATIVE] THEOplayer TypedSource requires 'src' property in 'sources' description")
         }
         return nil
     }
@@ -329,11 +329,11 @@ class THEOplayerRCTSourceDescriptionBuilder {
                 default: return try JSONDecoder().decode(MultiplatformDRMConfiguration.self, from: data)
                 }
             } else {
-                print("[NATIVE] integration type not specified... trying default drm integration")
+                PrintUtils.printLog(logText: "[NATIVE] integration type not specified... trying default drm integration")
                 return try JSONDecoder().decode(MultiplatformDRMConfiguration.self, from: data)
             }
         } catch {
-            print("[NATIVE] unsupported contentProtection data format")
+            PrintUtils.printLog(logText: "[NATIVE] unsupported contentProtection data format")
         }
         return nil
     }

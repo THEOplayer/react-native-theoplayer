@@ -25,7 +25,7 @@ extension THEOplayerRCTSourceDescriptionBuilder {
                         adsDescriptions?.append(adDescription)
                     } else {
                         if DEBUG_SOURCE_DESCRIPTION_BUIDER {
-                            print("[NATIVE] Could not create THEOplayer GoogleImaAdDescription from adsData array")
+                            PrintUtils.printLog(logText: "[NATIVE] Could not create THEOplayer GoogleImaAdDescription from adsData array")
                         }
                         return nil
                     }
@@ -37,7 +37,7 @@ extension THEOplayerRCTSourceDescriptionBuilder {
                     adsDescriptions?.append(adDescription)
                 } else {
                     if DEBUG_SOURCE_DESCRIPTION_BUIDER {
-                        print("[NATIVE] Could not create THEOplayer GoogleImaAdDescription from adsData")
+                        PrintUtils.printLog(logText: "[NATIVE] Could not create THEOplayer GoogleImaAdDescription from adsData")
                     }
                     return nil
                 }
@@ -67,10 +67,10 @@ extension THEOplayerRCTSourceDescriptionBuilder {
             if let src = srcString {
                 return GoogleImaAdDescription(src: src, timeOffset: timeOffset)
             } else {
-                if DEBUG_SOURCE_DESCRIPTION_BUIDER  { print("[NATIVE] AdDescription requires 'src' property in 'ads' description.") }
+                if DEBUG_SOURCE_DESCRIPTION_BUIDER  { PrintUtils.printLog(logText: "[NATIVE] AdDescription requires 'src' property in 'ads' description.") }
             }
         }
-        if DEBUG_SOURCE_DESCRIPTION_BUIDER  { print("[NATIVE] We currently require and only support the 'google-ima' integration in the 'ads' description.") }
+        if DEBUG_SOURCE_DESCRIPTION_BUIDER  { PrintUtils.printLog(logText: "[NATIVE] We currently require and only support the 'google-ima' integration in the 'ads' description.") }
 #endif
 
         return nil
@@ -110,7 +110,7 @@ extension THEOplayerRCTSourceDescriptionBuilder {
                         }
                     default:
                         if DEBUG_SOURCE_DESCRIPTION_BUIDER {
-                            print("[NATIVE] THEOplayer ssai 'availabilityType' must be 'live' or 'vod'")
+                            PrintUtils.printLog(logText: "[NATIVE] THEOplayer ssai 'availabilityType' must be 'live' or 'vod'")
                         }
                         return nil
                     }

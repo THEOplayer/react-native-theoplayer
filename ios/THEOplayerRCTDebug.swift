@@ -1,16 +1,16 @@
 // THEOplayerRCTDebug.swift
 
 // General debug flag, if set to false none of the debug prints will appear
-let DEBUG = false
+let DEBUG = true
 
 // Debug flag to monitor incoming Theoplayer events
-let DEBUG_THEOPLAYER_EVENTS = DEBUG && false
+let DEBUG_THEOPLAYER_EVENTS = DEBUG && true
 
 // Debug flag to monitor eventhandler setup and breakdown
 let DEBUG_EVENTHANDLER = DEBUG && false
 
 // Debug flag to monitor the interactions for each view with its underlying theoplayer instance
-let DEBUG_THEOPLAYER_INTERACTION = DEBUG && false
+let DEBUG_THEOPLAYER_INTERACTION = DEBUG && true
 
 // Debug flag to monitor contentProtection integration handling
 let DEBUG_CONTENT_PROTECTION_API = DEBUG && false

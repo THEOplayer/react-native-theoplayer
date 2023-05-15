@@ -140,7 +140,7 @@ public class THEOplayerRCTView: UIView {
         self.player?.removeAllIntegrations()
         self.player?.destroy()
         self.player = nil
-        if DEBUG_THEOPLAYER_INTERACTION { print("[NATIVE] THEOplayer instance destroyed.") }
+        if DEBUG_THEOPLAYER_INTERACTION { PrintUtils.printLog(logText: "[NATIVE] THEOplayer instance destroyed.") }
     }
     
     // MARK: - Property bridging (config)
@@ -153,7 +153,7 @@ public class THEOplayerRCTView: UIView {
         self.chromeless = configDict["chromeless"] as? Bool ?? true
         self.parseAdsConfig(configDict: configDict)
         self.parseCastConfig(configDict: configDict)
-        if DEBUG_VIEW { print("[NATIVE] config prop updated.") }
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] config prop updated.") }
         
         // Given the bridged config, create the initial THEOplayer instance
         self.createPlayer()
@@ -167,7 +167,7 @@ public class THEOplayerRCTView: UIView {
     @objc(setOnNativePlayerReady:)
     func setOnNativePlayerReady(nativePlayerReady: @escaping RCTDirectEventBlock) {
         self.onNativePlayerReady = nativePlayerReady
-        if DEBUG_VIEW { print("[NATIVE] nativePlayerReady prop set.") }
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativePlayerReady prop set.") }
     }
     
     // MARK: - Listener based MAIN event bridging
@@ -175,121 +175,121 @@ public class THEOplayerRCTView: UIView {
     @objc(setOnNativePlay:)
     func setOnNativePlay(nativePlay: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativePlay = nativePlay
-        if DEBUG_VIEW { print("[NATIVE] nativePlay prop set.") }
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativePlay prop set.") }
     }
     
     @objc(setOnNativePause:)
     func setOnNativePause(nativePause: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativePause = nativePause
-        if DEBUG_VIEW { print("[NATIVE] nativePause prop set.") }
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativePause prop set.") }
     }
     
     @objc(setOnNativeSourceChange:)
     func setOnNativeSourceChange(nativeSourceChange: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeSourceChange = nativeSourceChange
-        if DEBUG_VIEW { print("[NATIVE] nativeSourceChange prop set.") }
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeSourceChange prop set.") }
     }
     
     @objc(setOnNativeLoadStart:)
     func setOnNativeLoadStart(nativeLoadStart: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeLoadStart = nativeLoadStart
-        if DEBUG_VIEW { print("[NATIVE] nativeLoadStart prop set.") }
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeLoadStart prop set.") }
     }
     
     @objc(setOnNativeReadyStateChange:)
     func setOnNativeReadyStateChange(nativeReadyStateChange: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeReadyStateChange = nativeReadyStateChange
-        if DEBUG_VIEW { print("[NATIVE] nativeReadyStateChange prop set.") }
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeReadyStateChange prop set.") }
     }
     
     @objc(setOnNativeDurationChange:)
     func setOnNativeDurationChange(nativeDurationChange: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeDurationChange = nativeDurationChange
-        if DEBUG_VIEW { print("[NATIVE] nativeDurationChange prop set.") }
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeDurationChange prop set.") }
     }
     
     @objc(setOnNativeVolumeChange:)
     func setOnNativeVolumeChange(nativeVolumeChange: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeVolumeChange = nativeVolumeChange
-        if DEBUG_VIEW { print("[NATIVE] nativeVolumeChange prop set.") }
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeVolumeChange prop set.") }
     }
     
     @objc(setOnNativeProgress:)
     func setOnNativeProgress(nativeProgress: @escaping RCTBubblingEventBlock) {
         self.mainEventHandler.onNativeProgress = nativeProgress
-        if DEBUG_VIEW { print("[NATIVE] nativeProgress prop set.") }
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeProgress prop set.") }
     }
     
     @objc(setOnNativeTimeUpdate:)
     func setOnNativeTimeUpdate(nativeTimeUpdate: @escaping RCTBubblingEventBlock) {
         self.mainEventHandler.onNativeTimeUpdate = nativeTimeUpdate
-        if DEBUG_VIEW { print("[NATIVE] nativeTimeUpdate prop set.") }
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeTimeUpdate prop set.") }
     }
     
     @objc(setOnNativePlaying:)
     func setOnNativePlaying(nativePlaying: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativePlaying = nativePlaying
-        if DEBUG_VIEW { print("[NATIVE] nativePlaying prop set.") }
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativePlaying prop set.") }
     }
     
     @objc(setOnNativeSeeking:)
     func setOnNativeSeeking(nativeSeeking: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeSeeking = nativeSeeking
-        if DEBUG_VIEW { print("[NATIVE] nativeSeeking prop set.") }
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeSeeking prop set.") }
     }
     
     @objc(setOnNativeSeeked:)
     func setOnNativeSeeked(nativeSeeked: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeSeeked = nativeSeeked
-        if DEBUG_VIEW { print("[NATIVE] nativeSeeked prop set.") }
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeSeeked prop set.") }
     }
     
     @objc(setOnNativeEnded:)
     func setOnNativeEnded(nativeEnded: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeEnded = nativeEnded
-        if DEBUG_VIEW { print("[NATIVE] nativeEnded prop set.") }
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeEnded prop set.") }
     }
     
     @objc(setOnNativeError:)
     func setOnNativeError(nativeError: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeError = nativeError
-        if DEBUG_VIEW { print("[NATIVE] nativeError prop set.") }
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeError prop set.") }
     }
     
     @objc(setOnNativeLoadedData:)
     func setOnNativeLoadedData(nativeLoadedData: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeLoadedData = nativeLoadedData
-        if DEBUG_VIEW { print("[NATIVE] nativeLoadedData prop set.") }
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeLoadedData prop set.") }
     }
     
     @objc(setOnNativeRateChange:)
     func setOnNativeRateChange(nativeRateChange: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeRateChange = nativeRateChange
-        if DEBUG_VIEW { print("[NATIVE] nativeRateChange prop set.") }
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeRateChange prop set.") }
     }
     
     @objc(setOnNativeLoadedMetadata:)
     func setOnNativeLoadedMetadata(nativeLoadedMetadata: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeLoadedMetadata = nativeLoadedMetadata
-        if DEBUG_VIEW { print("[NATIVE] nativeLoadedMetadata prop set.") }
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeLoadedMetadata prop set.") }
     }
     
     @objc(setOnNativeWaiting:)
     func setOnNativeWaiting(nativeWaiting: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeWaiting = nativeWaiting
-        if DEBUG_VIEW { print("[NATIVE] nativeWaiting prop set.") }
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeWaiting prop set.") }
     }
     
     @objc(setOnNativeCanPlay:)
     func setOnNativeCanPlay(nativeCanPlay: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeCanPlay = nativeCanPlay
-        if DEBUG_VIEW { print("[NATIVE] nativeCanPlay prop set.") }
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeCanPlay prop set.") }
     }
     
     @objc(setOnNativePresentationModeChange:)
     func setOnNativePresentationModeChange(nativePresentationMode: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativePresentationModeChange = nativePresentationMode
-        if DEBUG_VIEW { print("[NATIVE] nativePresentationMode prop set.") }
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativePresentationMode prop set.") }
     }
     
     // MARK: - Listener based TEXTTRACK event bridging
@@ -297,13 +297,13 @@ public class THEOplayerRCTView: UIView {
     @objc(setOnNativeTextTrackListEvent:)
     func setOnNativeTextTrackListEvent(nativeTextTrackListEvent: @escaping RCTDirectEventBlock) {
         self.textTrackEventHandler.onNativeTextTrackListEvent = nativeTextTrackListEvent
-        if DEBUG_VIEW { print("[NATIVE] nativeTextTrackListEvent prop set.") }
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeTextTrackListEvent prop set.") }
     }
     
     @objc(setOnNativeTextTrackEvent:)
     func setOnNativeTextTrackEvent(nativeTextTrackEvent: @escaping RCTDirectEventBlock) {
         self.textTrackEventHandler.onNativeTextTrackEvent = nativeTextTrackEvent
-        if DEBUG_VIEW { print("[NATIVE] nativeTextTrackEvent prop set.") }
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeTextTrackEvent prop set.") }
     }
     
     // MARK: - Listener based MEDIATRACK event bridging
@@ -311,13 +311,13 @@ public class THEOplayerRCTView: UIView {
     @objc(setOnNativeMediaTrackListEvent:)
     func setOnNativeMediaTrackListEvent(nativeMediaTrackListEvent: @escaping RCTDirectEventBlock) {
         self.mediaTrackEventHandler.onNativeMediaTrackListEvent = nativeMediaTrackListEvent
-        if DEBUG_VIEW { print("[NATIVE] nativeMediaTrackListEvent prop set.") }
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeMediaTrackListEvent prop set.") }
     }
     
     @objc(setOnNativeMediaTrackEvent:)
     func setOnNativeMediaTrackEvent(nativeMediaTrackEvent: @escaping RCTDirectEventBlock) {
         self.mediaTrackEventHandler.onNativeMediaTrackEvent = nativeMediaTrackEvent
-        if DEBUG_VIEW { print("[NATIVE] nativeMediaTrackEvent prop set.") }
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeMediaTrackEvent prop set.") }
     }
     
     // MARK: - Listener based CAST event bridging
@@ -325,7 +325,7 @@ public class THEOplayerRCTView: UIView {
     @objc(setOnNativeCastEvent:)
     func setOnNativeCastEvent(nativeCastEvent: @escaping RCTDirectEventBlock) {
         self.castEventHandler.onNativeCastEvent = nativeCastEvent
-        if DEBUG_VIEW { print("[NATIVE] nativeCastEvent prop set.") }
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeCastEvent prop set.") }
     }
     
     // MARK: - Listener based AD event bridging
@@ -333,6 +333,6 @@ public class THEOplayerRCTView: UIView {
     @objc(setOnNativeAdEvent:)
     func setOnNativeAdEvent(nativeAdEvent: @escaping RCTDirectEventBlock) {
         self.adEventHandler.onNativeAdEvent = nativeAdEvent
-        if DEBUG_VIEW { print("[NATIVE] nativeAdEvent prop set.") }
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeAdEvent prop set.") }
     }
 }

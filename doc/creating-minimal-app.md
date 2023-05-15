@@ -65,7 +65,7 @@ const playerConfig: PlayerConfiguration = {
 const source: SourceDescription = {
   sources: [
     {
-      src: "https://cdn.theoplayer.com/video/elephants-dream/plylist-single-audio.m3u8",
+      src: "https://cdn.theoplayer.com/video/elephants-dream/playlist-single-audio.m3u8",
       type: "application/x-mpegurl"
     },
   ],

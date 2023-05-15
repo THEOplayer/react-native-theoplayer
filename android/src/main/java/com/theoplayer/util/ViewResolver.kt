@@ -1,8 +1,11 @@
 package com.theoplayer.util
 
+import android.util.Log
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.uimanager.UIManagerModule
 import com.theoplayer.ReactTHEOplayerView
+
+private const val TAG = "ViewResolver"
 
 class ViewResolver(private val reactContext: ReactApplicationContext) {
   private var uiManager: UIManagerModule? = null
@@ -12,7 +15,12 @@ class ViewResolver(private val reactContext: ReactApplicationContext) {
       uiManager = reactContext.getNativeModule(UIManagerModule::class.java)
     }
     uiManager?.addUIBlock {
-      onResolved(it.resolveView(tag) as ReactTHEOplayerView)
+      try {
+        onResolved(it.resolveView(tag) as ReactTHEOplayerView)
+      } catch (ignore: Exception) {
+        // The ReactTHEOplayerView instance could not be resolved: log but do not forward exception.
+        Log.w(TAG, "Failed to resolve ReactTHEOplayerView tag $tag")
+      }
     }
   }
 }

@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.7.0] - 23-05-15
+
+### Changed
+
+- Approved player behaviour on iOS and Android when doing player operations such as `play` and `pause` in case no source was set.
+
+### Fixed
+
+- Fixed an issue on Android where if an invalid view tag is passed to the native bridge, it would crash the player.
+- Fixed an issue on Web where preview thumbnails would fail to load.
+
+### Added
+
+- Updated UI documentation with necessary dependencies.
+- Added improved debug logging on iOS.
+
 ## [2.6.0] - 23-05-05
 
 ### Fixed

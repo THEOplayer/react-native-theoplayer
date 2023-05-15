@@ -19,7 +19,7 @@ extension THEOplayerRCTCastAPI {
                 resolve(chromecast.casting)
             } else {
                 reject(ERROR_CODE_CHROMECAST_ACCESS_FAILURE, ERROR_MESSAGE_CHROMECAST_ACCESS_FAILURE, nil)
-                if DEBUG_CAST_API { print("[NATIVE] Could not retrieve current chromecast casting status.") }
+                if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Could not retrieve current chromecast casting status.") }
             }
         }
     }
@@ -33,7 +33,7 @@ extension THEOplayerRCTCastAPI {
                 resolve(chromecast.state?._rawValue)
             } else {
                 reject(ERROR_CODE_CHROMECAST_ACCESS_FAILURE, ERROR_MESSAGE_CHROMECAST_ACCESS_FAILURE, nil)
-                if DEBUG_CAST_API { print("[NATIVE] Could not retrieve current chromecast state.") }
+                if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Could not retrieve current chromecast state.") }
             }
         }
     }
@@ -44,10 +44,10 @@ extension THEOplayerRCTCastAPI {
             let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
             if let cast = theView.cast(),
                let chromecast = cast.chromecast {
-                if DEBUG_CAST_API { print("[NATIVE] Starting chromecast session.") }
+                if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Starting chromecast session.") }
                 chromecast.start()
             } else {
-                if DEBUG_CAST_API { print("[NATIVE] Could not start chromecast session.") }
+                if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Could not start chromecast session.") }
             }
         }
     }
@@ -58,10 +58,10 @@ extension THEOplayerRCTCastAPI {
             let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
             if let cast = theView.cast(),
                let chromecast = cast.chromecast {
-                if DEBUG_CAST_API { print("[NATIVE] Stopping chromecast session.") }
+                if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Stopping chromecast session.") }
                 chromecast.stop()
             } else {
-                if DEBUG_CAST_API { print("[NATIVE] Could not stop chromecast session.") }
+                if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Could not stop chromecast session.") }
             }
         }
     }
@@ -72,10 +72,10 @@ extension THEOplayerRCTCastAPI {
             let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
             if let cast = theView.cast(),
                let chromecast = cast.chromecast {
-                if DEBUG_CAST_API { print("[NATIVE] Joining chromecast session.") }
+                if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Joining chromecast session.") }
                 chromecast.join()
             } else {
-                if DEBUG_CAST_API { print("[NATIVE] Could not join chromecast session.") }
+                if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Could not join chromecast session.") }
             }
         }
     }
@@ -86,10 +86,10 @@ extension THEOplayerRCTCastAPI {
             let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
             if let cast = theView.cast(),
                let chromecast = cast.chromecast {
-                if DEBUG_CAST_API { print("[NATIVE] Leaving chromecast session.") }
+                if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Leaving chromecast session.") }
                 chromecast.leave()
             } else {
-                if DEBUG_CAST_API { print("[NATIVE] Could not leave chromecast session.") }
+                if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Could not leave chromecast session.") }
             }
         }
     }
