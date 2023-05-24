@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed an issue on Android where play-out of an MP4 stream would sometimes crash the player.
+
 ### Changed
 
 - Improved fullscreen support to use non-native fullscreen on Safari for iPad and Mac.
