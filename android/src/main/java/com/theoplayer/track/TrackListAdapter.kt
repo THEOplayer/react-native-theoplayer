@@ -124,9 +124,11 @@ object TrackListAdapter {
     audioTrackPayload.putString(PROP_LANGUAGE, audioTrack.language)
     val qualityList = audioTrack.qualities
     val qualities = Arguments.createArray()
-    qualityList?.forEach { quality ->
-      qualities.pushMap(fromAudioQuality(quality))
-    }
+    try {
+      qualityList?.forEach { quality ->
+        qualities.pushMap(fromAudioQuality(quality))
+      }
+    } catch (ignore: NullPointerException) {}
     audioTrackPayload.putArray(PROP_QUALITIES, qualities)
     val activeQuality = audioTrack.activeQuality
     if (activeQuality != null) {
@@ -163,18 +165,20 @@ object TrackListAdapter {
     videoTrackPayload.putString(PROP_KIND, videoTrack.kind)
     videoTrackPayload.putString(PROP_LABEL, videoTrack.label)
     videoTrackPayload.putString(PROP_LANGUAGE, videoTrack.language)
-    val qualityList = videoTrack.qualities
     val qualities = Arguments.createArray()
-    if (qualityList != null) {
-      // Sort qualities according to (height, bandwidth)
-      val sortedQualityList = QualityListAdapter(qualityList)
-      sortedQualityList.sort { o: VideoQuality, t1: VideoQuality ->
-        if (o.height == t1.height) t1.bandwidth.compareTo(o.bandwidth) else t1.height.compareTo(o.height)
+    try {
+      val qualityList = videoTrack.qualities
+      if (qualityList != null) {
+        // Sort qualities according to (height, bandwidth)
+        val sortedQualityList = QualityListAdapter(qualityList)
+        sortedQualityList.sort { o: VideoQuality, t1: VideoQuality ->
+          if (o.height == t1.height) t1.bandwidth.compareTo(o.bandwidth) else t1.height.compareTo(o.height)
+        }
+        for (quality in sortedQualityList) {
+          qualities.pushMap(fromVideoQuality(quality as VideoQuality))
+        }
       }
-      for (quality in sortedQualityList) {
-        qualities.pushMap(fromVideoQuality(quality as VideoQuality))
-      }
-    }
+    } catch (ignore: java.lang.NullPointerException) {}
     videoTrackPayload.putArray(PROP_QUALITIES, qualities)
     val activeQuality = videoTrack.activeQuality
     if (activeQuality != null) {
