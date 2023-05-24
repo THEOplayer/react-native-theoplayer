@@ -3,7 +3,7 @@ import { PresentationMode } from 'react-native-theoplayer';
 import type * as THEOplayerWeb from 'theoplayer';
 import { DefaultPresentationModeChangeEvent } from '../event/PlayerEvents';
 import type { DefaultEventDispatcher } from '../event/DefaultEventDispatcher';
-import { fullscreenAPI } from './utils/FullscreenUtils';
+import { fullscreenAPI } from './FullscreenAPI';
 import { noOp } from '../../utils/CommonUtils';
 
 export class WebPresentationModeManager {
