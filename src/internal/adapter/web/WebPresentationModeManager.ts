@@ -3,8 +3,8 @@ import { PresentationMode } from 'react-native-theoplayer';
 import type * as THEOplayerWeb from 'theoplayer';
 import { DefaultPresentationModeChangeEvent } from '../event/PlayerEvents';
 import type { DefaultEventDispatcher } from '../event/DefaultEventDispatcher';
-import { fullscreenAPI } from "./Utils/FullscreenUtils";
-import { noOp } from "../util/CommonUtils";
+import { fullscreenAPI } from './utils/FullscreenUtils';
+import { noOp } from '../../utils/CommonUtils';
 
 export class WebPresentationModeManager {
   private readonly _player: THEOplayerWeb.ChromelessPlayer;
@@ -32,7 +32,7 @@ export class WebPresentationModeManager {
       // All other browsers
       if (presentationMode === PresentationMode.fullscreen) {
         const appElement = document.getElementById('app')!;
-        const promise = appElement[ fullscreenAPI.requestFullscreen_ ]();
+        const promise = appElement[fullscreenAPI.requestFullscreen_]();
         if (promise && promise.then) {
           promise.then(noOp, noOp);
         }
@@ -40,7 +40,7 @@ export class WebPresentationModeManager {
         void this._element?.requestPictureInPicture?.();
       } else {
         if (this._presentationMode === PresentationMode.fullscreen) {
-          const promise = document[ fullscreenAPI.exitFullscreen_ ]();
+          const promise = document[fullscreenAPI.exitFullscreen_]();
           if (promise && promise.then) {
             promise.then(noOp, noOp);
           }
@@ -99,5 +99,5 @@ export class WebPresentationModeManager {
       this._presentationMode = newPresentationMode;
       this._eventForwarder.dispatchEvent(new DefaultPresentationModeChangeEvent(this._presentationMode, previousPresentationMode));
     }
-  }
+  };
 }
