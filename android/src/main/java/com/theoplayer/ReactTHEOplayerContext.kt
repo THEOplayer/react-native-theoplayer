@@ -26,7 +26,7 @@ import com.theoplayer.android.api.event.player.*
 import com.theoplayer.android.api.player.Player
 import com.theoplayer.android.connector.mediasession.MediaSessionConnector
 import com.theoplayer.audio.BackgroundAudioConfig
-import com.theoplayer.audio.MediaPlaybackService
+import com.theoplayer.media.MediaPlaybackService
 import java.util.concurrent.atomic.AtomicBoolean
 
 private const val TAG = "ReactTHEOplayerContext"

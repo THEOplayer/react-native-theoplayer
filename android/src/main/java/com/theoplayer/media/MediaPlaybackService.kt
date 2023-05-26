@@ -1,4 +1,4 @@
-package com.theoplayer.audio
+package com.theoplayer.media
 
 import android.app.NotificationManager
 import android.app.PendingIntent
