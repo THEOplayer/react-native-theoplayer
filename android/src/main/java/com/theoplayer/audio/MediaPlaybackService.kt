@@ -165,7 +165,6 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
   }
 
   private fun stopForegroundService() {
-    player?.pause()
     updateNotification(PlaybackStateCompat.STATE_STOPPED)
     stopSelf()
   }
