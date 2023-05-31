@@ -24,6 +24,7 @@ import com.theoplayer.android.api.source.metadata.ChromecastMetadataImage
 import com.facebook.react.bridge.ReadableArray
 import com.theoplayer.BuildConfig
 import com.theoplayer.android.api.error.ErrorCode
+import com.theoplayer.android.api.source.dash.DashPlaybackConfiguration
 import com.theoplayer.drm.ContentProtectionAdapter
 import org.json.JSONArray
 import org.json.JSONException
@@ -51,6 +52,8 @@ private const val PROP_TEXT_TRACKS = "textTracks"
 private const val PROP_POSTER = "poster"
 private const val PROP_ADS = "ads"
 private const val PROP_AVAILABILITY_TYPE = "availabilityType"
+private const val PROP_DASH = "dash"
+private const val PROP_DASH_IGNORE_AVAILABILITYWINDOW = "ignoreAvailabilityWindow"
 private const val ERROR_DAI_NOT_ENABLED = "Google DAI support not enabled."
 private const val ERROR_UNSUPPORTED_SSAI_INTEGRATION = "Unsupported SSAI integration"
 private const val ERROR_MISSING_SSAI_INTEGRATION = "Missing SSAI integration"
@@ -181,6 +184,9 @@ class SourceAdapter {
       }
       if (sourceType != null) {
         tsBuilder.type(sourceType)
+      }
+      if (jsonTypedSource.has(PROP_DASH)) {
+        tsBuilder.dash(parseDashConfig(jsonTypedSource.getJSONObject(PROP_DASH)))
       }
       if (jsonTypedSource.has(PROP_LIVE_OFFSET)) {
         tsBuilder.liveOffset(jsonTypedSource.getDouble(PROP_LIVE_OFFSET))
@@ -352,6 +358,12 @@ class SourceAdapter {
       }
     }
     return MetadataDescription(metadata)
+  }
+
+  private fun parseDashConfig(dashConfig: JSONObject): DashPlaybackConfiguration {
+    return DashPlaybackConfiguration.Builder()
+      .ignoreAvailabilityWindow(dashConfig.optBoolean(PROP_DASH_IGNORE_AVAILABILITYWINDOW))
+      .build()
   }
 
   @Throws(JSONException::class)

@@ -42,4 +42,16 @@ export interface DashPlaybackConfiguration {
    * @defaultValue `'auto'`
    */
   useSeamlessPeriodSwitch?: SeamlessPeriodSwitchStrategy;
+
+  /**
+   * (Experimental) Force the player to ignore the availability window of individual segments in the MPD,
+   * and instead consider every listed segment to be immediately available.
+   *
+   * @remarks
+   * <br/> - Available since v5.2.0.
+   * <br/> - Available on Web and Android.
+   * <br/> - This only applies to livestreams (with `<MPD type="dynamic">`).
+   * <br/> - This only applies to streams that use `<SegmentTimeline>`.
+   */
+  ignoreAvailabilityWindow?: boolean;
 }
