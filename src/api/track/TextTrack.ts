@@ -121,13 +121,13 @@ export function hasTextTrackCue(textTrack: TextTrack, cue: TextTrackCue): boolea
   return !!(textTrack.cues && cue && textTrack.cues.find((c) => cue.uid === c.uid));
 }
 
-export function removeTextTrackCue(textTrack: TextTrack, cue: TextTrackCue) {
+export function removeTextTrackCue(textTrack?: TextTrack, cue?: TextTrackCue) {
   if (textTrack && textTrack.cues && cue && !hasTextTrackCue(textTrack, cue)) {
     textTrack.cues = textTrack.cues.filter((c) => c.uid !== cue.uid);
   }
 }
 
-export function addTextTrackCue(textTrack: TextTrack, cue: TextTrackCue) {
+export function addTextTrackCue(textTrack?: TextTrack, cue?: TextTrackCue) {
   if (textTrack && textTrack.cues && cue && !hasTextTrackCue(textTrack, cue)) {
     textTrack.cues.push(cue);
   }
