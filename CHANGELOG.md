@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Added `ignoreAvailabilityWindow` property to `SourceDescription.dash` for Android and Web.
+- Added `needsTimescaleShifting`, `desiredTimescale` and `forceSeekToSynchronize` properties to `SourceDescription.dash` for Web.
+
 ### Fixed
 
 - Fixed an issue where text track cue changes were not applied to the TextTrack's `cue` property.

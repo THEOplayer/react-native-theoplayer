@@ -25,6 +25,8 @@ export interface DashPlaybackConfiguration {
    * Whether to seamlessly switch between DASH periods.
    *
    * @remarks
+   * <br/> - Available on Web only.
+   *
    * The player supports two strategies for handling a switch between two periods in an MPEG-DASH stream:
    * <br/> - <strong>Seamless</strong>: Once the player is done buffering the current period, it immediately starts buffering the next period.
    *         This requires that the current period and the next period have compatible codecs and content protection, or that the platform
@@ -42,4 +44,58 @@ export interface DashPlaybackConfiguration {
    * @defaultValue `'auto'`
    */
   useSeamlessPeriodSwitch?: SeamlessPeriodSwitchStrategy;
+
+  /**
+   * (Experimental) Whether the timescales of the media data need to be shifted,
+   * in order to work around platform-specific issues on certain smart TV platforms.
+   *
+   * @remarks
+   * <br/> - Available since v4.1.0.
+   * <br/> - Available on Web only.
+   * <br/> - On certain smart TV platforms (such as Tizen 2), playback issues may arise when
+   *         the timescale of the media data changes across periods or discontinuities.
+   *         In that case, the player may need to shift all the timescales first,
+   *         however this strategy may not work for all streams.
+   * <br/> - When not specified, the player will decide whether or not to shift timescales
+   *         based on the platform.
+   * <br/> - This is an experimental option. It should only be used after consulting with
+   *         THEOplayer support or engineering.
+   */
+  needsTimescaleShifting?: boolean | null;
+
+  /**
+   * (Experimental) The desired timescale to which the media data should be shifted.
+   *
+   * @remarks
+   * <br/> - Available since v4.11.0.
+   * <br/> - Available on Web only.
+   * <br/> - When specified, if the player decides to shift the timescale (see {@link DashPlaybackConfiguration.needsTimescaleShifting}), the timescale will be set to the
+   *         given desired timescale.
+   * <br/> - When not specified, if the player decides to shift timescale, the player will decide the timescale to which it should shift.
+   * <br/> - This is an experimental option. It should only be used after consulting with
+   *         THEOplayer support or engineering.
+   */
+  desiredTimescale?: number;
+
+  /**
+   * Whether the player should try to force the seek on period switching to realign video and audio.
+   *
+   * @internal
+   *
+   * @remarks
+   * <br/> - Available on Web only.
+   */
+  forceSeekToSynchronize?: boolean;
+
+  /**
+   * (Experimental) Force the player to ignore the availability window of individual segments in the MPD,
+   * and instead consider every listed segment to be immediately available.
+   *
+   * @remarks
+   * <br/> - Available since v5.2.0.
+   * <br/> - Available on Web and Android.
+   * <br/> - This only applies to livestreams (with `<MPD type="dynamic">`).
+   * <br/> - This only applies to streams that use `<SegmentTimeline>`.
+   */
+  ignoreAvailabilityWindow?: boolean;
 }
