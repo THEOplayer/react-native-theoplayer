@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed an issue where text track cue changes were not applied to the TextTrack's `cue` property.
 - Fixed an issue on Android where play-out of an MP4 stream would sometimes crash the player.
+- Fixed an issue on Android where a `pause` event would not be dispatched while pausing during play-out of an ad.
 
 ### Changed
 
