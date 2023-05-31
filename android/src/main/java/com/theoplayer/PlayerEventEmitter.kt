@@ -346,7 +346,7 @@ class PlayerEventEmitter internal constructor(
   private fun onPause() {
     val player = playerView.player
     // Do not forward the pause event in case the content player is paused because the ad player starts.
-    if (player != null && !playerView.adsApi.isPlaying) {
+    if (player != null && (!playerView.adsApi.isPlaying || player.isPaused)) {
       receiveEvent(EVENT_PAUSE, null)
     }
   }
