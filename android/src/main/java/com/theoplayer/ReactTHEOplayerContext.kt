@@ -60,8 +60,6 @@ class ReactTHEOplayerContext private constructor(
     get() = backgroundAudioConfig.enabled
 
   companion object {
-    private var mediaControlledInstance: ReactTHEOplayerContext? = null
-
     fun create(
       reactContext: ThemedReactContext,
       playerConfig: THEOplayerConfig
@@ -191,11 +189,8 @@ class ReactTHEOplayerContext private constructor(
     addIntegrations(playerConfig)
     addListeners()
 
-    if (mediaControlledInstance == null) {
-      mediaControlledInstance = this
-      if (!BuildConfig.USE_PLAYBACK_SERVICE || !isBackgroundAudioEnabled) {
-        initDefaultMediaSession()
-      }
+    if (!BuildConfig.USE_PLAYBACK_SERVICE || !isBackgroundAudioEnabled) {
+      initDefaultMediaSession()
     }
 
     // Apply initial backgroundPlayback config
@@ -326,17 +321,14 @@ class ReactTHEOplayerContext private constructor(
   }
 
   fun destroy() {
-    if (mediaControlledInstance == this) {
-      if (BuildConfig.USE_PLAYBACK_SERVICE) {
-        removeListeners()
+    if (BuildConfig.USE_PLAYBACK_SERVICE) {
+      removeListeners()
 
-        // Remove service from foreground
-        binder?.stopForegroundService()
+      // Remove service from foreground
+      binder?.stopForegroundService()
 
-        // Unbind client from background service so it can stop
-        unbindMediaPlaybackService()
-      }
-      mediaControlledInstance = null
+      // Unbind client from background service so it can stop
+      unbindMediaPlaybackService()
     }
     mediaSessionConnector?.destroy()
     playerView.onDestroy()
