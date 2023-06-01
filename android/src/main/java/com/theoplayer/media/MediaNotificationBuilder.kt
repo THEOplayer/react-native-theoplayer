@@ -1,4 +1,4 @@
-package com.theoplayer.audio
+package com.theoplayer.media
 
 import android.app.Notification
 import android.app.NotificationChannel

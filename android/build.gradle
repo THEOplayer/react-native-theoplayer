@@ -109,7 +109,7 @@ dependencies {
   def theoplayer_sdk_version = safeExtGet('THEOplayer_sdk', '[5.0.1,)')
 
 //  def theoplayer_mediasession_version = safeExtGet('THEOplayer_mediasession', theoplayer_sdk_version)
-  def theoplayer_mediasession_version = "4.12.0-local"
+  def theoplayer_mediasession_version = "5.2.0-local"
   def enabledV4 = theoplayer_sdk_version.toString().startsWith("4.")
   def core_prefix = enabledV4 ? 'unified' : 'core'
   def integration_prefix = enabledV4 ? 'unified' : 'integration'

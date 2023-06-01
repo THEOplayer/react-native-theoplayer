@@ -29,7 +29,7 @@
 
     <!-- Allow background audio playback by registering this service. -->
     <service
-      android:name="com.theoplayer.audio.MediaPlaybackService"
+      android:name="com.theoplayer.media.MediaPlaybackService"
       android:description="@string/background_playback_service_description"
       android:exported="false"
       android:enabled="false"
@@ -40,7 +40,7 @@
       </intent-filter>
     </service>
 
-    <receiver android:name="androidx.media.session.MediaButtonReceiver"
+    <receiver android:name="com.theoplayer.media.CustomMediaButtonReceiver"
       android:exported="false">
       <intent-filter>
         <action android:name="android.intent.action.MEDIA_BUTTON" />
