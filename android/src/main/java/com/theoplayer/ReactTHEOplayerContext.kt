@@ -25,12 +25,20 @@ import com.theoplayer.android.api.event.EventListener
 import com.theoplayer.android.api.event.player.*
 import com.theoplayer.android.api.player.Player
 import com.theoplayer.android.connector.mediasession.MediaSessionConnector
-import com.theoplayer.android.connector.mediasession.PlaybackStateProvider
 import com.theoplayer.audio.BackgroundAudioConfig
 import com.theoplayer.media.MediaPlaybackService
 import java.util.concurrent.atomic.AtomicBoolean
 
 private const val TAG = "ReactTHEOplayerContext"
+
+private const val ALLOWED_PLAYBACK_ACTIONS = (
+  PlaybackStateCompat.ACTION_PLAY_PAUSE or
+    PlaybackStateCompat.ACTION_PLAY or
+    PlaybackStateCompat.ACTION_PAUSE or
+    PlaybackStateCompat.ACTION_SEEK_TO or
+    PlaybackStateCompat.ACTION_FAST_FORWARD or
+    PlaybackStateCompat.ACTION_REWIND or
+    PlaybackStateCompat.ACTION_SET_PLAYBACK_SPEED)
 
 class ReactTHEOplayerContext private constructor(
   private val reactContext: ThemedReactContext
@@ -131,7 +139,7 @@ class ReactTHEOplayerContext private constructor(
     mediaSessionConnector?.enabledPlaybackActions = if (isInAd || isLive) {
       0
     } else {
-      PlaybackStateProvider.DEFAULT_PLAYBACK_ACTIONS
+      ALLOWED_PLAYBACK_ACTIONS
     }
   }
 
