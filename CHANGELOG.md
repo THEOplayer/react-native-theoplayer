@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.8.0] - 23-06-01
+
+### Added
+
+- Added `ignoreAvailabilityWindow` property to `SourceDescription.dash` for Android and Web.
+- Added `needsTimescaleShifting`, `desiredTimescale` and `forceSeekToSynchronize` properties to `SourceDescription.dash` for Web.
+
+### Fixed
+
+- Fixed an issue where text track cue changes were not applied to the TextTrack's `cue` property.
+- Fixed an issue on Android where play-out of an MP4 stream would sometimes crash the player.
+- Fixed an issue on Android where a `pause` event would not be dispatched while pausing during play-out of an ad.
+- Fixed an issue on Android where hardware buttons, such as `play` and `pause`, were not handled anymore after toggling background audio support.
+- Fixed an issue on Android where the app would crash when toggling background playback while multiple `MediaBrowserServiceCompat` instances are registered.
+
+### Changed
+
+- Improved fullscreen support to use non-native fullscreen on Safari for iPad and Mac.
+- Limited the set of available media session actions on Android when an ad or live stream is playing.
+- Removed pausing the stream when disabling background playback on Android.
+
 ## [2.7.0] - 23-05-15
 
 ### Changed

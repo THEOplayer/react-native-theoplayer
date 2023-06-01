@@ -2,8 +2,9 @@ import type { PlayerEventMap } from 'react-native-theoplayer';
 import { PresentationMode } from 'react-native-theoplayer';
 import type * as THEOplayerWeb from 'theoplayer';
 import { DefaultPresentationModeChangeEvent } from '../event/PlayerEvents';
-import { browserDetection } from '../../../web/platform/BrowserDetection';
 import type { DefaultEventDispatcher } from '../event/DefaultEventDispatcher';
+import { fullscreenAPI } from './FullscreenAPI';
+import { noOp } from '../../utils/CommonUtils';
 
 export class WebPresentationModeManager {
   private readonly _player: THEOplayerWeb.ChromelessPlayer;
@@ -27,30 +28,35 @@ export class WebPresentationModeManager {
 
     this.prepareForPresentationModeChanges();
 
-    // on iOS Safari requestFullscreen isn't supported (https://caniuse.com/?search=requestFullscreen), where we need to use webkit methods on the video element
-    if (/*browserDetection.IS_IOS_ && */ browserDetection.IS_SAFARI_) {
+    if (fullscreenAPI !== undefined) {
+      // All other browsers
+      if (presentationMode === PresentationMode.fullscreen) {
+        const appElement = document.getElementById('app')!;
+        const promise = appElement[fullscreenAPI.requestFullscreen_]();
+        if (promise && promise.then) {
+          promise.then(noOp, noOp);
+        }
+      } else if (presentationMode === PresentationMode.pip) {
+        void this._element?.requestPictureInPicture?.();
+      } else {
+        if (this._presentationMode === PresentationMode.fullscreen) {
+          const promise = document[fullscreenAPI.exitFullscreen_]();
+          if (promise && promise.then) {
+            promise.then(noOp, noOp);
+          }
+        }
+        if (this._presentationMode === PresentationMode.pip) {
+          void document.exitPictureInPicture();
+        }
+      }
+    } else {
+      // iOS Safari doesn't properly support fullscreen, use native fullscreen instead
       if (presentationMode === PresentationMode.fullscreen) {
         this._element?.webkitEnterFullscreen?.();
       } else if (presentationMode === PresentationMode.pip) {
         this._element?.webkitSetPresentationMode?.(PresentationMode.pip);
       } else {
         this._element?.webkitSetPresentationMode?.(PresentationMode.inline);
-      }
-    } else {
-      // other web-platformsyarn
-
-      if (presentationMode === PresentationMode.fullscreen) {
-        const appElement = document.getElementById('app');
-        void appElement?.requestFullscreen();
-      } else if (presentationMode === PresentationMode.pip) {
-        void this._element?.requestPictureInPicture?.();
-      } else {
-        if (this._presentationMode === PresentationMode.fullscreen) {
-          void document.exitFullscreen();
-        }
-        if (this._presentationMode === PresentationMode.pip) {
-          void document.exitPictureInPicture();
-        }
       }
     }
   }
@@ -72,15 +78,16 @@ export class WebPresentationModeManager {
       };
     }
     // listen for fullscreen updates on document
-    document.onfullscreenchange = () => {
-      this.updatePresentationMode();
-    };
+    if (fullscreenAPI !== undefined) {
+      document.addEventListener(fullscreenAPI.fullscreenchange_, this.updatePresentationMode);
+      document.addEventListener(fullscreenAPI.fullscreenerror_, this.updatePresentationMode);
+    }
   }
 
-  private updatePresentationMode() {
+  private updatePresentationMode = () => {
     // detect new presentation mode
     let newPresentationMode: PresentationMode = PresentationMode.inline;
-    if (document.fullscreenElement !== null) {
+    if (fullscreenAPI !== undefined && document[fullscreenAPI.fullscreenElement_] !== null) {
       newPresentationMode = PresentationMode.fullscreen;
     } else if (document.pictureInPictureElement !== null) {
       newPresentationMode = PresentationMode.pip;
@@ -92,5 +99,5 @@ export class WebPresentationModeManager {
       this._presentationMode = newPresentationMode;
       this._eventForwarder.dispatchEvent(new DefaultPresentationModeChangeEvent(this._presentationMode, previousPresentationMode));
     }
-  }
+  };
 }
