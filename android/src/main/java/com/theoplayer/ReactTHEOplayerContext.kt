@@ -76,9 +76,6 @@ class ReactTHEOplayerContext private constructor(
     override fun onServiceConnected(className: ComponentName, service: IBinder) {
       binder = service as MediaPlaybackService.MediaPlaybackBinder
 
-      // Clean-up any existing media session connector
-      mediaSessionConnector?.destroy()
-
       // Get media session connector from service
       mediaSessionConnector = binder?.mediaSessionConnector
       mediaSessionConnector?.player = player
@@ -146,6 +143,9 @@ class ReactTHEOplayerContext private constructor(
     // Multiple components can bind to the service at once, but when all of them unbind, the
     // service is destroyed.
     if (!isBound.get()) {
+      // Clean-up any existing media session connector
+      mediaSessionConnector?.destroy()
+
       isBound.set(
         reactContext.bindService(
           Intent(reactContext, MediaPlaybackService::class.java),
