@@ -98,6 +98,9 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
   }
 
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    // This ensures that the correct callbacks to MediaSessionCompat.Callback will be triggered
+    // based on the incoming KeyEvent.
+    // https://developer.android.com/reference/androidx/media/session/MediaButtonReceiver
     MediaButtonReceiver.handleIntent(mediaSession, intent)
     return super.onStartCommand(intent, flags, startId)
   }
@@ -155,13 +158,16 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
       setMediaButtonReceiver(mediaButtonPendingIntent)
     }
 
-    // Create a MediaSessionConnector and attach the THEOplayer instance.
+    // Create a MediaSessionConnector.
     mediaSessionConnector = MediaSessionConnector(mediaSession).apply {
       debug = BuildConfig.LOG_MEDIASESSION_EVENTS
 
       // Set mediaSession active
       setActive(true)
     }
+
+    // Set the MediaBrowserServiceCompat's media session.
+    sessionToken = mediaSession.sessionToken
   }
 
   private fun stopForegroundService() {
