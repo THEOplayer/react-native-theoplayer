@@ -2,7 +2,7 @@
 
 The example application on our `react-native-theoplayer`
 [git repository](https://github.com/THEOplayer/react-native-theoplayer/tree/master/example) demonstrates how the use the
-player with the `THEOplayerView` component and some UI components from `@theoplayer/react-native-ui`.
+player with the `THEOplayerView` component and the UI components from `@theoplayer/react-native-ui`.
 
 The example app depends on [`react-native-tvos`](https://github.com/react-native-tvos/react-native-tvos),
 a fork of the main `react-native` repository, to properly include support for Apple TV.
