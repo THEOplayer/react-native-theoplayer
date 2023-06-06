@@ -1,9 +1,8 @@
 package com.theoplayer.media
 
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.app.Service
+import android.app.*
 import android.content.Intent
+import android.content.pm.ServiceInfo
 import android.os.Binder
 import android.os.Build
 import android.os.Bundle
@@ -12,6 +11,7 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.text.TextUtils
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.media.MediaBrowserServiceCompat
 import androidx.media.session.MediaButtonReceiver
@@ -85,10 +85,16 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
 
     // This ensures that the service starts and continues to run, even when all
     // UI MediaBrowser activities that are bound to it unbind.
-    ContextCompat.startForegroundService(
-      applicationContext,
-      Intent(applicationContext, MediaPlaybackService::class.java)
-    )
+    try {
+      ContextCompat.startForegroundService(
+        applicationContext,
+        Intent(applicationContext, MediaPlaybackService::class.java)
+      )
+    } catch (e: IllegalStateException) {
+      // Make sure that app does not crash in case anything goes wrong with starting the service.
+      // https://issuetracker.google.com/issues/229000935
+      Log.w(TAG, "Failed to start foreground service: ${e.message}")
+    }
 
     updateNotification(PlaybackStateCompat.STATE_PLAYING)
   }
@@ -260,13 +266,24 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
         // information from the session's metadata.
         // Fetch large icon asynchronously
         fetchImageFromUri(mediaSession.controller.metadata?.description?.iconUri) { largeIcon ->
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            startForeground(NOTIFICATION_ID,
-              notificationBuilder.build(playbackState, largeIcon, enableMediaControls),
-              ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
-          } else {
-            startForeground(NOTIFICATION_ID, notificationBuilder.build(playbackState, largeIcon, enableMediaControls))
-          }
+         try {
+           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+             startForeground(
+               NOTIFICATION_ID,
+               notificationBuilder.build(playbackState, largeIcon, enableMediaControls),
+               ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
+             )
+           } else {
+             startForeground(
+               NOTIFICATION_ID,
+               notificationBuilder.build(playbackState, largeIcon, enableMediaControls)
+             )
+           }
+         } catch (e: IllegalStateException) {
+           // Make sure that app does not crash in case anything goes wrong with starting the service.
+           // https://issuetracker.google.com/issues/229000935
+           Log.w(TAG, "Failed to start foreground service: ${e.message}")
+         }
         }
       }
       PlaybackStateCompat.STATE_STOPPED -> {
