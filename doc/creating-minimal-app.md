@@ -3,7 +3,7 @@
 In this section we start from an empty React Native template, include a dependency to `react-native-theoplayer`,
 and deploy it on an Android or iOS device.
 
-There is no React Native UI included in this app, as this is covered in the accompanying [example application](example-app.md).
+A user interface is added using the `@theoplayer/react-native-ui` package.
 
 ### Table of Contents
 - [Setting up a new project](#setting-up-a-new-project)
@@ -211,7 +211,7 @@ necessary to play-out MPEG-TS based HLS streams. By default it is set to the loc
 
 ### Building and running the app
 
-Finally build and deploy the app. Make sure an emulator is available, or there is a physical
+Finally, build and deploy the app. Make sure an emulator is available, or there is a physical
 device connected to deploy to.
 
 ```bash
@@ -221,6 +221,13 @@ $ npm run web
 ```
 
 ### Final notes
+### Adding a user interface
+
+The `react-native-theoplayer` package does not contain a user interface by default. There is however a separate package
+that builds a UI on top of the `THEOplayerView` component, `@theoplayer/react-native-ui`.
+
+We refer to the [documentation](https://github.com/THEOplayer/react-native-theoplayer-ui) of
+`@theoplayer/react-native-ui` on how to install and use it.
 
 On some platforms issues with [React Native Flipper](https://fbflipper.com/), a platform for debugging apps, can occur,
 either during building or running the app. If so, it is advised to just remove it for this demo app.
