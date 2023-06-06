@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added an overview of the available React Native connectors.
 
+### Fixed
+
+- Fixed an issue on Android where the background media service would crash the app in case it was started from the background.
+
 ## [2.8.0] - 23-06-01
 
 ### Added
