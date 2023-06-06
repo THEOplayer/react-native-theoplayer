@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Moved React Native UI to separate `@theoplayer/react-native-ui` package.
+
 ### Added
 
 - Added an overview of the available React Native connectors.
