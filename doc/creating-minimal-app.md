@@ -11,7 +11,7 @@ A user interface is added using the `@theoplayer/react-native-ui` package.
 - [Getting started on iOS](#getting-started-on-ios-and-tvos)
 - [Getting started on Web](#getting-started-on-web)
 - [Building and running the app](#building-and-running-the-app)
-- [Final notes](#final-notes)
+- [Adding a user interface](#adding-a-user-interface)
 
 ### Setting up a new project
 
@@ -220,7 +220,6 @@ $ npm run ios
 $ npm run web
 ```
 
-### Final notes
 ### Adding a user interface
 
 The `react-native-theoplayer` package does not contain a user interface by default. There is however a separate package
@@ -229,5 +228,3 @@ that builds a UI on top of the `THEOplayerView` component, `@theoplayer/react-na
 We refer to the [documentation](https://github.com/THEOplayer/react-native-theoplayer-ui) of
 `@theoplayer/react-native-ui` on how to install and use it.
 
-On some platforms issues with [React Native Flipper](https://fbflipper.com/), a platform for debugging apps, can occur,
-either during building or running the app. If so, it is advised to just remove it for this demo app.
