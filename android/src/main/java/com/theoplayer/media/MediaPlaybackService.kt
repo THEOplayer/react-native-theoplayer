@@ -260,7 +260,13 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
         // information from the session's metadata.
         // Fetch large icon asynchronously
         fetchImageFromUri(mediaSession.controller.metadata?.description?.iconUri) { largeIcon ->
-          startForeground(NOTIFICATION_ID, notificationBuilder.build(playbackState, largeIcon, enableMediaControls))
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(NOTIFICATION_ID,
+              notificationBuilder.build(playbackState, largeIcon, enableMediaControls),
+              ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
+          } else {
+            startForeground(NOTIFICATION_ID, notificationBuilder.build(playbackState, largeIcon, enableMediaControls))
+          }
         }
       }
       PlaybackStateCompat.STATE_STOPPED -> {
