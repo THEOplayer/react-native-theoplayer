@@ -14,16 +14,14 @@
     "lint": "eslint \"**/*.{ts,tsx}\""
   },
   "dependencies": {
-    "buffer": "^6.0.3",
+    "@react-native-community/slider": "^4.4.2",
+    "@theoplayer/react-native-ui": "^0.1.1",
     "react": "18.0.0",
     "react-dom": "18.0.0",
     "react-native": "npm:react-native-tvos@0.69.8-1",
+    "react-native-svg": "^13.9.0",
     "react-native-web": "^0.19.2",
-    "react-native-web-image-loader": "^0.1.1",
-    "react-native-svg": "^13.8.0",
-    "@react-native-community/slider": "^4.4.2",
-    "ts-loader": "^8.2.0",
-    "url-polyfill": "^1.1.12"
+    "react-native-web-image-loader": "^0.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.16.7",
@@ -34,6 +32,7 @@
     "@types/jest": "^26.0.24",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
+    "@types/react-native": "^0.63.70",
     "@types/react-test-renderer": "18.0.0",
     "babel-jest": "^26.6.3",
     "babel-loader": "^8.2.3",
@@ -51,7 +50,9 @@
     "webpack-dev-server": "^4.7.3"
   },
   "overrides": {
-    "@types/react-native": "^0.71.5"
+    "react-native-google-cast": {
+      "react-native": "npm:react-native-tvos@0.69.8-1"
+    }
   },
   "jest": {
     "preset": "react-native",

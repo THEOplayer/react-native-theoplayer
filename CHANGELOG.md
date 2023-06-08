@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Moved React Native UI to separate `@theoplayer/react-native-ui` package.
+
+### Removed
+
+- Removed `react-native-theoplayer` dependencies on packages `@react-native-community/slider`, `react-native-google-cast`, `react-native-svg`, `react-native-svg-web`, `react-native-url-polyfill` and `url-polyfill`.
+
 ### Added
 
 - Added an overview of the available React Native connectors.
