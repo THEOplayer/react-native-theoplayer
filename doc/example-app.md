@@ -11,9 +11,9 @@ In this section we cover building and running the example app. If you would like
 `DefaultTHEOplayerUi` and all the other UI components,
 visit [our React Native UI project](https://github.com/THEOplayer/react-native-theoplayer-ui).
 
-| ![basic-ui](./example-app-player-ui.png) | ![basic-ui-source](./example-app-source-selection.png) |
-|------------------------------------------|--------------------------------------------------------|
-| The `DefaultTHEOplayerUi` in action.     | Choosing a demo source from a custom UI component.     |
+| ![basic-ui](./example-app-player-ui.png) | ![basic-ui-source](./example-app-source-selection.png) | ![basic-ui-source](./example-app-thumbnails.png) |
+|-------------------------------------------------------------------------------|--------------------------------------------------------|--------------------------------------------------|
+| The `DefaultTHEOplayerUi` in action.                                          | Choosing a demo source from a custom UI component.     | Preview thumbnails.                              |
 
 ### Building the example application
 
