@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed an issue on Android where the background media service would crash the app in case it was started from the background.
+- Fixed an issue on iOS where the delayed contentId extraction resulted in an incorrect value being passed to the license request setup.
 
 ## [2.8.0] - 23-06-01
 
