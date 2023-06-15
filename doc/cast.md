@@ -7,22 +7,18 @@ THEOplayer's [Knowledge Base](https://docs.theoplayer.com/how-to-guides/03-cast/
 The `react-native-theoplayer` package has support for both.
 
 This page first outlines the setup
-needed for Chromecast and Airplay, and then describes the player's cast API and events
-subscription, which is common for both.
+needed for Chromecast and Airplay, and then describes the player's cast API and events subscription, which is common for both.
 
 ### Chromecast
 
 #### Setup
 
-To enable Chromecast we recommend using the
-[`react-native-google-cast`](https://github.com/react-native-google-cast/react-native-google-cast)
+To enable Chromecast, react-native-theoplayer provides a cast module on the player (player.cast) that allows you to start/stop/join/leave chromecast sessions. The THEOplayer SDK will take care of the interactions with the cast receiver (communicating source updates, seeking, play/pause, ...) and route all cast events through its API.
+
+We can also recommend the [`react-native-google-cast`](https://github.com/react-native-google-cast/react-native-google-cast)
 package, which comes with native support for both iOS and Android. It is fully-featured and provides the possibility to
-manage
-devices and sessions, send a source description and listen for cast events.
-Most importantly, it includes a `<CastButton>` component that can be added to the app's UI, as demonstrated in
-the [example app](example-app.md).
-This button represents a native media route button that shows the connection state and opens a
-device dialog when tapped.
+manage devices and cast sessions, send new source descriptions and listen for cast events. It also includes a `<CastButton>` component that can be added to the app's UI, as demonstrated in
+the [example app](example-app.md). 
 
 ```tsx
 <CastButton
@@ -31,24 +27,20 @@ device dialog when tapped.
 />
 ```
 
-The THEOplayer SDK is able to send a source description to a receiver and route all cast events through its
-API. It is possible to use `react-native-google-cast`'s functionality for this as well, but this would require some
-extra steps, such as communicating a source description and listening for cast events.
-For the rest of this document we assume that THEOplayer handles this logic.
+This button represents a native media route button that shows the connection state and opens a device dialog when tapped. Using `react-native-google-cast`'s functionality does require some extra steps, such as communicating source updates, managing player status on both sender and receiver and handling the cast events. Our react-native-theoplayer integration already takes care of these tasks. The [installation instructions](https://react-native-google-cast.github.io/docs/getting-started/installation)
+for `react-native-google-cast` cover the steps to enable support for Chromecast in your app through that component.
 
-The [installation instructions](https://react-native-google-cast.github.io/docs/getting-started/installation)
-for `react-native-google-cast` also cover the steps to enable support for Chromecast in your app.
-
-Enabling the player with Chromecast support requires a different approach on each platform.
+For the rest of this document we assume that THEOplayer handles this logic. Enabling the player with Chromecast support requires a different approach on each platform.
 
 <details>
 <summary>Android</summary>
+
+##### Enable THEOplayer Extensions (default: disabled)
 
 The Android SDK is modular-based, so enabling Chromecast is limited to including
 the cast extension in gradle by setting this flag in your `gradle.properties`:
 
 ```
-# Enable THEOplayer Extensions (default: disabled)
 THEOplayer_extensionCast = true
 ```
 
@@ -57,13 +49,17 @@ THEOplayer_extensionCast = true
 <details>
 <summary>iOS</summary>
 
-##### iOS: Custom THEOplayer build
+##### 1.x versions: Custom THEOplayer build
 
-To enable Chromecast for the iOS platform, a dependency to the THEOplayer SDK
+To enable Chromecast on react-native-theoplayer 1.x versions, a dependency to the THEOplayer SDK
 that includes the Google Cast library needs to be added. See [Custom iOS framework](./custom-ios-framework.md) for more
 details.
 
-##### iOS: Network discovery
+##### 2.x versions: Add feature flag to config
+
+To enable Chromecast on react-native-theoplayer 2.x versions, you can add the "CHROMECAST" [feature flag](./creating-minimal-app.md#getting-started-on-ios-and-tvos) to react-native-theoplayer.json
+
+##### iOS Configuration
 
 Specify NSBonjourServices in your Info.plist to allow local network discovery to succeed on iOS 14. You will need to add
 both _googlecast._tcp and _[your-app-id]._googlecast._tcp as services for device discovery to work properly.
@@ -80,8 +76,6 @@ your appID.
 </array>
 ```
 
-##### iOS: Cast Discovery Permission
-
 We also recommend that you customize the message shown in the Local Network prompt by adding an app-specific permission
 string in your app's Info.plist file for the NSLocalNetworkUsageDescription such as to describe Cast discovery and other
 discovery services.
@@ -94,7 +88,7 @@ network.
 </string>
 ```
 
-##### iOS: Early CastContext setup
+##### Combining with react-native-google-cast
 
 When using react-native-google-cast to render the CastButton, their documentation suggest to setup the CastContext as
 soon as possible. We noticed that waiting to prepare this context to a later point in time (i.e. till the AppId is
@@ -102,6 +96,19 @@ bridged from RN) fails to display that CastButton. To prevent this follow
 the [instructions](https://react-native-google-cast.github.io/docs/getting-started/setup#ios) (or check our example
 application) to setup the GCKCastContext in the AppDelegate.
 
+In addition, react-native-google-cast currently does not include a full featured (guest mode combined with Apple M1 support) setup of the Google Cast SDK. Our THEOplayerCastIntegration however does, but conbining both results in a clash of dependencies (both delivering a GoogleCast.xcframework). To overcome this double dependency we suggest to use a [fork of react-native-google-cast](https://github.com/Danesz/react-native-google-cast/tree/feature/guestmode_apple_silicon) that depends on the same GoogleCast.xcframework. To achieve this:
+1. Add the following to your applications podFile:
+```ruby
+pod 'react-native-google-cast', :git => 'https://github.com/Danesz/react-native-google-cast.git', branch: 'feature/guestmode_apple_silicon'
+```
+2. Prevent the autolinking of the original by updating your react-native.config.js with:
+```json
+'react-native-google-cast': {
+	platforms: {
+		ios: null,
+	},
+},
+```
 </details>
 
 <details>

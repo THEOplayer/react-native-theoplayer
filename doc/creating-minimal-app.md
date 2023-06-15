@@ -139,7 +139,7 @@ React Native component updates and could affect performance in negative way.
 
 ### Getting started on iOS and tvOS
 
-To define which extra THEOplayer integrations need to be loaded for additionl features (currently: IMA ads and/or chromecast) a config file needs to be added to you application folder:
+To define which extra THEOplayer integrations need to be loaded for additional features (currently: IMA ads and/or chromecast) a config file needs to be added to you application folder:
 
 Create a json file at **[YourApplicationFolder]/react-native-theoplayer.json** (Should be on the same level as the node_modules folder)
 
