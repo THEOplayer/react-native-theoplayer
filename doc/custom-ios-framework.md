@@ -1,6 +1,10 @@
-# React Native THEOplayer - custom 4.x THEOplayer portal build for iOS
+# React Native THEOplayer 1.x + custom 4.x THEOplayer portal build for iOS
 
-To use a custom THEOplayerSDK xcframework for iOS, you need to change the dependency of the react-native-package on the THEOplayerSDK-basic pod into a dependency on a custom xcframework build.
+1.x versions of react-native-theoplayer work with 4.x versions of the iOS THEOplayer SDK (THEOplayerSDK-basic). If you need a specific feature like Google IMA, Goolge DAI or Chromecast, you need to use a custom THEOplayerSDK xcframework for iOS and change the dependency of the react-native-package on the THEOplayerSDK-basic pod into a dependency on that custom xcframework build.
+
+__This does not apply to 2.x versions of react-native-theoplayer__, because they rely on the 5.x series of the native iOS THEOplayer SDK (THEOplayerSDK-core). Making use of additional features is in that case done by adding specific feature flags to the react-native-theoplayer.json file, which results in loading additional integrations onto the SDK.
+
+The next sections discuss how to __add a custom 4.x xcframework to a react-native-theoplayer 1.x setup__:
 
 ## Generate/download custom THEOplayerSDK.xcframework
 Create in your application's ios folder a new folder named TheoSDK, to store the custom xcframeworks (**[YourApplicationFolder]/ios/TheoSdk**). This should be at the same level as the Podfile of your application (**[YourApplicationFolder]/ios/Podfile**)
@@ -65,7 +69,7 @@ Edit the file to reflect your custom features (all uppercase, with dashes replac
 - **GOOGLE_DAI** enables the Google DAI functionality in the 4.x SDK
 - **CHROMECAST** enables the chromecsting functionality in the 4.x SDK
 
-Make sure to add the **'WEB'** feature to indicate a custom **4.x** build is being used. Otherwise a more recent 5.x player is expected which could support a different set of features.
+Make sure to add the **'WEB'** feature to indicate a custom **4.x** build is being used. Otherwise a more recent 5.x player will be loaded.
 
 ## Finalize the project
 Run **pod install** to update the SDK dependencies in your application. This will regenerate the pod project for your application that now depends on the generated xcframeworks and supports the indicated features.
