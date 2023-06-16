@@ -43,8 +43,11 @@ const CopyWebpackPluginConfig = new CopyWebpackPlugin({
 // published. If you depend on uncompiled packages they may cause webpack build
 // errors. To fix this webpack can be configured to compile to the necessary
 // `node_module`.
+//
+// /\.tsx?$/                : process all tsx files.
+// /.*@theoplayer\/.*\.js$/ : process all js files from @theoplayer packages to apply the root import alias. This is only needed for this example.
 const babelLoaderConfiguration = {
-  test: /\.tsx?$/,
+  test: [/\.tsx?$/, /.*@theoplayer\/.*\.js$/],
   exclude: ['/**/*.d.ts', '/**/node_modules/'],
   use: {
     loader: 'babel-loader',
@@ -87,8 +90,10 @@ module.exports = {
     extensions: ['.web.js', '.web.ts', '.web.tsx', '.js', '.ts', '.tsx'],
     alias: {
       'react-native$': 'react-native-web',
+      'react-native-url-polyfill': 'url-polyfill',
       'react-native-google-cast': path.resolve(stubDirectory, 'CastButtonStub'),
       'react-native-web': path.resolve(appDirectory, 'node_modules/react-native-web'),
+      'react-native-svg': 'react-native-svg-web',
 
       // Avoid duplicate react env.
       react: path.resolve(appDirectory, 'node_modules/react'),

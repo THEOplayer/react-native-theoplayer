@@ -40,8 +40,15 @@ THEOplayer_extensionGoogleIMA = true
 <details>
 <summary>iOS/tvOS</summary>
 
-To enable Google IMA for the iOS/tvOS platforms, a dependency to the THEOplayer SDK
-that includes the IMA library needs to be added. See [Custom iOS framework](./custom-ios-framework.md) for more details.
+##### 1.x versions: Custom THEOplayer build
+
+To enable GoogleIMA on react-native-theoplayer 1.x versions, a dependency to the THEOplayer SDK
+that includes the Google IMA library needs to be added. See [Custom iOS framework](./custom-ios-framework.md) for more
+details.
+
+##### 2.x versions: Add feature flag to config
+
+To enable Google IMA on react-native-theoplayer 2.x versions, you can add the "GOOGLE_IMA" [feature flag](./creating-minimal-app.md#getting-started-on-ios-and-tvos) to react-native-theoplayer.json
 
 </details>
 

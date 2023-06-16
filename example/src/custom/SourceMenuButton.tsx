@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Platform } from 'react-native';
-import { ListSvg, MenuButton, MenuRadioButton, MenuView, PlayerContext, ScrollableMenu } from 'react-native-theoplayer';
+import { ListSvg, MenuButton, MenuRadioButton, MenuView, PlayerContext, ScrollableMenu } from '@theoplayer/react-native-ui';
 import type { Source } from './Source';
 import ALL_SOURCES from './sources.json';
 

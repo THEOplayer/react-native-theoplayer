@@ -11,6 +11,7 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE
 import androidx.core.content.ContextCompat
 import androidx.media.session.MediaButtonReceiver
 import com.facebook.common.executors.UiThreadImmediateExecutorService
@@ -80,6 +81,10 @@ class MediaNotificationBuilder(
       }
     }
     builder.apply {
+
+      // Fix for a bug where ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK that was passed
+      // with the startForeground call got ignored.
+      foregroundServiceBehavior = FOREGROUND_SERVICE_IMMEDIATE
 
       // Add the metadata for the currently playing track
       mediaSession.controller.metadata?.description?.let {

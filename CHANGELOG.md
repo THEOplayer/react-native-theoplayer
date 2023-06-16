@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.9.0] - 23-06-16
+
+### Changed
+
+- Moved React Native UI to separate `@theoplayer/react-native-ui` package.
+
+### Removed
+
+- Removed `react-native-theoplayer` dependencies on packages `@react-native-community/slider`, `react-native-google-cast`, `react-native-svg`, `react-native-svg-web`, `react-native-url-polyfill` and `url-polyfill`.
+
+### Added
+
+- Added an overview of the available React Native connectors.
+
+### Fixed
+
+- Fixed an issue on Android where the background media service would crash the app in case it was started from the background.
+- Fixed an issue on iOS where the delayed contentId extraction resulted in an incorrect value being passed to the license request setup.
+
 ## [2.8.0] - 23-06-01
 
 ### Added
@@ -230,13 +249,30 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed missing `volumechange` events on mobile platforms.
 - Fixed an issue on iOS where after toggling the mute state during an ad playout, succeeding mute toggles had no effect.
 
-## [1.8.2]
+## [1.8.4] - 23-04-27
+
+### Fixed
+
+- Fixed an issue on Android where the `pause` event was not dispatched during play-out of an ad.
+
+### Added
+
+- Added a `videoAspectRatio` property on the `THEOplayerView` for iOS and Android.
+- Added a `PlayerEventTypes.WAITING` event that is dispatched when play-back stops due to lack of media data.
+
+## [1.8.3] - 23-04-06
+
+### Fixed
+
+- Fixed an issue on Android where building the SDK would fail when depending on player SDK v5.x.
+
+## [1.8.2] - 23-04-05
 
 ### Fixed
 
 - Fixed an issue on Android where building the SDK would fail when depending on player SDK v4.12.0.
 
-## [1.8.1]
+## [1.8.1] - 23-02-09
 
 ### Changed
 
@@ -249,7 +285,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed an issue on iOS where the player was not destroyed correctly on the iOS bridge.
 - Added support for `DRMConfig` through `SourceDescription` for SSAI sources on iOS.
 
-## [1.8.0]
+## [1.8.0] - 23-01-16
 
 ### Added
 
@@ -264,20 +300,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Upgraded Web SDK to v4.6.0.
 - Updated the custom build setup to support both iOS and tvOS.
 
-## [1.7.2]
+## [1.7.2] - 22-12-05
 
 ### Fixed
 
 - Fixed an issue on tvOS where a feature flag was incorrectly used for ads-related code.
 
-## [1.7.1]
+## [1.7.1] - 22-11-28
 
 ### Fixed
 
 - Fixed an issue on Android where the player would consider unusable custom drm integrations.
 - Fixed missing kotlin classpath property on Android.
 
-## [1.7.0]
+## [1.7.0] - 22-11-23
 
 ### Added
 
@@ -295,13 +331,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed an issue in the example app where it would not be possible to select a specific text track.
 - Fixed conflicting npm dependencies in the example app.
 
-## [1.6.1]
+## [1.6.1] - 22-10-07
 
 ### Added
 
 - Improved source handling for iOS.
 
-## [1.6.0]
+## [1.6.0] - 22-09-28
 
 ### Fixed
 
@@ -313,7 +349,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Excluded folders from bob build config.
 - Upgraded gradle versions for Android.
 
-## [1.5.0]
+## [1.5.0] - 22-09-26
 
 ### Fixed
 
@@ -325,7 +361,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Support for DRM pre-integrations on Android.
 - Support for additional source properties on Android: `liveOffset`, `hlsDateRange`, `timeServer` and `hls`.
 
-## [1.4.0]
+## [1.4.0] - 22-08-11
 
 ### Fixed
 
@@ -336,7 +372,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Improved determination of the stream source type on Android.
 
-## [1.3.0]
+## [1.3.0] - 22-07-26
 
 ### Fixed
 
@@ -345,7 +381,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed documentation feature matrix.
 - Fixed duration scale in loadedmetadata event properties for Web.
 
-## [1.2.0]
+## [1.2.0] - 22-06-30
 
 ### Fixed
 
@@ -353,7 +389,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed a number of broken links in the documentation.
 - Removed unused files.
 
-## [1.1.0]
+## [1.1.0] - 22-06-06
 
 ### Added
 

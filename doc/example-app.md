@@ -2,17 +2,18 @@
 
 The example application on our `react-native-theoplayer`
 [git repository](https://github.com/THEOplayer/react-native-theoplayer/tree/master/example) demonstrates how the use the
-player with the `THEOplayerDefaultUi` component.
+player with the `THEOplayerView` component and the UI components from `@theoplayer/react-native-ui`.
 
 The example app depends on [`react-native-tvos`](https://github.com/react-native-tvos/react-native-tvos),
 a fork of the main `react-native` repository, to properly include support for Apple TV.
 
 In this section we cover building and running the example app. If you would like to know more about the
-`DefaultTHEOplayerUi` and all the other UI components, visit [our UI documentation page](./ui.md).
+`DefaultTHEOplayerUi` and all the other UI components,
+visit [our React Native UI project](https://github.com/THEOplayer/react-native-theoplayer-ui).
 
-| ![basic-ui](./example-app-player-ui.png) | ![basic-ui-source](./example-app-source-selection.png) |
-|------------------------------------------|--------------------------------------------------------|
-| The `DefaultTHEOplayerUi` in action.     | Choosing a demo source from a custom UI component.     |
+| ![basic-ui](./example-app-player-ui.png) | ![basic-ui-source](./example-app-source-selection.png) | ![basic-ui-source](./example-app-thumbnails.png) |
+|-------------------------------------------------------------------------------|--------------------------------------------------------|--------------------------------------------------|
+| The `DefaultTHEOplayerUi` in action.                                          | Choosing a demo source from a custom UI component.     | Preview thumbnails.                              |
 
 ### Building the example application
 

@@ -14,18 +14,16 @@ import {
   PipButton,
   PlaybackRateSubMenu,
   PlayButton,
-  PlayerConfiguration,
-  PlayerEventType,
   QualitySubMenu,
   SeekBar,
   SettingsMenuButton,
   SkipButton,
   Spacer,
-  THEOplayer,
-  THEOplayerView,
   TimeLabel,
   UiContainer,
-} from 'react-native-theoplayer';
+} from '@theoplayer/react-native-ui';
+import { PlayerConfiguration, PlayerEventType, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
+
 import { Platform, StyleSheet, View, ViewStyle } from 'react-native';
 import { SourceMenuButton, SOURCES } from './custom/SourceMenuButton';
 

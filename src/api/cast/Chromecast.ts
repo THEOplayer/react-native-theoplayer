@@ -1,5 +1,5 @@
 /**
- * The Airplay API.
+ * The Chromecast API.
  *
  * @public
  */

@@ -23,7 +23,6 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
     private weak var contentProtectionAPI: THEOplayerRCTContentProtectionAPI?
     private var integrationId: String!
     private var keySystemId: String!
-    private var skdUrl: String?
     private var drmConfig: THEOplayerSDK.DRMConfiguration
     private var certificateResponseFinal = false
     private var licenseResponseFinal = false
@@ -87,32 +86,17 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
     
     func onLicenseRequest(request: LicenseRequest, callback: LicenseRequestCallback) {
         if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "THEOplayer triggered an onLicenseRequest") }
-        guard let skdUrl = self.skdUrl else {
-            callback.error(error: ProxyIntegrationError.licenseRequestHandlingFailed)
-            return
-        }
         self.licenseResponseFinal = false
-        
-        // First, extract contentId
-        self.contentProtectionAPI?.handleExtractFairplayContentId(integrationId: self.integrationId, keySystemId: self.keySystemId, skdUrl: skdUrl) { contentId, error in
+        self.contentProtectionAPI?.handleLicenseRequest(integrationId: self.integrationId, keySystemId: self.keySystemId, licenseRequest: request) { licenseData, error in
             if let error = error {
-                print(PROXY_INTEGRATION_TAG, "We encountered an issue while extracting the fairplay contentId: \(error.localizedDescription)")
-                callback.error(error: ProxyIntegrationError.licenseRequestHandlingFailed)
+                callback.error(error: error)
+                return
+            }
+            if let data = licenseData {
+                self.licenseResponseFinal = true
+                callback.respond(license: data)
             } else {
-                // Next, handle onLicenseRequest
-                if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "Received extracted fairplay contentId \(contentId) on RN bridge") }
-                self.contentProtectionAPI?.handleLicenseRequest(integrationId: self.integrationId, keySystemId: self.keySystemId, licenseRequest: request) { licenseData, error in
-                    if let error = error {
-                        callback.error(error: error)
-                        return
-                    }
-                    if let data = licenseData {
-                        self.licenseResponseFinal = true
-                        callback.respond(license: data)
-                    } else {
-                        callback.error(error: ProxyIntegrationError.licenseRequestHandlingFailed)
-                    }
-                }
+                callback.error(error: ProxyIntegrationError.licenseRequestHandlingFailed)
             }
         }
     }
@@ -139,12 +123,18 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
         }
     }
     
-    func extractFairplayContentId(skdUrl: String) -> String {
+    func onExtractFairplayContentId(skdUrl: String, callback: ExtractContentIdCallback) {
         if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "THEOplayer triggered an extractFairplayContentId") }
-        if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "Storing skdUrl: \(skdUrl)") }
-        // We cannot handle this synchronously  and store the skdUrl for later, asynchronous contentId extraction
-        self.skdUrl = skdUrl
-        return skdUrl
+        self.contentProtectionAPI?.handleExtractFairplayContentId(integrationId: self.integrationId, keySystemId: self.keySystemId, skdUrl: skdUrl) { contentId, error in
+            if let error = error {
+                print(PROXY_INTEGRATION_TAG, "We encountered an issue while extracting the fairplay contentId: \(error.localizedDescription)")
+                callback.error(error: error)
+            } else {
+                // Next, handle onLicenseRequest
+                if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "Received extracted fairplay contentId \(contentId) on RN bridge") }
+                callback.respond(contentID: contentId.data(using: .utf8))
+            }
+        }
     }
     
     // MARK: local certificate handling
