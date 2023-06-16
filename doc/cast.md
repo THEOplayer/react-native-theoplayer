@@ -35,12 +35,11 @@ For the rest of this document we assume that THEOplayer handles this logic. Enab
 <details>
 <summary>Android</summary>
 
-##### Enable THEOplayer Extensions (default: disabled)
-
 The Android SDK is modular-based, so enabling Chromecast is limited to including
 the cast extension in gradle by setting this flag in your `gradle.properties`:
 
 ```
+# Enable THEOplayer Extensions (default: disabled)
 THEOplayer_extensionCast = true
 ```
 
