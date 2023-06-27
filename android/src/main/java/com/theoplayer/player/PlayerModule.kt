@@ -17,6 +17,7 @@ import com.theoplayer.util.ViewResolver
 
 private const val TAG = "PlayerModule"
 
+@Suppress("unused")
 class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(context) {
   private val viewResolver: ViewResolver
 
