@@ -6,6 +6,7 @@ import type {
   NativeHandleType,
   PlayerConfiguration,
   PlayerEventMap,
+  PlayerVersion,
   PreloadType,
   TextTrack,
   TextTrackStyle,
@@ -14,7 +15,7 @@ import type {
 import { AspectRatio, PlayerEventType, PresentationMode } from 'react-native-theoplayer';
 import { THEOplayerWebAdsAdapter } from './ads/THEOplayerWebAdsAdapter';
 import { THEOplayerWebCastAdapter } from './cast/THEOplayerWebCastAdapter';
-import type * as THEOplayerWeb from 'theoplayer';
+import * as THEOplayerWeb from 'theoplayer';
 import type { MediaTrack as NativeMediaTrack, TextTrack as NativeTextTrack } from 'theoplayer';
 import { findNativeQualitiesByUid, fromNativeMediaTrackList, fromNativeTextTrackList } from './web/TrackUtils';
 import type { ABRConfiguration, SourceDescription } from 'src/api/barrel';
@@ -297,6 +298,9 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
 
   public get cast(): CastAPI {
     return this._castAdapter;
+  }
+
+  public get version(): PlayerVersion {
   }
 
   destroy(): void {

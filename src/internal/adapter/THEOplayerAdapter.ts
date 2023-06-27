@@ -31,6 +31,7 @@ import {
   MediaTrackEventType,
   MediaTrackType,
   PlayerEventType,
+  PlayerVersion,
   PreloadType,
   PresentationMode,
   removeTextTrackCue,
@@ -507,6 +508,9 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
       this._state.paused = false;
       NativeModules.PlayerModule.setPaused(this._view.nativeHandle, false);
     }
+  }
+
+  public get version(): PlayerVersion {
   }
 
   get nativeHandle(): NativeHandleType {
