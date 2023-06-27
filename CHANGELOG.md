@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Removed restrictions on media session playback actions for AndroidTV.
 
+### Added
+
+- Added a `version` property to `THEOplayer` for querying the `player` version (e.g., `'5.5.0'`) and `playerSuite` (e.g., `'2023.3.0'`) versions.
+
 ## [2.9.0] - 23-06-16
 
 ### Changed
