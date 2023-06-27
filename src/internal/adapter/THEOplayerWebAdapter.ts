@@ -301,6 +301,10 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   }
 
   public get version(): PlayerVersion {
+    return {
+      version: THEOplayerWeb.version,
+      playerSuiteVersion: THEOplayerWeb.playerSuiteVersion,
+    };
   }
 
   destroy(): void {
