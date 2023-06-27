@@ -1,10 +1,12 @@
 package com.theoplayer
 
+import android.app.UiModeManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
@@ -59,6 +61,10 @@ class ReactTHEOplayerContext private constructor(
   val player: Player
     get() = playerView.player
 
+  private val uiModeManager by lazy {
+      reactContext.getSystemService(Context.UI_MODE_SERVICE) as? UiModeManager
+  }
+
   var daiIntegration: GoogleDaiIntegration? = null
   var imaIntegration: GoogleImaIntegration? = null
   var castIntegration: CastIntegration? = null
@@ -66,6 +72,8 @@ class ReactTHEOplayerContext private constructor(
 
   private val isBackgroundAudioEnabled: Boolean
     get() = backgroundAudioConfig.enabled
+  private val isTV: Boolean
+    get() = uiModeManager?.currentModeType == Configuration.UI_MODE_TYPE_TELEVISION
 
   companion object {
     fun create(
@@ -136,7 +144,7 @@ class ReactTHEOplayerContext private constructor(
     // Reduce allowed set of remote control playback actions for ads & live streams.
     val isLive = player.duration.isInfinite()
     val isInAd = player.ads.isPlaying
-    mediaSessionConnector?.enabledPlaybackActions = if (isInAd || isLive) {
+    mediaSessionConnector?.enabledPlaybackActions = if (isInAd || isLive && !isTV) {
       0
     } else {
       ALLOWED_PLAYBACK_ACTIONS

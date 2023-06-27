@@ -40,7 +40,7 @@
       </intent-filter>
     </service>
 
-    <receiver android:name="com.theoplayer.media.CustomMediaButtonReceiver"
+    <receiver android:name="androidx.media.session.MediaButtonReceiver"
       android:exported="false">
       <intent-filter>
         <action android:name="android.intent.action.MEDIA_BUTTON" />

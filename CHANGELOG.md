@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- Fixed an issue on Android where the media button receiver would not accept button events in case multiple receivers are registered.
+
+### Changed
+
+- Removed restrictions on media session playback actions for AndroidTV.
+
 ## [2.9.0] - 23-06-16
 
 ### Changed
