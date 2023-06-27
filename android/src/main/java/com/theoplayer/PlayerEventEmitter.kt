@@ -6,9 +6,11 @@ import androidx.annotation.StringDef
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.WritableMap
+import com.facebook.react.bridge.WritableNativeMap
 import com.facebook.react.uimanager.events.ReactEventEmitter
 import com.theoplayer.ads.AdEventAdapter
 import com.theoplayer.ads.AdEventAdapter.AdEventEmitter
+import com.theoplayer.android.api.THEOplayerGlobal
 import com.theoplayer.android.api.error.THEOplayerException
 import com.theoplayer.android.api.event.EventListener
 import com.theoplayer.android.api.event.EventType
@@ -76,6 +78,8 @@ private const val EVENT_VOLUMECHANGE = "onNativeVolumeChange"
 
 private const val EVENT_PROP_TYPE = "type"
 private const val EVENT_PROP_STATE = "state"
+private const val EVENT_PROP_VERSION = "version"
+private const val EVENT_PROP_SUITE_VERSION = "playerSuiteVersion"
 
 @Suppress("UNCHECKED_CAST")
 class PlayerEventEmitter internal constructor(
@@ -273,15 +277,12 @@ class PlayerEventEmitter internal constructor(
         .source(player.source)
         .currentTime(player.currentTime)
         .currentProgramDateTime(player.currentProgramDateTime)
-//        .presentationMode()
         .paused(player.isPaused)
         .playbackRate(player.playbackRate)
         .duration(player.duration)
         .volume(player.volume, player.isMuted)
         .seekable(player.seekable)
         .buffered(player.buffered)
-//        .error(player.error)
-//        .readyState(player.readyState)
         .textTracks(player.textTracks)
         .audioTracks(player.audioTracks)
         .videoTracks(player.videoTracks)
@@ -290,6 +291,10 @@ class PlayerEventEmitter internal constructor(
         .selectedVideoTrack(getSelectedVideoTrack(player))
         .build()
     )
+    payload.putMap(EVENT_PROP_VERSION, WritableNativeMap().apply {
+      putString(EVENT_PROP_VERSION, THEOplayerGlobal.getVersion())
+      putString(EVENT_PROP_SUITE_VERSION, THEOplayerGlobal.getPlayerSuiteVersion())
+    })
 
     // Notify the player is ready
     receiveEvent(EVENT_PLAYER_READY, payload)
