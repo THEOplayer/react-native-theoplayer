@@ -1,4 +1,12 @@
-import type { MediaTrack, PlayerError, PresentationMode, PresentationModeChangeContext, TextTrack, TimeRange } from 'react-native-theoplayer';
+import type {
+  MediaTrack,
+  PlayerError,
+  PlayerVersion,
+  PresentationMode,
+  PresentationModeChangeContext,
+  TextTrack,
+  TimeRange,
+} from 'react-native-theoplayer';
 import type { NativePlayerState } from '../../NativePlayerState';
 
 export interface NativeErrorEvent {
@@ -107,5 +115,7 @@ export interface NativeSegmentNotFoundEvent {
 }
 
 export interface NativePlayerStateEvent {
+  readonly version: PlayerVersion;
+
   readonly state: NativePlayerState;
 }

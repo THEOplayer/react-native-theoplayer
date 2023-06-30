@@ -11,6 +11,7 @@ import type { TextTrackStyle } from '../track/TextTrackStyle';
 import type { PresentationMode } from '../presentation/PresentationMode';
 import type { PiPConfiguration } from '../pip/PiPConfiguration';
 import type { BackgroundAudioConfiguration } from '../backgroundAudio/BackgroundAudioConfiguration';
+import type { PlayerVersion } from './PlayerVersion';
 
 export type PreloadType = 'none' | 'metadata' | 'auto' | '';
 
@@ -201,6 +202,11 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
    * The API for casting devices.
    */
   readonly cast: CastAPI;
+
+  /**
+   * The player version.
+   */
+  readonly version: PlayerVersion;
 
   /**
    * Native player handle.

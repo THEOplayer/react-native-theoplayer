@@ -31,6 +31,7 @@ import {
   MediaTrackEventType,
   MediaTrackType,
   PlayerEventType,
+  PlayerVersion,
   PreloadType,
   PresentationMode,
   removeTextTrackCue,
@@ -81,6 +82,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   private readonly _castAdapter: THEOplayerNativeCastAdapter;
   private readonly _abrAdapter: AbrAdapter;
   private readonly _textTrackStyleAdapter: TextTrackStyleAdapter;
+  private _playerVersion!: PlayerVersion;
 
   constructor(view: THEOplayerView, initialState: NativePlayerState = defaultPlayerState) {
     super();
@@ -509,12 +511,19 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     }
   }
 
+  public get version(): PlayerVersion {
+    return this._playerVersion;
+  }
+
   get nativeHandle(): NativeHandleType {
     return this._view.nativeHandle;
   }
 
-  initializeWithNativePlayerState_(state: NativePlayerState) {
-    Object.assign(this._state, state);
-    this._castAdapter.init_();
+  initializeFromNativePlayer_(version: PlayerVersion, state: NativePlayerState | undefined) {
+    this._playerVersion = version;
+    if (state) {
+      Object.assign(this._state, state);
+      this._castAdapter.init_();
+    }
   }
 }
