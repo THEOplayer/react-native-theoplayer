@@ -27,6 +27,7 @@ import { PlayerConfiguration, PlayerEventType, THEOplayer, THEOplayerView } from
 import { Platform, StyleSheet, View, ViewStyle } from 'react-native';
 import { SourceMenuButton, SOURCES } from './custom/SourceMenuButton';
 import { BackgroundAudioSubMenu } from './custom/BackgroundAudioSubMenu';
+import { PiPSubMenu } from './custom/PipSubMenu';
 
 const playerConfig: PlayerConfiguration = {
   // Get your THEOplayer license from https://portal.theoplayer.com/
@@ -109,6 +110,7 @@ export default function App() {
                     <QualitySubMenu />
                     <PlaybackRateSubMenu />
                     <BackgroundAudioSubMenu />
+                    <PiPSubMenu />
                   </SettingsMenuButton>
                 </ControlBar>
               }
