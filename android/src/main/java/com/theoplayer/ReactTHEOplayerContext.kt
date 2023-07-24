@@ -120,6 +120,8 @@ class ReactTHEOplayerContext private constructor(
     config: BackgroundAudioConfig,
     prevConfig: BackgroundAudioConfig?
   ) {
+    playerView.settings.setAllowBackgroundPlayback(config.enabled)
+
     if (prevConfig?.enabled == config.enabled) {
       // No changes
       return
@@ -320,9 +322,9 @@ class ReactTHEOplayerContext private constructor(
   fun onHostPause() {
     // Keep current playing state when going to background
     wasPlayingOnHostPause = !player.isPaused
-
+    playerView.onPause()
     if (!isBackgroundAudioEnabled) {
-      playerView.onPause()
+      mediaSessionConnector?.setActive(false)
     }
   }
 
@@ -330,10 +332,8 @@ class ReactTHEOplayerContext private constructor(
    * The host activity is resumed.
    */
   fun onHostResume() {
-    if (!isBackgroundAudioEnabled) {
-      mediaSessionConnector?.setActive(true)
-      playerView.onResume()
-    }
+    mediaSessionConnector?.setActive(true)
+    playerView.onResume()
   }
 
   fun destroy() {
