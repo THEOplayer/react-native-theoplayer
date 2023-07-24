@@ -46,8 +46,8 @@ class PipUtils(
 ) {
 
   private var enabled: Boolean = false
-  private var onPlayerAction: EventListener<PlayerEvent<*>>? = null
-  private var onAdAction: EventListener<GoogleImaAdEvent>? = null
+  private var onPlayerAction: EventListener<PlayerEvent<*>>
+  private var onAdAction: EventListener<GoogleImaAdEvent>
   private val playerEvents = listOf(PlayerEventTypes.PLAY, PlayerEventTypes.PAUSE)
   private var adEvents = listOf<GoogleImaAdEventType>()
   private val broadcastReceiver: BroadcastReceiver = buildBroadcastReceiver()
