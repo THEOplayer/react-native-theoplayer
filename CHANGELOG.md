@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 - Removed restrictions on media session playback actions for AndroidTV.
+- Upgraded `react-native` version of the example app to `react-native-tvos@0.71.12-0`.
 
 ### Added
 
