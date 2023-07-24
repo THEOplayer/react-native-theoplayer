@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed an issue on Android where the media button receiver would not accept button events in case multiple receivers are registered.
+- Fixed an issue on Android where `react-native-theoplayer` would not build when depending on Android player SDK v5.6.0.
 
 ### Changed
 
