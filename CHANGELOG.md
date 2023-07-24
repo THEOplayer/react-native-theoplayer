@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed an issue on Android where the media button receiver would not accept button events in case multiple receivers are registered.
 - Fixed an issue on Android where `react-native-theoplayer` would not build when depending on Android player SDK v5.6.0.
+- Fixed an issue on Android where a `pause` event would not be dispatched when putting the app to the background during play-out of an ad, while background playback is enabled. The ad would also restart when bringing the app back to the foreground.
 
 ### Changed
 
