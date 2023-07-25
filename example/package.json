@@ -16,9 +16,9 @@
   "dependencies": {
     "@react-native-community/slider": "^4.4.2",
     "@theoplayer/react-native-ui": "latest",
-    "react": "18.0.0",
-    "react-dom": "18.0.0",
-    "react-native": "npm:react-native-tvos@0.69.8-1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-native": "npm:react-native-tvos@0.71.12-0",
     "react-native-svg": "^13.9.0",
     "react-native-web": "^0.19.2",
     "react-native-web-image-loader": "^0.1.1"
@@ -49,8 +49,9 @@
     "webpack-dev-server": "^4.7.3"
   },
   "overrides": {
+    "use-subscription": "1.8.0",
     "react-native-google-cast": {
-      "react-native": "npm:react-native-tvos@0.69.8-1"
+      "react-native": "npm:react-native-tvos@0.71.12-0"
     },
     "@types/react-native": "^0.71.5"
   },
