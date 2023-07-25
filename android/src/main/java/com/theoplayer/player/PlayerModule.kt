@@ -12,6 +12,7 @@ import com.theoplayer.android.api.player.track.texttrack.TextTrackMode
 import com.theoplayer.audio.BackgroundAudioConfigAdapter
 import com.theoplayer.presentation.PipConfigAdapter
 import com.theoplayer.track.QualityListFilter
+import com.theoplayer.track.TextTrackStyleAdapter
 import com.theoplayer.track.emptyQualityList
 import com.theoplayer.util.ViewResolver
 
@@ -186,6 +187,15 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
         "aspectFill" -> AspectRatio.ASPECT_FILL
         else -> AspectRatio.FIT
       })
+    }
+  }
+
+  @ReactMethod
+  fun setTextTrackStyle(tag: Int, style: ReadableMap?) {
+    viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
+      view?.player?.let { player ->
+        TextTrackStyleAdapter.applyTextTrackStyle(player.textTrackStyle, style)
+      }
     }
   }
 }
