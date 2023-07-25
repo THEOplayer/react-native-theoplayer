@@ -136,9 +136,9 @@ interface BridgeColor {
   a: number;
 }
 
-function convertColorToRGBA(color: string | undefined): BridgeColor | undefined {
+function convertColorToRGBA(color: string | undefined): BridgeColor | null {
   if (!color) {
-    return undefined;
+    return null;
   }
 
   color = color.replace('#', '');
@@ -151,7 +151,7 @@ function convertColorToRGBA(color: string | undefined): BridgeColor | undefined 
   const match = color.match(colorPattern);
 
   if (!match) {
-    return undefined;
+    return null;
   }
 
   const r = parseInt(match[1], 16);

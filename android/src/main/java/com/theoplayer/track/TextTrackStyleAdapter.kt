@@ -23,24 +23,29 @@ object TextTrackStyleAdapter {
     if (props == null) {
       return
     }
-
-    props.getMap(PROP_BACKGROUND_COLOR)?.let { color ->
-      style.backgroundColor = colorFromBridgeColor(color)
+    if (props.hasKey(PROP_BACKGROUND_COLOR)) {
+      style.backgroundColor =
+        colorFromBridgeColor(props.getMap(PROP_BACKGROUND_COLOR)) ?: Color.BLACK
     }
     if (props.hasKey(PROP_EDGE_STYLE)) {
       style.edgeType = edgeStyleFromProps(props.getString(PROP_EDGE_STYLE))
     }
-    props.getMap(PROP_FONT_COLOR)?.let { color ->
-      style.fontColor = colorFromBridgeColor(color)
+    if (props.hasKey(PROP_FONT_COLOR)) {
+      style.fontColor = colorFromBridgeColor(props.getMap(PROP_FONT_COLOR)) ?: Color.WHITE
     }
-    props.getString(PROP_FONT_FAMILY)?.let { family ->
-      style.setFont(family, TextTrackStyle.FontStyle.NORMAL)
+    if (props.hasKey(PROP_FONT_FAMILY)) {
+      val family = props.getString(PROP_FONT_FAMILY)
+      if (family != null) {
+        style.setFont(family, TextTrackStyle.FontStyle.NORMAL)
+      } else {
+        style.setFont(TextTrackStyle.FontFamily.DEFAULT, TextTrackStyle.FontStyle.NORMAL)
+      }
     }
     if (props.hasKey(PROP_FONT_SIZE)) {
       style.fontSize = props.getInt(PROP_FONT_SIZE)
     }
-    props.getMap(PROP_WINDOW_COLOR)?.let { color ->
-      style.windowColor = colorFromBridgeColor(color)
+    if (props.hasKey(PROP_WINDOW_COLOR)) {
+      style.windowColor = colorFromBridgeColor(props.getMap(PROP_WINDOW_COLOR)) ?: Color.TRANSPARENT
     }
     if (props.hasKey(PROP_MARGIN_TOP)) {
       style.marginTop = props.getInt(PROP_MARGIN_TOP)
@@ -60,7 +65,10 @@ object TextTrackStyleAdapter {
     }
   }
 
-  private fun colorFromBridgeColor(color: ReadableMap): Int {
+  private fun colorFromBridgeColor(color: ReadableMap?): Int? {
+    if (color == null) {
+      return null
+    }
     return Color.argb(
       color.getInt(PROP_COLOR_A),
       color.getInt(PROP_COLOR_R),
