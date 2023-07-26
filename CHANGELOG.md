@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added DAI support through iOS Native pipeline, using new THEOplayerGoogleIMAIntegration functionality
 
+### Fixed
+
+- Fixed an issue on Android where the player would sometimes crash when requesting the current active video track.
+
 ## [2.10.0] - 23-07-25
 
 ### Fixed
