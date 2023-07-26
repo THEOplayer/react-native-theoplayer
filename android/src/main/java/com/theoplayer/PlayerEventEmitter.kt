@@ -494,7 +494,7 @@ class PlayerEventEmitter internal constructor(
   }
 
   private fun <T : Quality?> activeTrack(tracks: MediaTrackList<T>?): MediaTrack<T>? {
-    return tracks?.first { track ->
+    return tracks?.firstOrNull { track ->
       track.isEnabled
     }
   }
