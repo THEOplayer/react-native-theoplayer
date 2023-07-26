@@ -76,12 +76,4 @@ object TextTrackStyleAdapter {
       color.getInt(PROP_COLOR_B),
     )
   }
-
-  private fun fontSizeFromPercentage(size: String?): Int {
-    if (size == null) {
-      return 100
-    }
-    val numberString = size.replace("%", "")
-    return numberString.toInt()
-  }
 }
