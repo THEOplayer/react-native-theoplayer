@@ -11,6 +11,7 @@ import com.theoplayer.android.api.ads.wrapper.AdsApiWrapper
 import com.theoplayer.android.api.cast.Cast
 import com.theoplayer.android.api.error.THEOplayerException
 import com.theoplayer.android.api.player.Player
+import com.theoplayer.android.connector.mediasession.MediaSessionConnector
 import com.theoplayer.presentation.PresentationManager
 import com.theoplayer.source.SourceAdapter
 
@@ -32,8 +33,17 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
   val castApi: Cast?
     get() = playerContext?.playerView?.cast
 
+  /**
+   * Get the active THEOplayer associated with this view.
+   */
   val player: Player?
     get() = playerContext?.player
+
+  /**
+   * Get the player's mediaSession connector.
+   */
+  val mediaSessionConnector: MediaSessionConnector?
+    get() = playerContext?.mediaSessionConnector
 
   init {
     reactContext.addLifecycleEventListener(this)

@@ -48,7 +48,9 @@ class ReactTHEOplayerContext private constructor(
   private val mainHandler = Handler(Looper.getMainLooper())
   private var isBound = AtomicBoolean()
   private var binder: MediaPlaybackService.MediaPlaybackBinder? = null
-  private var mediaSessionConnector: MediaSessionConnector? = null
+
+  var mediaSessionConnector: MediaSessionConnector? = null
+    private set
 
   var backgroundAudioConfig: BackgroundAudioConfig = BackgroundAudioConfig(enabled = false)
     set(value) {
