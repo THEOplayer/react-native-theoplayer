@@ -39,5 +39,5 @@ export interface MediaCacheAPI extends EventDispatcher<CacheEventMap> {
    * @param source - Describes the media source to be cached.
    * @param parameters - Contains caching task related options.
    */
-  createTask(source: SourceDescription, parameters: CachingTaskParameters): CachingTask;
+  createTask(source: SourceDescription, parameters: CachingTaskParameters): Promise<CachingTask>;
 }
