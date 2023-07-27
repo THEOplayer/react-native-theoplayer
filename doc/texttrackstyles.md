@@ -15,10 +15,10 @@ which enables the customization of subtitles and closed captions' appearance. We
 | `backgroundColor` | The color of the area directly behind the text.                   | A string, e.g.`'red'`, `'#ff0000'`, `'#ffc50f'` or `'rgba(255, 0, 0, 1)`.               | All platforms. The `rgba()` formatting is supported on Web only.   |
 | `windowColor`     | The color of the area covering the full width of the text track.  | A string, e.g.`'red'`, `'#ff0000'`, `'#ffc50f'` or `'rgba(255, 0, 0, 1)`.               | Web and Android. The `rgba()` formatting is supported on Web only. |
 | `edgeStyle`       | The edge style of the text.                                       | An enum value, either `none` (default), `dropshadow`, `raised`, `depressed`, `uniform`. | All platforms.                                                     |
-| `marginTop`       | The top margin of the area where subtitles are being rendered.    | A numeric value specifying the number of pixels.                                        | All platforms.                                                     |
-| `marginLeft`      | The left margin of the area where subtitles are being rendered.   | A numeric value specifying the number of pixels.                                        | All platforms.                                                     |
-| `marginBottom`    | The bottom margin of the area where subtitles are being rendered. | A numeric value specifying the number of pixels.                                        | Web only.                                                          |
-| `marginRight`     | The right margin  of the area where subtitles are being rendered. | A numeric value specifying the number of pixels.                                        | Web only.                                                          |
+| `marginTop`       | The top margin of the area where subtitles are being rendered.    | A positive numeric value specifying the number of pixels.                               | All platforms.                                                     |
+| `marginLeft`      | The left margin of the area where subtitles are being rendered.   | A positive numeric value specifying the number of pixels.                               | All platforms.                                                     |
+| `marginBottom`    | The bottom margin of the area where subtitles are being rendered. | A positive numeric value specifying the number of pixels.                               | Web only.                                                          |
+| `marginRight`     | The right margin  of the area where subtitles are being rendered. | A positive numeric value specifying the number of pixels.                               | Web only.                                                          |
 
 ### Examples
 
