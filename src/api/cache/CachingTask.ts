@@ -3,7 +3,7 @@ import type { EventDispatcher } from '../event/EventDispatcher';
 import type { CachingTaskLicense } from './CachingTaskLicense';
 import type { CachingTaskParameters } from './CachingTaskParameters';
 import type { CachingTaskEventMap } from './events/CachingTaskEvent';
-
+import type { TimeRange } from '../timeranges/TimeRange';
 /**
  * The cache task status, represented by a value from the following list:
  * <br/> - `'idle'`: The task has been created, but has not started downloading content.
@@ -56,7 +56,7 @@ export interface CachingTask extends EventDispatcher<CachingTaskEventMap> {
   /**
    * The time ranges cached.
    */
-  readonly cached: TimeRanges;
+  readonly cached: TimeRange[];
 
   /**
    * The duration cached, in seconds.
