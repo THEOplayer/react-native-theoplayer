@@ -15,7 +15,7 @@ export interface TextTrackStyle {
    * @example
    * <br/> - `red` will set the color of the text to red.
    * <br/> - `#ff0000` will set the color of the text to red.
-   * <br/> - `rgba(255,0,0,0.5)` will set the color of the text to red, with 50% opacity.
+   * <br/> - Available on Web only: `rgba(255,0,0,0.5)` will set the color of the text to red, with 50% opacity.
    */
   fontColor: string | undefined;
 
@@ -36,7 +36,7 @@ export interface TextTrackStyle {
    * @example
    * <br/> - `red` will set the background color of the text track to red.
    * <br/> - `#ff0000` will set the background color of the text track to red.
-   * <br/> - `rgba(255,0,0,0.5)` will set the background color of the text track to red, with 50% opacity.
+   * <br/> - Available on Web only: `rgba(255,0,0,0.5)` will set the background color of the text track to red, with 50% opacity.
    */
   backgroundColor: string | undefined;
 
@@ -44,12 +44,13 @@ export interface TextTrackStyle {
    * The window color for the text track.
    *
    * @remarks
-   * This targets the area covering the full width of the text track.
+   * <br/> - This targets the area covering the full width of the text track.
+   * <br/> - Available on Web and Android only.
    *
    * @example
    * <br/> - `red` will set the background color of the window of the text track to red.
    * <br/> - `#ff0000` will set the background color of the window of the text track to red.
-   * <br/> - `rgba(255,0,0,0.5)` will set the background color of the window of the text track to red, with 50% opacity.
+   * <br/> - Available on Web only: `rgba(255,0,0,0.5)` will set the background color of the window of the text track to red, with 50% opacity.
    */
   windowColor: string | undefined;
 
@@ -62,6 +63,39 @@ export interface TextTrackStyle {
    * <br/> - `'uniform`
    */
   edgeStyle: EdgeStyle | undefined;
+
+  /**
+   * The top margin of the area where subtitles are being rendered.
+   *
+   * @remarks
+   * <br/> - The margin is in number of pixels.
+   */
+  marginTop: number | undefined;
+
+  /**
+   * The bottom margin of the area where subtitles are being rendered.
+   *
+   * @remarks
+   * <br/> - The margin is in number of pixels.
+   * <br/> - Available on Web only.
+   */
+  marginBottom: number | undefined;
+  /**
+   * The left margin of the area where subtitles are being rendered.
+   *
+   * @remarks
+   * <br/> - The margin is in number of pixels.
+   */
+  marginLeft: number | undefined;
+  /**
+   * The right margin  of the area where subtitles are being rendered.
+   *
+   * @remarks
+   * <br/> - The margin is in number of pixels.
+   * <br/> - Useful for pushing the subtitles left, so they don't overlap with the UI.
+   * <br/> - Available on Web only.
+   */
+  marginRight: number | undefined;
 }
 
 /**
@@ -74,4 +108,10 @@ export interface TextTrackStyle {
  *
  * @public
  */
-export type EdgeStyle = 'none' | 'dropshadow' | 'raised' | 'depressed' | 'uniform';
+export enum EdgeStyle {
+  none = 'none',
+  dropshadow = 'dropshadow',
+  raised = 'raised',
+  depressed = 'depressed',
+  uniform = 'uniform',
+}
