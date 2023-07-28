@@ -4,6 +4,7 @@ package com.theoplayer.cache
 
 import android.util.Log
 import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
@@ -86,7 +87,7 @@ class CacheModule(private val context: ReactApplicationContext) :
   }
 
   override fun getName(): String {
-    return "CastModule"
+    return TAG
   }
 
   private fun emit(
@@ -96,6 +97,11 @@ class CacheModule(private val context: ReactApplicationContext) :
     context
       .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
       .emit(eventName, payload)
+  }
+
+  @ReactMethod
+  fun getTasks(promise: Promise) {
+    promise.resolve(CacheAdapter.fromCachingTaskList(THEOplayerGlobal.getSharedInstance(context).cache?.tasks))
   }
 
   @ReactMethod

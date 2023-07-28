@@ -2,10 +2,12 @@ package com.theoplayer.cache
 
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReadableMap
+import com.facebook.react.bridge.WritableArray
 import com.facebook.react.bridge.WritableMap
 import com.theoplayer.android.api.cache.CacheStatus
 import com.theoplayer.android.api.cache.CachingParameters
 import com.theoplayer.android.api.cache.CachingTask
+import com.theoplayer.android.api.cache.CachingTaskList
 import com.theoplayer.android.api.cache.CachingTaskProgress
 import com.theoplayer.android.api.cache.CachingTaskStatus
 import com.theoplayer.util.fromTimeRanges
@@ -45,6 +47,14 @@ object CacheAdapter {
     }
   }
 
+  fun fromCachingTaskList(taskList: CachingTaskList?): WritableArray {
+    return Arguments.createArray().apply {
+      taskList?.forEach { task ->
+        pushMap(fromCachingTask(task))
+      }
+    }
+  }
+
   fun fromCacheStatus(status: CacheStatus): String {
     return when (status) {
       CacheStatus.INITIALISED -> "initialised"
@@ -76,7 +86,9 @@ object CacheAdapter {
   fun parseCachingParameters(parameters: ReadableMap): CachingParameters {
     return CachingParameters.Builder().apply {
       amount(parameters.getString(PROP_PARAMETERS_AMOUNT))
-      bandwidth(parameters.getDouble(PROP_PARAMETERS_BANDWIDTH).toLong())
+      if (parameters.hasKey(PROP_PARAMETERS_BANDWIDTH)) {
+        bandwidth(parameters.getDouble(PROP_PARAMETERS_BANDWIDTH).toLong())
+      }
       // TODO
 //      expirationDate(Date())
 //      this.preferredTrackSelection()

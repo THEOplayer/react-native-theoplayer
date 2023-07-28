@@ -1,4 +1,4 @@
-import { CachingTaskListEventType, MediaCache } from 'react-native-theoplayer';
+import { CacheEventType, MediaCache } from 'react-native-theoplayer';
 import { useEffect, useState } from 'react';
 
 export const useCachingTaskList = (debug = false) => {
@@ -10,11 +10,11 @@ export const useCachingTaskList = (debug = false) => {
       }
       setTasks([...MediaCache.tasks]);
     };
-    MediaCache.tasks.addEventListener(CachingTaskListEventType.addtask, taskListChangeListener);
-    MediaCache.tasks.addEventListener(CachingTaskListEventType.removetask, taskListChangeListener);
+    MediaCache.addEventListener(CacheEventType.addtask, taskListChangeListener);
+    MediaCache.addEventListener(CacheEventType.removetask, taskListChangeListener);
     return () => {
-      MediaCache.tasks.removeEventListener(CachingTaskListEventType.addtask, taskListChangeListener);
-      MediaCache.tasks.removeEventListener(CachingTaskListEventType.removetask, taskListChangeListener);
+      MediaCache.removeEventListener(CacheEventType.addtask, taskListChangeListener);
+      MediaCache.removeEventListener(CacheEventType.removetask, taskListChangeListener);
     };
   }, []);
   return tasks;
