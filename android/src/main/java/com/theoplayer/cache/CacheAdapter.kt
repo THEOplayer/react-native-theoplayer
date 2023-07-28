@@ -1,12 +1,15 @@
 package com.theoplayer.cache
 
 import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableMap
 import com.theoplayer.android.api.cache.CacheStatus
 import com.theoplayer.android.api.cache.CachingParameters
 import com.theoplayer.android.api.cache.CachingTask
+import com.theoplayer.android.api.cache.CachingTaskProgress
 import com.theoplayer.android.api.cache.CachingTaskStatus
 import com.theoplayer.util.fromTimeRanges
+import java.util.Date
 
 private const val PROP_ID = "id"
 private const val PROP_STATUS = "status"
@@ -49,7 +52,18 @@ object CacheAdapter {
     }
   }
 
-  private fun fromCacheTaskStatus(status: CachingTaskStatus): String {
+  fun fromCachingTaskProgress(progress: CachingTaskProgress): WritableMap {
+    return Arguments.createMap().apply {
+      putDouble(PROP_DURATION, progress.duration)
+      putArray(PROP_CACHED, fromTimeRanges(progress.cached))
+      putDouble(PROP_SECONDS_CACHED, progress.secondsCached)
+      putDouble(PROP_PERCENTAGE_CACHED, progress.percentageCached)
+      putDouble(PROP_BYTES, progress.bytes.toDouble())
+      putDouble(PROP_BYTES_CACHED, progress.bytesCached.toDouble())
+    }
+  }
+
+  fun fromCacheTaskStatus(status: CachingTaskStatus): String {
     return when (status) {
       CachingTaskStatus.ERROR -> "error"
       CachingTaskStatus.DONE -> "done"
@@ -57,6 +71,16 @@ object CacheAdapter {
       CachingTaskStatus.LOADING -> "loading"
       else -> "idle"
     }
+  }
+
+  fun parseCachingParameters(parameters: ReadableMap): CachingParameters {
+    return CachingParameters.Builder().apply {
+      amount(parameters.getString(PROP_PARAMETERS_AMOUNT))
+      bandwidth(parameters.getDouble(PROP_PARAMETERS_BANDWIDTH).toLong())
+      // TODO
+//      expirationDate(Date())
+//      this.preferredTrackSelection()
+    }.build()
   }
 
   private fun fromCachingParameters(parameters: CachingParameters?): WritableMap {
@@ -69,4 +93,5 @@ object CacheAdapter {
       }
     }
   }
+
 }

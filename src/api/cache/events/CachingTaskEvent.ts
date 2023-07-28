@@ -21,3 +21,13 @@ export interface CachingTaskEventMap {
    */
   [CachingTaskEventType.statechange]: Event<CachingTaskEventType.statechange>;
 }
+
+export interface CachingTaskProgressEvent extends Event<CachingTaskEventType.progress> {
+  // Identifier of the task.
+  readonly id: string;
+}
+
+export interface CachingTaskStatusChangeEvent extends Event<CachingTaskEventType.statechange> {
+  // Identifier of the task.
+  readonly id: string;
+}

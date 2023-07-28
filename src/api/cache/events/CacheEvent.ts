@@ -1,10 +1,11 @@
 import type { Event } from '../../event/Event';
-import type { AddCachingTaskEvent } from './AddCachingTaskEvent';
-import type { RemoveCachingTaskEvent } from './RemoveCachingTaskEvent';
-import { CachingTaskListEventType } from './CachingTaskListEvent';
+import type { CacheStatus } from '../MediaCacheAPI';
+import type { CachingTask } from '../CachingTask';
 
 export enum CacheEventType {
   statechange = 'statechange',
+  addtask = 'addtask',
+  removetask = 'removetask',
 }
 
 /**
@@ -21,10 +22,41 @@ export interface CacheEventMap {
   /**
    * {@inheritDoc AddCachingTaskEvent}
    */
-  [CachingTaskListEventType.addtask]: AddCachingTaskEvent;
+  [CacheEventType.addtask]: AddCachingTaskEvent;
 
   /**
    * {@inheritDoc AddCachingTaskEvent}
    */
-  [CachingTaskListEventType.removetask]: RemoveCachingTaskEvent;
+  [CacheEventType.removetask]: RemoveCachingTaskEvent;
+}
+
+export interface CacheStatusChangeEvent extends Event<CacheEventType.statechange> {
+  /**
+   * The cache's new status.
+   */
+  readonly status: CacheStatus;
+}
+
+/**
+ * Dispatched when a caching task is added.
+ *
+ * @public
+ */
+export interface AddCachingTaskEvent extends Event<CacheEventType.addtask> {
+  /**
+   * The task which has been added.
+   */
+  readonly task: CachingTask;
+}
+
+/**
+ * Dispatched when a caching task is removed.
+ *
+ * @public
+ */
+export interface RemoveCachingTaskEvent extends Event<CacheEventType.removetask> {
+  /**
+   * The task which has been removed.
+   */
+  readonly task: CachingTask;
 }
