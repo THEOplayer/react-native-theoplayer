@@ -1,7 +1,7 @@
 import { CachingTask, CachingTaskEventType } from 'react-native-theoplayer';
 import { useEffect, useState } from 'react';
 
-export const useCachingTaskProgress = (task: CachingTask, debug = false) => {
+export const useCachingTaskProgress = (task: CachingTask, debug = true) => {
   const [progress, setProgress] = useState<number | undefined>(task.percentageCached);
   useEffect(() => {
     const onProgress = () => {

@@ -53,6 +53,6 @@ export class CachingTaskAdapter extends DefaultEventDispatcher<CachingTaskEventM
   }
 
   start(): void {
-    NativeModules.CacheModule.start(this.id);
+    NativeModules.CacheModule.startCachingTask(this.id);
   }
 }

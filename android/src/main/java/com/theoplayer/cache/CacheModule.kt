@@ -2,6 +2,8 @@
 
 package com.theoplayer.cache
 
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
@@ -13,6 +15,7 @@ import com.facebook.react.bridge.WritableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.theoplayer.util.ViewResolver
 import com.theoplayer.android.api.THEOplayerGlobal
+import com.theoplayer.android.api.cache.Cache
 import com.theoplayer.android.api.cache.CachingTask
 import com.theoplayer.android.api.event.EventListener
 import com.theoplayer.android.api.event.cache.CacheEventTypes
@@ -26,6 +29,7 @@ import com.theoplayer.source.SourceAdapter
 private const val TAG = "CacheModule"
 
 private const val PROP_STATUS = "status"
+private const val PROP_ID = "id"
 private const val PROP_TASK = "task"
 private const val PROP_PROGRESS = "progress"
 private const val PROP_ERROR = "error"
@@ -33,105 +37,142 @@ private const val PROP_ERROR = "error"
 class CacheModule(private val context: ReactApplicationContext) :
   ReactContextBaseJavaModule(context) {
   private val viewResolver: ViewResolver = ViewResolver(context)
-  private val onTaskProgress: EventListener<CachingTaskProgressEvent>
-  private val onTaskError: EventListener<CachingTaskErrorEvent>
-  private val onTaskStateChange: EventListener<CachingTaskStateChangeEvent>
+  private val onTaskProgress = mutableMapOf<String, EventListener<CachingTaskProgressEvent>>()
+  private val onTaskError = mutableMapOf<String, EventListener<CachingTaskErrorEvent>>()
+  private val onTaskStateChange = mutableMapOf<String, EventListener<CachingTaskStateChangeEvent>>()
   private val sourceAdapter = SourceAdapter()
+  private val cache: Cache?
+    get() = THEOplayerGlobal.getSharedInstance(context.applicationContext).cache
+  private val handler = Handler(Looper.getMainLooper())
 
   init {
-    onTaskProgress = EventListener<CachingTaskProgressEvent> { event ->
-      emit("onCachingTaskProgressEvent", Arguments.createMap().apply {
-        putMap(PROP_PROGRESS, CacheAdapter.fromCachingTaskProgress(event.progress))
-      })
-    }
-    onTaskError = EventListener<CachingTaskErrorEvent> { event ->
-      emit("onCachingTaskErrorEvent", Arguments.createMap().apply {
-        putString(PROP_ERROR, event.error.description)
-      })
-    }
-    onTaskStateChange = EventListener<CachingTaskStateChangeEvent> { event ->
-      emit("onCachingTaskStatusChangeEvent", Arguments.createMap().apply {
-        putString(PROP_STATUS, CacheAdapter.fromCacheTaskStatus(event.status))
-      })
-    }
-
-    THEOplayerGlobal.getSharedInstance(context).cache?.apply {
+    cache?.apply {
       addEventListener(CacheEventTypes.CACHE_STATE_CHANGE) { event ->
         emit("onCacheStatusChange", Arguments.createMap().apply {
           putString(PROP_STATUS, CacheAdapter.fromCacheStatus(event.status))
         })
       }
       tasks.addEventListener(CachingTaskListEventTypes.ADD_TASK) { event ->
-        emit("onCacheAddTaskEvent", Arguments.createMap().apply {
-          putMap(PROP_STATUS, CacheAdapter.fromCachingTask(event.task))
-        })
-        event.task?.addEventListener(CachingTaskEventTypes.CACHING_TASK_PROGRESS, onTaskProgress)
-//        event.task?.addEventListener(CachingTaskEventTypes.CACHING_TASK_ERROR, onTaskError)
-        event.task?.addEventListener(
-          CachingTaskEventTypes.CACHING_TASK_STATE_CHANGE,
-          onTaskStateChange
-        )
+        event.task?.let {task ->
+
+          // Notify AddCachingTaskEvent event
+          emit("onAddCachingTaskEvent", Arguments.createMap().apply {
+            putMap(PROP_TASK, CacheAdapter.fromCachingTask(task))
+          })
+
+          // Listen for task progress
+          onTaskProgress[task.id] = EventListener<CachingTaskProgressEvent> { progressEvent ->
+            emit("onCachingTaskProgressEvent", Arguments.createMap().apply {
+              putString(PROP_ID, task.id)
+              putMap(PROP_PROGRESS, CacheAdapter.fromCachingTaskProgress(progressEvent.progress))
+            })
+          }.also { listener ->
+            task.addEventListener(CachingTaskEventTypes.CACHING_TASK_PROGRESS, listener)
+          }
+
+          // Listen for task errors
+          onTaskError[task.id] = EventListener<CachingTaskErrorEvent> { errorEvent ->
+            emit("onCachingTaskErrorEvent", Arguments.createMap().apply {
+              putString(PROP_ID, task.id)
+              putString(PROP_ERROR, errorEvent.error.description)
+            })
+          }.also {
+//            task.addEventListener(CachingTaskEventTypes.CACHING_TASK_ERROR, listener)
+          }
+
+          // Listen for task state changes
+          onTaskStateChange[task.id] = EventListener<CachingTaskStateChangeEvent> { changeEvent ->
+            emit("onCachingTaskStatusChangeEvent", Arguments.createMap().apply {
+              putString(PROP_ID, task.id)
+              putString(PROP_STATUS, CacheAdapter.fromCacheTaskStatus(changeEvent.status))
+            })
+          }.also { listener ->
+            task.addEventListener(CachingTaskEventTypes.CACHING_TASK_STATE_CHANGE, listener)
+        }
       }
-      tasks.addEventListener(CachingTaskListEventTypes.REMOVE_TASK) { event ->
-        emit("onCacheRemoveTaskEvent", Arguments.createMap().apply {
-          putMap(PROP_STATUS, CacheAdapter.fromCachingTask(event.task))
+    }
+    tasks.addEventListener(CachingTaskListEventTypes.REMOVE_TASK) { event ->
+      event.task?.let { task ->
+
+        // Notify RemoveCachingTaskEvent event
+        emit("onRemoveCachingTaskEvent", Arguments.createMap().apply {
+          putMap(PROP_TASK, CacheAdapter.fromCachingTask(event.task))
         })
-        event.task?.removeEventListener(CachingTaskEventTypes.CACHING_TASK_PROGRESS, onTaskProgress)
-//        event.task?.removeEventListener(CachingTaskEventTypes.CACHING_TASK_ERROR, onTaskError)
-        event.task?.removeEventListener(
-          CachingTaskEventTypes.CACHING_TASK_STATE_CHANGE,
-          onTaskStateChange
-        )
+        onTaskProgress[task.id]?.apply {
+          task.removeEventListener(CachingTaskEventTypes.CACHING_TASK_PROGRESS, this)
+        }
+        onTaskProgress.remove(task.id)
+        onTaskError[task.id]?.apply {
+          // TODO: API
+//          task.removeEventListener(CachingTaskEventTypes.CACHING_TASK_ERROR, this)
+        }
+        onTaskError.remove(task.id)
+        onTaskStateChange[task.id]?.apply {
+          task.removeEventListener(CachingTaskEventTypes.CACHING_TASK_STATE_CHANGE, this)
+        }
+        onTaskStateChange.remove(task.id)
       }
     }
   }
+}
 
-  override fun getName(): String {
-    return TAG
+override fun getName(): String {
+  return TAG
+}
+
+private fun emit(
+  eventName: String,
+  payload: WritableMap
+) {
+  context
+    .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+    .emit(eventName, payload)
+}
+
+@ReactMethod
+fun getTasks(promise: Promise) {
+  handler.post {
+    promise.resolve(CacheAdapter.fromCachingTaskList(cache?.tasks))
   }
+}
 
-  private fun emit(
-    eventName: String,
-    payload: WritableMap
-  ) {
-    context
-      .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-      .emit(eventName, payload)
-  }
-
-  @ReactMethod
-  fun getTasks(promise: Promise) {
-    promise.resolve(CacheAdapter.fromCachingTaskList(THEOplayerGlobal.getSharedInstance(context).cache?.tasks))
-  }
-
-  @ReactMethod
-  fun createTask(source: ReadableMap, parameters: ReadableMap) {
-    val sourceDescription = sourceAdapter.parseSourceFromJS(source)
-    if (sourceDescription != null) {
-      THEOplayerGlobal.getSharedInstance(context).cache?.createTask(
+@ReactMethod
+fun createTask(source: ReadableMap, parameters: ReadableMap) {
+  val sourceDescription = sourceAdapter.parseSourceFromJS(source)
+  if (sourceDescription != null) {
+    handler.post {
+      cache?.createTask(
         sourceDescription,
         CacheAdapter.parseCachingParameters(parameters)
       )
     }
   }
+}
 
-  @ReactMethod
-  fun pauseCachingTask(id: String) {
-    THEOplayerGlobal.getSharedInstance(context).cache?.tasks?.getTaskById(id)?.pause()
+@ReactMethod
+fun pauseCachingTask(id: String) {
+  handler.post {
+    cache?.tasks?.getTaskById(id)?.pause()
   }
+}
 
-  @ReactMethod
-  fun removeCachingTask(id: String) {
-    THEOplayerGlobal.getSharedInstance(context).cache?.tasks?.getTaskById(id)?.remove()
+@ReactMethod
+fun removeCachingTask(id: String) {
+  handler.post {
+    cache?.tasks?.getTaskById(id)?.remove()
   }
+}
 
-  @ReactMethod
-  fun startCachingTask(id: String) {
-    THEOplayerGlobal.getSharedInstance(context).cache?.tasks?.getTaskById(id)?.start()
+@ReactMethod
+fun startCachingTask(id: String) {
+  handler.post {
+    cache?.tasks?.getTaskById(id)?.start()
   }
+}
 
-  @ReactMethod
-  fun renewLicense(id: String, drmConfiguration: ReadableMap?) {
+@ReactMethod
+fun renewLicense(id: String, drmConfiguration: ReadableMap?) {
+  handler.post {
     if (drmConfiguration == null) {
       taskById(id)?.license()?.renew()
     } else {
@@ -139,11 +180,12 @@ class CacheModule(private val context: ReactApplicationContext) :
 //      taskById(id)?.license()?.renew(ContentProtectionAdapter.drmConfigurationFromJson(drmConfiguration))
     }
   }
+}
 
-  private fun taskById(id: String): CachingTask? {
-    return THEOplayerGlobal.getSharedInstance(context).cache?.tasks?.getTaskById(id) ?: run {
-      Log.w(TAG, "CachingTask with id $id not found")
-      return null
-    }
+private fun taskById(id: String): CachingTask? {
+  return cache?.tasks?.getTaskById(id) ?: run {
+    Log.w(TAG, "CachingTask with id $id not found")
+    return null
   }
+}
 }
