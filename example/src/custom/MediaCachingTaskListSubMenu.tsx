@@ -74,9 +74,9 @@ const TaskItemView = (props: { id: number; task: CachingTask }) => {
           }}
         />
       )}
-      {progress && (
+      {progress !== undefined && (
         <MenuRadioButton
-          label={`${(100 * (progress || 1)).toFixed(2)}%`}
+          label={`${(100 * progress).toFixed(2)}%`}
           uid={2}
           onSelect={() => {
             /*ignore*/
