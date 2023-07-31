@@ -46,12 +46,15 @@ class CacheModule(private val context: ReactApplicationContext) :
   private val handler = Handler(Looper.getMainLooper())
 
   init {
+    // Add cache event listeners
     cache?.apply {
+      // Listen for cache state changes
       addEventListener(CacheEventTypes.CACHE_STATE_CHANGE) { event ->
         emit("onCacheStatusChange", Arguments.createMap().apply {
           putString(PROP_STATUS, CacheAdapter.fromCacheStatus(event.status))
         })
       }
+      // Listen for add task events
       tasks.addEventListener(CachingTaskListEventTypes.ADD_TASK) { event ->
         event.task?.let { task ->
 
@@ -92,6 +95,8 @@ class CacheModule(private val context: ReactApplicationContext) :
           }
         }
       }
+
+      // Listen for task removal
       tasks.addEventListener(CachingTaskListEventTypes.REMOVE_TASK) { event ->
         event.task?.let { task ->
 
@@ -115,6 +120,9 @@ class CacheModule(private val context: ReactApplicationContext) :
         }
       }
     }
+
+    // Notify initial state
+    emit("")
   }
 
   override fun getName(): String {
