@@ -2,13 +2,13 @@ import { CacheStatus, MediaCacheAPI } from '../../api/cache/MediaCacheAPI';
 import type { CachingTaskList } from '../../api/cache/CachingTaskList';
 import { DefaultEventDispatcher } from '../adapter/event/DefaultEventDispatcher';
 import type { CacheEventMap, CacheStatusChangeEvent } from '../../api/cache/events/CacheEvent';
+import { CacheEventType } from '../../api/cache/events/CacheEvent';
 import type { AddCachingTaskEvent, RemoveCachingTaskEvent, SourceDescription } from 'react-native-theoplayer';
+import { CacheTaskStatus, CachingTaskEventType, TimeRange } from 'react-native-theoplayer';
 import type { CachingTaskParameters } from '../../api/cache/CachingTaskParameters';
 import type { CachingTask } from '../../api/cache/CachingTask';
 import { NativeEventEmitter, NativeModules } from 'react-native';
 import { NativeCachingTaskAdapter } from './NativeCachingTaskAdapter';
-import { CacheTaskStatus, CachingTaskEventType, TimeRange } from 'react-native-theoplayer';
-import { CacheEventType } from '../../api/cache/events/CacheEvent';
 
 interface NativeCachingStatusChangeEvent {
   readonly id: string;
@@ -50,11 +50,13 @@ export class NativeMediaCache extends DefaultEventDispatcher<CacheEventMap> impl
     this._tasks = initialState.tasks.map((task: CachingTask) => new NativeCachingTaskAdapter(task));
 
     // Dispatch status change event here
-    this.onCacheStatusChange({
-      type: CacheEventType.statechange,
-      status: this._status,
-      date: new Date(),
-    });
+    if (this._status === CacheStatus.initialised) {
+      this.onCacheStatusChange({
+        type: CacheEventType.statechange,
+        status: this._status,
+        date: new Date(),
+      });
+    }
   }
 
   private onCacheStatusChange = (event: CacheStatusChangeEvent) => {
