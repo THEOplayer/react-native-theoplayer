@@ -13,10 +13,12 @@ export const useCachingTaskList = (debug = false) => {
     console.log('TVL', 'useCachingTaskList', 'addtask listener');
     MediaCache.addEventListener(CacheEventType.addtask, taskListChangeListener);
     MediaCache.addEventListener(CacheEventType.removetask, taskListChangeListener);
+    MediaCache.addEventListener(CacheEventType.statechange, taskListChangeListener);
     return () => {
       console.log('TVL', 'useCachingTaskList', 'removetask listener');
       MediaCache.removeEventListener(CacheEventType.addtask, taskListChangeListener);
       MediaCache.removeEventListener(CacheEventType.removetask, taskListChangeListener);
+      MediaCache.addEventListener(CacheEventType.statechange, taskListChangeListener);
     };
   }, []);
   return tasks;
