@@ -10,6 +10,16 @@ import { NativeCachingTaskAdapter } from './NativeCachingTaskAdapter';
 import { CacheTaskStatus, CachingTaskEventType, TimeRange } from 'react-native-theoplayer';
 import { CacheEventType } from '../../api/cache/events/CacheEvent';
 
+interface NativeCacheInitializedEvent {
+  readonly status: CacheStatus;
+  readonly tasks: CachingTaskList;
+}
+
+interface NativeCachingStatusChangeEvent {
+  readonly id: string;
+  readonly status: CacheTaskStatus;
+}
+
 interface NativeCachingTaskProgressEvent {
   id: string;
   progress: {
@@ -22,11 +32,6 @@ interface NativeCachingTaskProgressEvent {
   };
 }
 
-interface NativeCachingStatusChangeEvent {
-  readonly id: string;
-  readonly status: CacheTaskStatus;
-}
-
 export class NativeMediaCache extends DefaultEventDispatcher<CacheEventMap> implements MediaCacheAPI {
   private _emitter: NativeEventEmitter = new NativeEventEmitter(NativeModules.CacheModule);
   private _status: CacheStatus = CacheStatus.uninitialised;
@@ -34,12 +39,18 @@ export class NativeMediaCache extends DefaultEventDispatcher<CacheEventMap> impl
 
   constructor() {
     super();
+    this._emitter.addListener('onCacheInitialized', this.onCacheInitialized);
     this._emitter.addListener('onCacheStatusChange', this.onCacheStatusChange);
     this._emitter.addListener('onAddCachingTaskEvent', this.onAddCachingTaskEvent);
     this._emitter.addListener('onRemoveCachingTaskEvent', this.onRemoveCachingTaskEvent);
     this._emitter.addListener('onCachingTaskProgressEvent', this.onCachingTaskProgressEvent);
     this._emitter.addListener('onCachingTaskStatusChangeEvent', this.onCachingTaskStatusChangeEvent);
   }
+
+  private onCacheInitialized = (event: NativeCacheInitializedEvent) => {
+    this._status = event.status;
+    this._tasks = event.tasks.map((task) => new NativeCachingTaskAdapter(task));
+  };
 
   private onCacheStatusChange = (event: CacheStatusChangeEvent) => {
     this._status = event.status;
