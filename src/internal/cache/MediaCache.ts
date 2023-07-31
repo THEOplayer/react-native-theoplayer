@@ -10,11 +10,6 @@ import { NativeCachingTaskAdapter } from './NativeCachingTaskAdapter';
 import { CacheTaskStatus, CachingTaskEventType, TimeRange } from 'react-native-theoplayer';
 import { CacheEventType } from '../../api/cache/events/CacheEvent';
 
-interface NativeCacheInitializedEvent {
-  readonly status: CacheStatus;
-  readonly tasks: CachingTaskList;
-}
-
 interface NativeCachingStatusChangeEvent {
   readonly id: string;
   readonly status: CacheTaskStatus;
@@ -39,18 +34,28 @@ export class NativeMediaCache extends DefaultEventDispatcher<CacheEventMap> impl
 
   constructor() {
     super();
-    this._emitter.addListener('onCacheInitialized', this.onCacheInitialized);
     this._emitter.addListener('onCacheStatusChange', this.onCacheStatusChange);
     this._emitter.addListener('onAddCachingTaskEvent', this.onAddCachingTaskEvent);
     this._emitter.addListener('onRemoveCachingTaskEvent', this.onRemoveCachingTaskEvent);
     this._emitter.addListener('onCachingTaskProgressEvent', this.onCachingTaskProgressEvent);
     this._emitter.addListener('onCachingTaskStatusChangeEvent', this.onCachingTaskStatusChangeEvent);
+    void this.setInitialState();
   }
 
-  private onCacheInitialized = (event: NativeCacheInitializedEvent) => {
-    this._status = event.status;
-    this._tasks = event.tasks.map((task) => new NativeCachingTaskAdapter(task));
-  };
+  private async setInitialState() {
+    console.log('TVL', 'setInitialState');
+    const initialState = await NativeModules.CacheModule.getInitialState();
+    console.log('TVL', 'setInitialState', JSON.stringify(initialState));
+    this._status = initialState.status;
+    this._tasks = initialState.tasks.map((task: CachingTask) => new NativeCachingTaskAdapter(task));
+
+    // Dispatch status change event here
+    this.onCacheStatusChange({
+      type: CacheEventType.statechange,
+      status: this._status,
+      date: new Date(),
+    });
+  }
 
   private onCacheStatusChange = (event: CacheStatusChangeEvent) => {
     this._status = event.status;
