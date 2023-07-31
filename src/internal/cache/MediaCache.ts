@@ -6,8 +6,9 @@ import type { AddCachingTaskEvent, RemoveCachingTaskEvent, SourceDescription } f
 import type { CachingTaskParameters } from '../../api/cache/CachingTaskParameters';
 import type { CachingTask } from '../../api/cache/CachingTask';
 import { NativeEventEmitter, NativeModules } from 'react-native';
-import { CachingTaskAdapter } from './CachingTaskAdapter';
+import { NativeCachingTaskAdapter } from './NativeCachingTaskAdapter';
 import { CacheTaskStatus, CachingTaskEventType, TimeRange } from 'react-native-theoplayer';
+import { CacheEventType } from '../../api/cache/events/CacheEvent';
 
 interface NativeCachingTaskProgressEvent {
   id: string;
@@ -29,7 +30,7 @@ interface NativeCachingStatusChangeEvent {
 export class NativeMediaCache extends DefaultEventDispatcher<CacheEventMap> implements MediaCacheAPI {
   private _emitter: NativeEventEmitter = new NativeEventEmitter(NativeModules.CacheModule);
   private _status: CacheStatus = CacheStatus.uninitialised;
-  private _tasks: CachingTaskAdapter[] = [];
+  private _tasks: NativeCachingTaskAdapter[] = [];
 
   constructor() {
     super();
@@ -46,14 +47,21 @@ export class NativeMediaCache extends DefaultEventDispatcher<CacheEventMap> impl
   };
 
   private onAddCachingTaskEvent = (event: AddCachingTaskEvent) => {
-    console.log('TVL', 'onCacheAddTaskEvent', JSON.stringify(event));
-    this._tasks.push(new CachingTaskAdapter(event.task));
-    this.dispatchEvent(event);
+    this._tasks.push(new NativeCachingTaskAdapter(event.task));
+    this.dispatchEvent({
+      type: CacheEventType.addtask,
+      task: event.task,
+      date: new Date(),
+    });
   };
 
   private onRemoveCachingTaskEvent = (event: RemoveCachingTaskEvent) => {
     this._tasks = this._tasks.filter((task) => task.id !== event.task.id);
-    this.dispatchEvent(event);
+    this.dispatchEvent({
+      type: CacheEventType.removetask,
+      task: event.task,
+      date: new Date(),
+    });
   };
 
   private onCachingTaskProgressEvent = (event: NativeCachingTaskProgressEvent) => {
@@ -93,7 +101,7 @@ export class NativeMediaCache extends DefaultEventDispatcher<CacheEventMap> impl
     return this._tasks;
   }
 
-  private taskById(id: string): CachingTaskAdapter | undefined {
+  private taskById(id: string): NativeCachingTaskAdapter | undefined {
     return this._tasks.find((task) => task.id === id);
   }
 }
