@@ -53,7 +53,7 @@ class CacheModule(private val context: ReactApplicationContext) :
         })
       }
       tasks.addEventListener(CachingTaskListEventTypes.ADD_TASK) { event ->
-        event.task?.let {task ->
+        event.task?.let { task ->
 
           // Notify AddCachingTaskEvent event
           emit("onAddCachingTaskEvent", Arguments.createMap().apply {
@@ -77,6 +77,7 @@ class CacheModule(private val context: ReactApplicationContext) :
               putString(PROP_ERROR, errorEvent.error.description)
             })
           }.also {
+              // TODO: Fix needed in SDK
 //            task.addEventListener(CachingTaskEventTypes.CACHING_TASK_ERROR, listener)
           }
 
@@ -88,104 +89,114 @@ class CacheModule(private val context: ReactApplicationContext) :
             })
           }.also { listener ->
             task.addEventListener(CachingTaskEventTypes.CACHING_TASK_STATE_CHANGE, listener)
+          }
         }
       }
-    }
-    tasks.addEventListener(CachingTaskListEventTypes.REMOVE_TASK) { event ->
-      event.task?.let { task ->
+      tasks.addEventListener(CachingTaskListEventTypes.REMOVE_TASK) { event ->
+        event.task?.let { task ->
 
-        // Notify RemoveCachingTaskEvent event
-        emit("onRemoveCachingTaskEvent", Arguments.createMap().apply {
-          putMap(PROP_TASK, CacheAdapter.fromCachingTask(event.task))
-        })
-        onTaskProgress[task.id]?.apply {
-          task.removeEventListener(CachingTaskEventTypes.CACHING_TASK_PROGRESS, this)
-        }
-        onTaskProgress.remove(task.id)
-        onTaskError[task.id]?.apply {
-          // TODO: API
+          // Notify RemoveCachingTaskEvent event
+          emit("onRemoveCachingTaskEvent", Arguments.createMap().apply {
+            putMap(PROP_TASK, CacheAdapter.fromCachingTask(event.task))
+          })
+          onTaskProgress[task.id]?.apply {
+            task.removeEventListener(CachingTaskEventTypes.CACHING_TASK_PROGRESS, this)
+          }
+          onTaskProgress.remove(task.id)
+          onTaskError[task.id]?.apply {
+            // TODO: Fix needed in SDK
 //          task.removeEventListener(CachingTaskEventTypes.CACHING_TASK_ERROR, this)
+          }
+          onTaskError.remove(task.id)
+          onTaskStateChange[task.id]?.apply {
+            task.removeEventListener(CachingTaskEventTypes.CACHING_TASK_STATE_CHANGE, this)
+          }
+          onTaskStateChange.remove(task.id)
         }
-        onTaskError.remove(task.id)
-        onTaskStateChange[task.id]?.apply {
-          task.removeEventListener(CachingTaskEventTypes.CACHING_TASK_STATE_CHANGE, this)
-        }
-        onTaskStateChange.remove(task.id)
       }
     }
   }
-}
 
-override fun getName(): String {
-  return TAG
-}
-
-private fun emit(
-  eventName: String,
-  payload: WritableMap
-) {
-  context
-    .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-    .emit(eventName, payload)
-}
-
-@ReactMethod
-fun getTasks(promise: Promise) {
-  handler.post {
-    promise.resolve(CacheAdapter.fromCachingTaskList(cache?.tasks))
+  override fun getName(): String {
+    return TAG
   }
-}
 
-@ReactMethod
-fun createTask(source: ReadableMap, parameters: ReadableMap) {
-  val sourceDescription = sourceAdapter.parseSourceFromJS(source)
-  if (sourceDescription != null) {
+  private fun emit(
+    eventName: String,
+    payload: WritableMap
+  ) {
+    context
+      .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+      .emit(eventName, payload)
+  }
+
+  @ReactMethod
+  fun getTasks(promise: Promise) {
     handler.post {
-      cache?.createTask(
-        sourceDescription,
-        CacheAdapter.parseCachingParameters(parameters)
-      )
+      promise.resolve(CacheAdapter.fromCachingTaskList(cache?.tasks))
     }
   }
-}
 
-@ReactMethod
-fun pauseCachingTask(id: String) {
-  handler.post {
-    cache?.tasks?.getTaskById(id)?.pause()
+  @ReactMethod
+  fun createTask(source: ReadableMap, parameters: ReadableMap) {
+    val sourceDescription = sourceAdapter.parseSourceFromJS(source)
+    if (sourceDescription != null) {
+      handler.post {
+        cache?.createTask(
+          sourceDescription,
+          CacheAdapter.parseCachingParameters(parameters)
+        )
+      }
+    }
   }
-}
 
-@ReactMethod
-fun removeCachingTask(id: String) {
-  handler.post {
-    cache?.tasks?.getTaskById(id)?.remove()
+  @ReactMethod
+  fun pauseCachingTask(id: String) {
+    handler.post {
+      cache?.tasks?.getTaskById(id)?.pause()
+    }
   }
-}
 
-@ReactMethod
-fun startCachingTask(id: String) {
-  handler.post {
-    cache?.tasks?.getTaskById(id)?.start()
+  @ReactMethod
+  fun removeCachingTask(id: String) {
+    handler.post {
+      cache?.tasks?.getTaskById(id)?.remove()
+    }
   }
-}
 
-@ReactMethod
-fun renewLicense(id: String, drmConfiguration: ReadableMap?) {
-  handler.post {
-    if (drmConfiguration == null) {
-      taskById(id)?.license()?.renew()
-    } else {
-      // TODO
+  @ReactMethod
+  fun startCachingTask(id: String) {
+    handler.post {
+      cache?.tasks?.getTaskById(id)?.start()
+    }
+  }
+
+  @ReactMethod
+  fun renewLicense(id: String, drmConfiguration: ReadableMap?) {
+    handler.post {
+      if (drmConfiguration == null) {
+        taskById(id)?.license()?.renew()
+      } else {
+        // TODO
 //      taskById(id)?.license()?.renew(ContentProtectionAdapter.drmConfigurationFromJson(drmConfiguration))
+      }
     }
   }
-}
 
-private fun taskById(id: String): CachingTask? {
-  return cache?.tasks?.getTaskById(id) ?: run {
-    Log.w(TAG, "CachingTask with id $id not found")
-    return null
+  @ReactMethod
+  @Suppress("UNUSED_PARAMETER")
+  fun addListener(eventName: String?) {
   }
-}
+
+  @ReactMethod
+  @Suppress("UNUSED_PARAMETER")
+  fun removeListeners(count: Int?) {
+  }
+
+  private fun taskById(id: String): CachingTask? {
+    return cache?.tasks?.getTaskById(id) ?: run {
+      Log.w(TAG, "CachingTask with id $id not found")
+      return null
+    }
+  }
 }
