@@ -31,6 +31,7 @@ private const val TAG = "CacheModule"
 private const val PROP_STATUS = "status"
 private const val PROP_ID = "id"
 private const val PROP_TASK = "task"
+private const val PROP_TASKS = "tasks"
 private const val PROP_PROGRESS = "progress"
 private const val PROP_ERROR = "error"
 
@@ -120,9 +121,6 @@ class CacheModule(private val context: ReactApplicationContext) :
         }
       }
     }
-
-    // Notify initial state
-    emit("")
   }
 
   override fun getName(): String {
@@ -139,9 +137,14 @@ class CacheModule(private val context: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun getTasks(promise: Promise) {
+  fun getInitialState(promise: Promise) {
     handler.post {
-      promise.resolve(CacheAdapter.fromCachingTaskList(cache?.tasks))
+      cache?.apply {
+        promise.resolve(Arguments.createMap().apply {
+          putString(PROP_STATUS, CacheAdapter.fromCacheStatus(status))
+          putArray(PROP_TASKS, CacheAdapter.fromCachingTaskList(tasks))
+        })
+      }
     }
   }
 
