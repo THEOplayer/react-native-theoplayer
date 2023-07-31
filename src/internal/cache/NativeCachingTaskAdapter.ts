@@ -11,7 +11,7 @@ import type { CacheTaskStatus } from 'react-native-theoplayer';
 import { NativeModules } from 'react-native';
 import type { DRMConfiguration } from 'react-native-theoplayer';
 
-export class CachingTaskAdapter extends DefaultEventDispatcher<CachingTaskEventMap> implements CachingTask {
+export class NativeCachingTaskAdapter extends DefaultEventDispatcher<CachingTaskEventMap> implements CachingTask {
   readonly bytes: number;
   readonly bytesCached: number;
   readonly cached: TimeRange[];
