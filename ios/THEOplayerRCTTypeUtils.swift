@@ -96,6 +96,14 @@ class THEOplayerRCTTypeUtils {
             return TextTrackStyleEdgeStyle.uniform
         default:
             return TextTrackStyleEdgeStyle.none
+	}
+
+    class func cacheStatusToString(_ status: CacheStatus) -> String {
+        switch status {
+        case CacheStatus.initialised:
+            return "initialised"
+        default:
+            return "uninitialised"
         }
     }
 }

@@ -38,3 +38,6 @@ let DEBUG_REMOTECOMMANDS = DEBUG && false
 
 // Debug flag to monitor PIP Controls updates
 let DEBUG_PIPCONTROLS = DEBUG && false
+
+// Debug flag to monitor incoming cache events
+let DEBUG_CACHE_EVENTS = DEBUG && false
