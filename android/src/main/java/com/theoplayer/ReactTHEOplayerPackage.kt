@@ -7,6 +7,7 @@ import com.facebook.react.uimanager.ViewManager
 import com.theoplayer.ads.AdsModule
 import com.theoplayer.drm.ContentProtectionModule
 import com.theoplayer.cast.CastModule
+import com.theoplayer.media.MediaSessionModule
 import com.theoplayer.player.PlayerModule
 
 class ReactTHEOplayerPackage : ReactPackage {
@@ -15,7 +16,8 @@ class ReactTHEOplayerPackage : ReactPackage {
       PlayerModule(reactContext),
       AdsModule(reactContext),
       ContentProtectionModule(reactContext),
-      CastModule(reactContext)
+      CastModule(reactContext),
+      MediaSessionModule(reactContext)
     )
   }
 
