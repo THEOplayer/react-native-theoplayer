@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed an issue on Android where the player would sometimes crash when requesting the current active video track.
 
+### Changed
+
+- Switched to 'displayIconUri' in sourceDescription.metadata as primary field for artwork selection in NowplayingInfo/MediaSession, 'poster' in sourceDescription is now the fallback.
+
 ## [2.10.0] - 23-07-25
 
 ### Fixed

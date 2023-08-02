@@ -198,13 +198,13 @@
         "src": "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8",
         "type": "application/x-mpegurl"
       },
-      "poster": "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
+      "poster": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-1200x1200.png",
       "metadata": {
-        "title": "The Title",
-        "subtitle": "The Subtitle",
-        "album": "Album",
-        "displayIconUri": "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
-        "artist": "Artist"
+        "title": "Bipbop",
+        "subtitle": "Bipbop Subtitle",
+        "album": "Bipbop Album",
+        "displayIconUri": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
+        "artist": "Apple"
       }
     }
   },
@@ -219,13 +219,13 @@
         "src": "https://cdn.theoplayer.com/video/elephants-dream/playlist-single-audio.m3u8",
         "type": "application/x-mpegurl"
       },
-      "poster": "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
+      "poster": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-1200x1200.png",
       "metadata": {
-        "title": "The Title",
-        "subtitle": "The Subtitle",
-        "album": "Album",
-        "displayIconUri": "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
-        "artist": "Artist"
+        "title": "Elephants Dream",
+        "subtitle": "Elephants Dream Subtitle",
+        "album": "Elephants Dream Album",
+        "displayIconUri": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
+        "artist": "The elephant"
       }
     }
   },
@@ -248,13 +248,13 @@
           "sources": "https://cdn.theoplayer.com/demos/ads/vast/dfp-preroll-no-skip.xml"
         }
       ],
-      "poster": "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
+      "poster": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-1200x1200.png",
       "metadata": {
-        "title": "The Title",
-        "subtitle": "The Subtitle",
-        "album": "Album",
-        "displayIconUri": "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
-        "artist": "Artist"
+        "title": "Elephants Dream with Preroll",
+        "subtitle": "Elephants Dream with Preroll Subtitle",
+        "album": "Elephants Album",
+        "displayIconUri": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
+        "artist": "The Dream"
       }
     }
   },
@@ -280,13 +280,13 @@
           "timeOffset": 10
         }
       ],
-      "poster": "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
+      "poster": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-1200x1200.png",
       "metadata": {
-        "title": "The Title",
-        "subtitle": "The Subtitle",
-        "album": "Album",
-        "displayIconUri": "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
-        "artist": "Artist"
+        "title": "Elephants Dream with Midroll",
+        "subtitle": "Elephants Dream with Midroll Subtitle",
+        "album": "Ellies Album",
+        "displayIconUri": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
+        "artist": "Ellie"
       }
     }
   },

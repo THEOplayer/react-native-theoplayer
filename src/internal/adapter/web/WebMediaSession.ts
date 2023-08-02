@@ -102,7 +102,7 @@ export class WebMediaSession {
   private updateMetadata = () => {
     const source = this._player.source;
     const metadata = source?.metadata;
-    const artwork = [source?.poster, metadata?.displayIconUri, ...(metadata?.images ? metadata?.images : [])]
+    const artwork = [metadata?.displayIconUri, source?.poster, ...(metadata?.images ? metadata?.images : [])]
       .filter((image) => image !== undefined)
       .map((image) => {
         if (typeof image === 'string') {
