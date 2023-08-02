@@ -48,6 +48,7 @@ import { NativeModules, Platform } from 'react-native';
 import { TextTrackStyleAdapter } from './track/TextTrackStyleAdapter';
 import type { BackgroundAudioConfiguration } from 'src/api/backgroundAudio/BackgroundAudioConfiguration';
 import type { NativePlayerState } from './NativePlayerState';
+import { MediaSessionAdapter } from "./mediasession/MediaSessionAdapter";
 
 const defaultPlayerState: NativePlayerState = {
   source: undefined,
@@ -81,6 +82,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   private readonly _adsAdapter: THEOplayerNativeAdsAdapter;
   private readonly _castAdapter: THEOplayerNativeCastAdapter;
   private readonly _abrAdapter: AbrAdapter;
+  private readonly _mediaSessionAdapter: MediaSessionAdapter | undefined;
   private readonly _textTrackStyleAdapter: TextTrackStyleAdapter;
   private _playerVersion!: PlayerVersion;
 
@@ -91,6 +93,9 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._adsAdapter = new THEOplayerNativeAdsAdapter(this._view);
     this._castAdapter = new THEOplayerNativeCastAdapter(this, this._view);
     this._abrAdapter = new AbrAdapter(this._view);
+    if (Platform.OS === 'android') {
+      this._mediaSessionAdapter = new MediaSessionAdapter(this._view);
+    }
     this._textTrackStyleAdapter = new TextTrackStyleAdapter(this._view);
 
     this.addEventListener(PlayerEventType.SOURCE_CHANGE, this.onSourceChange);
@@ -293,6 +298,10 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   get cast(): CastAPI {
     return this._castAdapter;
+  }
+
+  get mediaSession(): MediaSessionAdapter | undefined {
+    return this._mediaSessionAdapter;
   }
 
   get currentTime(): number {

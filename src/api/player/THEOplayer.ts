@@ -12,6 +12,7 @@ import type { PresentationMode } from '../presentation/PresentationMode';
 import type { PiPConfiguration } from '../pip/PiPConfiguration';
 import type { BackgroundAudioConfiguration } from '../backgroundAudio/BackgroundAudioConfiguration';
 import type { PlayerVersion } from './PlayerVersion';
+import type { MediaSessionAPI } from "../media/MediaSessionAPI";
 
 export type PreloadType = 'none' | 'metadata' | 'auto' | '';
 
@@ -202,6 +203,14 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
    * The API for casting devices.
    */
   readonly cast: CastAPI;
+
+  /**
+   * The API for controlling the player's mediaSession.
+   *
+   * @remarks
+   * <br/> - This feature is only available for Android.
+   */
+  readonly mediaSession?: MediaSessionAPI;
 
   /**
    * The player version.
