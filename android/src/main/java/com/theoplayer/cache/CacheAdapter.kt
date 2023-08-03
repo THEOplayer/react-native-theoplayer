@@ -89,8 +89,9 @@ object CacheAdapter {
       if (parameters.hasKey(PROP_PARAMETERS_BANDWIDTH)) {
         bandwidth(parameters.getDouble(PROP_PARAMETERS_BANDWIDTH).toLong())
       }
-      // TODO
-//      expirationDate(Date())
+      if (parameters.hasKey(PROP_PARAMETERS_EXPIRATION_DATE)) {
+        expirationDate(Date(parameters.getDouble(PROP_PARAMETERS_EXPIRATION_DATE).toLong()))
+      }
 //      this.preferredTrackSelection()
     }.build()
   }
@@ -100,8 +101,7 @@ object CacheAdapter {
       if (parameters != null) {
         putString(PROP_PARAMETERS_AMOUNT, parameters.amount)
         putDouble(PROP_PARAMETERS_BANDWIDTH, parameters.bandwidth.toDouble())
-        // TODO: date
-//        putDouble(PROP_PARAMETERS_EXPIRATION_DATE, parameters.expirationDate)
+        putDouble(PROP_PARAMETERS_EXPIRATION_DATE, parameters.expirationDate.time.toDouble())
       }
     }
   }
