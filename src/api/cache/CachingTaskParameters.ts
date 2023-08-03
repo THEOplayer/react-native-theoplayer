@@ -17,7 +17,7 @@ export interface CachingTaskParameters {
    * <br/> - A percentage string (XX%) for a proportion of the content duration.
    *
    */
-  amount: number | string;
+  readonly amount: number | string;
 
   /**
    * The expiration date of the cached data.
@@ -28,7 +28,7 @@ export interface CachingTaskParameters {
    *
    * @defaultValue 30 minutes after starting the caching task.
    */
-  expirationDate?: Date;
+  readonly expirationDate?: Date;
 
   /**
    * Upper bandwidth limit of the quality to cache.
@@ -39,7 +39,7 @@ export interface CachingTaskParameters {
    *
    * @defaultValue Infinity
    */
-  bandwidth?: number;
+  readonly bandwidth?: number;
 
   /**
    * The preferred audio/text tracks to cache.
@@ -48,7 +48,7 @@ export interface CachingTaskParameters {
    * <br/> - Available only on iOS and Android.
    * <br/> - By default, the first track will be picked.
    */
-  preferredTrackSelection?: CachingPreferredTrackSelection;
+  readonly preferredTrackSelection?: CachingPreferredTrackSelection;
 
   /**
    * An indication of whether the data should be cached on a cellular network, or only on WIFI. Defaults to true.
@@ -58,5 +58,5 @@ export interface CachingTaskParameters {
    * <br/> - The value can not be changed on a scheduled asset.
    * <br/> - If the download is scheduled/started on WIFI-only mode, and suddenly we would like allow Cellular Network download too, the `CachingTask` has to be removed and scheduled again with the new `CachingParamaters`.
    */
-  allowsCellularAccess?: boolean;
+  readonly allowsCellularAccess?: boolean;
 }

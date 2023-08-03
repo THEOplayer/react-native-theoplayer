@@ -10,6 +10,29 @@ import type {
 import type { CacheTaskStatus } from 'react-native-theoplayer';
 import { NativeModules } from 'react-native';
 import type { DRMConfiguration } from 'react-native-theoplayer';
+import { fromNativeCachingTaskParameters, NativeCachingTaskParameters } from "./NativeCachingTaskParametersAdapter";
+
+export interface NativeCachingTask {
+  readonly id: string;
+
+  readonly status: CacheTaskStatus;
+
+  readonly source: SourceDescription;
+
+  readonly parameters: NativeCachingTaskParameters;
+
+  readonly duration: number;
+
+  readonly cached: TimeRange[];
+
+  readonly secondsCached: number;
+
+  readonly percentageCached: number;
+
+  readonly bytes: number;
+
+  readonly bytesCached: number;
+}
 
 export class NativeCachingTaskAdapter extends DefaultEventDispatcher<CachingTaskEventMap> implements CachingTask {
   readonly bytes: number;
@@ -24,7 +47,7 @@ export class NativeCachingTaskAdapter extends DefaultEventDispatcher<CachingTask
   readonly source: SourceDescription;
   readonly status: CacheTaskStatus;
 
-  constructor(task: CachingTask) {
+  constructor(task: NativeCachingTask) {
     super();
     this.bytes = task.bytes;
     this.cached = { ...task.cached };
@@ -36,10 +59,7 @@ export class NativeCachingTaskAdapter extends DefaultEventDispatcher<CachingTask
         NativeModules.CacheModule.renewLicense(task.id, drmConfiguration);
       },
     };
-    this.parameters = {
-      ...task.parameters,
-      expirationDate: task.parameters.expirationDate? new Date(task.parameters.expirationDate) : undefined
-    };
+    this.parameters = fromNativeCachingTaskParameters(task.parameters);
     this.percentageCached = task.percentageCached;
     this.secondsCached = task.secondsCached;
     // TODO!
