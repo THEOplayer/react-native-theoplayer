@@ -129,6 +129,11 @@ class CacheModule(private val context: ReactApplicationContext) :
     eventName: String,
     payload: WritableMap
   ) {
+    // Make sure we are not emitting before React has been setup.
+    if(!context.hasActiveReactInstance()) {
+      return
+    }
+
     context
       .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
       .emit(eventName, payload)
