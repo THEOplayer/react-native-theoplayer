@@ -54,7 +54,7 @@ export interface CachingTask extends EventDispatcher<CachingTaskEventMap> {
   readonly duration: number;
 
   /**
-   * The time ranges cached.
+   * The time ranges cached, in milliseconds.
    */
   readonly cached: TimeRange[];
 
