@@ -78,7 +78,15 @@ class THEOplayerRCTCacheAPI: RCTEventEmitter {
     
     @objc(createTask:params:)
     func createTask(_ src: NSDictionary, params: NSDictionary) -> Void {
-        
+        if DEBUG_CACHE_API { PrintUtils.printLog(logText: "[NATIVE] createTask triggered on Cache API.") }
+        let params = THEOplayerRCTCachingParametersBuilder.buildCachingParameters(params)
+        if let srcDescription = THEOplayerRCTSourceDescriptionBuilder.buildSourceDescription(src),
+           let newTask = THEOplayer.cache.createTask(source: srcDescription, parameters: params) {
+            if DEBUG_CACHE_API { PrintUtils.printLog(logText: "[NATIVE] New cache task created with id \(newTask.id)") }
+            
+            // add stateChange and progress listeners to newly created task
+            
+        }
     }
     
     @objc(startCachingTask:)
