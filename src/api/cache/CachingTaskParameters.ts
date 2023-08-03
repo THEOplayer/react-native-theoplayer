@@ -11,6 +11,7 @@ export interface CachingTaskParameters {
    * Possible formats:
    * <br/> - A number in seconds.
    * <br/> - A percentage string (XX%) for a proportion of the content duration.
+   * <br/> - Available only on Web and Android. On iOS this value we always be '100%'.
    */
   amount: number | string;
 
