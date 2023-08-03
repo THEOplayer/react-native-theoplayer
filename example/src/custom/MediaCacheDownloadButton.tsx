@@ -11,6 +11,13 @@ export const MediaCacheDownloadButton = () => {
     if (currentSource) {
       MediaCache.createTask(currentSource, {
         amount: '100%',
+        expirationDate: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        allowsCellularAccess: true,
+        bandwidth: 2000000,
+        preferredTrackSelection: {
+          audioTrackSelection: ['en-US'],
+          textTrackSelection: ['en-US'],
+        }
       });
     }
   }, []);
