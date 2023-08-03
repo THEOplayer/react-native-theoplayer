@@ -36,7 +36,10 @@ export class NativeCachingTaskAdapter extends DefaultEventDispatcher<CachingTask
         NativeModules.CacheModule.renewLicense(task.id, drmConfiguration);
       },
     };
-    this.parameters = { ...task.parameters };
+    this.parameters = {
+      ...task.parameters,
+      expirationDate: task.parameters.expirationDate? new Date(task.parameters.expirationDate) : undefined
+    };
     this.percentageCached = task.percentageCached;
     this.secondsCached = task.secondsCached;
     // TODO!
