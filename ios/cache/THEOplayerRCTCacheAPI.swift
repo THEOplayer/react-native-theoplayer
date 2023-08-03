@@ -1,9 +1,8 @@
 //
-//  THEOplayerRCTContentProtectionAPI.swift
+//  THEOplayerRCTCacheAPI.swift
 //  Theoplayer
 //
-//  Created by William van Haevre on 09/09/2022.
-//  Copyright © 2022 Facebook. All rights reserved.
+//  Created by William Van Haevre on 01/08/2023.
 //
 
 import Foundation
@@ -11,6 +10,7 @@ import UIKit
 import THEOplayerSDK
 
 let CACHE_EVENT_PROP_STATUS: String = "status"
+let CACHE_EVENT_PROP_TASKS: String = "tasks"
 
 let CACHE_TAG: String = "[CacheAPI]"
 
@@ -70,7 +70,10 @@ class THEOplayerRCTCacheAPI: RCTEventEmitter {
     
     @objc(getInitialState:rejecter:)
     func getInitialState(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
-        
+        resolve([
+            CACHE_EVENT_PROP_STATUS: THEOplayerRCTTypeUtils.cacheStatusToString(THEOplayer.cache.status),
+            CACHE_EVENT_PROP_TASKS: THEOplayerRCTCacheAggregator.aggregateCacheTasks(tasks: THEOplayer.cache.tasks)
+        ] as [String : Any])
     }
     
     @objc(createTask:params:)
