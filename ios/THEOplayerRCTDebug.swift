@@ -4,7 +4,7 @@
 let DEBUG = true
 
 // Debug flag to monitor incoming Theoplayer events
-let DEBUG_THEOPLAYER_EVENTS = DEBUG && true
+let DEBUG_THEOPLAYER_EVENTS = DEBUG && false
 
 // Debug flag to monitor eventhandler setup and breakdown
 let DEBUG_EVENTHANDLER = DEBUG && false
@@ -40,4 +40,7 @@ let DEBUG_REMOTECOMMANDS = DEBUG && false
 let DEBUG_PIPCONTROLS = DEBUG && false
 
 // Debug flag to monitor incoming cache events
-let DEBUG_CACHE_EVENTS = DEBUG && false
+let DEBUG_CACHE_EVENTS = DEBUG && true
+
+// Debug flag to monitor cache API usage
+let DEBUG_CACHE_API = DEBUG && true
