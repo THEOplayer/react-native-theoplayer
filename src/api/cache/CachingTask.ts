@@ -64,7 +64,7 @@ export interface CachingTask extends EventDispatcher<CachingTaskEventMap> {
   readonly secondsCached: number;
 
   /**
-   * The percentage cached.
+   * The percentage cached, a value between 0 and 1.
    */
   readonly percentageCached: number;
 
@@ -73,6 +73,7 @@ export interface CachingTask extends EventDispatcher<CachingTaskEventMap> {
    *
    * @remarks
    * <br/> - Returns -1 if the estimate is not available yet.
+   * <br/> - Available only on Web and Android.
    */
   readonly bytes: number;
 
