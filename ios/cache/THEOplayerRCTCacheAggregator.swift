@@ -18,6 +18,10 @@ let CACHETASK_PROP_PARAMETERS_BANDWIDTH: String = "bandwidth"
 let CACHETASK_PROP_PARAMETERS_EXPIRATION_DATE: String = "expirationDate"
 let CACHETASK_PROP_TIMERANGE_START: String = "start"
 let CACHETASK_PROP_TIMERANGE_END: String = "end"
+let CACHETASK_PROP_PARAMETERS_CELLULAR: String = "allowsCellularAccess"
+let CACHETASK_PROP_PARAMETERS_TRACK_SELECTION: String = "preferredTrackSelection"
+let CACHETASK_PROP_PARAMETERS_AUDIO_TRACK_SELECTION: String = "audioTrackSelection"
+let CACHETASK_PROP_PARAMETERS_TEXT_TRACK_SELECTION: String = "textTrackSelection"
 
 let CACHE_AGGREGATOR_TAG: String = "[CacheAggregator]"
 
@@ -42,7 +46,7 @@ class THEOplayerRCTCacheAggregator {
         aggregatedData[CACHETASK_PROP_PERCENTAGE_CACHED] = task.percentageCached
         aggregatedData[CACHETASK_PROP_BYTES] = -1
         aggregatedData[CACHETASK_PROP_BUTES_CACHED] = task.bytesCached
-        aggregatedData[CACHETASK_PROP_SOURCE]: [String:Any] = [:] // TODO: aggregate sourceDescription
+        aggregatedData[CACHETASK_PROP_SOURCE] = [:] as [String:Any] // TODO: aggregate sourceDescription
         return aggregatedData
     }
     
@@ -53,6 +57,11 @@ class THEOplayerRCTCacheAggregator {
             aggregatedData[CACHETASK_PROP_PARAMETERS_BANDWIDTH] = bandwidthValue
         }
         aggregatedData[CACHETASK_PROP_PARAMETERS_EXPIRATION_DATE] = params.expirationDate.timeIntervalSince1970 * 1000 // sec -> msec
+        aggregatedData[CACHETASK_PROP_PARAMETERS_CELLULAR] = params.allowsCellularAccess
+        aggregatedData[CACHETASK_PROP_PARAMETERS_TRACK_SELECTION] = [
+            CACHETASK_PROP_PARAMETERS_AUDIO_TRACK_SELECTION : params.preferredTrackSelection.audioTrackSelection,
+            CACHETASK_PROP_PARAMETERS_TEXT_TRACK_SELECTION: params.preferredTrackSelection.textTrackSelection
+        ]
         return aggregatedData
     }
     
