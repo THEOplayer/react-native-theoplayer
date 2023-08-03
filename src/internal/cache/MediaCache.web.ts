@@ -48,3 +48,7 @@ export class WebMediaCache extends DefaultEventDispatcher<CacheEventMap> impleme
 }
 
 export const MediaCache = new WebMediaCache();
+
+// Expose cache for easy access
+// @ts-ignore
+window.MediaCache = MediaCache;
