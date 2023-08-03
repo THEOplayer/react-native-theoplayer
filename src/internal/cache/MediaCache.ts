@@ -39,19 +39,15 @@ export class NativeMediaCache extends DefaultEventDispatcher<CacheEventMap> impl
     this._emitter.addListener('onRemoveCachingTaskEvent', this.onRemoveCachingTaskEvent);
     this._emitter.addListener('onCachingTaskProgressEvent', this.onCachingTaskProgressEvent);
     this._emitter.addListener('onCachingTaskStatusChangeEvent', this.onCachingTaskStatusChangeEvent);
-    void this.setInitialState();
+    void this.initialize();
   }
 
-  private async setInitialState() {
-    console.log('TVL', 'setInitialState');
-    const initialState = await NativeModules.CacheModule.getInitialState();
-    console.log('TVL', 'setInitialState', JSON.stringify(initialState));
-    this._status = initialState.status;
-    this._tasks = initialState.tasks.map((task: CachingTask) => new NativeCachingTaskAdapter(task));
+  private async initialize(): Promise<void> {
+    await this.getInitialState();
 
     // Dispatch status change event here
     if (this._status === CacheStatus.initialised) {
-      this.onCacheStatusChange({
+      await this.onCacheStatusChange({
         type: CacheEventType.statechange,
         status: this._status,
         date: new Date(),
@@ -59,7 +55,16 @@ export class NativeMediaCache extends DefaultEventDispatcher<CacheEventMap> impl
     }
   }
 
-  private onCacheStatusChange = (event: CacheStatusChangeEvent) => {
+  private async getInitialState(): Promise<void> {
+    const initialState = await NativeModules.CacheModule.getInitialState();
+    this._status = initialState.status;
+    this._tasks = initialState.tasks.map((task: CachingTask) => new NativeCachingTaskAdapter(task));
+  }
+
+  private onCacheStatusChange = async (event: CacheStatusChangeEvent) => {
+    if (this._status === CacheStatus.uninitialised) {
+      await this.getInitialState();
+    }
     this._status = event.status;
     this.dispatchEvent(event);
   };
