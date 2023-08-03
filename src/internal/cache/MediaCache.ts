@@ -3,7 +3,7 @@ import type { CachingTaskList } from '../../api/cache/CachingTaskList';
 import { DefaultEventDispatcher } from '../adapter/event/DefaultEventDispatcher';
 import type { CacheEventMap } from '../../api/cache/events/CacheEvent';
 import { CacheEventType } from '../../api/cache/events/CacheEvent';
-import type { SourceDescription } from 'react-native-theoplayer';
+import type { CachingTaskProgressEvent, CachingTaskStatusChangeEvent, SourceDescription } from 'react-native-theoplayer';
 import { CacheTaskStatus, CachingTaskEventType, TimeRange } from 'react-native-theoplayer';
 import type { CachingTaskParameters } from '../../api/cache/CachingTaskParameters';
 import type { CachingTask } from '../../api/cache/CachingTask';
@@ -128,7 +128,7 @@ export class NativeMediaCache extends DefaultEventDispatcher<CacheEventMap> impl
       task.dispatchEvent({
         type: CachingTaskEventType.progress,
         date: new Date(),
-      });
+      } as CachingTaskProgressEvent);
     }
   };
 
@@ -139,7 +139,7 @@ export class NativeMediaCache extends DefaultEventDispatcher<CacheEventMap> impl
       task.dispatchEvent({
         type: CachingTaskEventType.statechange,
         date: new Date(),
-      });
+      } as CachingTaskStatusChangeEvent);
     }
   };
 
