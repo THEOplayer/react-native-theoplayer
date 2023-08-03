@@ -1,11 +1,13 @@
 package com.theoplayer.cache
 
 import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableArray
 import com.facebook.react.bridge.WritableMap
 import com.theoplayer.android.api.cache.CacheStatus
 import com.theoplayer.android.api.cache.CachingParameters
+import com.theoplayer.android.api.cache.CachingPreferredTrackSelection
 import com.theoplayer.android.api.cache.CachingTask
 import com.theoplayer.android.api.cache.CachingTaskList
 import com.theoplayer.android.api.cache.CachingTaskProgress
@@ -20,6 +22,9 @@ private const val PROP_PARAMETERS = "parameters"
 private const val PROP_PARAMETERS_AMOUNT = "amount"
 private const val PROP_PARAMETERS_EXPIRATION_DATE = "expirationDate"
 private const val PROP_PARAMETERS_BANDWIDTH = "bandwidth"
+private const val PROP_PARAMETERS_PREFERRED_TRACK_SELECTION = "preferredTrackSelection"
+private const val PROP_PARAMETERS_AUDIO_TRACK_SELECTION = "audioTrackSelection"
+private const val PROP_PARAMETERS_TEXT_TRACK_SELECTION = "textTrackSelection"
 private const val PROP_DURATION = "duration"
 private const val PROP_CACHED = "cached"
 private const val PROP_SECONDS_CACHED = "secondsCached"
@@ -92,8 +97,21 @@ object CacheAdapter {
       if (parameters.hasKey(PROP_PARAMETERS_EXPIRATION_DATE)) {
         expirationDate(Date(parameters.getDouble(PROP_PARAMETERS_EXPIRATION_DATE).toLong()))
       }
-//      this.preferredTrackSelection()
+      if (parameters.hasKey(PROP_PARAMETERS_PREFERRED_TRACK_SELECTION)) {
+        preferredTrackSelection(parsePreferredTrackSelection(parameters.getMap(PROP_PARAMETERS_PREFERRED_TRACK_SELECTION)))
+      }
     }.build()
+  }
+
+  private fun parsePreferredTrackSelection(parameters: ReadableMap?): CachingPreferredTrackSelection {
+    return CachingPreferredTrackSelection.Builder().apply {
+      audioTrackSelection(fromReadableStringArray(parameters?.getArray(PROP_PARAMETERS_AUDIO_TRACK_SELECTION)))
+      textTrackSelection(fromReadableStringArray(parameters?.getArray(PROP_PARAMETERS_TEXT_TRACK_SELECTION)))
+    }.build()
+  }
+
+  private fun fromReadableStringArray(array: ReadableArray?): Array<String>? {
+    return array?.toArrayList()?.map { it.toString() }?.toTypedArray()
   }
 
   private fun fromCachingParameters(parameters: CachingParameters?): WritableMap {
@@ -105,5 +123,4 @@ object CacheAdapter {
       }
     }
   }
-
 }
