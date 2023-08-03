@@ -72,8 +72,8 @@ export interface CachingTask extends EventDispatcher<CachingTaskEventMap> {
    * The estimation of the amount this task will download and store, in bytes.
    *
    * @remarks
-   * <br/> - Returns -1 if the estimate is not available yet.
    * <br/> - Available only on Web and Android.
+   * <br/> - Returns -1 if the estimate is not available yet.
    */
   readonly bytes: number;
 
