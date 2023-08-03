@@ -66,7 +66,6 @@ export class NativeMediaCache extends DefaultEventDispatcher<CacheEventMap> impl
   }
 
   get tasks(): CachingTaskList {
-    console.log('TVL', 'TASKS', JSON.stringify(this._tasks));
     return this._tasks;
   }
 
@@ -123,7 +122,6 @@ export class NativeMediaCache extends DefaultEventDispatcher<CacheEventMap> impl
   };
 
   private onCachingTaskProgressEvent = (event: NativeCachingTaskProgressEvent) => {
-    console.log('TVL', 'onCachingTaskProgressEvent', JSON.stringify(event));
     const task = this.taskById(event.id);
     if (task) {
       Object.assign(task, { ...event.progress });
@@ -135,7 +133,6 @@ export class NativeMediaCache extends DefaultEventDispatcher<CacheEventMap> impl
   };
 
   private onCachingTaskStatusChangeEvent = (event: NativeCachingStatusChangeEvent) => {
-    console.log('TVL', 'onCachingTaskStatusChangeEvent', JSON.stringify(event));
     const task = this.taskById(event.id);
     if (task) {
       Object.assign(task, { ...event });
