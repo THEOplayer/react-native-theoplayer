@@ -106,4 +106,19 @@ class THEOplayerRCTTypeUtils {
             return "uninitialised"
         }
     }
+    
+    class func cachingTaskStatusToString(_ status: CachingTaskStatus) -> String {
+        switch status {
+        case CachingTaskStatus.error:
+            return "error"
+        case CachingTaskStatus.done:
+            return "done"
+        case CachingTaskStatus.evicted:
+            return "evicted"
+        case CachingTaskStatus.loading:
+            return "loading"
+        default:
+            return "idle"
+        }
+    }
 }
