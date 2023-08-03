@@ -83,21 +83,21 @@ class THEOplayerRCTCacheAPI: RCTEventEmitter {
     
     @objc(startCachingTask:)
     func startCachingTask(_ id: NSNumber) -> Void {
-        
+        if DEBUG_CACHE_API { PrintUtils.printLog(logText: "[NATIVE] Start task triggered on Cache API for task with id \(id).") }
     }
     
     @objc(pauseCachingTask:)
     func pauseCachingTask(_ id: NSNumber) -> Void {
-        
+        if DEBUG_CACHE_API { PrintUtils.printLog(logText: "[NATIVE] Pause task triggered on Cache API for task with id \(id).") }
     }
     
     @objc(removeCachingTask:)
     func removeCachingTask(_ id: NSNumber) -> Void {
-        
+        if DEBUG_CACHE_API { PrintUtils.printLog(logText: "[NATIVE] Remove task triggered on Cache API for task with id \(id).") }
     }
     
     @objc(renewLicense:drmConfig:)
     func renewLicense(_ id: NSNumber, drmConfig: NSDictionary) -> Void {
-        
+        if DEBUG_CACHE_API { PrintUtils.printLog(logText: "[NATIVE] Renew license triggered on Cache API for task with id \(id).") }
     }
 }
