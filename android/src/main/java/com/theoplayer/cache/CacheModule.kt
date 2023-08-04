@@ -208,8 +208,13 @@ class CacheModule(private val context: ReactApplicationContext) :
       if (drmConfiguration == null) {
         taskById(id)?.license()?.renew()
       } else {
-        // TODO
-//      taskById(id)?.license()?.renew(ContentProtectionAdapter.drmConfigurationFromJson(drmConfiguration))
+        try {
+          val drmConfigurationJson = JSONObject(Gson().toJson(drmConfiguration.toHashMap()))
+          taskById(id)?.license()
+            ?.renew(ContentProtectionAdapter.drmConfigurationFromJson(drmConfigurationJson))
+        } catch (e: JSONException) {
+          e.printStackTrace()
+        }
       }
     }
   }
