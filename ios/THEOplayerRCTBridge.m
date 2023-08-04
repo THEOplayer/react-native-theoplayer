@@ -229,13 +229,13 @@ RCT_EXTERN_METHOD(getInitialState:(RCTPromiseResolveBlock)resolve
 RCT_EXTERN_METHOD(createTask:(NSDictionary)src
                   params:(NSDictionary)params)
 
-RCT_EXTERN_METHOD(startCachingTask(nonnull NSNumber *)id)
+RCT_EXTERN_METHOD(startCachingTask:(nonnull NSString *)id)
 
-RCT_EXTERN_METHOD(pauseCachingTask(nonnull NSNumber *)id)
+RCT_EXTERN_METHOD(pauseCachingTask:(nonnull NSString *)id)
 
-RCT_EXTERN_METHOD(removeCachingTask(nonnull NSNumber *)id)
+RCT_EXTERN_METHOD(removeCachingTask:(nonnull NSString *)id)
 
-RCT_EXTERN_METHOD(renewLicense:(nonnull NSNumber *)id
+RCT_EXTERN_METHOD(renewLicense:(nonnull NSString *)id
                   drmConfig:(NSDictionary)drmConfig)
 
 @end
