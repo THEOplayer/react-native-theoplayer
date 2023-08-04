@@ -82,7 +82,7 @@ class THEOplayerRCTCacheAPI: RCTEventEmitter {
     private func attachTaskListenersToTask(_ newTask: CachingTask) {
         // add STATE_CHANGE listeners to newly created task
         self.taskStateChangeListeners[newTask.id] = newTask.addEventListener(type: CachingTaskEventTypes.STATE_CHANGE) { [weak self] event in
-            if DEBUG_CACHE_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received STATE_CHANGE event from task with id \(newTask.id)") }
+            if DEBUG_CACHE_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received STATE_CHANGE event from task with id \(newTask.id): status is \(THEOplayerRCTTypeUtils.cachingTaskStatusToString(newTask.status))") }
             self?.sendEvent(withName: "onCachingTaskStatusChangeEvent", body: [
                 CACHETASK_PROP_ID: newTask.id,
                 CACHE_EVENT_PROP_STATUS: THEOplayerRCTTypeUtils.cachingTaskStatusToString(newTask.status)
@@ -92,7 +92,7 @@ class THEOplayerRCTCacheAPI: RCTEventEmitter {
         
         // add PROGRESS listeners to newly created task
         self.taskProgressListeners[newTask.id] = newTask.addEventListener(type: CachingTaskEventTypes.PROGRESS) { [weak self] event in
-            if DEBUG_CACHE_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received PROGRESS event from task with id \(newTask.id)") }
+            if DEBUG_CACHE_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received PROGRESS event from task with id \(newTask.id): progress is \(newTask.percentageCached * 100.0)% of \(newTask.duration) sec.") }
             self?.sendEvent(withName: "onCachingTaskProgressEvent", body: [
                 CACHETASK_PROP_ID: newTask.id,
                 CACHE_EVENT_PROP_PROGRESS: THEOplayerRCTCacheAggregator.aggregateCacheTaskProgress(task: newTask)
