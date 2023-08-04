@@ -35,6 +35,7 @@ private const val ACTION_RWD = ACTION_PLAY + 2
 private const val ACTION_FFD = ACTION_PLAY + 3
 private const val ACTION_IGNORE = ACTION_PLAY + 999
 private const val SKIP_TIME = 15
+private const val NO_ICON = -1
 
 private val PIP_ASPECT_RATIO_DEFAULT = Rational(16, 9)
 private val PIP_ASPECT_RATIO_MIN = Rational(100, 239)
@@ -125,21 +126,24 @@ class PipUtils(
       }
 
       // Play/pause
-      // Always add this button, but send an ACTION_IGNORE if disabled.
+      // Always add this button, but send an ACTION_IGNORE and make invisible if disabled.
+      // If no RemoteActions are added, MediaSession takes over the UI.
       add(
         if (paused) {
           buildRemoteAction(
-            if (enablePlayPause) ACTION_PLAY else ACTION_IGNORE,
+            ACTION_PLAY,
             R.drawable.ic_play,
             R.string.play_pip,
-            R.string.play_desc_pip
+            R.string.play_desc_pip,
+            enablePlayPause
           )
         } else {
           buildRemoteAction(
-            if (enablePlayPause) ACTION_PAUSE else ACTION_IGNORE,
+            ACTION_PAUSE,
             R.drawable.ic_pause,
             R.string.pause_pip,
-            R.string.pause_desc_pip
+            R.string.pause_desc_pip,
+            enablePlayPause
           )
         }
       )
@@ -235,12 +239,15 @@ class PipUtils(
     requestId: Int,
     iconId: Int,
     titleId: Int,
-    descId: Int
+    descId: Int,
+    enabled: Boolean = true
   ): RemoteAction {
-    val intent = Intent(ACTION_MEDIA_CONTROL).putExtra(EXTRA_ACTION, requestId)
+    // Ignore the action if it is disabled
+    val requestCode = if (enabled) requestId else ACTION_IGNORE
+    val intent = Intent(ACTION_MEDIA_CONTROL).putExtra(EXTRA_ACTION, requestCode)
     val pendingIntent =
-      PendingIntent.getBroadcast(reactContext, requestId, intent, PendingIntent.FLAG_IMMUTABLE)
-    val icon: Icon = Icon.createWithResource(reactContext, iconId)
+      PendingIntent.getBroadcast(reactContext, requestCode, intent, PendingIntent.FLAG_IMMUTABLE)
+    val icon: Icon = Icon.createWithResource(reactContext, if (enabled) iconId else NO_ICON)
     val title = reactContext.getString(titleId)
     val desc = reactContext.getString(descId)
     return RemoteAction(icon, title, desc, pendingIntent)
