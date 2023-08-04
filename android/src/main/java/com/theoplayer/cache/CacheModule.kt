@@ -13,6 +13,7 @@ import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
+import com.google.gson.Gson
 import com.theoplayer.util.ViewResolver
 import com.theoplayer.android.api.THEOplayerGlobal
 import com.theoplayer.android.api.cache.Cache
@@ -23,7 +24,10 @@ import com.theoplayer.android.api.event.cache.task.CachingTaskEventTypes
 import com.theoplayer.android.api.event.cache.task.CachingTaskProgressEvent
 import com.theoplayer.android.api.event.cache.task.CachingTaskStateChangeEvent
 import com.theoplayer.android.api.event.cache.tasklist.CachingTaskListEventTypes
+import com.theoplayer.drm.ContentProtectionAdapter
 import com.theoplayer.source.SourceAdapter
+import org.json.JSONException
+import org.json.JSONObject
 
 private const val TAG = "CacheModule"
 
@@ -58,64 +62,24 @@ class CacheModule(private val context: ReactApplicationContext) :
       // Listen for add task events
       tasks.addEventListener(CachingTaskListEventTypes.ADD_TASK) { event ->
         event.task?.let { task ->
-
           // Notify AddCachingTaskEvent event
           emit("onAddCachingTaskEvent", Arguments.createMap().apply {
             putMap(PROP_TASK, CacheAdapter.fromCachingTask(task))
           })
-
-          // Listen for task progress
-          onTaskProgress[task.id] = EventListener<CachingTaskProgressEvent> { progressEvent ->
-            emit("onCachingTaskProgressEvent", Arguments.createMap().apply {
-              putString(PROP_ID, task.id)
-              putMap(PROP_PROGRESS, CacheAdapter.fromCachingTaskProgress(progressEvent.progress))
-            })
-          }.also { listener ->
-            task.addEventListener(CachingTaskEventTypes.CACHING_TASK_PROGRESS, listener)
-          }
-
-//          // Listen for task errors
-//          onTaskError[task.id] = EventListener<CachingTaskErrorEvent> { errorEvent ->
-//            emit("onCachingTaskErrorEvent", Arguments.createMap().apply {
-//              putString(PROP_ID, task.id)
-//              putString(PROP_ERROR, errorEvent.error.description)
-//            })
-//          }.also {
-//            task.addEventListener(CachingTaskEventTypes.CACHING_TASK_ERROR, listener)
-//          }
-
-          // Listen for task state changes
-          onTaskStateChange[task.id] = EventListener<CachingTaskStateChangeEvent> { changeEvent ->
-            emit("onCachingTaskStatusChangeEvent", Arguments.createMap().apply {
-              putString(PROP_ID, task.id)
-              putString(PROP_STATUS, CacheAdapter.fromCacheTaskStatus(changeEvent.status))
-            })
-          }.also { listener ->
-            task.addEventListener(CachingTaskEventTypes.CACHING_TASK_STATE_CHANGE, listener)
-          }
+          // Add CachingTask listeners
+          addCachingTaskListeners(task)
         }
       }
 
       // Listen for task removal
       tasks.addEventListener(CachingTaskListEventTypes.REMOVE_TASK) { event ->
         event.task?.let { task ->
-
           // Notify RemoveCachingTaskEvent event
           emit("onRemoveCachingTaskEvent", Arguments.createMap().apply {
             putMap(PROP_TASK, CacheAdapter.fromCachingTask(event.task))
           })
-          onTaskProgress[task.id]?.apply {
-            task.removeEventListener(CachingTaskEventTypes.CACHING_TASK_PROGRESS, this)
-          }
-          onTaskProgress.remove(task.id)
-//          onTaskError[task.id]?.apply {
-//            task.removeEventListener(CachingTaskEventTypes.CACHING_TASK_ERROR, this)
-//          }
-//          onTaskError.remove(task.id)
-          onTaskStateChange[task.id]?.apply {
-            task.removeEventListener(CachingTaskEventTypes.CACHING_TASK_STATE_CHANGE, this)
-          }
-          onTaskStateChange.remove(task.id)
+          // Remove CachingTask listeners
+          removeCachingTaskListeners(task)
         }
       }
     }
@@ -125,12 +89,59 @@ class CacheModule(private val context: ReactApplicationContext) :
     return TAG
   }
 
+  private fun addCachingTaskListeners(task: CachingTask) {
+    // Listen for task progress
+    onTaskProgress[task.id] = EventListener<CachingTaskProgressEvent> { progressEvent ->
+      emit("onCachingTaskProgressEvent", Arguments.createMap().apply {
+        putString(PROP_ID, task.id)
+        putMap(PROP_PROGRESS, CacheAdapter.fromCachingTaskProgress(progressEvent.progress))
+      })
+    }.also { listener ->
+      task.addEventListener(CachingTaskEventTypes.CACHING_TASK_PROGRESS, listener)
+    }
+
+//    // Listen for task errors
+//    onTaskError[task.id] = EventListener<CachingTaskErrorEvent> { errorEvent ->
+//      emit("onCachingTaskErrorEvent", Arguments.createMap().apply {
+//        putString(PROP_ID, task.id)
+//        putString(PROP_ERROR, errorEvent.error.description)
+//      })
+//    }.also {
+//      task.addEventListener(CachingTaskEventTypes.CACHING_TASK_ERROR, listener)
+//    }
+
+    // Listen for task state changes
+    onTaskStateChange[task.id] = EventListener<CachingTaskStateChangeEvent> { changeEvent ->
+      emit("onCachingTaskStatusChangeEvent", Arguments.createMap().apply {
+        putString(PROP_ID, task.id)
+        putString(PROP_STATUS, CacheAdapter.fromCacheTaskStatus(changeEvent.status))
+      })
+    }.also { listener ->
+      task.addEventListener(CachingTaskEventTypes.CACHING_TASK_STATE_CHANGE, listener)
+    }
+  }
+
+  private fun removeCachingTaskListeners(task: CachingTask) {
+    onTaskProgress[task.id]?.apply {
+      task.removeEventListener(CachingTaskEventTypes.CACHING_TASK_PROGRESS, this)
+    }
+    onTaskProgress.remove(task.id)
+//    onTaskError[task.id]?.apply {
+//      task.removeEventListener(CachingTaskEventTypes.CACHING_TASK_ERROR, this)
+//    }
+//    onTaskError.remove(task.id)
+    onTaskStateChange[task.id]?.apply {
+      task.removeEventListener(CachingTaskEventTypes.CACHING_TASK_STATE_CHANGE, this)
+    }
+    onTaskStateChange.remove(task.id)
+  }
+
   private fun emit(
     eventName: String,
     payload: WritableMap
   ) {
     // Make sure we are not emitting before React has been setup.
-    if(!context.hasActiveReactInstance()) {
+    if (!context.hasActiveReactInstance()) {
       return
     }
 
@@ -143,6 +154,12 @@ class CacheModule(private val context: ReactApplicationContext) :
   fun getInitialState(promise: Promise) {
     handler.post {
       cache?.apply {
+
+        // Add listeners to existing tasks
+        tasks.forEach { task ->
+          addCachingTaskListeners(task)
+        }
+
         promise.resolve(Arguments.createMap().apply {
           putString(PROP_STATUS, CacheAdapter.fromCacheStatus(status))
           putArray(PROP_TASKS, CacheAdapter.fromCachingTaskList(tasks))
