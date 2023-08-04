@@ -2,9 +2,12 @@ package com.theoplayer.source
 
 import android.text.TextUtils
 import android.util.Log
+import com.facebook.react.bridge.Arguments
 import com.google.gson.Gson
 import com.theoplayer.android.api.error.THEOplayerException
 import com.facebook.react.bridge.ReadableMap
+import com.facebook.react.bridge.WritableArray
+import com.facebook.react.bridge.WritableMap
 import com.theoplayer.android.api.source.SourceDescription
 import com.theoplayer.android.api.source.TypedSource
 import com.theoplayer.android.api.source.metadata.MetadataDescription
@@ -20,11 +23,11 @@ import com.theoplayer.android.api.event.ads.AdIntegrationKind
 import com.theoplayer.android.api.source.addescription.GoogleImaAdDescription
 import com.theoplayer.android.api.player.track.texttrack.TextTrackKind
 import com.theoplayer.android.api.source.metadata.ChromecastMetadataImage
-import com.facebook.react.bridge.ReadableArray
 import com.theoplayer.BuildConfig
 import com.theoplayer.android.api.error.ErrorCode
 import com.theoplayer.android.api.source.dash.DashPlaybackConfiguration
 import com.theoplayer.drm.ContentProtectionAdapter
+import com.theoplayer.util.BridgeUtils
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -68,10 +71,8 @@ class SourceAdapter {
     if (source == null) {
       return null
     }
-    val hashmap = eliminateReadables(source)
     try {
-      val json = gson.toJson(hashmap)
-      val jsonSourceObject = JSONObject(json)
+      val jsonSourceObject = JSONObject(gson.toJson(source.toHashMap()))
 
       // typed sources
       val typedSources = ArrayList<TypedSource>()
@@ -221,9 +222,8 @@ class SourceAdapter {
 
   @Throws(THEOplayerException::class)
   fun parseAdFromJS(map: ReadableMap): AdDescription? {
-    val hashmap = eliminateReadables(map)
     return try {
-      val jsonAdDescription = JSONObject(gson.toJson(hashmap))
+      val jsonAdDescription = JSONObject(gson.toJson(map.toHashMap()))
       parseAdFromJS(jsonAdDescription)
     } catch (e: JSONException) {
       e.printStackTrace()
@@ -382,33 +382,7 @@ class SourceAdapter {
     return ChromecastMetadataImage(metadataImage.optString("src"), width, height)
   }
 
-  private fun eliminateReadables(readableMap: ReadableMap): HashMap<String, Any> {
-    val hashMap = readableMap.toHashMap()
-    val eliminatedHashMap = HashMap<String, Any>()
-    for (entry in hashMap.entries) {
-      var value = entry.value
-      if (value is ReadableMap) {
-        value = eliminateReadables(value)
-      } else if (value is ReadableArray) {
-        value = eliminateReadables(value)
-      }
-      eliminatedHashMap[entry.key] = value
-    }
-    return eliminatedHashMap
-  }
-
-  private fun eliminateReadables(readableArray: ReadableArray): ArrayList<Any> {
-    val arrayList = readableArray.toArrayList()
-    val eliminatedArrayList = ArrayList<Any>()
-    for (o in arrayList) {
-      var value = o
-      if (value is ReadableMap) {
-        value = eliminateReadables(value)
-      } else if (value is ReadableArray) {
-        value = eliminateReadables(value)
-      }
-      eliminatedArrayList.add(value)
-    }
-    return eliminatedArrayList
+  fun fromSourceDescription(source: SourceDescription): WritableMap {
+    return BridgeUtils.fromJSONObjectToBridge(JSONObject(gson.toJson(source)))
   }
 }
