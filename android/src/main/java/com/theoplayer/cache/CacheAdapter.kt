@@ -12,6 +12,7 @@ import com.theoplayer.android.api.cache.CachingTask
 import com.theoplayer.android.api.cache.CachingTaskList
 import com.theoplayer.android.api.cache.CachingTaskProgress
 import com.theoplayer.android.api.cache.CachingTaskStatus
+import com.theoplayer.source.SourceAdapter
 import com.theoplayer.util.fromTimeRanges
 import java.util.Date
 
@@ -41,7 +42,7 @@ object CacheAdapter {
     return Arguments.createMap().apply {
       putString(PROP_ID, task.id)
       putString(PROP_STATUS, fromCacheTaskStatus(task.status))
-//      putString(PROP_SOURCE, /*TODO*/)
+      putMap(PROP_SOURCE, SourceAdapter().fromSourceDescription(task.source))
       putMap(PROP_PARAMETERS, fromCachingParameters(task.parameters))
       putDouble(PROP_DURATION, task.duration)
       putArray(PROP_CACHED, fromTimeRanges(task.cached))
