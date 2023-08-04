@@ -50,7 +50,6 @@ const TaskItemView = (props: { id: number; task: CachingTask }) => {
 
     const status = useCachingTaskStatus(task);
     const progress = useCachingTaskProgress(task);
-    const evicted = status === CacheTaskStatus.evicted
 
     return (
         <View style={{flex: 1, justifyContent: 'center', flexDirection: 'row', alignItems: 'center'}}>
@@ -78,12 +77,10 @@ const TaskItemView = (props: { id: number; task: CachingTask }) => {
             </View>
             <ActionButton
                 svg={<DeleteSvg/>}
-                touchable={!evicted}
+                touchable={true}
                 style={{width: 32}}
                 onPress={() => {
-                    if (!evicted) {
-                        task.remove();
-                    }
+                    task.remove();
                 }}/>
         </View>
     );
