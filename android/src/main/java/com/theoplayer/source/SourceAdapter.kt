@@ -41,6 +41,7 @@ private const val PROP_LIVE_OFFSET = "liveOffset"
 private const val PROP_HLS_DATERANGE = "hlsDateRange"
 private const val PROP_HLS_PLAYBACK_CONFIG = "hls"
 private const val PROP_TIME_SERVER = "timeServer"
+private const val PROP_DATA = "data"
 private const val PROP_METADATA = "metadata"
 private const val PROP_SSAI = "ssai"
 private const val PROP_TYPE = "type"
@@ -387,6 +388,14 @@ class SourceAdapter {
   }
 
   fun fromSourceDescription(source: SourceDescription): WritableMap {
-    return BridgeUtils.fromJSONObjectToBridge(JSONObject(gson.toJson(source)))
+    val json = JSONObject(gson.toJson(source))
+
+    // Normalize metadata
+    // The player SDK adds an extra 'data' level within metadata: flatten.
+    json.optJSONObject(PROP_METADATA)?.optJSONObject(PROP_DATA)?.let { newMetadata ->
+      json.put(PROP_METADATA, newMetadata)
+    }
+
+    return BridgeUtils.fromJSONObjectToBridge(json)
   }
 }
