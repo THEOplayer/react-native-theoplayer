@@ -1,6 +1,6 @@
 import { CacheTaskStatus, CachingTask, MediaCache, useCachingTaskList, useCachingTaskProgress, useCachingTaskStatus } from 'react-native-theoplayer';
 import React from 'react';
-import { StyleProp, View, ViewStyle } from 'react-native';
+import { StyleProp, View, ViewStyle, Text } from 'react-native';
 import { ActionButton, MenuRadioButton, MenuView, ScrollableMenu, SubMenuWithButton } from '@theoplayer/react-native-ui';
 import { DeleteSvg } from "../res/DeleteSvg";
 
@@ -55,13 +55,7 @@ const TaskItemView = (props: { id: number; task: CachingTask }) => {
     return (
         <View style={{flex: 1, justifyContent: 'center', flexDirection: 'row', alignItems: 'center'}}>
             <View style={{flex: 5}}>
-                <MenuRadioButton
-                    label={getCachingTaskLabel(task)}
-                    style={{alignSelf: 'flex-start'}}
-                    uid={0}
-                    onSelect={() => {
-                        /**/
-                    }}/>
+                <Text style={{color: 'white'}}>{getCachingTaskLabel(task)}</Text>
             </View>
             <View style={{flex: 1, minWidth: 70}}>
                 <MenuRadioButton
@@ -80,13 +74,7 @@ const TaskItemView = (props: { id: number; task: CachingTask }) => {
                 />
             </View>
             <View style={{flex: 1, minWidth: 60}}>
-                <MenuRadioButton
-                    label={`${(100 * (progress || 0)).toFixed(2)}%`}
-                    uid={2}
-                    onSelect={() => {
-                        /*ignore*/
-                    }}
-                />
+                <Text style={{color: 'white'}}>{`${(100 * (progress || 0)).toFixed(2)}%`}</Text>
             </View>
             <ActionButton
                 svg={<DeleteSvg/>}
