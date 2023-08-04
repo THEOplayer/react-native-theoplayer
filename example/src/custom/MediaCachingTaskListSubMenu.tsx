@@ -27,7 +27,7 @@ export interface MediaCachingTaskViewProps {
 }
 
 function getCachingTaskLabel(task: CachingTask): string {
-  return task.source.metadata?.title || 'Unknown source';
+  return task.source.metadata?.title || task.id.slice(0, 13);
 }
 
 const EmptyMediaCacheView = () => {
