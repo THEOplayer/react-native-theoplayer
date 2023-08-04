@@ -82,11 +82,18 @@ class THEOplayerRCTCacheAPI: RCTEventEmitter {
     private func attachTaskListenersToTask(_ newTask: CachingTask) {
         // add STATE_CHANGE listeners to newly created task
         self.taskStateChangeListeners[newTask.id] = newTask.addEventListener(type: CachingTaskEventTypes.STATE_CHANGE) { [weak self] event in
-            if DEBUG_CACHE_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received STATE_CHANGE event from task with id \(newTask.id): status is \(THEOplayerRCTTypeUtils.cachingTaskStatusToString(newTask.status))") }
+            if DEBUG_CACHE_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received STATE_CHANGE event for task with id \(newTask.id): status is \(THEOplayerRCTTypeUtils.cachingTaskStatusToString(newTask.status))") }
             self?.sendEvent(withName: "onCachingTaskStatusChangeEvent", body: [
                 CACHETASK_PROP_ID: newTask.id,
                 CACHE_EVENT_PROP_STATUS: THEOplayerRCTTypeUtils.cachingTaskStatusToString(newTask.status)
             ])
+            
+            if let errorEvent = event as? CachingTaskErrorStateChangeEvent,
+               let error = errorEvent.error {
+                if DEBUG_CACHE_EVENTS { PrintUtils.printLog(logText: "[NATIVE] STATE_CHANGE_ERROR event for task with id \(newTask.id): [error] \(error)") }
+            } else if let idleEvent = event as? CachingTaskIdleStateChangeEvent {
+                if DEBUG_CACHE_EVENTS { PrintUtils.printLog(logText: "[NATIVE] STATE_CHANGE_IDLE event for task with id \(newTask.id): [reason] \(THEOplayerRCTTypeUtils.cacheStatusIdleReasonToString(idleEvent.idleReason))") }
+            }
         }
         if DEBUG_CACHE_EVENTS { PrintUtils.printLog(logText: "[NATIVE] StateChange listener attached to task with id \(newTask.id).") }
         

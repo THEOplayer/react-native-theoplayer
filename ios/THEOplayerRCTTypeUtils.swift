@@ -122,4 +122,17 @@ class THEOplayerRCTTypeUtils {
             return "idle"
         }
     }
+    
+    class func cacheStatusIdleReasonToString(_ status: CacheStatusIdleReason) -> String {
+        switch status {
+        case CacheStatusIdleReason.notStarted:
+            return "notStarted"
+        case CacheStatusIdleReason.paused:
+            return "paused"
+        case CacheStatusIdleReason.lostNetwork:
+            return "lostNetwork"
+        default:
+            return "notStarted"
+        }
+    }
 }
