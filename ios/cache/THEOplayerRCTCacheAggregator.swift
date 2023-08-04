@@ -12,7 +12,7 @@ let CACHETASK_PROP_CACHED: String = "cached"
 let CACHETASK_PROP_SECONDS_CACHED: String = "secondsCached"
 let CACHETASK_PROP_PERCENTAGE_CACHED: String = "percentageCached"
 let CACHETASK_PROP_BYTES: String = "bytes"
-let CACHETASK_PROP_BUTES_CACHED: String = "bytesCached"
+let CACHETASK_PROP_BYTES_CACHED: String = "bytesCached"
 let CACHETASK_PROP_PARAMETERS_AMOUNT: String = "amount"
 let CACHETASK_PROP_PARAMETERS_BANDWIDTH: String = "bandwidth"
 let CACHETASK_PROP_PARAMETERS_EXPIRATION_DATE: String = "expirationDate"
@@ -40,14 +40,23 @@ class THEOplayerRCTCacheAggregator {
         aggregatedData[CACHETASK_PROP_ID] = task.id
         aggregatedData[CACHETASK_PROP_STATUS] = THEOplayerRCTTypeUtils.cachingTaskStatusToString(task.status)
         aggregatedData[CACHETASK_PROP_PARAMETERS] = THEOplayerRCTCacheAggregator.aggregateCacheTaskParameters(params: task.parameters)
+        aggregatedData[CACHETASK_PROP_SOURCE] = THEOplayerRCTSourceDescriptionAggregator.aggregateCacheTaskSourceDescription(sourceDescription: task.source)
+        for (key, value) in THEOplayerRCTCacheAggregator.aggregateCacheTaskProgress(task: task) {
+            aggregatedData[key] = value
+        }
+        return aggregatedData
+    }
+                                                     
+    class func aggregateCacheTaskProgress(task: CachingTask) -> [String:Any] {
+        var aggregatedData: [String:Any] = [:]
         aggregatedData[CACHETASK_PROP_DURATION] = task.duration // in sec
         aggregatedData[CACHETASK_PROP_CACHED] = THEOplayerRCTCacheAggregator.aggregateCachedTimeRanges(ranges: task.cached)
         aggregatedData[CACHETASK_PROP_SECONDS_CACHED] = task.secondsCached
         aggregatedData[CACHETASK_PROP_PERCENTAGE_CACHED] = task.percentageCached
-        aggregatedData[CACHETASK_PROP_BYTES] = -1
-        aggregatedData[CACHETASK_PROP_BUTES_CACHED] = task.bytesCached
-        aggregatedData[CACHETASK_PROP_SOURCE] = [:] as [String:Any] // TODO: aggregate sourceDescription
+        aggregatedData[CACHETASK_PROP_BYTES] = -1 // default setting, as iOS does not provide estimate yet.
+        aggregatedData[CACHETASK_PROP_BYTES_CACHED] = task.bytesCached
         return aggregatedData
+        
     }
     
     private class func aggregateCacheTaskParameters(params: CachingParameters) -> [String:Any] {
