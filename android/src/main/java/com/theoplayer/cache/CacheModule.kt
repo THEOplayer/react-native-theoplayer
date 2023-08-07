@@ -20,6 +20,7 @@ import com.theoplayer.android.api.cache.Cache
 import com.theoplayer.android.api.cache.CachingTask
 import com.theoplayer.android.api.event.EventListener
 import com.theoplayer.android.api.event.cache.CacheEventTypes
+import com.theoplayer.android.api.event.cache.task.CachingTaskErrorEvent
 import com.theoplayer.android.api.event.cache.task.CachingTaskEventTypes
 import com.theoplayer.android.api.event.cache.task.CachingTaskProgressEvent
 import com.theoplayer.android.api.event.cache.task.CachingTaskStateChangeEvent
@@ -42,8 +43,7 @@ class CacheModule(private val context: ReactApplicationContext) :
   ReactContextBaseJavaModule(context) {
   private val viewResolver: ViewResolver = ViewResolver(context)
   private val onTaskProgress = mutableMapOf<String, EventListener<CachingTaskProgressEvent>>()
-//  // Note: CachingTaskErrorEvent is not available in the other SDKS
-//  private val onTaskError = mutableMapOf<String, EventListener<CachingTaskErrorEvent>>()
+  private val onTaskError = mutableMapOf<String, EventListener<CachingTaskErrorEvent>>()
   private val onTaskStateChange = mutableMapOf<String, EventListener<CachingTaskStateChangeEvent>>()
   private val sourceAdapter = SourceAdapter()
   private val cache: Cache?
@@ -100,15 +100,15 @@ class CacheModule(private val context: ReactApplicationContext) :
       task.addEventListener(CachingTaskEventTypes.CACHING_TASK_PROGRESS, listener)
     }
 
-//    // Listen for task errors
-//    onTaskError[task.id] = EventListener<CachingTaskErrorEvent> { errorEvent ->
-//      emit("onCachingTaskErrorEvent", Arguments.createMap().apply {
-//        putString(PROP_ID, task.id)
-//        putString(PROP_ERROR, errorEvent.error.description)
-//      })
-//    }.also {
-//      task.addEventListener(CachingTaskEventTypes.CACHING_TASK_ERROR, listener)
-//    }
+    // Listen for task errors
+    onTaskError[task.id] = EventListener<CachingTaskErrorEvent> { errorEvent ->
+      emit("onCachingTaskErrorEvent", Arguments.createMap().apply {
+        putString(PROP_ID, task.id)
+        putString(PROP_ERROR, errorEvent.error.description)
+      })
+    }.also { listener ->
+      task.addEventListener(CachingTaskEventTypes.CACHING_TASK_ERROR, listener)
+    }
 
     // Listen for task state changes
     onTaskStateChange[task.id] = EventListener<CachingTaskStateChangeEvent> { changeEvent ->
@@ -126,10 +126,10 @@ class CacheModule(private val context: ReactApplicationContext) :
       task.removeEventListener(CachingTaskEventTypes.CACHING_TASK_PROGRESS, this)
     }
     onTaskProgress.remove(task.id)
-//    onTaskError[task.id]?.apply {
-//      task.removeEventListener(CachingTaskEventTypes.CACHING_TASK_ERROR, this)
-//    }
-//    onTaskError.remove(task.id)
+    onTaskError[task.id]?.apply {
+      task.removeEventListener(CachingTaskEventTypes.CACHING_TASK_ERROR, this)
+    }
+    onTaskError.remove(task.id)
     onTaskStateChange[task.id]?.apply {
       task.removeEventListener(CachingTaskEventTypes.CACHING_TASK_STATE_CHANGE, this)
     }
