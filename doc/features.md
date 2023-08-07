@@ -1,3 +1,5 @@
+
+
 ## Features
 
 Depending on the platform on which the application is deployed, a different set of features is available.
@@ -5,32 +7,14 @@ Depending on the platform on which the application is deployed, a different set 
 If a feature missing, additional help is needed, or you need to extend the package,
 please reach out to us for support.
 
-<style>
-table {
-  border: 0;
-}
-.hdr {
-  background-color: #f5f5f5;
-  border-radius: 15px;
-}
-td {
-  border-radius: 15px;
-  background-color: #d9ead3;
-}
-td:first-child {
-  background-color: #cdd8e0;
-  font-weight: bold;
-}
-</style>
-
-<table>
-  <th class="hdr">Feature</th>
-  <th class="hdr">Android, Android TV, Fire TV</th>
-  <th class="hdr">Web</th>
-  <th class="hdr">iOS, tvOS</th>
+<table style="border: 0;">
+  <th>Feature</th>
+  <th>Android, Android TV, Fire TV</th>
+  <th>Web</th>
+  <th>iOS, tvOS</th>
 
   <tr>
-    <td class="feature">Streaming</td>
+    <td>Streaming</td>
     <td colspan="2">MPEG-DASH (fmp4, CMAF), HLS (TS, CMAF), Progressive MP4, MP3</td>
     <td>HLS (TS, CMAF), Progressive MP4, MP3</td>
   </tr>
@@ -90,3 +74,4 @@ td:first-child {
   </tr>
 
 </table>
+
