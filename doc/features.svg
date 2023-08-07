@@ -21,35 +21,35 @@
         font-weight: bold;
         background-color: #cdd8e0;
         border-radius: 15px;
-        padding: 10px 10px;
+        padding: 5px 10px;
         min-height: 40px;
         flex: 1;
         }
 
-        .item {
-        background-color: #d9ead3;
-        border-radius: 15px;
-        padding: 10px 10px;
-        min-height: 40px;
-        flex: 1;
-        }
-
-        .item-bold {
+        .header {
         background-color: #f5f5f5;
         border-radius: 15px;
-        padding: 10px 10px;
+        padding: 5px 10px;
         flex: 1;
         font-weight: bold;
         vertical-align: top;
         min-height: 40px;
         }
+
+        .item {
+        background-color: #d9ead3;
+        border-radius: 15px;
+        padding: 5px 10px;
+        min-height: 40px;
+        flex: 1;
+        }
       </style>
 
       <div class="section">
-        <div class="item-bold">Feature</div>
-        <div class="item-bold">Android, Android TV, Fire TV</div>
-        <div class="item-bold">Web</div>
-        <div class="item-bold">iOS, tvOS</div>
+        <div class="header">Feature</div>
+        <div class="header">Android, Android TV, Fire TV</div>
+        <div class="header">Web</div>
+        <div class="header">iOS, tvOS</div>
       </div>
 
       <div class="section">
