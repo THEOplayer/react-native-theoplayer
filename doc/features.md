@@ -5,37 +5,88 @@ Depending on the platform on which the application is deployed, a different set 
 If a feature missing, additional help is needed, or you need to extend the package,
 please reach out to us for support.
 
-| Feature                                           | Android<br/>AndroidTV<br/>FireTV |       Web       |   iOS / tvOS    |
-|---------------------------------------------------|:--------------------------------:|:---------------:|:---------------:|
-| DASH (mp4)                                        |         as of v3.6.1 (*)         |        V        |                 |
-| DASH (fmp4)                                       |                V                 |        V        |                 |
-| HLS (ts)                                          |         as of v3.6.1 (*)         |        V        |        V        |
-| HLS (fmp4)                                        |                V                 |        V        |        V        |
-| plain MP4                                         |         as of v3.6.1 (*)         |        V        |        V        |
-| MP3                               		        |         as of v3.6.1 (*)         |        V        |        V        |
-| DRM protection (Widevine)                         |                V                 |        V        |                 |
-| DRM protection (PlayReady)                        |                V                 |        V        |                 |
-| DRM protection (FairPlay)                         |               N/A                |     Safari      |        V        |
-| Text tracks (TTML, WebVTT, CEA608 / 608 over 708) |                V                 |        V        |        V        |
-| Text track selection                              |                V                 |        V        |        V        |
-| Text track events                                 |                V                 |        V        |        V        |
-| Media track selection                             |                V                 |        V        |        V        |
-| Media track events                                |                V                 |        V        |     V (**)      |
-| Google IMA CSAI                                   |                V                 |        V        |     V (***)     |
-| Google DAI SSAI                                   |                V                 |        V        |    V (****)     |
-| Chromeless                                        |                V                 |        V        |        V        |
-| Chromefull (default SDK UI)                       |               N/A                |        V        |        V        |
-| Fullscreen                                        |                V                 | with default UI | with default UI |
-| Preview thumbnails                                |                V                 |        V        |  as of v3.6.0*  |
-| Chromecast                                        |                V                 | with default UI |     V (***)     |
-| Airplay                                           |               N/A                |     Safari      |        V        |
-| Picture-in-Picture                                |                V                 |        V        |        V        |
-| Background playback                               |                V                 |        V        |        V        |
+<style>
+table {
+  border: 0;
+}
+.hdr {
+  background-color: #f5f5f5;
+  border-radius: 15px;
+}
+td {
+  border-radius: 15px;
+  background-color: #d9ead3;
+}
+td:first-child {
+  background-color: #cdd8e0;
+  font-weight: bold;
+}
+</style>
 
-(*) This refers to the underlying platform's THEOplayer SDK.
+<table>
+  <th class="hdr">Feature</th>
+  <th class="hdr">Android, Android TV, Fire TV</th>
+  <th class="hdr">Web</th>
+  <th class="hdr">iOS, tvOS</th>
 
-(**) Media quality change event is not available on iOS systems.
+  <tr>
+    <td class="feature">Streaming</td>
+    <td colspan="2">MPEG-DASH (fmp4, CMAF), HLS (TS, CMAF), Progressive MP4, MP3</td>
+    <td>HLS (TS, CMAF), Progressive MP4, MP3</td>
+  </tr>
 
-(***) When using a 4.x THEOplayer this requires a custom build for the iOS and tvOS framework from Portal, with the specific feature enabled.
+  <tr>
+    <td>Content Protection</td>
+    <td>Widevine</td>
+    <td>Widevine, PlayReady, Fairplay</td>
+    <td>Fairplay</td>
+  </tr>
 
-(****) Not available with THEOplayer 5.x and requires a custom iOS framework build from Portal with the specific feature enabled, when using a 4.x THEOplayer.  This is not available for tvOS.
+  <tr>
+    <td>DRM Connectors</td>
+    <td colspan="3">BuyDRM, EZDRM, Anvato, Titanium, Axinom, Irdeto, VuDRM, Comcast, Verimatrix, Azure, …</td>
+  </tr>
+
+  <tr>
+    <td>Analytics Connectors</td>
+    <td colspan="3">Conviva, Adobe, Nielsen, Comscore</td>
+  </tr>
+
+  <tr>
+    <td>Subtitles & Closed Captions</td>
+    <td colspan="3">CEA-608/708, SRT, TTML, WebVTT</td>
+  </tr>
+
+  <tr>
+    <td>Metadata</td>
+    <td colspan="3">Event stream, emsg, ID3, EXT-X-DATERANGE, EXT-X-PROGRAM-DATE-TIME</td>
+  </tr>
+
+  <tr>
+    <td>Advertising Integration</td>
+    <td colspan="3"><b>Google IMA, Google DAI</b></td>
+  </tr>
+
+  <tr>
+    <td>Cast Integration</td>
+    <td><b>Chromecast</b></td>
+    <td colspan="2"><b>Chromecast, Airplay</b></td>
+  </tr>
+
+  <tr>
+    <td>Presentation Mode</td>
+    <td colspan="3">Inline, <b>Picture-in-Picture</b>, Fullscreen</td>
+  </tr>
+
+  <tr>
+    <td>Advanced APIs</td>
+    <td colspan="2"><b>Background playback, Media Session</b></td>
+    <td><b>Background playback, NowPlaying</b></td>
+  </tr>
+
+  <tr>
+    <td>User Interface</td>
+    <td colspan="3">Basic playback, media & text track selection, progress bar, live & vod, <b>preview thumbnails, customisable & extensible</b></td>
+  </tr>
+
+</table>
