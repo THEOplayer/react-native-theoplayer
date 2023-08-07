@@ -8,7 +8,16 @@ create caching tasks, and control the media cache.
 
 The process of caching a media asset involves several steps to enable offline playback.
 It starts with the creation and initiation of a CachingTask, which downloads the media content for local storage.
-Once cached, the asset can be played offline seamlessly. Here's an elaboration of the caching flow:
+Once cached, the asset can be played offline seamlessly.
+
+This page is structured as follows:
+
+- [Caching Workflow](#caching-workflow)
+- [Creating a CachingTask](#creating-a-cachingtask)
+- [Controlling the CachingTask](#controlling-the-cachingtask)
+- [Listening for Cache events](#listening-for-cache-events)
+- [Using React hooks](#using-react-hooks)
+- [Known Limitations](#known-limitations)
 
 #### Caching Workflow
 Caching a media asset encompasses the following stages:
@@ -154,4 +163,4 @@ source, and show a list of the currently available caching tasks.
 | ![main](./media_caching_1.png) | ![main](./media_caching_2.png) |
 |--------------------------------|--------------------------------|
 
-
+### Known Limitations
