@@ -74,6 +74,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added DAI support through iOS Native pipeline, using new THEOplayerGoogleIMAIntegration functionality
 - Added `TextTrackStyle` API for iOS and Android.
+- Added `MediaCache` API, enabling download of media assets for offline playback.
 
 ### Fixed
 
