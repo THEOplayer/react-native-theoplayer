@@ -13,7 +13,7 @@ Once cached, the asset can be played offline seamlessly. Here's an elaboration o
 #### Caching Workflow
 Caching a media asset encompasses the following stages:
 
-- CachingTask Creation: The caching process commences by creating a CachingTask, which orchestrates the downloading of the media content for offline access.
+- CachingTask creation: The caching process commences by creating a CachingTask, which orchestrates the downloading of the media content for offline access.
 
 - Starting the CachingTask: Once the CachingTask is established, the download process is initiated using the start() method. This triggers the download of the complete media stream to the device's local storage.
 
@@ -59,7 +59,7 @@ const task = await MediaCache.createTask(source, parameters);
 
 ### Controlling the CachingTask
 
-Once the `CachingTask` is created, it enters the idle state. To initiate the download process:
+Once the `CachingTask` is created, it enters the `idle` state. To initiate the download process:
 ```typescript
 task.start();
 ```
@@ -111,8 +111,6 @@ task.addEventListener(CachingTaskEventType.progress, () => {
 });
 ```
 
-### Querying the MediaCache
-
 ### Using React hooks
 
 For convenience, React hooks are available to simplify handling caching tasks without the need to subscribe or
@@ -146,4 +144,14 @@ function CachingTaskView(props: {task: CachingTask, debug: boolean}) {
     </View>
 }
 ```
+
+### The Example App
+
+The example app that is part of this repository demonstrates the Media Cache features through
+a basic user interface. It provides a menu with options to start caching the currently selected
+source, and show a list of the currently available caching tasks.
+
+| ![main](./media_caching_1.png) | ![main](./media_caching_2.png) |
+|--------------------------------|--------------------------------|
+
 
