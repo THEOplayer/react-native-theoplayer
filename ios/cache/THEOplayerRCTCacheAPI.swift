@@ -90,7 +90,7 @@ class THEOplayerRCTCacheAPI: RCTEventEmitter {
             
             if let errorEvent = event as? CachingTaskErrorStateChangeEvent,
                let error = errorEvent.error {
-                if DEBUG_CACHE_EVENTS { PrintUtils.printLog(logText: "[NATIVE] STATE_CHANGE_ERROR event for task with id \(newTask.id): [error] \(error)") }
+                if DEBUG_CACHE_EVENTS { PrintUtils.printLog(logText: "[NATIVE] STATE_CHANGE_ERROR event for task with id \(newTask.id): [error] \(error.code):\(error.category) - \(error.message)") }
             } else if let idleEvent = event as? CachingTaskIdleStateChangeEvent {
                 if DEBUG_CACHE_EVENTS { PrintUtils.printLog(logText: "[NATIVE] STATE_CHANGE_IDLE event for task with id \(newTask.id): [reason] \(THEOplayerRCTTypeUtils.cacheStatusIdleReasonToString(idleEvent.idleReason))") }
             }
