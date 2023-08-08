@@ -260,7 +260,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
      Updates the contentProtectionData to a valid iOS SDK contentProtectionData, flattening out cross SDK differences
      - returns: a THEOplayer valid contentProtection data map
      */
-    private static func sanitiseContentProtectionData(_ contentProtectionData: [String:Any]) -> [String:Any] {
+    static func sanitiseContentProtectionData(_ contentProtectionData: [String:Any]) -> [String:Any] {
         var sanitisedContentProtectionData: [String:Any] = contentProtectionData
         // fairplay update
         if let fairplayData = contentProtectionData[SD_PROP_FAIRPLAY] as? [String:Any] {
@@ -319,7 +319,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
      Creates a THEOplayer DRMConfiguration. This requires a contentProtection property in the RN source description.
      - returns: a THEOplayer DRMConfiguration
      */
-    private static func buildContentProtection(_ contentProtectionData: [String:Any]) -> MultiplatformDRMConfiguration? {
+    static func buildContentProtection(_ contentProtectionData: [String:Any]) -> MultiplatformDRMConfiguration? {
         do {
             let data = try JSONSerialization.data(withJSONObject: contentProtectionData)
             if let integration = contentProtectionData[SD_PROP_INTEGRATION] as? String {
