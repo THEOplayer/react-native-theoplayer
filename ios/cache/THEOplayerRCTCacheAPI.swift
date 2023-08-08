@@ -180,8 +180,17 @@ class THEOplayerRCTCacheAPI: RCTEventEmitter {
     func renewLicense(_ id: NSString, drmConfig: NSDictionary) -> Void {
         if DEBUG_CACHE_API { PrintUtils.printLog(logText: "[NATIVE] Renew license triggered on Cache API for task with id \(id).") }
         if let task = self.taskById(id as String) {
-            //let drmConfiguration = THEOplayerRCTSourceDescriptionBuilder.extractDrmConfiguration()
-            //task.license.renew()
+            guard let contentProtectionData = drmConfig as? [String:Any] else {
+                if DEBUG_CACHE_API { PrintUtils.printLog(logText: "[NATIVE] Renew license failed for task with id \(id): Unable to extract drm configuration data.") }
+                return
+            }
+            let sanitisedContentProtectionData = THEOplayerRCTSourceDescriptionBuilder.sanitiseContentProtectionData(contentProtectionData)
+            if let contentProtectionConfig = THEOplayerRCTSourceDescriptionBuilder.buildContentProtection(sanitisedContentProtectionData) {
+                task.license.renew(contentProtectionConfig)
+                if DEBUG_CACHE_API { PrintUtils.printLog(logText: "[NATIVE] License renewed for task with id \(id).") }
+            } else {
+                if DEBUG_CACHE_API { PrintUtils.printLog(logText: "[NATIVE] Renew license failed for task with id \(id): Invalid contentProtection input.") }
+            }
         }
     }
     
