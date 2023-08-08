@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 - Switched to 'displayIconUri' in sourceDescription.metadata as primary field for artwork selection in NowplayingInfo/MediaSession, 'poster' in sourceDescription is now the fallback.
+- Removed the play/pause icon in the PiP window on Android while playing an ad.
 
 ## [2.10.0] - 23-07-25
 
