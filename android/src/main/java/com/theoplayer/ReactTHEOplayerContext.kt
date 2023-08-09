@@ -27,6 +27,7 @@ import com.theoplayer.android.api.event.EventListener
 import com.theoplayer.android.api.event.player.*
 import com.theoplayer.android.api.player.Player
 import com.theoplayer.android.connector.mediasession.MediaSessionConnector
+import com.theoplayer.audio.AudioBecomingNoisyManager
 import com.theoplayer.audio.BackgroundAudioConfig
 import com.theoplayer.media.MediaPlaybackService
 import java.util.concurrent.atomic.AtomicBoolean
@@ -49,6 +50,9 @@ class ReactTHEOplayerContext private constructor(
   private var isBound = AtomicBoolean()
   private var binder: MediaPlaybackService.MediaPlaybackBinder? = null
   private var mediaSessionConnector: MediaSessionConnector? = null
+  private var audioBecomingNoisyManager = AudioBecomingNoisyManager(reactContext) {
+    player.pause()
+  }
 
   var backgroundAudioConfig: BackgroundAudioConfig = BackgroundAudioConfig(enabled = false)
     set(value) {
@@ -282,11 +286,13 @@ class ReactTHEOplayerContext private constructor(
     }
     binder?.updateNotification(PlaybackStateCompat.STATE_PLAYING)
     applyAllowedMediaControls()
+    audioBecomingNoisyManager.setEnabled(true)
   }
 
   private val onPause = EventListener<PauseEvent> {
     binder?.updateNotification(PlaybackStateCompat.STATE_PAUSED)
     applyAllowedMediaControls()
+    audioBecomingNoisyManager.setEnabled(false)
   }
 
   private fun addListeners() {
