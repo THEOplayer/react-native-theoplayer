@@ -2,8 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
+The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+
+## [2.11.0] - 23-08-10
+
+### Added
+
+- Added DAI support through iOS Native pipeline, using new THEOplayerGoogleIMAIntegration functionality
+- Added `TextTrackStyle` API for iOS and Android.
+
+### Fixed
+
+- Fixed an issue on Android where the player would sometimes crash when requesting the current active video track.
+
+### Changed
+
+- Switched to 'displayIconUri' in sourceDescription.metadata as primary field for artwork selection in NowplayingInfo/MediaSession, 'poster' in sourceDescription is now the fallback.
+- Removed the play/pause icon in the PiP window on Android while playing an ad.
 
 ## [2.10.0] - 23-07-25
 

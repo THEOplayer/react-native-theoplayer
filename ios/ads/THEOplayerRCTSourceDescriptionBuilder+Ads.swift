@@ -77,7 +77,7 @@ extension THEOplayerRCTSourceDescriptionBuilder {
     }
 
     static func buildDAITypedSource(_ typedSourceData: [String:Any], contentProtection: MultiplatformDRMConfiguration?) -> TypedSource? {
-#if GOOGLE_DAI
+#if GOOGLE_DAI || canImport(THEOplayerGoogleIMAIntegration)
         // check for alternative Google DAI SSAI
         if let ssaiData = typedSourceData[SD_PROP_SSAI] as? [String:Any] {
             if let integration = ssaiData[SD_PROP_INTEGRATION] as? String,

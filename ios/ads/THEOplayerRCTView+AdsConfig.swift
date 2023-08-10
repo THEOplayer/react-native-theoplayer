@@ -72,7 +72,7 @@ extension THEOplayerRCTView {
     
     func parseAdsConfig(configDict: NSDictionary) {}
     
-#if GOOGLE_IMA || canImport(THEOplayerGoogleIMAIntegration)
+#if (GOOGLE_IMA || GOOGLE_DAI) || canImport(THEOplayerGoogleIMAIntegration)
     func playerAdsConfiguration() -> AdsConfiguration? { return AdsConfiguration() }
 #else
     func playerAdsConfiguration() -> AdsConfiguration? { return nil }

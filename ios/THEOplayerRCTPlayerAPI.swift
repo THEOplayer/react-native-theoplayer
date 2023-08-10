@@ -10,6 +10,18 @@ let ERROR_MESSAGE_PLAYER_ABR_UNSUPPORTED_FEATURE: String = "Setting an ABRconfig
 let ERROR_MESSAGE_PLAYER_QUALITY_UNSUPPORTED_FEATURE: String = "Setting a target video quality is not supported on iOS/tvOS."
 let ERROR_MESSAGE_PLAYER_FULLSCREEN_UNSUPPORTED_FEATURE: String = "Fullscreen presentationmode should be implemented on the RN level for iOS/tvOS."
 
+let TTS_PROP_BACKGROUND_COLOR = "backgroundColor"
+let TTS_PROP_EDGE_STYLE = "edgeStyle"
+let TTS_PROP_FONT_COLOR = "fontColor"
+let TTS_PROP_FONT_FAMILY = "fontFamily"
+let TTS_PROP_FONT_SIZE = "fontSize"
+let TTS_PROP_MARGIN_LEFT = "marginLeft"
+let TTS_PROP_MARGIN_TOP = "marginTop"
+let TTS_PROP_COLOR_R = "r"
+let TTS_PROP_COLOR_G = "g"
+let TTS_PROP_COLOR_B = "b"
+let TTS_PROP_COLOR_A = "a"
+
 @objc(THEOplayerRCTPlayerAPI)
 class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
     @objc var bridge: RCTBridge!
@@ -246,6 +258,46 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                 if player.preload != preloadType {
                     if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Changing TheoPlayer preload type to \(type)") }
                     player.setPreload(preloadType)
+                }
+            }
+        }
+    }
+    
+    @objc(setTextTrackStyle:textTrackStyle:)
+    func setTextTrackStyle(_ node: NSNumber, textTrackStyle: NSDictionary) -> Void {
+        DispatchQueue.main.async {
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let player = theView.player {
+                if let bgColorMap = textTrackStyle[TTS_PROP_BACKGROUND_COLOR] as? [String:Any],
+                   let r = bgColorMap[TTS_PROP_COLOR_R] as? Int,
+                   let g = bgColorMap[TTS_PROP_COLOR_G] as? Int,
+                   let b = bgColorMap[TTS_PROP_COLOR_B] as? Int,
+                   let a = bgColorMap[TTS_PROP_COLOR_A] as? Int {
+                    let bgColor = UIColor(red: CGFloat(r)/255.0, green: CGFloat(g)/255.0, blue: CGFloat(b)/255.0, alpha: CGFloat(a)/255.0)
+                    player.textTrackStyle?.backgroundColor = [TextTrackStyleRuleColor(bgColor)]
+                }
+                if let fontColorMap = textTrackStyle[TTS_PROP_FONT_COLOR] as? [String:Any],
+                   let r = fontColorMap[TTS_PROP_COLOR_R] as? Int,
+                   let g = fontColorMap[TTS_PROP_COLOR_G] as? Int,
+                   let b = fontColorMap[TTS_PROP_COLOR_B] as? Int,
+                   let a = fontColorMap[TTS_PROP_COLOR_A] as? Int {
+                    let fontColor = UIColor(red: CGFloat(r)/255.0, green: CGFloat(g)/255.0, blue: CGFloat(b)/255.0, alpha: CGFloat(a)/255.0)
+                    player.textTrackStyle?.fontColor = [TextTrackStyleRuleColor(fontColor)]
+                }
+                if let edgeStyle = textTrackStyle[TTS_PROP_EDGE_STYLE] as? String {
+                    player.textTrackStyle?.edgeStyle = [TextTrackStyleRuleString(THEOplayerRCTTypeUtils.textTrackEdgeStyleStringFromString(edgeStyle))]
+                }
+                if let fontFamily = textTrackStyle[TTS_PROP_FONT_FAMILY] as? String {
+                    player.textTrackStyle?.fontFamily = [TextTrackStyleRuleString(fontFamily)]
+                }
+                if let fontSize = textTrackStyle[TTS_PROP_FONT_SIZE] as? Int {
+                    player.textTrackStyle?.fontSize = [TextTrackStyleRuleNumber(fontSize)]
+                }
+                if let marginTop = textTrackStyle[TTS_PROP_MARGIN_TOP] as? Int {
+                    player.textTrackStyle?.marginTop = [TextTrackStyleRuleNumber(marginTop)]
+                }
+                if let marginLeft = textTrackStyle[TTS_PROP_MARGIN_LEFT] as? Int {
+                    player.textTrackStyle?.marginLeft = [TextTrackStyleRuleNumber(marginLeft)]
                 }
             }
         }

@@ -11,7 +11,7 @@ let ERROR_MESSAGE_DAI_GET_SNAPBACK_UNDEFINED = "Undefined dai snapback"
 
 extension THEOplayerRCTAdsAPI {
     
-#if GOOGLE_DAI
+#if GOOGLE_DAI || canImport(THEOplayerGoogleIMAIntegration)
     @objc(daiSnapback:resolver:rejecter:)
     func daiSnapback(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         DispatchQueue.main.async {

@@ -60,7 +60,7 @@ properties:
 The following fields from the sourceDescription are used to display information in the lockscreen:
 - *lockscreen title* field: **source.metadata.title**
 - *lockscreen artist* field: **source.metadata.artist**, with a fallback to **source.metadata.subtitle**
-- *lockscreen image*: **source.poster**, with a fallback to **source.metadata.displayIconUri**
+- *lockscreen image*: **source.metadata.displayIconUri**, with a fallback to **source.poster**
 The following fields can be setup to do additional configuration for the lockscreen behaviour on iOS:
 - Info property service identifier: **source.metadata.nowPlayingServiceIdentifier**
 - Info property content identifier: **source.metadata.nowPlayingContentIdentifier**

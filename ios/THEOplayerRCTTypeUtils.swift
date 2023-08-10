@@ -83,4 +83,19 @@ class THEOplayerRCTTypeUtils {
             return "fit"
         }
     }
+    
+    class func textTrackEdgeStyleStringFromString(_ style: String) -> String {
+        switch style {
+        case "dropshadow":
+            return TextTrackStyleEdgeStyle.dropShadow
+        case "raised":
+            return TextTrackStyleEdgeStyle.raised
+        case "depressed":
+            return TextTrackStyleEdgeStyle.depressed
+        case "uniform":
+            return TextTrackStyleEdgeStyle.uniform
+        default:
+            return TextTrackStyleEdgeStyle.none
+        }
+    }
 }

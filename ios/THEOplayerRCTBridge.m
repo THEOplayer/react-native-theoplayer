@@ -108,6 +108,9 @@ RCT_EXTERN_METHOD(setTargetVideoQuality:(nonnull NSNumber *)node
 RCT_EXTERN_METHOD(setPreload:(nonnull NSNumber *)node
                   type:(nonnull NSString *)type)
 
+RCT_EXTERN_METHOD(setTextTrackStyle:(nonnull NSNumber *)node
+                  textTrackStyle:(NSDictionary)textTrackStyle)
+
 @end
 
 // ----------------------------------------------------------------------------

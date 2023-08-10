@@ -79,12 +79,12 @@ class THEOplayerRCTNowPlayingManager {
     }
     
     private func getArtWorkUrlStringFromSourceDescription(_ sourceDescription: SourceDescription) -> String? {
-        if let posterUrlString = sourceDescription.poster?.absoluteString {
-            return posterUrlString
-        }
         if let metadata = sourceDescription.metadata,
            let displayIconUrlString = metadata.metadataKeys?["displayIconUri"] as? String {
             return displayIconUrlString
+        }
+        if let posterUrlString = sourceDescription.poster?.absoluteString {
+            return posterUrlString
         }
         
         return nil
