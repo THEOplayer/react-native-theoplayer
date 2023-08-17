@@ -28,6 +28,7 @@ import com.theoplayer.android.api.event.player.*
 import com.theoplayer.android.api.player.Player
 import com.theoplayer.android.connector.mediasession.MediaSessionConnector
 import com.theoplayer.audio.AudioBecomingNoisyManager
+import com.theoplayer.audio.AudioFocusManager
 import com.theoplayer.audio.BackgroundAudioConfig
 import com.theoplayer.media.MediaPlaybackService
 import java.util.concurrent.atomic.AtomicBoolean
@@ -53,6 +54,7 @@ class ReactTHEOplayerContext private constructor(
   private var audioBecomingNoisyManager = AudioBecomingNoisyManager(reactContext) {
     player.pause()
   }
+  private var audioFocusManager: AudioFocusManager? = null
 
   var backgroundAudioConfig: BackgroundAudioConfig = BackgroundAudioConfig(enabled = false)
     set(value) {
@@ -211,6 +213,8 @@ class ReactTHEOplayerContext private constructor(
     addIntegrations(playerConfig)
     addListeners()
 
+    audioFocusManager = AudioFocusManager(reactContext, player)
+
     if (!BuildConfig.USE_PLAYBACK_SERVICE || !isBackgroundAudioEnabled) {
       initDefaultMediaSession()
     }
@@ -287,6 +291,7 @@ class ReactTHEOplayerContext private constructor(
     binder?.updateNotification(PlaybackStateCompat.STATE_PLAYING)
     applyAllowedMediaControls()
     audioBecomingNoisyManager.setEnabled(true)
+    audioFocusManager?.retrieveAudioFocus()
   }
 
   private val onPause = EventListener<PauseEvent> {
@@ -340,6 +345,7 @@ class ReactTHEOplayerContext private constructor(
   fun onHostResume() {
     mediaSessionConnector?.setActive(true)
     playerView.onResume()
+    AudioFocusManager(reactContext).retrieveAudioFocus()
   }
 
   fun destroy() {
@@ -352,6 +358,7 @@ class ReactTHEOplayerContext private constructor(
       // Unbind client from background service so it can stop
       unbindMediaPlaybackService()
     }
+    audioFocusManager?.abandonAudioFocus()
     mediaSessionConnector?.destroy()
     playerView.onDestroy()
   }
