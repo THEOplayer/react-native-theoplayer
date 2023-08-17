@@ -56,7 +56,13 @@ class AudioFocusManager(
     }
     when (focusChange) {
       // Used to indicate a gain of audio focus, or a request of audio focus, of unknown duration.
-      AudioManagerCompat.AUDIOFOCUS_GAIN -> player?.play()
+      AudioManager.AUDIOFOCUS_GAIN -> player?.play()
+
+      // Used to indicate a loss of audio focus of unknown duration.
+      AudioManager.AUDIOFOCUS_LOSS,
+
+      // Used to indicate a transient loss of audio focus.
+      AudioManager.AUDIOFOCUS_LOSS_TRANSIENT,
 
       // Used to indicate a transient loss of audio focus where the loser of the audio focus can
       // lower its output volume if it wants to continue playing (also referred to as "ducking"),
