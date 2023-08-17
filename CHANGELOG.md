@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Added an `AnalyticsDescription` property to `SourceDescription` to configure additional source-specific properties for analytics connectors.
+- Added Audio Focus and Audio Becoming Noisy manager for Android.
 
 ### Fixed
 
