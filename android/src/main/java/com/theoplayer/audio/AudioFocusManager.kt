@@ -4,10 +4,14 @@ import android.app.UiModeManager
 import android.content.Context
 import android.content.res.Configuration
 import android.media.AudioManager
+import android.util.Log
 import androidx.media.AudioAttributesCompat
 import androidx.media.AudioFocusRequestCompat
 import androidx.media.AudioManagerCompat
+import com.theoplayer.BuildConfig
 import com.theoplayer.android.api.player.Player
+
+private const val TAG = "AudioFocusManager"
 
 /**
  * Manages audio focus for the application, ensuring proper handling of audio focus changes
@@ -47,6 +51,9 @@ class AudioFocusManager(
       // Ignore changes in audioFocus for Connected TVs.
       return
     }
+    if (BuildConfig.DEBUG) {
+      Log.d(TAG, "onAudioFocusChange: ${fromAudioFocusChange(focusChange)}")
+    }
     when (focusChange) {
       // Used to indicate a gain of audio focus, or a request of audio focus, of unknown duration.
       AudioManagerCompat.AUDIOFOCUS_GAIN -> player?.play()
@@ -58,23 +65,51 @@ class AudioFocusManager(
     }
   }
 
+  private fun fromAudioFocusChange(focusChange: Int?): String {
+    return when (focusChange) {
+      AudioManager.AUDIOFOCUS_GAIN -> "AUDIOFOCUS_GAIN"
+      AudioManager.AUDIOFOCUS_GAIN_TRANSIENT -> "AUDIOFOCUS_GAIN_TRANSIENT"
+      AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE -> "AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE"
+      AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK -> "AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK"
+      AudioManager.AUDIOFOCUS_LOSS -> "AUDIOFOCUS_LOSS"
+      AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> "AUDIOFOCUS_LOSS_TRANSIENT"
+      AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK"
+      else -> "AUDIOFOCUS_NONE"
+    }
+  }
+
+  private fun fromAudioFocusRequest(focusRequest: Int?): String {
+    return when(focusRequest) {
+      AudioManager.AUDIOFOCUS_REQUEST_GRANTED -> "AUDIOFOCUS_REQUEST_GRANTED"
+      AudioManager.AUDIOFOCUS_REQUEST_DELAYED -> "AUDIOFOCUS_REQUEST_DELAYED"
+      else -> "AUDIOFOCUS_REQUEST_FAILED"
+    }
+  }
+
   /**
    * Send a request to obtain the audio focus
    *
    * @return True if audio focus is granted, false otherwise.
    */
   fun retrieveAudioFocus(): Boolean {
-    return AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioManager?.let {
+    val result = audioManager?.let {
       AudioManagerCompat.requestAudioFocus(it, audioFocusRequest)
     }
+    if (BuildConfig.DEBUG) {
+      Log.d(TAG, "retrieveAudioFocus: ${fromAudioFocusRequest(result)}")
+    }
+    return result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
   }
 
   /**
    * Abandon audio focus. Causes the previous focus owner, if any, to receive focus.
    */
   fun abandonAudioFocus() {
-    audioManager?.let {
+    val result = audioManager?.let {
       AudioManagerCompat.abandonAudioFocusRequest(it, audioFocusRequest)
+    }
+    if (BuildConfig.DEBUG) {
+      Log.d(TAG, "abandonAudioFocus: ${fromAudioFocusRequest(result)}")
     }
   }
 }
