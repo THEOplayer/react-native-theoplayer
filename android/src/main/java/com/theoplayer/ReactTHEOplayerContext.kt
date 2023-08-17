@@ -52,6 +52,7 @@ class ReactTHEOplayerContext private constructor(
   private var binder: MediaPlaybackService.MediaPlaybackBinder? = null
   private var mediaSessionConnector: MediaSessionConnector? = null
   private var audioBecomingNoisyManager = AudioBecomingNoisyManager(reactContext) {
+    // Audio is about to become 'noisy' due to a change in audio outputs: pause the player
     player.pause()
   }
   private var audioFocusManager: AudioFocusManager? = null
