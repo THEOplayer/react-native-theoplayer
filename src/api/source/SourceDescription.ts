@@ -12,6 +12,7 @@ import type { HlsPlaybackConfiguration } from './hls/HlsPlaybackConfiguration';
 import type { AdDescription } from './ads/Ads';
 import type { MetadataDescription } from './metadata/MetadataDescription';
 import type { ServerSideAdInsertionConfiguration } from "./ads/ssai/ServerSideAdInsertionConfiguration";
+import type { AnalyticsDescription } from "./analytics/AnalyticsDescription";
 
 export type Source = TypedSource;
 
@@ -87,6 +88,11 @@ export interface SourceConfiguration {
    * @public
    */
   metadata?: MetadataDescription;
+
+  /**
+   * List of {@link AnalyticsDescription}s to configure source-related properties for analytics connectors.
+   */
+  analytics?: AnalyticsDescription[];
 }
 
 /**
