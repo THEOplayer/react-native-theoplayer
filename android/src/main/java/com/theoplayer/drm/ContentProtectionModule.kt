@@ -111,7 +111,7 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
     }
     emit(
       EVENT_BUILD_INTEGRATION, payload,
-      onResult = hashMapOf(),
+      onResult = hashMapOf(EVENT_BUILD_PROCESSED to { /*NoOp*/ }),
       onError = {}
     )
   }
