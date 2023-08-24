@@ -122,7 +122,7 @@ export function hasTextTrackCue(textTrack: TextTrack, cue: TextTrackCue): boolea
 }
 
 export function removeTextTrackCue(textTrack?: TextTrack, cue?: TextTrackCue) {
-  if (textTrack && textTrack.cues && cue && !hasTextTrackCue(textTrack, cue)) {
+  if (textTrack && textTrack.cues && cue && hasTextTrackCue(textTrack, cue)) {
     textTrack.cues = textTrack.cues.filter((c) => c.uid !== cue.uid);
   }
 }
