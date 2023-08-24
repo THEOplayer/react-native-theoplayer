@@ -71,7 +71,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   set source(source: SourceDescription | undefined) {
     this._targetVideoQuality = undefined;
     if (this._player) {
-      this._player.source = source;
+      this._player.source = source as THEOplayerWeb.SourceDescription;
     }
   }
 
