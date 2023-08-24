@@ -130,9 +130,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
     try {
       val sourceDescription = SourceAdapter().parseSourceFromJS(source)
       adsApi.setSource(sourceDescription)
-      if (sourceDescription != null) {
-        player?.source = sourceDescription
-      }
+      player?.source = sourceDescription
     } catch (exception: THEOplayerException) {
       Log.e(TAG, exception.message ?: "")
       eventEmitter.emitError(exception)
