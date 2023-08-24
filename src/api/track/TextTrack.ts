@@ -38,7 +38,7 @@ export interface TextTrack extends Track {
   /**
    * The label of the text track.
    */
-  label: string;
+  readonly label: string;
 
   /**
    * The language of the text track.
@@ -122,7 +122,7 @@ export function hasTextTrackCue(textTrack: TextTrack, cue: TextTrackCue): boolea
 }
 
 export function removeTextTrackCue(textTrack?: TextTrack, cue?: TextTrackCue) {
-  if (textTrack && textTrack.cues && cue && !hasTextTrackCue(textTrack, cue)) {
+  if (textTrack && textTrack.cues && cue && hasTextTrackCue(textTrack, cue)) {
     textTrack.cues = textTrack.cues.filter((c) => c.uid !== cue.uid);
   }
 }
