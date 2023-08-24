@@ -143,19 +143,22 @@ To define which extra THEOplayer integrations need to be loaded for additional f
 
 Create a json file at **[YourApplicationFolder]/react-native-theoplayer.json** (Should be on the same level as the node_modules folder)
 
-Edit the file to reflect the features required for your application. The following example adds both Google IMA and Chromecast to the setup. If one of these is out of your applications scope, you can leave it out to reduce the app's size. When using only basic functionality, leave the features array empty. Example:
+Edit the file to reflect the features required for your application. The following example adds Google IMA, Chromecast and Sideloaded textTracks to the setup. If one of these is out of your applications scope, you can leave it out to reduce the app's size. When using only basic functionality, leave the features array empty. 
+Example:
 ```
 {
 	"ios": {
 		"features": [
 			"GOOGLE_IMA",
-			"CHROMECAST"
+			"CHROMECAST",
+			"SIDELOADED_TEXTTRACKS"
 		]
 	}
 }
 ```
 - **GOOGLE_IMA**: adds an additional dependency to the THEOplayer-Integration-GoogleIMA cocoapod that delivers the IMA functionality
 - **CHROMECAST**: adds an additional dependency to the THEOplayer-Integration-GoogleCast cocoapod that delivers the chromecast functionality
+- **SIDELOADED_TEXTTRACKS**: adds an additional dependency to the THEOplayer-Connector-SideloadedSubtitle cocoapod that delivers the sideloaded texttracks functionality
 
 Once the project has been setup correctly, set the source to a valid HLS stream, eg.
 ```typescript
