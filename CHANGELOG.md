@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added an `AnalyticsDescription` property to `SourceDescription` to configure additional source-specific properties for analytics connectors.
 
+### Fixed
+
+- Fixed an issue on Android that would cause the player not to reset when setting an empty source.
+
 ## [2.11.0] - 23-08-10
 
 ### Added
