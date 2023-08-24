@@ -38,7 +38,7 @@ export interface TextTrack extends Track {
   /**
    * The label of the text track.
    */
-  label: string;
+  readonly label: string;
 
   /**
    * The language of the text track.
