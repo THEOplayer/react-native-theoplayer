@@ -2,7 +2,8 @@
 	"ios": {
 		"features": [
 			"GOOGLE_IMA",
-			"CHROMECAST"
+			"CHROMECAST",
+			"SIDELOADED_TEXTTRACKS"
 		]
 	}
 }

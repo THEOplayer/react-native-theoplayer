@@ -6,6 +6,10 @@ import Foundation
 import UIKit
 import THEOplayerSDK
 
+#if canImport(THEOplayerConnectorSideloadedSubtitle)
+import THEOplayerConnectorSideloadedSubtitle
+#endif
+
 let ERROR_MESSAGE_PLAYER_ABR_UNSUPPORTED_FEATURE: String = "Setting an ABRconfig is not supported on iOS/tvOS."
 let ERROR_MESSAGE_PLAYER_QUALITY_UNSUPPORTED_FEATURE: String = "Setting a target video quality is not supported on iOS/tvOS."
 let ERROR_MESSAGE_PLAYER_FULLSCREEN_UNSUPPORTED_FEATURE: String = "Fullscreen presentationmode should be implemented on the RN level for iOS/tvOS."
@@ -56,13 +60,21 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
             if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
                let srcDescription = THEOplayerRCTSourceDescriptionBuilder.buildSourceDescription(src) {
                 if let player = theView.player {
-                    if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Setting new source on TheoPlayer") }
-                    player.source = srcDescription
+                    self.setNewSourceDescription(player: player, srcDescription: srcDescription)
                 }
             } else {
                 if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Failed to update THEOplayer source.") }
             }
         }
+    }
+    
+    private func setNewSourceDescription(player: THEOplayer, srcDescription: SourceDescription) {
+        if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Setting new source on TheoPlayer") }
+#if canImport(THEOplayerConnectorSideloadedSubtitle)
+        player.setSourceWithSubtitles(source: srcDescription)
+#else
+        player.source = srcDescription
+#endif
     }
     
     @objc(setABRConfig:abrConfig:)

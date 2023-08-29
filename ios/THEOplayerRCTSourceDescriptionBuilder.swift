@@ -375,6 +375,8 @@ class THEOplayerRCTSourceDescriptionBuilder {
 
         if format == "webvtt" {
             return THEOplayerSDK.TextTrackFormat.WebVTT
+        } else if format == "srt" {
+            return THEOplayerSDK.TextTrackFormat.SRT
         } else {
             return THEOplayerSDK.TextTrackFormat.none
         }
