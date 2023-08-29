@@ -28,6 +28,8 @@ class AudioFocusManager(
 
   private val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as? AudioManager
   private val uiModeManager = context.getSystemService(Context.UI_MODE_SERVICE) as? UiModeManager
+  private var resumeOnFocusGain = false
+  private val focusLock = Any()
 
   private val audioFocusRequest = AudioFocusRequestCompat.Builder(AudioManagerCompat.AUDIOFOCUS_GAIN)
     .setAudioAttributes(
@@ -56,10 +58,23 @@ class AudioFocusManager(
     }
     when (focusChange) {
       // Used to indicate a gain of audio focus, or a request of audio focus, of unknown duration.
-      AudioManager.AUDIOFOCUS_GAIN -> player?.play()
+      AudioManager.AUDIOFOCUS_GAIN -> {
+        if (resumeOnFocusGain) {
+          synchronized(focusLock) {
+            // Reset resume flag
+            resumeOnFocusGain = false
+          }
+          player?.play()
+        }
+      }
 
       // Used to indicate a loss of audio focus of unknown duration.
-      AudioManager.AUDIOFOCUS_LOSS,
+      AudioManager.AUDIOFOCUS_LOSS -> {
+        synchronized (focusLock) {
+          // This is not a transient loss, we shouldn't automatically resume for now
+          resumeOnFocusGain = false;
+        }
+      }
 
       // Used to indicate a transient loss of audio focus.
       AudioManager.AUDIOFOCUS_LOSS_TRANSIENT,
@@ -67,7 +82,13 @@ class AudioFocusManager(
       // Used to indicate a transient loss of audio focus where the loser of the audio focus can
       // lower its output volume if it wants to continue playing (also referred to as "ducking"),
       // as the new focus owner doesn't require others to be silent.
-      AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> player?.pause()
+      AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
+        synchronized (focusLock) {
+          // We should only resume if playback was interrupted
+          resumeOnFocusGain = !(player?.isPaused ?: true)
+        }
+        player?.pause()
+      }
     }
   }
 
@@ -111,6 +132,9 @@ class AudioFocusManager(
    * Abandon audio focus. Causes the previous focus owner, if any, to receive focus.
    */
   fun abandonAudioFocus() {
+    synchronized (focusLock) {
+      resumeOnFocusGain = false
+    }
     val result = audioManager?.let {
       AudioManagerCompat.abandonAudioFocusRequest(it, audioFocusRequest)
     }
