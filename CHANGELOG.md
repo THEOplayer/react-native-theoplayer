@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Added an `AnalyticsDescription` property to `SourceDescription` to configure additional source-specific properties for analytics connectors.
+- Added Audio Focus for Android, pausing play-out on audio focus loss and resuming play-out once focus has been regained.
+- Added Audio Focus and Audio Becoming Noisy manager for Android.
 
 ### Fixed
 
