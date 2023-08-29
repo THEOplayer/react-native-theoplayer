@@ -114,12 +114,6 @@
       </div>
 
       <div class="section">
-        <div class="feature">Advanced APIs</div>
-        <div class="item" style="flex:2">Background playback, Media Session</div>
-        <div class="item">Background playback, NowPlaying</div>
-      </div>
-
-      <div class="section">
         <div class="feature">User Interface</div>
         <div class="item" style="flex:3">Basic playback, media &amp; text track selection, progress bar, live &amp; vod, preview thumbnails, customisable &amp; extensible</div>
       </div>
