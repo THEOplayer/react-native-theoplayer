@@ -72,100 +72,113 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     
     func updateRemoteCommands() {
         let commandCenter = MPRemoteCommandCenter.shared()
+        
+        // update the enabled state to have correct visual representation in the lockscreen
         commandCenter.playCommand.isEnabled = !self.inAd && self.backgroundaudioConfig.enabled
         commandCenter.pauseCommand.isEnabled = !self.inAd && self.backgroundaudioConfig.enabled
         commandCenter.togglePlayPauseCommand.isEnabled = !self.inAd && self.backgroundaudioConfig.enabled
         commandCenter.stopCommand.isEnabled = !self.inAd && self.backgroundaudioConfig.enabled
-        commandCenter.changePlaybackPositionCommand.isEnabled = !isLive && !self.inAd && self.backgroundaudioConfig.enabled
-        commandCenter.skipForwardCommand.isEnabled = !isLive && !self.inAd && self.backgroundaudioConfig.enabled
-        commandCenter.skipBackwardCommand.isEnabled = !isLive && !self.inAd && self.backgroundaudioConfig.enabled
+        commandCenter.changePlaybackPositionCommand.isEnabled = !self.isLive && !self.inAd && self.backgroundaudioConfig.enabled
+        commandCenter.skipForwardCommand.isEnabled = !self.isLive && !self.inAd && self.backgroundaudioConfig.enabled
+        commandCenter.skipBackwardCommand.isEnabled = !self.isLive && !self.inAd && self.backgroundaudioConfig.enabled
+        
         if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Remote commands updated for \(self.isLive ? "LIVE" : "VOD") (\(self.inAd ? "AD IS PLAYING" : "NO AD PLAYING"), \(self.backgroundaudioConfig.enabled ? "BGAUDIO ENABLED" : "BGAUDIO DISABLED") ).") }
     }
     
     @objc private func onPlayCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
         if let player = self.player,
+           !self.inAd,
            player.paused {
             player.play()
-            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Play command triggered.") }
-            return .success
+            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Play command handled.") }
+        } else {
+            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Play command not handled.") }
         }
-        if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Play command Failed.") }
-        return .commandFailed
+        return .success
     }
     
     @objc private func onPauseCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
         if let player = self.player,
+           !self.inAd,
            !player.paused {
             player.pause()
-            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Pause command triggered.") }
-            return .success
+            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Pause command handled.") }
+        } else {
+            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Pause command not handled.") }
         }
-        if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Pause command Failed.") }
-        return .commandFailed
+        return .success
     }
     
     @objc private func onTogglePlayPauseCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
-        if let player = self.player {
+        if let player = self.player,
+           !self.inAd {
             if player.paused {
                 player.play()
             } else {
                 player.pause()
             }
-            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Toggle play/pause command triggered.") }
-            return .success
+            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Toggle play/pause command handled.") }
+        } else {
+            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Toggle play/pause command not handled.") }
         }
-        if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Toggle play/pause command Failed.") }
-        return .commandFailed
+        return .success
     }
     
     @objc private func onStopCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
-        if let player = self.player {
+        if let player = self.player,
+           !self.inAd {
             if !player.paused {
                 player.pause()
             }
-            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Stop command triggered.") }
-            return .success
+            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Stop command handled.") }
+        } else {
+            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Stop command not handled.") }
         }
-        if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Stop command Failed.") }
-        return .commandFailed
+        return .success
     }
     
     @objc private func onScrubCommand(_ event: MPChangePlaybackPositionCommandEvent) -> MPRemoteCommandHandlerStatus {
-        if let player = self.player {
+        if let player = self.player,
+           !self.isLive,
+           !self.inAd {
             player.setCurrentTime(event.positionTime)
-            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Scrub command triggered.") }
-            return .success
+            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Scrub command handled.") }
+        } else {
+            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Scrub command not handled.") }
         }
-        if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Scrub command Failed.") }
-        return .commandFailed
+        return .success
     }
     
     @objc private func onSkipForwardCommand(_ event: MPSkipIntervalCommandEvent) -> MPRemoteCommandHandlerStatus {
-        if let player = self.player {
+        if let player = self.player,
+           !self.isLive,
+           !self.inAd {
             player.requestCurrentTime(completionHandler: { time, error in
                 if let currentTime = time {
                     player.setCurrentTime(currentTime + event.interval)
                 }
             })
-            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Skip forward command triggered.") }
-            return .success
+            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Skip forward command handled.") }
+        } else {
+            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Skip forward command not handled.") }
         }
-        if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Skip forward command Failed.") }
-        return .commandFailed
+        return .success
     }
     
     @objc private func onSkipBackwardCommand(_ event: MPSkipIntervalCommandEvent) -> MPRemoteCommandHandlerStatus {
-        if let player = self.player {
+        if let player = self.player ,
+           !self.isLive,
+           !self.inAd {
             player.requestCurrentTime(completionHandler: { time, error in
                 if let currentTime = time {
                     player.setCurrentTime(currentTime - event.interval)
                 }
             })
-            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Skip backward command triggered.") }
-            return .success
+            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Skip backward command handled.") }
+        } else {
+            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Skip backward command not handled.") }
         }
-        if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Skip backward command Failed.") }
-        return .commandFailed
+        return .success
     }
     
     private func attachListeners() {
@@ -193,11 +206,13 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         // ADBREAK_BEGIN
         self.adBreakBeginListener = player.ads.addEventListener(type: AdsEventTypes.AD_BREAK_BEGIN) { [weak self] event in
             self?.inAd = true
+            self?.updateRemoteCommands()
         }
         
         // ADBREAK_END
         self.adBreakEndListener = player.ads.addEventListener(type: AdsEventTypes.AD_BREAK_END) { [weak self] event in
             self?.inAd = false
+            self?.updateRemoteCommands()
         }
         
 #endif
