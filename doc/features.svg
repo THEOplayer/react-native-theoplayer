@@ -59,7 +59,7 @@
       </div>
 
       <div class="section">
-        <div class="feature">Content Protection</div>
+        <div class="feature"><a href="https://github.com/THEOplayer/react-native-theoplayer/blob/develop/doc/drm.md">Content Protection</a></div>
         <div class="item">Widevine</div>
         <div class="item">Widevine, PlayReady, Fairplay</div>
         <div class="item">Fairplay</div>
@@ -71,7 +71,7 @@
       </div>
 
       <div class="section">
-        <div class="feature">Analytics Connectors</div>
+        <div class="feature"><a href="https://github.com/THEOplayer/react-native-theoplayer-analytics">Analytics Connectors</a></div>
         <div class="item" style="flex:3">Conviva, Adobe, Nielsen, Comscore</div>
       </div>
 
@@ -86,14 +86,14 @@
       </div>
 
       <div class="section">
-        <div class="feature">Advertising Integration</div>
-        <div class="item" style="flex:3"><a href="https://github.com/THEOplayer/react-native-theoplayer/blob/develop/doc/ads.md">Google IMA, Google DAI</a></div>
+        <div class="feature"><a href="https://github.com/THEOplayer/react-native-theoplayer/blob/develop/doc/ads.md">Advertising Integration</a></div>
+        <div class="item" style="flex:3">Google IMA, Google DAI</div>
       </div>
 
       <div class="section">
-        <div class="feature">Cast Integration</div>
-        <div class="item"><a href="https://github.com/THEOplayer/react-native-theoplayer/blob/develop/doc/cast.md">Chromecast</a></div>
-        <div class="item" style="flex:2"><a href="https://github.com/THEOplayer/react-native-theoplayer/blob/develop/doc/cast.md">Chromecast, Airplay</a></div>
+        <div class="feature"><a href="https://github.com/THEOplayer/react-native-theoplayer/blob/develop/doc/cast.md">Cast Integration</a></div>
+        <div class="item">Chromecast</div>
+        <div class="item" style="flex:2">Chromecast, Airplay</div>
       </div>
 
       <div class="section">
