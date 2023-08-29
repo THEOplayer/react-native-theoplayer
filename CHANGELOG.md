@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed an issue on Android that would cause the player not to reset when setting an empty source.
 - Fixed an issue where a text track cue was not properly removed from the cue list on a TextTrackEventType.REMOVE_CUE event.
+- Fixed an issue on tvOS that allowed the user to pause a CSAI ad using the apple remote control.
 
 ## [2.11.0] - 23-08-10
 
