@@ -6,7 +6,8 @@ Android allows multiple apps to play audio concurrently, but this can lead to a 
 mixed audio streams. To enhance user experience, Android offers an API for apps to control **audio focus**, ensuring only
 one app possesses audio focus, thus delivering a more favorable user experience.
 
-This section details how `react-native-theoplayer` addresses changes in audio focus.
+This section details how `react-native-theoplayer` addresses changes in audio focus, which is available as of
+version 2.12.0.
 
 References:
 - [Android for Developers: Audio focus](https://developer.android.com/reference/android/media/AudioFocusRequest)
