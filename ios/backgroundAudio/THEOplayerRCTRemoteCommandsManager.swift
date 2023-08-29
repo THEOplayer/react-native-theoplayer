@@ -193,11 +193,13 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         // ADBREAK_BEGIN
         self.adBreakBeginListener = player.ads.addEventListener(type: AdsEventTypes.AD_BREAK_BEGIN) { [weak self] event in
             self?.inAd = true
+            self?.updateRemoteCommands()
         }
         
         // ADBREAK_END
         self.adBreakEndListener = player.ads.addEventListener(type: AdsEventTypes.AD_BREAK_END) { [weak self] event in
             self?.inAd = false
+            self?.updateRemoteCommands()
         }
         
 #endif
