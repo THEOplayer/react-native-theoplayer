@@ -7,7 +7,7 @@ import type { CachingTaskParameters } from 'react-native-theoplayer';
 import type { CachingTask } from 'react-native-theoplayer';
 import * as THEOplayerWeb from 'theoplayer';
 import { WebCachingTaskAdapter } from './WebCachingTaskAdapter';
-import type { AddCachingTaskEvent, RemoveCachingTaskEvent } from 'theoplayer';
+import type { AddCachingTaskEvent, RemoveCachingTaskEvent, SourceDescription as NativeSourceDescription } from 'theoplayer';
 import { CacheEventType } from 'react-native-theoplayer';
 
 export class WebMediaCache extends DefaultEventDispatcher<CacheEventMap> implements MediaCacheAPI {
@@ -34,7 +34,7 @@ export class WebMediaCache extends DefaultEventDispatcher<CacheEventMap> impleme
   };
 
   createTask(source: SourceDescription, parameters: CachingTaskParameters): Promise<CachingTask> {
-    return Promise.resolve(new WebCachingTaskAdapter(THEOplayerWeb.cache.createTask(source, parameters)));
+    return Promise.resolve(new WebCachingTaskAdapter(THEOplayerWeb.cache.createTask(source as NativeSourceDescription, parameters)));
   }
 
   get status(): CacheStatus {
