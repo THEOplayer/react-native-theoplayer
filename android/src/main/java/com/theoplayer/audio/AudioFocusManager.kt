@@ -132,7 +132,9 @@ class AudioFocusManager(
    * Abandon audio focus. Causes the previous focus owner, if any, to receive focus.
    */
   fun abandonAudioFocus() {
-    resumeOnFocusGain = false
+    synchronized (focusLock) {
+      resumeOnFocusGain = false
+    }
     val result = audioManager?.let {
       AudioManagerCompat.abandonAudioFocusRequest(it, audioFocusRequest)
     }
