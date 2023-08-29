@@ -87,30 +87,30 @@
 
       <div class="section">
         <div class="feature">Advertising Integration</div>
-        <div class="item" style="flex:3">Google IMA, Google DAI</div>
+        <div class="item" style="flex:3"><a href="https://github.com/THEOplayer/react-native-theoplayer/blob/develop/doc/ads.md">Google IMA, Google DAI</a></div>
       </div>
 
       <div class="section">
         <div class="feature">Cast Integration</div>
-        <div class="item">Chromecast</div>
-        <div class="item" style="flex:2">Chromecast, Airplay</div>
+        <div class="item"><a href="https://github.com/THEOplayer/react-native-theoplayer/blob/develop/doc/cast.md">Chromecast</a></div>
+        <div class="item" style="flex:2"><a href="https://github.com/THEOplayer/react-native-theoplayer/blob/develop/doc/cast.md">Chromecast, Airplay</a></div>
       </div>
 
       <div class="section">
         <div class="feature">Presentation Mode</div>
-        <div class="item" style="flex:3">Inline, Picture-in-Picture, Fullscreen</div>
+        <div class="item" style="flex:3">Inline, <a href="https://github.com/THEOplayer/react-native-theoplayer/blob/develop/doc/pip.md">Picture-in-Picture</a>, Fullscreen</div>
       </div>
 
       <div class="section">
         <div class="feature">Audio Control Management</div>
-        <div class="item">Audio focus &amp; Audio-Becoming-Noisy mgmt</div>
+        <div class="item"><a href="https://github.com/THEOplayer/react-native-theoplayer/blob/develop/doc/audio-control.md">Audio focus &amp; Audio-Becoming-Noisy mgmt</a></div>
         <div class="item" style="flex:2">(Audio control management by platform)</div>
       </div>
 
       <div class="section">
         <div class="feature">Advanced APIs</div>
-        <div class="item" style="flex:2">Background playback, Media Session</div>
-        <div class="item">Background playback, NowPlaying</div>
+        <div class="item" style="flex:2"><a href="https://github.com/THEOplayer/react-native-theoplayer/blob/develop/doc/background.md">Background playback</a>, Media Session</div>
+        <div class="item"><a href="https://github.com/THEOplayer/react-native-theoplayer/blob/develop/doc/background.md">Background playback</a>, NowPlaying</div>
       </div>
 
       <div class="section">
