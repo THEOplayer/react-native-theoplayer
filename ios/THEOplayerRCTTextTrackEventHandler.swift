@@ -79,16 +79,19 @@ class THEOplayerRCTTextTrackEventHandler {
                     "type" : TrackListEventType.REMOVE_TRACK.rawValue
                 ])
                 // stop listening for cue events on this track
-                if let addCueListener = welf.addCueListeners[textTrack.uid],
-                   let removeCueListener = welf.removeCueListeners[textTrack.uid],
-                   let enterCueListener = welf.enterCueListeners[textTrack.uid],
-                   let exitCueListener = welf.exitCueListeners[textTrack.uid] {
+                if let addCueListener = welf.addCueListeners.removeValue(forKey: textTrack.uid) {
                     textTrack.removeEventListener(type: TextTrackEventTypes.ADD_CUE, listener: addCueListener)
                     if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] AddCue listener removed from THEOplayer textTrack with uid \(textTrack.uid)") }
+                }
+                if let removeCueListener = welf.removeCueListeners.removeValue(forKey: textTrack.uid) {
                     textTrack.removeEventListener(type: TextTrackEventTypes.REMOVE_CUE, listener: removeCueListener)
                     if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] RemoveCue listener removed from THEOplayer textTrack with uid \(textTrack.uid)") }
+                }
+                if let enterCueListener = welf.enterCueListeners.removeValue(forKey: textTrack.uid) {
                     textTrack.removeEventListener(type: TextTrackEventTypes.ENTER_CUE, listener: enterCueListener)
                     if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] EnterCue listener removed from THEOplayer textTrack with uid \(textTrack.uid)") }
+                }
+                if let exitCueListener = welf.exitCueListeners.removeValue(forKey: textTrack.uid) {
                     textTrack.removeEventListener(type: TextTrackEventTypes.EXIT_CUE, listener: exitCueListener)
                     if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] ExitCue listener removed from THEOplayer textTrack with uid \(textTrack.uid)") }
                 }
@@ -133,6 +136,31 @@ class THEOplayerRCTTextTrackEventHandler {
         if let changeTrackListener = self.changeTrackListener {
             player.textTracks.removeEventListener(type: TextTrackListEventTypes.CHANGE, listener: changeTrackListener)
             if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] ChangeTrack listener dettached from THEOplayer textTrack list") }
+        }
+        
+        // ADD_CUE, REMOVE_CUE, ENTER_CUE, EXIT_CUE
+        let textTrackCount = player.textTracks.count
+        if textTrackCount > 0 {
+            for i in 0..<textTrackCount {
+                let textTrack = player.textTracks[i]
+                // stop listening for cue events on this track
+                if let addCueListener = self.addCueListeners.removeValue(forKey: textTrack.uid) {
+                    textTrack.removeEventListener(type: TextTrackEventTypes.ADD_CUE, listener: addCueListener)
+                    if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] AddCue listener removed from THEOplayer textTrack with uid \(textTrack.uid)") }
+                }
+                if let removeCueListener = self.removeCueListeners.removeValue(forKey: textTrack.uid) {
+                    textTrack.removeEventListener(type: TextTrackEventTypes.REMOVE_CUE, listener: removeCueListener)
+                    if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] RemoveCue listener removed from THEOplayer textTrack with uid \(textTrack.uid)") }
+                }
+                if let enterCueListener = self.enterCueListeners.removeValue(forKey: textTrack.uid) {
+                    textTrack.removeEventListener(type: TextTrackEventTypes.ENTER_CUE, listener: enterCueListener)
+                    if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] EnterCue listener removed from THEOplayer textTrack with uid \(textTrack.uid)") }
+                }
+                if let exitCueListener = self.exitCueListeners.removeValue(forKey: textTrack.uid) {
+                    textTrack.removeEventListener(type: TextTrackEventTypes.EXIT_CUE, listener: exitCueListener)
+                    if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] ExitCue listener removed from THEOplayer textTrack with uid \(textTrack.uid)") }
+                }
+            }
         }
     }
     
