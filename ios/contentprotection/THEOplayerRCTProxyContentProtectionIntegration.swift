@@ -2,8 +2,6 @@
 //  THEOplayerRCTContentProtectionIntegration.swift
 //  Theoplayer
 //
-//  Created by William van Haevre on 28/10/2022.
-//
 
 import Foundation
 import THEOplayerSDK

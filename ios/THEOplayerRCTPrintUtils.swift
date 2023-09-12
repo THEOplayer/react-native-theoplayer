@@ -2,9 +2,6 @@
 //  Printing.swift
 //  THEOliveSDK
 //
-//  Created by William van Haevre on 21/06/2021.
-//
-
 import Foundation
 
 class PrintUtils {

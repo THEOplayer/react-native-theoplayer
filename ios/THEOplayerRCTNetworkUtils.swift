@@ -2,8 +2,6 @@
 //  THEOplayerRCTNetworkUtils.swift
 //  Theoplayer
 //
-//  Created by William van Haevre on 14/11/2022.
-//
 
 import Foundation
 
