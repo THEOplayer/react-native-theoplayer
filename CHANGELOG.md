@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- Fixed an issue on iOS where the error was not forwarded to theoplayer if a drm request fails on the iOS bridge 
+
 ## [2.12.0] - 23-09-04
 
 ### Added
