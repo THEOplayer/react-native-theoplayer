@@ -13,9 +13,6 @@ import android.os.Looper
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import com.facebook.react.uimanager.ThemedReactContext
-import com.google.ads.interactivemedia.v3.api.AdsRenderingSettings
-import com.google.ads.interactivemedia.v3.api.ImaSdkFactory
-import com.theoplayer.android.api.THEOplayerConfig
 import com.theoplayer.android.api.THEOplayerView
 import com.theoplayer.android.api.ads.dai.GoogleDaiIntegration
 import com.theoplayer.android.api.ads.dai.GoogleDaiIntegrationFactory
@@ -86,10 +83,10 @@ class ReactTHEOplayerContext private constructor(
   companion object {
     fun create(
       reactContext: ThemedReactContext,
-      playerConfig: THEOplayerConfig
+      configAdapter: PlayerConfigAdapter
     ): ReactTHEOplayerContext {
       return ReactTHEOplayerContext(reactContext).apply {
-        initializePlayerView(playerConfig)
+        initializePlayerView(configAdapter)
       }
     }
   }
@@ -213,8 +210,8 @@ class ReactTHEOplayerContext private constructor(
     binder = null
   }
 
-  private fun initializePlayerView(playerConfig: THEOplayerConfig) {
-    playerView = object : THEOplayerView(reactContext.currentActivity!!, playerConfig) {
+  private fun initializePlayerView(configAdapter: PlayerConfigAdapter) {
+    playerView = object : THEOplayerView(reactContext.currentActivity!!, configAdapter.playerConfig()) {
       private fun measureAndLayout() {
         measure(
           MeasureSpec.makeMeasureSpec(measuredWidth, MeasureSpec.EXACTLY),
@@ -234,7 +231,7 @@ class ReactTHEOplayerContext private constructor(
     // By default, the screen should remain on.
     playerView.keepScreenOn = true
 
-    addIntegrations(playerConfig)
+    addIntegrations(configAdapter)
     addListeners()
 
     audioFocusManager = AudioFocusManager(reactContext, player)
@@ -268,29 +265,37 @@ class ReactTHEOplayerContext private constructor(
     }
   }
 
-  private fun addIntegrations(playerConfig: THEOplayerConfig) {
+  private fun addIntegrations(configAdapter: PlayerConfigAdapter) {
     try {
       if (BuildConfig.EXTENSION_GOOGLE_IMA) {
-        imaIntegration = GoogleImaIntegrationFactory.createGoogleImaIntegration(playerView).apply {
-          setAdsRenderingSettings(createRenderSettings(playerConfig))
-          playerView.player.addIntegration(this)
+        imaIntegration = GoogleImaIntegrationFactory.createGoogleImaIntegration(
+          playerView, configAdapter.adsConfig()
+        ).apply {
+          setAdsRenderingSettings(configAdapter.adsRenderSettings())
+        }.also {
+          playerView.player.addIntegration(it)
         }
       }
     } catch (ignore: Exception) {
     }
     try {
       if (BuildConfig.EXTENSION_GOOGLE_DAI) {
-        daiIntegration = GoogleDaiIntegrationFactory.createGoogleDaiIntegration(playerView).apply {
-          setAdsRenderingSettings(createRenderSettings(playerConfig))
-          playerView.player.addIntegration(this)
+        daiIntegration = GoogleDaiIntegrationFactory.createGoogleDaiIntegration(
+          playerView, configAdapter.adsConfig()
+        ).apply {
+          setAdsRenderingSettings(configAdapter.adsRenderSettings())
+        }.also {
+          playerView.player.addIntegration(it)
         }
       }
     } catch (ignore: Exception) {
     }
     try {
       if (BuildConfig.EXTENSION_CAST) {
-        castIntegration = CastIntegrationFactory.createCastIntegration(playerView).apply {
-          playerView.player.addIntegration(this)
+        castIntegration = CastIntegrationFactory.createCastIntegration(
+          playerView, configAdapter.castConfig()
+        ).also {
+          playerView.player.addIntegration(it)
         }
       }
       // Add other future integrations here.
@@ -341,15 +346,6 @@ class ReactTHEOplayerContext private constructor(
       removeEventListener(PlayerEventTypes.PAUSE, onPause)
       removeEventListener(PlayerEventTypes.PLAY, onPlay)
     }
-  }
-
-  private fun createRenderSettings(playerConfig: THEOplayerConfig): AdsRenderingSettings {
-    val renderingSettings = ImaSdkFactory.getInstance().createAdsRenderingSettings()
-    if (playerConfig.ads != null && !playerConfig.ads!!.isShowCountdown) {
-      renderingSettings.setUiElements(emptySet())
-      renderingSettings.disableUi = true
-    }
-    return renderingSettings
   }
 
   /**
