@@ -6,7 +6,6 @@ import com.facebook.react.bridge.ReadableMap
 import com.theoplayer.android.api.THEOplayerConfig
 import com.theoplayer.android.api.ads.AdsConfiguration
 import com.theoplayer.android.api.ads.AdPreloadType
-import com.theoplayer.android.api.ads.GoogleImaConfiguration
 import com.theoplayer.android.api.cast.CastStrategy
 import com.google.android.gms.cast.framework.CastContext
 import com.theoplayer.android.api.pip.PipConfiguration
@@ -18,8 +17,6 @@ private const val PROP_LICENSE = "license"
 private const val PROP_LICENSE_URL = "licenseUrl"
 private const val PROP_PRELOAD = "preload"
 private const val PROP_UI_ENABLED = "uiEnabled"
-private const val PROP_GOOGLE_IMA_CONFIGURATION = "googleImaConfiguration"
-private const val PROP_USE_NATIVE_IMA = "useNativeIma"
 private const val PROP_CAST_CONFIGURATION = "cast"
 private const val PROP_CAST_STRATEGY = "strategy"
 private const val PROP_CHROMECAST_CONFIG = "chromecast"
@@ -70,12 +67,6 @@ object PlayerConfigAdapter {
     builder.showCountdown(
       !configProps.hasKey(PROP_UI_ENABLED) || configProps.getBoolean(PROP_UI_ENABLED)
     )
-    val googleImaConfiguration = googleImaConfigurationFromProps(
-      configProps.getMap(PROP_GOOGLE_IMA_CONFIGURATION)
-    )
-    if (googleImaConfiguration != null) {
-      builder.googleIma(googleImaConfiguration)
-    }
     return builder.build()
   }
 
@@ -127,15 +118,5 @@ object PlayerConfigAdapter {
       "disabled" -> CastStrategy.DISABLED
       else -> null
     }
-  }
-
-  private fun googleImaConfigurationFromProps(configProps: ReadableMap?): GoogleImaConfiguration? {
-    return if (configProps == null) {
-      null
-    } else GoogleImaConfiguration.Builder()
-      .useNativeIma(
-        configProps.hasKey(PROP_USE_NATIVE_IMA) && configProps.getBoolean(PROP_USE_NATIVE_IMA)
-      )
-      .build()
   }
 }
