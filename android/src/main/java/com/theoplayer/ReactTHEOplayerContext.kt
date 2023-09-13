@@ -12,6 +12,7 @@ import android.os.IBinder
 import android.os.Looper
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import android.util.Log
 import com.facebook.react.uimanager.ThemedReactContext
 import com.theoplayer.android.api.THEOplayerView
 import com.theoplayer.android.api.ads.dai.GoogleDaiIntegration
@@ -276,7 +277,8 @@ class ReactTHEOplayerContext private constructor(
           playerView.player.addIntegration(it)
         }
       }
-    } catch (ignore: Exception) {
+    } catch (e: Exception) {
+      Log.w(TAG, "Failed to configure Google IMA integration ${e.message}")
     }
     try {
       if (BuildConfig.EXTENSION_GOOGLE_DAI) {
@@ -288,7 +290,8 @@ class ReactTHEOplayerContext private constructor(
           playerView.player.addIntegration(it)
         }
       }
-    } catch (ignore: Exception) {
+    } catch (e: Exception) {
+      Log.w(TAG, "Failed to configure Google DAI integration ${e.message}")
     }
     try {
       if (BuildConfig.EXTENSION_CAST) {
@@ -298,9 +301,10 @@ class ReactTHEOplayerContext private constructor(
           playerView.player.addIntegration(it)
         }
       }
-      // Add other future integrations here.
-    } catch (ignore: Exception) {
+    } catch (e: Exception) {
+      Log.w(TAG, "Failed to configure Cast integration ${e.message}")
     }
+    // Add other future integrations here.
   }
 
   private val onSourceChange = EventListener<SourceChangeEvent> {
