@@ -15,7 +15,6 @@ import com.theoplayer.android.api.source.ssai.SsaiIntegration
 import com.theoplayer.android.api.source.GoogleDaiTypedSource
 import com.theoplayer.android.api.source.ssai.dai.GoogleDaiVodConfiguration
 import com.theoplayer.android.api.source.ssai.dai.GoogleDaiLiveConfiguration
-import com.theoplayer.android.api.source.ssai.YoSpaceDescription
 import com.theoplayer.android.api.source.hls.HlsPlaybackConfiguration
 import com.theoplayer.android.api.event.ads.AdIntegrationKind
 import com.theoplayer.android.api.source.addescription.GoogleImaAdDescription
@@ -174,9 +173,6 @@ class SourceAdapter {
                 tsBuilder.type(SourceType.DASH)
               }
             }
-            SsaiIntegration.YOSPACE -> tsBuilder.ssai(
-              gson.fromJson(ssaiJson.toString(), YoSpaceDescription::class.java)
-            )
             else -> throw THEOplayerException(
               ErrorCode.AD_ERROR,
               "$ERROR_UNSUPPORTED_SSAI_INTEGRATION: $ssaiIntegrationStr"
@@ -283,7 +279,7 @@ class SourceAdapter {
         AdIntegrationKind.GOOGLE_IMA -> parseImaAdFromJS(
           jsonAdDescription
         )
-        AdIntegrationKind.DEFAULT, AdIntegrationKind.THEO, AdIntegrationKind.FREEWHEEL, AdIntegrationKind.SPOTX -> {
+        AdIntegrationKind.DEFAULT -> {
           throw THEOplayerException(
             ErrorCode.AD_ERROR,
             "$ERROR_UNSUPPORTED_CSAI_INTEGRATION: $integrationKindStr"
