@@ -16,7 +16,6 @@ private const val TAG = "PlayerConfigAdapter"
 private const val PROP_ADS_CONFIGURATION = "ads"
 private const val PROP_LICENSE = "license"
 private const val PROP_LICENSE_URL = "licenseUrl"
-private const val PROP_CHROMELESS = "chromeless"
 private const val PROP_PRELOAD = "preload"
 private const val PROP_UI_ENABLED = "uiEnabled"
 private const val PROP_GOOGLE_IMA_CONFIGURATION = "googleImaConfiguration"
@@ -46,9 +45,6 @@ object PlayerConfigAdapter {
       val licenseUrl = configProps.getString(PROP_LICENSE_URL)
       if (licenseUrl != null) {
         configBuilder.licenseUrl(licenseUrl)
-      }
-      if (configProps.hasKey(PROP_CHROMELESS)) {
-        configBuilder.chromeless(configProps.getBoolean(PROP_CHROMELESS))
       }
       if (configProps.hasKey(PROP_RETRY_CONFIG)) {
         val networkConfig = networkConfigurationFromProps(configProps.getMap(PROP_RETRY_CONFIG))
