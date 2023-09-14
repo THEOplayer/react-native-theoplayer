@@ -12,7 +12,6 @@ import com.theoplayer.android.api.cast.CastConfiguration
 import com.theoplayer.android.api.pip.PipConfiguration
 import com.theoplayer.android.api.player.NetworkConfiguration
 
-private const val TAG = "PlayerConfigAdapter"
 private const val PROP_LICENSE = "license"
 private const val PROP_LICENSE_URL = "licenseUrl"
 private const val PROP_PRELOAD = "preload"
