@@ -21,6 +21,8 @@ private const val PROP_RETRY_CONFIG = "retryConfiguration"
 private const val PROP_RETRY_MAX_RETRIES = "maxRetries"
 private const val PROP_RETRY_MIN_BACKOFF = "minimumBackoff"
 private const val PROP_RETRY_MAX_BACKOFF = "maximumBackoff"
+private const val PROP_CAST_CONFIGURATION = "cast"
+private const val PROP_ADS_CONFIGURATION = "ads"
 
 class PlayerConfigAdapter(private val configProps: ReadableMap?) {
 
@@ -39,8 +41,8 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
         getString(PROP_LICENSE_URL)?.let { licenseUrl ->
           licenseUrl(licenseUrl)
         }
-        if (configProps.hasKey(PROP_RETRY_CONFIG)) {
-          networkConfiguration(networkConfig(configProps.getMap(PROP_RETRY_CONFIG)))
+        if (hasKey(PROP_RETRY_CONFIG)) {
+          networkConfiguration(networkConfig())
         }
         pipConfiguration(PipConfiguration.Builder().build())
       }
@@ -53,9 +55,9 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
    * - minimumBackoff: The initial delay in milliseconds before a retry request occurs.
    * - maximumBackoff: The maximum amount of delay in milliseconds between retry requests.
    */
-  private fun networkConfig(configProps: ReadableMap?): NetworkConfiguration {
+  private fun networkConfig(): NetworkConfiguration {
     return NetworkConfiguration.Builder().apply {
-      configProps?.run {
+      configProps?.getMap(PROP_RETRY_CONFIG)?.run {
         if (hasKey(PROP_RETRY_MAX_RETRIES)) {
           maxRetries(getInt(PROP_RETRY_MAX_RETRIES))
         }
@@ -76,7 +78,7 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
    */
   fun adsConfig(): AdsConfiguration {
     return AdsConfiguration.Builder().apply {
-      configProps?.run {
+      configProps?.getMap(PROP_ADS_CONFIGURATION)?.run {
         if (hasKey(PROP_PRELOAD)) {
           val preloadTypeString = getString(PROP_PRELOAD)
           if (!TextUtils.isEmpty(preloadTypeString)) {
@@ -95,8 +97,8 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
    */
   fun adsRenderSettings(): AdsRenderingSettings {
     return ImaSdkFactory.getInstance().createAdsRenderingSettings().apply {
-      configProps?.run {
-        if (hasKey(PROP_UI_ENABLED) && !configProps.getBoolean(PROP_UI_ENABLED)) {
+      configProps?.getMap(PROP_ADS_CONFIGURATION)?.run {
+        if (hasKey(PROP_UI_ENABLED) && !getBoolean(PROP_UI_ENABLED)) {
           setUiElements(emptySet())
           disableUi = true
         }
@@ -110,8 +112,8 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
    */
   fun castConfig(): CastConfiguration {
     return CastConfiguration.Builder().apply {
-      configProps?.run {
-        castStrategyFromString(configProps.getString(PROP_CAST_STRATEGY))?.let { strategy ->
+      configProps?.getMap(PROP_CAST_CONFIGURATION)?.run {
+        castStrategyFromString(getString(PROP_CAST_STRATEGY))?.let { strategy ->
           castStrategy(strategy)
         }
       }
