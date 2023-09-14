@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed an issue on Android where the player SDK dependency could resolve to version 6.+.
+- Fixed an issue on iOS where the player integration dependencies could resolve to version 6.+.
 
 ## [2.12.0] - 23-09-04
 
