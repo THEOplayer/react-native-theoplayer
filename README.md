@@ -50,6 +50,15 @@ These are guides on how to use the THEOplayer React Native SDK in your React Nat
 linearly or by searching the specific section. It is recommended that you have a basic understanding of how
 React Native works to speed up the way of working with THEOplayer React Native SDK.
 
+## Features
+
+Depending on the platform on which the application is deployed, a different set of features is available.
+
+If a feature missing, additional help is needed, or you need to extend the package,
+please reach out to us for support.
+
+<img src="./doc/features.svg">
+
 ## Available connectors
 
 The `react-native-theoplayer` package can be combined with any number of connectors to provide extra

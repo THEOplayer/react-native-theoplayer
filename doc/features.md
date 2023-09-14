@@ -8,5 +8,3 @@ If a feature missing, additional help is needed, or you need to extend the packa
 please reach out to us for support.
 
 <img src="./features.svg">
-
-<div style="margin"></div>
