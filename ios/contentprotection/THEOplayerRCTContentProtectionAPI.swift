@@ -2,9 +2,6 @@
 //  THEOplayerRCTContentProtectionAPI.swift
 //  Theoplayer
 //
-//  Created by William van Haevre on 09/09/2022.
-//  Copyright © 2022 Facebook. All rights reserved.
-//
 
 import Foundation
 import UIKit
