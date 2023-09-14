@@ -24,6 +24,13 @@ private const val PROP_RETRY_MIN_BACKOFF = "minimumBackoff"
 private const val PROP_RETRY_MAX_BACKOFF = "maximumBackoff"
 
 class PlayerConfigAdapter(private val configProps: ReadableMap?) {
+
+  /**
+   * Get general THEOplayerConfig object; these properties apply:
+   * - license: The license for the player.
+   * - licenseUrl: The url to fetch the license for the player.
+   * - retryConfiguration: The retry configuration for the player.
+   */
   fun playerConfig(): THEOplayerConfig {
     return THEOplayerConfig.Builder().apply {
       configProps?.run {
@@ -41,6 +48,12 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
     }.build()
   }
 
+  /**
+   * Get NetworkConfiguration object; there properties apply:
+   * - maxRetries: The maximum amount of retries before the player throws a fatal error.
+   * - minimumBackoff: The initial delay in milliseconds before a retry request occurs.
+   * - maximumBackoff: The maximum amount of delay in milliseconds between retry requests.
+   */
   private fun networkConfig(configProps: ReadableMap?): NetworkConfiguration {
     return NetworkConfiguration.Builder().apply {
       configProps?.run {
@@ -57,6 +70,11 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
     }.build()
   }
 
+  /**
+   * Get AdsConfiguration object; these properties apply:
+   * - preload: Whether media files of mid- and postrolls are preloaded.
+   * - uiEnabled: Whether an advertisement UI is shown.
+   */
   fun adsConfig(): AdsConfiguration {
     return AdsConfiguration.Builder().apply {
       configProps?.run {
@@ -73,6 +91,9 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
     }.build()
   }
 
+  /**
+   * Create a AdsRenderingSettings object.
+   */
   fun adsRenderSettings(): AdsRenderingSettings {
     return ImaSdkFactory.getInstance().createAdsRenderingSettings().apply {
       configProps?.run {
@@ -84,6 +105,10 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
     }
   }
 
+  /**
+   * Get CastConfiguration object; these properties apply:
+   * - strategy: The join strategy of the player.
+   */
   fun castConfig(): CastConfiguration {
     return CastConfiguration.Builder().apply {
       configProps?.run {
