@@ -90,7 +90,6 @@ and discussed in the next section. Finally, an overview of features, limitations
     - [Getting started on Web](./doc/creating-minimal-app.md#getting-started-on-web)
 - [The THEOplayerView component](./doc/theoplayerview-component.md)
 - [The example application](./doc/example-app.md)
-- [Features](./doc/features.md)
 - Knowledge Base
   - [Adaptive Bitrate (ABR)](./doc/abr.md)
   - [Advertisements](./doc/ads.md)
