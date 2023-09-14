@@ -9,9 +9,11 @@ This projects falls under the license as defined in https://github.com/THEOplaye
 ## Table of Contents
 
 1. [Overview](#overview)
-2. [How to use these guides](#how-to-use-these-guides)
-3. [Prerequisites](#prerequisites)
-4. [Getting Started](#getting-started)
+2. [Prerequisites](#prerequisites)
+3. [How to use these guides](#how-to-use-these-guides)
+4. [Features](#features)
+5. [Available connectors](#available-connectors)
+6. [Getting Started](#getting-started)
 
 ## Overview
 
