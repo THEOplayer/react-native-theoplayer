@@ -9,9 +9,9 @@ This projects falls under the license as defined in https://github.com/THEOplaye
 ## Table of Contents
 
 1. [Overview](#overview)
-1. [How to use these guides](#how-to-use-these-guides)
-1. [Prerequisites](#prerequisites)
-2. [Getting Started](#getting-started)
+2. [How to use these guides](#how-to-use-these-guides)
+3. [Prerequisites](#prerequisites)
+4. [Getting Started](#getting-started)
 
 ## Overview
 
@@ -58,9 +58,11 @@ functionality. Currently, the following connectors are available:
 | Package name                                                                                                              | Purpose                                              | Registry                                                                                                                                                      |
 |---------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [`@theoplayer/react-native-analytics-adobe`](https://github.com/THEOplayer/react-native-theoplayer-analytics)             | Adobe analytics connector                            | [![npm](https://img.shields.io/npm/v/@theoplayer/react-native-analytics-adobe)](https://www.npmjs.com/package/@theoplayer/react-native-analytics-adobe)       |
+| [`@theoplayer/react-native-analytics-agama`](https://github.com/THEOplayer/react-native-theoplayer-analytics)             | Agama analytics connector                            | [![npm](https://img.shields.io/npm/v/@theoplayer/react-native-analytics-agama)](https://www.npmjs.com/package/@theoplayer/react-native-analytics-agama)       |
 | [`@theoplayer/react-native-analytics-comscore`](https://github.com/THEOplayer/react-native-theoplayer-analytics)          | Comscore analytics connector                         | [![npm](https://img.shields.io/npm/v/@theoplayer/react-native-analytics-comscore)](https://www.npmjs.com/package/@theoplayer/react-native-analytics-comscore) |
 | [`@theoplayer/react-native-analytics-conviva`](https://github.com/THEOplayer/react-native-theoplayer-analytics)           | Conviva analytics connector                          | [![npm](https://img.shields.io/npm/v/@theoplayer/react-native-analytics-conviva)](https://www.npmjs.com/package/@theoplayer/react-native-analytics-conviva)   |
 | [`@theoplayer/react-native-analytics-nielsen`](https://github.com/THEOplayer/react-native-theoplayer-analytics)           | Nielsen analytics connector                          | [![npm](https://img.shields.io/npm/v/@theoplayer/react-native-analytics-nielsen)](https://www.npmjs.com/package/@theoplayer/react-native-analytics-nielsen)   |
+| [`@theoplayer/react-native-analytics-youbora`](https://github.com/THEOplayer/react-native-theoplayer-analytics)           | Youbora analytics connector                          | [![npm](https://img.shields.io/npm/v/@theoplayer/react-native-analytics-youbora)](https://www.npmjs.com/package/@theoplayer/react-native-analytics-youbora)   |
 | [`@theoplayer/react-native-drm`](https://github.com/THEOplayer/react-native-theoplayer-drm)                               | Content protection (DRM) connectors                  | [![npm](https://img.shields.io/npm/v/@theoplayer/react-native-drm)](https://www.npmjs.com/package/@theoplayer/react-native-drm)                               |
 | [`@theoplayer/react-native-ui`](https://github.com/THEOplayer/react-native-theoplayer-ui)                                 | React Native user interface                          | [![npm](https://img.shields.io/npm/v/@theoplayer/react-native-ui)](https://www.npmjs.com/package/@theoplayer/react-native-ui)                                 |
 | [`@theoplayer/react-native-connector-template`](https://github.com/THEOplayer/react-native-theoplayer-connector-template) | A template for `react-native-theoplayer` connectors. | [![npm](https://img.shields.io/npm/v/@theoplayer/react-native-connector-template)](https://www.npmjs.com/package/@theoplayer/react-native-connector-template) |

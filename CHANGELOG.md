@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed an issue where setting a new source on iOS, during DRM handling, would crash the application due to unsafe array access by different threads.
 
+## [2.12.1] - 23-09-14
+
+### Fixed
+
+- Fixed an issue on Android where the player SDK dependency could resolve to version 6.+.
+- Fixed an issue on iOS where the player integration dependencies could resolve to version 6.+.
+
 ## [2.12.0] - 23-09-04
 
 ### Added

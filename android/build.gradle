@@ -105,8 +105,8 @@ dependencies {
   implementation "com.theoplayer.theoplayer-sdk-android:ads-wrapper:4.8.0"
   implementation "androidx.appcompat:appcompat:1.4.+"
 
-  // The minimum supported version is 5.0.1
-  def theoplayer_sdk_version = safeExtGet('THEOplayer_sdk', '[5.0.1,)')
+  // The minimum supported version is 5.10.0
+  def theoplayer_sdk_version = safeExtGet('THEOplayer_sdk', '[5.10,6.0)')
 
 //  def theoplayer_mediasession_version = safeExtGet('THEOplayer_mediasession', theoplayer_sdk_version)
   def theoplayer_mediasession_version = "5.2.0-local"
