@@ -179,10 +179,35 @@
         "title": "The Venture Bros",
         "subtitle": "Adult Swim",
         "album": "React-Native THEOplayer demos",
-        "displayIconUri": "https://cdn.theoplayer.com/video/adultswim/poster.jpg",
+        "displayIconUri": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
         "artist": "THEOplayer",
         "type": "tv-show",
         "releaseDate": "november 29th",
+        "releaseYear": 1997
+      }
+    }
+  },
+  {
+    "name": "HLS - LIVE - Clear - TOS",
+    "os": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "source": {
+      "sources": {
+        "src": "https://cph-msl.akamaized.net/hls/live/2000341/test/master.m3u8",
+        "type": "application/x-mpegurl"
+      },
+      "poster": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-640x640.png",
+      "metadata": {
+        "title": "Tears of Steel",
+        "subtitle": "Steel Tears",
+        "album": "React-Native demos",
+        "displayIconUri": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
+        "artist": "THEOplayer",
+        "type": "tv-show",
+        "releaseDate": "november 30th",
         "releaseYear": 1997
       }
     }
