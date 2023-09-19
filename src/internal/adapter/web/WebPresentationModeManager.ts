@@ -1,18 +1,18 @@
 import type { PlayerEventMap } from 'react-native-theoplayer';
 import { PresentationMode } from 'react-native-theoplayer';
-import type * as THEOplayerWeb from 'theoplayer';
+import type { ChromelessPlayer } from 'theoplayer';
 import { DefaultPresentationModeChangeEvent } from '../event/PlayerEvents';
 import type { DefaultEventDispatcher } from '../event/DefaultEventDispatcher';
 import { fullscreenAPI } from './FullscreenAPI';
 import { noOp } from '../../utils/CommonUtils';
 
 export class WebPresentationModeManager {
-  private readonly _player: THEOplayerWeb.ChromelessPlayer;
+  private readonly _player: ChromelessPlayer;
   private _presentationMode: PresentationMode = PresentationMode.inline;
   private _element: HTMLVideoElement | undefined = undefined;
   private _eventForwarder: DefaultEventDispatcher<PlayerEventMap>;
 
-  constructor(player: THEOplayerWeb.ChromelessPlayer, eventForwarder: DefaultEventDispatcher<PlayerEventMap>) {
+  constructor(player: ChromelessPlayer, eventForwarder: DefaultEventDispatcher<PlayerEventMap>) {
     this._player = player;
     this._eventForwarder = eventForwarder;
   }
