@@ -5,7 +5,6 @@ import THEOplayerSDK
 
 struct AdsConfig {
     var adSUIEnabled: Bool = true
-    var googleImaUsesNativeIma: Bool = true
     var adPreloadTypeString: String = "none"
 }
 
@@ -19,16 +18,12 @@ extension THEOplayerRCTView {
             if let adPreloadType = adsConfig["preload"] as? String {
                 self.adsConfig.adPreloadTypeString = adPreloadType
             }
-            if let googleImaConfiguration = adsConfig["googleImaConfiguration"] as? NSDictionary {
-                self.adsConfig.googleImaUsesNativeIma = googleImaConfiguration["useNativeIma"] as? Bool ?? true
-            }
         }
     }
 
 #if (GOOGLE_IMA || GOOGLE_DAI) || canImport(THEOplayerGoogleIMAIntegration)
     func playerAdsConfiguration() -> AdsConfiguration? {
         let googleBuilder = GoogleIMAConfigurationBuilder()
-        googleBuilder.useNativeIMA = self.adsConfig.googleImaUsesNativeIma
         googleBuilder.disableUI = !self.adsConfig.adSUIEnabled
         googleBuilder.enableBackgroundPlayback = true
         let googleIMAAdsConfiguration = googleBuilder.build()
@@ -40,14 +35,6 @@ extension THEOplayerRCTView {
                                 preload: self.adPreloadType(),
                                 googleIma: googleIMAAdsConfiguration,
                                 googleDai: googleDaiAdsConfiguration)
-        
-        // For older iOS SDK versions replace the above with:
-        /*let googleIMAConfiguration = GoogleIMAConfiguration()
-         googleIMAConfiguration.useNativeIma = self.googleImaUsesNativeIma
-         googleIMAConfiguration.disableUI = !self.adSUIEnabled
-         return AdsConfiguration(showCountdown: self.adSUIEnabled,
-         preload: self.adPreloadType,
-         googleImaConfiguration: googleIMAConfiguration)*/
     }
     
     private func adPreloadType() -> THEOplayerSDK.AdPreloadType {
