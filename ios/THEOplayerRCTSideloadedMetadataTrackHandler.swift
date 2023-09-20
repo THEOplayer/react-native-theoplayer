@@ -24,7 +24,7 @@ class THEOplayerRCTSideloadedMetadataTrackHandler {
                 }
                 
                 if let vttString = String(data: data, encoding: .utf8) {
-                    let cues = THEOplayerRCTSideloadedMetadataTrackHandler.parseWebVTTString(vttString)
+                    let cues = THEOplayerRCTSideloadedMetadataTrackHandler.parseVTTString(vttString)
                     completion(cues)
                 } else {
                     completion(nil)
@@ -34,7 +34,7 @@ class THEOplayerRCTSideloadedMetadataTrackHandler {
             task.resume()
         }
 
-    private class func parseWebVTTString(_ vttString: String) -> [Cue] {
+    private class func parseVTTString(_ vttString: String) -> [Cue] {
             var cues: [Cue] = []
             var currentCue: Cue?
             
