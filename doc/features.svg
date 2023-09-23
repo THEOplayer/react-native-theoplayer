@@ -11,6 +11,7 @@
 
         .section {
         display: flex;
+        font-size: 14px;
         justify-content: space-between;
         align-items: center;
         border-radius: 15px;
