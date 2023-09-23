@@ -9,9 +9,11 @@ This projects falls under the license as defined in https://github.com/THEOplaye
 ## Table of Contents
 
 1. [Overview](#overview)
-2. [How to use these guides](#how-to-use-these-guides)
-3. [Prerequisites](#prerequisites)
-4. [Getting Started](#getting-started)
+2. [Prerequisites](#prerequisites)
+3. [How to use these guides](#how-to-use-these-guides)
+4. [Features](#features)
+5. [Available connectors](#available-connectors)
+6. [Getting Started](#getting-started)
 
 ## Overview
 
@@ -50,6 +52,15 @@ These are guides on how to use the THEOplayer React Native SDK in your React Nat
 linearly or by searching the specific section. It is recommended that you have a basic understanding of how
 React Native works to speed up the way of working with THEOplayer React Native SDK.
 
+## Features
+
+Depending on the platform on which the application is deployed, a different set of features is available.
+
+If a feature missing, additional help is needed, or you need to extend the package,
+please reach out to us for support.
+
+<img src="./doc/features.svg">
+
 ## Available connectors
 
 The `react-native-theoplayer` package can be combined with any number of connectors to provide extra
@@ -81,7 +92,6 @@ and discussed in the next section. Finally, an overview of features, limitations
     - [Getting started on Web](./doc/creating-minimal-app.md#getting-started-on-web)
 - [The THEOplayerView component](./doc/theoplayerview-component.md)
 - [The example application](./doc/example-app.md)
-- [Features](./doc/features.md)
 - Knowledge Base
   - [Adaptive Bitrate (ABR)](./doc/abr.md)
   - [Advertisements](./doc/ads.md)
