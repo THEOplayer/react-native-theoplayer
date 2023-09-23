@@ -72,7 +72,7 @@
 
       <div class="section">
         <div class="feature">Analytics Connectors</div>
-        <div class="item" style="flex:3">Adobe, Agama, Comscore, Conviva, Nielsen</div>
+        <div class="item" style="flex:3">Adobe, Agama, Comscore, Conviva, Nielsen, Youbora</div>
       </div>
 
       <div class="section">
@@ -114,7 +114,7 @@
       </div>
 
       <div class="section">
-        <div class="feature">User Interface</div>
+        <div class="feature">User Interface <br/><small>@theoplayer/react-native-ui</small></div>
         <div class="item" style="flex:3">Basic playback, media &amp; text track selection, progress bar, live &amp; vod, preview thumbnails, customisable &amp; extensible</div>
       </div>
     </div>
