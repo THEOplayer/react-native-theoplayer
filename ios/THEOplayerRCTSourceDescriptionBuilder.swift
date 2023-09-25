@@ -59,12 +59,12 @@ class THEOplayerRCTSourceDescriptionBuilder {
 
     /**
      Builds a THEOplayer SourceDescription that can be passed as a source for the THEOplayer.
-     - returns: a THEOplayer TypedSource. In case of SSAI we  support GoogleDAITypedSource with GoogleDAIVodConfiguration or GoogleDAILiveConfiguration
+     - returns: a THEOplayer TypedSource and an array containing possible sideloaded metadataTracks. In case of SSAI we  support GoogleDAITypedSource with GoogleDAIVodConfiguration or GoogleDAILiveConfiguration
      */
-    static func buildSourceDescription(_ sourceData: NSDictionary) -> SourceDescription? {
+    static func buildSourceDescription(_ sourceData: NSDictionary) -> (SourceDescription?, [TextTrackDescription]?) {
         // 1. Extract "sources"
         guard let sourcesData = sourceData[SD_PROP_SOURCES] else {
-            return nil
+            return (nil, nil)
         }
 
         var typedSources: [TypedSource] = []
@@ -77,7 +77,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
                     if DEBUG_SOURCE_DESCRIPTION_BUIDER {
                         PrintUtils.printLog(logText: "[NATIVE] Could not create THEOplayer TypedSource from sourceData array")
                     }
-                    return nil
+                    return (nil, nil)
                 }
             }
         }
@@ -89,7 +89,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
                 if DEBUG_SOURCE_DESCRIPTION_BUIDER {
                     PrintUtils.printLog(logText: "[NATIVE] Could not create THEOplayer TypedSource from sourceData")
                 }
-                return nil
+                return (nil, nil)
             }
         }
 
@@ -98,16 +98,22 @@ class THEOplayerRCTSourceDescriptionBuilder {
 
         // 3. extract 'textTracks'
         var textTrackDescriptions: [TextTrackDescription]?
+        var metadataTrackDescriptions: [TextTrackDescription]?
         if let textTracksDataArray = sourceData[SD_PROP_TEXTTRACKS] as? [[String:Any]] {
             textTrackDescriptions = []
+            metadataTrackDescriptions = []
             for textTracksData in textTracksDataArray {
                 if let textTrackDescription = THEOplayerRCTSourceDescriptionBuilder.buildTextTrackDescriptions(textTracksData) {
-                    textTrackDescriptions?.append(textTrackDescription)
+                    if textTrackDescription.kind == .metadata {
+                        metadataTrackDescriptions?.append(textTrackDescription)
+                    } else {
+                        textTrackDescriptions?.append(textTrackDescription)
+                    }
                 } else {
                     if DEBUG_SOURCE_DESCRIPTION_BUIDER {
                         PrintUtils.printLog(logText: "[NATIVE] Could not create THEOplayer TextTrackDescription from textTrackData array")
                     }
-                    return nil
+                    return (nil, nil)
                 }
             }
 
@@ -122,12 +128,14 @@ class THEOplayerRCTSourceDescriptionBuilder {
             metadataDescription = THEOplayerRCTSourceDescriptionBuilder.buildMetaDataDescription(metadataData)
         }
 
-        // 6. construct and return SourceDescription
-        return SourceDescription(sources: typedSources,
+        // 6. construct the SourceDescription
+        let sourceDescription = SourceDescription(sources: typedSources,
                                  textTracks: textTrackDescriptions,
                                  ads: adsDescriptions,
                                  poster: poster,
                                  metadata: metadataDescription)
+        
+        return (sourceDescription, metadataTrackDescriptions)
     }
 
     // MARK: Private build methods

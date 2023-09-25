@@ -28,12 +28,12 @@ let PROP_SRC: String = "src"
 
 class THEOplayerRCTTrackMetadataAggregator {
 
-    class func aggregateTrackMetadata(player: THEOplayer) -> [String:Any] {
+    class func aggregateTrackMetadata(player: THEOplayer, metadataTracksInfo: [[String:Any]]) -> [String:Any] {
         let textTracks: TextTrackList = player.textTracks
         let audioTracks: AudioTrackList = player.audioTracks
         let videoTracks: VideoTrackList = player.videoTracks
         return [
-            EVENT_PROP_TEXT_TRACKS : THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackListInfo(textTracks: textTracks),
+            EVENT_PROP_TEXT_TRACKS : THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackListInfo(textTracks: textTracks, metadataTracks: metadataTracksInfo),
             EVENT_PROP_AUDIO_TRACKS : THEOplayerRCTTrackMetadataAggregator.aggregatedAudioTrackListInfo(audioTracks: audioTracks),
             EVENT_PROP_VIDEO_TRACKS : THEOplayerRCTTrackMetadataAggregator.aggregatedVideoTrackListInfo(videoTracks: videoTracks),
             EVENT_PROP_SELECTED_TEXT_TRACK: THEOplayerRCTTrackMetadataAggregator.selectedTextTrack(textTracks: textTracks),
@@ -44,16 +44,16 @@ class THEOplayerRCTTrackMetadataAggregator {
     }
 
     // MARK: TEXTTRACKS
-    class func aggregatedTextTrackListInfo(textTracks: TextTrackList) -> [[String:Any]] {
-        var textTrackEntries:[[String:Any]] = []
+    class func aggregatedTextTrackListInfo(textTracks: TextTrackList, metadataTracks: [[String:Any]]) -> [[String:Any]] {
+        var trackEntries:[[String:Any]] = metadataTracks
         guard textTracks.count > 0 else {
-            return textTrackEntries
+            return trackEntries
         }
         for i in 0...textTracks.count-1 {
             let textTrack: TextTrack = textTracks.get(i)
-            textTrackEntries.append(THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackInfo(textTrack: textTrack))
+            trackEntries.append(THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackInfo(textTrack: textTrack))
         }
-        return textTrackEntries
+        return trackEntries
     }
     
     class func aggregatedTextTrackInfo(textTrack: TextTrack) -> [String:Any] {
@@ -182,5 +182,48 @@ class THEOplayerRCTTrackMetadataAggregator {
             }
         }
         return 0
+    }
+    
+    class func aggregatedMetadataTrackInfo(metadataTrackDescriptions: [TextTrackDescription], completed: (([[String:Any]]) -> Void)? ) {
+        var trackIndex = 0
+        var tracksInfo: [[String:Any]] = []
+        for trackDescription in metadataTrackDescriptions {
+            guard trackDescription.kind == .metadata, trackDescription.format == .WebVTT else { continue }
+            
+            let urlString = trackDescription.src.absoluteString
+            THEOplayerRCTSideloadedMetadataTrackHandler.parseVtt(urlString) { cueArray in
+                if let cues = cueArray {
+                    var track: [String:Any] = [:]
+                    let trackUid = 1000 + trackIndex
+                    track[PROP_ID] = UUID().uuidString
+                    track[PROP_UID] = trackUid
+                    track[PROP_KIND] = trackDescription.kind?._rawValue
+                    track[PROP_LANGUAGE] = trackDescription.srclang
+                    track[PROP_MODE] = "hidden"
+                    track[PROP_LABEL] = trackDescription.label ?? "no label"
+                    track[PROP_TYPE] = "webvtt"
+                    track[PROP_SRC] = trackDescription.src.absoluteString
+                    var cueList: [[String:Any]] = []
+                    var cueIndex = 0
+                    for c in cues {
+                        //print("[CUE] \(c.startTime) --> \(c.endTime): \(c.cueContent)")
+                        var cue: [String:Any] = [:]
+                        cue[PROP_ID] = cueIndex
+                        cue[PROP_UID] = (trackUid * 1000000) + cueIndex
+                        cue[PROP_STARTTIME] = c.startTime
+                        cue[PROP_ENDTIME] = c.endTime
+                        cue[PROP_CUE_CONTENT] = c.cueContent
+                        cueList.append(cue)
+                        cueIndex += 1
+                    }
+                    track[PROP_CUES] = cueList
+                    tracksInfo.append(track)
+                    if tracksInfo.count == metadataTrackDescriptions.count {
+                        completed?(tracksInfo)
+                    }
+                }
+            }
+            trackIndex += 1
+        }
     }
 }
