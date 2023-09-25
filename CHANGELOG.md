@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed an issue on Android where the MediaButtonReceiver would crash the app when it did not find a registered MediaBrowserService instance.
 
+### Added
+
+- Added support for side-loaded metadata tracks on iOS.
+
 ## [2.13.0] - 23-09-15
 
 ### Fixed
