@@ -366,6 +366,7 @@
           "src": "https://cdn.theoplayer.com/dash/theoplayer/thumbnails/big_buck_bunny_thumbnails.vtt",
           "label": "thumbnails",
           "kind": "metadata",
+          "format": "webvtt",
           "srclang": "en"
         }
       ]
