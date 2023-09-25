@@ -115,8 +115,20 @@ class ReactTHEOplayerContext private constructor(
   }
 
   private fun setPlaybackServiceEnabled(enabled: Boolean) {
+    // Toggle the MediaPlaybackService.
+    toggleComponent(enabled, ComponentName(reactContext.applicationContext, MediaPlaybackService::class.java))
+
+    // Also toggle any registered MediaButtonReceiver broadcast receiver.
+    // It will crash the app if it remains active and tries to find our disabled MediaBrowserService instance.
+    toggleComponent(enabled, ComponentName(reactContext.applicationContext, androidx.media.session.MediaButtonReceiver::class.java))
+  }
+
+  /**
+   * Enable or disable a receiver component.
+   */
+  private fun toggleComponent(enabled: Boolean, componentName: ComponentName) {
     reactContext.applicationContext.packageManager.setComponentEnabledSetting(
-      ComponentName(reactContext.applicationContext, MediaPlaybackService::class.java),
+      componentName,
       if (enabled) PackageManager.COMPONENT_ENABLED_STATE_ENABLED
       else PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
       PackageManager.DONT_KILL_APP

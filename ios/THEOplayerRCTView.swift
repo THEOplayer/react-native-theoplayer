@@ -150,6 +150,17 @@ public class THEOplayerRCTView: UIView {
         if DEBUG_THEOPLAYER_INTERACTION { PrintUtils.printLog(logText: "[NATIVE] THEOplayer instance destroyed.") }
     }
     
+    func processMetadataTracks(metadataTrackDescriptions: [TextTrackDescription]?) {
+        if let trackDescriptions = metadataTrackDescriptions {
+            THEOplayerRCTTrackMetadataAggregator.aggregatedMetadataTrackInfo(metadataTrackDescriptions: trackDescriptions) { tracksInfo in
+                self.mainEventHandler.setMetadataTracksInfo(metadataTracksInfo: tracksInfo)
+                for trackInfo in tracksInfo {
+                    self.textTrackEventHandler.triggerAddMetadataTrackEvent(metadataTrackInfo: trackInfo)
+                }
+            }
+        }
+    }
+    
     // MARK: - Property bridging (config)
     
     @objc(setConfig:)

@@ -37,6 +37,15 @@ class THEOplayerRCTTextTrackEventHandler {
         self.attachListeners()
     }
     
+    func triggerAddMetadataTrackEvent(metadataTrackInfo: [String:Any]) {
+        if let addTrackEvent = self.onNativeTextTrackListEvent {
+            addTrackEvent([
+                "track" : metadataTrackInfo,
+                "type" : TrackListEventType.ADD_TRACK.rawValue
+            ])
+        }
+    }
+    
     // MARK: - attach/dettach textTrackList Listeners
     private func attachListeners() {
         guard let player = self.player else {
