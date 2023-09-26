@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- Fixed an issue where the Android mediaSession connector would still process media button events when the app was in the background, and `enableBackgroundPlayback` was false.
+- Fixed an issue on Android where play-out would still start when the app was put to the background during initial buffering, and `enableBackgroundPlayback` was false.
+- Fixed an issue on Android where the MediaButtonReceiver would crash the app when it did not find a registered MediaBrowserService instance, when setting `enableBackgroundPlayback` to false while backgrounding the app.
+
 ## [2.14.0] - 23-09-25
 
 ### Fixed
