@@ -349,6 +349,9 @@ class ReactTHEOplayerContext private constructor(
     playerView.onPause()
     if (!isBackgroundAudioEnabled) {
       mediaSessionConnector?.setActive(false)
+
+      // The player pauses and goes to the background, we can abandon audio focus.
+      audioFocusManager?.abandonAudioFocus()
     }
   }
 
