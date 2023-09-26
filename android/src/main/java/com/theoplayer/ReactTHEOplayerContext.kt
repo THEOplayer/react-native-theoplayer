@@ -76,6 +76,7 @@ class ReactTHEOplayerContext private constructor(
   var imaIntegration: GoogleImaIntegration? = null
   var castIntegration: CastIntegration? = null
   var wasPlayingOnHostPause: Boolean = false
+  var isHostPaused: Boolean = false
 
   private val isBackgroundAudioEnabled: Boolean
     get() = backgroundAudioConfig.enabled
@@ -162,6 +163,11 @@ class ReactTHEOplayerContext private constructor(
 
         // Create a new media session.
         initDefaultMediaSession()
+
+        // If the app is currently backgrounded, apply state changes.
+        if (isHostPaused) {
+          applyHostPaused()
+        }
       }
     }
   }
@@ -256,8 +262,9 @@ class ReactTHEOplayerContext private constructor(
       debug = BuildConfig.LOG_MEDIASESSION_EVENTS
       player = this@ReactTHEOplayerContext.player
 
-      // Set mediaSession active
-      setActive(true)
+      // Set mediaSession active and ready to receive media button events, but not if the player
+      // is backgrounded.
+      setActive(!isHostPaused)
     }
   }
 
@@ -349,6 +356,11 @@ class ReactTHEOplayerContext private constructor(
    * The host activity is paused.
    */
   fun onHostPause() {
+    isHostPaused = true
+    applyHostPaused()
+  }
+
+  private fun applyHostPaused() {
     // Keep current playing state when going to background
     wasPlayingOnHostPause = !player.isPaused
     playerView.onPause()
@@ -364,6 +376,7 @@ class ReactTHEOplayerContext private constructor(
    * The host activity is resumed.
    */
   fun onHostResume() {
+    isHostPaused = false
     mediaSessionConnector?.setActive(true)
     playerView.onResume()
     audioFocusManager?.retrieveAudioFocus()
