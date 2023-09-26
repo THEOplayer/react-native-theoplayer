@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Upgraded the iOS side-loaded text track connector.
+
 ### Fixed
 
 - Fixed an issue where the Android mediaSession connector would still process media button events when the app was in the background, and `enableBackgroundPlayback` was false.
