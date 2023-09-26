@@ -76,6 +76,7 @@ class ReactTHEOplayerContext private constructor(
   var imaIntegration: GoogleImaIntegration? = null
   var castIntegration: CastIntegration? = null
   var wasPlayingOnHostPause: Boolean = false
+  var isHostPaused: Boolean = false
 
   private val isBackgroundAudioEnabled: Boolean
     get() = backgroundAudioConfig.enabled
@@ -148,15 +149,25 @@ class ReactTHEOplayerContext private constructor(
 
     if (BuildConfig.USE_PLAYBACK_SERVICE) {
       if (prevConfig?.enabled != true && config.enabled) {
-        // Enabling background playback
+        // Enable & bind background playback
         setPlaybackServiceEnabled(true)
         bindMediaPlaybackService()
       } else if (prevConfig?.enabled == true) {
-        // Disabling background playback
+        // First disable the MediaPlaybackService and MediaButtonReceiver so that no more media
+        // button events can be captured.
+        setPlaybackServiceEnabled(false)
+
+        // Stop & unbind MediaPlaybackService.
         binder?.stopForegroundService()
         unbindMediaPlaybackService()
-        setPlaybackServiceEnabled(false)
+
+        // Create a new media session.
         initDefaultMediaSession()
+
+        // If the app is currently backgrounded, apply state changes.
+        if (isHostPaused) {
+          applyHostPaused()
+        }
       }
     }
   }
@@ -251,8 +262,9 @@ class ReactTHEOplayerContext private constructor(
       debug = BuildConfig.LOG_MEDIASESSION_EVENTS
       player = this@ReactTHEOplayerContext.player
 
-      // Set mediaSession active
-      setActive(true)
+      // Set mediaSession active and ready to receive media button events, but not if the player
+      // is backgrounded.
+      setActive(!isHostPaused)
     }
   }
 
@@ -344,11 +356,19 @@ class ReactTHEOplayerContext private constructor(
    * The host activity is paused.
    */
   fun onHostPause() {
+    isHostPaused = true
+    applyHostPaused()
+  }
+
+  private fun applyHostPaused() {
     // Keep current playing state when going to background
     wasPlayingOnHostPause = !player.isPaused
     playerView.onPause()
     if (!isBackgroundAudioEnabled) {
       mediaSessionConnector?.setActive(false)
+
+      // The player pauses and goes to the background, we can abandon audio focus.
+      audioFocusManager?.abandonAudioFocus()
     }
   }
 
@@ -356,6 +376,7 @@ class ReactTHEOplayerContext private constructor(
    * The host activity is resumed.
    */
   fun onHostResume() {
+    isHostPaused = false
     mediaSessionConnector?.setActive(true)
     playerView.onResume()
     audioFocusManager?.retrieveAudioFocus()

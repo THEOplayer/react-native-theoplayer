@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.theoplayer.android-connector</groupId>
   <artifactId>mediasession</artifactId>
-  <version>5.2.0-local</version>
+  <version>5.11.0-local</version>
   <packaging>aar</packaging>
   <dependencies>
     <dependency>
