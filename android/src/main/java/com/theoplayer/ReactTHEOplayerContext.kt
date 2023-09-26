@@ -148,14 +148,19 @@ class ReactTHEOplayerContext private constructor(
 
     if (BuildConfig.USE_PLAYBACK_SERVICE) {
       if (prevConfig?.enabled != true && config.enabled) {
-        // Enabling background playback
+        // Enable & bind background playback
         setPlaybackServiceEnabled(true)
         bindMediaPlaybackService()
       } else if (prevConfig?.enabled == true) {
-        // Disabling background playback
+        // First disable the MediaPlaybackService and MediaButtonReceiver so that no more media
+        // button events can be captured.
+        setPlaybackServiceEnabled(false)
+
+        // Stop & unbind MediaPlaybackService.
         binder?.stopForegroundService()
         unbindMediaPlaybackService()
-        setPlaybackServiceEnabled(false)
+
+        // Create a new media session.
         initDefaultMediaSession()
       }
     }
