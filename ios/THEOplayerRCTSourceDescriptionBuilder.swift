@@ -4,6 +4,10 @@ import Foundation
 import THEOplayerSDK
 import UIKit
 
+#if canImport(THEOplayerConnectorSideloadedSubtitle)
+import THEOplayerConnectorSideloadedSubtitle
+#endif
+
 let SD_PROP_SOURCES: String = "sources"
 let SD_PROP_POSTER: String = "poster"
 let SD_PROP_TEXTTRACKS: String = "textTracks"
@@ -42,6 +46,8 @@ let SD_PROP_METADATA_RELEASE_DATE: String = "releaseDate"
 let SD_PROP_METADATA_RELEASE_YEAR: String = "releaseYear"
 let SD_PROP_METADATA_TITLE: String = "title"
 let SD_PROP_METADATA_SUBTITLE: String = "subtitle"
+let SD_PROP_PTS: String = "subtitlePTS"
+let SD_PROP_LOCALTIME: String = "subtitleLocaltime"
 
 let EXTENSION_HLS: String = ".m3u8"
 let EXTENSION_MP4: String = ".mp4"
@@ -185,12 +191,28 @@ class THEOplayerRCTSourceDescriptionBuilder {
             let textTrackLabel = textTracksData[SD_PROP_LABEL] as? String
             let textTrackKind = THEOplayerRCTSourceDescriptionBuilder.extractTextTrackKind(textTracksData[SD_PROP_KIND] as? String)
             let textTrackFormat = THEOplayerRCTSourceDescriptionBuilder.extractTextTrackFormat(textTracksData[SD_PROP_FORMAT] as? String)
-            return TextTrackDescription(src: textTrackSrc,
-                                        srclang: textTrackSrcLang,
-                                        isDefault: textTrackIsDefault,
-                                        kind: textTrackKind,
-                                        label: textTrackLabel,
-                                        format: textTrackFormat)
+            let textTrackPTS = textTracksData[SD_PROP_PTS] as? String
+            let textTrackLocalTime = textTracksData[SD_PROP_LOCALTIME] as? String ?? "00:00:00.000"
+            
+#if canImport(THEOplayerConnectorSideloadedSubtitle)
+            let ttDescription = SSTextTrackDescription(src: textTrackSrc,
+                                                       srclang: textTrackSrcLang,
+                                                       isDefault: textTrackIsDefault,
+                                                       kind: textTrackKind,
+                                                       label: textTrackLabel,
+                                                       format: textTrackFormat)
+            if let pts = textTrackPTS {
+                ttDescription.vttTimestamp = .init(pts: pts, localTime: textTrackLocalTime)
+            }
+#else
+            let ttDescription = TextTrackDescription(src: textTrackSrc,
+                                                       srclang: textTrackSrcLang,
+                                                       isDefault: textTrackIsDefault,
+                                                       kind: textTrackKind,
+                                                       label: textTrackLabel,
+                                                       format: textTrackFormat)
+#endif
+            return ttDescription
         }
         return nil
     }
@@ -263,7 +285,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
     }
 #endif
 
-	  /**
+      /**
      Updates the contentProtectionData to a valid iOS SDK contentProtectionData, flattening out cross SDK differences
      - returns: a THEOplayer valid contentProtection data map
      */
