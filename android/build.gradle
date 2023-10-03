@@ -29,11 +29,11 @@ def enabledCast = safeExtGet("THEOplayer_extensionCast", 'false').toBoolean()
 def enabledMediaSession = safeExtGet("THEOplayer_extensionMediaSession", 'true').toBoolean()
 
 android {
-  compileSdkVersion safeExtGet('THEOplayer_compileSdkVersion', 31)
+  compileSdk safeExtGet('THEOplayer_compileSdkVersion', 33)
 
   defaultConfig {
     minSdkVersion safeExtGet('THEOplayer_minSdkVersion', 21)
-    targetSdkVersion safeExtGet('THEOplayer_targetSdkVersion', 31)
+    targetSdkVersion safeExtGet('THEOplayer_targetSdkVersion', 33)
     versionCode 1
     versionName "1.0"
 
