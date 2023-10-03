@@ -102,10 +102,9 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"  // From node_modules
   implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
-  implementation "com.theoplayer.theoplayer-sdk-android:ads-wrapper:4.8.0"
-  implementation "androidx.appcompat:appcompat:1.4.+"
+  implementation "androidx.appcompat:appcompat:1.6.1"
 
-  // The minimum supported version is 5.10.0
+  // The minimum supported THEOplayer version is 6.0.0
   def theoplayer_sdk_version = safeExtGet('THEOplayer_sdk', '[6.0.0,7.0)')
 
 //  def theoplayer_mediasession_version = safeExtGet('THEOplayer_mediasession', theoplayer_sdk_version)
@@ -113,6 +112,8 @@ dependencies {
 
   println("Using THEOplayer (${versionString(theoplayer_sdk_version)})")
   implementation "com.theoplayer.theoplayer-sdk-android:core:${theoplayer_sdk_version}"
+
+  implementation "com.theoplayer.theoplayer-sdk-android:ads-wrapper:4.8.0"
 
   if (enabledMediaSession) {
     println("Enable THEOplayer MediaSession extension (${versionString(theoplayer_mediasession_version)})")
