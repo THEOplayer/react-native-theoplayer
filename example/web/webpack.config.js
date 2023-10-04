@@ -111,5 +111,12 @@ module.exports = {
     ],
     // Hot reload on source changes
     hot: true,
+    client: {
+      overlay: {
+        errors: true,
+        warnings: false,
+        runtimeErrors: false,
+      },
+    },
   },
 };
