@@ -103,5 +103,6 @@ and discussed in the next section. Finally, an overview of features, limitations
   - [Digital Rights Management (DRM)](./doc/drm.md)
   - [Migrating to `react-native-theoplayer` v2.x](./doc/migrating_v2.md)
   - [Picture-in-Picture (PiP)](./doc/pip.md)
+  - [Subtitles, Closed Captions and Metadata tracks](./doc/texttracks.md)
   - [Styling subtitles and closed captions](./doc/texttrackstyles.md)
 - [Limitations and known issues](./doc/limitations.md)
