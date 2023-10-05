@@ -76,8 +76,9 @@ player.addEventListener(PlayerEventType.LOADED_METADATA, (event: LoadedMetadataE
 })
 ```
 
-The `PlayerEventType.TEXT_TRACK_LIST` event can be used to dynamically listen to text tracks that are being added,
-removed or changed.
+Alternatively, the `PlayerEventType.TEXT_TRACK_LIST` event can be used to dynamically listen to text tracks that are being added,
+removed or changed. In-band text tracks, in particular, are created when their first cue is loaded, which can occur at any
+point during playback.
 
 ```typescript
 player.addEventListener(PlayerEventType.TEXT_TRACK_LIST, (event: TextTrackListEvent) => {
@@ -90,7 +91,7 @@ player.addEventListener(PlayerEventType.TEXT_TRACK_LIST, (event: TextTrackListEv
 });
 ```
 
-Similarly, for text track cues, the `PlayerEventType.TEXT_TRACK` event provides knowledge on cues
+Similarly for text track cues, the `PlayerEventType.TEXT_TRACK` event provides knowledge on cues
 being added or removed.
 
 ```typescript
