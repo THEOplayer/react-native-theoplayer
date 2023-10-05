@@ -53,14 +53,7 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
         DispatchQueue.main.async {
             let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
             if let ads = theView.ads() {
-                ads.requestPlaying { playing, error in
-                    if let err = error {
-                        reject(ERROR_CODE_ADS_GET_PLAYING_STATE_FAILED, err.localizedDescription, error)
-                        if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Retrieving ad playing state failed: \(err.localizedDescription)") }
-                    } else {
-                        resolve(playing)
-                    }
-                }
+                resolve(ads.playing)
             } else {
                 reject(ERROR_CODE_ADS_ACCESS_FAILURE, ERROR_MESSAGE_ADS_ACCESS_FAILURE, nil)
                 if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not skip ad (ads module unavailable).") }
@@ -72,18 +65,9 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
     func currentAdBreak(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         DispatchQueue.main.async {
             let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            if let ads = theView.ads() {
-                ads.requestCurrentAdBreak { adBreak, error in
-                    if let err = error {
-                        reject(ERROR_CODE_ADS_GET_CURRENT_ADBREAK_FAILED, err.localizedDescription, error)
-                        if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Retrieving current adbreak failed: \(err.localizedDescription)") }
-                    } else if let currentAdBreak = adBreak {
-                        resolve(THEOplayerRCTAdAggregator.aggregateAdBreak(adBreak:currentAdBreak))
-                    } else {
-                        reject(ERROR_CODE_ADS_GET_CURRENT_ADBREAK_UNDEFINED, ERROR_MESSAGE_ADS_GET_CURRENT_ADBREAK_UNDEFINED, nil)
-                        if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Retrieving current adbreak failed: could not load adbreak.") }
-                    }
-                }
+            if let ads = theView.ads(),
+               let currentAdBreak = ads.currentAdBreak {
+                resolve(THEOplayerRCTAdAggregator.aggregateAdBreak(adBreak:currentAdBreak))
             } else {
                 reject(ERROR_CODE_ADS_ACCESS_FAILURE, ERROR_MESSAGE_ADS_ACCESS_FAILURE, nil)
                 if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not retrieve current adbreak (ads module unavailable).") }
@@ -96,21 +80,12 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
         DispatchQueue.main.async {
             let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
             if let ads = theView.ads() {
-                ads.requestCurrentAds { adsArray, error in
-                    if let err = error {
-                        reject(ERROR_CODE_ADS_GET_CURRENT_ADS_FAILED, err.localizedDescription, error)
-                        if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Retrieving current ads failed: \(err.localizedDescription)") }
-                    } else if let currentAdsArray = adsArray {
-                        var currentAds: [[String:Any]] = []
-                        for ad in currentAdsArray {
-                            currentAds.append(THEOplayerRCTAdAggregator.aggregateAd(ad: ad))
-                        }
-                        resolve(currentAds)
-                    } else {
-                        reject(ERROR_CODE_ADS_GET_CURRENT_ADS_UNDEFINED, ERROR_MESSAGE_ADS_GET_CURRENT_ADS_UNDEFINED, nil)
-                        if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Retrieving current ads failed: could not load ads.") }
-                    }
+                let currentAdsArray = ads.currentAds
+                var currentAds: [[String:Any]] = []
+                for ad in currentAdsArray {
+                    currentAds.append(THEOplayerRCTAdAggregator.aggregateAd(ad: ad))
                 }
+                resolve(currentAds)
             } else {
                 reject(ERROR_CODE_ADS_ACCESS_FAILURE, ERROR_MESSAGE_ADS_ACCESS_FAILURE, nil)
                 if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not retrieve current ad (ads module unavailable).") }
@@ -123,21 +98,12 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
         DispatchQueue.main.async {
             let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
             if let ads = theView.ads() {
-                ads.requestScheduledAdBreaks { adBreaksArray, error in
-                    if let err = error {
-                        reject(ERROR_CODE_ADS_GET_SCHEDULED_ADBREAKS_FAILED, err.localizedDescription, error)
-                        if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Retrieving scheduled adbreaks failed: \(err.localizedDescription)") }
-                    } else if let currentAdBreaksArray = adBreaksArray {
-                        var currentAdBreaks: [[String:Any]] = []
-                        for adbreak in currentAdBreaksArray {
-                            currentAdBreaks.append(THEOplayerRCTAdAggregator.aggregateAdBreak(adBreak: adbreak))
-                        }
-                        resolve(currentAdBreaks)
-                    } else {
-                        reject(ERROR_CODE_ADS_GET_SCHEDULED_ADBREAKS_UNDEFINED, ERROR_MESSAGE_ADS_GET_SCHEDULED_ADBREAKS_UNDEFINED, nil)
-                        if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Retrieving current adbreaks failed: could not load adbreaks.") }
-                    }
+                let currentAdBreaksArray = ads.scheduledAdBreaks
+                var currentAdBreaks: [[String:Any]] = []
+                for adbreak in currentAdBreaksArray {
+                    currentAdBreaks.append(THEOplayerRCTAdAggregator.aggregateAdBreak(adBreak: adbreak))
                 }
+                resolve(currentAdBreaks)
             } else {
                 reject(ERROR_CODE_ADS_ACCESS_FAILURE, ERROR_MESSAGE_ADS_ACCESS_FAILURE, nil)
                 if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not retrieve current ad (ads module unavailable).") }

@@ -53,6 +53,9 @@ export interface PlayerConfiguration {
 
   /**
    * Sets whether the native player is chromeless (without UI).
+   *
+   * @remarks
+   * <br/> - This parameter only applies to Web platforms.
    */
   readonly chromeless?: boolean;
 

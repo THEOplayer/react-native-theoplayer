@@ -15,7 +15,7 @@ import type {
 import { AspectRatio, PlayerEventType, PresentationMode } from 'react-native-theoplayer';
 import { THEOplayerWebAdsAdapter } from './ads/THEOplayerWebAdsAdapter';
 import { THEOplayerWebCastAdapter } from './cast/THEOplayerWebCastAdapter';
-import * as THEOplayerWeb from 'theoplayer';
+import { ChromelessPlayer as NativeChromelessPlayer, SourceDescription as NativeSourceDescription, version as nativeVersion } from 'theoplayer';
 import type { MediaTrack as NativeMediaTrack, TextTrack as NativeTextTrack } from 'theoplayer';
 import { findNativeQualitiesByUid, fromNativeMediaTrackList, fromNativeTextTrackList } from './web/TrackUtils';
 import type { ABRConfiguration, SourceDescription } from 'src/api/barrel';
@@ -38,14 +38,14 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   private readonly _adsAdapter: THEOplayerWebAdsAdapter;
   private readonly _castAdapter: THEOplayerWebCastAdapter;
   private readonly _presentationModeManager: WebPresentationModeManager;
-  private _player: THEOplayerWeb.ChromelessPlayer | undefined;
+  private _player: NativeChromelessPlayer | undefined;
   private _eventForwarder: WebEventForwarder | undefined;
   private _mediaSession: WebMediaSession | undefined = undefined;
   private _targetVideoQuality: number | number[] | undefined = undefined;
   private _backgroundAudioConfiguration: BackgroundAudioConfiguration = defaultBackgroundAudioConfiguration;
   private _pipConfiguration: PiPConfiguration = defaultPipConfiguration;
 
-  constructor(player: THEOplayerWeb.ChromelessPlayer, config?: PlayerConfiguration) {
+  constructor(player: NativeChromelessPlayer, config?: PlayerConfiguration) {
     super();
     this._player = player;
     this._adsAdapter = new THEOplayerWebAdsAdapter(this._player);
@@ -71,7 +71,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   set source(source: SourceDescription | undefined) {
     this._targetVideoQuality = undefined;
     if (this._player) {
-      this._player.source = source as THEOplayerWeb.SourceDescription;
+      this._player.source = source as NativeSourceDescription;
     }
   }
 
@@ -302,8 +302,8 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
 
   public get version(): PlayerVersion {
     return {
-      version: THEOplayerWeb.version,
-      playerSuiteVersion: THEOplayerWeb.playerSuiteVersion,
+      version: nativeVersion,
+      playerSuiteVersion: '', // deprecated
     };
   }
 

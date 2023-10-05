@@ -97,5 +97,42 @@ class THEOplayerRCTTypeUtils {
         default:
             return TextTrackStyleEdgeStyle.none
         }
+	}
+
+    class func cacheStatusToString(_ status: CacheStatus) -> String {
+        switch status {
+        case CacheStatus.initialised:
+            return "initialised"
+        default:
+            return "uninitialised"
+        }
+    }
+    
+    class func cachingTaskStatusToString(_ status: CachingTaskStatus) -> String {
+        switch status {
+        case CachingTaskStatus.error:
+            return "error"
+        case CachingTaskStatus.done:
+            return "done"
+        case CachingTaskStatus.evicted:
+            return "evicted"
+        case CachingTaskStatus.loading:
+            return "loading"
+        default:
+            return "idle"
+        }
+    }
+    
+    class func cacheStatusIdleReasonToString(_ status: CacheStatusIdleReason) -> String {
+        switch status {
+        case CacheStatusIdleReason.notStarted:
+            return "notStarted"
+        case CacheStatusIdleReason.paused:
+            return "paused"
+        case CacheStatusIdleReason.lostNetwork:
+            return "lostNetwork"
+        default:
+            return "notStarted"
+        }
     }
 }

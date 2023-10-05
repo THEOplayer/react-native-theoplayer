@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
   s.platforms    = { :ios => "12.0", :tvos => "12.0" }
   s.source       = { :git => "https://www.theoplayer.com/.git", :tag => "#{s.version}" }
   
-  s.source_files = 'ios/*.{h,m,swift}', 'ios/ads/*.swift', 'ios/casting/*.swift', 'ios/contentprotection/*.swift', 'ios/pip/*.swift', 'ios/backgroundAudio/*.swift'
+  s.source_files = 'ios/*.{h,m,swift}', 'ios/ads/*.swift', 'ios/casting/*.swift', 'ios/contentprotection/*.swift', 'ios/pip/*.swift', 'ios/backgroundAudio/*.swift', 'ios/cache/*.swift'
   s.resources = ['ios/*.css']
   
   # ReactNative Dependency
@@ -36,14 +36,14 @@ Pod::Spec.new do |s|
     }
   else 
   	puts "Using THEOplayer-core SDK"
-    s.dependency "THEOplayerSDK-core", "~> 5.11"
+    s.dependency "THEOplayerSDK-core", "~> 6.0"
     if theofeatures.include?("GOOGLE_IMA") 
 	  puts "Adding THEOplayer-Integration-GoogleIMA"
-      s.dependency "THEOplayer-Integration-GoogleIMA", "~> 5.11"
+      s.dependency "THEOplayer-Integration-GoogleIMA", "~> 6.0"
     end
     if theofeatures.include?("CHROMECAST")
 	  puts "Adding THEOplayer-Integration-GoogleCast"
-      s.ios.dependency "THEOplayer-Integration-GoogleCast", "~> 5.11"
+      s.ios.dependency "THEOplayer-Integration-GoogleCast", "~> 6.0"
     end
     if theofeatures.include?("SIDELOADED_TEXTTRACKS") 
 	  puts "Adding THEOplayer-Connector-SideloadedSubtitle"

@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import type { THEOplayerViewProps } from 'react-native-theoplayer';
-import * as THEOplayer from 'theoplayer';
+import { Player, ChromelessPlayer, PlayerConfiguration } from 'theoplayer';
 import { THEOplayerWebAdapter } from './adapter/THEOplayerWebAdapter';
 
 export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProps>) {
   const { config, children } = props;
-  const player = useRef<THEOplayer.ChromelessPlayer | null>(null);
+  const player = useRef<ChromelessPlayer | null>(null);
   const adapter = useRef<THEOplayerWebAdapter | null>(null);
   const container = useRef<null | HTMLDivElement>(null);
 
@@ -15,14 +15,14 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
       const chromeless = config?.chromeless === true || config?.chromeless === undefined;
       const updatedConfig = { ...config, allowNativeFullscreen: true };
       if (chromeless) {
-        player.current = new THEOplayer.ChromelessPlayer(container.current, updatedConfig);
+        player.current = new ChromelessPlayer(container.current, updatedConfig);
       } else {
-        player.current = new THEOplayer.Player(container.current, {
+        player.current = new Player(container.current, {
           ...updatedConfig,
           ui: {
             fluid: true,
           },
-        } as THEOplayer.PlayerConfiguration);
+        } as PlayerConfiguration);
       }
 
       // Adapt native player to react-native player.

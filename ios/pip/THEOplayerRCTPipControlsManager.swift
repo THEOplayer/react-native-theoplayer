@@ -44,10 +44,8 @@ class THEOplayerRCTPipControlsManager: NSObject {
            let duration = player.duration {
             self.isLive = duration.isInfinite
 #if (GOOGLE_IMA || GOOGLE_DAI) || canImport(THEOplayerGoogleIMAIntegration)
-            player.ads.requestPlaying(completionHandler: { adIsPlaying, error in
-                self.inAd = adIsPlaying ?? false
-                self.updatePipControls()
-            })
+            self.inAd = player.ads.playing
+            self.updatePipControls()
 #else
             self.updatePipControls()
 #endif
