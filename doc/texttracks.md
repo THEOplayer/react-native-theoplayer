@@ -68,7 +68,7 @@ feature to the `react-native-theoplayer.json` file in your app folder.
 
 Out-band and side-loaded text tracks become accessible via the text track API once the player has loaded the media
 source. This event is signaled by the `PlayerEventType.LOADED_METADATA` event,
-which is dispatched by the [THEOplayer API](../src/api/player/THEOplayer.ts),
+which is dispatched by the [THEOplayer API](../src/api/player/THEOplayer.ts):
 
 ```typescript
 player.addEventListener(PlayerEventType.LOADED_METADATA, (event: LoadedMetadataEvent) => {
