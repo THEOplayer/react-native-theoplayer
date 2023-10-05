@@ -22,7 +22,7 @@ following platforms:
 
 - Android, Android TV & FireTV
 - iOS & tvOS (Apple TV)
-- Web (currently only HTML5 browsers are tested)
+- HTML5, Tizen & webOS (web, mobile web, smart TVs, set-top boxes and gaming consoles).
 
 This document covers the creation of a minimal app including a `THEOplayerView` component,
 and an overview of the accompanying example app with a user interface provided
