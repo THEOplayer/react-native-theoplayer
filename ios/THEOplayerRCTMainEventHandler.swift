@@ -156,34 +156,32 @@ public class THEOplayerRCTMainEventHandler {
             //if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received PROGRESS event from THEOplayer") }
             if let wplayer = player,
                let forwardedProgressEvent = self?.onNativeProgress {
-                wplayer.requestSeekable(completionHandler: { seekableTimeRanges, error in
-                    wplayer.requestBuffered(completionHandler: { bufferedTimeRanges, error in
-                        var seekable: [[String:Double]] = []
-                        seekableTimeRanges?.forEach({ timeRange in
-                            seekable.append(
-                                [
-                                    "start": timeRange.start * 1000,            // sec -> msec
-                                    "end": timeRange.end * 1000                 // sec -> msec
-                                ]
-                            )
-                        })
-                        var buffered: [[String:Double]] = []
-                        bufferedTimeRanges?.forEach({ timeRange in
-                            buffered.append(
-                                [
-                                    "start": timeRange.start * 1000,            // sec -> msec
-                                    "end": timeRange.end * 1000                 // sec -> msec
-                                ]
-                            )
-                        })
-                        forwardedProgressEvent(
-                            [
-                                "seekable":seekable,
-                                "buffered":buffered
-                            ]
-                        )
-                    })
+                let seekableTimeRanges = wplayer.seekable
+                let bufferedTimeRanges = wplayer.buffered
+                var seekable: [[String:Double]] = []
+                seekableTimeRanges.forEach({ timeRange in
+                    seekable.append(
+                        [
+                            "start": timeRange.start * 1000,            // sec -> msec
+                            "end": timeRange.end * 1000                 // sec -> msec
+                        ]
+                    )
                 })
+                var buffered: [[String:Double]] = []
+                bufferedTimeRanges.forEach({ timeRange in
+                    buffered.append(
+                        [
+                            "start": timeRange.start * 1000,            // sec -> msec
+                            "end": timeRange.end * 1000                 // sec -> msec
+                        ]
+                    )
+                })
+                forwardedProgressEvent(
+                    [
+                        "seekable":seekable,
+                        "buffered":buffered
+                    ]
+                )
             }
         }
         if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] Progress listener attached to THEOplayer") }

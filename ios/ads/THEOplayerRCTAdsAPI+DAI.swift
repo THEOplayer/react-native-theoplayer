@@ -18,17 +18,7 @@ extension THEOplayerRCTAdsAPI {
             let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
             if let ads = theView.ads(),
                let dai = ads.dai {
-                dai.requestSnapBack { enabled, error in
-                    if let err = error {
-                        reject(ERROR_CODE_DAI_GET_SNAPBACK_FAILED, err.localizedDescription, error)
-                        if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Retrieving dai snapback status failed: \(err.localizedDescription)") }
-                    } else if let snapBack = enabled {
-                        resolve(snapBack)
-                    } else {
-                        reject(ERROR_CODE_DAI_GET_SNAPBACK_UNDEFINED, ERROR_MESSAGE_DAI_GET_SNAPBACK_UNDEFINED, nil)
-                        if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Retrieving dai snapback status failed.") }
-                    }
-                }
+                resolve(dai.snapback)
             } else {
                 reject(ERROR_CODE_DAI_ACCESS_FAILURE, ERROR_MESSAGE_DAI_ACCESS_FAILURE, nil)
                 if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not retrieve dai snapback status (ads DAI module unavailable).") }
@@ -41,8 +31,8 @@ extension THEOplayerRCTAdsAPI {
         DispatchQueue.main.async {
             let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
             if let ads = theView.ads(),
-               let dai = ads.dai {
-                dai.setSnapBack(enabled, completionHandler: nil)
+               var dai = ads.dai {
+                dai.snapback = enabled
             } else {
                 if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not update dai snapback status (ads DAI module unavailable).") }
             }

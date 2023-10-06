@@ -12,6 +12,7 @@ let SD_PROP_SOURCES: String = "sources"
 let SD_PROP_POSTER: String = "poster"
 let SD_PROP_TEXTTRACKS: String = "textTracks"
 let SD_PROP_METADATA: String = "metadata"
+let SD_PROP_METADATAKEYS: String = "metadataKeys"
 let SD_PROP_SRC: String = "src"
 let SD_PROP_TYPE: String = "type"
 let SD_PROP_SSAI: String = "ssai"
@@ -289,7 +290,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
      Updates the contentProtectionData to a valid iOS SDK contentProtectionData, flattening out cross SDK differences
      - returns: a THEOplayer valid contentProtection data map
      */
-    private static func sanitiseContentProtectionData(_ contentProtectionData: [String:Any]) -> [String:Any] {
+    static func sanitiseContentProtectionData(_ contentProtectionData: [String:Any]) -> [String:Any] {
         var sanitisedContentProtectionData: [String:Any] = contentProtectionData
         // fairplay update
         if let fairplayData = contentProtectionData[SD_PROP_FAIRPLAY] as? [String:Any] {
@@ -348,7 +349,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
      Creates a THEOplayer DRMConfiguration. This requires a contentProtection property in the RN source description.
      - returns: a THEOplayer DRMConfiguration
      */
-    private static func buildContentProtection(_ contentProtectionData: [String:Any]) -> MultiplatformDRMConfiguration? {
+    static func buildContentProtection(_ contentProtectionData: [String:Any]) -> MultiplatformDRMConfiguration? {
         do {
             let data = try JSONSerialization.data(withJSONObject: contentProtectionData)
             if let integration = contentProtectionData[SD_PROP_INTEGRATION] as? String {

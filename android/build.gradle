@@ -29,11 +29,11 @@ def enabledCast = safeExtGet("THEOplayer_extensionCast", 'false').toBoolean()
 def enabledMediaSession = safeExtGet("THEOplayer_extensionMediaSession", 'true').toBoolean()
 
 android {
-  compileSdkVersion safeExtGet('THEOplayer_compileSdkVersion', 31)
+  compileSdk safeExtGet('THEOplayer_compileSdkVersion', 33)
 
   defaultConfig {
     minSdkVersion safeExtGet('THEOplayer_minSdkVersion', 21)
-    targetSdkVersion safeExtGet('THEOplayer_targetSdkVersion', 31)
+    targetSdkVersion safeExtGet('THEOplayer_targetSdkVersion', 33)
     versionCode 1
     versionName "1.0"
 
@@ -67,7 +67,7 @@ android {
       minifyEnabled false
     }
   }
-  lintOptions {
+  lint {
     disable 'GradleCompatible'
   }
   compileOptions {
@@ -102,20 +102,18 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"  // From node_modules
   implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
-  implementation "com.theoplayer.theoplayer-sdk-android:ads-wrapper:4.8.0"
-  implementation "androidx.appcompat:appcompat:1.4.+"
+  implementation "androidx.appcompat:appcompat:1.6.1"
 
-  // The minimum supported version is 5.10.0
-  def theoplayer_sdk_version = safeExtGet('THEOplayer_sdk', '[5.10,6.0)')
+  // The minimum supported THEOplayer version is 6.0.0
+  def theoplayer_sdk_version = safeExtGet('THEOplayer_sdk', '[6.0.0,7.0)')
 
 //  def theoplayer_mediasession_version = safeExtGet('THEOplayer_mediasession', theoplayer_sdk_version)
   def theoplayer_mediasession_version = "5.11.0-local"
-  def enabledV4 = theoplayer_sdk_version.toString().startsWith("4.")
-  def core_prefix = enabledV4 ? 'unified' : 'core'
-  def integration_prefix = enabledV4 ? 'unified' : 'integration'
 
   println("Using THEOplayer (${versionString(theoplayer_sdk_version)})")
-  implementation "com.theoplayer.theoplayer-sdk-android:${core_prefix}:${theoplayer_sdk_version}"
+  implementation "com.theoplayer.theoplayer-sdk-android:core:${theoplayer_sdk_version}"
+
+  implementation "com.theoplayer.theoplayer-sdk-android:ads-wrapper:4.8.0"
 
   if (enabledMediaSession) {
     println("Enable THEOplayer MediaSession extension (${versionString(theoplayer_mediasession_version)})")
@@ -127,30 +125,29 @@ dependencies {
 
   if (enabledGoogleIMA) {
     println('Enable THEOplayer IMA extension.')
-    implementation "com.theoplayer.theoplayer-sdk-android:${integration_prefix}-ads:${theoplayer_sdk_version}"
-    implementation "com.theoplayer.theoplayer-sdk-android:${integration_prefix}-ads-ima:${theoplayer_sdk_version}"
+    implementation "com.theoplayer.theoplayer-sdk-android:integration-ads:${theoplayer_sdk_version}"
+    implementation "com.theoplayer.theoplayer-sdk-android:integration-ads-ima:${theoplayer_sdk_version}"
   } else {
     println('Disable THEOplayer IMA extension.')
-    compileOnly "com.theoplayer.theoplayer-sdk-android:${integration_prefix}-ads:${theoplayer_sdk_version}"
-    compileOnly "com.theoplayer.theoplayer-sdk-android:${integration_prefix}-ads-ima:${theoplayer_sdk_version}"
+    compileOnly "com.theoplayer.theoplayer-sdk-android:integration-ads:${theoplayer_sdk_version}"
+    compileOnly "com.theoplayer.theoplayer-sdk-android:integration-ads-ima:${theoplayer_sdk_version}"
   }
 
-  // NOTE: The DAI extension module is available on Maven as of SDK v4.3.0
   if (enabledGoogleDAI) {
     println('Enable THEOplayer DAI extension.')
-    implementation "com.theoplayer.theoplayer-sdk-android:${integration_prefix}-ads:${theoplayer_sdk_version}"
-    implementation "com.theoplayer.theoplayer-sdk-android:${integration_prefix}-ads-dai:${theoplayer_sdk_version}"
+    implementation "com.theoplayer.theoplayer-sdk-android:integration-ads:${theoplayer_sdk_version}"
+    implementation "com.theoplayer.theoplayer-sdk-android:integration-ads-dai:${theoplayer_sdk_version}"
   } else {
     println('Disable THEOplayer DAI extension.')
-    compileOnly "com.theoplayer.theoplayer-sdk-android:${integration_prefix}-ads:${theoplayer_sdk_version}"
-    compileOnly "com.theoplayer.theoplayer-sdk-android:${integration_prefix}-ads-dai:${theoplayer_sdk_version}"
+    compileOnly "com.theoplayer.theoplayer-sdk-android:integration-ads:${theoplayer_sdk_version}"
+    compileOnly "com.theoplayer.theoplayer-sdk-android:integration-ads-dai:${theoplayer_sdk_version}"
   }
 
   if (enabledCast) {
     println('Enable THEOplayer cast extension.')
-    implementation "com.theoplayer.theoplayer-sdk-android:${integration_prefix}-cast:${theoplayer_sdk_version}"
+    implementation "com.theoplayer.theoplayer-sdk-android:integration-cast:${theoplayer_sdk_version}"
   } else {
     println('Disable THEOplayer cast extension.')
-    compileOnly "com.theoplayer.theoplayer-sdk-android:${integration_prefix}-cast:${theoplayer_sdk_version}"
+    compileOnly "com.theoplayer.theoplayer-sdk-android:integration-cast:${theoplayer_sdk_version}"
   }
 }

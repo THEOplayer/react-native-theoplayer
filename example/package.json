@@ -14,46 +14,45 @@
     "lint": "eslint \"**/*.{ts,tsx}\""
   },
   "dependencies": {
-    "@react-native-community/slider": "^4.4.2",
-    "@theoplayer/react-native-ui": "latest",
+    "@react-native-community/slider": "^4.4.3",
+    "@theoplayer/react-native-ui": "^0.2.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-native": "npm:react-native-tvos@0.71.12-0",
-    "react-native-svg": "^13.9.0",
-    "react-native-web": "^0.19.2",
+    "react-native": "npm:react-native-tvos@^0.71.13-1",
+    "react-native-svg": "^13.14.0",
+    "react-native-web": "^0.19.9",
     "react-native-web-image-loader": "^0.1.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.16.7",
-    "@babel/preset-env": "^7.16.8",
-    "@babel/preset-react": "^7.16.7",
-    "@babel/runtime": "^7.12.5",
+    "@babel/core": "^7.23.0",
+    "@babel/preset-env": "^7.22.20",
+    "@babel/preset-react": "^7.22.15",
+    "@babel/runtime": "^7.23.1",
     "@react-native-community/eslint-config": "^2.0.0",
     "@types/jest": "^26.0.24",
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0",
+    "@types/react": "^18.2.24",
+    "@types/react-dom": "^18.2.8",
     "@types/react-test-renderer": "18.0.0",
     "babel-jest": "^26.6.3",
-    "babel-loader": "^8.2.3",
-    "babel-plugin-module-resolver": "^4.0.0",
-    "babel-plugin-react-native-web": "^0.17.5",
+    "babel-loader": "^8.3.0",
+    "babel-plugin-module-resolver": "^5.0.0",
+    "babel-plugin-react-native-web": "^0.17.7",
     "copy-webpack-plugin": "^11.0.0",
     "eslint": "7.14.0",
     "html-webpack-plugin": "^4.5.2",
     "jest": "^26.6.3",
     "metro-react-native-babel-preset": "^0.64.0",
     "react-test-renderer": "18.0.0",
-    "typescript": "^3.8.3",
-    "webpack": "^5.76.0",
-    "webpack-cli": "^4.9.1",
-    "webpack-dev-server": "^4.7.3"
+    "typescript": "^3.9.10",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^4.15.1"
   },
   "overrides": {
     "use-subscription": "1.8.0",
     "react-native-google-cast": {
-      "react-native": "npm:react-native-tvos@0.71.12-0"
-    },
-    "@types/react-native": "^0.71.5"
+      "react-native": "npm:react-native-tvos@^0.71.13-1"
+    }
   },
   "jest": {
     "preset": "react-native",

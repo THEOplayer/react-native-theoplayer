@@ -153,11 +153,7 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         if let player = self.player,
            !self.isLive,
            !self.inAd {
-            player.requestCurrentTime(completionHandler: { time, error in
-                if let currentTime = time {
-                    player.setCurrentTime(currentTime + event.interval)
-                }
-            })
+            player.currentTime = player.currentTime + event.interval
             if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Skip forward command handled.") }
         } else {
             if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Skip forward command not handled.") }
@@ -169,11 +165,7 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         if let player = self.player ,
            !self.isLive,
            !self.inAd {
-            player.requestCurrentTime(completionHandler: { time, error in
-                if let currentTime = time {
-                    player.setCurrentTime(currentTime - event.interval)
-                }
-            })
+            player.currentTime = player.currentTime - event.interval
             if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Skip backward command handled.") }
         } else {
             if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Skip backward command not handled.") }

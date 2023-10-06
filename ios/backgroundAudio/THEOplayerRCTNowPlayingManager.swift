@@ -50,10 +50,9 @@ class THEOplayerRCTNowPlayingManager {
             self.updatePlaybackRate(player.playbackRate)
             self.updateServiceIdentifier(metadata.metadataKeys?["nowPlayingServiceIdentifier"] as? String)
             self.updateContentIdentifier(metadata.metadataKeys?["nowPlayingContentIdentifier"] as? String)
+            self.updateCurrentTime(player.currentTime)
             self.updateArtWork(artWorkUrlString) { [weak self] in
-                self?.updateCurrentTime { [weak self] in
-                    self?.processNowPlayingToInfoCenter()
-                }
+                self?.processNowPlayingToInfoCenter()
             }
         }
     }
@@ -160,19 +159,8 @@ class THEOplayerRCTNowPlayingManager {
         self.nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = NSNumber(value: playerPlaybackRate)
     }
     
-    private func updateCurrentTime(completion: (() -> Void)?) {
-        if let player = self.player {
-            player.requestCurrentTime(completionHandler: { [weak self] time, error in
-                if let welf = self,
-                   let currentTime = time {
-                    welf.nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = NSNumber(value: currentTime)
-                    if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE] CurrentTime updated in nowPlayingInfo.") }
-                    DispatchQueue.main.async {
-                        completion?()
-                    }
-                }
-            })
-        }
+    private func updateCurrentTime(_ currentTime: Double) {
+        self.nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = NSNumber(value: currentTime)
     }
     
     private func attachListeners() {
@@ -195,24 +183,24 @@ class THEOplayerRCTNowPlayingManager {
         }
         
         // PLAYING
-        self.playingListener = player.addEventListener(type: PlayerEventTypes.PLAYING) { [weak self] event in
-            self?.updatePlaybackState()
-            self?.updateCurrentTime { [weak self] in
-                if let welf = self {
-                    if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE] PLAYING: Updating playbackState and time on NowPlayingInfoCenter...") }
-                    welf.processNowPlayingToInfoCenter()
-                }
+        self.playingListener = player.addEventListener(type: PlayerEventTypes.PLAYING) { [weak self, weak player] event in
+            if let welf = self,
+               let wplayer = player {
+                welf.updatePlaybackState()
+                welf.updateCurrentTime(wplayer.currentTime)
+                if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE] PLAYING: Updating playbackState and time on NowPlayingInfoCenter...") }
+                welf.processNowPlayingToInfoCenter()
             }
         }
         
         // PAUSE
-        self.pauseListener = player.addEventListener(type: PlayerEventTypes.PAUSE) { [weak self] event in
-            self?.updatePlaybackState()
-            self?.updateCurrentTime { [weak self] in
-                if let welf = self {
-                    if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE] PAUSED: Updating PlaybackState and time on NowPlayingInfoCenter...") }
-                    welf.processNowPlayingToInfoCenter()
-                }
+        self.pauseListener = player.addEventListener(type: PlayerEventTypes.PAUSE) { [weak self, weak player] event in
+            if let welf = self,
+               let wplayer = player {
+                welf.updatePlaybackState()
+                welf.updateCurrentTime(wplayer.currentTime)
+                if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE] PAUSED: Updating PlaybackState and time on NowPlayingInfoCenter...") }
+                welf.processNowPlayingToInfoCenter()
             }
         }
                                           
@@ -228,12 +216,12 @@ class THEOplayerRCTNowPlayingManager {
         }
         
         // SEEKED
-        self.seekedListener = player.addEventListener(type: PlayerEventTypes.SEEKED) { [weak self] event in
-            self?.updateCurrentTime { [weak self] in
-                if let welf = self {
-                    if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE] SEEKED: Time updated on NowPlayingInfoCenter.") }
-                    welf.processNowPlayingToInfoCenter()
-                }
+        self.seekedListener = player.addEventListener(type: PlayerEventTypes.SEEKED) { [weak self, weak player] event in
+            if let welf = self,
+               let wplayer = player {
+                welf.updateCurrentTime(wplayer.currentTime)
+                if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE] SEEKED: Time updated on NowPlayingInfoCenter.") }
+                welf.processNowPlayingToInfoCenter()
             }
         }
         
