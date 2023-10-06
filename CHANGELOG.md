@@ -5,11 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [3.0.0-pre1] - 23-10-05
+## [3.0.0] - 23-10-06
+
+### Fixed
+
+- Fixed sourceDescription processing on iOS for offline playback.
 
 ### Changed
 
 - Added support for THEOplayer 6.0. See [THEOplayer's changelog](https://docs.theoplayer.com/changelog.md) for details.
+- Bumped minimal version for SideloadedTextTracks connection on iOS to v6.1.1 which contains fix for iOS 17.0.
 
 ### Added
 

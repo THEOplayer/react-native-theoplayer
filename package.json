@@ -1,6 +1,6 @@
 {
   "name": "react-native-theoplayer",
-  "version": "3.0.0-pre1",
+  "version": "3.0.0",
   "description": "A THEOplayer video component for react-native.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
