@@ -10,6 +10,8 @@ The process of caching a media asset involves several steps to enable offline pl
 It starts with the creation and initiation of a CachingTask, which downloads the media content for local storage.
 Once cached, the asset can be played offline seamlessly.
 
+The Media Cache feature is accessible on all platforms except for tvOS.
+
 This page is structured as follows:
 
 - [Caching Workflow](#caching-workflow)
