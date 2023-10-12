@@ -99,6 +99,7 @@ class THEOplayerRCTTypeUtils {
         }
 	}
 
+#if os(iOS)
     class func cacheStatusToString(_ status: CacheStatus) -> String {
         switch status {
         case CacheStatus.initialised:
@@ -135,4 +136,5 @@ class THEOplayerRCTTypeUtils {
             return "notStarted"
         }
     }
+#endif
 }

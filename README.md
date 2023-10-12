@@ -22,7 +22,7 @@ following platforms:
 
 - Android, Android TV & FireTV
 - iOS & tvOS (Apple TV)
-- Web (currently only HTML5 browsers are tested)
+- HTML5, Tizen & webOS (web, mobile web, smart TVs, set-top boxes and gaming consoles).
 
 This document covers the creation of a minimal app including a `THEOplayerView` component,
 and an overview of the accompanying example app with a user interface provided
@@ -104,5 +104,5 @@ and discussed in the next section. Finally, an overview of features, limitations
   - [Media Caching](./doc/media_caching.md)
   - [Migrating to `react-native-theoplayer` v2.x](./doc/migrating_v2.md)
   - [Picture-in-Picture (PiP)](./doc/pip.md)
-  - [Styling subtitles and closed captions](./doc/texttrackstyles.md)
-- [Limitations and known issues](./doc/limitations.md)
+  - [Subtitles, Closed Captions and Metadata tracks](./doc/texttracks.md)
+  - [Limitations and known issues](./doc/limitations.md)

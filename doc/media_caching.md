@@ -2,7 +2,7 @@
 
 ### Overview
 
-The Media Cache API is available as of v2.12.0 and facilitates the download of media assets for offline playback.
+The Media Cache API is available as of v3.0.0 and facilitates the download of media assets for offline playback.
 This section provides an overview of how to utilize the Media Caching API,
 create caching tasks, and control the media cache.
 

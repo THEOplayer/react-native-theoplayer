@@ -25,6 +25,7 @@ let CACHETASK_PROP_PARAMETERS_TEXT_TRACK_SELECTION: String = "textTrackSelection
 
 let CACHE_AGGREGATOR_TAG: String = "[CacheAggregator]"
 
+#if os(iOS)
 class THEOplayerRCTCacheAggregator {
     
     class func aggregateCacheTasks(tasks: [CachingTask]) -> [[String:Any]] {
@@ -85,3 +86,4 @@ class THEOplayerRCTCacheAggregator {
         return aggregatedData
     }
 }
+#endif
