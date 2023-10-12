@@ -1,4 +1,4 @@
-<svg fill="none" viewBox="0 0 690 710" width="800" height="900" xmlns="http://www.w3.org/2000/svg">
+<svg fill="none" viewBox="0 0 690 725" width="800" height="900" xmlns="http://www.w3.org/2000/svg">
   <foreignObject width="100%" height="100%">
     <div xmlns="http://www.w3.org/1999/xhtml">
       <style>
@@ -104,14 +104,21 @@
 
       <div class="section">
         <div class="feature">Audio Control Management</div>
-        <div class="item">Audio focus &amp; Audio-Becoming-Noisy mgmt</div>
+        <div class="item">Audio focus &amp; Audio-Becoming-Noisy mgmt<br/></div>
         <div class="item" style="flex:2">(Audio control management by platform)</div>
       </div>
 
       <div class="section">
-        <div class="feature">Advanced APIs</div>
-        <div class="item" style="flex:2">Background playback, Media Session, Media Cache</div>
-        <div class="item">Background playback, NowPlaying, Media Cache</div>
+        <div class="feature">Advanced APIs<br/><br/><br/></div>
+        <div class="item" style="flex:2">
+          Background playback,<br/>
+          Media Session,<br/>
+          Media Cache (offline playback)
+        </div>
+        <div class="item">
+          Background playback,<br/>
+          NowPlaying,<br/>
+          Media Cache (iOS only)</div>
       </div>
 
       <div class="section">
