@@ -4,6 +4,7 @@ import Foundation
 import THEOplayerSDK
 import UIKit
 
+#if os(iOS)
 class THEOplayerRCTCachingParametersBuilder {
     static func buildCachingParameters(_ paramsData: NSDictionary) -> CachingParameters {
         var expirationDate: Date = Date(timeInterval: TimeInterval(30*60), since: Date()) // default expiration is after 30 minutes
@@ -25,3 +26,4 @@ class THEOplayerRCTCachingParametersBuilder {
         return builder.build()
     }
 }
+#endif
