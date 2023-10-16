@@ -33,8 +33,8 @@ class QualityListAdapter<Q : Quality> : QualityList<Q> {
     return qualities.size
   }
 
-  override fun getItem(i: Int): Q? {
-    return if (i >= 0 && i < length()) qualities[i] else null
+  override fun getItem(i: Int): Q {
+    return qualities[i]
   }
 
   override fun iterator(): MutableIterator<Q?> {
