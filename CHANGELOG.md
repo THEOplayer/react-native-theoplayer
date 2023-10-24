@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+- Fixed an issue on Android where during play-out of a locally stored media asset the `seekable` property would not update.
+
 ## [3.0.2] - 23-10-17
 
 ### Fixed
