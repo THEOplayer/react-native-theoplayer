@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- When resuming an app on Android, retrieve audio focus only if the player is not paused.
+
+### Fixed
+
 - Fixed an issue on Android where during play-out of a locally stored media asset the `seekable` property would not update.
 
 ## [3.0.2] - 23-10-17

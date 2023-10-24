@@ -379,7 +379,9 @@ class ReactTHEOplayerContext private constructor(
     isHostPaused = false
     mediaSessionConnector?.setActive(true)
     playerView.onResume()
-    audioFocusManager?.retrieveAudioFocus()
+    if (!player.isPaused) {
+      audioFocusManager?.retrieveAudioFocus()
+    }
   }
 
   fun destroy() {
