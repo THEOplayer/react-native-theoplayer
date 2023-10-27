@@ -73,7 +73,7 @@ class ReactTHEOplayerContext private constructor(
   var imaIntegration: GoogleImaIntegration? = null
   var castIntegration: CastIntegration? = null
   var wasPlayingOnHostPause: Boolean = false
-  var isHostPaused: Boolean = false
+  private var isHostPaused: Boolean = false
 
   private val isBackgroundAudioEnabled: Boolean
     get() = backgroundAudioConfig.enabled
