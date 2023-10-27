@@ -5,7 +5,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Handler
 import android.os.IBinder
@@ -113,27 +112,6 @@ class ReactTHEOplayerContext private constructor(
     }
   }
 
-  private fun setPlaybackServiceEnabled(enabled: Boolean) {
-    // Toggle the MediaPlaybackService.
-    toggleComponent(enabled, ComponentName(reactContext.applicationContext, MediaPlaybackService::class.java))
-
-    // Also toggle any registered MediaButtonReceiver broadcast receiver.
-    // It will crash the app if it remains active and tries to find our disabled MediaBrowserService instance.
-    toggleComponent(enabled, ComponentName(reactContext.applicationContext, androidx.media.session.MediaButtonReceiver::class.java))
-  }
-
-  /**
-   * Enable or disable a receiver component.
-   */
-  private fun toggleComponent(enabled: Boolean, componentName: ComponentName) {
-    reactContext.applicationContext.packageManager.setComponentEnabledSetting(
-      componentName,
-      if (enabled) PackageManager.COMPONENT_ENABLED_STATE_ENABLED
-      else PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-      PackageManager.DONT_KILL_APP
-    )
-  }
-
   private fun applyBackgroundPlaybackConfig(
     config: BackgroundAudioConfig,
     prevConfig: BackgroundAudioConfig?
@@ -148,13 +126,8 @@ class ReactTHEOplayerContext private constructor(
     if (BuildConfig.USE_PLAYBACK_SERVICE) {
       if (prevConfig?.enabled != true && config.enabled) {
         // Enable & bind background playback
-        setPlaybackServiceEnabled(true)
         bindMediaPlaybackService()
       } else if (prevConfig?.enabled == true) {
-        // First disable the MediaPlaybackService and MediaButtonReceiver so that no more media
-        // button events can be captured.
-        setPlaybackServiceEnabled(false)
-
         // Stop & unbind MediaPlaybackService.
         binder?.stopForegroundService()
         unbindMediaPlaybackService()
