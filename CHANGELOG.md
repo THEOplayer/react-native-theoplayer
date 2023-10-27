@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [3.1.0] - 23-10-27
 
 ### Changed
 
@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed an issue on Android where during play-out of a locally stored media asset the `seekable` property would not update.
-- Fixed an issue on iOS where the error was not forwarded to theoplayer if a drm request fails on the iOS bridge 
+- Fixed an issue on iOS where the error was not forwarded to theoplayer if a drm request fails on the iOS bridge
 
 ## [3.0.2] - 23-10-17
 
