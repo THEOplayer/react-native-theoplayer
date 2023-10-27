@@ -142,6 +142,9 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._state.selectedAudioTrack = event.selectedAudioTrack;
     this._state.selectedVideoTrack = event.selectedVideoTrack;
     this._state.selectedTextTrack = event.selectedTextTrack;
+    if (isFinite(this._state.duration)) {
+      this._state.seekable = [{start: 0, end: this._state.duration}];
+    }
   };
 
   private onDurationChange = (event: DurationChangeEvent) => {

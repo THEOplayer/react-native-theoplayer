@@ -31,7 +31,6 @@ class THEOplayerRCTNetworkUtils: NSObject, URLSessionDataDelegate {
         let task = self.defaultUrlSession.dataTask(with: request) { data, response, error in
             if let error = error {
                 PrintUtils.printLog(logText: "request Error: \(error.localizedDescription)")
-                return
             }
             if let urlResponse = response as? HTTPURLResponse {
                 let statusCode = urlResponse.statusCode
@@ -44,7 +43,10 @@ class THEOplayerRCTNetworkUtils: NSObject, URLSessionDataDelegate {
                     }
                 }
                 completion?(data, statusCode, allHeaders, error)
+            } else {
+                completion?(data, -1, [:], error)
             }
+            
         }
         // start the task
         task.resume()

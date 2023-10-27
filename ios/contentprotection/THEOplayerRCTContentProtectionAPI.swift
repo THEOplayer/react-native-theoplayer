@@ -211,8 +211,10 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
             THEOplayerRCTNetworkUtils.shared.requestFromUrl(url: url, method: method, body: bodyData, headers: headers) { data, statusCode, responseHeaders, error in
                 if let responseError = error {
                     print(CPI_TAG, "Certificate request failure: error = \(responseError.localizedDescription)")
+                    completion(data, error)
                 } else if statusCode >= 400 {
                     PrintUtils.printLog(logText: "Certificate request failure: statusCode = \(statusCode)")
+                    completion(data, nil)
                 } else {
                     if DEBUG_CONTENT_PROTECTION_API {print(CPI_TAG, "Certificate request success: statusCode = \(statusCode)") }
                     let certificateRequest = CertificateRequest(url: urlString, method: method, headers: headers, body: bodyData)
@@ -278,8 +280,10 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
             THEOplayerRCTNetworkUtils.shared.requestFromUrl(url: url, method: method, body: bodyData, headers: headers) { data, statusCode, responseHeaders, error in
                 if let responseError = error {
                     print(CPI_TAG, "License request failure: error = \(responseError.localizedDescription)")
+                    completion(data, error)
                 } else if statusCode >= 400 {
                     print(CPI_TAG, "License request failure: statusCode = \(statusCode)")
+                    completion(data, nil)
                 } else {
                     if DEBUG_CONTENT_PROTECTION_API {print(CPI_TAG, "License request success: statusCode = \(statusCode)") }
                     let licenseRequest = LicenseRequest(url: urlString, method: method, headers: headers, body: bodyData, fairplaySkdUrl: nil, useCredentials: false)

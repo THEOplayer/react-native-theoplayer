@@ -32,7 +32,7 @@
       android:name="com.theoplayer.media.MediaPlaybackService"
       android:description="@string/background_playback_service_description"
       android:exported="false"
-      android:enabled="false"
+      android:enabled="true"
       android:foregroundServiceType="mediaPlayback">
       <intent-filter>
         <action android:name="android.media.browse.MediaBrowserService" />
