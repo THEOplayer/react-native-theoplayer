@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- When resuming an app on Android, retrieve audio focus only if the player is not paused.
+- Revised audio focus protocol on Android. When resuming an app, audio focus is retrieved only if the player is not paused.
+- Changed the behaviour of the Android component supporting background playback. It is stopped but not disabled when setting `backgroundAudioConfiguration.enabled = true`.
 
 ### Fixed
 
