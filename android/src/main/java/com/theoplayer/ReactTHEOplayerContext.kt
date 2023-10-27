@@ -12,10 +12,8 @@ import android.os.IBinder
 import android.os.Looper
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import android.util.Log
 import com.facebook.react.uimanager.ThemedReactContext
-import com.google.ads.interactivemedia.v3.api.AdsRenderingSettings
-import com.google.ads.interactivemedia.v3.api.ImaSdkFactory
-import com.theoplayer.android.api.THEOplayerConfig
 import com.theoplayer.android.api.THEOplayerView
 import com.theoplayer.android.api.ads.dai.GoogleDaiIntegration
 import com.theoplayer.android.api.ads.dai.GoogleDaiIntegrationFactory
@@ -76,6 +74,7 @@ class ReactTHEOplayerContext private constructor(
   var imaIntegration: GoogleImaIntegration? = null
   var castIntegration: CastIntegration? = null
   var wasPlayingOnHostPause: Boolean = false
+  var isHostPaused: Boolean = false
 
   private val isBackgroundAudioEnabled: Boolean
     get() = backgroundAudioConfig.enabled
@@ -85,10 +84,10 @@ class ReactTHEOplayerContext private constructor(
   companion object {
     fun create(
       reactContext: ThemedReactContext,
-      playerConfig: THEOplayerConfig
+      configAdapter: PlayerConfigAdapter
     ): ReactTHEOplayerContext {
       return ReactTHEOplayerContext(reactContext).apply {
-        initializePlayerView(playerConfig)
+        initializePlayerView(configAdapter)
       }
     }
   }
@@ -115,8 +114,20 @@ class ReactTHEOplayerContext private constructor(
   }
 
   private fun setPlaybackServiceEnabled(enabled: Boolean) {
+    // Toggle the MediaPlaybackService.
+    toggleComponent(enabled, ComponentName(reactContext.applicationContext, MediaPlaybackService::class.java))
+
+    // Also toggle any registered MediaButtonReceiver broadcast receiver.
+    // It will crash the app if it remains active and tries to find our disabled MediaBrowserService instance.
+    toggleComponent(enabled, ComponentName(reactContext.applicationContext, androidx.media.session.MediaButtonReceiver::class.java))
+  }
+
+  /**
+   * Enable or disable a receiver component.
+   */
+  private fun toggleComponent(enabled: Boolean, componentName: ComponentName) {
     reactContext.applicationContext.packageManager.setComponentEnabledSetting(
-      ComponentName(reactContext.applicationContext, MediaPlaybackService::class.java),
+      componentName,
       if (enabled) PackageManager.COMPONENT_ENABLED_STATE_ENABLED
       else PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
       PackageManager.DONT_KILL_APP
@@ -136,15 +147,25 @@ class ReactTHEOplayerContext private constructor(
 
     if (BuildConfig.USE_PLAYBACK_SERVICE) {
       if (prevConfig?.enabled != true && config.enabled) {
-        // Enabling background playback
+        // Enable & bind background playback
         setPlaybackServiceEnabled(true)
         bindMediaPlaybackService()
       } else if (prevConfig?.enabled == true) {
-        // Disabling background playback
+        // First disable the MediaPlaybackService and MediaButtonReceiver so that no more media
+        // button events can be captured.
+        setPlaybackServiceEnabled(false)
+
+        // Stop & unbind MediaPlaybackService.
         binder?.stopForegroundService()
         unbindMediaPlaybackService()
-        setPlaybackServiceEnabled(false)
+
+        // Create a new media session.
         initDefaultMediaSession()
+
+        // If the app is currently backgrounded, apply state changes.
+        if (isHostPaused) {
+          applyHostPaused()
+        }
       }
     }
   }
@@ -190,8 +211,8 @@ class ReactTHEOplayerContext private constructor(
     binder = null
   }
 
-  private fun initializePlayerView(playerConfig: THEOplayerConfig) {
-    playerView = object : THEOplayerView(reactContext.currentActivity!!, playerConfig) {
+  private fun initializePlayerView(configAdapter: PlayerConfigAdapter) {
+    playerView = object : THEOplayerView(reactContext.currentActivity!!, configAdapter.playerConfig()) {
       private fun measureAndLayout() {
         measure(
           MeasureSpec.makeMeasureSpec(measuredWidth, MeasureSpec.EXACTLY),
@@ -211,7 +232,7 @@ class ReactTHEOplayerContext private constructor(
     // By default, the screen should remain on.
     playerView.keepScreenOn = true
 
-    addIntegrations(playerConfig)
+    addIntegrations(configAdapter)
     addListeners()
 
     audioFocusManager = AudioFocusManager(reactContext, player)
@@ -239,39 +260,51 @@ class ReactTHEOplayerContext private constructor(
       debug = BuildConfig.LOG_MEDIASESSION_EVENTS
       player = this@ReactTHEOplayerContext.player
 
-      // Set mediaSession active
-      setActive(true)
+      // Set mediaSession active and ready to receive media button events, but not if the player
+      // is backgrounded.
+      setActive(!isHostPaused)
     }
   }
 
-  private fun addIntegrations(playerConfig: THEOplayerConfig) {
+  private fun addIntegrations(configAdapter: PlayerConfigAdapter) {
     try {
       if (BuildConfig.EXTENSION_GOOGLE_IMA) {
-        imaIntegration = GoogleImaIntegrationFactory.createGoogleImaIntegration(playerView).apply {
-          setAdsRenderingSettings(createRenderSettings(playerConfig))
-          playerView.player.addIntegration(this)
+        imaIntegration = GoogleImaIntegrationFactory.createGoogleImaIntegration(
+          playerView, configAdapter.adsConfig()
+        ).apply {
+          setAdsRenderingSettings(configAdapter.adsRenderSettings())
+        }.also {
+          playerView.player.addIntegration(it)
         }
       }
-    } catch (ignore: Exception) {
+    } catch (e: Exception) {
+      Log.w(TAG, "Failed to configure Google IMA integration ${e.message}")
     }
     try {
       if (BuildConfig.EXTENSION_GOOGLE_DAI) {
-        daiIntegration = GoogleDaiIntegrationFactory.createGoogleDaiIntegration(playerView).apply {
-          setAdsRenderingSettings(createRenderSettings(playerConfig))
-          playerView.player.addIntegration(this)
+        daiIntegration = GoogleDaiIntegrationFactory.createGoogleDaiIntegration(
+          playerView, configAdapter.adsConfig()
+        ).apply {
+          setAdsRenderingSettings(configAdapter.adsRenderSettings())
+        }.also {
+          playerView.player.addIntegration(it)
         }
       }
-    } catch (ignore: Exception) {
+    } catch (e: Exception) {
+      Log.w(TAG, "Failed to configure Google DAI integration ${e.message}")
     }
     try {
       if (BuildConfig.EXTENSION_CAST) {
-        castIntegration = CastIntegrationFactory.createCastIntegration(playerView).apply {
-          playerView.player.addIntegration(this)
+        castIntegration = CastIntegrationFactory.createCastIntegration(
+          playerView, configAdapter.castConfig()
+        ).also {
+          playerView.player.addIntegration(it)
         }
       }
-      // Add other future integrations here.
-    } catch (ignore: Exception) {
+    } catch (e: Exception) {
+      Log.w(TAG, "Failed to configure Cast integration ${e.message}")
     }
+    // Add other future integrations here.
   }
 
   private val onSourceChange = EventListener<SourceChangeEvent> {
@@ -319,24 +352,23 @@ class ReactTHEOplayerContext private constructor(
     }
   }
 
-  private fun createRenderSettings(playerConfig: THEOplayerConfig): AdsRenderingSettings {
-    val renderingSettings = ImaSdkFactory.getInstance().createAdsRenderingSettings()
-    if (playerConfig.ads != null && !playerConfig.ads!!.isShowCountdown) {
-      renderingSettings.setUiElements(emptySet())
-      renderingSettings.disableUi = true
-    }
-    return renderingSettings
-  }
-
   /**
    * The host activity is paused.
    */
   fun onHostPause() {
+    isHostPaused = true
+    applyHostPaused()
+  }
+
+  private fun applyHostPaused() {
     // Keep current playing state when going to background
     wasPlayingOnHostPause = !player.isPaused
     playerView.onPause()
     if (!isBackgroundAudioEnabled) {
       mediaSessionConnector?.setActive(false)
+
+      // The player pauses and goes to the background, we can abandon audio focus.
+      audioFocusManager?.abandonAudioFocus()
     }
   }
 
@@ -344,9 +376,12 @@ class ReactTHEOplayerContext private constructor(
    * The host activity is resumed.
    */
   fun onHostResume() {
+    isHostPaused = false
     mediaSessionConnector?.setActive(true)
     playerView.onResume()
-    audioFocusManager?.retrieveAudioFocus()
+    if (!player.isPaused) {
+      audioFocusManager?.retrieveAudioFocus()
+    }
   }
 
   fun destroy() {

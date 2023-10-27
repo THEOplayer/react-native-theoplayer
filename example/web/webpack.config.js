@@ -93,7 +93,7 @@ module.exports = {
       'react-native-url-polyfill': 'url-polyfill',
       'react-native-google-cast': path.resolve(stubDirectory, 'CastButtonStub'),
       'react-native-web': path.resolve(appDirectory, 'node_modules/react-native-web'),
-      'react-native-svg': 'react-native-svg-web',
+      'react-native-svg': path.resolve(appDirectory, 'node_modules/react-native-svg-web'),
 
       // Avoid duplicate react env.
       react: path.resolve(appDirectory, 'node_modules/react'),
@@ -111,5 +111,12 @@ module.exports = {
     ],
     // Hot reload on source changes
     hot: true,
+    client: {
+      overlay: {
+        errors: true,
+        warnings: false,
+        runtimeErrors: false,
+      },
+    },
   },
 };

@@ -1,12 +1,12 @@
 import type { Ad, AdBreak, AdDescription, AdsAPI, GoogleDAI } from 'react-native-theoplayer';
 import { THEOplayerWebGoogleDAI } from './THEOplayerWebGoogleDAI';
-import type * as THEOplayer from 'theoplayer';
+import type { ChromelessPlayer } from 'theoplayer';
 
 export class THEOplayerWebAdsAdapter implements AdsAPI {
-  private readonly _player: THEOplayer.ChromelessPlayer;
+  private readonly _player: ChromelessPlayer;
   private _dai: GoogleDAI | undefined;
 
-  constructor(player: THEOplayer.ChromelessPlayer) {
+  constructor(player: ChromelessPlayer) {
     this._player = player;
   }
 

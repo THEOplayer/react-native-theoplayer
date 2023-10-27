@@ -11,9 +11,7 @@ import com.theoplayer.android.api.player.track.mediatrack.quality.VideoQuality
 import com.theoplayer.android.api.player.track.texttrack.TextTrackMode
 import com.theoplayer.audio.BackgroundAudioConfigAdapter
 import com.theoplayer.presentation.PipConfigAdapter
-import com.theoplayer.track.QualityListFilter
 import com.theoplayer.track.TextTrackStyleAdapter
-import com.theoplayer.track.emptyQualityList
 import com.theoplayer.util.ViewResolver
 
 private const val TAG = "PlayerModule"
@@ -120,22 +118,39 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
     }
   }
 
+  /**
+   * Check whether a uid is contained in an array of uids.
+   */
+  private fun containsUid(uid: Int, uids: ReadableArray): Boolean {
+    for (q in 0 until uids.size()) {
+      if (uids.getInt(q) == uid) {
+        return true
+      }
+    }
+    return false
+  }
+
   @ReactMethod
   fun setTargetVideoQuality(tag: Int, uids: ReadableArray) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.player?.let {
         // Apply the target quality to the current enabled video track
         for (track in it.videoTracks) {
-          if (track.isEnabled) {
-            val currentVideoTrack = track as MediaTrack<VideoQuality>
-            if (uids.size() == 0) {
-              // Reset target qualities when passing empty list.
-              currentVideoTrack.targetQualities = emptyQualityList()
-              currentVideoTrack.targetQuality = null
-            } else {
-              currentVideoTrack.qualities?.let { qualities ->
-                currentVideoTrack.targetQualities = QualityListFilter(qualities).filterQualityList(uids)
-              }
+          // Only consider enabled tracks
+          if (!track.isEnabled) {
+            continue
+          }
+          val currentVideoTrack = track as MediaTrack<VideoQuality>
+          if (uids.size() == 0) {
+            // Reset target qualities when passing empty list.
+            currentVideoTrack.setTargetQualities(listOf())
+            currentVideoTrack.targetQuality = null
+          } else {
+            // Filter qualities based on target uids
+            currentVideoTrack.qualities?.let { availableQualities ->
+              currentVideoTrack.setTargetQualities(availableQualities.filter { quality ->
+                containsUid(quality.uid, uids)
+              })
             }
           }
         }

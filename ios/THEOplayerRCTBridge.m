@@ -217,3 +217,25 @@ RCT_EXTERN_METHOD(airplayStart:(nonnull NSNumber *)node)
 RCT_EXTERN_METHOD(airplayStop:(nonnull NSNumber *)node)
 
 @end
+
+// ----------------------------------------------------------------------------
+// Cache Module
+// ----------------------------------------------------------------------------
+@interface RCT_EXTERN_REMAP_MODULE(CacheModule, THEOplayerRCTCacheAPI, RCTEventEmitter)
+
+RCT_EXTERN_METHOD(getInitialState:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(createTask:(NSDictionary)src
+                  params:(NSDictionary)params)
+
+RCT_EXTERN_METHOD(startCachingTask:(nonnull NSString *)id)
+
+RCT_EXTERN_METHOD(pauseCachingTask:(nonnull NSString *)id)
+
+RCT_EXTERN_METHOD(removeCachingTask:(nonnull NSString *)id)
+
+RCT_EXTERN_METHOD(renewLicense:(nonnull NSString *)id
+                  drmConfig:(NSDictionary)drmConfig)
+
+@end

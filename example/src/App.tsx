@@ -28,6 +28,9 @@ import { Platform, StyleSheet, View, ViewStyle } from 'react-native';
 import { SourceMenuButton, SOURCES } from './custom/SourceMenuButton';
 import { BackgroundAudioSubMenu } from './custom/BackgroundAudioSubMenu';
 import { PiPSubMenu } from './custom/PipSubMenu';
+import { MediaCacheDownloadButton } from './custom/MediaCacheDownloadButton';
+import { MediaCacheMenuButton } from './custom/MediaCacheMenuButton';
+import { MediaCachingTaskListSubMenu } from './custom/MediaCachingTaskListSubMenu';
 
 const playerConfig: PlayerConfiguration = {
   // Get your THEOplayer license from https://portal.theoplayer.com/
@@ -96,6 +99,10 @@ export default function App() {
               behind={<CenteredDelayedActivityIndicator size={50} />}
               top={
                 <ControlBar>
+                  <MediaCacheMenuButton>
+                    <MediaCacheDownloadButton />
+                    <MediaCachingTaskListSubMenu />
+                  </MediaCacheMenuButton>
                   {/*This is a custom menu for source selection.*/}
                   <SourceMenuButton />
                   {!Platform.isTV && (

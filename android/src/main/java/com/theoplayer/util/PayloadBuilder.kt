@@ -226,18 +226,18 @@ class PayloadBuilder {
     payload.putMap(EVENT_PROP_QUALITIES, TrackListAdapter.fromQuality(quality))
   }
 
-  private fun fromTimeRanges(timeRanges: TimeRanges?): WritableArray {
-    val payload = Arguments.createArray()
-    timeRanges?.forEach { timeRange ->
-      val range = Arguments.createMap()
-      range.putDouble(EVENT_PROP_START, 1e03 * timeRange.start)
-      range.putDouble(EVENT_PROP_END, 1e03 * timeRange.end)
-      payload.pushMap(range)
-    }
-    return payload
-  }
-
   fun build(): WritableMap {
     return payload
   }
+}
+
+fun fromTimeRanges(timeRanges: TimeRanges?): WritableArray {
+  val payload = Arguments.createArray()
+  timeRanges?.forEach { timeRange ->
+    val range = Arguments.createMap()
+    range.putDouble(EVENT_PROP_START, 1e03 * timeRange.start)
+    range.putDouble(EVENT_PROP_END, 1e03 * timeRange.end)
+    payload.pushMap(range)
+  }
+  return payload
 }

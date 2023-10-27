@@ -7,9 +7,82 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- When resuming an app on Android, retrieve audio focus only if the player is not paused.
+
 ### Fixed
 
+- Fixed an issue on Android where during play-out of a locally stored media asset the `seekable` property would not update.
 - Fixed an issue on iOS where the error was not forwarded to theoplayer if a drm request fails on the iOS bridge 
+
+## [3.0.2] - 23-10-17
+
+### Fixed
+
+- Fixed an issue on Android where compilation would fail when depending on player SDK 6.2.0.
+
+## [3.0.1] - 23-10-12
+
+### Fixed
+
+- Fixed compilation issues caused by Caching API not being supported on tvOS
+
+## [3.0.0] - 23-10-06
+
+### Fixed
+
+- Fixed sourceDescription processing on iOS for offline playback.
+
+### Changed
+
+- Added support for THEOplayer 6.0. See [THEOplayer's changelog](https://docs.theoplayer.com/changelog.md) for details.
+- Bumped minimal version for SideloadedTextTracks connection on iOS to v6.1.1 which contains fix for iOS 17.0.
+
+### Added
+
+- Added `MediaCache` API, enabling download of media assets for offline playback.
+
+## [2.16.1] - 23-09-27
+
+### Added
+
+- For iOS, added a subtitlePTS property to the TextTrackDescription that syncs a sideloaded textTrack with the video content.
+
+## [2.15.0] - 23-09-26
+
+### Changed
+
+- Upgraded the iOS side-loaded text track connector.
+
+### Fixed
+
+- Fixed an issue where the Android mediaSession connector would still process media button events when the app was in the background, and `enableBackgroundPlayback` was false.
+- Fixed an issue on Android where play-out would still start when the app was put to the background during initial buffering, and `enableBackgroundPlayback` was false.
+- Fixed an issue on Android where the MediaButtonReceiver would crash the app when it did not find a registered MediaBrowserService instance, when setting `enableBackgroundPlayback` to false while backgrounding the app.
+
+## [2.14.0] - 23-09-25
+
+### Fixed
+
+- Fixed an issue on Android where the MediaButtonReceiver would crash the app when it did not find a registered MediaBrowserService instance.
+
+### Added
+
+- Added support for side-loaded metadata tracks on iOS.
+
+## [2.13.0] - 23-09-15
+
+### Fixed
+
+- Fixed an issue where setting a new source on iOS, during DRM handling, would crash the application due to unsafe array access by different threads.
+
+## [2.12.1] - 23-09-14
+
+### Fixed
+
+- Fixed an issue on Android where the player SDK dependency could resolve to version 6.+.
+- Fixed an issue on iOS where the player integration dependencies could resolve to version 6.+.
 
 ## [2.12.0] - 23-09-04
 

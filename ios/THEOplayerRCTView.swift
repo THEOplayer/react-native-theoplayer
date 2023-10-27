@@ -88,12 +88,11 @@ public class THEOplayerRCTView: UIView {
     private func notifyNativePlayerReady() {
         DispatchQueue.main.async {
             let versionString = THEOplayer.version
-            let suiteVersionString = THEOplayer.playerSuiteVersion
             if let forwardedNativeReady = self.onNativePlayerReady {
                 forwardedNativeReady([
                     "version":  [
                         "version" : versionString,
-                        "playerSuiteVersion": suiteVersionString
+                        "playerSuiteVersion": versionString
                     ],
                 ])
             }
@@ -148,6 +147,17 @@ public class THEOplayerRCTView: UIView {
         self.player?.destroy()
         self.player = nil
         if DEBUG_THEOPLAYER_INTERACTION { PrintUtils.printLog(logText: "[NATIVE] THEOplayer instance destroyed.") }
+    }
+    
+    func processMetadataTracks(metadataTrackDescriptions: [TextTrackDescription]?) {
+        if let trackDescriptions = metadataTrackDescriptions {
+            THEOplayerRCTTrackMetadataAggregator.aggregatedMetadataTrackInfo(metadataTrackDescriptions: trackDescriptions) { tracksInfo in
+                self.mainEventHandler.setMetadataTracksInfo(metadataTracksInfo: tracksInfo)
+                for trackInfo in tracksInfo {
+                    self.textTrackEventHandler.triggerAddMetadataTrackEvent(metadataTrackInfo: trackInfo)
+                }
+            }
+        }
     }
     
     // MARK: - Property bridging (config)

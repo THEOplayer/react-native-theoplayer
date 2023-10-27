@@ -1,4 +1,4 @@
-import type * as THEOplayer from 'theoplayer';
+import type { ChromelessPlayer } from 'theoplayer';
 import type {
   AddTrackEvent,
   CastStateChangeEvent,
@@ -53,10 +53,10 @@ import {
 import { fromNativeCue, fromNativeMediaTrack, fromNativeTextTrack } from './web/TrackUtils';
 
 export class WebEventForwarder {
-  private readonly _player: THEOplayer.ChromelessPlayer;
+  private readonly _player: ChromelessPlayer;
   private readonly _facade: THEOplayerWebAdapter;
 
-  constructor(player: THEOplayer.ChromelessPlayer, facade: THEOplayerWebAdapter) {
+  constructor(player: ChromelessPlayer, facade: THEOplayerWebAdapter) {
     this._player = player;
     this._facade = facade;
     this.addEventListeners();

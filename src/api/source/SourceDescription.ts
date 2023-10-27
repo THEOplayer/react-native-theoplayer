@@ -221,6 +221,27 @@ export interface TextTrackDescription {
    */
   // Note: This works for HLS, but not for DASH.
   id?: string;
+
+  /**
+   * The PTS value used to sync the track with the video.
+   *
+   * @internal
+   * 
+   * @remarks
+   * <br/> - Available on iOS.
+   */
+  subtitlePTS?: string;
+
+  /**
+   * The localTime that matches the PTS value that is used to sync the track with the video.
+   *
+   * @internal
+    * @remarks
+   * <br/> - Available on iOS. 
+   * <br/> - Format: "HH:mm:mm:SSS" 
+   * <br/> - Default value is "00:00:00:000"
+   */
+  subtitleLocaltime?: string;
 }
 
 /**

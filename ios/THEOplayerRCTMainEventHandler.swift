@@ -7,6 +7,7 @@ public class THEOplayerRCTMainEventHandler {
     // MARK: Members
     private weak var player: THEOplayer?
     private weak var presentationModeContext: THEOplayerRCTPresentationModeContext?
+    private var metadataTracksInfo: [[String:Any]] = []
         
     // MARK: Events
     var onNativePlay: RCTDirectEventBlock?
@@ -65,6 +66,10 @@ public class THEOplayerRCTMainEventHandler {
         
         // attach listeners
         self.attachListeners()
+    }
+    
+    func setMetadataTracksInfo(metadataTracksInfo: [[String:Any]]) {
+        self.metadataTracksInfo = metadataTracksInfo
     }
     
     // MARK: - attach/dettach main player Listeners
@@ -151,34 +156,32 @@ public class THEOplayerRCTMainEventHandler {
             //if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received PROGRESS event from THEOplayer") }
             if let wplayer = player,
                let forwardedProgressEvent = self?.onNativeProgress {
-                wplayer.requestSeekable(completionHandler: { seekableTimeRanges, error in
-                    wplayer.requestBuffered(completionHandler: { bufferedTimeRanges, error in
-                        var seekable: [[String:Double]] = []
-                        seekableTimeRanges?.forEach({ timeRange in
-                            seekable.append(
-                                [
-                                    "start": timeRange.start * 1000,            // sec -> msec
-                                    "end": timeRange.end * 1000                 // sec -> msec
-                                ]
-                            )
-                        })
-                        var buffered: [[String:Double]] = []
-                        bufferedTimeRanges?.forEach({ timeRange in
-                            buffered.append(
-                                [
-                                    "start": timeRange.start * 1000,            // sec -> msec
-                                    "end": timeRange.end * 1000                 // sec -> msec
-                                ]
-                            )
-                        })
-                        forwardedProgressEvent(
-                            [
-                                "seekable":seekable,
-                                "buffered":buffered
-                            ]
-                        )
-                    })
+                let seekableTimeRanges = wplayer.seekable
+                let bufferedTimeRanges = wplayer.buffered
+                var seekable: [[String:Double]] = []
+                seekableTimeRanges.forEach({ timeRange in
+                    seekable.append(
+                        [
+                            "start": timeRange.start * 1000,            // sec -> msec
+                            "end": timeRange.end * 1000                 // sec -> msec
+                        ]
+                    )
                 })
+                var buffered: [[String:Double]] = []
+                bufferedTimeRanges.forEach({ timeRange in
+                    buffered.append(
+                        [
+                            "start": timeRange.start * 1000,            // sec -> msec
+                            "end": timeRange.end * 1000                 // sec -> msec
+                        ]
+                    )
+                })
+                forwardedProgressEvent(
+                    [
+                        "seekable":seekable,
+                        "buffered":buffered
+                    ]
+                )
             }
         }
         if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] Progress listener attached to THEOplayer") }
@@ -268,8 +271,9 @@ public class THEOplayerRCTMainEventHandler {
         self.loadedMetadataListener = player.addEventListener(type: PlayerEventTypes.LOADED_META_DATA) { [weak self, weak player] event in
             if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received LOADED_META_DATA event from THEOplayer") }
             if let wplayer = player,
+               let welf = self,
                let forwardedLoadedMetadataEvent = self?.onNativeLoadedMetadata {
-                let metadata = THEOplayerRCTTrackMetadataAggregator.aggregateTrackMetadata(player: wplayer)
+                let metadata = THEOplayerRCTTrackMetadataAggregator.aggregateTrackMetadata(player: wplayer, metadataTracksInfo: welf.metadataTracksInfo)
                 print(metadata)
                 forwardedLoadedMetadataEvent(metadata)
             }

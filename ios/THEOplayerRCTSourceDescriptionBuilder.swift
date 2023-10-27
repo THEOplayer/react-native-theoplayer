@@ -4,10 +4,15 @@ import Foundation
 import THEOplayerSDK
 import UIKit
 
+#if canImport(THEOplayerConnectorSideloadedSubtitle)
+import THEOplayerConnectorSideloadedSubtitle
+#endif
+
 let SD_PROP_SOURCES: String = "sources"
 let SD_PROP_POSTER: String = "poster"
 let SD_PROP_TEXTTRACKS: String = "textTracks"
 let SD_PROP_METADATA: String = "metadata"
+let SD_PROP_METADATAKEYS: String = "metadataKeys"
 let SD_PROP_SRC: String = "src"
 let SD_PROP_TYPE: String = "type"
 let SD_PROP_SSAI: String = "ssai"
@@ -42,6 +47,8 @@ let SD_PROP_METADATA_RELEASE_DATE: String = "releaseDate"
 let SD_PROP_METADATA_RELEASE_YEAR: String = "releaseYear"
 let SD_PROP_METADATA_TITLE: String = "title"
 let SD_PROP_METADATA_SUBTITLE: String = "subtitle"
+let SD_PROP_PTS: String = "subtitlePTS"
+let SD_PROP_LOCALTIME: String = "subtitleLocaltime"
 
 let EXTENSION_HLS: String = ".m3u8"
 let EXTENSION_MP4: String = ".mp4"
@@ -59,12 +66,12 @@ class THEOplayerRCTSourceDescriptionBuilder {
 
     /**
      Builds a THEOplayer SourceDescription that can be passed as a source for the THEOplayer.
-     - returns: a THEOplayer TypedSource. In case of SSAI we  support GoogleDAITypedSource with GoogleDAIVodConfiguration or GoogleDAILiveConfiguration
+     - returns: a THEOplayer TypedSource and an array containing possible sideloaded metadataTracks. In case of SSAI we  support GoogleDAITypedSource with GoogleDAIVodConfiguration or GoogleDAILiveConfiguration
      */
-    static func buildSourceDescription(_ sourceData: NSDictionary) -> SourceDescription? {
+    static func buildSourceDescription(_ sourceData: NSDictionary) -> (SourceDescription?, [TextTrackDescription]?) {
         // 1. Extract "sources"
         guard let sourcesData = sourceData[SD_PROP_SOURCES] else {
-            return nil
+            return (nil, nil)
         }
 
         var typedSources: [TypedSource] = []
@@ -77,7 +84,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
                     if DEBUG_SOURCE_DESCRIPTION_BUIDER {
                         PrintUtils.printLog(logText: "[NATIVE] Could not create THEOplayer TypedSource from sourceData array")
                     }
-                    return nil
+                    return (nil, nil)
                 }
             }
         }
@@ -89,7 +96,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
                 if DEBUG_SOURCE_DESCRIPTION_BUIDER {
                     PrintUtils.printLog(logText: "[NATIVE] Could not create THEOplayer TypedSource from sourceData")
                 }
-                return nil
+                return (nil, nil)
             }
         }
 
@@ -98,16 +105,22 @@ class THEOplayerRCTSourceDescriptionBuilder {
 
         // 3. extract 'textTracks'
         var textTrackDescriptions: [TextTrackDescription]?
+        var metadataTrackDescriptions: [TextTrackDescription]?
         if let textTracksDataArray = sourceData[SD_PROP_TEXTTRACKS] as? [[String:Any]] {
             textTrackDescriptions = []
+            metadataTrackDescriptions = []
             for textTracksData in textTracksDataArray {
                 if let textTrackDescription = THEOplayerRCTSourceDescriptionBuilder.buildTextTrackDescriptions(textTracksData) {
-                    textTrackDescriptions?.append(textTrackDescription)
+                    if textTrackDescription.kind == .metadata {
+                        metadataTrackDescriptions?.append(textTrackDescription)
+                    } else {
+                        textTrackDescriptions?.append(textTrackDescription)
+                    }
                 } else {
                     if DEBUG_SOURCE_DESCRIPTION_BUIDER {
                         PrintUtils.printLog(logText: "[NATIVE] Could not create THEOplayer TextTrackDescription from textTrackData array")
                     }
-                    return nil
+                    return (nil, nil)
                 }
             }
 
@@ -122,12 +135,14 @@ class THEOplayerRCTSourceDescriptionBuilder {
             metadataDescription = THEOplayerRCTSourceDescriptionBuilder.buildMetaDataDescription(metadataData)
         }
 
-        // 6. construct and return SourceDescription
-        return SourceDescription(sources: typedSources,
+        // 6. construct the SourceDescription
+        let sourceDescription = SourceDescription(sources: typedSources,
                                  textTracks: textTrackDescriptions,
                                  ads: adsDescriptions,
                                  poster: poster,
                                  metadata: metadataDescription)
+        
+        return (sourceDescription, metadataTrackDescriptions)
     }
 
     // MARK: Private build methods
@@ -177,12 +192,28 @@ class THEOplayerRCTSourceDescriptionBuilder {
             let textTrackLabel = textTracksData[SD_PROP_LABEL] as? String
             let textTrackKind = THEOplayerRCTSourceDescriptionBuilder.extractTextTrackKind(textTracksData[SD_PROP_KIND] as? String)
             let textTrackFormat = THEOplayerRCTSourceDescriptionBuilder.extractTextTrackFormat(textTracksData[SD_PROP_FORMAT] as? String)
-            return TextTrackDescription(src: textTrackSrc,
-                                        srclang: textTrackSrcLang,
-                                        isDefault: textTrackIsDefault,
-                                        kind: textTrackKind,
-                                        label: textTrackLabel,
-                                        format: textTrackFormat)
+            let textTrackPTS = textTracksData[SD_PROP_PTS] as? String
+            let textTrackLocalTime = textTracksData[SD_PROP_LOCALTIME] as? String ?? "00:00:00.000"
+            
+#if canImport(THEOplayerConnectorSideloadedSubtitle)
+            let ttDescription = SSTextTrackDescription(src: textTrackSrc,
+                                                       srclang: textTrackSrcLang,
+                                                       isDefault: textTrackIsDefault,
+                                                       kind: textTrackKind,
+                                                       label: textTrackLabel,
+                                                       format: textTrackFormat)
+            if let pts = textTrackPTS {
+                ttDescription.vttTimestamp = .init(pts: pts, localTime: textTrackLocalTime)
+            }
+#else
+            let ttDescription = TextTrackDescription(src: textTrackSrc,
+                                                       srclang: textTrackSrcLang,
+                                                       isDefault: textTrackIsDefault,
+                                                       kind: textTrackKind,
+                                                       label: textTrackLabel,
+                                                       format: textTrackFormat)
+#endif
+            return ttDescription
         }
         return nil
     }
@@ -255,11 +286,11 @@ class THEOplayerRCTSourceDescriptionBuilder {
     }
 #endif
 
-	  /**
+      /**
      Updates the contentProtectionData to a valid iOS SDK contentProtectionData, flattening out cross SDK differences
      - returns: a THEOplayer valid contentProtection data map
      */
-    private static func sanitiseContentProtectionData(_ contentProtectionData: [String:Any]) -> [String:Any] {
+    static func sanitiseContentProtectionData(_ contentProtectionData: [String:Any]) -> [String:Any] {
         var sanitisedContentProtectionData: [String:Any] = contentProtectionData
         // fairplay update
         if let fairplayData = contentProtectionData[SD_PROP_FAIRPLAY] as? [String:Any] {
@@ -318,7 +349,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
      Creates a THEOplayer DRMConfiguration. This requires a contentProtection property in the RN source description.
      - returns: a THEOplayer DRMConfiguration
      */
-    private static func buildContentProtection(_ contentProtectionData: [String:Any]) -> MultiplatformDRMConfiguration? {
+    static func buildContentProtection(_ contentProtectionData: [String:Any]) -> MultiplatformDRMConfiguration? {
         do {
             let data = try JSONSerialization.data(withJSONObject: contentProtectionData)
             if let integration = contentProtectionData[SD_PROP_INTEGRATION] as? String {
