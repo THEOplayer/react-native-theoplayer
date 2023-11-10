@@ -43,9 +43,9 @@
 		<string>_CC1AD845._googlecast._tcp</string>
 	</array>
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>sure</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Local Network Usage Permission</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Bluetooth Always Usage Permission</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
