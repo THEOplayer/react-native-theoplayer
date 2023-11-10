@@ -24,6 +24,7 @@ let PROP_STARTTIME: String = "startTime"
 let PROP_ENDTIME: String = "endTime"
 let PROP_CUES: String = "cues"
 let PROP_CUE_CONTENT: String = "content"
+let PROP_CUE_CUSTOM_ATTRIBUTES: String = "customAttributes"
 let PROP_SRC: String = "src"
 
 class THEOplayerRCTTrackMetadataAggregator {
@@ -101,6 +102,32 @@ class THEOplayerRCTTrackMetadataAggregator {
             entry[PROP_CUE_CONTENT] = content
         } else if let contentString = textTrackCue.contentString {
             entry[PROP_CUE_CONTENT] = contentString
+        }
+        if let dateRangeCue = textTrackCue as? DateRangeCue {
+            let customAttributes = dateRangeCue.customAttributes
+            let customAttributesDict = customAttributes.getAttributesAsDictionary()
+            if !customAttributesDict.isEmpty {
+                var attributesEntry: [String:Any] = [:]
+                for (key, _) in customAttributesDict {
+                    do {
+                        // try reading as string
+                        attributesEntry[key] = try customAttributes.getString(for: key)
+                    } catch {
+                        do {
+                            // try reading as double
+                            attributesEntry[key] = try customAttributes.getDouble(for: key)
+                        } catch {
+                            do {
+                                // try reading as data
+                                attributesEntry[key] = try customAttributes.getBytes(for: key)
+                            } catch {
+                                print("Unable to extract customAttribute from DateRange cue. Content is limited to String, Double or Data.")
+                            }
+                        }
+                    }
+                }
+                entry[PROP_CUE_CUSTOM_ATTRIBUTES] = attributesEntry
+            }
         }
         return entry
     }
