@@ -7,6 +7,7 @@ export enum TextTrackType {
   srt = 'srt',
   ttml = 'ttml',
   webvtt = 'webvtt',
+  daterange = 'daterange',
 }
 
 export enum TextTrackKind {
@@ -65,6 +66,7 @@ export interface TextTrack extends Track {
    * The mode of the text track, represented by a value from the following list:
    * <br/> - `'disabled'`: The track is disabled.
    * <br/> - `'showing'`: The track is showing.
+   * <br/> - `'hidden'`: The track is enabled and loading cues, but not shown. (used for metadata tracks)
    */
   mode: TextTrackMode;
 
