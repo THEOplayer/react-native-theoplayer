@@ -65,3 +65,10 @@ export interface DateRangeCue extends TextTrackCue {
    */
   customAttributes: Record<string, string | number | ArrayBuffer>;
 }
+
+/**
+ * Check whether a text track cue is of type DateRangeCue.
+ */
+export function isDateRangeCue(cue: TextTrackCue): cue is DateRangeCue {
+  return (cue as DateRangeCue).customAttributes != undefined;
+}
