@@ -11,6 +11,7 @@ import com.theoplayer.android.api.player.track.mediatrack.quality.Quality
 import com.theoplayer.android.api.player.track.mediatrack.quality.AudioQuality
 import com.theoplayer.android.api.player.track.mediatrack.quality.VideoQuality
 import com.theoplayer.android.api.player.track.mediatrack.MediaTrackList
+import com.theoplayer.android.api.player.track.texttrack.cue.DateRangeCue
 import com.theoplayer.util.TypeUtils
 
 private const val PROP_ID = "id"
@@ -35,6 +36,16 @@ private const val PROP_STARTTIME = "startTime"
 private const val PROP_ENDTIME = "endTime"
 private const val PROP_CUES = "cues"
 private const val PROP_CUE_CONTENT = "content"
+private const val PROP_ATTRIBUTE_CLASS = "class"
+private const val PROP_STARTDATE = "startDate"
+private const val PROP_ENDDATE = "endDate"
+private const val PROP_DURATION = "duration"
+private const val PROP_PLANNED_DURATION = "plannedDuration"
+private const val PROP_END_ON_NEXT = "endOnNext"
+private const val PROP_SCTE35CMD = "scte35Cmd"
+private const val PROP_SCTE35OUT = "scte35Out"
+private const val PROP_SCTE35IN = "scte35In"
+private const val PROP_CUSTOM_ATTRIBUTES = "customAttributes"
 
 object TrackListAdapter {
 
@@ -85,6 +96,39 @@ object TrackListAdapter {
         content.optString("content") ?: content.optString("contentString")
       )
     }
+
+    if (cue is DateRangeCue) {
+      cue.attributeClass?.run {
+        cuePayload.putString(PROP_ENDDATE, this)
+      }
+      cuePayload.putString(PROP_ATTRIBUTE_CLASS, cue.attributeClass)
+      cuePayload.putDouble(PROP_STARTDATE, cue.startDate.time.toDouble())
+      cue.endDate?.run {
+        cuePayload.putDouble(PROP_ENDDATE, this.time.toDouble())
+      }
+      cue.duration?.run {
+        cuePayload.putDouble(PROP_DURATION, this)
+      }
+      cue.plannedDuration?.run {
+        cuePayload.putDouble(PROP_PLANNED_DURATION, this)
+      }
+      cuePayload.putBoolean(PROP_END_ON_NEXT, cue.isEndOnNext)
+      cue.customAttributes?.asMap()?.run {
+        val attributes = Arguments.createMap()
+        forEach { (key, value) ->
+          when (value) {
+            is String -> attributes.putString(key, value)
+            is Boolean -> attributes.putBoolean(key, value)
+            is Int -> attributes.putInt(key, value)
+            is Double -> attributes.putDouble(key, value)
+            // TODO: support array & sub-objects
+          }
+        }
+        cuePayload.putMap(PROP_CUSTOM_ATTRIBUTES, attributes)
+      }
+      // TODO: Add SCTE marker properties
+    }
+
     return cuePayload
   }
 
@@ -128,7 +172,8 @@ object TrackListAdapter {
       qualityList?.forEach { quality ->
         qualities.pushMap(fromAudioQuality(quality))
       }
-    } catch (ignore: NullPointerException) {}
+    } catch (ignore: NullPointerException) {
+    }
     audioTrackPayload.putArray(PROP_QUALITIES, qualities)
     val activeQuality = audioTrack.activeQuality
     if (activeQuality != null) {
@@ -178,7 +223,8 @@ object TrackListAdapter {
           qualities.pushMap(fromVideoQuality(quality as VideoQuality))
         }
       }
-    } catch (ignore: java.lang.NullPointerException) {}
+    } catch (ignore: java.lang.NullPointerException) {
+    }
     videoTrackPayload.putArray(PROP_QUALITIES, qualities)
     val activeQuality = videoTrack.activeQuality
     if (activeQuality != null) {
