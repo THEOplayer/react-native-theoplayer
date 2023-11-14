@@ -99,9 +99,8 @@ object TrackListAdapter {
 
     if (cue is DateRangeCue) {
       cue.attributeClass?.run {
-        cuePayload.putString(PROP_ENDDATE, this)
+        cuePayload.putString(PROP_ATTRIBUTE_CLASS, this)
       }
-      cuePayload.putString(PROP_ATTRIBUTE_CLASS, cue.attributeClass)
       cuePayload.putDouble(PROP_STARTDATE, cue.startDate.time.toDouble())
       cue.endDate?.run {
         cuePayload.putDouble(PROP_ENDDATE, this.time.toDouble())
