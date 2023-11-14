@@ -26,6 +26,12 @@ let PROP_CUES: String = "cues"
 let PROP_CUE_CONTENT: String = "content"
 let PROP_CUE_CUSTOM_ATTRIBUTES: String = "customAttributes"
 let PROP_SRC: String = "src"
+let PROP_START_DATE: String = "startDate"
+let PROP_END_DATE: String = "endDate"
+let PROP_ATTRIBUTE_CLASS: String = "class"
+let PROP_DURATION: String = "duration"
+let PROP_PLANNED_DURATION: String = "plannedDuration"
+let PROP_END_ON_NEXT: String = "endOnNext"
 
 class THEOplayerRCTTrackMetadataAggregator {
 
@@ -104,6 +110,20 @@ class THEOplayerRCTTrackMetadataAggregator {
             entry[PROP_CUE_CONTENT] = contentString
         }
         if let dateRangeCue = textTrackCue as? DateRangeCue {
+            entry[PROP_START_DATE] = dateRangeCue.startDate.timeIntervalSince1970
+            if let endDate = dateRangeCue.endDate {
+                entry[PROP_END_DATE] = endDate.timeIntervalSince1970
+            }
+            if let attributeClass = dateRangeCue.attributeClass {
+                entry[PROP_ATTRIBUTE_CLASS] = attributeClass
+            }
+            if let duration = dateRangeCue.duration {
+                entry[PROP_DURATION] = THEOplayerRCTTypeUtils.encodeInfNan(duration * 1000)
+            }
+            if let plannedDuration = dateRangeCue.plannedDuration {
+                entry[PROP_PLANNED_DURATION] = THEOplayerRCTTypeUtils.encodeInfNan(plannedDuration * 1000)
+            }
+            entry[PROP_END_ON_NEXT] = dateRangeCue.endOnNext
             let customAttributes = dateRangeCue.customAttributes
             let customAttributesDict = customAttributes.getAttributesAsDictionary()
             if !customAttributesDict.isEmpty {
