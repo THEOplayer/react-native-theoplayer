@@ -107,10 +107,10 @@ object TrackListAdapter {
         cuePayload.putDouble(PROP_ENDDATE, this.time.toDouble())
       }
       cue.duration?.run {
-        cuePayload.putDouble(PROP_DURATION, this)
+        cuePayload.putDouble(PROP_DURATION, 1e3 * this)
       }
       cue.plannedDuration?.run {
-        cuePayload.putDouble(PROP_PLANNED_DURATION, this)
+        cuePayload.putDouble(PROP_PLANNED_DURATION, 1e3 * this)
       }
       cuePayload.putBoolean(PROP_END_ON_NEXT, cue.isEndOnNext)
       cue.customAttributes?.asMap()?.run {
