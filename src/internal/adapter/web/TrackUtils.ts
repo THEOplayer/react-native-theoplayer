@@ -15,22 +15,25 @@ export function isDateRangeCue(cue: TextTrackCue): cue is DateRangeCue {
 }
 
 export function fromNativeCue(cue: NativeTextTrackCue): TextTrackCue {
-  const newCue = {
+  return {
     id: cue.id,
     uid: cue.uid,
     startTime: decodeNanInf(1e3 * cue.startTime),
     endTime: decodeNanInf(1e3 * cue.endTime),
     content: cue.content,
+    ...(isDateRangeCue(cue) && {
+      class: cue.class,
+      startDate: cue.startDate,
+      endDate: cue.endDate,
+      duration: cue.duration,
+      plannedDuration: cue.plannedDuration,
+      endOnNext: cue.endOnNext,
+      scte35Cmd: cue.scte35Cmd,
+      scte35Out: cue.scte35Out,
+      scte35In: cue.scte35In,
+      customAttributes: cue.customAttributes,
+    }),
   } as TextTrackCue;
-
-  if (isDateRangeCue(cue)) {
-    return {
-      ...newCue,
-      customAttributes: cue.customAttributes
-    } as DateRangeCue;
-  }
-
-  return newCue;
 }
 
 export function fromNativeTextTrackList(tracks: NativeTextTrackList): TextTrack[] {
