@@ -25,12 +25,12 @@ export interface DateRangeCue extends TextTrackCue {
   endDate: Date | undefined;
 
   /**
-   * The duration of the date range cue, in seconds.
+   * The duration of the date range cue, in milliseconds.
    */
   duration: number | undefined;
 
   /**
-   * The planned duration of the date range cue, in seconds.
+   * The planned duration of the date range cue, in milliseconds.
    *
    * @remarks
    * <br/> - This is used when the exact duration is not known yet.
