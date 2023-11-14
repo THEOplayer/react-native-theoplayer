@@ -8,6 +8,7 @@ export enum TextTrackType {
   ttml = 'ttml',
   webvtt = 'webvtt',
   daterange = 'daterange',
+  eventstream = 'eventstream',
 }
 
 export enum TextTrackKind {
