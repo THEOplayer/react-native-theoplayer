@@ -188,6 +188,24 @@
     }
   },
   {
+    "name": "HLS - VOD - Clear - DateRange Metadata",
+    "os": [
+      "ios",
+      "web",
+      "android"
+    ],
+    "source": {
+      "sources": {
+        "src": "https://cdn.theoplayer.com/video/star_wars_episode_vii-the_force_awakens_official_comic-con_2015_reel_(2015)/index-daterange.m3u8",
+        "type": "application/x-mpegurl"
+      },
+      "metadata": {
+        "title": "Star Wars Episode VII - The Force Awakens Official Comic-Con 2015 Reel",
+        "displayIconUri": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-200x200.png"
+      }
+    }
+  },
+  {
     "name": "HLS - LIVE - Clear - TOS",
     "os": [
       "ios",
