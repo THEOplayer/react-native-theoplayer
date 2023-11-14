@@ -15,7 +15,7 @@ export function isDateRangeCue(cue: TextTrackCue): cue is DateRangeCue {
 }
 
 export function fromNativeCue(cue: NativeTextTrackCue): TextTrackCue {
-  let newCue = {
+  const newCue = {
     id: cue.id,
     uid: cue.uid,
     startTime: decodeNanInf(1e3 * cue.startTime),
