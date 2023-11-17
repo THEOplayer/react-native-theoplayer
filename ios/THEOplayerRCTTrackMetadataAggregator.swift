@@ -110,9 +110,9 @@ class THEOplayerRCTTrackMetadataAggregator {
             entry[PROP_CUE_CONTENT] = contentString
         }
         if let dateRangeCue = textTrackCue as? DateRangeCue {
-            entry[PROP_START_DATE] = dateRangeCue.startDate.timeIntervalSince1970
+            entry[PROP_START_DATE] = dateRangeCue.startDate.timeIntervalSince1970 * 1000
             if let endDate = dateRangeCue.endDate {
-                entry[PROP_END_DATE] = endDate.timeIntervalSince1970
+                entry[PROP_END_DATE] = endDate.timeIntervalSince1970 * 1000
             }
             if let attributeClass = dateRangeCue.attributeClass {
                 entry[PROP_ATTRIBUTE_CLASS] = attributeClass
