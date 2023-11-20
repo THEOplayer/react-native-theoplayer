@@ -40,7 +40,7 @@ class THEOplayerRCTTrackMetadataAggregator {
         let audioTracks: AudioTrackList = player.audioTracks
         let videoTracks: VideoTrackList = player.videoTracks
         return [
-            EVENT_PROP_TEXT_TRACKS : THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackListInfo(textTracks: textTracks, metadataTracks: metadataTracksInfo),
+            EVENT_PROP_TEXT_TRACKS : THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackListInfo(textTracks: textTracks, metadataTracks: metadataTracksInfo, player: player),
             EVENT_PROP_AUDIO_TRACKS : THEOplayerRCTTrackMetadataAggregator.aggregatedAudioTrackListInfo(audioTracks: audioTracks),
             EVENT_PROP_VIDEO_TRACKS : THEOplayerRCTTrackMetadataAggregator.aggregatedVideoTrackListInfo(videoTracks: videoTracks),
             EVENT_PROP_SELECTED_TEXT_TRACK: THEOplayerRCTTrackMetadataAggregator.selectedTextTrack(textTracks: textTracks),
@@ -51,19 +51,19 @@ class THEOplayerRCTTrackMetadataAggregator {
     }
 
     // MARK: TEXTTRACKS
-    class func aggregatedTextTrackListInfo(textTracks: TextTrackList, metadataTracks: [[String:Any]]) -> [[String:Any]] {
+    class func aggregatedTextTrackListInfo(textTracks: TextTrackList, metadataTracks: [[String:Any]], player: THEOplayer) -> [[String:Any]] {
         var trackEntries:[[String:Any]] = metadataTracks
         guard textTracks.count > 0 else {
             return trackEntries
         }
         for i in 0...textTracks.count-1 {
             let textTrack: TextTrack = textTracks.get(i)
-            trackEntries.append(THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackInfo(textTrack: textTrack))
+            trackEntries.append(THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackInfo(textTrack: textTrack, player: player))
         }
         return trackEntries
     }
     
-    class func aggregatedTextTrackInfo(textTrack: TextTrack) -> [String:Any] {
+    class func aggregatedTextTrackInfo(textTrack: TextTrack, player: THEOplayer) -> [String:Any] {
         var entry: [String:Any] = [:]
         entry[PROP_ID] = textTrack.id
         entry[PROP_UID] = textTrack.uid
@@ -77,7 +77,7 @@ class THEOplayerRCTTrackMetadataAggregator {
         if !textTrack.cues.isEmpty {
             var cueList: [[String:Any]] = []
             for cue in textTrack.cues {
-                cueList.append(THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackCueInfo(textTrackCue: cue))
+                cueList.append(THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackCueInfo(textTrackCue: cue, player: player))
             }
             entry[PROP_CUES] = cueList
         }
@@ -98,12 +98,21 @@ class THEOplayerRCTTrackMetadataAggregator {
     }
     
     // MARK: TEXTTRACK CUES
-    class func aggregatedTextTrackCueInfo(textTrackCue: TextTrackCue) -> [String:Any] {
+    class func aggregatedTextTrackCueInfo(textTrackCue: TextTrackCue, player: THEOplayer) -> [String:Any] {
         var entry: [String:Any] = [:]
         entry[PROP_ID] = textTrackCue.id
         entry[PROP_UID] = textTrackCue.uid
-        entry[PROP_STARTTIME] = THEOplayerRCTTypeUtils.encodeInfNan((textTrackCue.startTime ?? 0) * 1000)
-        entry[PROP_ENDTIME] = THEOplayerRCTTypeUtils.encodeInfNan((textTrackCue.endTime ?? 0) * 1000)
+        var startTime = textTrackCue.startTime
+        var endTime = textTrackCue.endTime
+        if let dateRangeCue = textTrackCue as? DateRangeCue,
+           let programDateTime = player.currentProgramDateTime?.timeIntervalSince1970 {
+            let currentTime = player.currentTime
+            let offset = programDateTime - currentTime
+            startTime = dateRangeCue.startDate.timeIntervalSince1970 - offset
+            endTime = dateRangeCue.endDate != nil ? dateRangeCue.endDate!.timeIntervalSince1970 - offset : .infinity
+        }
+        entry[PROP_STARTTIME] = THEOplayerRCTTypeUtils.encodeInfNan((startTime ?? 0) * 1000)
+        entry[PROP_ENDTIME] = THEOplayerRCTTypeUtils.encodeInfNan((endTime ?? 0) * 1000)
         if let content = textTrackCue.content {
             entry[PROP_CUE_CONTENT] = content
         } else if let contentString = textTrackCue.contentString {
