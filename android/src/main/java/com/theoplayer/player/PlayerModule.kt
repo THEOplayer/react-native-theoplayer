@@ -98,6 +98,10 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
 
   @ReactMethod
   fun setSelectedAudioTrack(tag: Int, uid: Int) {
+    if (uid == -1) {
+      // Do not allow disabling all audio tracks
+      return
+    }
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.player?.let {
         for (track in it.audioTracks) {
@@ -109,6 +113,10 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
 
   @ReactMethod
   fun setSelectedVideoTrack(tag: Int, uid: Int) {
+    if (uid == -1) {
+      // Do not allow disabling all video tracks
+      return
+    }
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.player?.let {
         for (track in it.videoTracks) {
