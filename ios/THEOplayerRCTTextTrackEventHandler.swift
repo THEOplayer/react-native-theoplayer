@@ -53,14 +53,14 @@ class THEOplayerRCTTextTrackEventHandler {
         }
         
         // ADD_TRACK
-        self.addTrackListener = player.textTracks.addEventListener(type: TextTrackListEventTypes.ADD_TRACK) { [weak self] event in
-            guard let welf = self else { return }
+        self.addTrackListener = player.textTracks.addEventListener(type: TextTrackListEventTypes.ADD_TRACK) { [weak self, weak player] event in
+            guard let welf = self, let wplayer = player else { return }
             if let forwardedTextTrackListEvent = welf.onNativeTextTrackListEvent,
                let textTrack = event.track as? TextTrack {
                 if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received ADD_TRACK event from THEOplayer textTrack list: trackUid = \(textTrack.uid)") }
                 // trigger tracklist event
                 forwardedTextTrackListEvent([
-                    "track" : THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackInfo(textTrack: textTrack),
+                    "track" : THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackInfo(textTrack: textTrack, player: wplayer),
                     "type" : TrackListEventType.ADD_TRACK.rawValue
                 ])
                 // start listening for cue events on this track and keep listener for later removal
@@ -77,14 +77,14 @@ class THEOplayerRCTTextTrackEventHandler {
         if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] AddTrack listener attached to THEOplayer textTrack list") }
         
         // REMOVE_TRACK
-        self.removeTrackListener = player.textTracks.addEventListener(type: TextTrackListEventTypes.REMOVE_TRACK) { [weak self] event in
-            guard let welf = self else { return }
+        self.removeTrackListener = player.textTracks.addEventListener(type: TextTrackListEventTypes.REMOVE_TRACK) { [weak self, weak player] event in
+            guard let welf = self, let wplayer = player else { return }
             if let forwardedTextTrackListEvent = welf.onNativeTextTrackListEvent,
                let textTrack = event.track as? TextTrack {
                 if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received REMOVE_TRACK event from THEOplayer textTrack list: trackUid = \(textTrack.uid)") }
                 // trigger tracklist event
                 forwardedTextTrackListEvent([
-                    "track" : THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackInfo(textTrack: textTrack),
+                    "track" : THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackInfo(textTrack: textTrack, player: wplayer),
                     "type" : TrackListEventType.REMOVE_TRACK.rawValue
                 ])
                 // stop listening for cue events on this track
@@ -109,14 +109,14 @@ class THEOplayerRCTTextTrackEventHandler {
         if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] RemoveTrack listener attached to THEOplayer textTrack list") }
         
         // CHANGE
-        self.changeTrackListener = player.textTracks.addEventListener(type: TextTrackListEventTypes.CHANGE) { [weak self] event in
-            guard let welf = self else { return }
+        self.changeTrackListener = player.textTracks.addEventListener(type: TextTrackListEventTypes.CHANGE) { [weak self, weak player] event in
+            guard let welf = self, let wplayer = player else { return }
             if let forwardedTextTrackListEvent = welf.onNativeTextTrackListEvent,
                let textTrack = event.track as? TextTrack {
                 if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received CHANGE event from THEOplayer textTrack list: trackUid = \(textTrack.uid)") }
                 // trigger tracklist event
                 forwardedTextTrackListEvent([
-                    "track" : THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackInfo(textTrack: textTrack),
+                    "track" : THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackInfo(textTrack: textTrack, player: wplayer),
                     "type" : TrackListEventType.CHANGE_TRACK.rawValue
                 ])
             }
@@ -176,48 +176,52 @@ class THEOplayerRCTTextTrackEventHandler {
     // MARK: - dynamic textTrack Listeners
     private func addCueListener(_ event: AddCueEvent) {
         if let forwardedTextTrackEvent = self.onNativeTextTrackEvent,
-           let textTrack = event.cue.track {
+           let textTrack = event.cue.track,
+           let player = self.player {
             if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received ADD_CUE event from textTrack: trackUid = \(textTrack.uid), cueUid = \(event.cue.uid)") }
             forwardedTextTrackEvent([
                 "trackUid" : textTrack.uid,
                 "type": TrackCueEventType.ADD_CUE.rawValue,
-                "cue": THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackCueInfo(textTrackCue: event.cue)
+                "cue": THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackCueInfo(textTrackCue: event.cue, player: player)
             ])
         }
     }
     
     private func removeCueListener(_ event: RemoveCueEvent) {
         if let forwardedTextTrackEvent = self.onNativeTextTrackEvent,
-           let textTrack = event.cue.track {
+           let textTrack = event.cue.track,
+           let player = self.player {
             if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received REMOVE_CUE event from textTrack: trackUid = \(textTrack.uid), cueUid = \(event.cue.uid)") }
             forwardedTextTrackEvent([
                 "trackUid" : textTrack.uid,
                 "type": TrackCueEventType.REMOVE_CUE.rawValue,
-                "cue": THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackCueInfo(textTrackCue: event.cue)
+                "cue": THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackCueInfo(textTrackCue: event.cue, player: player)
             ])
         }
     }
     
     private func enterCueListener(_ event: EnterCueEvent) {
         if let forwardedTextTrackEvent = self.onNativeTextTrackEvent,
-           let textTrack = event.cue.track {
+           let textTrack = event.cue.track,
+           let player = self.player {
             if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received ENTER_CUE event from textTrack: trackUid = \(textTrack.uid), cueUid = \(event.cue.uid)") }
             forwardedTextTrackEvent([
                 "trackUid" : textTrack.uid,
                 "type": TrackCueEventType.ENTER_CUE.rawValue,
-                "cue": THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackCueInfo(textTrackCue: event.cue)
+                "cue": THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackCueInfo(textTrackCue: event.cue, player: player)
             ])
         }
     }
     
     private func exitCueListener(_ event: ExitCueEvent) {
         if let forwardedTextTrackEvent = self.onNativeTextTrackEvent,
-           let textTrack = event.cue.track {
+           let textTrack = event.cue.track,
+           let player = self.player {
             if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received EXIT_CUE event from textTrack: trackUid = \(textTrack.uid), cueUid = \(event.cue.uid)") }
             forwardedTextTrackEvent([
                 "trackUid" : textTrack.uid,
                 "type": TrackCueEventType.EXIT_CUE.rawValue,
-                "cue": THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackCueInfo(textTrackCue: event.cue)
+                "cue": THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackCueInfo(textTrackCue: event.cue, player: player)
             ])
         }
     }
