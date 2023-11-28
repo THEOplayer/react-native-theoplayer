@@ -48,6 +48,7 @@ import { NativeModules, Platform } from 'react-native';
 import { TextTrackStyleAdapter } from './track/TextTrackStyleAdapter';
 import type { BackgroundAudioConfiguration } from 'src/api/backgroundAudio/BackgroundAudioConfiguration';
 import type { NativePlayerState } from './NativePlayerState';
+import { NativeTextTrackAdapter } from "./track/NativeTextTrackAdapter";
 
 const defaultPlayerState: NativePlayerState = {
   source: undefined,
@@ -138,7 +139,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._state.duration = event.duration;
     this._state.audioTracks = event.audioTracks;
     this._state.videoTracks = event.videoTracks;
-    this._state.textTracks = event.textTracks;
+    this._state.textTracks = event.textTracks.map((nativeTrack) => new NativeTextTrackAdapter(nativeTrack, this));
     this._state.selectedAudioTrack = event.selectedAudioTrack;
     this._state.selectedVideoTrack = event.selectedVideoTrack;
     this._state.selectedTextTrack = event.selectedTextTrack;
@@ -185,14 +186,14 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     const { subType, track } = event;
     switch (subType) {
       case TrackListEventType.ADD_TRACK:
-        this._state.textTracks = addTrack(this._state.textTracks, track);
+        this._state.textTracks = addTrack(this._state.textTracks, new NativeTextTrackAdapter(track, this));
         break;
       case TrackListEventType.REMOVE_TRACK:
         this._state.textTracks = removeTrack(this._state.textTracks, track);
         break;
       case TrackListEventType.CHANGE_TRACK:
         this._state.textTracks = removeTrack(this._state.textTracks, track);
-        this._state.textTracks = addTrack(this._state.textTracks, track);
+        this._state.textTracks = addTrack(this._state.textTracks, new NativeTextTrackAdapter(track, this));
         break;
     }
   };

@@ -8,6 +8,7 @@ import type {
 } from 'theoplayer';
 import type { MediaTrack, TextTrack, TextTrackCue } from 'react-native-theoplayer';
 import { decodeNanInf } from '../../utils/TypeUtils';
+import { WebTextTrackAdapter } from "../track/WebTextTrackAdapter";
 
 export function fromNativeCue(cue: NativeTextTrackCue): TextTrackCue {
   return {
@@ -24,20 +25,7 @@ export function fromNativeTextTrackList(tracks: NativeTextTrackList): TextTrack[
 }
 
 export function fromNativeTextTrack(track: NativeTextTrack): TextTrack {
-  const { id, uid, kind, label, language, mode, type, src, forced } = track;
-
-  return {
-    id,
-    uid,
-    kind,
-    label,
-    language,
-    mode,
-    type,
-    src,
-    forced,
-    cues: track.cues ? track.cues.map((cue) => fromNativeCue(cue)) : [],
-  } as TextTrack;
+  return new WebTextTrackAdapter(track);
 }
 
 export function fromNativeMediaTrackList(tracks: NativeMediaTrackList): MediaTrack[] {
