@@ -50,7 +50,7 @@ import {
   DefaultTimeupdateEvent,
   DefaultVolumeChangeEvent,
 } from './event/PlayerEvents';
-import { fromNativeCue, fromNativeMediaTrack, fromNativeTextTrack } from './web/TrackUtils';
+import { fromNativeCue } from './web/TrackUtils';
 
 export class WebEventForwarder {
   private readonly _player: ChromelessPlayer;
@@ -165,9 +165,9 @@ export class WebEventForwarder {
   private readonly onLoadedMetadata = () => {
     this._facade.dispatchEvent(
       new DefaultLoadedMetadataEvent(
-        this._player.textTracks.map((textTrack: NativeTextTrack) => fromNativeTextTrack(textTrack)),
-        this._player.audioTracks.map((audioTrack: NativeMediaTrack) => fromNativeMediaTrack(audioTrack)),
-        this._player.videoTracks.map((videoTrack: NativeMediaTrack) => fromNativeMediaTrack(videoTrack)),
+        this._facade.textTracks,
+        this._facade.audioTracks,
+        this._facade.videoTracks,
         1e3 * this._player.duration,
         this._player.textTracks.find((track: NativeTextTrack) => track.mode === 'showing')?.uid,
         this._player.videoTracks.find((track: NativeMediaTrack) => track.enabled)?.uid,

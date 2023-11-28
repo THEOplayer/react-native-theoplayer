@@ -98,6 +98,11 @@ export interface TextTrack extends Track {
    * Set a cue time offset, in milliseconds.
    */
   timeOffset?: number;
+
+  /**
+   * Set a maximum on the duration of this text track's cues, in milliseconds.
+   */
+  maxCueDuration?: number;
 }
 
 /**

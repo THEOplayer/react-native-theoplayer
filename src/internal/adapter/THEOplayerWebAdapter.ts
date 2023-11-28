@@ -17,7 +17,7 @@ import { THEOplayerWebAdsAdapter } from './ads/THEOplayerWebAdsAdapter';
 import { THEOplayerWebCastAdapter } from './cast/THEOplayerWebCastAdapter';
 import { ChromelessPlayer as NativeChromelessPlayer, SourceDescription as NativeSourceDescription, version as nativeVersion } from 'theoplayer';
 import type { MediaTrack as NativeMediaTrack, TextTrack as NativeTextTrack } from 'theoplayer';
-import { findNativeQualitiesByUid, fromNativeMediaTrackList, fromNativeTextTrackList } from './web/TrackUtils';
+import { findNativeQualitiesByUid, fromNativeMediaTrackList } from './web/TrackUtils';
 import type { ABRConfiguration, SourceDescription } from 'src/api/barrel';
 import { WebEventForwarder } from './WebEventForwarder';
 import type { PiPConfiguration } from 'src/api/pip/PiPConfiguration';
@@ -25,6 +25,7 @@ import type { BackgroundAudioConfiguration } from 'src/api/backgroundAudio/Backg
 import { WebPresentationModeManager } from './web/WebPresentationModeManager';
 import { WebMediaSession } from './web/WebMediaSession';
 import { BaseEvent } from './event/BaseEvent';
+import { WebTextTrackListAdapter } from "./track/WebTextTrackListAdapter";
 
 const defaultBackgroundAudioConfiguration: BackgroundAudioConfiguration = {
   enabled: false,
@@ -44,6 +45,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   private _targetVideoQuality: number | number[] | undefined = undefined;
   private _backgroundAudioConfiguration: BackgroundAudioConfiguration = defaultBackgroundAudioConfiguration;
   private _pipConfiguration: PiPConfiguration = defaultPipConfiguration;
+  private _textTracksAdapter: WebTextTrackListAdapter;
 
   constructor(player: NativeChromelessPlayer, config?: PlayerConfiguration) {
     super();
@@ -51,6 +53,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     this._adsAdapter = new THEOplayerWebAdsAdapter(this._player);
     this._castAdapter = new THEOplayerWebCastAdapter(this._player);
     this._eventForwarder = new WebEventForwarder(this._player, this);
+    this._textTracksAdapter = new WebTextTrackListAdapter(this._player);
     this._presentationModeManager = new WebPresentationModeManager(this._player, this);
     document.addEventListener('visibilitychange', this.onVisibilityChange);
 
@@ -193,7 +196,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   }
 
   get textTracks(): TextTrack[] {
-    return this._player ? fromNativeTextTrackList(this._player.textTracks) : [];
+    return this._textTracksAdapter.textTracks;
   }
 
   get selectedTextTrack(): number | undefined {
