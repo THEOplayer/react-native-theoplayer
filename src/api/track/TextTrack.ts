@@ -93,6 +93,11 @@ export interface TextTrack extends Track {
    * <br/> - For HLS: the corresponding #EXT-X-MEDIA tag contains the attributes TYPE=SUBTITLES and FORCED=YES (not supported yet)
    */
   readonly forced: boolean;
+
+  /**
+   * Set a cue time offset, in milliseconds.
+   */
+  timeOffset?: number;
 }
 
 /**
