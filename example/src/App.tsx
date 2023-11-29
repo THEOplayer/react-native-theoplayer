@@ -37,6 +37,7 @@ const playerConfig: PlayerConfiguration = {
   // Without a license, only demo sources hosted on '*.theoplayer.com' domains can be played.
   license: undefined,
   chromeless: true,
+  hlsDateRange: true,
   libraryLocation: 'theoplayer',
   cast: {
     chromecast: {

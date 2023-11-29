@@ -391,7 +391,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
       return;
     }
     this._state.selectedAudioTrack = trackUid;
-    NativeModules.PlayerModule.setSelectedAudioTrack(this._view.nativeHandle, trackUid || -1);
+    NativeModules.PlayerModule.setSelectedAudioTrack(this._view.nativeHandle, (trackUid !== undefined) ? trackUid : -1);
   }
 
   get videoTracks(): MediaTrack[] {
@@ -408,7 +408,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     }
     this._state.selectedVideoTrack = trackUid;
     this._state.targetVideoQuality = undefined;
-    NativeModules.PlayerModule.setSelectedVideoTrack(this._view.nativeHandle, trackUid || -1);
+    NativeModules.PlayerModule.setSelectedVideoTrack(this._view.nativeHandle, (trackUid !== undefined) ? trackUid : -1);
   }
 
   get textTracks(): TextTrack[] {
@@ -431,7 +431,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
         track.mode = TextTrackMode.disabled;
       }
     });
-    NativeModules.PlayerModule.setSelectedTextTrack(this._view.nativeHandle, trackUid || -1);
+    NativeModules.PlayerModule.setSelectedTextTrack(this._view.nativeHandle, (trackUid !== undefined) ? trackUid : -1);
   }
 
   get textTrackStyle(): TextTrackStyle {

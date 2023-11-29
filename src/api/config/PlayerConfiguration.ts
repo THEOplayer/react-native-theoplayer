@@ -60,6 +60,11 @@ export interface PlayerConfiguration {
   readonly chromeless?: boolean;
 
   /**
+   * Sets whether DateRange tags from the playlists should be imported as a textTrack.
+   */
+  readonly hlsDateRange?: boolean;
+
+  /**
    * The retry configuration for the player.
    *
    * @remarks

@@ -26,6 +26,8 @@ import {
   PlayerEventType,
   PresentationMode,
   TextTrackEventType,
+  TextTrackKind,
+  TextTrackMode,
   TrackListEventType,
 } from 'react-native-theoplayer';
 import type { THEOplayerWebAdapter } from './THEOplayerWebAdapter';
@@ -251,6 +253,9 @@ export class WebEventForwarder {
 
   private readonly onAddTextTrack = (event: AddTrackEvent) => {
     const track = event.track as NativeTextTrack;
+    if (track.kind === TextTrackKind.metadata) {
+      track.mode = TextTrackMode.hidden;
+    }
     track.addEventListener('addcue', this.onAddTextTrackCue(track));
     track.addEventListener('removecue', this.onRemoveTextTrackCue(track));
     track.addEventListener('entercue', this.onEnterTextTrackCue(track));

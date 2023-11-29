@@ -11,7 +11,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import type { PlayerConfiguration, PlayerError, THEOplayerViewProps } from 'react-native-theoplayer';
+import { isDateRangeCue, PlayerConfiguration, PlayerError, TextTrackCue, THEOplayerViewProps } from 'react-native-theoplayer';
 import { CastEventType, PlayerEventType } from 'react-native-theoplayer';
 
 import styles from './THEOplayerView.style';
@@ -254,11 +254,27 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
     const nativeEvent = event.nativeEvent;
     const cue = nativeEvent.cue;
     if (cue) {
-      cue.startTime = decodeNanInf(cue.startTime);
-      cue.endTime = decodeNanInf(cue.endTime);
+      this.normalizeCue(cue);
     }
     this._facade.dispatchEvent(new DefaultTextTrackEvent(toTextTrackEventType(nativeEvent.type), nativeEvent.trackUid, cue));
   };
+
+  private normalizeCue(cue: TextTrackCue) {
+    cue.startTime = decodeNanInf(cue.startTime);
+    cue.endTime = decodeNanInf(cue.endTime);
+    if (isDateRangeCue(cue)) {
+      cue.startDate = new Date(cue.startDate);
+      if (cue.endDate) {
+        cue.endDate = new Date(cue.endDate);
+      }
+      if (cue.duration) {
+        cue.duration = decodeNanInf(cue.duration);
+      }
+      if (cue.plannedDuration) {
+        cue.plannedDuration = decodeNanInf(cue.plannedDuration);
+      }
+    }
+  }
 
   private _onMediaTrackListEvent = (event: NativeSyntheticEvent<NativeMediaTrackListEvent>) => {
     const nativeEvent = event.nativeEvent;

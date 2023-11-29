@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.2.0] - 23-11-29
+
+### Fixed
+
+- Fixed an issue on iOS and Android were selecting an audio, video or text track that has a `uid` with value `0`, would fail.
+
+### Added
+
+- Added support for HLS #EXT-X-DATERANGE timed metadata tags. The tags appear as cues in a dedicated text track with type `daterange`.
+
 ## [3.1.0] - 23-10-27
 
 ### Changed

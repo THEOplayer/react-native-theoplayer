@@ -38,6 +38,7 @@ import com.theoplayer.android.api.player.track.mediatrack.quality.AudioQuality
 import com.theoplayer.android.api.player.track.mediatrack.quality.Quality
 import com.theoplayer.android.api.player.track.mediatrack.quality.VideoQuality
 import com.theoplayer.android.api.player.track.texttrack.TextTrack
+import com.theoplayer.android.api.player.track.texttrack.TextTrackKind
 import com.theoplayer.android.api.player.track.texttrack.TextTrackMode
 import com.theoplayer.cast.CastEventAdapter
 import com.theoplayer.presentation.PresentationModeChangeContext
@@ -474,6 +475,10 @@ class PlayerEventEmitter internal constructor(
   }
 
   private fun onTextTrackAdd(event: AddTrackEvent) {
+    // By default, set metadata tracks to mode 'hidden', until we add an API to set the mode.
+    if (event.track.kind == TextTrackKind.METADATA.type) {
+      event.track.mode = TextTrackMode.HIDDEN
+    }
     dispatchTextTrackEvent(TrackEventType.ADD_TRACK, event.track)
   }
 

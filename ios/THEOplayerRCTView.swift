@@ -37,6 +37,7 @@ public class THEOplayerRCTView: UIView {
     private var license: String?
     private var licenseUrl: String?
     private var chromeless: Bool = true
+    private var hlsDateRange: Bool = false
     private var config: THEOplayerConfiguration?
     
     // MARK: - Initialisation / view setup
@@ -108,6 +109,7 @@ public class THEOplayerRCTView: UIView {
                                                                         pip: self.playerPipConfiguration(),
                                                                         ads: self.playerAdsConfiguration(),
                                                                         cast: self.playerCastConfiguration(),
+                                                                        hlsDateRange: self.hlsDateRange,
                                                                         license: self.license,
                                                                         licenseUrl: self.licenseUrl))
         self.initAdsIntegration()
@@ -120,6 +122,7 @@ public class THEOplayerRCTView: UIView {
     private func initPlayer() -> THEOplayer? {
         self.player = THEOplayer(configuration: THEOplayerConfiguration(chromeless: self.chromeless,
                                                                         ads: self.playerAdsConfiguration(),
+                                                                        hlsDateRange: self.hlsDateRange,
                                                                         license: self.license,
                                                                         licenseUrl: self.licenseUrl,
                                                                         pip: self.playerPipConfiguration()))
@@ -168,6 +171,7 @@ public class THEOplayerRCTView: UIView {
         self.license = configDict["license"] as? String
         self.licenseUrl = configDict["licenseUrl"] as? String
         self.chromeless = configDict["chromeless"] as? Bool ?? true
+        self.hlsDateRange = configDict["hlsDateRange"] as? Bool ?? false
         self.parseAdsConfig(configDict: configDict)
         self.parseCastConfig(configDict: configDict)
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] config prop updated.") }

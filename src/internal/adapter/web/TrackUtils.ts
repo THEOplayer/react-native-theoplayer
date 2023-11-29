@@ -1,4 +1,5 @@
 import type {
+  DateRangeCue as NativeDateRangeCue,
   MediaTrack as NativeMediaTrack,
   MediaTrackList as NativeMediaTrackList,
   Quality as NativeQuality,
@@ -6,8 +7,12 @@ import type {
   TextTrackCue as NativeTextTrackCue,
   TextTracksList as NativeTextTrackList,
 } from 'theoplayer';
-import type { MediaTrack, TextTrack, TextTrackCue } from 'react-native-theoplayer';
+import type { MediaTrack, TextTrack, TextTrackCue, DateRangeCue } from 'react-native-theoplayer';
 import { decodeNanInf } from '../../utils/TypeUtils';
+
+export function isDateRangeCue(cue: TextTrackCue): cue is DateRangeCue {
+  return (cue as NativeDateRangeCue).customAttributes != undefined;
+}
 
 export function fromNativeCue(cue: NativeTextTrackCue): TextTrackCue {
   return {
@@ -16,6 +21,18 @@ export function fromNativeCue(cue: NativeTextTrackCue): TextTrackCue {
     startTime: decodeNanInf(1e3 * cue.startTime),
     endTime: decodeNanInf(1e3 * cue.endTime),
     content: cue.content,
+    ...(isDateRangeCue(cue) && {
+      class: cue.class,
+      startDate: cue.startDate,
+      endDate: cue.endDate,
+      duration: cue.duration ? decodeNanInf(1e3 * cue.duration) : cue.duration,
+      plannedDuration: cue.plannedDuration ? decodeNanInf(1e3 * cue.plannedDuration) : cue.plannedDuration,
+      endOnNext: cue.endOnNext,
+      scte35Cmd: cue.scte35Cmd,
+      scte35Out: cue.scte35Out,
+      scte35In: cue.scte35In,
+      customAttributes: cue.customAttributes,
+    }),
   } as TextTrackCue;
 }
 
