@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed an issue on iOS and Android were selecting an audio, video or text track that has a `uid` with value `0`, would fail.
 
+### Added
+
+- Added support for HLS #EXT-X-DATERANGE timed metadata tags. The tags appear as cues in a dedicated text track with type `daterange`.
+
 ## [3.1.0] - 23-10-27
 
 ### Changed
