@@ -9,6 +9,7 @@ import com.theoplayer.cache.CacheModule
 import com.theoplayer.drm.ContentProtectionModule
 import com.theoplayer.cast.CastModule
 import com.theoplayer.player.PlayerModule
+import com.theoplayer.track.TextTrackModule
 
 class ReactTHEOplayerPackage : ReactPackage {
   override fun createNativeModules(reactContext: ReactApplicationContext): List<NativeModule> {
@@ -17,7 +18,8 @@ class ReactTHEOplayerPackage : ReactPackage {
       AdsModule(reactContext),
       ContentProtectionModule(reactContext),
       CastModule(reactContext),
-      CacheModule(reactContext)
+      CacheModule(reactContext),
+      TextTrackModule(reactContext)
     )
   }
 

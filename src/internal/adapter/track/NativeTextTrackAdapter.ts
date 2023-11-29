@@ -1,10 +1,12 @@
 import type { TextTrack, THEOplayer } from 'react-native-theoplayer';
 import type { TextTrackMode } from "react-native-theoplayer";
 import type { TextTrackCue, TextTrackKind, TextTrackType } from "react-native-theoplayer";
+import { NativeModules, Platform } from "react-native";
 
 export class NativeTextTrackAdapter implements TextTrack {
 
     private _timeOffset: number | undefined = undefined;
+    private _maxCueDuration: number | undefined = undefined;
 
     // @ts-ignore
     constructor(private _nativeTextTrack: TextTrack, private _player: THEOplayer) {
@@ -61,7 +63,19 @@ export class NativeTextTrackAdapter implements TextTrack {
 
     set timeOffset(offset: number | undefined) {
         this._timeOffset = offset;
-        // TODO
-        // NativeModules.TextTrackModule.setTimeOffsety(this._player.nativeHandle, offset);
+        if (Platform.OS !== 'ios') {
+            NativeModules.TextTrackModule.setTimeOffset(this._player.nativeHandle, this._nativeTextTrack.uid, offset);
+        }
+    }
+
+    get maxCueDuration(): number | undefined {
+        return this._maxCueDuration;
+    }
+
+    set maxCueDuration(max: number | undefined) {
+        this._maxCueDuration = max;
+        if (Platform.OS !== 'ios') {
+            NativeModules.TextTrackModule.setMaxCueDuration(this._player.nativeHandle, this._nativeTextTrack.uid, max);
+        }
     }
 }
