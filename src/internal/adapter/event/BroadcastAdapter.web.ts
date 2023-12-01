@@ -1,7 +1,7 @@
 import type { BroadcastAPI } from "react-native-theoplayer";
 import type { THEOplayer } from "react-native-theoplayer";
-import type { THEOplayerWebAdapter } from "../adapter/THEOplayerWebAdapter";
-import type { StringKeyOf } from "../../api/event/EventDispatcher";
+import type { THEOplayerWebAdapter } from "../THEOplayerWebAdapter";
+import type { StringKeyOf } from "../../../api/event/EventDispatcher";
 import type { PlayerEventMap } from "react-native-theoplayer";
 
 export class BroadcastAdapter implements BroadcastAPI {
