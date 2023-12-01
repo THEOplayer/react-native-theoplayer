@@ -1,11 +1,11 @@
 import type { Event } from './Event';
 
 /**
- * The EventBroadcastAPI allows dispatching extra player events to both ReactNative and native listeners.
+ * The BroadcastAPI allows dispatching extra player events to both ReactNative and native listeners.
  *
  * @internal
  */
-export interface EventBroadcastAPI {
+export interface BroadcastAPI {
   /**
    * Broadcast an event.
    */

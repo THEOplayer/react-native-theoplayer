@@ -3,7 +3,7 @@ import type {
   ABRConfiguration,
   AdsAPI,
   CastAPI,
-  DurationChangeEvent, ExternalEventAPI,
+  DurationChangeEvent, BroadcastAPI,
   LoadedMetadataEvent,
   MediaTrack,
   MediaTrackEvent,
@@ -48,7 +48,7 @@ import { NativeModules, Platform } from 'react-native';
 import { TextTrackStyleAdapter } from './track/TextTrackStyleAdapter';
 import type { BackgroundAudioConfiguration } from 'src/api/backgroundAudio/BackgroundAudioConfiguration';
 import type { NativePlayerState } from './NativePlayerState';
-import { ExternalEventAdapter } from "../event/ExternalEventAdapter";
+import { BroadcastAdapter } from "../event/BroadcastAdapter";
 
 const defaultPlayerState: NativePlayerState = {
   source: undefined,
@@ -83,7 +83,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   private readonly _castAdapter: THEOplayerNativeCastAdapter;
   private readonly _abrAdapter: AbrAdapter;
   private readonly _textTrackStyleAdapter: TextTrackStyleAdapter;
-  private _externalEventRouter: ExternalEventAPI | undefined = undefined;
+  private _externalEventRouter: BroadcastAPI | undefined = undefined;
   private _playerVersion!: PlayerVersion;
 
   constructor(view: THEOplayerView, initialState: NativePlayerState = defaultPlayerState) {
@@ -526,8 +526,8 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   }
 
   // @internal
-  get externalEventRouter(): ExternalEventAPI {
-    return this._externalEventRouter ?? (this._externalEventRouter = new ExternalEventAdapter(this));
+  get externalEventRouter(): BroadcastAPI {
+    return this._externalEventRouter ?? (this._externalEventRouter = new BroadcastAdapter(this));
   }
 
   initializeFromNativePlayer_(version: PlayerVersion, state: NativePlayerState | undefined) {

@@ -1,12 +1,12 @@
-import type { ExternalEventAPI } from "react-native-theoplayer";
+import type { BroadcastAPI } from "react-native-theoplayer";
 import type { Event } from '../../api/event/Event';
 import type { THEOplayer } from "react-native-theoplayer";
 
-export class ExternalEventAdapter implements ExternalEventAPI {
+export class ExternalEventAdapter implements BroadcastAPI {
   constructor(private _player: THEOplayer) {
   }
 
-  dispatchEvent(event: Event): void {
+  dispatchEvent(_event: Event): void {
     try {
       // TODO
     } catch (e) {
