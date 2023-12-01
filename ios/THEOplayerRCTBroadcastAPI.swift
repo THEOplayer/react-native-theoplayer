@@ -9,13 +9,6 @@ protocol EventReceiver {
     func onReceivedEvent()
 }
 
-class NativeAdBreak: AdBreak {
-    var ads: [THEOplayerSDK.Ad]  = []
-    var maxDuration: Int = 0
-    var maxRemainingDuration: Double = 0
-    var timeOffset: Int = 0
-}
-
 @objc(THEOplayerRCTBroadcastAPI)
 class THEOplayerRCTBroadcastAPI: NSObject, RCTBridgeModule {
     @objc var bridge: RCTBridge!
@@ -30,5 +23,16 @@ class THEOplayerRCTBroadcastAPI: NSObject, RCTBridgeModule {
     
     @objc(dispatchEvent:event:)
     func dispatchEvent(_ node: NSNumber, event: NSDictionary) -> Void {
+        DispatchQueue.main.async {
+            if self.bridge.uiManager.view(forReactTag: node) is THEOplayerRCTView {
+                let selector = NSSelectorFromString("onReceivedEvent:")
+                self.bridge.moduleClasses.forEach { moduleClass in
+                    if let nativeModule = self.bridge.module(for: moduleClass) as? RCTBridgeModule,
+                       nativeModule.responds(to: selector) {
+                        nativeModule.perform(selector, with: nil)
+                    }
+                }
+            }
+        }
     }
 }
