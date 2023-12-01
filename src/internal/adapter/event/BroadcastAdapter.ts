@@ -1,6 +1,5 @@
 import type { BroadcastAPI, PlayerEventMap, THEOplayer } from "react-native-theoplayer";
 import { NativeModules } from "react-native";
-import * as console from "console";
 import type { THEOplayerAdapter } from "../THEOplayerAdapter";
 import type { StringKeyOf } from "../../../api/event/EventDispatcher";
 
