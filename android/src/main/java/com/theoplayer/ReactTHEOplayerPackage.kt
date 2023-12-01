@@ -8,6 +8,7 @@ import com.theoplayer.ads.AdsModule
 import com.theoplayer.cache.CacheModule
 import com.theoplayer.drm.ContentProtectionModule
 import com.theoplayer.cast.CastModule
+import com.theoplayer.event.ExternalEventRouterModule
 import com.theoplayer.player.PlayerModule
 
 class ReactTHEOplayerPackage : ReactPackage {
@@ -17,7 +18,8 @@ class ReactTHEOplayerPackage : ReactPackage {
       AdsModule(reactContext),
       ContentProtectionModule(reactContext),
       CastModule(reactContext),
-      CacheModule(reactContext)
+      CacheModule(reactContext),
+      ExternalEventRouterModule(reactContext)
     )
   }
 

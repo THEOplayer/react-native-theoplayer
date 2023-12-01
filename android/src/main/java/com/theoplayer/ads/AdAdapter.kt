@@ -1,12 +1,15 @@
 package com.theoplayer.ads
 
 import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.bridge.WritableArray
 import com.theoplayer.android.api.ads.Ad
 import com.theoplayer.android.api.ads.AdBreak
 import com.theoplayer.android.api.ads.CompanionAd
 import com.theoplayer.android.api.ads.GoogleImaAd
+import com.theoplayer.android.api.ads.UniversalAdId
+import com.theoplayer.android.api.event.ads.AdIntegrationKind
 import java.lang.Exception
 
 private const val PROP_AD_SYSTEM = "adSystem"
@@ -43,10 +46,9 @@ private const val PROP_UNIVERSAL_AD_ID_REGISTRY = "adIdRegistry"
 private const val PROP_UNIVERSAL_AD_ID_VALUE = "adIdValue"
 
 object AdAdapter {
-  fun fromAd(ad: Ad): WritableMap {
-    return fromAd(ad, true)
-  }
-
+  /**
+   * Convert a list of native Ads to a ReactNative Ads.
+   */
   fun fromAds(ads: List<Ad>): WritableArray {
     val payload = Arguments.createArray()
     for (ad in ads) {
@@ -55,6 +57,16 @@ object AdAdapter {
     return payload
   }
 
+  /**
+   * Convert a native Ad to a ReactNative Ad.
+   */
+  fun fromAd(ad: Ad): WritableMap {
+    return fromAd(ad, true)
+  }
+
+  /**
+   * Convert a native Ad to a ReactNative Ad, optionally include its AdBreak.
+   */
   private fun fromAd(ad: Ad, includeAdBreak: Boolean): WritableMap {
     val adPayload = Arguments.createMap()
     adPayload.putString(
@@ -113,6 +125,9 @@ object AdAdapter {
     return adPayload
   }
 
+  /**
+   * Convert a native AdBreak to a ReactNative AdBreak.
+   */
   fun fromAdBreak(adbreak: AdBreak?): WritableMap {
     val adbreakPayload = Arguments.createMap()
     if (adbreak == null) {
@@ -157,5 +172,76 @@ object AdAdapter {
       companionsPayload.pushMap(adPayload)
     }
     return companionsPayload
+  }
+
+  /**
+   * Convert a ReactNative Ad to a native Ad.
+   */
+  fun parseAd(ad: ReadableMap?): GoogleImaAd? {
+    if (ad == null) {
+      return null
+    }
+    return object: GoogleImaAd {
+      override fun getId(): String {
+        return ad.getString(PROP_AD_ID) ?: ""
+      }
+
+      override fun getCompanions(): List<CompanionAd> {
+        return mutableListOf()
+      }
+
+      override fun getType(): String? {
+        return ad.getString(PROP_AD_TYPE)
+      }
+
+      override fun getAdBreak(): AdBreak? {
+        // TODO
+        return null
+      }
+
+      override fun getSkipOffset(): Int {
+        return if (ad.hasKey(PROP_AD_SKIPOFFSET)) ad.getInt(PROP_AD_SKIPOFFSET) else 0
+      }
+
+      override fun getIntegration(): AdIntegrationKind {
+        return AdIntegrationKind.from(ad.getString(PROP_AD_INTEGRATION))
+      }
+
+      override fun getImaAd(): com.google.ads.interactivemedia.v3.api.Ad {
+        TODO("Not yet implemented")
+      }
+
+      override fun getAdSystem(): String {
+        return ad.getString(PROP_AD_SYSTEM) ?: ""
+      }
+
+      override fun getCreativeId(): String? {
+        return ad.getString(PROP_AD_CREATIVE_ID)
+      }
+
+      override fun getWrapperAdIds(): List<String> {
+        return listOf()
+      }
+
+      override fun getWrapperAdSystems(): List<String> {
+        return listOf()
+      }
+
+      override fun getWrapperCreativeIds(): List<String> {
+        return listOf()
+      }
+
+      override fun getVastMediaBitrate(): Int {
+        return if (ad.hasKey(PROP_AD_BITRATE)) ad.getInt(PROP_AD_BITRATE) else 0
+      }
+
+      override fun getUniversalAdIds(): List<UniversalAdId> {
+        return listOf()
+      }
+
+      override fun getTraffickingParameters(): String {
+        return ad.getString(PROP_AD_TRAFFICKING_PARAMETERS) ?: ""
+      }
+    }
   }
 }
