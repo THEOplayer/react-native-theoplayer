@@ -25,7 +25,7 @@ import type { BackgroundAudioConfiguration } from 'src/api/backgroundAudio/Backg
 import { WebPresentationModeManager } from './web/WebPresentationModeManager';
 import { WebMediaSession } from './web/WebMediaSession';
 import { BaseEvent } from './event/BaseEvent';
-import { BroadcastAdapter } from "../event/BroadcastAdapter";
+import { BroadcastAdapter } from "./event/BroadcastAdapter";
 
 const defaultBackgroundAudioConfiguration: BackgroundAudioConfiguration = {
   enabled: false,

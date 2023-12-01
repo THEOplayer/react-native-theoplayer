@@ -48,7 +48,7 @@ import { NativeModules, Platform } from 'react-native';
 import { TextTrackStyleAdapter } from './track/TextTrackStyleAdapter';
 import type { BackgroundAudioConfiguration } from 'src/api/backgroundAudio/BackgroundAudioConfiguration';
 import type { NativePlayerState } from './NativePlayerState';
-import { BroadcastAdapter } from "../event/BroadcastAdapter";
+import { BroadcastAdapter } from "./event/BroadcastAdapter";
 
 const defaultPlayerState: NativePlayerState = {
   source: undefined,
