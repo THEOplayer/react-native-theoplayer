@@ -13,9 +13,9 @@ export class BroadcastAdapter implements BroadcastAPI {
       (this._player as THEOplayerAdapter).dispatchEvent(event);
 
       // Broadcast native event.
-      NativeModules.ExternalEventRouterModule.dispatchEvent(this._player.nativeHandle, event)
+      NativeModules.BroadcastModule.dispatchEvent(this._player.nativeHandle, event)
     } catch (e) {
-      console.warn("ExternalEventAPI not available");
+      console.warn("BroadcastAPI not available");
     }
   }
 }
