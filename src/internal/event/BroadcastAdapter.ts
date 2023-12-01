@@ -1,18 +1,17 @@
-import type { BroadcastAPI } from "react-native-theoplayer";
-import type { Event } from '../../api/event/Event';
+import type { BroadcastAPI, PlayerEventMap, THEOplayer } from "react-native-theoplayer";
 import { NativeModules } from "react-native";
 import * as console from "console";
 import type { THEOplayerAdapter } from "../adapter/THEOplayerAdapter";
-import { PlayerEventType } from "react-native-theoplayer";
+import type { StringKeyOf } from "../../api/event/EventDispatcher";
 
 export class BroadcastAdapter implements BroadcastAPI {
-  constructor(private _player: THEOplayerAdapter) {
+  constructor(private _player: THEOplayer) {
   }
 
-  broadcastEvent(event: Event): void {
+  broadcastEvent<K extends StringKeyOf<PlayerEventMap>>(event: PlayerEventMap[K]): void {
     try {
       // Broadcast ReactNative event.
-      this._player.dispatchEvent(event as Event<PlayerEventType>);
+      (this._player as THEOplayerAdapter).dispatchEvent(event);
 
       // Broadcast native event.
       NativeModules.ExternalEventRouterModule.dispatchEvent(this._player.nativeHandle, event)

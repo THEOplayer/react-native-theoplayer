@@ -340,7 +340,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   }
 
   // @internal
-  get externalEventRouter(): BroadcastAPI {
+  get broadcast(): BroadcastAPI {
     return this._externalEventRouter ?? (this._externalEventRouter = new BroadcastAdapter(this));
   }
 }

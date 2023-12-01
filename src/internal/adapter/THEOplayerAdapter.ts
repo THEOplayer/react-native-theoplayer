@@ -526,7 +526,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   }
 
   // @internal
-  get externalEventRouter(): BroadcastAPI {
+  get broadcast(): BroadcastAPI {
     return this._externalEventRouter ?? (this._externalEventRouter = new BroadcastAdapter(this));
   }
 
