@@ -1,4 +1,4 @@
-package com.theoplayer.event
+package com.theoplayer.broadcast
 
 import com.facebook.react.bridge.NativeModule
 import com.facebook.react.bridge.ReactApplicationContext
@@ -11,10 +11,10 @@ import com.theoplayer.android.api.event.Event
 import com.theoplayer.util.ViewResolver
 import java.lang.Exception
 
-private const val TAG = "BroadcastModule"
+private const val TAG = "EventBroadcastModule"
 
 @ReactModule(name = TAG)
-class BroadcastModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(context) {
+class EventBroadcastModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(context) {
 
   private val viewResolver: ViewResolver
 
@@ -50,7 +50,7 @@ class BroadcastModule(context: ReactApplicationContext) : ReactContextBaseJavaMo
 
   fun broadcastEvent(target: NativeModule, event: Event<*>) {
     try {
-      (target as? BroadcastReceiver)?.onReceivedEvent(event)
+      (target as? EventBroadcastReceiver)?.onReceivedEvent(event)
     } catch (e: Exception) {
       // Module does not accept event.
     }

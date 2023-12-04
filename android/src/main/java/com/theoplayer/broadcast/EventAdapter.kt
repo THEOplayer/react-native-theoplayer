@@ -1,4 +1,4 @@
-package com.theoplayer.event
+package com.theoplayer.broadcast
 
 import android.util.Log
 import com.facebook.react.bridge.ReadableMap
@@ -15,7 +15,7 @@ object EventAdapter {
     return when (val eventType = event?.getString(EVENT_PROP_TYPE)) {
       PROP_AD_EVENT -> AdEventAdapter.parseEvent(event)
       else -> {
-        Log.w(TAG, "Forwarding events of type $eventType not supported yet.")
+          Log.w(TAG, "Forwarding events of type $eventType not supported yet.")
         null
       } /*not supported yet*/
     }
