@@ -2,7 +2,6 @@ import type { EventBroadcastAPI, PlayerEventMap, THEOplayer } from "react-native
 import { NativeModules } from "react-native";
 import type { THEOplayerAdapter } from "../THEOplayerAdapter";
 import type { StringKeyOf } from "../../../api/event/EventDispatcher";
-import * as console from "console";
 
 export class EventBroadcastAdapter implements EventBroadcastAPI {
   constructor(private _player: THEOplayer) {
