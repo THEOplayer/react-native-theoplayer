@@ -28,7 +28,10 @@ export class EventBroadcastAdapter extends DefaultWebEventDispatcher<EventMap<st
 function toNativeEvent<K extends StringKeyOf<PlayerEventMap>>(event: PlayerEventMap[K]): WebEvent | undefined {
   switch (event.type) {
     case PlayerEventType.AD_EVENT: return toNativeAdEvent(event);
-    default: return undefined
+    default: {
+      console.warn(`EventBroadcastAdapter: native event of type ${event?.type}} not supported`)
+      return undefined
+    }
   }
 }
 
