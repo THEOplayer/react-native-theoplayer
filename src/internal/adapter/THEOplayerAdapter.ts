@@ -3,7 +3,7 @@ import type {
   ABRConfiguration,
   AdsAPI,
   CastAPI,
-  DurationChangeEvent, BroadcastAPI,
+  DurationChangeEvent, EventBroadcastAPI,
   LoadedMetadataEvent,
   MediaTrack,
   MediaTrackEvent,
@@ -26,6 +26,7 @@ import {
   addTextTrackCue,
   addTrack,
   AspectRatio,
+  BackgroundAudioConfiguration,
   findMediaTrackByUid,
   findTextTrackByUid,
   MediaTrackEventType,
@@ -46,9 +47,8 @@ import { THEOplayerNativeCastAdapter } from './cast/THEOplayerNativeCastAdapter'
 import { AbrAdapter } from './abr/AbrAdapter';
 import { NativeModules, Platform } from 'react-native';
 import { TextTrackStyleAdapter } from './track/TextTrackStyleAdapter';
-import type { BackgroundAudioConfiguration } from 'src/api/backgroundAudio/BackgroundAudioConfiguration';
 import type { NativePlayerState } from './NativePlayerState';
-import { BroadcastAdapter } from "./event/BroadcastAdapter";
+import { EventBroadcastAdapter } from "./broadcast/EventBroadcastAdapter";
 
 const defaultPlayerState: NativePlayerState = {
   source: undefined,
@@ -83,7 +83,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   private readonly _castAdapter: THEOplayerNativeCastAdapter;
   private readonly _abrAdapter: AbrAdapter;
   private readonly _textTrackStyleAdapter: TextTrackStyleAdapter;
-  private _externalEventRouter: BroadcastAPI | undefined = undefined;
+  private _externalEventRouter: EventBroadcastAPI | undefined = undefined;
   private _playerVersion!: PlayerVersion;
 
   constructor(view: THEOplayerView, initialState: NativePlayerState = defaultPlayerState) {
@@ -526,8 +526,8 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   }
 
   // @internal
-  get broadcast(): BroadcastAPI {
-    return this._externalEventRouter ?? (this._externalEventRouter = new BroadcastAdapter(this));
+  get broadcast(): EventBroadcastAPI {
+    return this._externalEventRouter ?? (this._externalEventRouter = new EventBroadcastAdapter(this));
   }
 
   initializeFromNativePlayer_(version: PlayerVersion, state: NativePlayerState | undefined) {
