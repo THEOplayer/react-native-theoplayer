@@ -243,7 +243,7 @@ RCT_EXTERN_METHOD(renewLicense:(nonnull NSString *)id
 // ----------------------------------------------------------------------------
 // Broadcast Module
 // ----------------------------------------------------------------------------
-@interface RCT_EXTERN_REMAP_MODULE(BroadcastModule, THEOplayerRCTBroadcastAPI, NSObject)
+@interface RCT_EXTERN_REMAP_MODULE(BroadcastModule, THEOplayerRCTEventBroadcastAPI, NSObject)
 
 RCT_EXTERN_METHOD(dispatchEvent:(nonnull NSNumber *)node
                   event:(NSDictionary)event)
