@@ -16,7 +16,7 @@ import java.util.*
 
 private const val EVENT_PROP_AD = "ad"
 private const val EVENT_PROP_TYPE = "type"
-private const val EVENT_PROP_SUBTYPE = "subtype"
+private const val EVENT_PROP_SUBTYPE = "subType"
 
 private val ALL_AD_EVENTS = arrayOf(
   GoogleImaAdEventType.LOADED,

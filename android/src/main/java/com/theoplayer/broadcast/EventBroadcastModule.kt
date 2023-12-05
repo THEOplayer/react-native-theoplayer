@@ -27,7 +27,7 @@ class EventBroadcastModule(context: ReactApplicationContext) : ReactContextBaseJ
   }
 
   @ReactMethod
-  fun dispatchEvent(tag: Int, event: ReadableMap) {
+  fun broadcastEvent(tag: Int, event: ReadableMap) {
     // Map target names to native modules.
     val modules = reactApplicationContext.nativeModules
 
@@ -36,21 +36,17 @@ class EventBroadcastModule(context: ReactApplicationContext) : ReactContextBaseJ
       return
     }
 
-    viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      if (view != null) {
-        // Route the event to each module
-        EventAdapter.parseEvent(event)?.also {
-          modules.forEach { module ->
-            broadcastEvent(module, it)
-          }
-        }
+    // Route the event to each module
+    EventAdapter.parseEvent(event)?.also {
+      modules.forEach { module ->
+        broadcastEvent(tag, module, it)
       }
     }
   }
 
-  fun broadcastEvent(target: NativeModule, event: Event<*>) {
+  fun broadcastEvent(tag: Int, target: NativeModule, event: Event<*>) {
     try {
-      (target as? EventBroadcastReceiver)?.onReceivedEvent(event)
+      (target as? EventBroadcastReceiver)?.onEventBroadcasted(tag, event)
     } catch (e: Exception) {
       // Module does not accept event.
     }
