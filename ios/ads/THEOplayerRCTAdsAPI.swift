@@ -67,7 +67,7 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
             let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
             if let ads = theView.ads(),
                let currentAdBreak = ads.currentAdBreak {
-                resolve(THEOplayerRCTAdAggregator.aggregateAdBreak(adBreak:currentAdBreak))
+                resolve(THEOplayerRCTAdAdapter.fromAdBreak(adBreak:currentAdBreak))
             } else {
                 reject(ERROR_CODE_ADS_ACCESS_FAILURE, ERROR_MESSAGE_ADS_ACCESS_FAILURE, nil)
                 if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not retrieve current adbreak (ads module unavailable).") }
@@ -83,7 +83,7 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
                 let currentAdsArray = ads.currentAds
                 var currentAds: [[String:Any]] = []
                 for ad in currentAdsArray {
-                    currentAds.append(THEOplayerRCTAdAggregator.aggregateAd(ad: ad))
+                    currentAds.append(THEOplayerRCTAdAdapter.fromAd(ad: ad))
                 }
                 resolve(currentAds)
             } else {
@@ -101,7 +101,7 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
                 let currentAdBreaksArray = ads.scheduledAdBreaks
                 var currentAdBreaks: [[String:Any]] = []
                 for adbreak in currentAdBreaksArray {
-                    currentAdBreaks.append(THEOplayerRCTAdAggregator.aggregateAdBreak(adBreak: adbreak))
+                    currentAdBreaks.append(THEOplayerRCTAdAdapter.fromAdBreak(adBreak: adbreak))
                 }
                 resolve(currentAdBreaks)
             } else {

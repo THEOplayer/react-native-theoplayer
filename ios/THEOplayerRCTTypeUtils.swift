@@ -98,6 +98,23 @@ class THEOplayerRCTTypeUtils {
             return TextTrackStyleEdgeStyle.none
         }
 	}
+    
+    class func adIntegrationKind(_ integration: String) -> AdIntegrationKind {
+        switch integration {
+        case "theo":
+            return AdIntegrationKind.theo
+        case "freewheel":
+            return AdIntegrationKind.freewheel
+        case "google-ima":
+            return AdIntegrationKind.google_ima
+        case "google-dai":
+            return AdIntegrationKind.google_dai
+        case "":
+            return AdIntegrationKind.defaultKind
+        default:
+            return AdIntegrationKind.defaultKind
+        }
+    }
 
 #if os(iOS)
     class func cacheStatusToString(_ status: CacheStatus) -> String {

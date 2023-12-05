@@ -1,4 +1,4 @@
-// THEOplayerRCTAdAggregator.swift
+// THEOplayerRCTAdAdapter.swift
 
 import Foundation
 import THEOplayerSDK
@@ -38,10 +38,10 @@ let PROP_COMPANION_WIDTH: String = "width"
 let PROP_COMPANION_HEIGHT: String = "height"
 let PROP_COMPANION_RESOURCE_URI: String = "resourceURI"
 
-class THEOplayerRCTAdAggregator {
+class THEOplayerRCTAdAdapter {
 
 #if (GOOGLE_IMA || GOOGLE_DAI) || canImport(THEOplayerGoogleIMAIntegration)
-    class func aggregateAd(ad: Ad, processAdBreak: Bool = true) -> [String:Any] {
+    class func fromAd(ad: Ad, processAdBreak: Bool = true) -> [String:Any] {
         var adData: [String:Any] = [:]
         adData[PROP_AD_INTEGRATION] = ad.integration._rawValue
         adData[PROP_AD_TYPE] = ad.type
@@ -56,11 +56,11 @@ class THEOplayerRCTAdAggregator {
         }
         if processAdBreak,
            let adBreak = ad.adBreak {
-            adData[PROP_AD_BREAK] = THEOplayerRCTAdAggregator.aggregateAdBreak(adBreak: adBreak)
+            adData[PROP_AD_BREAK] = THEOplayerRCTAdAdapter.fromAdBreak(adBreak: adBreak)
         }
         
 #if os(iOS)
-        adData[PROP_AD_COMPANIONS] = THEOplayerRCTAdAggregator.aggregateCompanionAds(companionAds: ad.companions)
+        adData[PROP_AD_COMPANIONS] = THEOplayerRCTAdAdapter.fromCompanionAds(companionAds: ad.companions)
 #endif
         
         adData[PROP_AD_UNIVERSAL_AD_IDS] = []
@@ -91,7 +91,7 @@ class THEOplayerRCTAdAggregator {
             }
             let traffickingParametersString = googleImaAd.traffickingParameters
             adData[PROP_GOOGLE_AD_TRAFFICKING_PARAMETERS_STRING] = traffickingParametersString
-            if let traffickingParameters = THEOplayerRCTAdAggregator.aggregateTraffickingParameters(traffickingParametersString: traffickingParametersString) {
+            if let traffickingParameters = THEOplayerRCTAdAdapter.fromTraffickingParameters(traffickingParametersString: traffickingParametersString) {
                 adData[PROP_GOOGLE_AD_TRAFFICKING_PARAMETERS] = traffickingParameters
             }
             adData[PROP_GOOGLE_AD_BITRATE] = googleImaAd.vastMediaBitrate
@@ -102,14 +102,7 @@ class THEOplayerRCTAdAggregator {
                 adData[PROP_GOOGLE_AD_HEIGHT] = height
             }
             if !googleImaAd.universalAdIds.isEmpty {
-                var adIdList: [[String:Any]] = []
-                for adId in googleImaAd.universalAdIds {
-                    var adIdData: [String:Any] = [:]
-                    adIdData[PROP_GOOGLE_AD_ID_REGISTRY] = adId.adIdRegistry
-                    adIdData[PROP_GOOGLE_AD_ID_VALUE] = adId.adIdValue
-                    adIdList.append(adIdData)
-                }
-                adData[PROP_AD_UNIVERSAL_AD_IDS] = adIdList
+                adData[PROP_AD_UNIVERSAL_AD_IDS] = THEOplayerRCTAdAdapter.fromUniversalAdIds(universalAdIds: googleImaAd.universalAdIds)
             }
             adData[PROP_GOOGLE_AD_WRAPPER_AD_IDS] = googleImaAd.wrapperAdIds
             adData[PROP_GOOGLE_AD_WRAPPER_AD_SYSTEMS] = googleImaAd.wrapperAdSystems
@@ -119,7 +112,64 @@ class THEOplayerRCTAdAggregator {
         return adData
     }
     
-    class func aggregateAdBreak(adBreak: AdBreak) -> [String:Any] {
+    private class func fromUniversalAdIds(universalAdIds: [THEOplayerSDK.UniversalAdId]?) -> [[String:Any]] {
+        guard let universalAdIds = universalAdIds else {
+            return []
+        }
+        
+        var adIdList: [[String:Any]] = []
+        for adId in universalAdIds {
+            var adIdData: [String:Any] = [:]
+            adIdData[PROP_GOOGLE_AD_ID_REGISTRY] = adId.adIdRegistry
+            adIdData[PROP_GOOGLE_AD_ID_VALUE] = adId.adIdValue
+            adIdList.append(adIdData)
+        }
+        
+        return adIdList
+    }
+    
+    class func toAd(adData: [String:Any]?) -> NativeAd? {
+        guard let adData = adData else {
+            return nil
+        }
+        
+        return NativeLinearGoogleImaAd(adBreak: THEOplayerRCTAdAdapter.toAdBreak(adBreakData: adData[PROP_AD_BREAK] as? [String:Any]),
+                                       companions: THEOplayerRCTAdAdapter.toCompanionAds(companiondAdsData: adData[PROP_AD_COMPANIONS] as? [[String : Any]]),
+                                       type: (adData[PROP_AD_TYPE] as? String) ?? "",
+                                       id: adData[PROP_AD_ID] as? String,
+                                       skipOffset: adData[PROP_AD_SKIP_OFFSET] as? Int,
+                                       resourceURI: adData[PROP_AD_RESOURCE_URI] as? String,
+                                       width: adData[PROP_GOOGLE_AD_WIDTH] as? Int,
+                                       height: adData[PROP_GOOGLE_AD_HEIGHT] as? Int,
+                                       integration: THEOplayerRCTTypeUtils.adIntegrationKind((adData[PROP_AD_INTEGRATION] as? String) ?? ""),
+                                       duration: lround(Double((adData[PROP_AD_DURATION] as? Int) ?? 0) * 0.001),         // msec -> sec
+                                       mediaFiles: [], // TODO
+                                       adSystem: adData[PROP_GOOGLE_AD_AD_SYSTEM] as? String,
+                                       creativeId: adData[PROP_GOOGLE_AD_CREATIVE_ID] as? String,
+                                       wrapperAdIds: (adData[PROP_GOOGLE_AD_WRAPPER_AD_IDS] as? [String]) ?? [],
+                                       wrapperAdSystems: (adData[PROP_GOOGLE_AD_WRAPPER_AD_SYSTEMS] as? [String]) ?? [],
+                                       wrapperCreativeIds: (adData[PROP_GOOGLE_AD_WRAPPER_CREATIVE_IDS] as? [String] ?? []),
+                                       vastMediaBitrate: (adData[PROP_GOOGLE_AD_BITRATE] as? Int) ?? 0,
+                                       universalAdIds: THEOplayerRCTAdAdapter.toUniversalAdIds(universalAdIdsData: adData[PROP_AD_UNIVERSAL_AD_IDS] as? [[String:Any]]),
+                                       traffickingParameters: "") // TODO
+    }
+    
+    private class func toUniversalAdIds(universalAdIdsData: [[String:Any]]?) -> [THEOplayerSDK.UniversalAdId] {
+        guard let universalAdIdsData = universalAdIdsData else {
+            return []
+        }
+        
+        var adIdList: [THEOplayerSDK.UniversalAdId] = []
+        
+        for adIdData in universalAdIdsData {
+            adIdList.append(NativeUniversalAdId(adIdValue: (adIdData[PROP_GOOGLE_AD_ID_VALUE] as? String) ?? "",
+                                                adIdRegistry: (adIdData[PROP_GOOGLE_AD_ID_REGISTRY] as? String) ?? ""))
+        }
+        
+        return adIdList
+    }
+    
+    class func fromAdBreak(adBreak: AdBreak) -> [String:Any] {
         var adBreakData: [String:Any] = [:]
         adBreakData[PROP_ADBREAK_MAX_DURATION] = adBreak.maxDuration * 1000 // sec -> msec
         adBreakData[PROP_ADBREAK_TIME_OFFSET] = adBreak.timeOffset * 1000 // sec -> msec
@@ -128,7 +178,7 @@ class THEOplayerRCTAdAggregator {
         if !adBreak.ads.isEmpty {
             var adList: [[String:Any]] = []
             for ad in adBreak.ads {
-                adList.append(THEOplayerRCTAdAggregator.aggregateAd(ad: ad, processAdBreak: false))
+                adList.append(THEOplayerRCTAdAdapter.fromAd(ad: ad, processAdBreak: false))
             }
             adBreakData[PROP_ADBREAK_ADS] = adList
             if adList.count > 0,
@@ -139,7 +189,27 @@ class THEOplayerRCTAdAggregator {
         return adBreakData
     }
     
-    class private func aggregateCompanionAds(companionAds: [CompanionAd?]) -> [[String:Any]] {
+    class func toAdBreak(adBreakData: [String:Any]?) -> NativeAdBreak? {
+        guard let adBreakData = adBreakData else {
+            return nil
+        }
+        
+        var ads: [NativeAd] = []
+        if let adsData = adBreakData[PROP_ADBREAK_ADS] as? [[String:Any]] {
+            for adData in adsData {
+                if let ad = THEOplayerRCTAdAdapter.toAd(adData: adData) {
+                    ads.append(ad)
+                }
+            }
+        }
+        
+        return NativeAdBreak(ads: ads,
+                             maxDuration: lround(Double((adBreakData[PROP_ADBREAK_MAX_DURATION] as? Int) ?? 0) * 0.001),                    // msec -> sec,
+                             maxRemainingDuration: Double((adBreakData[PROP_ADBREAK_MAX_REMAINING_DURATION] as? Int) ?? 0) * 0.001,         // msec -> sec,
+                             timeOffset: lround(Double((adBreakData[PROP_ADBREAK_TIME_OFFSET] as? Int) ?? 0) * 0.001))                      // msec -> sec,
+    }
+    
+    class private func fromCompanionAds(companionAds: [CompanionAd?]) -> [[String:Any]] {
         var companionAdsData: [[String:Any]] = []
         for cAd in companionAds {
             if let companionAd = cAd {
@@ -156,7 +226,11 @@ class THEOplayerRCTAdAggregator {
         return companionAdsData
     }
     
-    class private func aggregateTraffickingParameters(traffickingParametersString: String) -> [String:Any]? {
+    class func toCompanionAds(companiondAdsData: [[String:Any]]?) -> [CompanionAd?] {
+        return []
+    }
+    
+    class private func fromTraffickingParameters(traffickingParametersString: String) -> [String:Any]? {
         if let data = traffickingParametersString.data(using: .utf8) {
             return try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String:Any]
         }

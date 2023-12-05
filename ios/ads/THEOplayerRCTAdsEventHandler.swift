@@ -62,7 +62,7 @@ class THEOplayerRCTAdsEventHandler {
                let ad = event.ad {
                 forwardedAdEvent([
                     AD_EVENT_PROP_TYPE: EVENT_TYPE_AD_BEGIN,
-                    AD_EVENT_PROP_AD: THEOplayerRCTAdAggregator.aggregateAd(ad: ad)
+                    AD_EVENT_PROP_AD: THEOplayerRCTAdAdapter.fromAd(ad: ad)
                 ])
             }
         }
@@ -75,7 +75,7 @@ class THEOplayerRCTAdsEventHandler {
                let ad = event.ad {
                 forwardedAdEvent([
                     AD_EVENT_PROP_TYPE: EVENT_TYPE_AD_END,
-                    AD_EVENT_PROP_AD: THEOplayerRCTAdAggregator.aggregateAd(ad: ad)
+                    AD_EVENT_PROP_AD: THEOplayerRCTAdAdapter.fromAd(ad: ad)
                 ])
             }
         }
@@ -88,7 +88,7 @@ class THEOplayerRCTAdsEventHandler {
                let adBreak = event.ad {
                 forwardedAdEvent([
                     AD_EVENT_PROP_TYPE: EVENT_TYPE_ADBREAK_BEGIN,
-                    AD_EVENT_PROP_AD: THEOplayerRCTAdAggregator.aggregateAdBreak(adBreak: adBreak)
+                    AD_EVENT_PROP_AD: THEOplayerRCTAdAdapter.fromAdBreak(adBreak: adBreak)
                 ])
             }
         }
@@ -101,7 +101,7 @@ class THEOplayerRCTAdsEventHandler {
                let adBreak = event.ad {
                 forwardedAdEvent([
                     AD_EVENT_PROP_TYPE: EVENT_TYPE_ADBREAK_END,
-                    AD_EVENT_PROP_AD: THEOplayerRCTAdAggregator.aggregateAdBreak(adBreak: adBreak)
+                    AD_EVENT_PROP_AD: THEOplayerRCTAdAdapter.fromAdBreak(adBreak: adBreak)
                 ])
             }
         }
@@ -114,7 +114,7 @@ class THEOplayerRCTAdsEventHandler {
                let ad = event.ad {
                 forwardedAdEvent([
                     AD_EVENT_PROP_TYPE: EVENT_TYPE_AD_ERROR,
-                    AD_EVENT_PROP_AD: THEOplayerRCTAdAggregator.aggregateAd(ad: ad)
+                    AD_EVENT_PROP_AD: THEOplayerRCTAdAdapter.fromAd(ad: ad)
                 ])
             }
         }
@@ -127,7 +127,7 @@ class THEOplayerRCTAdsEventHandler {
                let ad = event.ad {
                 forwardedAdEvent([
                     AD_EVENT_PROP_TYPE: EVENT_TYPE_AD_FIRST_QUARTILE,
-                    AD_EVENT_PROP_AD: THEOplayerRCTAdAggregator.aggregateAd(ad: ad)
+                    AD_EVENT_PROP_AD: THEOplayerRCTAdAdapter.fromAd(ad: ad)
                 ])
             }
         }
@@ -140,7 +140,7 @@ class THEOplayerRCTAdsEventHandler {
                let ad = event.ad {
                 forwardedAdEvent([
                     AD_EVENT_PROP_TYPE: EVENT_TYPE_AD_MIDPOINT,
-                    AD_EVENT_PROP_AD: THEOplayerRCTAdAggregator.aggregateAd(ad: ad)
+                    AD_EVENT_PROP_AD: THEOplayerRCTAdAdapter.fromAd(ad: ad)
                 ])
             }
         }
@@ -153,7 +153,7 @@ class THEOplayerRCTAdsEventHandler {
                let ad = event.ad {
                 forwardedAdEvent([
                     AD_EVENT_PROP_TYPE: EVENT_TYPE_AD_THIRD_QUARTILE,
-                    AD_EVENT_PROP_AD: THEOplayerRCTAdAggregator.aggregateAd(ad: ad)
+                    AD_EVENT_PROP_AD: THEOplayerRCTAdAdapter.fromAd(ad: ad)
                 ])
             }
         }
@@ -166,7 +166,7 @@ class THEOplayerRCTAdsEventHandler {
                let ad = event.ad {
                 forwardedAdEvent([
                     AD_EVENT_PROP_TYPE: EVENT_TYPE_AD_LOADED,
-                    AD_EVENT_PROP_AD: THEOplayerRCTAdAggregator.aggregateAd(ad: ad)
+                    AD_EVENT_PROP_AD: THEOplayerRCTAdAdapter.fromAd(ad: ad)
                 ])
             }
         }
