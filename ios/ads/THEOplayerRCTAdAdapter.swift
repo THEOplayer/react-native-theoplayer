@@ -40,7 +40,6 @@ let PROP_COMPANION_RESOURCE_URI: String = "resourceURI"
 
 class THEOplayerRCTAdAdapter {
 
-#if (GOOGLE_IMA || GOOGLE_DAI) || canImport(THEOplayerGoogleIMAIntegration)
     class func fromAd(ad: Ad, processAdBreak: Bool = true) -> [String:Any] {
         var adData: [String:Any] = [:]
         adData[PROP_AD_INTEGRATION] = ad.integration._rawValue
@@ -236,6 +235,5 @@ class THEOplayerRCTAdAdapter {
         }
         return nil
     }
-#endif
     
 }
