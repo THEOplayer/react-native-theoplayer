@@ -3,7 +3,7 @@
 import Foundation
 import THEOplayerSDK
 
-let ADEVENT_PROP_SUBTYPE: String = "subtype"
+let ADEVENT_PROP_SUBTYPE: String = "subType"
 let ADEVENT_PROP_AD: String = "ad"
 
 class THEOplayerRCTAdEventAdapter {
