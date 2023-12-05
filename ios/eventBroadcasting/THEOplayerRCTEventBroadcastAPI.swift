@@ -15,15 +15,15 @@ class THEOplayerRCTBroadcastAPI: NSObject, RCTBridgeModule {
     
     
     static func moduleName() -> String! {
-        return "BroadcastModule"
+        return "EventBroadcastModule"
     }
     
     static func requiresMainQueueSetup() -> Bool {
         return false
     }
     
-    @objc(dispatchEvent:event:)
-    func dispatchEvent(_ node: NSNumber, event: NSDictionary) -> Void {
+    @objc(broadcastEvent:event:)
+    func broadcastEvent(_ node: NSNumber, event: NSDictionary) -> Void {
         DispatchQueue.main.async {
             if self.bridge.uiManager.view(forReactTag: node) is THEOplayerRCTView {
                 let selector = NSSelectorFromString("onEventBroadcasted:")
