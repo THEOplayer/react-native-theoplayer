@@ -15,7 +15,7 @@ export class EventBroadcastAdapter implements EventBroadcastAPI {
       // Broadcast native event.
       NativeModules.EventBroadcastModule.broadcastEvent(this._player.nativeHandle, event)
     } catch (e) {
-      console.warn("EventBroadcastModule not available");
+      console.warn(`EventBroadcastModule not available: ${e}`);
     }
   }
 }
