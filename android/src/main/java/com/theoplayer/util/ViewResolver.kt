@@ -22,9 +22,9 @@ class ViewResolver(private val reactContext: ReactApplicationContext) {
     uiManager?.addUIBlock {
       try {
         onResolved(it.resolveView(tag) as ReactTHEOplayerView)
-      } catch (ignore: Exception) {
+      } catch (e: Exception) {
         // The ReactTHEOplayerView instance could not be resolved: log but do not forward exception.
-        Log.w(TAG, "Failed to resolve ReactTHEOplayerView tag $tag")
+        Log.e(TAG, "Failed to resolve ReactTHEOplayerView tag $tag: $e")
         onResolved(null)
       }
     }

@@ -437,14 +437,14 @@ class PlayerEventEmitter internal constructor(
   }
 
   private val onTextTrackEnterCue = EventListener<EnterCueEvent> { event ->
-    val payload = PayloadBuilder().textTrackCue(event.cue, null /*TODO*/).build().apply {
+    val payload = PayloadBuilder().textTrackCue(event.cue, event.track).build().apply {
       putInt(EVENT_PROP_TYPE, TextTrackCueEventType.ENTER_CUE.type)
     }
     receiveEvent(EVENT_TEXTTRACK_EVENT, payload)
   }
 
   private val onTextTrackExitCue = EventListener<ExitCueEvent> { event ->
-    val payload = PayloadBuilder().textTrackCue(event.cue, null /*TODO*/).build().apply {
+    val payload = PayloadBuilder().textTrackCue(event.cue, event.track).build().apply {
       putInt(EVENT_PROP_TYPE, TextTrackCueEventType.EXIT_CUE.type)
     }
     receiveEvent(EVENT_TEXTTRACK_EVENT, payload)
