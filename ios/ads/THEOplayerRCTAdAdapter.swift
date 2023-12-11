@@ -141,7 +141,7 @@ class THEOplayerRCTAdAdapter {
                                        width: adData[PROP_GOOGLE_AD_WIDTH] as? Int,
                                        height: adData[PROP_GOOGLE_AD_HEIGHT] as? Int,
                                        integration: THEOplayerRCTTypeUtils.adIntegrationKind((adData[PROP_AD_INTEGRATION] as? String) ?? ""),
-                                       duration: lround(Double((adData[PROP_AD_DURATION] as? Int) ?? 0) * 0.001),         // msec -> sec
+                                       duration: lround((adData[PROP_AD_DURATION] as? Double) ?? 0.0),
                                        mediaFiles: [], // TODO
                                        adSystem: adData[PROP_GOOGLE_AD_AD_SYSTEM] as? String,
                                        creativeId: adData[PROP_GOOGLE_AD_CREATIVE_ID] as? String,

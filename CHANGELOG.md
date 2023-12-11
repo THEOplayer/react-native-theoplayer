@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.3.1] - 23-12-11
+
+### Fixed
+
+- Fixed an issue on Android where a `ContentResumeRequested` ad event was never broadcasted.
+- Fixed an issue on iOS where the ad duration was provided in milliseconds instead of seconds.
+
 ## [3.3.0] - 23-12-11
 
 ### Changed

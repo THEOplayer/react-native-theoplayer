@@ -106,7 +106,7 @@ class AdEventAdapter(private val adsApi: AdsApiWrapper, eventEmitter: AdEventEmi
         "aderror" -> GoogleImaAdEventType.AD_ERROR
         "adbuffering" -> GoogleImaAdEventType.AD_BUFFERING
         "adbreakbegin" -> GoogleImaAdEventType.AD_BREAK_STARTED
-        "adbreakend" -> GoogleImaAdEventType.AD_BREAK_ENDED
+        "adbreakend" -> GoogleImaAdEventType.CONTENT_RESUME_REQUESTED
         else -> null /*unknown*/
       }
     }
