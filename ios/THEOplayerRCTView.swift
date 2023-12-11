@@ -8,6 +8,7 @@ public class THEOplayerRCTView: UIView {
     // MARK: Members
     public private(set) var player: THEOplayer?
     public private(set) var mainEventHandler: THEOplayerRCTMainEventHandler
+    public private(set) var broadcastEventHandler: THEOplayerRCTBroadcastEventHandler
     var textTrackEventHandler: THEOplayerRCTTextTrackEventHandler
     var mediaTrackEventHandler: THEOplayerRCTMediaTrackEventHandler
     var adEventHandler: THEOplayerRCTAdsEventHandler
@@ -44,6 +45,7 @@ public class THEOplayerRCTView: UIView {
     init() {
         // create event handlers to maintain event props
         self.mainEventHandler = THEOplayerRCTMainEventHandler()
+        self.broadcastEventHandler = THEOplayerRCTBroadcastEventHandler()
         self.textTrackEventHandler = THEOplayerRCTTextTrackEventHandler()
         self.mediaTrackEventHandler = THEOplayerRCTMediaTrackEventHandler()
         self.adEventHandler = THEOplayerRCTAdsEventHandler()

@@ -11,6 +11,7 @@ import com.theoplayer.android.api.ads.wrapper.AdsApiWrapper
 import com.theoplayer.android.api.cast.Cast
 import com.theoplayer.android.api.error.THEOplayerException
 import com.theoplayer.android.api.player.Player
+import com.theoplayer.broadcast.EventBroadcastAdapter
 import com.theoplayer.presentation.PresentationManager
 import com.theoplayer.source.SourceAdapter
 
@@ -22,7 +23,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
 
   private val eventEmitter: PlayerEventEmitter =
     PlayerEventEmitter(reactContext.reactApplicationContext, this)
-
+  val broadcast = EventBroadcastAdapter(this)
   var presentationManager: PresentationManager? = null
   var playerContext: ReactTHEOplayerContext? = null
   private var isInitialized: Boolean = false

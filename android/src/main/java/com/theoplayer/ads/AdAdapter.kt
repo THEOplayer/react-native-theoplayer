@@ -1,12 +1,17 @@
 package com.theoplayer.ads
 
 import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.bridge.WritableArray
+import com.google.ads.interactivemedia.v3.api.AdPodInfo
+import com.google.ads.interactivemedia.v3.api.UiElement
 import com.theoplayer.android.api.ads.Ad
 import com.theoplayer.android.api.ads.AdBreak
 import com.theoplayer.android.api.ads.CompanionAd
 import com.theoplayer.android.api.ads.GoogleImaAd
+import com.theoplayer.android.api.ads.UniversalAdId
+import com.theoplayer.android.api.event.ads.AdIntegrationKind
 import java.lang.Exception
 
 private const val PROP_AD_SYSTEM = "adSystem"
@@ -42,11 +47,13 @@ private const val PROP_COMPANION_RESOURCEURI = "resourceURI"
 private const val PROP_UNIVERSAL_AD_ID_REGISTRY = "adIdRegistry"
 private const val PROP_UNIVERSAL_AD_ID_VALUE = "adIdValue"
 
-object AdAdapter {
-  fun fromAd(ad: Ad): WritableMap {
-    return fromAd(ad, true)
-  }
+private const val INVALID_DOUBLE = -1.0
+private const val INVALID_INT = -1
 
+object AdAdapter {
+  /**
+   * Convert a list of native Ads to a ReactNative Ads.
+   */
   fun fromAds(ads: List<Ad>): WritableArray {
     val payload = Arguments.createArray()
     for (ad in ads) {
@@ -55,6 +62,16 @@ object AdAdapter {
     return payload
   }
 
+  /**
+   * Convert a native Ad to a ReactNative Ad.
+   */
+  fun fromAd(ad: Ad): WritableMap {
+    return fromAd(ad, true)
+  }
+
+  /**
+   * Convert a native Ad to a ReactNative Ad, optionally include its AdBreak.
+   */
   private fun fromAd(ad: Ad, includeAdBreak: Boolean): WritableMap {
     val adPayload = Arguments.createMap()
     adPayload.putString(
@@ -113,6 +130,9 @@ object AdAdapter {
     return adPayload
   }
 
+  /**
+   * Convert a native AdBreak to a ReactNative AdBreak.
+   */
   fun fromAdBreak(adbreak: AdBreak?): WritableMap {
     val adbreakPayload = Arguments.createMap()
     if (adbreak == null) {
@@ -157,5 +177,276 @@ object AdAdapter {
       companionsPayload.pushMap(adPayload)
     }
     return companionsPayload
+  }
+
+  /**
+   * Convert a ReactNative Ad to a native Ad.
+   */
+  fun parseAd(ad: ReadableMap?): GoogleImaAd? {
+    if (ad == null) {
+      return null
+    }
+    return object: GoogleImaAd {
+      override fun getId(): String {
+        return ad.getString(PROP_AD_ID) ?: ""
+      }
+
+      override fun getCompanions(): List<CompanionAd> {
+        return emptyList()
+      }
+
+      override fun getType(): String? {
+        return ad.getString(PROP_AD_TYPE)
+      }
+
+      override fun getAdBreak(): AdBreak? {
+        return parseAdBreak(ad.getMap(PROP_AD_BREAK))
+      }
+
+      override fun getSkipOffset(): Int {
+        return if (ad.hasKey(PROP_AD_SKIPOFFSET)) ad.getInt(PROP_AD_SKIPOFFSET) else 0
+      }
+
+      override fun getIntegration(): AdIntegrationKind {
+        return AdIntegrationKind.from(ad.getString(PROP_AD_INTEGRATION))
+      }
+
+      override fun getImaAd(): com.google.ads.interactivemedia.v3.api.Ad {
+        return parseImaAd(ad)
+      }
+
+      override fun getAdSystem(): String {
+        return ad.getString(PROP_AD_SYSTEM) ?: ""
+      }
+
+      override fun getCreativeId(): String? {
+        return ad.getString(PROP_AD_CREATIVE_ID)
+      }
+
+      override fun getWrapperAdIds(): List<String> {
+        return emptyList()
+      }
+
+      override fun getWrapperAdSystems(): List<String> {
+        return emptyList()
+      }
+
+      override fun getWrapperCreativeIds(): List<String> {
+        return emptyList()
+      }
+
+      override fun getVastMediaBitrate(): Int {
+        return if (ad.hasKey(PROP_AD_BITRATE)) ad.getInt(PROP_AD_BITRATE) else 0
+      }
+
+      override fun getUniversalAdIds(): List<UniversalAdId> {
+        return emptyList()
+      }
+
+      override fun getTraffickingParameters(): String {
+        return ad.getString(PROP_AD_TRAFFICKING_PARAMETERS) ?: ""
+      }
+    }
+  }
+
+  fun parseAdBreak(adBreak: ReadableMap?): AdBreak? {
+    if (adBreak == null) {
+      return null
+    }
+    return object: AdBreak {
+      override fun getAds(): List<Ad> {
+        return emptyList()
+      }
+
+      override fun getMaxDuration(): Int {
+        return if (adBreak.hasKey(PROP_ADBREAK_MAXDURATION))
+          (1e-3 * adBreak.getInt(PROP_ADBREAK_MAXDURATION)).toInt()
+        else
+          INVALID_INT
+      }
+
+      override fun getMaxRemainingDuration(): Double {
+        return if (adBreak.hasKey(PROP_ADBREAK_MAXREMAININGDURATION))
+          1e-3 * adBreak.getDouble(PROP_ADBREAK_MAXREMAININGDURATION)
+        else
+          INVALID_DOUBLE
+      }
+
+      override fun getTimeOffset(): Int {
+        return if (adBreak.hasKey(PROP_ADBREAK_TIMEOFFSET))
+          (1e-3 * adBreak.getInt(PROP_ADBREAK_TIMEOFFSET)).toInt()
+        else
+          0
+      }
+
+      override fun getIntegration(): AdIntegrationKind {
+        return AdIntegrationKind.from(adBreak.getString(PROP_ADBREAK_INTEGRATION))
+      }
+    }
+  }
+
+  fun parseImaAd(ad: ReadableMap?): com.google.ads.interactivemedia.v3.api.Ad {
+    return object: com.google.ads.interactivemedia.v3.api.Ad {
+      override fun getDuration(): Double {
+        return ad?.run {
+          if (hasKey(PROP_AD_DURATION)) 1e-3 * getDouble(PROP_AD_DURATION) else INVALID_DOUBLE
+        } ?: INVALID_DOUBLE
+      }
+
+      override fun getSkipTimeOffset(): Double {
+        return ad?.run {
+          if (hasKey(PROP_AD_SKIPOFFSET)) 1e-3 * getDouble(PROP_AD_SKIPOFFSET) else INVALID_DOUBLE
+        } ?: INVALID_DOUBLE
+      }
+
+      override fun getHeight(): Int {
+        return ad?.run {
+          if (hasKey(PROP_AD_HEIGHT)) getInt(PROP_AD_HEIGHT) else INVALID_INT
+        } ?: INVALID_INT
+      }
+
+      override fun getVastMediaBitrate(): Int {
+        return ad?.run {
+          if (hasKey(PROP_AD_BITRATE)) getInt(PROP_AD_BITRATE) else INVALID_INT
+        } ?: INVALID_INT
+      }
+
+      override fun getVastMediaHeight(): Int {
+        return ad?.run {
+          if (hasKey(PROP_AD_HEIGHT)) getInt(PROP_AD_HEIGHT) else INVALID_INT
+        } ?: INVALID_INT
+      }
+
+      override fun getVastMediaWidth(): Int {
+        return ad?.run {
+          if (hasKey(PROP_AD_WIDTH)) getInt(PROP_AD_WIDTH) else INVALID_INT
+        } ?: INVALID_INT
+      }
+
+      override fun getWidth(): Int {
+        return ad?.run {
+          if (hasKey(PROP_AD_WIDTH)) getInt(PROP_AD_WIDTH) else INVALID_INT
+        } ?: INVALID_INT
+      }
+
+      override fun getAdPodInfo(): AdPodInfo {
+        return object: AdPodInfo {
+          override fun getMaxDuration(): Double {
+            return INVALID_DOUBLE
+          }
+
+          override fun getTimeOffset(): Double {
+            return INVALID_DOUBLE
+          }
+
+          override fun getAdPosition(): Int {
+            return INVALID_INT
+          }
+
+          override fun getPodIndex(): Int {
+            return INVALID_INT
+          }
+
+          override fun getTotalAds(): Int {
+            return INVALID_INT
+          }
+
+          override fun isBumper(): Boolean {
+            return false
+          }
+        }
+      }
+
+      override fun getAdId(): String {
+        return ad?.getString(PROP_AD_ID) ?: ""
+      }
+
+      override fun getAdSystem(): String {
+        return ad?.getString(PROP_AD_SYSTEM) ?: ""
+      }
+
+      override fun getAdvertiserName(): String {
+        return ""
+      }
+
+      override fun getContentType(): String {
+        return ad?.getString(PROP_AD_CONTENT_TYPE) ?: ""
+      }
+
+      override fun getCreativeAdId(): String {
+        return ""
+      }
+
+      override fun getCreativeId(): String {
+        return ad?.getString(PROP_AD_CREATIVE_ID) ?: ""
+      }
+
+      override fun getDealId(): String {
+        return ""
+      }
+
+      override fun getDescription(): String {
+        return ""
+      }
+
+      override fun getSurveyUrl(): String {
+        return ""
+      }
+
+      override fun getTitle(): String {
+        return ad?.getString(PROP_AD_TITLE) ?: ""
+      }
+
+      override fun getTraffickingParameters(): String {
+        return ad?.getString(PROP_AD_TRAFFICKING_PARAMETERS) ?: ""
+      }
+
+      @Deprecated("Deprecated in Java")
+      override fun getUniversalAdIdRegistry(): String {
+        return ""
+      }
+
+      @Deprecated("Deprecated in Java")
+      override fun getUniversalAdIdValue(): String {
+        return ad?.getString(PROP_UNIVERSAL_AD_ID_VALUE) ?: ""
+      }
+
+      override fun getCompanionAds(): List<com.google.ads.interactivemedia.v3.api.CompanionAd> {
+        return emptyList()
+      }
+
+      override fun getUiElements(): Set<UiElement> {
+        return emptySet()
+      }
+
+      override fun isLinear(): Boolean {
+        // Only linear ads are supported currently
+        return true
+      }
+
+      override fun isSkippable(): Boolean {
+        return false
+      }
+
+      override fun isUiDisabled(): Boolean {
+        return false
+      }
+
+      override fun getUniversalAdIds(): Array<com.google.ads.interactivemedia.v3.api.UniversalAdId> {
+        return emptyArray()
+      }
+
+      override fun getAdWrapperCreativeIds(): Array<String> {
+        return emptyArray()
+      }
+
+      override fun getAdWrapperIds(): Array<String> {
+        return emptyArray()
+      }
+
+      override fun getAdWrapperSystems(): Array<String> {
+        return emptyArray()
+      }
+    }
   }
 }

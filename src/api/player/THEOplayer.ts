@@ -12,6 +12,7 @@ import type { PresentationMode } from '../presentation/PresentationMode';
 import type { PiPConfiguration } from '../pip/PiPConfiguration';
 import type { BackgroundAudioConfiguration } from '../backgroundAudio/BackgroundAudioConfiguration';
 import type { PlayerVersion } from './PlayerVersion';
+import type { EventBroadcastAPI } from "../broadcast/EventBroadcastAPI";
 
 export type PreloadType = 'none' | 'metadata' | 'auto' | '';
 
@@ -212,4 +213,9 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
    * Native player handle.
    */
   readonly nativeHandle: NativeHandleType;
+
+  /**
+   * Event Broadcast API.
+   */
+  readonly broadcast: EventBroadcastAPI;
 }
