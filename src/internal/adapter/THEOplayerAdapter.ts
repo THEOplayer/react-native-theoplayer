@@ -3,7 +3,7 @@ import type {
   ABRConfiguration,
   AdsAPI,
   CastAPI,
-  DurationChangeEvent,
+  DurationChangeEvent, EventBroadcastAPI,
   LoadedMetadataEvent,
   MediaTrack,
   MediaTrackEvent,
@@ -26,6 +26,7 @@ import {
   addTextTrackCue,
   addTrack,
   AspectRatio,
+  BackgroundAudioConfiguration,
   findMediaTrackByUid,
   findTextTrackByUid,
   MediaTrackEventType,
@@ -46,8 +47,8 @@ import { THEOplayerNativeCastAdapter } from './cast/THEOplayerNativeCastAdapter'
 import { AbrAdapter } from './abr/AbrAdapter';
 import { NativeModules, Platform } from 'react-native';
 import { TextTrackStyleAdapter } from './track/TextTrackStyleAdapter';
-import type { BackgroundAudioConfiguration } from 'src/api/backgroundAudio/BackgroundAudioConfiguration';
 import type { NativePlayerState } from './NativePlayerState';
+import { EventBroadcastAdapter } from "./broadcast/EventBroadcastAdapter";
 
 const defaultPlayerState: NativePlayerState = {
   source: undefined,
@@ -82,6 +83,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   private readonly _castAdapter: THEOplayerNativeCastAdapter;
   private readonly _abrAdapter: AbrAdapter;
   private readonly _textTrackStyleAdapter: TextTrackStyleAdapter;
+  private _externalEventRouter: EventBroadcastAPI | undefined = undefined;
   private _playerVersion!: PlayerVersion;
 
   constructor(view: THEOplayerView, initialState: NativePlayerState = defaultPlayerState) {
@@ -518,8 +520,14 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     return this._playerVersion;
   }
 
+  // @internal
   get nativeHandle(): NativeHandleType {
     return this._view.nativeHandle;
+  }
+
+  // @internal
+  get broadcast(): EventBroadcastAPI {
+    return this._externalEventRouter ?? (this._externalEventRouter = new EventBroadcastAdapter(this));
   }
 
   initializeFromNativePlayer_(version: PlayerVersion, state: NativePlayerState | undefined) {

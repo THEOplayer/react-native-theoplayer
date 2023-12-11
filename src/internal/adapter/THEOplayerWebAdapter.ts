@@ -12,7 +12,7 @@ import type {
   TextTrackStyle,
   THEOplayer,
 } from 'react-native-theoplayer';
-import { AspectRatio, PlayerEventType, PresentationMode } from 'react-native-theoplayer';
+import { AspectRatio, EventBroadcastAPI, PlayerEventType, PresentationMode } from 'react-native-theoplayer';
 import { THEOplayerWebAdsAdapter } from './ads/THEOplayerWebAdsAdapter';
 import { THEOplayerWebCastAdapter } from './cast/THEOplayerWebCastAdapter';
 import { ChromelessPlayer as NativeChromelessPlayer, SourceDescription as NativeSourceDescription, version as nativeVersion } from 'theoplayer';
@@ -25,6 +25,7 @@ import type { BackgroundAudioConfiguration } from 'src/api/backgroundAudio/Backg
 import { WebPresentationModeManager } from './web/WebPresentationModeManager';
 import { WebMediaSession } from './web/WebMediaSession';
 import { BaseEvent } from './event/BaseEvent';
+import { EventBroadcastAdapter } from "./broadcast/EventBroadcastAdapter";
 
 const defaultBackgroundAudioConfiguration: BackgroundAudioConfiguration = {
   enabled: false,
@@ -44,6 +45,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   private _targetVideoQuality: number | number[] | undefined = undefined;
   private _backgroundAudioConfiguration: BackgroundAudioConfiguration = defaultBackgroundAudioConfiguration;
   private _pipConfiguration: PiPConfiguration = defaultPipConfiguration;
+  private _externalEventRouter: EventBroadcastAPI | undefined = undefined;
 
   constructor(player: NativeChromelessPlayer, config?: PlayerConfiguration) {
     super();
@@ -318,10 +320,6 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     this._player = undefined;
   }
 
-  get nativeHandle(): NativeHandleType {
-    return this._player;
-  }
-
   private readonly onVisibilityChange = () => {
     if (!this._player) {
       return;
@@ -335,4 +333,12 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     // Apply media session controls
     this._mediaSession?.updateActionHandlers();
   };
+
+  get nativeHandle(): NativeHandleType {
+    return this._player;
+  }
+
+  get broadcast(): EventBroadcastAPI {
+    return this._externalEventRouter ?? (this._externalEventRouter = new EventBroadcastAdapter(this));
+  }
 }
