@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.3.2] - 23-12-12
+
+### Fixed
+
+- Fixed an issue on iOS & Android where timestamps in ad events were not consistently defined in seconds.
+- Fixed an issue on tvOS where unknown AdIntegrationKind values resulted in build issues.
+
 ## [3.3.1] - 23-12-11
 
 ### Fixed

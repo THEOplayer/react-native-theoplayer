@@ -51,7 +51,7 @@ class THEOplayerRCTAdAdapter {
             adData[PROP_AD_RESOURCE_URI] = resourceURI
         }
         if let skipOffset = ad.skipOffset {
-            adData[PROP_AD_SKIP_OFFSET] = (skipOffset == -1) ? skipOffset : skipOffset * 1000 // sec -> msec
+            adData[PROP_AD_SKIP_OFFSET] = (skipOffset == -1) ? skipOffset : skipOffset
         }
         if processAdBreak,
            let adBreak = ad.adBreak {
@@ -67,7 +67,7 @@ class THEOplayerRCTAdAdapter {
         // Add additional properties for Linear Ads
         if let linearAd = ad as? LinearAd {
             if let adDuration = linearAd.duration {
-                adData[PROP_AD_DURATION] = adDuration * 1000 // sec -> msec
+                adData[PROP_AD_DURATION] = adDuration
             }
         }
         
@@ -170,9 +170,9 @@ class THEOplayerRCTAdAdapter {
     
     class func fromAdBreak(adBreak: AdBreak) -> [String:Any] {
         var adBreakData: [String:Any] = [:]
-        adBreakData[PROP_ADBREAK_MAX_DURATION] = adBreak.maxDuration * 1000 // sec -> msec
-        adBreakData[PROP_ADBREAK_TIME_OFFSET] = adBreak.timeOffset * 1000 // sec -> msec
-        adBreakData[PROP_ADBREAK_MAX_REMAINING_DURATION] = adBreak.maxRemainingDuration * 1000.0 // sec -> msec
+        adBreakData[PROP_ADBREAK_MAX_DURATION] = adBreak.maxDuration
+        adBreakData[PROP_ADBREAK_TIME_OFFSET] = adBreak.timeOffset
+        adBreakData[PROP_ADBREAK_MAX_REMAINING_DURATION] = adBreak.maxRemainingDuration
         // process adds when adbreak contains them
         if !adBreak.ads.isEmpty {
             var adList: [[String:Any]] = []
@@ -203,9 +203,9 @@ class THEOplayerRCTAdAdapter {
         }
         
         return NativeAdBreak(ads: ads,
-                             maxDuration: lround(Double((adBreakData[PROP_ADBREAK_MAX_DURATION] as? Int) ?? 0) * 0.001),                    // msec -> sec,
-                             maxRemainingDuration: Double((adBreakData[PROP_ADBREAK_MAX_REMAINING_DURATION] as? Int) ?? 0) * 0.001,         // msec -> sec,
-                             timeOffset: lround(Double((adBreakData[PROP_ADBREAK_TIME_OFFSET] as? Int) ?? 0) * 0.001))                      // msec -> sec,
+                             maxDuration: lround((adBreakData[PROP_ADBREAK_MAX_DURATION] as? Double) ?? 0),
+                             maxRemainingDuration: (adBreakData[PROP_ADBREAK_MAX_REMAINING_DURATION] as? Double) ?? 0,
+                             timeOffset: lround((adBreakData[PROP_ADBREAK_TIME_OFFSET] as? Double) ?? 0))
     }
     
     class private func fromCompanionAds(companionAds: [CompanionAd?]) -> [[String:Any]] {

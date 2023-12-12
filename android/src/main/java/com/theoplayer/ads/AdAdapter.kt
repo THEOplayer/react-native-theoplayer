@@ -93,7 +93,7 @@ object AdAdapter {
       adPayload.putInt(PROP_AD_BITRATE, ad.vastMediaBitrate)
       try {
         adPayload.putString(PROP_AD_TITLE, ad.imaAd.title)
-        adPayload.putInt(PROP_AD_DURATION, (1e3 * ad.imaAd.duration).toInt())
+        adPayload.putDouble(PROP_AD_DURATION, ad.imaAd.duration)
         adPayload.putDouble(PROP_AD_WIDTH, ad.imaAd.vastMediaWidth.toDouble())
         adPayload.putDouble(PROP_AD_HEIGHT, ad.imaAd.vastMediaHeight.toDouble())
         adPayload.putString(PROP_AD_CONTENT_TYPE, ad.imaAd.contentType)
@@ -139,12 +139,9 @@ object AdAdapter {
       return adbreakPayload
     }
     adbreakPayload.putString(PROP_ADBREAK_INTEGRATION, adbreak.integration.type)
-    adbreakPayload.putInt(PROP_ADBREAK_MAXDURATION, (1e3 * adbreak.maxDuration).toInt())
-    adbreakPayload.putInt(PROP_ADBREAK_TIMEOFFSET, (1e3 * adbreak.timeOffset).toInt())
-    adbreakPayload.putInt(
-      PROP_ADBREAK_MAXREMAININGDURATION,
-      (1e3 * adbreak.maxRemainingDuration).toInt()
-    )
+    adbreakPayload.putInt(PROP_ADBREAK_MAXDURATION,adbreak.maxDuration)
+    adbreakPayload.putInt(PROP_ADBREAK_TIMEOFFSET, adbreak.timeOffset)
+    adbreakPayload.putDouble(PROP_ADBREAK_MAXREMAININGDURATION, adbreak.maxRemainingDuration)
     val adsPayload = Arguments.createArray()
     for (ad in adbreak.ads) {
       // Some ads in the ad break are possibly not loaded yet.
@@ -260,21 +257,21 @@ object AdAdapter {
 
       override fun getMaxDuration(): Int {
         return if (adBreak.hasKey(PROP_ADBREAK_MAXDURATION))
-          (1e-3 * adBreak.getInt(PROP_ADBREAK_MAXDURATION)).toInt()
+          adBreak.getInt(PROP_ADBREAK_MAXDURATION)
         else
           INVALID_INT
       }
 
       override fun getMaxRemainingDuration(): Double {
         return if (adBreak.hasKey(PROP_ADBREAK_MAXREMAININGDURATION))
-          1e-3 * adBreak.getDouble(PROP_ADBREAK_MAXREMAININGDURATION)
+          adBreak.getDouble(PROP_ADBREAK_MAXREMAININGDURATION)
         else
           INVALID_DOUBLE
       }
 
       override fun getTimeOffset(): Int {
         return if (adBreak.hasKey(PROP_ADBREAK_TIMEOFFSET))
-          (1e-3 * adBreak.getInt(PROP_ADBREAK_TIMEOFFSET)).toInt()
+          adBreak.getInt(PROP_ADBREAK_TIMEOFFSET)
         else
           0
       }
@@ -289,13 +286,13 @@ object AdAdapter {
     return object: com.google.ads.interactivemedia.v3.api.Ad {
       override fun getDuration(): Double {
         return ad?.run {
-          if (hasKey(PROP_AD_DURATION)) 1e-3 * getDouble(PROP_AD_DURATION) else INVALID_DOUBLE
+          if (hasKey(PROP_AD_DURATION)) getDouble(PROP_AD_DURATION) else INVALID_DOUBLE
         } ?: INVALID_DOUBLE
       }
 
       override fun getSkipTimeOffset(): Double {
         return ad?.run {
-          if (hasKey(PROP_AD_SKIPOFFSET)) 1e-3 * getDouble(PROP_AD_SKIPOFFSET) else INVALID_DOUBLE
+          if (hasKey(PROP_AD_SKIPOFFSET)) getDouble(PROP_AD_SKIPOFFSET) else INVALID_DOUBLE
         } ?: INVALID_DOUBLE
       }
 
