@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed an issue on iOS & Android where timestamps in ad events were not consistently defined in seconds.
+- Fixed an issue on tvOS where unknown AdIntegrationKind values resulted in build issues.
 
 ## [3.3.1] - 23-12-11
 
