@@ -5,8 +5,8 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:4.2.2'
-    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.21'
+    classpath 'com.android.tools.build:gradle:7.4.2'
+    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.21'
   }
 }
 
@@ -101,7 +101,7 @@ repositories {
 dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"  // From node_modules
-  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
+  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
   implementation "androidx.appcompat:appcompat:1.6.1"
 
   // The minimum supported THEOplayer version is 6.0.0
