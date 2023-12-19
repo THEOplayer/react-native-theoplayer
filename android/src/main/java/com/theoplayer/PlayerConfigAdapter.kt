@@ -9,12 +9,14 @@ import com.theoplayer.android.api.ads.AdsConfiguration
 import com.theoplayer.android.api.ads.AdPreloadType
 import com.theoplayer.android.api.cast.CastStrategy
 import com.theoplayer.android.api.cast.CastConfiguration
+import com.theoplayer.android.api.cast.UIConfiguration
 import com.theoplayer.android.api.pip.PipConfiguration
 import com.theoplayer.android.api.player.NetworkConfiguration
 
 private const val PROP_LICENSE = "license"
 private const val PROP_LICENSE_URL = "licenseUrl"
 private const val PROP_PRELOAD = "preload"
+private const val PROP_LANGUAGE = "language"
 private const val PROP_UI_ENABLED = "uiEnabled"
 private const val PROP_CAST_STRATEGY = "strategy"
 private const val PROP_RETRY_CONFIG = "retryConfiguration"
@@ -24,6 +26,7 @@ private const val PROP_RETRY_MIN_BACKOFF = "minimumBackoff"
 private const val PROP_RETRY_MAX_BACKOFF = "maximumBackoff"
 private const val PROP_CAST_CONFIGURATION = "cast"
 private const val PROP_ADS_CONFIGURATION = "ads"
+private const val PROP_UI_CONFIGURATION = "ui"
 
 class PlayerConfigAdapter(private val configProps: ReadableMap?) {
 
@@ -44,6 +47,9 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
         }
         if (hasKey(PROP_RETRY_CONFIG)) {
           networkConfiguration(networkConfig())
+        }
+        if (hasKey(PROP_UI_CONFIGURATION)) {
+          ui(uiConfig())
         }
         if (hasKey(PROP_HLS_DATE_RANGE)) {
           hlsDateRange(getBoolean(PROP_HLS_DATE_RANGE))
@@ -95,6 +101,23 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
       }
     }.build()
   }
+
+  /**
+     * Get UIConfiguration object; these properties apply:
+     * - language: The language used to localize the ui elements.
+     */
+    fun uiConfig(): UIConfiguration {
+      return UIConfiguration.Builder().apply {
+        configProps?.getMap(PROP_UI_CONFIGURATION)?.run {
+          if (hasKey(PROP_LANGUAGE)) {
+            val languageString = getString(PROP_LANGUAGE)
+            if (!TextUtils.isEmpty(languageString)) {
+              language(languageString)
+            }
+          }
+        }
+      }.build()
+    }
 
   /**
    * Create a AdsRenderingSettings object.
