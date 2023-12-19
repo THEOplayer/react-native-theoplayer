@@ -45,6 +45,9 @@ const playerConfig: PlayerConfiguration = {
     },
     strategy: 'auto',
   },
+  ui: {
+    language: 'en',
+  },
   mediaControl: {
     mediaSessionEnabled: true,
   },

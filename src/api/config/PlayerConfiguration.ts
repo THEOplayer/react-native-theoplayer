@@ -2,6 +2,7 @@ import type { AdsConfiguration } from '../ads/AdsConfiguration';
 import type { CastConfiguration } from '../cast/CastConfiguration';
 import type { MediaControlConfiguration } from '../media/MediaControlConfiguration';
 import type { RetryConfiguration } from '../utils/RetryConfiguration';
+import type { UIConfiguration } from '../ui/UIConfiguration';
 
 export interface PlayerConfiguration {
   /**
@@ -35,6 +36,11 @@ export interface PlayerConfiguration {
    * The cast configuration for the player.
    */
   cast?: CastConfiguration;
+
+  /**
+   * The ui configuration for the underlying native player. Applies to Ad UI.
+   */
+  ui?: UIConfiguration;
 
   /**
    * The configuration of media controls and media sessions across platforms.
