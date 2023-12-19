@@ -16,6 +16,7 @@
     "react-native-theoplayer.podspec",
     "react-native-theoplayer.json",
     "CHANGELOG.md",
+    "app.plugin.js",
     "!lib/typescript/example",
     "!android/build",
     "!ios/build",
