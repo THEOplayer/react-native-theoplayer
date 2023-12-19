@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Added Expo plugin to support Android dependency configuration.
+
 ### Changed
 
 - Changed the Android notification channel name to `Notification channel`. It can be renamed by defining the `notification_channel_name` resource string.
