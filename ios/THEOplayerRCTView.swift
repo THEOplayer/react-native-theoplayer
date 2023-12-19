@@ -39,7 +39,6 @@ public class THEOplayerRCTView: UIView {
     private var licenseUrl: String?
     private var chromeless: Bool = true
     private var hlsDateRange: Bool = false
-    private var config: THEOplayerConfiguration?
     
     // MARK: - Initialisation / view setup
     init() {
