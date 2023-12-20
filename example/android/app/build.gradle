@@ -158,12 +158,12 @@ dependencies {
   implementation project(path: ':reactnativetheoplayer')
   implementation "com.google.android.gms:play-services-cast-framework:${safeExtGet('castFrameworkVersion', '+')}"
 
-  debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")
-  debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
+  debugImplementation("com.facebook.flipper:flipper:0.242.0")
+  debugImplementation("com.facebook.flipper:flipper-network-plugin:0.242.0") {
     exclude group: 'com.squareup.okhttp3', module: 'okhttp'
   }
 
-  debugImplementation("com.facebook.flipper:flipper-fresco-plugin:${FLIPPER_VERSION}")
+  debugImplementation("com.facebook.flipper:flipper-fresco-plugin:0.182.0")
   if (hermesEnabled.toBoolean()) {
     implementation("com.facebook.react:hermes-android")
   } else {
