@@ -9,9 +9,9 @@ import com.theoplayer.android.api.ads.AdsConfiguration
 import com.theoplayer.android.api.ads.AdPreloadType
 import com.theoplayer.android.api.cast.CastStrategy
 import com.theoplayer.android.api.cast.CastConfiguration
-import com.theoplayer.android.api.cast.UIConfiguration
 import com.theoplayer.android.api.pip.PipConfiguration
 import com.theoplayer.android.api.player.NetworkConfiguration
+import com.theoplayer.android.api.ui.UIConfiguration
 
 private const val PROP_LICENSE = "license"
 private const val PROP_LICENSE_URL = "licenseUrl"
@@ -103,21 +103,19 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
   }
 
   /**
-     * Get UIConfiguration object; these properties apply:
-     * - language: The language used to localize the ui elements.
-     */
-    fun uiConfig(): UIConfiguration {
-      return UIConfiguration.Builder().apply {
-        configProps?.getMap(PROP_UI_CONFIGURATION)?.run {
-          if (hasKey(PROP_LANGUAGE)) {
-            val languageString = getString(PROP_LANGUAGE)
-            if (!TextUtils.isEmpty(languageString)) {
-              language(languageString)
-            }
-          }
+   * Get UIConfiguration object; these properties apply:
+   * - language: The language used to localize the ui elements.
+   */
+  private fun uiConfig(): UIConfiguration {
+    return UIConfiguration.Builder().apply {
+      configProps?.getMap(PROP_UI_CONFIGURATION)?.run {
+        val languageString = getString(PROP_LANGUAGE)
+        if (languageString != null && !TextUtils.isEmpty(languageString)) {
+          language(languageString)
         }
-      }.build()
-    }
+      }
+    }.build()
+  }
 
   /**
    * Create a AdsRenderingSettings object.
