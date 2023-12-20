@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Changed the Android notification channel name to `Notification channel`. It can be renamed by defining the `notification_channel_name` resource string.
 
+### Added
+
+- Added support for Android 14.
+
 ## [3.3.2] - 23-12-12
 
 ### Fixed
