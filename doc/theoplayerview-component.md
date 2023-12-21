@@ -73,6 +73,10 @@ We refer to the [Adaptive Bitrate (ABR)](abr.md) page for detailed information, 
 If `chromeless = true`, the player does not include the native UI provided by the SDK and it is expected the UI is
 created in React Native. The accompanying example application provides a basic UI created in React Native.
 
+#### Native UI language
+
+`PlayerConfiguration.ui` has a configuration proerty 'language' that allows you to set the language for localisation when native UI elements (e.g. 'skip ad' being displayed on the skip butten in the ad UI) are presented to the user. This only applies to UI elements rendered by the native SDK's and not to other UI elements added via your react-native view stack.
+
 ### Setting a source
 
 You can set a source using the `source` property on the [THEOplayer API](../src/api/player/THEOplayer.ts). The type
