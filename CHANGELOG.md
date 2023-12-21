@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.4.1] - 23-12-21
+
+### Changed
+
+- Take the Gradle Kotlin plugin version from the root project, if specified.
+
 ## [3.4.0] - 23-12-21
 
 ### Added
