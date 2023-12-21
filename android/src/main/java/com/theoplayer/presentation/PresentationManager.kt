@@ -1,5 +1,6 @@
 package com.theoplayer.presentation
 
+import android.annotation.SuppressLint
 import android.app.AppOpsManager
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -18,6 +19,7 @@ import com.theoplayer.android.api.error.ErrorCode
 import com.theoplayer.android.api.error.THEOplayerException
 import com.theoplayer.android.api.player.PresentationMode
 
+@SuppressLint("UnspecifiedRegisterReceiverFlag")
 class PresentationManager(
   private val viewCtx: ReactTHEOplayerContext,
   private val reactContext: ThemedReactContext,
@@ -58,12 +60,27 @@ class PresentationManager(
       supportsPip =
         reactContext.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
     }
-    reactContext.currentActivity?.registerReceiver(
-      onUserLeaveHintReceiver, IntentFilter("onUserLeaveHint")
-    )
-    reactContext.currentActivity?.registerReceiver(
-      onPictureInPictureModeChanged, IntentFilter("onPictureInPictureModeChanged")
-    )
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+      reactContext.currentActivity?.registerReceiver(
+        onUserLeaveHintReceiver, IntentFilter("onUserLeaveHint"), Context.RECEIVER_EXPORTED
+      )
+    } else {
+      reactContext.currentActivity?.registerReceiver(
+        onUserLeaveHintReceiver, IntentFilter("onUserLeaveHint")
+      )
+    }
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+      reactContext.currentActivity?.registerReceiver(
+        onPictureInPictureModeChanged, IntentFilter("onPictureInPictureModeChanged"),
+        Context.RECEIVER_EXPORTED
+      )
+    } else {
+      reactContext.currentActivity?.registerReceiver(
+        onPictureInPictureModeChanged, IntentFilter("onPictureInPictureModeChanged")
+      )
+    }
   }
 
   fun destroy() {

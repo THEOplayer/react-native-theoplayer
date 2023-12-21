@@ -1,5 +1,6 @@
 package com.theoplayer.presentation
 
+import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.app.PictureInPictureParams
 import android.app.RemoteAction
@@ -68,6 +69,7 @@ class PipUtils(
     }
   }
 
+  @SuppressLint("UnspecifiedRegisterReceiverFlag")
   fun enable() {
     if (enabled) {
       return
@@ -78,10 +80,19 @@ class PipUtils(
     adEvents.forEach { action ->
       player.ads.addEventListener(action, onAdAction)
     }
-    reactContext.currentActivity?.registerReceiver(
-      broadcastReceiver,
-      IntentFilter(ACTION_MEDIA_CONTROL)
-    )
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+      reactContext.currentActivity?.registerReceiver(
+        broadcastReceiver,
+        IntentFilter(ACTION_MEDIA_CONTROL), Context.RECEIVER_EXPORTED
+      )
+    } else {
+      reactContext.currentActivity?.registerReceiver(
+        broadcastReceiver,
+        IntentFilter(ACTION_MEDIA_CONTROL)
+      )
+    }
+
     enabled = true
   }
 

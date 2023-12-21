@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.4.0] - 23-12-21
+
+### Added
+
+- Added `ui` configuration object to `PlayerConfiguration` to configure the ads UI language.
+- Added support for Android 14.
+- Added Expo plugin to support Android dependency configuration.
+
+### Changed
+
+- Changed the Android notification channel name to `Notification channel`. It can be renamed by defining the `notification_channel_name` resource string.
+
 ## [3.3.2] - 23-12-12
 
 ### Fixed

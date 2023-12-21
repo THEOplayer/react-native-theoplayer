@@ -19,6 +19,7 @@ public class THEOplayerRCTView: UIView {
     var presentationModeContext = THEOplayerRCTPresentationModeContext()
     var adsConfig = AdsConfig()
     var castConfig = CastConfig()
+    var uiConfig = UIConfig()
     
     var pipConfig = PipConfig() {
         didSet {
@@ -39,7 +40,6 @@ public class THEOplayerRCTView: UIView {
     private var licenseUrl: String?
     private var chromeless: Bool = true
     private var hlsDateRange: Bool = false
-    private var config: THEOplayerConfiguration?
     
     // MARK: - Initialisation / view setup
     init() {
@@ -110,6 +110,7 @@ public class THEOplayerRCTView: UIView {
                                                                         cssPaths: cssPaths,
                                                                         pip: self.playerPipConfiguration(),
                                                                         ads: self.playerAdsConfiguration(),
+                                                                        ui: self.playerUIConfiguration(),
                                                                         cast: self.playerCastConfiguration(),
                                                                         hlsDateRange: self.hlsDateRange,
                                                                         license: self.license,
@@ -127,7 +128,8 @@ public class THEOplayerRCTView: UIView {
                                                                         hlsDateRange: self.hlsDateRange,
                                                                         license: self.license,
                                                                         licenseUrl: self.licenseUrl,
-                                                                        pip: self.playerPipConfiguration()))
+                                                                        pip: self.playerPipConfiguration(),
+                                                                        ui: self.playerUIConfiguration()))
         self.initAdsIntegration()
         self.initBackgroundAudio()
         self.initPip()
@@ -176,6 +178,7 @@ public class THEOplayerRCTView: UIView {
         self.hlsDateRange = configDict["hlsDateRange"] as? Bool ?? false
         self.parseAdsConfig(configDict: configDict)
         self.parseCastConfig(configDict: configDict)
+        self.parseUIConfig(configDict: configDict)
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] config prop updated.") }
         
         // Given the bridged config, create the initial THEOplayer instance

@@ -3,7 +3,10 @@ package com.reactnativetheoplayer;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 
 import com.facebook.react.ReactActivity;
 import com.google.android.gms.cast.framework.CastContext;
@@ -40,8 +43,10 @@ public class MainActivity extends ReactActivity {
   }
 
   @Override
-  public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode, Configuration newConfig) {
-    super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig);
+  public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode, @NonNull Configuration newConfig) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig);
+    }
     Intent intent = new Intent("onPictureInPictureModeChanged");
     intent.putExtra("isInPictureInPictureMode", isInPictureInPictureMode);
     this.sendBroadcast(intent);
