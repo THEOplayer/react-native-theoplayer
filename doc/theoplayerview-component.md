@@ -40,13 +40,13 @@ The `THEOplayerView` component accepts a `config` property that contains basic p
 
 ```typescript
 const player: PlayerConfiguration = {
-  license: undefined, //'insert THEOplayer license here'
+  license: undefined, //'insert THEOplayer license for react-native here'
   chromeless: true,
 };
 ```
 
 The `license` is an obfuscated string that contains the THEOplayer license needed for play-out, and which can be found
-in your THEOplayer Portal account. If separate licenses per platform are needed, `Platform.select()` could be used to
+in your THEOplayer Portal account. You can generate a license specifically for react-native, but if separate licenses per platform are needed, `Platform.select()` could be used to
 configure them:
 
 ```typescript
