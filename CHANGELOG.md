@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- Take the Gradle Kotlin plugin version from the root project, if specified.
+- Take the Kotlin Gradle plugin version from the root project, if specified.
 
 ## [3.4.0] - 23-12-21
 
