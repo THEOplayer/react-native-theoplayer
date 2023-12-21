@@ -75,7 +75,7 @@ created in React Native. The accompanying example application provides a basic U
 
 #### Native UI language
 
-`PlayerConfiguration.ui` has a configuration proerty 'language' that allows you to set the language for localisation when native UI elements (e.g. 'skip ad' being displayed on the skip butten in the ad UI) are presented to the user. This only applies to UI elements rendered by the native SDK's and not to other UI elements added via your react-native view stack.
+`PlayerConfiguration.ui` has a configuration property 'language' that allows you to set the language for localisation when native UI elements (e.g. 'skip ad' being displayed on the skip butten in the ad UI) are presented to the user. This only applies to UI elements rendered by the native SDK's and not to other UI elements added via your react-native view stack.
 
 ### Setting a source
 
