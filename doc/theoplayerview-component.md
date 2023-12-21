@@ -40,13 +40,13 @@ The `THEOplayerView` component accepts a `config` property that contains basic p
 
 ```typescript
 const player: PlayerConfiguration = {
-  license: undefined, //'insert THEOplayer license here'
+  license: undefined, //'insert THEOplayer license for react-native here'
   chromeless: true,
 };
 ```
 
 The `license` is an obfuscated string that contains the THEOplayer license needed for play-out, and which can be found
-in your THEOplayer Portal account. If separate licenses per platform are needed, `Platform.select()` could be used to
+in your THEOplayer Portal account. You can generate a license specifically for react-native, but if separate licenses per platform are needed, `Platform.select()` could be used to
 configure them:
 
 ```typescript
@@ -72,6 +72,10 @@ We refer to the [Adaptive Bitrate (ABR)](abr.md) page for detailed information, 
 `PlayerConfiguration.chromeless` relates to whether the underlying _native_ SDK provides the UI or not.
 If `chromeless = true`, the player does not include the native UI provided by the SDK and it is expected the UI is
 created in React Native. The accompanying example application provides a basic UI created in React Native.
+
+#### Native UI language
+
+`PlayerConfiguration.ui` has a configuration property 'language' that allows you to set the language for localisation when native UI elements (e.g. 'skip ad' being displayed on the skip butten in the ad UI) are presented to the user. This only applies to UI elements rendered by the native SDK's and not to other UI elements added via your react-native view stack.
 
 ### Setting a source
 
