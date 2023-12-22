@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.4.2] - 23-12-22
+
+### Fixed
+
+- Fixed an issue in the Expo plugin for Android where it would fail to execute when no properties are passed.
+
 ## [3.4.1] - 23-12-21
 
 ### Changed
