@@ -37,7 +37,7 @@ const applyAndroidExtensions = (config, extensions) => {
 
 const withAndroidTHEOplayer = (config, props) => {
     // Apply Android extensions
-    const {extensions} = props;
+    const {extensions} = props | {};
     config = applyAndroidExtensions(config, extensions);
 
     // Add the localMaven repo to the project's repositories
