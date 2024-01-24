@@ -24,7 +24,7 @@ import {
 } from '@theoplayer/react-native-ui';
 import { PlayerConfiguration, PlayerEventType, PresentationMode, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
 
-import { useWindowDimensions, Modal, Platform, StyleSheet, Text, View } from 'react-native';
+import { useWindowDimensions, Modal, Platform, StyleSheet, Text, View, StatusBar } from 'react-native';
 import { SourceMenuButton, SOURCES } from './custom/SourceMenuButton';
 import { BackgroundAudioSubMenu } from './custom/BackgroundAudioSubMenu';
 import { PiPSubMenu } from './custom/PipSubMenu';
@@ -143,9 +143,6 @@ export default function App() {
                                             right={<SkipButton skip={30} />} />}
                 bottom={
                   <>
-                    <ControlBar style={{ justifyContent: 'flex-start' }}>
-                      <CastMessage />
-                    </ControlBar>
                     <ControlBar>
                       <SeekBar />
                     </ControlBar>
