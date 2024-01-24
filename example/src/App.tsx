@@ -24,13 +24,16 @@ import {
 } from '@theoplayer/react-native-ui';
 import { PlayerConfiguration, PlayerEventType, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
 
-import { Platform, StyleSheet, View, ViewStyle } from 'react-native';
+import { Platform, StyleSheet, View, ViewStyle, NativeEventEmitter, NativeModules } from 'react-native';
 import { SourceMenuButton, SOURCES } from './custom/SourceMenuButton';
 import { BackgroundAudioSubMenu } from './custom/BackgroundAudioSubMenu';
 import { PiPSubMenu } from './custom/PipSubMenu';
 import { MediaCacheDownloadButton } from './custom/MediaCacheDownloadButton';
 import { MediaCacheMenuButton } from './custom/MediaCacheMenuButton';
 import { MediaCachingTaskListSubMenu } from './custom/MediaCachingTaskListSubMenu';
+
+import Animated, { useSharedValue, withSpring } from 'react-native-reanimated';
+const AnimatedTHEOplayerView = Animated.createAnimatedComponent(THEOplayerView);
 
 const playerConfig: PlayerConfiguration = {
   // Get your THEOplayer license from https://portal.theoplayer.com/
@@ -52,6 +55,10 @@ const playerConfig: PlayerConfiguration = {
     mediaSessionEnabled: true,
   },
 };
+
+interface TestEvent {
+  increment: number;
+}
 
 /**
  * The example app demonstrates the use of the THEOplayerView with a custom UI using the provided UI components.
@@ -80,22 +87,28 @@ export default function App() {
     console.log('THEOplayer is ready:', player.version);
   };
 
-  const needsBorder = Platform.OS === 'ios';
   const PLAYER_CONTAINER_STYLE: ViewStyle = {
     position: 'absolute',
-    top: needsBorder ? 20 : 0,
-    left: needsBorder ? 5 : 0,
-    bottom: 0,
-    right: needsBorder ? 5 : 0,
+    top: 5,
+    left: 5,
+    bottom: 5,
+    right: 5,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#000000',
   };
 
+  const emitter = new NativeEventEmitter(NativeModules.EventModule);
+  const margin = useSharedValue(100);
+  emitter.addListener('onRCTEventEmitterEvent', (event: TestEvent) => {
+    const { increment } = event;
+    margin.value = withSpring(margin.value + increment * 20);
+  });
+
   return (
     <View style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}>
       <View style={PLAYER_CONTAINER_STYLE}>
-        <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady}>
+        <AnimatedTHEOplayerView config={playerConfig} onPlayerReady={onPlayerReady} style={{ margin: margin }}>
           {player !== undefined && chromeless && (
             <UiContainer
               theme={{ ...DEFAULT_THEOPLAYER_THEME }}
@@ -145,7 +158,7 @@ export default function App() {
               }
             />
           )}
-        </THEOplayerView>
+        </AnimatedTHEOplayerView>
       </View>
     </View>
   );
