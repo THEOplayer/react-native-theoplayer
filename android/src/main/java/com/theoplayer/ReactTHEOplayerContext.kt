@@ -12,6 +12,8 @@ import android.os.Looper
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
+import android.view.View
+import android.view.ViewGroup
 import com.facebook.react.uimanager.ThemedReactContext
 import com.theoplayer.android.api.THEOplayerView
 import com.theoplayer.android.api.ads.dai.GoogleDaiIntegration
@@ -199,6 +201,36 @@ class ReactTHEOplayerContext private constructor(
 
         // schedule a forced layout
         mainHandler.post { measureAndLayout() }
+      }
+
+      /**
+       * In case THEOplayerView is re-parented from outside, make sure we keep the playing state.
+       */
+      override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        if (!playerView.isDestroyed) {
+          // Keep playing state
+          wasPlayingOnHostPause = !player.isPaused
+
+          // Notify lifecycle
+          playerView.onPause()
+        }
+      }
+
+      /**
+       * In case THEOplayerView is re-parented from outside, make sure we restore the playing state.
+       */
+      override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        if (!playerView.isDestroyed) {
+          // Notify lifecycle
+          playerView.onResume()
+
+          // Restore playing state
+          if (wasPlayingOnHostPause && player.isPaused) {
+            player.play()
+          }
+        }
       }
     }
 
