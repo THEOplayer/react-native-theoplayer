@@ -14,6 +14,7 @@
     "lint": "eslint \"**/*.{ts,tsx}\""
   },
   "dependencies": {
+    "@alexzunik/rn-native-portals-reborn": "^1.0.5",
     "@react-native-community/slider": "^4.4.3",
     "@theoplayer/react-native-ui": "^0.2.0",
     "react": "18.2.0",
@@ -51,6 +52,9 @@
   "overrides": {
     "use-subscription": "1.8.0",
     "react-native-google-cast": {
+      "react-native": "npm:react-native-tvos@^0.71.13-1"
+    },
+    "@alexzunik/rn-native-portals-reborn": {
       "react-native": "npm:react-native-tvos@^0.71.13-1"
     }
   },
