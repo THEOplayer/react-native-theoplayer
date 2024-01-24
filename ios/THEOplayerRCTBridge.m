@@ -249,3 +249,10 @@ RCT_EXTERN_METHOD(broadcastEvent:(nonnull NSNumber *)node
                   event:(NSDictionary)event)
 
 @end
+
+// ----------------------------------------------------------------------------
+// Event Module
+// ----------------------------------------------------------------------------
+@interface RCT_EXTERN_REMAP_MODULE(EventModule, THEOplayerRCTEventAPI, RCTEventEmitter)
+
+@end
