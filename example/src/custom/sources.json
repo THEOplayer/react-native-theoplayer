@@ -1,5 +1,18 @@
 [
   {
+    "name": "HLS - VOD/Thumbnails - Clear - Big Buck Bunny",
+    "os": [
+      "ios",
+      "web"
+    ],
+    "source": {
+      "sources": {
+        "src": "https://cdn.theoplayer.com/video/big_buck_bunny/big_buck_bunny.m3u8",
+        "type": "application/x-mpegurl"
+      }
+    }
+  },
+  {
     "name": "DASH - Thumbnails in manifest",
     "os": [
       "android",
