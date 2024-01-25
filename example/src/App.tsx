@@ -24,7 +24,7 @@ import {
 } from '@theoplayer/react-native-ui';
 import { PlayerConfiguration, PlayerEventType, PresentationMode, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
 
-import { useWindowDimensions, Modal, Platform, StyleSheet, Text, View, StatusBar } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import { SourceMenuButton, SOURCES } from './custom/SourceMenuButton';
 import { BackgroundAudioSubMenu } from './custom/BackgroundAudioSubMenu';
 import { PiPSubMenu } from './custom/PipSubMenu';
@@ -62,23 +62,6 @@ const playerConfig: PlayerConfiguration = {
 export default function App() {
   const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);
   const [isFullScreenMode, setFullScreenModeState] = useState(false);
-  const { height, width } = useWindowDimensions();
-  const deviceWidth = width;
-  const deviceHeight = height;
-
-  const styles = StyleSheet.create({
-    videoContainer: {
-      width: '100%',
-      aspectRatio: '16/9',
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: '#000000',
-    },
-    videoContainerFullscreen: {
-      width: deviceWidth,
-      height: deviceHeight,
-    },
-  });
 
   const chromeless = playerConfig?.chromeless ?? false;
   const onPlayerReady = (player: THEOplayer) => {
@@ -95,7 +78,6 @@ export default function App() {
     player.addEventListener(PlayerEventType.SEEKED, console.log);
     player.addEventListener(PlayerEventType.ENDED, console.log);
     player.addEventListener(PlayerEventType.PRESENTATIONMODE_CHANGE, (event) => {
-      console.log('TVL', 'Fullscreen', event.presentationMode);
       setFullScreenModeState(event.presentationMode === PresentationMode.fullscreen);
     });
     player.source = SOURCES[0].source;
@@ -106,7 +88,7 @@ export default function App() {
   };
 
   return (
-    <View style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}>
+    <View style={styles.container}>
       <PortalOrigin destination={isFullScreenMode ? 'fullscreen' : null}>
         <View style={isFullScreenMode ? styles.videoContainerFullscreen : styles.videoContainer}>
           <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady}>
@@ -161,13 +143,43 @@ export default function App() {
         </View>
       </PortalOrigin>
 
-      <Text style={{ color: '#ffffff' }}>This text should not go into fullscreen</Text>
+      <View style={styles.contentContainer}>
+        <Text style={{ color: '#ffffff' }}>This text should not go into fullscreen</Text>
+      </View>
 
-      <Modal visible={isFullScreenMode}
-             statusBarTranslucent={true}
-             style={{ backgroundColor: '#000000', height: deviceHeight, width: deviceWidth }} animationType={'none'}>
+      <View style={isFullScreenMode ? styles.fullscreenContainer : styles.fullscreenContainerInactive}>
         <PortalDestination name="fullscreen" />
-      </Modal>
+      </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#000000',
+  },
+  videoContainer: {
+    aspectRatio: '16/9',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  videoContainerFullscreen: {
+    width: '100%',
+    height: '100%',
+  },
+  contentContainer: {
+    flex: 1,
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    padding: 20
+  },
+  fullscreenContainer: {
+    ...StyleSheet.absoluteFillObject,
+    flex: 1,
+  },
+  fullscreenContainerInactive: {
+    width: 0,
+    height: 0,
+  },
+});
