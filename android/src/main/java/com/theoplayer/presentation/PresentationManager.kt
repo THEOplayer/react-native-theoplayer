@@ -101,7 +101,6 @@ class PresentationManager(
         setFullscreen(true)
       }
       PresentationMode.PICTURE_IN_PICTURE -> {
-        setFullscreen(false)
         enterPip()
       }
     }
