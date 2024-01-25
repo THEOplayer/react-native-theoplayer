@@ -107,8 +107,8 @@ export default function App() {
 
   return (
     <View style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}>
-      <View style={isFullScreenMode ? styles.videoContainerFullscreen : styles.videoContainer}>
-        <PortalOrigin destination={isFullScreenMode ? 'fullscreen' : null} style={StyleSheet.absoluteFillObject}>
+      <PortalOrigin destination={isFullScreenMode ? 'fullscreen' : null}>
+        <View style={isFullScreenMode ? styles.videoContainerFullscreen : styles.videoContainer}>
           <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady}>
             {player !== undefined && chromeless && (
               <UiContainer
@@ -158,8 +158,8 @@ export default function App() {
               />
             )}
           </THEOplayerView>
-        </PortalOrigin>
-      </View>
+        </View>
+      </PortalOrigin>
 
       <Text style={{ color: '#ffffff' }}>This text should not go into fullscreen</Text>
 
