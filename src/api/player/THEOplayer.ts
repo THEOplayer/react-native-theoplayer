@@ -180,7 +180,7 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
   aspectRatio: AspectRatio;
 
   /**
-   * Toggle the wake-lock on the player view.
+   * Toggle the wake-lock on the player view. The screen will time out if disabled.
    *
    * @defaultValue `true`
    * @remarks
