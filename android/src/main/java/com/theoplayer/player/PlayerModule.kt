@@ -214,6 +214,13 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
   }
 
   @ReactMethod
+  fun setKeepScreenOn(tag: Int, value: Boolean) {
+    viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
+      view?.playerContext?.playerView?.keepScreenOn = value
+    }
+  }
+
+  @ReactMethod
   fun setTextTrackStyle(tag: Int, style: ReadableMap?) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.player?.let { player ->

@@ -67,6 +67,7 @@ const defaultPlayerState: NativePlayerState = {
   playbackRate: 1,
   preload: 'none',
   aspectRatio: AspectRatio.FIT,
+  keepScreenOn: true,
   audioTracks: [],
   videoTracks: [],
   textTracks: [],
@@ -500,6 +501,17 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   set aspectRatio(ratio: AspectRatio) {
     this._state.aspectRatio = ratio;
     NativeModules.PlayerModule.setAspectRatio(this._view.nativeHandle, ratio);
+  }
+
+  get keepScreenOn(): boolean {
+    return this._state.keepScreenOn;
+  }
+
+  set keepScreenOn(value: boolean) {
+    this._state.keepScreenOn = value;
+    if (Platform.OS === 'android') {
+      NativeModules.PlayerModule.setKeepScreenOn(this._view.nativeHandle, value);
+    }
   }
 
   pause(): void {

@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Added the ability to toggle `keepScreenOn` on Android. By default, screen timeout is disabled while the player is visible.
+
 ## [3.4.2] - 23-12-22
 
 ### Fixed

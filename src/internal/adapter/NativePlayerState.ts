@@ -1,7 +1,5 @@
 import type { MediaTrack, PreloadType, PresentationMode, SourceDescription, TextTrack, TimeRange } from 'react-native-theoplayer';
-import type { BackgroundAudioConfiguration } from '../../api/backgroundAudio/BackgroundAudioConfiguration';
-import type { PiPConfiguration } from 'react-native-theoplayer';
-import type { AspectRatio } from 'react-native-theoplayer';
+import type { PiPConfiguration, AspectRatio, BackgroundAudioConfiguration } from 'react-native-theoplayer';
 
 export interface NativePlayerState {
   source: SourceDescription | undefined;
@@ -20,6 +18,7 @@ export interface NativePlayerState {
   playbackRate: number;
   preload: PreloadType;
   aspectRatio: AspectRatio;
+  keepScreenOn: boolean;
   audioTracks: MediaTrack[];
   videoTracks: MediaTrack[];
   textTracks: TextTrack[];
