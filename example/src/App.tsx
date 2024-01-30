@@ -2,13 +2,11 @@ import * as React from 'react';
 import { useState } from 'react';
 import {
   AirplayButton,
-  CastMessage,
   CenteredControlBar,
   CenteredDelayedActivityIndicator,
   ChromecastButton,
   ControlBar,
   DEFAULT_THEOPLAYER_THEME,
-  FullscreenButton,
   LanguageMenuButton,
   MuteButton,
   PipButton,
@@ -33,6 +31,7 @@ import { MediaCacheMenuButton } from './custom/MediaCacheMenuButton';
 import { MediaCachingTaskListSubMenu } from './custom/MediaCachingTaskListSubMenu';
 
 import { PortalDestination, PortalOrigin } from '@alexzunik/rn-native-portals-reborn';
+import { CustomFullscreenButton } from './custom/CustomFullscreenButton';
 
 const playerConfig: PlayerConfiguration = {
   // Get your THEOplayer license from https://portal.theoplayer.com/
@@ -133,7 +132,7 @@ export default function App() {
                       <TimeLabel showDuration={true} />
                       <Spacer />
                       <PipButton />
-                      <FullscreenButton />
+                      <CustomFullscreenButton onToggle={setFullScreenModeState} />
                     </ControlBar>
                   </>
                 }
@@ -148,7 +147,7 @@ export default function App() {
       </View>
 
       <View style={isFullScreenMode ? styles.fullscreenContainer : styles.fullscreenContainerInactive}>
-        <PortalDestination name="fullscreen" />
+        <PortalDestination name="fullscreen" style={{flex: 1}} />
       </View>
     </View>
   );
