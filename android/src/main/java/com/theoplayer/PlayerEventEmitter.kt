@@ -294,7 +294,7 @@ class PlayerEventEmitter internal constructor(
     )
     payload.putMap(EVENT_PROP_VERSION, WritableNativeMap().apply {
       putString(EVENT_PROP_VERSION, THEOplayerGlobal.getVersion())
-      putString(EVENT_PROP_SUITE_VERSION, THEOplayerGlobal.getPlayerSuiteVersion())
+      putString(EVENT_PROP_SUITE_VERSION, "")
     })
 
     // Notify the player is ready
