@@ -21,7 +21,8 @@ open class DefaultEventDispatcher: EventDispatcher<Event<*>> {
 
     fun dispatchEvent(event: Event<*>) {
         _listeners[event.type]?.forEach { listener ->
-            (listener as EventListener<Event<*>>).handleEvent(event)
+          @Suppress("UNCHECKED_CAST")
+          (listener as EventListener<Event<*>>).handleEvent(event)
         }
     }
 }
