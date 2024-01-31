@@ -228,7 +228,6 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
     }
   }
 
-  @Suppress("UNUSED_PARAMETER")
   private fun allowBrowsing(clientPackageName: String, clientUid: Int): Boolean {
     // Only allow browsing from the same package
     return TextUtils.equals(clientPackageName, packageName)
