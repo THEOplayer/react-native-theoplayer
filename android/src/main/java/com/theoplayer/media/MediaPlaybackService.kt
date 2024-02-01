@@ -99,10 +99,7 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
 
     // Quickly post a notification and already call startForeground. This has to happen within 5s
     // after creating the service to avoid a ForegroundServiceDidNotStartInTimeException
-    updateNotification(PlaybackStateCompat.STATE_NONE)
-
-    // Now post a follow-up update of the notification.
-    updateNotification(PlaybackStateCompat.STATE_PAUSED)
+    updateNotification(PlaybackStateCompat.STATE_PLAYING)
   }
 
   override fun onBind(intent: Intent): IBinder {
@@ -261,10 +258,6 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
     // This lets the system know that the service is performing a useful function and should
     // not be killed if the system is low on memory.
     when (playbackState) {
-      PlaybackStateCompat.STATE_NONE -> {
-        // This is used initially to get the foreground service started in time.
-        startForegroundWithPlaybackState(playbackState)
-      }
       PlaybackStateCompat.STATE_PAUSED -> {
         // Fetch large icon asynchronously
         fetchImageFromUri(mediaSession.controller.metadata?.description?.iconUri) { largeIcon ->
@@ -275,7 +268,11 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
         // When a service runs in the foreground, it must display a notification, ideally
         // with one or more transport controls. The notification should also include useful
         // information from the session's metadata.
-        // Fetch large icon asynchronously
+
+        // Get the foreground service started in time before fetching an icon.
+        startForegroundWithPlaybackState(playbackState, loadPlaceHolderIcon(this))
+
+        // Fetch the correct large icon asynchronously.
         fetchImageFromUri(mediaSession.controller.metadata?.description?.iconUri) { largeIcon ->
           startForegroundWithPlaybackState(playbackState, largeIcon)
         }
