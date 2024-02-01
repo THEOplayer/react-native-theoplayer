@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
   base: {
@@ -9,4 +9,8 @@ export default StyleSheet.create({
     bottom: 0,
     right: 0,
   },
+  fullscreenOverride: {
+    width: Dimensions.get('screen').width,
+    height: Dimensions.get('screen').height
+  }
 });

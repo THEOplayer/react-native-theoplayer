@@ -11,7 +11,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import { isDateRangeCue, PlayerConfiguration, PlayerError, TextTrackCue, THEOplayerViewProps } from 'react-native-theoplayer';
+import { isDateRangeCue, PlayerConfiguration, PlayerError, PresentationMode, TextTrackCue, THEOplayerViewProps } from 'react-native-theoplayer';
 import { CastEventType, PlayerEventType } from 'react-native-theoplayer';
 
 import styles from './THEOplayerView.style';
@@ -99,6 +99,7 @@ interface THEOplayerRCTViewProps {
 
 interface THEOplayerRCTViewState {
   error?: PlayerError;
+  presentationMode?: PresentationMode | undefined;
 }
 
 type THEOplayerViewNativeComponent = HostComponent<THEOplayerRCTViewProps>;
@@ -109,6 +110,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
 
   private static initialState: THEOplayerRCTViewState = {
     error: undefined,
+    presentationMode: PresentationMode.inline
   };
 
   constructor(props: THEOplayerViewProps) {
@@ -315,6 +317,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
   };
 
   private _onPresentationModeChange = (event: NativeSyntheticEvent<NativePresentationModeChangeEvent>) => {
+    this.setState({presentationMode: event.nativeEvent.presentationMode});
     this._facade.dispatchEvent(
       new DefaultPresentationModeChangeEvent(
         event.nativeEvent.presentationMode,
@@ -326,8 +329,9 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
 
   public render(): JSX.Element {
     const { config, style, children } = this.props;
+    const fullscreen = this.state.presentationMode === PresentationMode.fullscreen;
     return (
-      <View style={[styles.base, style]}>
+      <View style={[styles.base, style, fullscreen ? styles.fullscreenOverride : {} ]}>
         <THEOplayerRCTView
           ref={this._root}
           style={StyleSheet.absoluteFill}
