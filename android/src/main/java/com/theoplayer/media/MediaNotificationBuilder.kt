@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.support.v4.media.session.MediaSessionCompat
@@ -193,5 +194,15 @@ fun fetchImageFromUri(uri: Uri?, block: (Bitmap?) -> Unit) {
       },
       UiThreadImmediateExecutorService.getInstance()
     )
+  }
+}
+
+fun loadPlaceHolderIcon(context: Context, res: Int = R.drawable.ic_notification_large): Bitmap? {
+  return try {
+    BitmapFactory.decodeResource(context.resources, res)
+  } catch(e: Exception) {
+    // Make sure we never crash on trying to decode a possibly overridden icon resource.
+    Log.w(TAG, "Failed to decode placeHolderIcon: ${e.message}")
+    null
   }
 }
