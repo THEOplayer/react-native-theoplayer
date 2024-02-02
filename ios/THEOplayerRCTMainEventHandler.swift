@@ -1,4 +1,4 @@
-// THEOplayerRCTView.swift
+// THEOplayerRCTMainEventHandler.swift
 
 import Foundation
 import THEOplayerSDK
@@ -29,7 +29,6 @@ public class THEOplayerRCTMainEventHandler {
     var onNativeRateChange: RCTDirectEventBlock?
     var onNativeWaiting: RCTDirectEventBlock?
     var onNativeCanPlay: RCTDirectEventBlock?
-    var onNativePresentationModeChange: RCTDirectEventBlock?
     
     // MARK: player Listeners
     private var playListener: EventListener?
@@ -60,9 +59,8 @@ public class THEOplayerRCTMainEventHandler {
     }
     
     // MARK: - player setup / breakdown
-    func setPlayer(_ player: THEOplayer, presentationModeContext: THEOplayerRCTPresentationModeContext) {
+    func setPlayer(_ player: THEOplayer) {
         self.player = player
-        self.presentationModeContext = presentationModeContext
         
         // attach listeners
         self.attachListeners()
@@ -306,16 +304,6 @@ public class THEOplayerRCTMainEventHandler {
             }
         }
         if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] Waiting listener attached to THEOplayer") }
-        
-        // PRESENTATION_MODE_CHANGE
-        self.presentationModeChangeListener = player.addEventListener(type: PlayerEventTypes.PRESENTATION_MODE_CHANGE) { [weak self] event in
-            if DEBUG_THEOPLAYER_EVENTS || true { PrintUtils.printLog(logText: "[NATIVE] Received PRESENTATION_MODE_CHANGE event from THEOplayer (to \(event.presentationMode._rawValue))") }
-            if let forwardedPresentationModeChangeEvent = self?.onNativePresentationModeChange,
-               let presentationModeContext = self?.presentationModeContext {
-                forwardedPresentationModeChangeEvent(presentationModeContext.eventContextForNewPresentationMode(event.presentationMode))
-            }
-        }
-        if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] PresentationModeChange listener attached to THEOplayer") }
     }
     
     private func dettachListeners() {
@@ -429,12 +417,6 @@ public class THEOplayerRCTMainEventHandler {
         if let canPlayListener = self.canPlayListener {
             player.removeEventListener(type: PlayerEventTypes.CAN_PLAY, listener: canPlayListener)
             if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] CanPlay listener dettached from THEOplayer") }
-        }
-        
-        // PRESENTATION_MODE_CHANGE
-        if let presentationModeChangeListener = self.presentationModeChangeListener {
-            player.removeEventListener(type: PlayerEventTypes.PRESENTATION_MODE_CHANGE, listener: presentationModeChangeListener)
-            if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] PresentationModeChange listener dettached from THEOplayer") }
         }
     }
 }

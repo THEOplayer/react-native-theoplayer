@@ -12,6 +12,7 @@ public class THEOplayerRCTView: UIView {
     var textTrackEventHandler: THEOplayerRCTTextTrackEventHandler
     var mediaTrackEventHandler: THEOplayerRCTMediaTrackEventHandler
     var metadataTrackEventHandler: THEOplayerRCTSideloadedMetadataTrackEventHandler
+    var presentationModeEventHandler: THEOplayerRCTPresentationModeEventHandler
     var adEventHandler: THEOplayerRCTAdsEventHandler
     var castEventHandler: THEOplayerRCTCastEventHandler
     var nowPlayingManager: THEOplayerRCTNowPlayingManager
@@ -50,6 +51,7 @@ public class THEOplayerRCTView: UIView {
         self.textTrackEventHandler = THEOplayerRCTTextTrackEventHandler()
         self.mediaTrackEventHandler = THEOplayerRCTMediaTrackEventHandler()
         self.metadataTrackEventHandler = THEOplayerRCTSideloadedMetadataTrackEventHandler()
+        self.presentationModeEventHandler = THEOplayerRCTPresentationModeEventHandler()
         self.adEventHandler = THEOplayerRCTAdsEventHandler()
         self.castEventHandler = THEOplayerRCTCastEventHandler()
         self.nowPlayingManager = THEOplayerRCTNowPlayingManager()
@@ -77,9 +79,10 @@ public class THEOplayerRCTView: UIView {
         // Create new player instance
         if let player = self.initPlayer() {
             // Attach player instance to event handlers
-            self.mainEventHandler.setPlayer(player, presentationModeContext: self.presentationModeContext)
+            self.mainEventHandler.setPlayer(player)
             self.textTrackEventHandler.setPlayer(player)
             self.mediaTrackEventHandler.setPlayer(player)
+            self.presentationModeEventHandler.setPlayer(player, presentationModeContext: self.presentationModeContext)
             self.adEventHandler.setPlayer(player)
             self.castEventHandler.setPlayer(player)
             self.nowPlayingManager.setPlayer(player)
@@ -310,9 +313,11 @@ public class THEOplayerRCTView: UIView {
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeCanPlay prop set.") }
     }
     
+    // MARK: - Listener based PRESENTATIONMODE event bridging
+    
     @objc(setOnNativePresentationModeChange:)
     func setOnNativePresentationModeChange(nativePresentationMode: @escaping RCTDirectEventBlock) {
-        self.mainEventHandler.onNativePresentationModeChange = nativePresentationMode
+        self.presentationModeEventHandler.onNativePresentationModeChange = nativePresentationMode
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativePresentationMode prop set.") }
     }
     
