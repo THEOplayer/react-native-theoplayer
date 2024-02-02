@@ -41,6 +41,7 @@ class CastEventAdapter(private val castApi: Cast, private val emitter: Emitter) 
 
   private fun serializeError(error: CastError): WritableMap  {
     val errorPayload = Arguments.createMap()
+    @Suppress("SENSELESS_NULL_IN_WHEN")
     errorPayload.putString(
       EVENT_PROP_ERROR_CODE,
       when (error.errorCode) {

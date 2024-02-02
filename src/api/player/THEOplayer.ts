@@ -180,6 +180,15 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
   aspectRatio: AspectRatio;
 
   /**
+   * Toggle the wake-lock on the player view. The screen will time out if disabled.
+   *
+   * @defaultValue `true`
+   * @remarks
+   * Only available on Android.
+   */
+  keepScreenOn: boolean;
+
+  /**
    * The active configuration for PiP.
    */
   pipConfiguration: PiPConfiguration;

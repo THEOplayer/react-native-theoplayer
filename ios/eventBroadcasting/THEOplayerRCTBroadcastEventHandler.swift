@@ -27,7 +27,7 @@ public class THEOplayerRCTBroadcastEventHandler: DefaultEventDispatcher {
     }
 }
 
-public class DefaultEventDispatcher: NSObject, THEOplayerSDK.EventDispatcherProtocol, THEOplayerSDK.DispatchDispatch {
+public class DefaultEventDispatcher: NSObject, THEOplayerSDK.EventDispatcherProtocol {
     private var eventListeners = [String: [EventListenerWrapper]]()
     
     public func addEventListener<E>(type: THEOplayerSDK.EventType<E>, listener: @escaping (_ : E) -> ()) -> THEOplayerSDK.EventListener {

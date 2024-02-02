@@ -20,6 +20,7 @@ target 'ReactNativeTHEOplayer' do
   use_react_native!(
     :path => config[:reactNativePath],
     :flipper_configuration => flipper_config,
+    :hermes_enabled => true,
   )
   
   pod 'react-native-theoplayer', :path => '../..'

@@ -3,6 +3,7 @@ package com.theoplayer.media
 import android.app.*
 import android.content.Intent
 import android.content.pm.ServiceInfo
+import android.graphics.Bitmap
 import android.os.Binder
 import android.os.Build
 import android.os.Bundle
@@ -96,6 +97,8 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
       Log.w(TAG, "Failed to start foreground service: ${e.message}")
     }
 
+    // Quickly post a notification and already call startForeground. This has to happen within 5s
+    // after creating the service to avoid a ForegroundServiceDidNotStartInTimeException
     updateNotification(PlaybackStateCompat.STATE_PLAYING)
   }
 
@@ -222,6 +225,7 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
     }
   }
 
+  @Suppress("UNUSED_PARAMETER")
   private fun allowBrowsing(clientPackageName: String, clientUid: Int): Boolean {
     // Only allow browsing from the same package
     return TextUtils.equals(clientPackageName, packageName)
@@ -264,26 +268,13 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
         // When a service runs in the foreground, it must display a notification, ideally
         // with one or more transport controls. The notification should also include useful
         // information from the session's metadata.
-        // Fetch large icon asynchronously
+
+        // Get the foreground service started in time before fetching an icon.
+        startForegroundWithPlaybackState(playbackState, loadPlaceHolderIcon(this))
+
+        // Fetch the correct large icon asynchronously.
         fetchImageFromUri(mediaSession.controller.metadata?.description?.iconUri) { largeIcon ->
-         try {
-           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-             startForeground(
-               NOTIFICATION_ID,
-               notificationBuilder.build(playbackState, largeIcon, enableMediaControls),
-               ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
-             )
-           } else {
-             startForeground(
-               NOTIFICATION_ID,
-               notificationBuilder.build(playbackState, largeIcon, enableMediaControls)
-             )
-           }
-         } catch (e: IllegalStateException) {
-           // Make sure that app does not crash in case anything goes wrong with starting the service.
-           // https://issuetracker.google.com/issues/229000935
-           Log.w(TAG, "Failed to start foreground service: ${e.message}")
-         }
+          startForegroundWithPlaybackState(playbackState, largeIcon)
         }
       }
       PlaybackStateCompat.STATE_STOPPED -> {
@@ -301,6 +292,27 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
       else -> {
         // Ignore
       }
+    }
+  }
+
+  private fun startForegroundWithPlaybackState(@PlaybackStateCompat.State playbackState: Int, largeIcon: Bitmap? = null) {
+    try {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        startForeground(
+          NOTIFICATION_ID,
+          notificationBuilder.build(playbackState, largeIcon, enableMediaControls),
+          ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
+        )
+      } else {
+        startForeground(
+          NOTIFICATION_ID,
+          notificationBuilder.build(playbackState, largeIcon, enableMediaControls)
+        )
+      }
+    } catch (e: IllegalStateException) {
+      // Make sure that app does not crash in case anything goes wrong with starting the service.
+      // https://issuetracker.google.com/issues/229000935
+      Log.w(TAG, "Failed to start foreground service: ${e.message}")
     }
   }
 }

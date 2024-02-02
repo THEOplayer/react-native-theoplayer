@@ -290,6 +290,14 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     // unused
   }
 
+  get keepScreenOn(): boolean {
+    return false;
+  }
+
+  set keepScreenOn(_screenOn: boolean) {
+    // unused
+  }
+
   get duration(): number {
     return this._player ? this._player.duration * 1e3 : NaN;
   }

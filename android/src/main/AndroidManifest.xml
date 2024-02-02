@@ -8,12 +8,6 @@
   <uses-permission android:name="android.permission.INTERNET" />
 
   <!--
-    Allows using PowerManager WakeLocks to keep processor from sleeping or screen from dimming.
-    Protection level: normal
-   -->
-  <uses-permission android:name="android.permission.WAKE_LOCK" />
-
-  <!--
     Allows a regular application to use Service.startForeground.
     Protection level: normal
     -->

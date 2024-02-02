@@ -216,10 +216,12 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
   }
 
   @ReactMethod
+  @Suppress("UNUSED_PARAMETER")
   fun addListener(eventName: String?) {
   }
 
   @ReactMethod
+  @Suppress("UNUSED_PARAMETER")
   fun removeListeners(count: Int?) {
   }
 

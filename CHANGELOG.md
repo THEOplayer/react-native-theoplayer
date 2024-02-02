@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.6.0] - 24-02-02
+
+### Fixed
+
+- Fixed a build issue on the iOS bridge caused by the deprecated DispatchDispatch protocol.
+- Fixed an issue on Android where the `MediaPlaybackService` would sometimes crash with a `ForegroundServiceDidNotStartInTimeException` exception.
+
+### Added
+
+- Added the ability to override both small and large notification icons in Android with `ic_notification_small` and `ic_notification_large` resources respectively.
+
+## [3.5.0] - 24-01-30
+
+### Added
+
+- Added the ability to toggle `keepScreenOn` on Android. By default, screen timeout is disabled while the player is visible.
+
 ## [3.4.2] - 23-12-22
 
 ### Fixed
