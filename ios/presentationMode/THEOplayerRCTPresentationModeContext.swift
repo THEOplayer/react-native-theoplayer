@@ -10,18 +10,14 @@ enum PipContext: String {
 
 class THEOplayerRCTPresentationModeContext {
     // MARK: Members
-    var currentPresentationMode: THEOplayerSDK.PresentationMode = .inline // TheoPlayer's initial presentationMode
     var pipContext: PipContext = .PIP_CLOSED
     
-    func eventContextForNewPresentationMode(_ newPresentationMode: PresentationMode) -> [String:Any] {
-        let previousPresentationMode = self.currentPresentationMode
-        self.currentPresentationMode = newPresentationMode
-        
+    func eventContextForNewPresentationMode(oldPresentationMode: PresentationMode, newPresentationMode: PresentationMode) -> [String:Any] {
         var eventContext: [String:Any] = [
-            "presentationMode": THEOplayerRCTTypeUtils.presentationModeToString(self.currentPresentationMode),
-            "previousPresentationMode": THEOplayerRCTTypeUtils.presentationModeToString(previousPresentationMode),
+            "presentationMode": THEOplayerRCTTypeUtils.presentationModeToString(newPresentationMode),
+            "previousPresentationMode": THEOplayerRCTTypeUtils.presentationModeToString(oldPresentationMode),
         ]
-        if previousPresentationMode == .pictureInPicture {
+        if oldPresentationMode == .pictureInPicture {
             eventContext["context"] = ["pip" : self.pipContext.rawValue]
         }
         return eventContext

@@ -12,7 +12,6 @@ import THEOplayerConnectorSideloadedSubtitle
 
 let ERROR_MESSAGE_PLAYER_ABR_UNSUPPORTED_FEATURE: String = "Setting an ABRconfig is not supported on iOS/tvOS."
 let ERROR_MESSAGE_PLAYER_QUALITY_UNSUPPORTED_FEATURE: String = "Setting a target video quality is not supported on iOS/tvOS."
-let ERROR_MESSAGE_PLAYER_FULLSCREEN_UNSUPPORTED_FEATURE: String = "Fullscreen presentationmode should be implemented on the RN level for iOS/tvOS."
 
 let TTS_PROP_BACKGROUND_COLOR = "backgroundColor"
 let TTS_PROP_EDGE_STYLE = "edgeStyle"
@@ -85,7 +84,6 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
     @objc(setABRConfig:abrConfig:)
     func setABRConfig(_ node: NSNumber, setABRConfig: NSDictionary) -> Void {
         if DEBUG_PLAYER_API { print(ERROR_MESSAGE_PLAYER_ABR_UNSUPPORTED_FEATURE) }
-        return
     }
     
     @objc(setCurrentTime:time:)
@@ -135,19 +133,11 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
     @objc(setPresentationMode:presentationMode:)
     func setPresentationMode(_ node: NSNumber, presentationMode: String) -> Void {
         DispatchQueue.main.async {
-            let newPresentationMode: PresentationMode = THEOplayerRCTTypeUtils.presentationModeFromString(presentationMode)
-            if newPresentationMode == .fullscreen {
-                print(ERROR_MESSAGE_PLAYER_FULLSCREEN_UNSUPPORTED_FEATURE)
-            }
-            else if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
-                    let player = theView.player {
-                if player.presentationMode != newPresentationMode {
-                    if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Changing TheoPlayer to \(presentationMode)") }
-                    player.presentationMode = newPresentationMode
-                }
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView {
+                let newPresentationMode: PresentationMode = THEOplayerRCTTypeUtils.presentationModeFromString(presentationMode)
+                theView.setPresentationMode(newPresentationMode: newPresentationMode)
             }
         }
-        return
     }
     
     @objc(setAspectRatio:ratio:)
@@ -162,7 +152,6 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                     }
                 }
             }
-            return
         }
     
     @objc(setPipConfig:pipConfig:)
@@ -173,7 +162,6 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                 theView.pipConfig = pipConfig
             }
         }
-        return
     }
     
     private func parsePipConfig(configDict: NSDictionary) -> PipConfig {
@@ -190,7 +178,6 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                theView.backgroundAudioConfig = newBackgroundAudioConfig
             }
         }
-        return
     }
     
     private func parseBackgroundAudioConfig(configDict: NSDictionary) -> BackgroundAudioConfig {

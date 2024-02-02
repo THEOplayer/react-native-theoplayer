@@ -12,13 +12,12 @@ public class THEOplayerRCTView: UIView {
     var textTrackEventHandler: THEOplayerRCTTextTrackEventHandler
     var mediaTrackEventHandler: THEOplayerRCTMediaTrackEventHandler
     var metadataTrackEventHandler: THEOplayerRCTSideloadedMetadataTrackEventHandler
-    var presentationModeEventHandler: THEOplayerRCTPresentationModeEventHandler
     var adEventHandler: THEOplayerRCTAdsEventHandler
     var castEventHandler: THEOplayerRCTCastEventHandler
+    var presentationModeManager: THEOplayerRCTPresentationModeManager
     var nowPlayingManager: THEOplayerRCTNowPlayingManager
     var remoteCommandsManager: THEOplayerRCTRemoteCommandsManager
     var pipControlsManager: THEOplayerRCTPipControlsManager
-    var presentationModeContext = THEOplayerRCTPresentationModeContext()
     var adsConfig = AdsConfig()
     var castConfig = CastConfig()
     var uiConfig = UIConfig()
@@ -51,9 +50,9 @@ public class THEOplayerRCTView: UIView {
         self.textTrackEventHandler = THEOplayerRCTTextTrackEventHandler()
         self.mediaTrackEventHandler = THEOplayerRCTMediaTrackEventHandler()
         self.metadataTrackEventHandler = THEOplayerRCTSideloadedMetadataTrackEventHandler()
-        self.presentationModeEventHandler = THEOplayerRCTPresentationModeEventHandler()
         self.adEventHandler = THEOplayerRCTAdsEventHandler()
         self.castEventHandler = THEOplayerRCTCastEventHandler()
+        self.presentationModeManager = THEOplayerRCTPresentationModeManager()
         self.nowPlayingManager = THEOplayerRCTNowPlayingManager()
         self.remoteCommandsManager = THEOplayerRCTRemoteCommandsManager()
         self.pipControlsManager = THEOplayerRCTPipControlsManager()
@@ -82,7 +81,7 @@ public class THEOplayerRCTView: UIView {
             self.mainEventHandler.setPlayer(player)
             self.textTrackEventHandler.setPlayer(player)
             self.mediaTrackEventHandler.setPlayer(player)
-            self.presentationModeEventHandler.setPlayer(player, presentationModeContext: self.presentationModeContext)
+            self.presentationModeManager.setPlayer(player)
             self.adEventHandler.setPlayer(player)
             self.castEventHandler.setPlayer(player)
             self.nowPlayingManager.setPlayer(player)
@@ -317,7 +316,7 @@ public class THEOplayerRCTView: UIView {
     
     @objc(setOnNativePresentationModeChange:)
     func setOnNativePresentationModeChange(nativePresentationMode: @escaping RCTDirectEventBlock) {
-        self.presentationModeEventHandler.onNativePresentationModeChange = nativePresentationMode
+        self.presentationModeManager.onNativePresentationModeChange = nativePresentationMode
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativePresentationMode prop set.") }
     }
     
