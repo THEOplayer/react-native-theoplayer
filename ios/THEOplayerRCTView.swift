@@ -81,7 +81,7 @@ public class THEOplayerRCTView: UIView {
             self.mainEventHandler.setPlayer(player)
             self.textTrackEventHandler.setPlayer(player)
             self.mediaTrackEventHandler.setPlayer(player)
-            self.presentationModeManager.setPlayer(player)
+            self.presentationModeManager.setPlayer(player, view: self)
             self.adEventHandler.setPlayer(player)
             self.castEventHandler.setPlayer(player)
             self.nowPlayingManager.setPlayer(player)
