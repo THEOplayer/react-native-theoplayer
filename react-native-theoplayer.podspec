@@ -36,18 +36,18 @@ Pod::Spec.new do |s|
     }
   else 
   	puts "Using THEOplayer-core SDK"
-    s.dependency "THEOplayerSDK-core", "~> 6.0"
+    s.dependency "THEOplayerSDK-core", "~> 6.9"
     if theofeatures.include?("GOOGLE_IMA") 
 	  puts "Adding THEOplayer-Integration-GoogleIMA"
-      s.dependency "THEOplayer-Integration-GoogleIMA", "~> 6.0"
+      s.dependency "THEOplayer-Integration-GoogleIMA", "~> 6.9"
     end
     if theofeatures.include?("CHROMECAST")
 	  puts "Adding THEOplayer-Integration-GoogleCast"
-      s.ios.dependency "THEOplayer-Integration-GoogleCast", "~> 6.0"
+      s.ios.dependency "THEOplayer-Integration-GoogleCast", "~> 6.9"
     end
     if theofeatures.include?("SIDELOADED_TEXTTRACKS") 
 	  puts "Adding THEOplayer-Connector-SideloadedSubtitle"
-      s.dependency "THEOplayer-Connector-SideloadedSubtitle", "~> 6.1", ">= 6.1.1"
+      s.dependency "THEOplayer-Connector-SideloadedSubtitle", "~> 6.9"
     end
   end
   
