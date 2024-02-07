@@ -24,7 +24,7 @@ import {
 } from '@theoplayer/react-native-ui';
 import { PlayerConfiguration, PlayerEventType, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
 
-import { Platform, StyleSheet, View, ViewStyle } from 'react-native';
+import { Platform, SafeAreaView, StyleSheet, View, ViewStyle } from 'react-native';
 import { SourceMenuButton, SOURCES } from './custom/SourceMenuButton';
 import { BackgroundAudioSubMenu } from './custom/BackgroundAudioSubMenu';
 import { PiPSubMenu } from './custom/PipSubMenu';
@@ -83,17 +83,17 @@ export default function App() {
   const needsBorder = Platform.OS === 'ios';
   const PLAYER_CONTAINER_STYLE: ViewStyle = {
     position: 'absolute',
-    top: needsBorder ? 20 : 0,
-    left: needsBorder ? 5 : 0,
+    top: 0,
+    left: needsBorder ? 2 : 0,
     bottom: 0,
-    right: needsBorder ? 5 : 0,
+    right: needsBorder ? 2 : 0,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#000000',
   };
 
   return (
-    <View style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}>
+    <SafeAreaView style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}>
       <View style={PLAYER_CONTAINER_STYLE}>
         <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady}>
           {player !== undefined && chromeless && (
@@ -147,6 +147,6 @@ export default function App() {
           )}
         </THEOplayerView>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
