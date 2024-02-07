@@ -132,7 +132,9 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   private onPresentationModeChange = (event: PresentationModeChangeEvent) => {
     this._state.presentationMode = event.presentationMode;
-    StatusBar.setHidden(event.presentationMode === PresentationMode.fullscreen, 'slide');
+    if (Platform.OS === 'ios') {
+      StatusBar.setHidden(event.presentationMode === PresentationMode.fullscreen, 'slide');
+    }
   };
 
   private onTimeupdate = (event: TimeUpdateEvent) => {
