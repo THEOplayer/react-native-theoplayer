@@ -11,6 +11,7 @@ public class THEOplayerRCTView: UIView {
     public private(set) var broadcastEventHandler: THEOplayerRCTBroadcastEventHandler
     var textTrackEventHandler: THEOplayerRCTTextTrackEventHandler
     var mediaTrackEventHandler: THEOplayerRCTMediaTrackEventHandler
+    var metadataTrackEventHandler: THEOplayerRCTSideloadedMetadataTrackEventHandler
     var adEventHandler: THEOplayerRCTAdsEventHandler
     var castEventHandler: THEOplayerRCTCastEventHandler
     var nowPlayingManager: THEOplayerRCTNowPlayingManager
@@ -48,6 +49,7 @@ public class THEOplayerRCTView: UIView {
         self.broadcastEventHandler = THEOplayerRCTBroadcastEventHandler()
         self.textTrackEventHandler = THEOplayerRCTTextTrackEventHandler()
         self.mediaTrackEventHandler = THEOplayerRCTMediaTrackEventHandler()
+        self.metadataTrackEventHandler = THEOplayerRCTSideloadedMetadataTrackEventHandler()
         self.adEventHandler = THEOplayerRCTAdsEventHandler()
         self.castEventHandler = THEOplayerRCTCastEventHandler()
         self.nowPlayingManager = THEOplayerRCTNowPlayingManager()
@@ -157,13 +159,9 @@ public class THEOplayerRCTView: UIView {
     }
     
     func processMetadataTracks(metadataTrackDescriptions: [TextTrackDescription]?) {
-        if let trackDescriptions = metadataTrackDescriptions {
-            THEOplayerRCTTrackMetadataAggregator.aggregatedMetadataTrackInfo(metadataTrackDescriptions: trackDescriptions) { tracksInfo in
-                self.mainEventHandler.setMetadataTracksInfo(metadataTracksInfo: tracksInfo)
-                for trackInfo in tracksInfo {
-                    self.textTrackEventHandler.triggerAddMetadataTrackEvent(metadataTrackInfo: trackInfo)
-                }
-            }
+        THEOplayerRCTSideloadedMetadataProcessor.loadTrackInfoFromTrackDescriptions(metadataTrackDescriptions) { tracksInfo in
+            self.mainEventHandler.setLoadedMetadataTracksInfo(tracksInfo)
+            self.metadataTrackEventHandler.setLoadedMetadataTracksInfo(tracksInfo)
         }
     }
     

@@ -1,4 +1,4 @@
-// THEOplayerRCTMetadataAggregator.swift
+// THEOplayerRCTSideloadedMetadataProcessor.swift
 
 import Foundation
 import THEOplayerSDK
@@ -9,7 +9,17 @@ struct Cue {
     var cueContent: String
 }
 
-class THEOplayerRCTSideloadedMetadataTrackHandler {
+class THEOplayerRCTSideloadedMetadataProcessor {
+    
+    class func loadTrackInfoFromTrackDescriptions(_ metadataTrackDescriptions: [TextTrackDescription]?, completed: (([[String:Any]]) -> Void)?) {
+        if let trackDescriptions = metadataTrackDescriptions {
+            THEOplayerRCTTrackMetadataAggregator.aggregatedMetadataTrackInfo(metadataTrackDescriptions: trackDescriptions) { tracksInfo in
+                completed?(tracksInfo)
+            }
+        } else {
+            completed?([])
+        }
+    }
     
     class func parseVtt(_ urlString: String, completion: @escaping ([Cue]?) -> Void) {
             guard let url = URL(string: urlString) else {
@@ -24,7 +34,7 @@ class THEOplayerRCTSideloadedMetadataTrackHandler {
                 }
                 
                 if let vttString = String(data: data, encoding: .utf8) {
-                    let cues = THEOplayerRCTSideloadedMetadataTrackHandler.parseVTTString(vttString)
+                    let cues = THEOplayerRCTSideloadedMetadataProcessor.parseVTTString(vttString)
                     completion(cues)
                 } else {
                     completion(nil)
@@ -38,7 +48,7 @@ class THEOplayerRCTSideloadedMetadataTrackHandler {
             var cues: [Cue] = []
             var currentCue: Cue?
             
-        let separator = THEOplayerRCTSideloadedMetadataTrackHandler.separatorSequence(vttString)
+        let separator = THEOplayerRCTSideloadedMetadataProcessor.separatorSequence(vttString)
         let lines = vttString.components(separatedBy: separator)
         for line in lines {
             if line.isEmpty {                                               // process unprocessed cue to list

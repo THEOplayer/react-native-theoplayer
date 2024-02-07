@@ -247,7 +247,7 @@ class THEOplayerRCTTrackMetadataAggregator {
             guard trackDescription.kind == .metadata, trackDescription.format == .WebVTT else { continue }
             
             let urlString = trackDescription.src.absoluteString
-            THEOplayerRCTSideloadedMetadataTrackHandler.parseVtt(urlString) { cueArray in
+            THEOplayerRCTSideloadedMetadataProcessor.parseVtt(urlString) { cueArray in
                 if let cues = cueArray {
                     var track: [String:Any] = [:]
                     let trackUid = 1000 + trackIndex
