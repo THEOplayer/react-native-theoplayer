@@ -62,7 +62,7 @@ import type {
 import type { NativeAdEvent } from './adapter/event/native/NativeAdEvent';
 import { THEOplayerAdapter } from './adapter/THEOplayerAdapter';
 import type { ScaledSize } from 'react-native/Libraries/Utilities/Dimensions';
-import { getUsableScreenSize } from './utils/Dimensions';
+import { getFullscreenSize } from './utils/Dimensions';
 
 const INVALID_HANDLE = -1;
 
@@ -115,7 +115,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
   private static initialState: THEOplayerRCTViewState = {
     error: undefined,
     presentationMode: PresentationMode.inline,
-    screenSize: getUsableScreenSize(),
+    screenSize: getFullscreenSize(),
   };
 
   constructor(props: THEOplayerViewProps) {
@@ -155,7 +155,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
   }
 
   private _onDimensionsChanged = () => {
-    this.setState({ screenSize: getUsableScreenSize() });
+    this.setState({ screenSize: getFullscreenSize() });
   };
 
   private _onNativePlayerReady = (event: NativeSyntheticEvent<NativePlayerStateEvent>) => {
