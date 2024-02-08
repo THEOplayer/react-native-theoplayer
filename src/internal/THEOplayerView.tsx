@@ -12,6 +12,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+import type { ScaledSize, EmitterSubscription } from 'react-native';
 import { isDateRangeCue, PlayerConfiguration, PlayerError, PresentationMode, TextTrackCue, THEOplayerViewProps } from 'react-native-theoplayer';
 import { CastEventType, PlayerEventType } from 'react-native-theoplayer';
 
@@ -61,7 +62,6 @@ import type {
 } from './adapter/event/native/NativePlayerEvent';
 import type { NativeAdEvent } from './adapter/event/native/NativeAdEvent';
 import { THEOplayerAdapter } from './adapter/THEOplayerAdapter';
-import type { ScaledSize } from 'react-native/Libraries/Utilities/Dimensions';
 import { getFullscreenSize } from './utils/Dimensions';
 
 const INVALID_HANDLE = -1;
@@ -111,6 +111,7 @@ type THEOplayerViewNativeComponent = HostComponent<THEOplayerRCTViewProps>;
 export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOplayerViewProps>, THEOplayerRCTViewState> {
   private readonly _root: React.RefObject<THEOplayerViewNativeComponent>;
   private readonly _facade: THEOplayerAdapter;
+  private _dimensionsHandler?: EmitterSubscription = undefined;
 
   private static initialState: THEOplayerRCTViewState = {
     error: undefined,
@@ -126,7 +127,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
   }
 
   componentDidMount() {
-    Dimensions.addEventListener('change', this._onDimensionsChanged);
+    this._dimensionsHandler = Dimensions.addEventListener('change', this._onDimensionsChanged);
   }
 
   componentWillUnmount() {
@@ -136,6 +137,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
       onPlayerDestroy(this._facade);
     }
     this._facade.dispatchEvent(new BaseEvent(PlayerEventType.DESTROY));
+    this._dimensionsHandler?.remove();
 
     if (Platform.OS === 'ios') {
       // TODO: move to native module
@@ -342,7 +344,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
 
   public render(): JSX.Element {
     const { config, style, children } = this.props;
-    const { presentationMode, screenSize : fullscreenSize } = this.state;
+    const { presentationMode, screenSize: fullscreenSize } = this.state;
 
     return (
       <View style={[styles.base, style, presentationMode === PresentationMode.fullscreen ? fullscreenSize : {}]}>
