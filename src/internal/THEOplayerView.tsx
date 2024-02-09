@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import {
+  Dimensions,
   findNodeHandle,
   HostComponent,
   NativeSyntheticEvent,
@@ -11,7 +12,8 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import { isDateRangeCue, PlayerConfiguration, PlayerError, TextTrackCue, THEOplayerViewProps } from 'react-native-theoplayer';
+import type { ScaledSize, EmitterSubscription } from 'react-native';
+import { isDateRangeCue, PlayerConfiguration, PlayerError, PresentationMode, TextTrackCue, THEOplayerViewProps } from 'react-native-theoplayer';
 import { CastEventType, PlayerEventType } from 'react-native-theoplayer';
 
 import styles from './THEOplayerView.style';
@@ -60,6 +62,7 @@ import type {
 } from './adapter/event/native/NativePlayerEvent';
 import type { NativeAdEvent } from './adapter/event/native/NativeAdEvent';
 import { THEOplayerAdapter } from './adapter/THEOplayerAdapter';
+import { getFullscreenSize } from './utils/Dimensions';
 
 const INVALID_HANDLE = -1;
 
@@ -99,6 +102,8 @@ interface THEOplayerRCTViewProps {
 
 interface THEOplayerRCTViewState {
   error?: PlayerError;
+  presentationMode?: PresentationMode | undefined;
+  screenSize: ScaledSize;
 }
 
 type THEOplayerViewNativeComponent = HostComponent<THEOplayerRCTViewProps>;
@@ -106,9 +111,12 @@ type THEOplayerViewNativeComponent = HostComponent<THEOplayerRCTViewProps>;
 export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOplayerViewProps>, THEOplayerRCTViewState> {
   private readonly _root: React.RefObject<THEOplayerViewNativeComponent>;
   private readonly _facade: THEOplayerAdapter;
+  private _dimensionsHandler?: EmitterSubscription = undefined;
 
   private static initialState: THEOplayerRCTViewState = {
     error: undefined,
+    presentationMode: PresentationMode.inline,
+    screenSize: getFullscreenSize(),
   };
 
   constructor(props: THEOplayerViewProps) {
@@ -118,6 +126,10 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
     this._facade = new THEOplayerAdapter(this);
   }
 
+  componentDidMount() {
+    this._dimensionsHandler = Dimensions.addEventListener('change', this._onDimensionsChanged);
+  }
+
   componentWillUnmount() {
     // Notify the player will be destroyed.
     const { onPlayerDestroy } = this.props;
@@ -125,6 +137,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
       onPlayerDestroy(this._facade);
     }
     this._facade.dispatchEvent(new BaseEvent(PlayerEventType.DESTROY));
+    this._dimensionsHandler?.remove();
 
     if (Platform.OS === 'ios') {
       // TODO: move to native module
@@ -142,6 +155,10 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
   private reset() {
     this.setState(THEOplayerView.initialState);
   }
+
+  private _onDimensionsChanged = () => {
+    this.setState({ screenSize: getFullscreenSize() });
+  };
 
   private _onNativePlayerReady = (event: NativeSyntheticEvent<NativePlayerStateEvent>) => {
     // Optionally apply an initial player state
@@ -315,6 +332,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
   };
 
   private _onPresentationModeChange = (event: NativeSyntheticEvent<NativePresentationModeChangeEvent>) => {
+    this.setState({ presentationMode: event.nativeEvent.presentationMode });
     this._facade.dispatchEvent(
       new DefaultPresentationModeChangeEvent(
         event.nativeEvent.presentationMode,
@@ -326,8 +344,10 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
 
   public render(): JSX.Element {
     const { config, style, children } = this.props;
+    const { presentationMode, screenSize: fullscreenSize } = this.state;
+
     return (
-      <View style={[styles.base, style]}>
+      <View style={[styles.base, style, presentationMode === PresentationMode.fullscreen ? fullscreenSize : {}]}>
         <THEOplayerRCTView
           ref={this._root}
           style={StyleSheet.absoluteFill}
@@ -369,7 +389,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
 
 const LINKING_ERROR =
   `The package 'react-native-theoplayer' doesn't seem to be linked. Make sure: \n\n` +
-  Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
+  Platform.select({ ios: '- You have run \'pod install\'\n', default: '' }) +
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo managed workflow\n';
 
@@ -379,5 +399,5 @@ const THEOplayerRCTView =
   UIManager.getViewManagerConfig(ComponentName) != null
     ? requireNativeComponent<THEOplayerRCTViewProps>(ComponentName)
     : () => {
-        throw new Error(LINKING_ERROR);
-      };
+      throw new Error(LINKING_ERROR);
+    };

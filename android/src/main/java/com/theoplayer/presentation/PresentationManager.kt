@@ -8,11 +8,20 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
+import android.view.View
+import android.view.View.OnLayoutChangeListener
+import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewParent
 import androidx.activity.ComponentActivity
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.children
+import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.Lifecycle
+import com.facebook.react.ReactRootView
 import com.facebook.react.uimanager.ThemedReactContext
+import com.facebook.react.views.view.ReactViewGroup
 import com.theoplayer.PlayerEventEmitter
 import com.theoplayer.ReactTHEOplayerContext
 import com.theoplayer.android.api.error.ErrorCode
@@ -28,7 +37,8 @@ class PresentationManager(
   private var supportsPip = false
   private var onUserLeaveHintReceiver: BroadcastReceiver? = null
   private var onPictureInPictureModeChanged: BroadcastReceiver? = null
-
+  private var playerGroupParentNode: ViewGroup? = null
+  private var playerGroupChildIndex: Int? = null
   private val pipUtils: PipUtils = PipUtils(viewCtx, reactContext)
 
   var currentPresentationMode: PresentationMode = PresentationMode.INLINE
@@ -189,16 +199,38 @@ class PresentationManager(
     }
     val activity = reactContext.currentActivity ?: return
     val window = activity.window
+
+    // Get the player's ReactViewGroup parent, which contains THEOplayerView and its children (typically the UI).
+    val reactPlayerGroup: ReactViewGroup? = getClosestParentOfType(this.viewCtx.playerView)
+
+    // Get ReactNative's root node or the render hiearchy
+    val root: ReactRootView? = getClosestParentOfType(reactPlayerGroup)
+
     if (fullscreen) {
       WindowInsetsControllerCompat(window, window.decorView).apply {
         systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
       }.hide(WindowInsetsCompat.Type.systemBars())
       updatePresentationMode(PresentationMode.FULLSCREEN)
+
+      playerGroupParentNode = (reactPlayerGroup?.parent as ReactViewGroup?)?.also { parent ->
+        playerGroupChildIndex = parent.indexOfChild(reactPlayerGroup)
+        // Re-parent the playerViewGroup to the root node
+        parent.removeView(reactPlayerGroup)
+        root?.addView(reactPlayerGroup)
+      }
     } else {
       WindowInsetsControllerCompat(window, window.decorView).show(
         WindowInsetsCompat.Type.systemBars()
       )
       updatePresentationMode(PresentationMode.INLINE)
+
+      root?.run {
+        // Re-parent the playerViewGroup from the root node to its original parent
+        removeView(reactPlayerGroup)
+        playerGroupParentNode?.addView(reactPlayerGroup, playerGroupChildIndex ?: 0)
+        playerGroupParentNode = null
+        playerGroupChildIndex = null
+      }
     }
   }
 
@@ -223,4 +255,12 @@ class PresentationManager(
       viewCtx.player.pause()
     }
   }
+}
+
+inline fun <reified T : View> getClosestParentOfType(view: View?): T? {
+  var parent: ViewParent? = view?.parent
+  while (parent != null && parent !is T) {
+    parent = parent.parent
+  }
+  return parent as? T
 }
