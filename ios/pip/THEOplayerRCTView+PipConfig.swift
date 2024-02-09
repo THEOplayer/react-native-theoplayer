@@ -40,12 +40,12 @@ extension THEOplayerRCTView: AVPictureInPictureControllerDelegate {
     // MARK: - AVPictureInPictureControllerDelegate
     @available(tvOS 14.0, *)
     public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        self.presentationModeContext.pipContext = .PIP_CLOSED
+        self.presentationModeManager.presentationModeContext.pipContext = .PIP_CLOSED
         self.pipControlsManager.willStartPip()
     }
     
     @available(tvOS 14.0, *)
     public func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
-        self.presentationModeContext.pipContext = .PIP_RESTORED
+        self.presentationModeManager.presentationModeContext.pipContext = .PIP_RESTORED
     }
 }

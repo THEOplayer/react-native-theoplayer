@@ -3,7 +3,8 @@ import type {
   ABRConfiguration,
   AdsAPI,
   CastAPI,
-  DurationChangeEvent, EventBroadcastAPI,
+  DurationChangeEvent,
+  EventBroadcastAPI,
   LoadedMetadataEvent,
   MediaTrack,
   MediaTrackEvent,
@@ -45,10 +46,10 @@ import {
 import { THEOplayerNativeAdsAdapter } from './ads/THEOplayerNativeAdsAdapter';
 import { THEOplayerNativeCastAdapter } from './cast/THEOplayerNativeCastAdapter';
 import { AbrAdapter } from './abr/AbrAdapter';
-import { NativeModules, Platform } from 'react-native';
+import { NativeModules, Platform, StatusBar } from 'react-native';
 import { TextTrackStyleAdapter } from './track/TextTrackStyleAdapter';
 import type { NativePlayerState } from './NativePlayerState';
-import { EventBroadcastAdapter } from "./broadcast/EventBroadcastAdapter";
+import { EventBroadcastAdapter } from './broadcast/EventBroadcastAdapter';
 
 const defaultPlayerState: NativePlayerState = {
   source: undefined,
@@ -131,6 +132,9 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   private onPresentationModeChange = (event: PresentationModeChangeEvent) => {
     this._state.presentationMode = event.presentationMode;
+    if (Platform.OS === 'ios') {
+      StatusBar.setHidden(event.presentationMode === PresentationMode.fullscreen, 'slide');
+    }
   };
 
   private onTimeupdate = (event: TimeUpdateEvent) => {
@@ -146,7 +150,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._state.selectedVideoTrack = event.selectedVideoTrack;
     this._state.selectedTextTrack = event.selectedTextTrack;
     if (isFinite(this._state.duration)) {
-      this._state.seekable = [{start: 0, end: this._state.duration}];
+      this._state.seekable = [{ start: 0, end: this._state.duration }];
     }
   };
 
@@ -394,7 +398,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
       return;
     }
     this._state.selectedAudioTrack = trackUid;
-    NativeModules.PlayerModule.setSelectedAudioTrack(this._view.nativeHandle, (trackUid !== undefined) ? trackUid : -1);
+    NativeModules.PlayerModule.setSelectedAudioTrack(this._view.nativeHandle, trackUid !== undefined ? trackUid : -1);
   }
 
   get videoTracks(): MediaTrack[] {
@@ -411,7 +415,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     }
     this._state.selectedVideoTrack = trackUid;
     this._state.targetVideoQuality = undefined;
-    NativeModules.PlayerModule.setSelectedVideoTrack(this._view.nativeHandle, (trackUid !== undefined) ? trackUid : -1);
+    NativeModules.PlayerModule.setSelectedVideoTrack(this._view.nativeHandle, trackUid !== undefined ? trackUid : -1);
   }
 
   get textTracks(): TextTrack[] {
@@ -434,7 +438,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
         track.mode = TextTrackMode.disabled;
       }
     });
-    NativeModules.PlayerModule.setSelectedTextTrack(this._view.nativeHandle, (trackUid !== undefined) ? trackUid : -1);
+    NativeModules.PlayerModule.setSelectedTextTrack(this._view.nativeHandle, trackUid !== undefined ? trackUid : -1);
   }
 
   get textTrackStyle(): TextTrackStyle {

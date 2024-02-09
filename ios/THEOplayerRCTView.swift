@@ -11,12 +11,13 @@ public class THEOplayerRCTView: UIView {
     public private(set) var broadcastEventHandler: THEOplayerRCTBroadcastEventHandler
     var textTrackEventHandler: THEOplayerRCTTextTrackEventHandler
     var mediaTrackEventHandler: THEOplayerRCTMediaTrackEventHandler
+    var metadataTrackEventHandler: THEOplayerRCTSideloadedMetadataTrackEventHandler
     var adEventHandler: THEOplayerRCTAdsEventHandler
     var castEventHandler: THEOplayerRCTCastEventHandler
+    var presentationModeManager: THEOplayerRCTPresentationModeManager
     var nowPlayingManager: THEOplayerRCTNowPlayingManager
     var remoteCommandsManager: THEOplayerRCTRemoteCommandsManager
     var pipControlsManager: THEOplayerRCTPipControlsManager
-    var presentationModeContext = THEOplayerRCTPresentationModeContext()
     var adsConfig = AdsConfig()
     var castConfig = CastConfig()
     var uiConfig = UIConfig()
@@ -48,8 +49,10 @@ public class THEOplayerRCTView: UIView {
         self.broadcastEventHandler = THEOplayerRCTBroadcastEventHandler()
         self.textTrackEventHandler = THEOplayerRCTTextTrackEventHandler()
         self.mediaTrackEventHandler = THEOplayerRCTMediaTrackEventHandler()
+        self.metadataTrackEventHandler = THEOplayerRCTSideloadedMetadataTrackEventHandler()
         self.adEventHandler = THEOplayerRCTAdsEventHandler()
         self.castEventHandler = THEOplayerRCTCastEventHandler()
+        self.presentationModeManager = THEOplayerRCTPresentationModeManager()
         self.nowPlayingManager = THEOplayerRCTNowPlayingManager()
         self.remoteCommandsManager = THEOplayerRCTRemoteCommandsManager()
         self.pipControlsManager = THEOplayerRCTPipControlsManager()
@@ -75,9 +78,10 @@ public class THEOplayerRCTView: UIView {
         // Create new player instance
         if let player = self.initPlayer() {
             // Attach player instance to event handlers
-            self.mainEventHandler.setPlayer(player, presentationModeContext: self.presentationModeContext)
+            self.mainEventHandler.setPlayer(player)
             self.textTrackEventHandler.setPlayer(player)
             self.mediaTrackEventHandler.setPlayer(player)
+            self.presentationModeManager.setPlayer(player, view: self)
             self.adEventHandler.setPlayer(player)
             self.castEventHandler.setPlayer(player)
             self.nowPlayingManager.setPlayer(player)
@@ -157,13 +161,9 @@ public class THEOplayerRCTView: UIView {
     }
     
     func processMetadataTracks(metadataTrackDescriptions: [TextTrackDescription]?) {
-        if let trackDescriptions = metadataTrackDescriptions {
-            THEOplayerRCTTrackMetadataAggregator.aggregatedMetadataTrackInfo(metadataTrackDescriptions: trackDescriptions) { tracksInfo in
-                self.mainEventHandler.setMetadataTracksInfo(metadataTracksInfo: tracksInfo)
-                for trackInfo in tracksInfo {
-                    self.textTrackEventHandler.triggerAddMetadataTrackEvent(metadataTrackInfo: trackInfo)
-                }
-            }
+        THEOplayerRCTSideloadedMetadataProcessor.loadTrackInfoFromTrackDescriptions(metadataTrackDescriptions) { tracksInfo in
+            self.mainEventHandler.setLoadedMetadataTracksInfo(tracksInfo)
+            self.metadataTrackEventHandler.setLoadedMetadataTracksInfo(tracksInfo)
         }
     }
     
@@ -312,9 +312,11 @@ public class THEOplayerRCTView: UIView {
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeCanPlay prop set.") }
     }
     
+    // MARK: - Listener based PRESENTATIONMODE event bridging
+    
     @objc(setOnNativePresentationModeChange:)
     func setOnNativePresentationModeChange(nativePresentationMode: @escaping RCTDirectEventBlock) {
-        self.mainEventHandler.onNativePresentationModeChange = nativePresentationMode
+        self.presentationModeManager.onNativePresentationModeChange = nativePresentationMode
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativePresentationMode prop set.") }
     }
     

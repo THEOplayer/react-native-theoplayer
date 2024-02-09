@@ -6,3 +6,4 @@
 #import <React/RCTUIManager.h>
 #import <React/RCTBridgeModule.h>
 #import <React/RCTEventEmitter.h>
+#import <React/RCTRootContentView.h>
