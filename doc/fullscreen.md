@@ -51,9 +51,9 @@ Make the current _inline video player_ component stretch itself while covering a
 The second option is able to let a video play inline with the other screen elements. The player is a part of the
 view hierarchy and will need to cover the whole screen without remounting the player component.
 
-| ![](./fullscreen_android.gif)                                              | ![](./fullscreen_ios.gif)                                              |
-|----------------------------------------------------------------------------|------------------------------------------------------------------------|
-| Transitioning from an inline player to fullscreen using Portals on Android | Transitioning from an inline player to fullscreen using Portals on iOS |
+| ![](./fullscreen_android.gif)                                 | ![](./fullscreen_ios.gif)                                 |
+|---------------------------------------------------------------|-----------------------------------------------------------|
+| Transitioning from an inline player to fullscreen on Android. | Transitioning from an inline player to fullscreen on iOS. |
 
 The `react-native-theoplayer` SDK supports this option on iOS and Android by re-parenting the native view to the
 top-most node of the view hierarchy when the player's presentation mode is set to `fullscreen`.
