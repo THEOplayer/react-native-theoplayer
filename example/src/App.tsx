@@ -25,6 +25,7 @@ import {
 import { PlayerConfiguration, PlayerEventType, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
 
 import { Platform, SafeAreaView, StyleSheet, View, ViewStyle } from 'react-native';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { SourceMenuButton, SOURCES } from './custom/SourceMenuButton';
 import { BackgroundAudioSubMenu } from './custom/BackgroundAudioSubMenu';
 import { PiPSubMenu } from './custom/PipSubMenu';
@@ -83,7 +84,7 @@ export default function App() {
   const needsBorder = Platform.OS === 'ios';
   const PLAYER_CONTAINER_STYLE: ViewStyle = {
     position: 'absolute',
-    top: 0,
+    top: needsBorder ? getStatusBarHeight() : 0,
     left: needsBorder ? 2 : 0,
     bottom: 0,
     right: needsBorder ? 2 : 0,
