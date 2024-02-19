@@ -14,7 +14,7 @@ class CastModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(
   private val viewResolver: ViewResolver = ViewResolver(context)
 
   override fun getName(): String {
-    return "CastModule"
+    return "THEORCTCastModule"
   }
 
   @ReactMethod
