@@ -2,6 +2,8 @@ import type { Airplay } from 'react-native-theoplayer';
 import { CastEvent, CastEventType, CastState, PlayerEventType, THEOplayer } from 'react-native-theoplayer';
 import { NativeModules } from 'react-native';
 
+const NativeCastModule = NativeModules.THEORCTCastModule;
+
 export class THEOplayerNativeAirplay implements Airplay {
   private readonly _player: THEOplayer;
 
@@ -14,8 +16,8 @@ export class THEOplayerNativeAirplay implements Airplay {
   }
 
   async init_(): Promise<void> {
-    this._casting = await NativeModules.CastModule.airplayCasting(this._player.nativeHandle);
-    this._state = await NativeModules.CastModule.airplayState(this._player.nativeHandle);
+    this._casting = await NativeCastModule.airplayCasting(this._player.nativeHandle);
+    this._state = await NativeCastModule.airplayState(this._player.nativeHandle);
   }
 
   private readonly _onCastStateChange = (event: CastEvent) => {
@@ -34,11 +36,11 @@ export class THEOplayerNativeAirplay implements Airplay {
   }
 
   start(): void {
-    NativeModules.CastModule.airplayStart(this._player.nativeHandle);
+    NativeCastModule.airplayStart(this._player.nativeHandle);
   }
 
   stop(): void {
-    NativeModules.CastModule.airplayStop(this._player.nativeHandle);
+    NativeCastModule.airplayStop(this._player.nativeHandle);
   }
 
   unload_(): void {

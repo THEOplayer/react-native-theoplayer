@@ -3,6 +3,8 @@ import { NativeModules } from 'react-native';
 import type { THEOplayerAdapter } from '../THEOplayerAdapter';
 import type { StringKeyOf } from '../../../api/event/EventDispatcher';
 
+const NativeEventBroadcastModule = NativeModules.THEORCTEventBroadcastModule;
+
 export class EventBroadcastAdapter implements EventBroadcastAPI {
   constructor(private _player: THEOplayer) {}
 
@@ -12,7 +14,7 @@ export class EventBroadcastAdapter implements EventBroadcastAPI {
 
     try {
       // Broadcast native event.
-      NativeModules.EventBroadcastModule.broadcastEvent(this._player.nativeHandle, Object.freeze(event));
+      NativeEventBroadcastModule.broadcastEvent(this._player.nativeHandle, Object.freeze(event));
     } catch (e) {
       console.warn(`EventBroadcastModule not available: ${e}`);
     }

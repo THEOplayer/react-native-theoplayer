@@ -1,6 +1,8 @@
 import type { ABRConfiguration, ABRStrategy, THEOplayerView } from 'react-native-theoplayer';
 import { NativeModules } from 'react-native';
 
+const NativePlayerModule = NativeModules.THEORCTPlayerModule;
+
 export class AbrAdapter implements ABRConfiguration {
   private readonly _view: THEOplayerView;
   private _strategy: ABRStrategy | undefined;
@@ -29,7 +31,7 @@ export class AbrAdapter implements ABRConfiguration {
   }
 
   private updateConfig() {
-    NativeModules.PlayerModule.setABRConfig(this._view.nativeHandle, {
+    NativePlayerModule.setABRConfig(this._view.nativeHandle, {
       targetBuffer: this._targetBuffer,
       strategy: this._strategy,
     });

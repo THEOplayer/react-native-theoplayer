@@ -2,6 +2,8 @@ import type { CastEvent, Chromecast, THEOplayerView } from 'react-native-theopla
 import { CastEventType, CastState, PlayerEventType, THEOplayer } from 'react-native-theoplayer';
 import { NativeModules } from 'react-native';
 
+const NativeCastModule = NativeModules.THEORCTCastModule;
+
 export class THEOplayerNativeChromecast implements Chromecast {
   private readonly _player: THEOplayer;
   private readonly _view: THEOplayerView;
@@ -16,8 +18,8 @@ export class THEOplayerNativeChromecast implements Chromecast {
   }
 
   async init_(): Promise<void> {
-    this._casting = await NativeModules.CastModule.chromecastCasting(this._view.nativeHandle);
-    this._state = await NativeModules.CastModule.chromecastState(this._view.nativeHandle);
+    this._casting = await NativeCastModule.chromecastCasting(this._view.nativeHandle);
+    this._state = await NativeCastModule.chromecastState(this._view.nativeHandle);
   }
 
   private readonly _onCastStateChange = (event: CastEvent) => {
@@ -36,19 +38,19 @@ export class THEOplayerNativeChromecast implements Chromecast {
   }
 
   start(): void {
-    NativeModules.CastModule.chromecastStart(this._view.nativeHandle);
+    NativeCastModule.chromecastStart(this._view.nativeHandle);
   }
 
   stop(): void {
-    NativeModules.CastModule.chromecastStop(this._view.nativeHandle);
+    NativeCastModule.chromecastStop(this._view.nativeHandle);
   }
 
   join(): void {
-    NativeModules.CastModule.chromecastJoin(this._view.nativeHandle);
+    NativeCastModule.chromecastJoin(this._view.nativeHandle);
   }
 
   leave(): void {
-    NativeModules.CastModule.chromecastLeave(this._view.nativeHandle);
+    NativeCastModule.chromecastLeave(this._view.nativeHandle);
   }
 
   unload_(): void {

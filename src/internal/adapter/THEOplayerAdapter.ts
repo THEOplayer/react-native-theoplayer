@@ -51,6 +51,8 @@ import { TextTrackStyleAdapter } from './track/TextTrackStyleAdapter';
 import type { NativePlayerState } from './NativePlayerState';
 import { EventBroadcastAdapter } from './broadcast/EventBroadcastAdapter';
 
+const NativePlayerModule = NativeModules.THEORCTPlayerModule;
+
 const defaultPlayerState: NativePlayerState = {
   source: undefined,
   autoplay: false,
@@ -281,7 +283,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   set preload(type: PreloadType) {
     this._state.preload = type;
-    NativeModules.PlayerModule.setPreload(this._view.nativeHandle, type);
+    NativePlayerModule.setPreload(this._view.nativeHandle, type);
   }
 
   get preload(): PreloadType {
@@ -325,7 +327,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     }
 
     this._state.currentTime = seekTime;
-    NativeModules.PlayerModule.setCurrentTime(this._view.nativeHandle, seekTime);
+    NativePlayerModule.setCurrentTime(this._view.nativeHandle, seekTime);
   }
 
   get duration(): number {
@@ -338,7 +340,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   set pipConfiguration(pipConfiguration: PiPConfiguration) {
     this._state.pipConfig = pipConfiguration;
-    NativeModules.PlayerModule.setPipConfig(this._view.nativeHandle, pipConfiguration);
+    NativePlayerModule.setPipConfig(this._view.nativeHandle, pipConfiguration);
   }
 
   get backgroundAudioConfiguration(): BackgroundAudioConfiguration {
@@ -347,7 +349,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   set backgroundAudioConfiguration(backgroundAudioConfiguration: BackgroundAudioConfiguration) {
     this._state.backgroundAudioConfig = backgroundAudioConfiguration;
-    NativeModules.PlayerModule.setBackgroundAudioConfig(this._view.nativeHandle, backgroundAudioConfiguration);
+    NativePlayerModule.setBackgroundAudioConfig(this._view.nativeHandle, backgroundAudioConfiguration);
   }
 
   get presentationMode(): PresentationMode {
@@ -356,7 +358,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   set presentationMode(presentationMode: PresentationMode) {
     this._state.presentationMode = presentationMode;
-    NativeModules.PlayerModule.setPresentationMode(this._view.nativeHandle, presentationMode);
+    NativePlayerModule.setPresentationMode(this._view.nativeHandle, presentationMode);
   }
 
   get muted(): boolean {
@@ -365,7 +367,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   set muted(muted: boolean) {
     this._state.muted = muted;
-    NativeModules.PlayerModule.setMuted(this._view.nativeHandle, muted);
+    NativePlayerModule.setMuted(this._view.nativeHandle, muted);
   }
 
   get seeking(): boolean {
@@ -382,7 +384,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   set playbackRate(playbackRate: number) {
     this._state.playbackRate = playbackRate;
-    NativeModules.PlayerModule.setPlaybackRate(this._view.nativeHandle, playbackRate);
+    NativePlayerModule.setPlaybackRate(this._view.nativeHandle, playbackRate);
   }
 
   get audioTracks(): MediaTrack[] {
@@ -398,7 +400,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
       return;
     }
     this._state.selectedAudioTrack = trackUid;
-    NativeModules.PlayerModule.setSelectedAudioTrack(this._view.nativeHandle, trackUid !== undefined ? trackUid : -1);
+    NativePlayerModule.setSelectedAudioTrack(this._view.nativeHandle, trackUid !== undefined ? trackUid : -1);
   }
 
   get videoTracks(): MediaTrack[] {
@@ -415,7 +417,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     }
     this._state.selectedVideoTrack = trackUid;
     this._state.targetVideoQuality = undefined;
-    NativeModules.PlayerModule.setSelectedVideoTrack(this._view.nativeHandle, trackUid !== undefined ? trackUid : -1);
+    NativePlayerModule.setSelectedVideoTrack(this._view.nativeHandle, trackUid !== undefined ? trackUid : -1);
   }
 
   get textTracks(): TextTrack[] {
@@ -438,7 +440,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
         track.mode = TextTrackMode.disabled;
       }
     });
-    NativeModules.PlayerModule.setSelectedTextTrack(this._view.nativeHandle, trackUid !== undefined ? trackUid : -1);
+    NativePlayerModule.setSelectedTextTrack(this._view.nativeHandle, trackUid !== undefined ? trackUid : -1);
   }
 
   get textTrackStyle(): TextTrackStyle {
@@ -453,7 +455,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     // This is to correctly reset autoplay during a source change.
     this.pause();
     this._state.source = source;
-    NativeModules.PlayerModule.setSource(this._view.nativeHandle, source);
+    NativePlayerModule.setSource(this._view.nativeHandle, source);
     // Reset state for play-out of new source
     Object.assign(this._state, {
       playbackRate: 1,
@@ -486,7 +488,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     if (track) {
       Object.assign(track, { ...track, targetQuality: this._state.targetVideoQuality });
     }
-    NativeModules.PlayerModule.setTargetVideoQuality(this._view.nativeHandle, this._state.targetVideoQuality);
+    NativePlayerModule.setTargetVideoQuality(this._view.nativeHandle, this._state.targetVideoQuality);
   }
 
   get volume(): number {
@@ -495,7 +497,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   set volume(volume: number) {
     this._state.volume = volume;
-    NativeModules.PlayerModule.setVolume(this._view.nativeHandle, volume);
+    NativePlayerModule.setVolume(this._view.nativeHandle, volume);
   }
 
   get aspectRatio(): AspectRatio {
@@ -504,7 +506,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   set aspectRatio(ratio: AspectRatio) {
     this._state.aspectRatio = ratio;
-    NativeModules.PlayerModule.setAspectRatio(this._view.nativeHandle, ratio);
+    NativePlayerModule.setAspectRatio(this._view.nativeHandle, ratio);
   }
 
   get keepScreenOn(): boolean {
@@ -514,21 +516,21 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   set keepScreenOn(value: boolean) {
     this._state.keepScreenOn = value;
     if (Platform.OS === 'android') {
-      NativeModules.PlayerModule.setKeepScreenOn(this._view.nativeHandle, value);
+      NativePlayerModule.setKeepScreenOn(this._view.nativeHandle, value);
     }
   }
 
   pause(): void {
     if (this.hasValidSource()) {
       this._state.paused = true;
-      NativeModules.PlayerModule.setPaused(this._view.nativeHandle, true);
+      NativePlayerModule.setPaused(this._view.nativeHandle, true);
     }
   }
 
   play(): void {
     if (this.hasValidSource()) {
       this._state.paused = false;
-      NativeModules.PlayerModule.setPaused(this._view.nativeHandle, false);
+      NativePlayerModule.setPaused(this._view.nativeHandle, false);
     }
   }
 
