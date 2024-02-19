@@ -12,18 +12,18 @@ let ERROR_MESSAGE_CAST_ACCESS_FAILURE = "Could not access THEOplayer Cast Module
 @objc(THEOplayerRCTCastAPI)
 class THEOplayerRCTCastAPI: NSObject, RCTBridgeModule {
     @objc var bridge: RCTBridge!
-    
+
     static func moduleName() -> String! {
-        return "CastModule"
+        return "THEORCTCastModule"
     }
-    
+
     static func requiresMainQueueSetup() -> Bool {
         return false
     }
-    
+
     // MARK: CHROMECAST AND AIRPLAY
 #if os(iOS)
-    
+
     @objc(casting:resolver:rejecter:)
     func casting(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         DispatchQueue.main.async {
@@ -36,15 +36,15 @@ class THEOplayerRCTCastAPI: NSObject, RCTBridgeModule {
             }
         }
     }
-    
+
 #else
-    
+
     @objc(casting:resolver:rejecter:)
     func casting(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if DEBUG_CAST_API { print(ERROR_MESSAGE_CASTING_UNSUPPORTED_FEATURE) }
         resolve(false)
     }
-    
+
 #endif
-    
+
 }

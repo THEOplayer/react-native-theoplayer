@@ -18,7 +18,7 @@ let BRIDGE_REQUEST_TIMEOUT = 10.0
 
 @objc(THEOplayerRCTContentProtectionAPI)
 class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
-    
+
     private var buildIntegrationCompletions: THEOplayerRCTSafeMap<String, (Bool) -> Void> = THEOplayerRCTSafeMap<String, (Bool) -> Void>()                          // [requestId : completion]
     private var certificateRequestCompletions:  THEOplayerRCTSafeMap<String, (Data?, Error?) -> Void> = THEOplayerRCTSafeMap<String, (Data?, Error?) -> Void>()     // [requestId : completion]
     private var certificateResponseCompletions:  THEOplayerRCTSafeMap<String, (Data?, Error?) -> Void> = THEOplayerRCTSafeMap<String, (Data?, Error?) -> Void>()    // [requestId : completion]
@@ -28,15 +28,15 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
     private var requestTimers:  THEOplayerRCTSafeMap<String, Timer> = THEOplayerRCTSafeMap<String, Timer>()                                                         // [requestId : Timer]
     private var requestIntegrationIds:  THEOplayerRCTSafeMap<String, String> = THEOplayerRCTSafeMap<String, String>()                                               // [requestId : integrationId]
     private var requestKeySystemIds:  THEOplayerRCTSafeMap<String, String> = THEOplayerRCTSafeMap<String, String>()                                                 // [requestId : keySystemId]
-    
+
     override static func moduleName() -> String! {
-        return "ContentProtectionModule"
+        return "THEORCTContentProtectionModule"
     }
-    
+
     override static func requiresMainQueueSetup() -> Bool {
         return false
     }
-    
+
     override func supportedEvents() -> [String]! {
         return ["onBuildIntegration",
                 "onCertificateRequest",
@@ -46,14 +46,14 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
                 "onExtractFairplayContentId"
         ]
     }
-    
+
     private func invalidateRequestWithId(_ requestId: String) {
         if let timer = self.requestTimers[requestId] {
             timer.invalidate()
             _ = self.requestTimers.removeValue(forKey: requestId)
         }
     }
-    
+
     // MARK: Module actions
     func handleBuildIntegration(integrationId: String, keySystemId: String, drmConfig: DRMConfiguration, completion: @escaping (Bool) -> Void) {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "handleBuildIntegration.") }
@@ -70,7 +70,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
             _ = self.buildIntegrationCompletions.removeValue(forKey: requestId)
         })
     }
-    
+
     func handleCertificateRequest(integrationId: String, keySystemId: String, certificateRequest: CertificateRequest, completion: @escaping (Data?, Error?) -> Void) {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "handleCertificateRequest.") }
         let requestId = UUID().uuidString
@@ -90,7 +90,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
             _ = self.certificateRequestCompletions.removeValue(forKey: requestId)
         })
     }
-    
+
     func handleCertificateResponse(integrationId: String, keySystemId: String, certificateResponse: CertificateResponse, completion: @escaping (Data?, Error?) -> Void) {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "handleCertificateResponse.") }
         let requestId = UUID().uuidString
@@ -106,7 +106,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
             _ = self.certificateResponseCompletions.removeValue(forKey: requestId)
         })
     }
-    
+
     func handleLicenseRequest(integrationId: String, keySystemId: String, licenseRequest: LicenseRequest, completion: @escaping (Data?, Error?) -> Void) {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "handleLicenseRequest.") }
         let requestId = UUID().uuidString
@@ -126,7 +126,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
             _ = self.licenseRequestCompletions.removeValue(forKey: requestId)
         })
     }
-    
+
     func handleLicenseResponse(integrationId: String, keySystemId: String, licenseResponse: LicenseResponse, completion: @escaping (Data?, Error?) -> Void) {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "handleLicenseResponse.") }
         let requestId = UUID().uuidString
@@ -142,7 +142,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
             _ = self.licenseResponseCompletions.removeValue(forKey: requestId)
         })
     }
-    
+
     func handleExtractFairplayContentId(integrationId: String, keySystemId: String, skdUrl: String, completion: @escaping (String, Error?) -> Void) {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "handleExtractFairplayContentId.") }
         let requestId = UUID().uuidString
@@ -159,7 +159,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
             _ = self.extractFairplayCompletions.removeValue(forKey: requestId)
         })
     }
-    
+
     // MARK: Incoming JS Notifications
     @objc(registerContentProtectionIntegration:keySystemId:)
     func registerContentProtectionIntegration(_ integrationId: String, keySystemId: String) -> Void {
@@ -178,7 +178,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
             if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "Prevented registering ContentProtectionIntegration for \(integrationId) - \(keySystemId)") }
         }
     }
-    
+
     @objc(onBuildProcessed:)
     func onBuildProcessed(_ result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onBuildProcessed.") }
@@ -191,7 +191,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
             print(CPI_TAG, "Failed to process buildIntegration result")
         }
     }
-    
+
     @objc(onCertificateRequestProcessedAsRequest:)
     func onCertificateRequestProcessedAsRequest(_ result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onCertificateRequestProcessedAsRequest.") }
@@ -228,7 +228,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
             print(CPI_TAG, "Failed to process certificate request as request")
         }
     }
-    
+
     @objc(onCertificateRequestProcessedAsCertificate:)
     func onCertificateRequestProcessedAsCertificate(_ result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onCertificateRequestProcessedAsCertificate.") }
@@ -244,7 +244,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
             print(CPI_TAG, "Failed to process certificate request as certificate")
         }
     }
-    
+
     @objc(onCertificateResponseProcessed:)
     func onCertificateResponseProcessed(_ result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onCertificateResponseProcessed.") }
@@ -260,7 +260,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
             print(CPI_TAG, "Failed to process certificate response")
         }
     }
-    
+
     @objc(onLicenseRequestProcessedAsRequest:)
     func onLicenseRequestProcessedAsRequest(_ result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onLicenseRequestProcessedAsRequest.") }
@@ -297,7 +297,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
             print(CPI_TAG, "Failed to process license request as request")
         }
     }
-    
+
     @objc(onLicenseRequestProcessedAsLicense:)
     func onLicenseRequestProcessedAsLicense(_ result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onLicenseRequestProcessedAsLicense.") }
@@ -313,7 +313,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
             print(CPI_TAG, "Failed to process license request as license")
         }
     }
-    
+
     @objc(onLicenseResponseProcessed:)
     func onLicenseResponseProcessed(_ result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onLicenseResponseProcessed.") }
@@ -329,7 +329,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
             print(CPI_TAG, "Failed to process license response")
         }
     }
-    
+
     @objc(onExtractFairplayContentIdProcessed:)
     func onExtractFairplayContentIdProcessed(_ result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onExtractFairplayContentIdProcessed.") }
@@ -342,7 +342,7 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
             print(CPI_TAG, "Failed to process extracted contentId result")
         }
     }
-    
+
     // MARK: Helpers
     private func keySystemFromString(_ keySystemIdString: String) -> THEOplayerSDK.KeySystemId {
         switch keySystemIdString.lowercased() {
