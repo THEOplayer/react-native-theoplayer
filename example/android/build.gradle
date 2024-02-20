@@ -6,54 +6,30 @@ buildscript {
     minSdkVersion = 24
     compileSdkVersion = 34
     targetSdkVersion = 34
-    ndkVersion = "23.1.7779620"
+    ndkVersion = "25.1.8937393"
     castFrameworkVersion = "21.4.0"
+    kotlinVersion = "1.8.0"
   }
   repositories {
     google()
     mavenCentral()
   }
   dependencies {
-    classpath("com.android.tools.build:gradle:7.4.2")
-    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.21")
+    classpath("com.android.tools.build:gradle")
     classpath("com.facebook.react:react-native-gradle-plugin")
-    // NOTE: Do not place your application dependencies here; they belong
-    // in the individual module build.gradle files
+    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
   }
 }
 
+apply plugin: "com.facebook.react.rootproject"
+
 allprojects {
   repositories {
-    exclusiveContent {
-      // We get React Native's Android binaries exclusively through npm,
-      // from a local Maven repo inside node_modules/react-native/.
-      // (The use of exclusiveContent prevents looking elsewhere like Maven Central
-      // and potentially getting a wrong version.)
-      filter {
-        includeGroup "com.facebook.react"
-      }
-      forRepository {
-        maven {
-          // NOTE: if you are in a monorepo, you may have "$rootDir/../../../node_modules/react-native/android"
-          url "$rootDir/../node_modules/react-native/android"
-        }
-      }
-    }
-
-    mavenLocal()
-    maven {
-      // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-      url("$rootDir/../node_modules/react-native/android")
-    }
-    maven {
-      // Android JSC is installed from npm
-      url("$rootDir/../node_modules/jsc-android/dist")
-    }
     maven {
       url("$rootDir/../../android/local")
     }
+    maven { url 'https://jitpack.io' }
     google()
     mavenCentral()
-    maven { url 'https://jitpack.io' }
   }
 }
