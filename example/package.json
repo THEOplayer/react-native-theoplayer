@@ -41,7 +41,6 @@
     "copy-webpack-plugin": "^11.0.0",
     "eslint": "^8.56.0",
     "html-webpack-plugin": "^4.5.2",
-    "metro-react-native-babel-preset": "^0.77.0",
     "react-test-renderer": "18.2.0",
     "typescript": "5.0.4",
     "webpack": "^5.88.2",
