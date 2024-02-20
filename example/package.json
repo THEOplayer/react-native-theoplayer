@@ -4,12 +4,12 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
-    "android-release": "react-native run-android --variant release",
-    "ios": "react-native run-ios",
+    "android": "npx react-native run-android",
+    "android-release": "npx react-native run-android --variant release",
+    "ios": "npx react-native run-ios",
     "web": "webpack-dev-server --config ./web/webpack.config.js --mode development",
     "web-release": "webpack --config ./web/webpack.config.js --mode production",
-    "start": "react-native start",
+    "start": "npx react-native start",
     "test": "jest",
     "lint": "eslint \"**/*.{ts,tsx}\""
   },
