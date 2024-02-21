@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Added `adbreakbegin` and `adbreakend` events for Google IMA on Android.
+- Added a second, alternative config filename to the iOS podspec setup to prevent a react-native-theoplayer module resolving clash.
 
 ## [3.7.1] - 24-02-09
 
