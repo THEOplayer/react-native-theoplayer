@@ -31,6 +31,7 @@ class AudioFocusManager(
   private var resumeOnFocusGain = false
   private val focusLock = Any()
 
+  // Request for audio focus of unknown duration.
   private val audioFocusRequest = AudioFocusRequestCompat.Builder(AudioManagerCompat.AUDIOFOCUS_GAIN)
     .setAudioAttributes(
       AudioAttributesCompat.Builder()
