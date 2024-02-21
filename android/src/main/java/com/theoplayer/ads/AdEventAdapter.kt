@@ -4,6 +4,7 @@ import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReadableMap
 import com.theoplayer.android.api.ads.wrapper.AdsApiWrapper
 import com.facebook.react.bridge.WritableMap
+import com.google.ads.interactivemedia.v3.api.AdError
 import com.theoplayer.android.api.ads.Ad
 import com.theoplayer.android.api.ads.AdBreak
 import com.theoplayer.android.api.ads.GoogleImaAd
@@ -44,7 +45,7 @@ class AdEventAdapter(private val adsApi: AdsApiWrapper, eventEmitter: AdEventEmi
 
   init {
     eventListener = object : AdEventListener {
-      override fun <E : AdEvent<*>?> onAdEvent(type: EventType<E>?, ad: Ad?, adData: Map<String, String>?) {
+      override fun <E : AdEvent<*>?> onAdEvent(type: EventType<E>?, ad: Ad?, adData: Map<String, String>?, adError: AdError?) {
         val payload = Arguments.createMap()
         if (type != null) {
           payload.putString(EVENT_PROP_TYPE, mapAdType(type))
@@ -55,7 +56,7 @@ class AdEventAdapter(private val adsApi: AdsApiWrapper, eventEmitter: AdEventEmi
         eventEmitter.emit(payload)
       }
 
-      override fun <E : AdEvent<*>?> onAdBreakEvent(type: EventType<E>?, adBreak: AdBreak?, adData: Map<String, String>?) {
+      override fun <E : AdEvent<*>?> onAdBreakEvent(type: EventType<E>?, adBreak: AdBreak?, adData: Map<String, String>?, adError: AdError?) {
         val payload = Arguments.createMap()
         if (type != null) {
           payload.putString(EVENT_PROP_TYPE, mapAdType(type))
