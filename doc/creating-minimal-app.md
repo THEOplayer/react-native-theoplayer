@@ -141,7 +141,7 @@ React Native component updates and could affect performance in negative way.
 
 To define which extra THEOplayer integrations need to be loaded for additional features (currently: IMA ads and/or chromecast) a config file needs to be added to you application folder:
 
-Create a json file at **[YourApplicationFolder]/react-native-theoplayer.json** (Should be on the same level as the node_modules folder)
+Create a json file **[YourApplicationFolder]/react-native-theoplayer.json**, or **[YourApplicationFolder]/theoplayer-config.json**, on the same level as the node_modules folder (both alternatives offer the same functionality).
 
 Edit the file to reflect the features required for your application. The following example adds Google IMA, Chromecast and Sideloaded textTracks to the setup. If one of these is out of your applications scope, you can leave it out to reduce the app's size. When using only basic functionality, leave the features array empty. 
 Example:

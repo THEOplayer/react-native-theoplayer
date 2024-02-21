@@ -48,7 +48,7 @@ details.
 
 ##### 2.x versions: Add feature flag to config
 
-To enable Google IMA on react-native-theoplayer 2.x versions, you can add the "GOOGLE_IMA" [feature flag](./creating-minimal-app.md#getting-started-on-ios-and-tvos) to react-native-theoplayer.json
+To enable Google IMA on react-native-theoplayer 2.x versions, you can add the "GOOGLE_IMA" [feature flag](./creating-minimal-app.md#getting-started-on-ios-and-tvos) to react-native-theoplayer.json (or theoplayer-config.json)
 
 </details>
 
