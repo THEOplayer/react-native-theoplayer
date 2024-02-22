@@ -11,11 +11,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Renamed native modules to avoid name collisions with external packages.
 
+### Added
+
+- Added `adbreakbegin` and `adbreakend` events for Google IMA on Android.
+
 ## [3.7.1] - 24-02-09
 
 ### Fixed
 
-- Fixed a dependency issue on iOS when using chromecast or google ima features.
+- Fixed a dependency issue on iOS when using chromecast or Google IMA features.
 
 ## [3.7.0] - 24-02-09
 
