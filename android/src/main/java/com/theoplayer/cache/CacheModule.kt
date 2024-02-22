@@ -30,7 +30,7 @@ import com.theoplayer.source.SourceAdapter
 import org.json.JSONException
 import org.json.JSONObject
 
-private const val TAG = "CacheModule"
+private const val TAG = "THEORCTCacheModule"
 
 private const val PROP_STATUS = "status"
 private const val PROP_ID = "id"

@@ -3,6 +3,7 @@ import { NativeModules } from 'react-native';
 import NamedColors from './NamedColors.json';
 
 const namedColorsMap = NamedColors as { [name: string]: string };
+const NativePlayerModule = NativeModules.THEORCTPlayerModule;
 
 export class TextTrackStyleAdapter implements TextTrackStyle {
   private _backgroundColor: string | undefined = undefined;
@@ -24,7 +25,7 @@ export class TextTrackStyleAdapter implements TextTrackStyle {
 
   set backgroundColor(color: string | undefined) {
     this._backgroundColor = color;
-    NativeModules.PlayerModule.setTextTrackStyle(this._view.nativeHandle, {
+    NativePlayerModule.setTextTrackStyle(this._view.nativeHandle, {
       backgroundColor: convertColorToRGBA(color),
     });
   }
@@ -35,7 +36,7 @@ export class TextTrackStyleAdapter implements TextTrackStyle {
 
   set edgeStyle(style: EdgeStyle | undefined) {
     this._edgeStyle = style;
-    NativeModules.PlayerModule.setTextTrackStyle(this._view.nativeHandle, {
+    NativePlayerModule.setTextTrackStyle(this._view.nativeHandle, {
       edgeStyle: style,
     });
   }
@@ -46,7 +47,7 @@ export class TextTrackStyleAdapter implements TextTrackStyle {
 
   set fontColor(color: string | undefined) {
     this._fontColor = color;
-    NativeModules.PlayerModule.setTextTrackStyle(this._view.nativeHandle, {
+    NativePlayerModule.setTextTrackStyle(this._view.nativeHandle, {
       fontColor: convertColorToRGBA(color),
     });
   }
@@ -57,7 +58,7 @@ export class TextTrackStyleAdapter implements TextTrackStyle {
 
   set fontFamily(family: string | undefined) {
     this._fontFamily = family;
-    NativeModules.PlayerModule.setTextTrackStyle(this._view.nativeHandle, {
+    NativePlayerModule.setTextTrackStyle(this._view.nativeHandle, {
       fontFamily: family,
     });
   }
@@ -68,7 +69,7 @@ export class TextTrackStyleAdapter implements TextTrackStyle {
 
   set fontSize(size: string | undefined) {
     this._fontSize = size;
-    NativeModules.PlayerModule.setTextTrackStyle(this._view.nativeHandle, {
+    NativePlayerModule.setTextTrackStyle(this._view.nativeHandle, {
       fontSize: fromPercentage(size),
     });
   }
@@ -79,7 +80,7 @@ export class TextTrackStyleAdapter implements TextTrackStyle {
 
   set windowColor(color: string | undefined) {
     this._windowColor = color;
-    NativeModules.PlayerModule.setTextTrackStyle(this._view.nativeHandle, {
+    NativePlayerModule.setTextTrackStyle(this._view.nativeHandle, {
       windowColor: convertColorToRGBA(color),
     });
   }
@@ -90,7 +91,7 @@ export class TextTrackStyleAdapter implements TextTrackStyle {
 
   set marginBottom(margin: number | undefined) {
     this._marginBottom = margin;
-    NativeModules.PlayerModule.setTextTrackStyle(this._view.nativeHandle, {
+    NativePlayerModule.setTextTrackStyle(this._view.nativeHandle, {
       marginBottom: margin,
     });
   }
@@ -101,7 +102,7 @@ export class TextTrackStyleAdapter implements TextTrackStyle {
 
   set marginLeft(margin: number | undefined) {
     this._marginLeft = margin;
-    NativeModules.PlayerModule.setTextTrackStyle(this._view.nativeHandle, {
+    NativePlayerModule.setTextTrackStyle(this._view.nativeHandle, {
       marginLeft: margin,
     });
   }
@@ -112,7 +113,7 @@ export class TextTrackStyleAdapter implements TextTrackStyle {
 
   set marginRight(margin: number | undefined) {
     this._marginRight = margin;
-    NativeModules.PlayerModule.setTextTrackStyle(this._view.nativeHandle, {
+    NativePlayerModule.setTextTrackStyle(this._view.nativeHandle, {
       marginRight: margin,
     });
   }
@@ -123,7 +124,7 @@ export class TextTrackStyleAdapter implements TextTrackStyle {
 
   set marginTop(margin: number | undefined) {
     this._marginTop = margin;
-    NativeModules.PlayerModule.setTextTrackStyle(this._view.nativeHandle, {
+    NativePlayerModule.setTextTrackStyle(this._view.nativeHandle, {
       marginTop: margin,
     });
   }

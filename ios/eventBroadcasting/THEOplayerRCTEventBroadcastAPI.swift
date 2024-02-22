@@ -12,16 +12,16 @@ protocol EventReceiver {
 @objc(THEOplayerRCTEventBroadcastAPI)
 class THEOplayerRCTBroadcastAPI: NSObject, RCTBridgeModule {
     @objc var bridge: RCTBridge!
-    
-    
+
+
     static func moduleName() -> String! {
-        return "EventBroadcastModule"
+        return "THEORCTEventBroadcastModule"
     }
-    
+
     static func requiresMainQueueSetup() -> Bool {
         return false
     }
-    
+
     @objc(broadcastEvent:event:)
     func broadcastEvent(_ node: NSNumber, event: NSDictionary) -> Void {
         DispatchQueue.main.async {

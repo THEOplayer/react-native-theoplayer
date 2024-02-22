@@ -14,7 +14,7 @@ import com.theoplayer.presentation.PipConfigAdapter
 import com.theoplayer.track.TextTrackStyleAdapter
 import com.theoplayer.util.ViewResolver
 
-private const val TAG = "PlayerModule"
+private const val TAG = "THEORCTPlayerModule"
 
 @Suppress("unused")
 class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(context) {

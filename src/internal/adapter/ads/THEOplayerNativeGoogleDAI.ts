@@ -1,22 +1,24 @@
 import type { GoogleDAI, THEOplayerView } from 'react-native-theoplayer';
 import { NativeModules } from 'react-native';
 
+const NativeAdsModule = NativeModules.THEORCTAdsModule;
+
 export class THEOplayerNativeGoogleDAI implements GoogleDAI {
   public constructor(private readonly _player: THEOplayerView) {}
 
   get snapback(): Promise<boolean> {
-    return NativeModules.AdsModule.daiSnapback(this._player.nativeHandle);
+    return NativeAdsModule.daiSnapback(this._player.nativeHandle);
   }
 
   setSnapback(enabled: boolean): void {
-    NativeModules.AdsModule.daiSetSnapback(this._player.nativeHandle, enabled);
+    NativeAdsModule.daiSetSnapback(this._player.nativeHandle, enabled);
   }
 
   contentTimeForStreamTime(time: number): Promise<number> {
-    return NativeModules.AdsModule.daiContentTimeForStreamTime(this._player.nativeHandle, time);
+    return NativeAdsModule.daiContentTimeForStreamTime(this._player.nativeHandle, time);
   }
 
   streamTimeForContentTime(time: number): Promise<number> {
-    return NativeModules.AdsModule.daiStreamTimeForContentTime(this._player.nativeHandle, time);
+    return NativeAdsModule.daiStreamTimeForContentTime(this._player.nativeHandle, time);
   }
 }

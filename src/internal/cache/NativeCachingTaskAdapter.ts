@@ -12,6 +12,8 @@ import { NativeModules } from 'react-native';
 import type { DRMConfiguration } from 'react-native-theoplayer';
 import { fromNativeCachingTaskParameters, NativeCachingTaskParameters } from "./NativeCachingTaskParametersAdapter";
 
+const NativeCacheModule = NativeModules.THEORCTCacheModule;
+
 export interface NativeCachingTask {
   readonly id: string;
 
@@ -56,7 +58,7 @@ export class NativeCachingTaskAdapter extends DefaultEventDispatcher<CachingTask
     this.bytesCached = task.bytesCached;
     this.license = {
       renew(drmConfiguration?: DRMConfiguration) {
-        NativeModules.CacheModule.renewLicense(task.id, drmConfiguration);
+        NativeCacheModule.renewLicense(task.id, drmConfiguration);
       },
     };
     this.parameters = fromNativeCachingTaskParameters(task.parameters);
@@ -68,14 +70,14 @@ export class NativeCachingTaskAdapter extends DefaultEventDispatcher<CachingTask
   }
 
   pause(): void {
-    NativeModules.CacheModule.pauseCachingTask(this.id);
+    NativeCacheModule.pauseCachingTask(this.id);
   }
 
   remove(): void {
-    NativeModules.CacheModule.removeCachingTask(this.id);
+    NativeCacheModule.removeCachingTask(this.id);
   }
 
   start(): void {
-    NativeModules.CacheModule.startCachingTask(this.id);
+    NativeCacheModule.startCachingTask(this.id);
   }
 }

@@ -57,7 +57,7 @@ RCT_EXTERN_METHOD(destroy:(nonnull NSNumber *)node);
 // ----------------------------------------------------------------------------
 // Player Module
 // ----------------------------------------------------------------------------
-@interface RCT_EXTERN_REMAP_MODULE(PlayerModule, THEOplayerRCTPlayerAPI, NSObject)
+@interface RCT_EXTERN_REMAP_MODULE(THEORCTPlayerModule, THEOplayerRCTPlayerAPI, NSObject)
 
 RCT_EXTERN_METHOD(setPaused:(nonnull NSNumber *)node
                   paused:(BOOL)paused)
@@ -116,7 +116,7 @@ RCT_EXTERN_METHOD(setTextTrackStyle:(nonnull NSNumber *)node
 // Ads Module
 // ----------------------------------------------------------------------------
 
-@interface RCT_EXTERN_REMAP_MODULE(AdsModule, THEOplayerRCTAdsAPI, NSObject)
+@interface RCT_EXTERN_REMAP_MODULE(THEORCTAdsModule, THEOplayerRCTAdsAPI, NSObject)
 
 RCT_EXTERN_METHOD(skip:(nonnull NSNumber *)node)
 
@@ -161,7 +161,7 @@ RCT_EXTERN_METHOD(daiStreamTimeForContentTime:(nonnull NSNumber *)node
 // ----------------------------------------------------------------------------
 // ContentProtection Module
 // ----------------------------------------------------------------------------
-@interface RCT_EXTERN_REMAP_MODULE(ContentProtectionModule, THEOplayerRCTContentProtectionAPI, RCTEventEmitter)
+@interface RCT_EXTERN_REMAP_MODULE(THEORCTContentProtectionModule, THEOplayerRCTContentProtectionAPI, RCTEventEmitter)
 
 RCT_EXTERN_METHOD(onBuildProcessed:(NSDictionary)result)
 RCT_EXTERN_METHOD(onCertificateRequestProcessedAsRequest:(NSDictionary)result)
@@ -180,7 +180,7 @@ RCT_EXTERN_METHOD(registerContentProtectionIntegration:(nonnull NSString *)integ
 // Cast Module
 // ----------------------------------------------------------------------------
 
-@interface RCT_EXTERN_REMAP_MODULE(CastModule, THEOplayerRCTCastAPI, NSObject)
+@interface RCT_EXTERN_REMAP_MODULE(THEORCTCastModule, THEOplayerRCTCastAPI, NSObject)
 
 RCT_EXTERN_METHOD(casting:(nonnull NSNumber *)node
                   resolver:(RCTPromiseResolveBlock)resolve
@@ -221,7 +221,7 @@ RCT_EXTERN_METHOD(airplayStop:(nonnull NSNumber *)node)
 // ----------------------------------------------------------------------------
 // Cache Module
 // ----------------------------------------------------------------------------
-@interface RCT_EXTERN_REMAP_MODULE(CacheModule, THEOplayerRCTCacheAPI, RCTEventEmitter)
+@interface RCT_EXTERN_REMAP_MODULE(THEORCTCacheModule, THEOplayerRCTCacheAPI, RCTEventEmitter)
 
 RCT_EXTERN_METHOD(getInitialState:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
@@ -243,7 +243,7 @@ RCT_EXTERN_METHOD(renewLicense:(nonnull NSString *)id
 // ----------------------------------------------------------------------------
 // Broadcast Module
 // ----------------------------------------------------------------------------
-@interface RCT_EXTERN_REMAP_MODULE(EventBroadcastModule, THEOplayerRCTEventBroadcastAPI, NSObject)
+@interface RCT_EXTERN_REMAP_MODULE(THEORCTEventBroadcastModule, THEOplayerRCTEventBroadcastAPI, NSObject)
 
 RCT_EXTERN_METHOD(broadcastEvent:(nonnull NSNumber *)node
                   event:(NSDictionary)event)

@@ -9,7 +9,7 @@ import com.theoplayer.util.ViewResolver
 import com.theoplayer.ReactTHEOplayerView
 import com.theoplayer.android.api.error.THEOplayerException
 
-private const val TAG = "AdsModule"
+private const val TAG = "THEORCTAdsModule"
 
 class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(context) {
   private val sourceHelper = SourceAdapter()
