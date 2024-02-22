@@ -83,6 +83,9 @@ export interface PlayerConfiguration {
    * This live point is the end of the manifest minus the provided offset.
    *
    * @defaultValue Three times the target duration of a segment, as specified by the manifest.
+   *
+   * @remarks
+   * <br/> - This parameter only applies to Web and Android platforms.
    */
   liveOffset?: number;
 }
