@@ -55,7 +55,7 @@ player.source = {
 #### iOS/tvOS
 
 On iOS and tvOS, support for side-loaded tracks is provided by a separate connector, which is enabled by adding the
-feature to the `react-native-theoplayer.json` file in your app folder.
+feature to the `react-native-theoplayer.json` (or `theoplayer-config.json`) file in your app folder.
 
 ```json
 {

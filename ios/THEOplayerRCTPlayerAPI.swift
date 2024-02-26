@@ -28,15 +28,15 @@ let TTS_PROP_COLOR_A = "a"
 @objc(THEOplayerRCTPlayerAPI)
 class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
     @objc var bridge: RCTBridge!
-    
+
     static func moduleName() -> String! {
-        return "PlayerModule"
+        return "THEORCTPlayerModule"
     }
-    
+
     static func requiresMainQueueSetup() -> Bool {
         return false
     }
-    
+
     @objc(setPaused:paused:)
     func setPaused(_ node: NSNumber, paused: Bool) -> Void {
         DispatchQueue.main.async {
@@ -52,7 +52,7 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
             }
         }
     }
-    
+
     @objc(setSource:src:)
     func setSource(_ node: NSNumber, src: NSDictionary) -> Void {
         DispatchQueue.main.async {
@@ -71,7 +71,7 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
             }
         }
     }
-    
+
     private func setNewSourceDescription(player: THEOplayer, srcDescription: SourceDescription) {
         if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Setting new source on TheoPlayer") }
 #if canImport(THEOplayerConnectorSideloadedSubtitle)
@@ -80,12 +80,12 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
         player.source = srcDescription
 #endif
     }
-    
+
     @objc(setABRConfig:abrConfig:)
     func setABRConfig(_ node: NSNumber, setABRConfig: NSDictionary) -> Void {
         if DEBUG_PLAYER_API { print(ERROR_MESSAGE_PLAYER_ABR_UNSUPPORTED_FEATURE) }
     }
-    
+
     @objc(setCurrentTime:time:)
     func setCurrentTime(_ node: NSNumber, time: NSNumber) -> Void {
         DispatchQueue.main.async {
@@ -97,7 +97,7 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
             }
         }
     }
-    
+
     @objc(setMuted:muted:)
     func setMuted(_ node: NSNumber, muted: Bool) -> Void {
         DispatchQueue.main.async {
@@ -110,12 +110,12 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
             }
         }
     }
-    
+
     @objc(setVolume:volume:)
     func setVolume(_ node: NSNumber, volume: NSNumber) -> Void {
         if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Setting volume: TheoPlayer does not handle volume changes for iOS. This is handled by the device.") }
     }
-    
+
     @objc(setPlaybackRate:playbackRate:)
     func setPlaybackRate(_ node: NSNumber, playbackRate: NSNumber) -> Void {
         DispatchQueue.main.async {
@@ -129,7 +129,7 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
             }
         }
     }
-    
+
     @objc(setPresentationMode:presentationMode:)
     func setPresentationMode(_ node: NSNumber, presentationMode: String) -> Void {
         DispatchQueue.main.async {
@@ -139,7 +139,7 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
             }
         }
     }
-    
+
     @objc(setAspectRatio:ratio:)
         func setAspectRatio(_ node: NSNumber, ratio: String) -> Void {
             DispatchQueue.main.async {
@@ -153,7 +153,7 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                 }
             }
         }
-    
+
     @objc(setPipConfig:pipConfig:)
     func setPipConfig(_ node: NSNumber, pipConfig: NSDictionary) -> Void {
         DispatchQueue.main.async {
@@ -163,13 +163,13 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
             }
         }
     }
-    
+
     private func parsePipConfig(configDict: NSDictionary) -> PipConfig {
         var pipConfig = PipConfig()
         pipConfig.canStartPictureInPictureAutomaticallyFromInline = configDict["startsAutomatically"] as? Bool ?? false
         return pipConfig
     }
-    
+
     @objc(setBackgroundAudioConfig:backgroundAudioConfig:)
     func setBackgroundAudioConfig(_ node: NSNumber, backgroundAudioConfig: NSDictionary) -> Void {
         DispatchQueue.main.async {
@@ -179,13 +179,13 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
             }
         }
     }
-    
+
     private func parseBackgroundAudioConfig(configDict: NSDictionary) -> BackgroundAudioConfig {
         var backgroundAudio = BackgroundAudioConfig()
         backgroundAudio.enabled = configDict["enabled"] as? Bool ?? false
         return backgroundAudio
     }
-    
+
     @objc(setSelectedTextTrack:uid:)
     func setSelectedTextTrack(_ node: NSNumber, uid: NSNumber) -> Void {
         DispatchQueue.main.async {
@@ -203,12 +203,12 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                         textTrack.mode = TextTrackMode.showing
                     } else if textTrack.mode == TextTrackMode.showing {
                         textTrack.mode = TextTrackMode.disabled
-                    } 
+                    }
                 }
             }
         }
     }
-    
+
     @objc(setSelectedAudioTrack:uid:)
     func setSelectedAudioTrack(_ node: NSNumber, uid: NSNumber) -> Void {
         DispatchQueue.main.async {
@@ -227,7 +227,7 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
             }
         }
     }
-    
+
     @objc(setSelectedVideoTrack:uid:)
     func setSelectedVideoTrack(_ node: NSNumber, uid: NSNumber) -> Void {
         DispatchQueue.main.async {
@@ -246,13 +246,13 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
             }
         }
     }
-    
+
     @objc(setTargetVideoQuality:uid:)
     func setTargetVideoQuality(_ node: NSNumber, uid: [NSNumber]) -> Void {
         if DEBUG_PLAYER_API { print(ERROR_MESSAGE_PLAYER_QUALITY_UNSUPPORTED_FEATURE) }
         return
     }
-    
+
     @objc(setPreload:type:)
     func setPreload(_ node: NSNumber, type: String) -> Void {
         DispatchQueue.main.async {
@@ -266,7 +266,7 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
             }
         }
     }
-    
+
     @objc(setTextTrackStyle:textTrackStyle:)
     func setTextTrackStyle(_ node: NSNumber, textTrackStyle: NSDictionary) -> Void {
         DispatchQueue.main.async {
@@ -306,5 +306,5 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
             }
         }
     }
-    
+
 }

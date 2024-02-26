@@ -5,11 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.8.0] - 24-02-23
+
+### Changed
+
+- Renamed native modules to avoid name collisions with external packages.
+
+### Added
+
+- Added `adbreakbegin` and `adbreakend` events for Google IMA on Android.
+- Added `liveOffset` property to `PlayerConfiguration`, allowing to set a custom offset from the live point.
+- Added a second, alternative config filename to the iOS podspec setup to prevent a react-native-theoplayer module resolving clash.
+
 ## [3.7.1] - 24-02-09
 
 ### Fixed
 
-- Fixed a dependency issue on iOS when using chromecast or google ima features.
+- Fixed a dependency issue on iOS when using chromecast or Google IMA features.
 
 ## [3.7.0] - 24-02-09
 

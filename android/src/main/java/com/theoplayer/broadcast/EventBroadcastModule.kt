@@ -9,7 +9,7 @@ import com.facebook.react.module.annotations.ReactModule
 import com.theoplayer.ReactTHEOplayerView
 import com.theoplayer.util.ViewResolver
 
-private const val TAG = "EventBroadcastModule"
+private const val TAG = "THEORCTEventBroadcastModule"
 
 @ReactModule(name = TAG)
 class EventBroadcastModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(context) {

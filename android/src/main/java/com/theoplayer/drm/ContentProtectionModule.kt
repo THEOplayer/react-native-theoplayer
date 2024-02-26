@@ -19,7 +19,7 @@ data class BridgeRequest(
   val onTimeout: Runnable
 )
 
-private const val TAG = "ContentProtectionModule"
+private const val TAG = "THEORCTContentProtectionModule"
 
 private const val EVENT_CERTIFICATE_REQUEST = "onCertificateRequest"
 private const val EVENT_CERTIFICATE_REQUEST_PROCESSED_AS_REQUEST = "onCertificateRequestProcessedAsRequest"

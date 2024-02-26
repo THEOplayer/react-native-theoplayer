@@ -13,6 +13,8 @@ import { toNativeCachingTaskParameters } from "./NativeCachingTaskParametersAdap
 
 const TAG = "NativeMediaCache";
 
+const NativeCacheModule = NativeModules.THEORCTCacheModule;
+
 interface NativeCachingStatusChangeEvent {
   readonly id: string;
   readonly status: CacheTaskStatus;
@@ -43,7 +45,7 @@ interface NativeCachingTaskProgressEvent {
 }
 
 export class NativeMediaCache extends DefaultEventDispatcher<CacheEventMap> implements MediaCacheAPI {
-  private _emitter: NativeEventEmitter = new NativeEventEmitter(NativeModules.CacheModule);
+  private _emitter: NativeEventEmitter = new NativeEventEmitter(NativeCacheModule);
   private _status: CacheStatus = CacheStatus.uninitialised;
   private _tasks: NativeCachingTaskAdapter[] = [];
 
@@ -58,7 +60,7 @@ export class NativeMediaCache extends DefaultEventDispatcher<CacheEventMap> impl
   }
 
   async createTask(source: SourceDescription, parameters: CachingTaskParameters): Promise<CachingTask> {
-    return NativeModules.CacheModule.createTask(source, toNativeCachingTaskParameters(parameters));
+    return NativeCacheModule.createTask(source, toNativeCachingTaskParameters(parameters));
   }
 
   get status(): CacheStatus {
@@ -81,7 +83,7 @@ export class NativeMediaCache extends DefaultEventDispatcher<CacheEventMap> impl
   }
 
   private async getInitialState(): Promise<void> {
-    const initialState = await NativeModules.CacheModule.getInitialState();
+    const initialState = await NativeCacheModule.getInitialState();
     this._status = initialState.status;
     this._tasks = initialState.tasks.map((task: NativeCachingTask) => new NativeCachingTaskAdapter(task));
   }
