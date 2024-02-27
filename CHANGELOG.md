@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 - Renamed native modules to avoid name collisions with external packages.
+- Reduce audio volume (duck) on Android when another app gains transient audio focus and ducking is allowed. In other cases the player will pause, and optionally resume if the audio focus loss was transient.
 
 ### Added
 
