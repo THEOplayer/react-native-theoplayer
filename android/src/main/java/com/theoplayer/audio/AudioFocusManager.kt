@@ -19,7 +19,8 @@ private const val TAG = "AudioFocusManager"
  *
  * - Android 12 (API level 31) or later: Audio focus is managed by the system.
  * - Android 8.0 (API level 26) through Android 11 (API level 30): Audio focus is not managed by
- *   the system, but includes some changes that were introduced starting in Android.
+ *   the system, but includes some changes that were introduced starting in Android 8.0
+ *   (API level 26).
  * - Android 7.1 (API level 25) and lower: Audio focus is not managed by the system.
  *
  * @see <a href="https://developer.android.com/media/optimize/audio-focus">documentation</a>
@@ -55,7 +56,7 @@ class AudioFocusManager(
 
       // Automatic ducking was introduced in Android 8.0 (API level 26)
       // The audio system ducks our player(s) while the other app has focus. When the other app abandons
-      // focus, it unducks our player. We are not notified when on focus loss.
+      // focus, it "unducks" our player. We are not notified when on focus loss.
       // https://developer.android.com/media/optimize/audio-focus#automatic_ducking
       .setWillPauseWhenDucked(false)
       .build()
