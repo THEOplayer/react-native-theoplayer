@@ -13,6 +13,7 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.text.TextUtils
 import android.util.Log
+import androidx.core.app.ServiceCompat
 import androidx.core.content.ContextCompat
 import androidx.media.MediaBrowserServiceCompat
 import androidx.media.session.MediaButtonReceiver
@@ -282,12 +283,7 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
         // needed. This does not stop the service from running (for that you use stopSelf()
         // or related methods), just takes it out of the foreground state.
         // Also remove the notification.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-          stopForeground(Service.STOP_FOREGROUND_REMOVE)
-        } else {
-          @Suppress("DEPRECATION")
-          stopForeground(true)
-        }
+        ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE)
       }
       else -> {
         // Ignore
@@ -297,18 +293,13 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
 
   private fun startForegroundWithPlaybackState(@PlaybackStateCompat.State playbackState: Int, largeIcon: Bitmap? = null) {
     try {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        startForeground(
-          NOTIFICATION_ID,
-          notificationBuilder.build(playbackState, largeIcon, enableMediaControls),
+      ServiceCompat.startForeground(
+        this, NOTIFICATION_ID,
+        notificationBuilder.build(playbackState, largeIcon, enableMediaControls),
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
           ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
-        )
-      } else {
-        startForeground(
-          NOTIFICATION_ID,
-          notificationBuilder.build(playbackState, largeIcon, enableMediaControls)
-        )
-      }
+        else 0
+      )
     } catch (e: IllegalStateException) {
       // Make sure that app does not crash in case anything goes wrong with starting the service.
       // https://issuetracker.google.com/issues/229000935
