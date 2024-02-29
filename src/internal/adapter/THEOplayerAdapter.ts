@@ -552,7 +552,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._playerVersion = version;
     if (state) {
       Object.assign(this._state, state);
-      this._castAdapter.init_();
     }
+    this._castAdapter.init_();
   }
 }
