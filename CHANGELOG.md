@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.9.0] - 24-03-04
+
+### Changed
+
+- Reduce audio volume (duck) on Android when another app gains transient audio focus and ducking is allowed. In other cases the player will pause, and optionally resume if the audio focus loss was transient.
+
+### Fixed
+
+- Fixed an issue on iOS where the lockscreen controls and displayed asset metadata would remain visible after the player has been destroyed.
+- Fixed an issue on iOS where the castState was not initialized correctly.
+
 ## [3.8.0] - 24-02-23
 
 ### Changed

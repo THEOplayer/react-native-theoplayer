@@ -21,6 +21,10 @@ class THEOplayerRCTNowPlayingManager {
     func destroy() {
         // dettach listeners
         self.dettachListeners()
+        
+        // clear nowPlayingInfo
+        self.nowPlayingInfo = [:]
+        self.clearNowPlayingOnInfoCenter()
     }
     
     // MARK: - player setup / breakdown

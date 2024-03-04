@@ -307,12 +307,18 @@ class ReactTHEOplayerContext private constructor(
     audioBecomingNoisyManager.setEnabled(false)
   }
 
+  private val onEnded = EventListener<EndedEvent> {
+    // Playback has ended, we can abandon audio focus.
+    audioFocusManager?.abandonAudioFocus()
+  }
+
   private fun addListeners() {
     player.apply {
       addEventListener(PlayerEventTypes.SOURCECHANGE, onSourceChange)
       addEventListener(PlayerEventTypes.LOADEDMETADATA, onLoadedMetadata)
       addEventListener(PlayerEventTypes.PAUSE, onPause)
       addEventListener(PlayerEventTypes.PLAY, onPlay)
+      addEventListener(PlayerEventTypes.ENDED, onEnded)
     }
   }
 
@@ -322,6 +328,7 @@ class ReactTHEOplayerContext private constructor(
       removeEventListener(PlayerEventTypes.LOADEDMETADATA, onLoadedMetadata)
       removeEventListener(PlayerEventTypes.PAUSE, onPause)
       removeEventListener(PlayerEventTypes.PLAY, onPlay)
+      removeEventListener(PlayerEventTypes.ENDED, onEnded)
     }
   }
 
