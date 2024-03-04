@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed an issue on iOS where the lockscreen controls and displayed asset metadata would remain visible after the player has been destroyed.
-- Fixed an issue where the castState was not initialized correctly.
+- Fixed an issue on iOS where the castState was not initialized correctly.
 
 ## [3.8.0] - 24-02-23
 
