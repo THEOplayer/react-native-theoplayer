@@ -50,7 +50,7 @@ Pod::Spec.new do |s|
     if theofeatures.include?("CHROMECAST")
 	  puts "Adding THEOplayer-Integration-GoogleCast"
       s.ios.dependency "THEOplayer-Integration-GoogleCast/Base", "~> 6.9"
-	  s.ios.dependency "THEOplayer-Integration-GoogleCast/Dependencies", "~> 6.9"
+	  s.ios.dependency "google-cast-sdk-dynamic-xcframework", "~> 4.8"
     end
     if theofeatures.include?("SIDELOADED_TEXTTRACKS") 
 	  puts "Adding THEOplayer-Connector-SideloadedSubtitle"
