@@ -40,6 +40,7 @@
   GCKDiscoveryCriteria *criteria = [[GCKDiscoveryCriteria alloc] initWithApplicationID:receiverAppID];
   GCKCastOptions* options = [[GCKCastOptions alloc] initWithDiscoveryCriteria:criteria];
   options.startDiscoveryAfterFirstTapOnCastButton = false;
+  options.suspendSessionsWhenBackgrounded = false;
   [GCKCastContext setSharedInstanceWithOptions:options];
 #endif
   

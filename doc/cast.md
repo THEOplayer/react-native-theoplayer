@@ -48,15 +48,9 @@ THEOplayer_extensionCast = true
 <details>
 <summary>iOS</summary>
 
-##### 1.x versions: Custom THEOplayer build
+##### Add feature flag to config
 
-To enable Chromecast on react-native-theoplayer 1.x versions, a dependency to the THEOplayer SDK
-that includes the Google Cast library needs to be added. See [Custom iOS framework](./custom-ios-framework.md) for more
-details.
-
-##### 2.x versions: Add feature flag to config
-
-To enable Chromecast on react-native-theoplayer 2.x versions, you can add the "CHROMECAST" [feature flag](./creating-minimal-app.md#getting-started-on-ios-and-tvos) to react-native-theoplayer.json (or theoplayer-config.json)
+To enable Chromecast on react-native-theoplayer 2.x versions and higher, you can add the "CHROMECAST" [feature flag](./creating-minimal-app.md#getting-started-on-ios-and-tvos) to react-native-theoplayer.json (or theoplayer-config.json)
 
 ##### iOS Configuration
 
@@ -95,7 +89,11 @@ bridged from RN) fails to display that CastButton. To prevent this follow
 the [instructions](https://react-native-google-cast.github.io/docs/getting-started/setup#ios) (or check our example
 application) to setup the GCKCastContext in the AppDelegate.
 
-In addition, react-native-google-cast currently does not include a full featured (guest mode combined with Apple M1 support) setup of the Google Cast SDK. Our THEOplayerCastIntegration however does, but conbining both results in a clash of dependencies (both delivering a GoogleCast.xcframework). To overcome this double dependency we suggest to use a [fork of react-native-google-cast](https://github.com/Danesz/react-native-google-cast/tree/feature/guestmode_apple_silicon) that depends on the same GoogleCast.xcframework. To achieve this:
+The following options on the GCKCastOptions can be set as desired:
+1. options.startDiscoveryAfterFirstTapOnCastButton = false;  (set up how/when the castbutton is shown)
+2. options.suspendSessionsWhenBackgrounded = false;			 (set up the connection response be when backgrounding the app)
+
+In addition, react-native-google-cast currently does not include a full featured (guest mode combined with Apple M1 support) setup of the Google Cast SDK. Our THEOplayerCastIntegration however does, but combining both results in a clash of dependencies (both delivering a GoogleCast.xcframework). To overcome this double dependency we suggest to use a [fork of react-native-google-cast](https://github.com/Danesz/react-native-google-cast/tree/feature/guestmode_apple_silicon) that depends on the same GoogleCast.xcframework. To achieve this:
 1. Add the following to your applications podFile:
 ```ruby
 pod 'react-native-google-cast', :git => 'https://github.com/Danesz/react-native-google-cast.git', branch: 'feature/guestmode_apple_silicon'

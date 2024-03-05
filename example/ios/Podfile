@@ -13,7 +13,7 @@ end
 
 target 'ReactNativeTHEOplayer' do
 
-  platform :ios, '12.4'
+  platform :ios, '13.0'
 
   config = use_native_modules!
 
@@ -35,7 +35,7 @@ end
 
 target 'ReactNativeTHEOplayer-tvOS' do
 
-  platform :tvos, '12.4'
+  platform :tvos, '13.0'
 
   config = use_native_modules!
 
