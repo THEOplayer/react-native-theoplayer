@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.9.1] - 24-03-05
+
+### Changed
+
+- Bumped google-cast-sdk dependency to v4.8.0 for iOS. 
+
 ## [3.9.0] - 24-03-04
 
 ### Changed
