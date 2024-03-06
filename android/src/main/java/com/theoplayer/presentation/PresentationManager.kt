@@ -9,15 +9,11 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.view.View
-import android.view.View.OnLayoutChangeListener
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewParent
 import androidx.activity.ComponentActivity
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.core.view.children
-import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.Lifecycle
 import com.facebook.react.ReactRootView
 import com.facebook.react.uimanager.ThemedReactContext
