@@ -13,8 +13,8 @@ extension THEOplayerRCTCastAPI {
     @objc(chromecastCasting:resolver:rejecter:)
     func chromecastCasting(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         DispatchQueue.main.async {
-            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            if let cast = theView.cast(),
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let cast = theView.cast(),
                let chromecast = cast.chromecast {
                 resolve(chromecast.casting)
             } else {
@@ -27,8 +27,8 @@ extension THEOplayerRCTCastAPI {
     @objc(chromecastState:resolver:rejecter:)
     func chromecastState(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         DispatchQueue.main.async {
-            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            if let cast = theView.cast(),
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let cast = theView.cast(),
                let chromecast = cast.chromecast {
                 resolve(chromecast.state?._rawValue)
             } else {
@@ -41,8 +41,8 @@ extension THEOplayerRCTCastAPI {
     @objc(chromecastStart:)
     func chromecastStart(_ node: NSNumber) -> Void {
         DispatchQueue.main.async {
-            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            if let cast = theView.cast(),
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let cast = theView.cast(),
                let chromecast = cast.chromecast {
                 if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Starting chromecast session.") }
                 chromecast.start()
@@ -55,8 +55,8 @@ extension THEOplayerRCTCastAPI {
     @objc(chromecastStop:)
     func chromecastStop(_ node: NSNumber) -> Void {
         DispatchQueue.main.async {
-            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            if let cast = theView.cast(),
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let cast = theView.cast(),
                let chromecast = cast.chromecast {
                 if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Stopping chromecast session.") }
                 chromecast.stop()
@@ -69,8 +69,8 @@ extension THEOplayerRCTCastAPI {
     @objc(chromecastJoin:)
     func chromecastJoin(_ node: NSNumber) -> Void {
         DispatchQueue.main.async {
-            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            if let cast = theView.cast(),
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let cast = theView.cast(),
                let chromecast = cast.chromecast {
                 if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Joining chromecast session.") }
                 chromecast.join()
@@ -83,8 +83,8 @@ extension THEOplayerRCTCastAPI {
     @objc(chromecastLeave:)
     func chromecastLeave(_ node: NSNumber) -> Void {
         DispatchQueue.main.async {
-            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            if let cast = theView.cast(),
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let cast = theView.cast(),
                let chromecast = cast.chromecast {
                 if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Leaving chromecast session.") }
                 chromecast.leave()
