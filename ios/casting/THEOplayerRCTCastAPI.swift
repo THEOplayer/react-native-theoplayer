@@ -27,8 +27,8 @@ class THEOplayerRCTCastAPI: NSObject, RCTBridgeModule {
     @objc(casting:resolver:rejecter:)
     func casting(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         DispatchQueue.main.async {
-            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            if let cast = theView.cast() {
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let cast = theView.cast() {
                 resolve(cast.casting)
             } else {
                 reject(ERROR_CODE_CAST_ACCESS_FAILURE, ERROR_MESSAGE_CAST_ACCESS_FAILURE, nil)

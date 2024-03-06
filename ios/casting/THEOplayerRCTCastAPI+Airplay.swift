@@ -13,8 +13,8 @@ extension THEOplayerRCTCastAPI {
     @objc(airplayCasting:resolver:rejecter:)
     func airplayCasting(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         DispatchQueue.main.async {
-            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            if let cast = theView.cast(),
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let cast = theView.cast(),
                let airplay = cast.airPlay {
                 resolve(airplay.casting)
             } else {
@@ -27,8 +27,8 @@ extension THEOplayerRCTCastAPI {
     @objc(airplayState:resolver:rejecter:)
     func airplayState(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         DispatchQueue.main.async {
-            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            if let cast = theView.cast(),
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let cast = theView.cast(),
                let airplay = cast.airPlay {
                 resolve(airplay.state._rawValue)
             } else {
@@ -41,8 +41,8 @@ extension THEOplayerRCTCastAPI {
     @objc(airplayStart:)
     func airplayStart(_ node: NSNumber) -> Void {
         DispatchQueue.main.async {
-            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            if let cast = theView.cast(),
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let cast = theView.cast(),
                let airplay = cast.airPlay {
                 if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Starting airplay session.") }
                 airplay.start()
@@ -55,8 +55,8 @@ extension THEOplayerRCTCastAPI {
     @objc(airplayStop:)
     func airplayStop(_ node: NSNumber) -> Void {
         DispatchQueue.main.async {
-            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            if let cast = theView.cast(),
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let cast = theView.cast(),
                let airplay = cast.airPlay {
                 if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Stopping airplay session.") }
                 airplay.stop()
