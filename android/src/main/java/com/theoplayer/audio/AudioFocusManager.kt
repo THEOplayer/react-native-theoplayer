@@ -93,20 +93,12 @@ class AudioFocusManager(
 
       // Used to indicate a loss of audio focus of unknown duration.
       AudioManager.AUDIOFOCUS_LOSS -> {
-        synchronized(focusLock) {
-          // This is not a transient (short) loss, we shouldn't automatically resume for now.
-          resumeOnFocusGain = false
-        }
-        player?.pause()
+        onAudioFocusLoss(false)
       }
 
       // Used to indicate a transient (short) loss of audio focus.
       AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
-        synchronized(focusLock) {
-          // We should only resume if playback was interrupted
-          resumeOnFocusGain = !(player?.isPaused ?: true)
-        }
-        player?.pause()
+        onAudioFocusLoss(true)
       }
 
       // Used to indicate a transient (short) loss of audio focus where the loser of the audio focus
@@ -121,6 +113,18 @@ class AudioFocusManager(
         }
       }
     }
+  }
+
+  private fun onAudioFocusLoss(transient: Boolean) {
+    // Don't pause when playing an ad
+    if (player?.ads?.isPlaying == true) {
+      return
+    }
+    synchronized(focusLock) {
+      // We should only resume if playback was interrupted
+      resumeOnFocusGain = transient && !(player?.isPaused ?: true)
+    }
+    player?.pause()
   }
 
   private fun fromAudioFocusChange(focusChange: Int?): String {
