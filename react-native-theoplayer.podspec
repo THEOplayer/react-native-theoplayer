@@ -4,14 +4,17 @@ package = JSON.parse(File.read(File.join(__dir__, "package.json")))
 
 theofeatures = []
 theoconfigfiles = ["theoplayer-config.json", "react-native-theoplayer.json"]
+theoconfigLocations = ["/../../", "/example/"]
 theoconfigfiles.each do |configfile|
-  configpath = File.join(__dir__ + "/../../", configfile)
-  if File.exist?(configpath) 
-    puts "THEOplayer config found: #{configfile}"
-    theoconfig = JSON.parse(File.read(configpath))
-    theofeatures = theoconfig["ios"]["features"]
+  theoconfigLocations.each do |configLocation|
+    configpath = File.join(__dir__ + configLocation, configfile)
+    if File.exist?(configpath) 
+      puts "THEOplayer config found: #{configfile}"
+      theoconfig = JSON.parse(File.read(configpath))
+      theofeatures = theoconfig["ios"]["features"]
+    end
+    break if theofeatures.length() > 0 
   end
-  break if theofeatures.length() > 0 
 end
 
 Pod::Spec.new do |s|
