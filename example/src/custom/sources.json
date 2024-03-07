@@ -273,6 +273,34 @@
     }
   },
   {
+    "name": "HLS - VOD - Clear - elephants-dream (sideloaded subtitles)",
+    "os": [
+      "ios",
+      "web"
+    ],
+    "source": {
+      "sources": {
+        "src": "https://cdn.theoplayer.com/video/elephants-dream/playlist-no-subtitles.m3u8",
+        "type": "application/x-mpegurl"
+      },
+      "textTracks": [{
+        "src": "https://cdn.theoplayer.com/video/elephants-dream/captions.en.vtt",
+        "label": "English",
+        "kind": "subtitles",
+        "format": "webvtt",
+        "srclang": "en"
+      }],
+      "poster": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-1200x1200.png",
+      "metadata": {
+        "title": "Elephants Dream",
+        "subtitle": "Elephants Dream with Sideloaded Subtitles",
+        "album": "Elephants Dream Album",
+        "displayIconUri": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
+        "artist": "The elephant"
+      }
+    }
+  },
+  {
     "name": "HLS - CSAI - Google IMA pre-roll",
     "os": [
       "ios",
