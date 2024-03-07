@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import type { THEOplayerViewProps } from 'react-native-theoplayer';
-import { Player, ChromelessPlayer, PlayerConfiguration } from 'theoplayer';
+import { Player, ChromelessPlayer, PlayerConfiguration, AdsConfiguration } from 'theoplayer';
 import { THEOplayerWebAdapter } from './adapter/THEOplayerWebAdapter';
 
 export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProps>) {
@@ -13,12 +13,24 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
     // Create player inside container.
     if (container.current) {
       const chromeless = config?.chromeless === true || config?.chromeless === undefined;
-      const updatedConfig = { ...config, allowNativeFullscreen: true };
+      const ads = {
+        ...config?.ads,
+        googleIma: {
+          useNativeIma: true,
+          language: config?.ui?.language ?? 'en',
+        },
+      };
+      const updatedConfig = {
+        ...config,
+        allowNativeFullscreen: true,
+        ads,
+      };
       if (chromeless) {
         player.current = new ChromelessPlayer(container.current, updatedConfig);
       } else {
         player.current = new Player(container.current, {
           ...updatedConfig,
+          ads,
           ui: {
             ...config?.ui,
             fluid: true,
