@@ -20,6 +20,7 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
         player.current = new Player(container.current, {
           ...updatedConfig,
           ui: {
+            ...config?.ui,
             fluid: true,
           },
         } as PlayerConfiguration);
