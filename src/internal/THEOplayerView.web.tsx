@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import type { THEOplayerViewProps } from 'react-native-theoplayer';
-import { Player, ChromelessPlayer, PlayerConfiguration, AdsConfiguration } from 'theoplayer';
+import { Player, ChromelessPlayer, PlayerConfiguration } from 'theoplayer';
 import { THEOplayerWebAdapter } from './adapter/THEOplayerWebAdapter';
 
 export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProps>) {
