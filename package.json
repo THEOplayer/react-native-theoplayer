@@ -47,57 +47,31 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "^11.0.0",
-    "@react-native-community/eslint-config": "^2.0.0",
-    "@release-it/conventional-changelog": "^7.0.2",
     "@types/react": "^18.2.24",
-    "@types/react-native": "^0.72.3",
-    "commitlint": "^17.7.2",
-    "eslint": "^7.32.0",
-    "eslint-config-prettier": "^7.2.0",
-    "eslint-plugin-prettier": "^3.4.1",
-    "eslint-plugin-react-native": "^4.1.0",
+    "@types/react-native": "^0.73.0",
+    "@react-native/eslint-config": "0.73.2",
+    "eslint": "^8.56.0",
     "husky": "^6.0.0",
     "pod-install": "^0.1.39",
-    "prettier": "^2.8.8",
+    "prettier": "^3.2.5",
     "react": "^18.2.0",
-    "react-native": "^0.72.5",
-    "react-native-builder-bob": "^0.18.3",
-    "release-it": "^16.2.1",
-    "theoplayer": "^6.5.0",
-    "typescript": "^4.9.5"
+    "react-native": "^0.73.4",
+    "react-native-builder-bob": "^0.23.2",
+    "theoplayer": "^6.10.0",
+    "typescript": "5.0.4"
   },
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
-    "theoplayer": ">=5.0.1"
+    "theoplayer": ">=6.0"
   },
   "peerDependenciesMeta": {
     "theoplayer": {
       "optional": true
     }
   },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
-  },
-  "release-it": {
-    "git": {
-      "commitMessage": "chore: release ${version}",
-      "tagName": "v${version}"
-    },
-    "npm": {
-      "publish": true
-    },
-    "github": {
-      "release": true
-    },
-    "plugins": {
-      "@release-it/conventional-changelog": {
-        "preset": "angular"
-      }
-    }
+  "engines": {
+    "node": ">=18"
   },
   "eslintIgnore": [
     "node_modules/",

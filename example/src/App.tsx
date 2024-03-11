@@ -132,9 +132,14 @@ export default function App() {
                   <ControlBar style={{ justifyContent: 'flex-start' }}>
                     <CastMessage />
                   </ControlBar>
-                  <ControlBar>
-                    <SeekBar />
-                  </ControlBar>
+                  {
+                    /*Note: RNSlider is not available on tvOS */
+                    !(Platform.isTV && Platform.OS === 'ios') && (
+                      <ControlBar>
+                        <SeekBar />
+                      </ControlBar>
+                    )
+                  }
                   <ControlBar>
                     <MuteButton />
                     <TimeLabel showDuration={true} />
