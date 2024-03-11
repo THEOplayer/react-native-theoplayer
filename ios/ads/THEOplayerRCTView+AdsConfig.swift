@@ -53,18 +53,7 @@ extension THEOplayerRCTView {
 
 #if (GOOGLE_IMA || GOOGLE_DAI) || canImport(THEOplayerGoogleIMAIntegration)
     func playerAdsConfiguration() -> AdsConfiguration? {
-        let googleBuilder = GoogleIMAConfigurationBuilder()
-        googleBuilder.disableUI = !self.adsConfig.adSUIEnabled
-        googleBuilder.enableBackgroundPlayback = true
-        let googleIMAAdsConfiguration = googleBuilder.build()
-        let daiBuilder = GoogleDAIAdsConfigurationBuilder()
-        daiBuilder.disableUI = !self.adsConfig.adSUIEnabled
-        daiBuilder.enableBackgroundPlayback = true
-        let googleDaiAdsConfiguration = daiBuilder.build()
-        return AdsConfiguration(showCountdown: self.adsConfig.adSUIEnabled,
-                                preload: self.adPreloadType(),
-                                googleIma: googleIMAAdsConfiguration,
-                                googleDai: googleDaiAdsConfiguration)
+        return AdsConfiguration(showCountdown: self.adsConfig.adSUIEnabled, preload: self.adPreloadType())
     }
     
     private func adPreloadType() -> THEOplayerSDK.AdPreloadType {

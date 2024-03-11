@@ -29,6 +29,7 @@ extension THEOplayerRCTView {
         imaSettings.enableDebugMode = self.adsConfig.adsImaConfig.enableDebugMode
         imaSettings.playerType = "THEOplayer"
         imaSettings.playerVersion = THEOplayer.version
+        imaSettings.enableBackgroundPlayback = true
         if let ppid = self.adsConfig.adsImaConfig.ppid {
             imaSettings.ppid = ppid
         }
@@ -42,8 +43,17 @@ extension THEOplayerRCTView {
             imaSettings.sessionID = sessionID
         }
         
+        // setup ima render settings
+        let imaRenderSettings = IMAAdsRenderingSettings()
+        let disableUi = !self.adsConfig.adSUIEnabled
+        if disableUi {
+            imaRenderSettings.disableUi = disableUi
+            imaRenderSettings.uiElements = []
+        }
+        
         // setup integration
         let imaIntegration = GoogleIMAIntegrationFactory.createIntegration(on: player, with: imaSettings)
+        imaIntegration.renderingSettings = imaRenderSettings
         player.addIntegration(imaIntegration)
 #endif
     }
