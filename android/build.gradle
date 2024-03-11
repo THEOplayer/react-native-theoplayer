@@ -112,20 +112,17 @@ dependencies {
   // The minimum supported THEOplayer version is 6.0.0
   def theoplayer_sdk_version = safeExtGet('THEOplayer_sdk', '[6.0.0,7.0)')
 
-//  def theoplayer_mediasession_version = safeExtGet('THEOplayer_mediasession', theoplayer_sdk_version)
-  def theoplayer_mediasession_version = "5.11.0-local"
-
   println("Using THEOplayer (${versionString(theoplayer_sdk_version)})")
   implementation "com.theoplayer.theoplayer-sdk-android:core:${theoplayer_sdk_version}"
 
   implementation "com.theoplayer.theoplayer-sdk-android:ads-wrapper:6.10.0"
 
   if (enabledMediaSession) {
-    println("Enable THEOplayer MediaSession extension (${versionString(theoplayer_mediasession_version)})")
-    implementation "com.theoplayer.android-connector:mediasession:${theoplayer_mediasession_version}"
+    println("Enable THEOplayer MediaSession extension (${versionString(theoplayer_sdk_version)})")
+    implementation "com.theoplayer.android-connector:mediasession:${theoplayer_sdk_version}"
   } else {
     println('Disable THEOplayer MediaSession extension.')
-    compileOnly "com.theoplayer.android-connector:mediasession:${theoplayer_mediasession_version}"
+    compileOnly "com.theoplayer.android-connector:mediasession:${theoplayer_sdk_version}"
   }
 
   if (enabledGoogleIMA) {
