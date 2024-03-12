@@ -18,6 +18,7 @@ import androidx.lifecycle.Lifecycle
 import com.facebook.react.ReactRootView
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.views.view.ReactViewGroup
+import com.theoplayer.BuildConfig
 import com.theoplayer.PlayerEventEmitter
 import com.theoplayer.ReactTHEOplayerContext
 import com.theoplayer.android.api.error.ErrorCode
@@ -208,6 +209,9 @@ class PresentationManager(
       }.hide(WindowInsetsCompat.Type.systemBars())
       updatePresentationMode(PresentationMode.FULLSCREEN)
 
+      if (!BuildConfig.REPARENT_ON_FULLSCREEN) {
+        return
+      }
       playerGroupParentNode = (reactPlayerGroup?.parent as ReactViewGroup?)?.also { parent ->
         playerGroupChildIndex = parent.indexOfChild(reactPlayerGroup)
         // Re-parent the playerViewGroup to the root node
@@ -220,6 +224,9 @@ class PresentationManager(
       )
       updatePresentationMode(PresentationMode.INLINE)
 
+      if (!BuildConfig.REPARENT_ON_FULLSCREEN) {
+        return
+      }
       root?.run {
         // Re-parent the playerViewGroup from the root node to its original parent
         removeView(reactPlayerGroup)
