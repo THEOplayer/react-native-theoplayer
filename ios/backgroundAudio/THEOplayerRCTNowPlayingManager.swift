@@ -197,7 +197,7 @@ class THEOplayerRCTNowPlayingManager {
         self.playingListener = player.addEventListener(type: PlayerEventTypes.PLAYING) { [weak self, weak player] event in
             if let welf = self,
                let wplayer = player {
-                welf.updatePlaybackRate(1)
+                welf.updatePlaybackRate(wplayer.playbackRate)
                 welf.updatePlaybackState()
                 welf.updateCurrentTime(wplayer.currentTime)
                 if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE] PLAYING: Updating playbackState and time on NowPlayingInfoCenter...") }
