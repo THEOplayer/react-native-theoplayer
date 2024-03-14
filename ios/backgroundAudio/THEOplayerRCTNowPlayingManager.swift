@@ -20,7 +20,13 @@ class THEOplayerRCTNowPlayingManager {
     // MARK: - destruction
     func destroy() {
         // dettach listeners
-        self.dettachListeners()
+        self.detachListeners()
+
+        // update elapsed time on close
+        if let player = self.player {
+            updateCurrentTime(player.currentTime)
+            self.processNowPlayingToInfoCenter()
+        }
         
         // clear nowPlayingInfo
         self.nowPlayingInfo = [:]
@@ -62,8 +68,9 @@ class THEOplayerRCTNowPlayingManager {
     }
     
     private func processNowPlayingToInfoCenter() {
+        let nowPlayingInfo = self.nowPlayingInfo
         DispatchQueue.main.async {
-            MPNowPlayingInfoCenter.default().nowPlayingInfo = self.nowPlayingInfo
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
         }
     }
 
@@ -190,6 +197,7 @@ class THEOplayerRCTNowPlayingManager {
         self.playingListener = player.addEventListener(type: PlayerEventTypes.PLAYING) { [weak self, weak player] event in
             if let welf = self,
                let wplayer = player {
+                welf.updatePlaybackRate(1)
                 welf.updatePlaybackState()
                 welf.updateCurrentTime(wplayer.currentTime)
                 if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE] PLAYING: Updating playbackState and time on NowPlayingInfoCenter...") }
@@ -201,6 +209,7 @@ class THEOplayerRCTNowPlayingManager {
         self.pauseListener = player.addEventListener(type: PlayerEventTypes.PAUSE) { [weak self, weak player] event in
             if let welf = self,
                let wplayer = player {
+                welf.updatePlaybackRate(0)
                 welf.updatePlaybackState()
                 welf.updateCurrentTime(wplayer.currentTime)
                 if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE] PAUSED: Updating PlaybackState and time on NowPlayingInfoCenter...") }
@@ -236,7 +245,7 @@ class THEOplayerRCTNowPlayingManager {
         }
     }
     
-    private func dettachListeners() {
+    private func detachListeners() {
         guard let player = self.player else {
             return
         }
