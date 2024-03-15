@@ -49,6 +49,9 @@ android {
     def TimeUpdateRate = "com.theoplayer.TimeUpdateRate"
     buildConfigField TimeUpdateRate, "TIMEUPDATE_RATE", safeExtGet('THEOplayer_timeUpdateRate', "${TimeUpdateRate}.UNLIMITED")
 
+    // Optionally re-parent player view on fullscreen event
+    buildConfigField "boolean", "REPARENT_ON_FULLSCREEN", "${safeExtGet('THEOplayer_reparent_on_fullscreen', 'true')}"
+
     // Optionally log events to logcat
     buildConfigField "boolean", "LOG_PLAYER_EVENTS", "${safeExtGet('THEOplayer_logPlayerEvents', 'false')}"
     buildConfigField "boolean", "LOG_VIEW_EVENTS", "${safeExtGet('THEOplayer_logViewEvents', 'false')}"
