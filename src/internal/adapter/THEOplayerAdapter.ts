@@ -481,7 +481,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
       return;
     }
     // Always pass an array for targetVideoQuality.
-    this._state.targetVideoQuality = !target ? [] : Array.isArray(target) ? target : [target];
+    this._state.targetVideoQuality = target === undefined ? [] : Array.isArray(target) ? target : [target];
 
     // Update local state
     const track = findMediaTrackByUid(this._state.videoTracks, this.selectedVideoTrack);
