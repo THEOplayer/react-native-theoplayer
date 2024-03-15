@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Updated dependencies and example app to support ReactNative v0.73.
 
+### Fixed
+
+- Improved NowPlayingInfo updates for iOS by setting playbackRate on pause/playing events and processing the final info on player desctruction.
+
 ## [3.9.2] - 24-03-06
 
 ### Changed
