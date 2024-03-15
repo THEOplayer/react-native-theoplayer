@@ -15,8 +15,8 @@ extension THEOplayerRCTAdsAPI {
     @objc(daiSnapback:resolver:rejecter:)
     func daiSnapback(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         DispatchQueue.main.async {
-            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            if let ads = theView.ads(),
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let ads = theView.ads(),
                let dai = ads.dai {
                 resolve(dai.snapback)
             } else {
@@ -29,8 +29,8 @@ extension THEOplayerRCTAdsAPI {
     @objc(daiSetSnapback:enabled:)
     func daiSetSnapback(_ node: NSNumber, enabled: Bool) -> Void {
         DispatchQueue.main.async {
-            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            if let ads = theView.ads(),
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let ads = theView.ads(),
                var dai = ads.dai {
                 dai.snapback = enabled
             } else {
@@ -42,8 +42,8 @@ extension THEOplayerRCTAdsAPI {
     @objc(daiContentTimeForStreamTime:time:resolver:rejecter:)
     func daiContentTimeForStreamTime(_ node: NSNumber, timeValue: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         DispatchQueue.main.async {
-            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            if let ads = theView.ads(),
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let ads = theView.ads(),
                let dai = ads.dai {
                 let streamTime = timeValue.doubleValue * 0.001                      // msec -> sec
                 let contentTime = dai.contentTime(from: streamTime) * 1000.0        // sec -> msec
@@ -58,8 +58,8 @@ extension THEOplayerRCTAdsAPI {
     @objc(daiStreamTimeForContentTime:time:resolver:rejecter:)
     func daiStreamTimeForContentTime(_ node: NSNumber, timeValue: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         DispatchQueue.main.async {
-            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            if let ads = theView.ads(),
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let ads = theView.ads(),
                let dai = ads.dai {
                 let contentTime = timeValue.doubleValue * 0.001                     // msec -> sec
                 let streamTime = dai.streamTime(from: contentTime) * 1000.0         // sec -> msec

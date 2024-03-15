@@ -1,6 +1,9 @@
 {
   "root": true,
   "parser": "@typescript-eslint/parser",
+  "env": {
+    "node": true
+  },
   "plugins": [
     "@typescript-eslint",
     "react",
@@ -16,5 +19,10 @@
     "max-len": ["error", { "code": 150, "ignoreComments": true, "ignoreStrings": true, "ignoreTemplateLiterals": true }],
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/ban-ts-comment": "off"
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }

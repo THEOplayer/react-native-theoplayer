@@ -4,66 +4,55 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
-    "android-release": "react-native run-android --variant release",
-    "ios": "react-native run-ios",
+    "android": "npx react-native run-android",
+    "android-release": "npx react-native run-android --variant release",
+    "ios": "npx react-native run-ios",
     "web": "webpack-dev-server --config ./web/webpack.config.js --mode development",
     "web-release": "webpack --config ./web/webpack.config.js --mode production",
-    "start": "react-native start",
+    "start": "npx react-native start",
     "test": "jest",
     "lint": "eslint \"**/*.{ts,tsx}\""
   },
   "dependencies": {
-    "@react-native-community/slider": "^4.4.3",
-    "@theoplayer/react-native-ui": "^0.2.0",
+    "@react-native-community/slider": "^4.5.0",
+    "@theoplayer/react-native-ui": "^0.4.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-native": "npm:react-native-tvos@^0.71.13-1",
+    "react-native": "npm:react-native-tvos@^0.73.4-0",
     "react-native-status-bar-height": "^2.6.0",
     "react-native-svg": "^13.14.0",
-    "react-native-web": "^0.19.9",
+    "react-native-web": "^0.19.10",
     "react-native-web-image-loader": "^0.1.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.0",
-    "@babel/preset-env": "^7.22.20",
-    "@babel/preset-react": "^7.22.15",
-    "@babel/runtime": "^7.23.1",
-    "@react-native-community/eslint-config": "^2.0.0",
-    "@types/jest": "^26.0.24",
+    "@babel/core": "^7.20.0",
+    "@babel/preset-env": "^7.20.0",
+    "@babel/runtime": "^7.20.0",
+    "@react-native/babel-preset": "0.73.21",
+    "@react-native/eslint-config": "0.73.2",
+    "@react-native/metro-config": "0.73.5",
+    "@react-native/typescript-config": "0.73.1",
     "@types/react": "^18.2.24",
     "@types/react-dom": "^18.2.8",
     "@types/react-test-renderer": "18.0.0",
-    "babel-jest": "^26.6.3",
     "babel-loader": "^8.3.0",
     "babel-plugin-module-resolver": "^5.0.0",
     "babel-plugin-react-native-web": "^0.17.7",
     "copy-webpack-plugin": "^11.0.0",
-    "eslint": "7.14.0",
+    "eslint": "^8.56.0",
     "html-webpack-plugin": "^4.5.2",
-    "jest": "^26.6.3",
-    "metro-react-native-babel-preset": "^0.64.0",
-    "react-test-renderer": "18.0.0",
-    "typescript": "^3.9.10",
+    "react-test-renderer": "18.2.0",
+    "typescript": "5.0.4",
     "webpack": "^5.88.2",
     "webpack-cli": "^4.10.0",
     "webpack-dev-server": "^4.15.1"
   },
   "overrides": {
-    "use-subscription": "1.8.0",
     "react-native-google-cast": {
-      "react-native": "npm:react-native-tvos@^0.71.13-1"
+      "react-native": "npm:react-native-tvos@^0.73.4-0"
     }
   },
-  "jest": {
-    "preset": "react-native",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json",
-      "node"
-    ]
+  "engines": {
+    "node": ">=18"
   }
 }

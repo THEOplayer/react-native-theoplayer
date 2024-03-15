@@ -39,8 +39,8 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
     func skip(_ node: NSNumber) -> Void {
 
         DispatchQueue.main.async {
-            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            if let ads = theView.ads() {
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let ads = theView.ads() {
                 ads.skip()
             } else {
                 if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not skip ad (ads module unavailable).") }
@@ -51,8 +51,8 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
     @objc(playing:resolver:rejecter:)
     func playing(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         DispatchQueue.main.async {
-            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            if let ads = theView.ads() {
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let ads = theView.ads() {
                 resolve(ads.playing)
             } else {
                 reject(ERROR_CODE_ADS_ACCESS_FAILURE, ERROR_MESSAGE_ADS_ACCESS_FAILURE, nil)
@@ -64,8 +64,8 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
     @objc(currentAdBreak:resolver:rejecter:)
     func currentAdBreak(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         DispatchQueue.main.async {
-            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            if let ads = theView.ads(),
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let ads = theView.ads(),
                let currentAdBreak = ads.currentAdBreak {
                 resolve(THEOplayerRCTAdAdapter.fromAdBreak(adBreak:currentAdBreak))
             } else {
@@ -78,8 +78,8 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
     @objc(currentAds:resolver:rejecter:)
     func currentAds(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         DispatchQueue.main.async {
-            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            if let ads = theView.ads() {
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let ads = theView.ads() {
                 let currentAdsArray = ads.currentAds
                 var currentAds: [[String:Any]] = []
                 for ad in currentAdsArray {
@@ -96,8 +96,8 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
     @objc(scheduledAdBreaks:resolver:rejecter:)
     func scheduledAdBreaks(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         DispatchQueue.main.async {
-            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            if let ads = theView.ads() {
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let ads = theView.ads() {
                 let currentAdBreaksArray = ads.scheduledAdBreaks
                 var currentAdBreaks: [[String:Any]] = []
                 for adbreak in currentAdBreaksArray {
@@ -114,8 +114,8 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
     @objc(schedule:ad:)
     func schedule(_ node: NSNumber, adDict: NSDictionary) -> Void {
         DispatchQueue.main.async {
-            let theView = self.bridge.uiManager.view(forReactTag: node) as! THEOplayerRCTView
-            if let adData = adDict as? [String:Any],
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let adData = adDict as? [String:Any],
                let ads = theView.ads(),
                let adDescription = THEOplayerRCTSourceDescriptionBuilder.buildSingleAdDescription(adData) {
                 ads.schedule(adDescription: adDescription)

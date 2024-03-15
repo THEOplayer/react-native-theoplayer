@@ -9,8 +9,8 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:7.4.2'
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${safeExtGet('kotlinVersion', '1.8.21')}"
+    classpath 'com.android.tools.build:gradle:8.2.2'
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${safeExtGet('kotlinVersion', '1.9.21')}"
   }
 }
 
@@ -48,6 +48,9 @@ android {
     // - "com.theoplayer.TimeUpdateRate.LIMITED_THREE_HZ"
     def TimeUpdateRate = "com.theoplayer.TimeUpdateRate"
     buildConfigField TimeUpdateRate, "TIMEUPDATE_RATE", safeExtGet('THEOplayer_timeUpdateRate', "${TimeUpdateRate}.UNLIMITED")
+
+    // Optionally re-parent player view on fullscreen event
+    buildConfigField "boolean", "REPARENT_ON_FULLSCREEN", "${safeExtGet('THEOplayer_reparent_on_fullscreen', 'true')}"
 
     // Optionally log events to logcat
     buildConfigField "boolean", "LOG_PLAYER_EVENTS", "${safeExtGet('THEOplayer_logPlayerEvents', 'false')}"
@@ -112,20 +115,17 @@ dependencies {
   // The minimum supported THEOplayer version is 6.0.0
   def theoplayer_sdk_version = safeExtGet('THEOplayer_sdk', '[6.0.0,7.0)')
 
-//  def theoplayer_mediasession_version = safeExtGet('THEOplayer_mediasession', theoplayer_sdk_version)
-  def theoplayer_mediasession_version = "5.11.0-local"
-
   println("Using THEOplayer (${versionString(theoplayer_sdk_version)})")
   implementation "com.theoplayer.theoplayer-sdk-android:core:${theoplayer_sdk_version}"
 
   implementation "com.theoplayer.theoplayer-sdk-android:ads-wrapper:6.10.0"
 
   if (enabledMediaSession) {
-    println("Enable THEOplayer MediaSession extension (${versionString(theoplayer_mediasession_version)})")
-    implementation "com.theoplayer.android-connector:mediasession:${theoplayer_mediasession_version}"
+    println("Enable THEOplayer MediaSession extension (${versionString(theoplayer_sdk_version)})")
+    implementation "com.theoplayer.android-connector:mediasession:${theoplayer_sdk_version}"
   } else {
     println('Disable THEOplayer MediaSession extension.')
-    compileOnly "com.theoplayer.android-connector:mediasession:${theoplayer_mediasession_version}"
+    compileOnly "com.theoplayer.android-connector:mediasession:${theoplayer_sdk_version}"
   }
 
   if (enabledGoogleIMA) {

@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.10.0] - 24-03-15
+
+### Changed
+
+- Updated dependencies and example app to support ReactNative v0.73.
+- Updated ios sdk version to 6.11
+
+### Fixed
+
+- Improved NowPlayingInfo updates for iOS by setting playbackRate on pause/playing events and processing the final info on player desctruction.
+- Fixed an issue with misinterpretation of `targetVideoQuality = 0` (use video track with `uid == 0`) as `targetVideoQuality = undefined` (use ABR across all video qualities).
+- Fixed an issue where the `srclang` property of a `textTrack` passed to a `SourceDescription` would not be parsed on Android.
+
+### Added
+
+- Added an optional `THEOplayer_reparent_on_fullscreen` build property on Android to disable `THEOplayerView` reparenting when transitioning to fullscreen presentation mode.
+
 ## [3.9.2] - 24-03-06
 
 ### Changed
@@ -478,7 +495,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- Moved all player properties such as `paused`, `muted` and `volume`, from  `THEOplayerView` component to `THEOplayer` instance. More info on the [migration documentation](./doc/migrating_v2.md) page.
+- Moved all player properties such as `paused`, `muted` and `volume`, from `THEOplayerView` component to `THEOplayer` instance. More info on the [migration documentation](./doc/migrating_v2.md) page.
 - Removed `onEventName` callback methods from `THEOplayerView` component in favor of `THEOplayer` event listener's interface. More info on the [migration documentation](./doc/migrating_v2.md) page.
 - Changed documentation sample code to reflect API changes.
 - Exposed the `activeQuality` of a `MediaTrack` as a `Quality` instance instead of the quality's `uid`.
