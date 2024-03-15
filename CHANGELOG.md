@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Improved NowPlayingInfo updates for iOS by setting playbackRate on pause/playing events and processing the final info on player desctruction.
 - Fixed an issue with misinterpretation of `targetVideoQuality = 0` (use video track with `uid == 0`) as `targetVideoQuality = undefined` (use ABR across all video qualities).
 
+### Added
+
+- Added an optional `THEOplayer_reparent_on_fullscreen` build property on Android to disable `THEOplayerView` reparenting when transitioning to fullscreen presentation mode.
+
 ## [3.9.2] - 24-03-06
 
 ### Changed
