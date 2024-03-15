@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 - Updated dependencies and example app to support ReactNative v0.73.
+- Updated ios sdk version to 6.11
 
 ### Fixed
 
