@@ -48,6 +48,7 @@ private const val PROP_SRC = "src"
 private const val PROP_SOURCES = "sources"
 private const val PROP_DEFAULT = "default"
 private const val PROP_LABEL = "label"
+private const val PROP_SRCLANG = "srclang"
 private const val PROP_KIND = "kind"
 private const val PROP_TIME_OFFSET = "timeOffset"
 private const val PROP_INTEGRATION = "integration"
@@ -325,6 +326,7 @@ class SourceAdapter {
     val builder = TextTrackDescription.Builder(jsonTextTrack.optString(PROP_SRC))
       .isDefault(jsonTextTrack.optBoolean(PROP_DEFAULT))
       .label(jsonTextTrack.optString(PROP_LABEL))
+      .srclang(jsonTextTrack.optString(PROP_SRCLANG))
       .kind(parseTextTrackKind(jsonTextTrack.optString(PROP_KIND))!!)
     return builder.build()
   }

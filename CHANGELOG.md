@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Improved NowPlayingInfo updates for iOS by setting playbackRate on pause/playing events and processing the final info on player desctruction.
 - Fixed an issue with misinterpretation of `targetVideoQuality = 0` (use video track with `uid == 0`) as `targetVideoQuality = undefined` (use ABR across all video qualities).
+- Fixed an issue where the `srclang` property of a `textTrack` passed to a `SourceDescription` would not be parsed on Android.
 
 ### Added
 
