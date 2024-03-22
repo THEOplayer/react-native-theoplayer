@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@react-native-community/slider": "^4.5.0",
-    "@theoplayer/react-native-ui": "^0.4.0",
+    "@theoplayer/react-native-ui": "^0.5.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "npm:react-native-tvos@^0.73.4-0",

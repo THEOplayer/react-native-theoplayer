@@ -60,6 +60,7 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                 let (sourceDescription, metadataTrackDescriptions) = THEOplayerRCTSourceDescriptionBuilder.buildSourceDescription(src)
                 if let srcDescription = sourceDescription {
                     if let player = theView.player {
+                        self.triggerViewHierarchyValidation(player)
                         self.setNewSourceDescription(player: player, srcDescription: srcDescription)
                         theView.processMetadataTracks(metadataTrackDescriptions: metadataTrackDescriptions)
                     }
@@ -70,6 +71,15 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                 if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Failed to update THEOplayer source.") }
             }
         }
+    }
+    
+    private func triggerViewHierarchyValidation(_ player: THEOplayer) {
+        // TEMP: trigger a ViewController Hierarchy revalidation for IMA on the iOS THEOplayer SDK
+#if canImport(THEOplayerGoogleIMAIntegration)
+        let originalFrame = player.frame
+        player.frame.size.width -= 1
+        player.frame = originalFrame
+#endif
     }
 
     private func setNewSourceDescription(player: THEOplayer, srcDescription: SourceDescription) {
