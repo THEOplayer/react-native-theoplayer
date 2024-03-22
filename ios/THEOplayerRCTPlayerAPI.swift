@@ -74,10 +74,12 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
     }
     
     private func triggerViewHierarchyValidation(_ player: THEOplayer) {
-        print("[WILL] trigger view hierarchy validation")
+        // TEMP: trigger a ViewController Hierarchy revalidation for IMA on the iOS THEOplayer SDK
+#if canImport(THEOplayerGoogleIMAIntegration)
         let originalFrame = player.frame
-        player.frame.size.width -= 1 // TEMP: this triggers a ViewController Hierarchy revalidation for IMA on the iOS THEOplayer SDK
+        player.frame.size.width -= 1
         player.frame = originalFrame
+#endif
     }
 
     private func setNewSourceDescription(player: THEOplayer, srcDescription: SourceDescription) {
