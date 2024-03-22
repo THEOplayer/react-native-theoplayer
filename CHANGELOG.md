@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.10.2] - 24-03-22
+
+### Changed
+
+- Downgraded default `androidx.core:core-ktx` dependency version to support Android target sdk 33.
+
 ## [3.10.1] - 24-03-19
 
 ### Changed
