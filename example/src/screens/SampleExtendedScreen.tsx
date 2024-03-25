@@ -67,8 +67,11 @@ export default function SampleExtendedScreen() {
   const chromeless = playerConfig?.chromeless ?? false;
   const onPlayerReady = (player: THEOplayer) => {
     console.log(LOG_TAG, 'THEOplayer is ready:', player.version);
+
+    // store player reference
     setPlayer(player);
-    // optional debug logs
+
+    // setup debug logs
     player.addEventListener<PlayerEventType>(PlayerEventType.SOURCE_CHANGE, console.log);
     player.addEventListener<PlayerEventType>(PlayerEventType.LOADED_DATA, console.log);
     player.addEventListener<PlayerEventType>(PlayerEventType.LOADED_METADATA, console.log);
@@ -79,29 +82,26 @@ export default function SampleExtendedScreen() {
     player.addEventListener<PlayerEventType>(PlayerEventType.SEEKING, console.log);
     player.addEventListener<PlayerEventType>(PlayerEventType.SEEKED, console.log);
     player.addEventListener<PlayerEventType>(PlayerEventType.ENDED, console.log);
-    player.autoplay = true;
+
+    // configure autoplay
+    //player.autoplay = true;
+
+    // set initial source
     player.source = SOURCES[0].source;
+
+    // configure backgroundAudio
     player.backgroundAudioConfiguration = { enabled: true };
+
+    // configure PiP
     player.pipConfiguration = { startsAutomatically: true };
   };
 
   // example app specific setup
   usePlayerFocus(player);
 
-  const PLAYER_CONTAINER_STYLE: ViewStyle = {
-    position: 'absolute',
-    top: Platform.OS === 'ios' ? getStatusBarHeight() : 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#000000',
-  };
-
   return (
     <SafeAreaView style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}>
-      <View style={PLAYER_CONTAINER_STYLE}>
+      <View style={styles.PLAYER_CONTAINER_STYLE}>
         <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady}>
           {player !== undefined && chromeless && (
             <UiContainer
@@ -162,3 +162,16 @@ export default function SampleExtendedScreen() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  PLAYER_CONTAINER_STYLE: {
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? getStatusBarHeight() : 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#000000',
+  },
+});

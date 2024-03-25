@@ -17,13 +17,14 @@ export default function SamplesStackNavigator() {
         }}>
       <Stack.Screen name="SampleOverview"
                     component={OverviewScreen}
-                    options={{ title: 'Overview' }} />
+                    options={{ title: 'Sample Overview' }} />
       <Stack.Screen name="Sample_Extended"
                     component={SampleExtendedScreen}
-                    options={{ title: 'Extended' }} />
+                    options={{ title: 'Extended Setup' }} />
       <Stack.Screen name="Sample_Minimal"
                     component={SampleMinimalScreen}
-                    options={{ title: 'Minimal' }} />
+                    options={{ title: 'Minimal Setup' }} />
     </Stack.Navigator>
   );
 }
+
