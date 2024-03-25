@@ -1,6 +1,5 @@
 import React from "react";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import SamplesScreen from "../screens/SamplesScreen";
 import ConfigScreen from "../screens/ConfigScreen";
 import SamplesStackNavigator from "./SamplesStackNavigator";
 
@@ -11,13 +10,14 @@ export default function BottomTabNavigator() {
       initialRouteName="Samples"
       screenOptions={
         {
-          detachInactiveScreens: true,
           headerShown: false,
           headerTitleAlign: "center",
           headerTintColor: '#FFC50F',
         }}>
-      <Tab.Screen name="Samples" component={SamplesStackNavigator} />
-      <Tab.Screen name="Config" component={ConfigScreen} />
+      <Tab.Screen name="Samples"
+                  component={SamplesStackNavigator} />
+      <Tab.Screen name="Config"
+                  component={ConfigScreen} />
     </Tab.Navigator>
   );
 }
