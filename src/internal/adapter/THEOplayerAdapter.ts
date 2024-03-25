@@ -56,7 +56,7 @@ const NativePlayerModule = NativeModules.THEORCTPlayerModule;
 const defaultPlayerState: NativePlayerState = {
   source: undefined,
   autoplay: false,
-  paused: false,
+  paused: true,
   seekable: [],
   buffered: [],
   pipConfig: { startsAutomatically: false },
