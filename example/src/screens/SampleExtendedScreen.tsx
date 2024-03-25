@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import {useState} from 'react';
 import {
   AirplayButton,
   CastMessage,
@@ -22,20 +22,29 @@ import {
   TimeLabel,
   UiContainer,
 } from '@theoplayer/react-native-ui';
-import { PlayerConfiguration, PlayerEventType, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
+import {
+  PlayerConfiguration,
+  PlayerEventType,
+  THEOplayer,
+  THEOplayerView
+} from 'react-native-theoplayer';
 
-import { Platform, SafeAreaView, StyleSheet, View, ViewStyle } from 'react-native';
-import { getStatusBarHeight } from 'react-native-status-bar-height';
-import { SourceMenuButton, SOURCES } from '../custom/SourceMenuButton';
-import { BackgroundAudioSubMenu } from '../custom/BackgroundAudioSubMenu';
-import { PiPSubMenu } from '../custom/PipSubMenu';
-import { MediaCacheDownloadButton } from '../custom/MediaCacheDownloadButton';
-import { MediaCacheMenuButton } from '../custom/MediaCacheMenuButton';
-import { MediaCachingTaskListSubMenu } from '../custom/MediaCachingTaskListSubMenu';
+import {Platform, SafeAreaView, StyleSheet, View, ViewStyle} from 'react-native';
+import {getStatusBarHeight} from 'react-native-status-bar-height';
+import {SourceMenuButton, SOURCES} from '../custom/SourceMenuButton';
+import {BackgroundAudioSubMenu} from '../custom/BackgroundAudioSubMenu';
+import {PiPSubMenu} from '../custom/PipSubMenu';
+import {MediaCacheDownloadButton} from '../custom/MediaCacheDownloadButton';
+import {MediaCacheMenuButton} from '../custom/MediaCacheMenuButton';
+import {MediaCachingTaskListSubMenu} from '../custom/MediaCachingTaskListSubMenu';
+import {usePlayerFocus} from "../hooks/usePlayerFocus";
+
+const LOG_TAG = "[EXAMPLE - EXTENDED SAMPLE]";
 
 const playerConfig: PlayerConfiguration = {
   // Get your THEOplayer license from https://portal.theoplayer.com/
   // Without a license, only demo sources hosted on '*.theoplayer.com' domains can be played.
+  license: undefined,
   chromeless: true,
   hlsDateRange: true,
   libraryLocation: 'theoplayer',
@@ -53,10 +62,11 @@ const playerConfig: PlayerConfiguration = {
   },
 };
 
-export default function SampleFullFeaturedScreen() {
+export default function SampleExtendedScreen() {
   const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);
   const chromeless = playerConfig?.chromeless ?? false;
   const onPlayerReady = (player: THEOplayer) => {
+    console.log(LOG_TAG, 'THEOplayer is ready:', player.version);
     setPlayer(player);
     // optional debug logs
     player.addEventListener<PlayerEventType>(PlayerEventType.SOURCE_CHANGE, console.log);
@@ -69,20 +79,21 @@ export default function SampleFullFeaturedScreen() {
     player.addEventListener<PlayerEventType>(PlayerEventType.SEEKING, console.log);
     player.addEventListener<PlayerEventType>(PlayerEventType.SEEKED, console.log);
     player.addEventListener<PlayerEventType>(PlayerEventType.ENDED, console.log);
+    player.autoplay = true;
     player.source = SOURCES[0].source;
-
     player.backgroundAudioConfiguration = { enabled: true };
     player.pipConfiguration = { startsAutomatically: true };
-    console.log('THEOplayer is ready:', player.version);
   };
 
-  const needsBorder = Platform.OS === 'ios';
+  // example app specific setup
+  usePlayerFocus(player);
+
   const PLAYER_CONTAINER_STYLE: ViewStyle = {
     position: 'absolute',
-    top: needsBorder ? getStatusBarHeight() : 0,
-    left: needsBorder ? 2 : 0,
+    top: Platform.OS === 'ios' ? getStatusBarHeight() : 0,
+    left: 0,
     bottom: 0,
-    right: needsBorder ? 2 : 0,
+    right: 0,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#000000',
