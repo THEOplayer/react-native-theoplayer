@@ -264,8 +264,6 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     }
     if (this._state.autoplay) {
       this.play();
-    } else {
-      this.pause();
     }
   }
 
