@@ -1,20 +1,22 @@
 import * as React from 'react';
 import { Button, View, Text } from 'react-native';
 
-function SamplesScreen({ navigation }) {
+function OverviewScreen({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Samples Screen</Text>
+      <Text>Samples Overview</Text>
       <Button
         title="Minimal Setup"
         onPress={() => navigation.navigate('Sample_Minimal')}
+        color="white"
       />
       <Button
-        title="Full Featured Setup"
-        onPress={() => navigation.navigate('Sample_FullFeatured')}
+        title="Extended Setup"
+        onPress={() => navigation.navigate('Sample_Extended')}
+        color="white"
       />
     </View>
   );
 }
 
-export default SamplesScreen;
+export default OverviewScreen;
