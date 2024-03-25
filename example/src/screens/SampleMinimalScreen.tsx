@@ -1,13 +1,11 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { PlayerConfiguration, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
-
-import { Platform, SafeAreaView, StyleSheet, View, ViewStyle } from 'react-native';
+import { Platform, SafeAreaView, StyleSheet, View } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import {usePlayerFocus} from "../hooks/usePlayerFocus";
 
 const LOG_TAG = "[EXAMPLE - MINIMAL SAMPLE]";
-
 const playerConfig: PlayerConfiguration = {
   // Get your THEOplayer license from https://portal.theoplayer.com/
   // Without a license, only demo sources hosted on '*.theoplayer.com' domains can be played.
@@ -38,7 +36,17 @@ export default function SampleMinimalScreen() {
   // example app specific setup
   usePlayerFocus(player);
 
-  const PLAYER_CONTAINER_STYLE: ViewStyle = {
+  return (
+    <SafeAreaView style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}>
+      <View style={styles.PLAYER_CONTAINER_STYLE}>
+        <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady} />
+      </View>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  PLAYER_CONTAINER_STYLE: {
     position: 'absolute',
     top: Platform.OS === 'ios' ? getStatusBarHeight() : 0,
     left: 0,
@@ -47,13 +55,5 @@ export default function SampleMinimalScreen() {
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#000000',
-  };
-
-  return (
-    <SafeAreaView style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}>
-      <View style={PLAYER_CONTAINER_STYLE}>
-        <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady} />
-      </View>
-    </SafeAreaView>
-  );
-}
+  },
+});
