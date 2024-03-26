@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Button, View, Text } from 'react-native';
+import PropTypes from 'prop-types';
 
-function OverviewScreen({ navigation }) {
+const OverviewScreen = ({ navigation }) => {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>Samples Overview</Text>
@@ -18,5 +19,9 @@ function OverviewScreen({ navigation }) {
     </View>
   );
 }
+
+OverviewScreen.propTypes = {
+  navigation: PropTypes.object.isRequired,
+};
 
 export default OverviewScreen;
