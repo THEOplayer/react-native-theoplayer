@@ -84,7 +84,7 @@ const SampleExtendedScreen = () => {
     player.addEventListener<PlayerEventType>(PlayerEventType.ENDED, console.log);
 
     // configure autoplay
-    //player.autoplay = true;
+    player.autoplay = true;
 
     // set initial source
     player.source = SOURCES[0].source;
