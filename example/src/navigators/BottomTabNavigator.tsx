@@ -10,14 +10,19 @@ export default function BottomTabNavigator() {
       initialRouteName="Samples"
       screenOptions={
         {
-          headerShown: false,
           headerTitleAlign: "center",
           headerTintColor: '#FFC50F',
         }}>
       <Tab.Screen name="Samples"
-                  component={SamplesStackNavigator} />
+                  component={SamplesStackNavigator}
+                  options={{
+                    headerShown: false
+                  }} />
       <Tab.Screen name="Config"
-                  component={ConfigScreen} />
+                  component={ConfigScreen}
+                  options={{
+                    headerShown: true
+                  }} />
     </Tab.Navigator>
   );
 }

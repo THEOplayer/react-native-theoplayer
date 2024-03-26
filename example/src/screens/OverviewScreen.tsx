@@ -16,6 +16,11 @@ const OverviewScreen = ({ navigation }) => {
         onPress={() => navigation.navigate('Sample_Extended')}
         color="white"
       />
+      <Button
+        title="PresentationModes Setup"
+        onPress={() => navigation.navigate('Sample_PresentationModes')}
+        color="white"
+      />
     </View>
   );
 }
