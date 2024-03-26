@@ -1,6 +1,8 @@
 import * as React from 'react';
 import {NavigationContainer, DarkTheme} from '@react-navigation/native';
 import BottomTabNavigator from "./navigators/BottomTabNavigator";
+import {Platform} from "react-native";
+import SampleExtendedScreen from "./screens/SampleExtendedScreen";
 
 export default function App() {
 
@@ -13,9 +15,12 @@ export default function App() {
     },
   };
 
+  const singleScreen = Platform.isTV || Platform.OS === 'web';
+
   return (
     <NavigationContainer theme={navTheme}>
-      <BottomTabNavigator />
+      {!singleScreen && (<BottomTabNavigator/>)}
+      {singleScreen && (<SampleExtendedScreen/>)}
     </NavigationContainer>
   );
 }
