@@ -29,7 +29,7 @@ import {
   THEOplayerView
 } from 'react-native-theoplayer';
 
-import {Platform, SafeAreaView, StyleSheet, View, ViewStyle} from 'react-native';
+import {Platform, SafeAreaView, StyleSheet, View} from 'react-native';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {SourceMenuButton, SOURCES} from '../custom/SourceMenuButton';
 import {BackgroundAudioSubMenu} from '../custom/BackgroundAudioSubMenu';
@@ -62,7 +62,7 @@ const playerConfig: PlayerConfiguration = {
   },
 };
 
-export default function SampleExtendedScreen() {
+const SampleExtendedScreen = () => {
   const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);
   const chromeless = playerConfig?.chromeless ?? false;
   const onPlayerReady = (player: THEOplayer) => {
@@ -175,3 +175,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#000000',
   },
 });
+
+export default SampleExtendedScreen;
