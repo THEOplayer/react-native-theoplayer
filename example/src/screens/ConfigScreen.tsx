@@ -1,12 +1,21 @@
 import * as React from 'react';
-import { View, Text } from 'react-native';
+import {StyleSheet, Text, SafeAreaView} from 'react-native';
 
 function ConfigScreen() {
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Config Screen</Text>
-    </View>
+    <SafeAreaView style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}>
+      <Text style={styles.TEXT}>{`work in progress...`}</Text>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  TEXT: {
+    marginTop: 25,
+    marginHorizontal: 20,
+    color: "white",
+    textAlign: 'center'
+  }
+});
 
 export default ConfigScreen;
