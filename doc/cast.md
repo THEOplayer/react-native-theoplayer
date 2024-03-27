@@ -35,12 +35,22 @@ For the rest of this document we assume that THEOplayer handles this logic. Enab
 <details>
 <summary>Android</summary>
 
-The Android SDK is modular-based, so enabling Chromecast is limited to including
+The Android SDK is modular-based, so enabling Chromecast is limited to
+(1) including
 the cast extension in gradle by setting this flag in your `gradle.properties`:
 
 ```
 # Enable THEOplayer Extensions (default: disabled)
 THEOplayer_extensionCast = true
+```
+
+and (2) initializing the `CastContext` in your app's MainActivity:
+
+```java
+@Override
+public void onCreate(Bundle savedInstanceState) {
+    CastContext castContext = CastContext.getSharedInstance(this);
+}
 ```
 
 </details>
