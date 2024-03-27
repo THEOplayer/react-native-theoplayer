@@ -73,3 +73,7 @@ ios/custom/Frameworks/tvos/*.xcframework
 
 # TypeDoc
 api/
+
+# Jekyll / GitHub Pages
+_site/
+Gemfile.lock

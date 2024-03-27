@@ -1,0 +1,23 @@
+title: React Native THEOplayer
+description: >-
+  A React Native THEOplayerView component
+author: THEO Technologies
+remote_theme: pages-themes/primer@v0.6.0
+plugins:
+  - jekyll-remote-theme
+include:
+  - api/
+exclude:
+  - LICENSE
+  - '.*.js'
+  - '*.json'
+  - '*.plugin.js'
+  - '*.config.js'
+  - '*.podspec'
+  - '.*/'
+  - android/
+  - example/
+  - ios/
+  - lib/
+  - node_modules/
+  - src/
