@@ -21,7 +21,7 @@ export interface PlayerConfiguration {
    * The muted autoplay policy for web.
    *
    * @remarks
-   * <br/> - The muted autoplay policy is impacted by this property and {@link SourceConfiguration.mutedAutoplay}.
+   * <br/> - The muted autoplay policy is impacted by this property and {@link theoplayer!SourceConfiguration.mutedAutoplay}.
    *
    * @defaultValue `'none'`.
    */
