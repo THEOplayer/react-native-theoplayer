@@ -1,3 +1,7 @@
+---
+sidebar_position: 2
+---
+
 # The `THEOplayerView` Component
 
 THEOplayer React native SDK is an NPM package, which exposes the THEOplayerView component that can be added to your

@@ -1,3 +1,7 @@
+---
+sidebar_position: 0
+---
+
 # React Native THEOplayer
 
 ![](./doc/logo-react-native.png) ![](./doc/logo-theo.png)

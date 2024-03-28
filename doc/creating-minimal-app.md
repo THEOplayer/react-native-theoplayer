@@ -1,3 +1,7 @@
+---
+sidebar_position: 1
+---
+
 # Creating a minimal demo app
 
 In this section we start from an empty React Native template, include a dependency to `react-native-theoplayer`,

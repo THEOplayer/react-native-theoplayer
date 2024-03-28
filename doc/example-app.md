@@ -1,3 +1,7 @@
+---
+sidebar_position: 3
+---
+
 # Example Application
 
 The example application on our `react-native-theoplayer`
