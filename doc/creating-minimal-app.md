@@ -53,7 +53,6 @@ $ npm i react-native-theoplayer --legacy-peer-deps
 
 Finally, replace the `App.tsx` with this minimal code:
 
-{% raw %}
 ```tsx
 import React from 'react';
 import {Platform, View} from 'react-native';
@@ -88,7 +87,6 @@ const App = () => {
 
 export default App;
 ```
-{% endraw %}
 
 When configuring a stream that is hosted on another server than `cdn.theoplayer.com`,
 a license for the React Native SDK needs to be obtained through the 'Licenses' built in the [THEOplayer portal](https://portal.theoplayer.com/)
