@@ -1,0 +1,43 @@
+name: GitHub Pages
+
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Run npm
+        run: npm ci
+      - name: Build API docs
+        run: npm run docs
+      - name: Build website
+        uses: actions/jekyll-build-pages@v1
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}

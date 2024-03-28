@@ -89,6 +89,7 @@ use [a package](https://www.npmjs.com/package/@alexzunik/rn-native-portals-rebor
 _relocates the native view to a different parent in the native view hierarchy_.
 This approach aims to prevent the remounting of the complex video component.
 
+{% raw %}
 ```tsx
 export default function App() {
   const [isMiniPlayer, setMiniPlayer] = useState(false);
@@ -117,6 +118,7 @@ export default function App() {
     </View>);
 }
 ```
+{% endraw %}
 
 The player component along with its UI container in the example above is wrapped in a `PortalOrigin`.
 Its destination is left `null` as long as the player is presented inline.
