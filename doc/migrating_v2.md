@@ -1,4 +1,4 @@
-## Migrating to `react-native-theoplayer` v2.x
+# Migrating to `react-native-theoplayer` v2.x
 
 The v2 release of `react-native-theoplayer` comes with a number of breaking API changes.
 The `THEOplayerView` component is now split into two separate objects,
@@ -8,7 +8,7 @@ In addition, events are being dispatched to subscribed listeners instead of thro
 In this section we will highlight the differences between the old and new approach in order
 to allow a smooth transition.
 
-### Player Creation
+## Player Creation
 
 The `THEOplayerView` component is created and mounted as before.
 
@@ -60,7 +60,7 @@ const App = () => {
 </tr>
 </table>
 
-### Listening to Player Events
+## Listening to Player Events
 
 As of v2.x, the event callbacks have been removed from `THEOplayerView` and replaced
 by a subscription approach.
@@ -131,7 +131,7 @@ const App = () => {
 </tr>
 </table>
 
-### AdsAPI and CastAPI
+## AdsAPI and CastAPI
 
 The existing ads and casting API's work the same as before. Instead of requesting an API
 from the view's reference, it can now be requested directly from the player instance.

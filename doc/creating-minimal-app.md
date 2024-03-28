@@ -1,11 +1,11 @@
-## Creating a minimal demo app
+# Creating a minimal demo app
 
 In this section we start from an empty React Native template, include a dependency to `react-native-theoplayer`,
 and deploy it on an Android or iOS device.
 
 A user interface is added using the `@theoplayer/react-native-ui` package.
 
-### Table of Contents
+## Table of Contents
 - [Setting up a new project](#setting-up-a-new-project)
 - [Getting started on Android](#getting-started-on-android)
 - [Getting started on iOS](#getting-started-on-ios-and-tvos)
@@ -13,7 +13,7 @@ A user interface is added using the `@theoplayer/react-native-ui` package.
 - [Building and running the app](#building-and-running-the-app)
 - [Adding a user interface](#adding-a-user-interface)
 
-### Setting up a new project
+## Setting up a new project
 
 In the following steps we will be using `npm` as the Node.js package manager.
 
@@ -94,7 +94,7 @@ or request a [free trial license](https://www.theoplayer.com/free-trial-theoplay
 
 ![license_portal](./license_portal.png)
 
-### Getting started on Android
+## Getting started on Android
 
 After completing the [initial project setup](#setting-up-a-new-project), which is shared for all platforms,
 the following Gradle buildConfig fields can be used in your `gradle.properties` file to override or
@@ -137,7 +137,7 @@ For optimal performance, make sure to build your app in release mode, and  optio
 events send by the player as shown in the config above. A `timeupdate` event typically triggers a number of
 React Native component updates and could affect performance in negative way.
 
-### Getting started on iOS and tvOS
+## Getting started on iOS and tvOS
 
 To define which extra THEOplayer integrations need to be loaded for additional features (currently: IMA ads and/or chromecast) a config file needs to be added to you application folder:
 
@@ -182,7 +182,7 @@ Run pod install in your app's ios folder
 pod install
 ```
 
-### When working with a 4.x tvOS THEOplayer SDK
+## When working with a 4.x tvOS THEOplayer SDK
 When using a 4.x SDK, you need an additional change for tvOS, since the tvOS SDK needs to be prepared before it can be used in a RN context. First, include TheoplayerSDK into your project's AppDelegate:
 ```swift
 #if TARGET_OS_TV
@@ -196,7 +196,7 @@ Next, prepare the THEOplayer right after the creation of the rootViewController 
 #endif
 ```
 
-### Getting started on Web
+## Getting started on Web
 
 Make sure to first complete the [initial project setup](#setting-up-a-new-project), which is shared for all platforms.
 Deploying a web app requires a little more work. The example uses [react-native-web](https://necolas.github.io/react-native-web/) to
@@ -205,7 +205,7 @@ In addition, the project relies on webpack to create the bundle that is loaded i
 
 We refer to the [example application](example-app.md) and its [code](../example/web/) for a full demonstration.
 
-#### libraryConfiguration
+### libraryConfiguration
 
 When passing the `PlayerConfiguration` object while creating the player, the
 [`libraryConfiguration`](https://docs.theoplayer.com/api-reference/web/theoplayer.playerconfiguration.md#librarylocation) parameter specifies
@@ -213,7 +213,7 @@ where the THEOplayer web worker files are located. The worker files are dynamica
 necessary to play-out MPEG-TS based HLS streams. By default it is set to the location where npm installed THEOplayer
 ('./node_modules/theoplayer').
 
-### Building and running the app
+## Building and running the app
 
 Finally, build and deploy the app. Make sure an emulator is available, or there is a physical
 device connected to deploy to.
@@ -224,7 +224,7 @@ $ npm run ios
 $ npm run web
 ```
 
-### Adding a user interface
+## Adding a user interface
 
 The `react-native-theoplayer` package does not contain a user interface by default. There is however a separate package
 that builds a UI on top of the `THEOplayerView` component, `@theoplayer/react-native-ui`.

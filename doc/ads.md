@@ -1,6 +1,6 @@
-## Advertisements
+# Advertisements
 
-### Overview
+## Overview
 
 A good starting point to get acquainted with THEOplayer's advertising features
 is THEOplayer's [Knowledge Base](https://docs.theoplayer.com/knowledge-base/01-advertisement/01-user-guide.md).
@@ -18,9 +18,9 @@ Additional functionality, such as scheduling ads at runtime, is provided by the 
 
 The final section describes how to subscribe and add custom logic to [ad events](#subscribing-to-ad-events).
 
-### Getting started with Google IMA
+## Getting started with Google IMA
 
-#### Configuration
+### Configuration
 
 First enable Google IMA support, which requires a different approach on each platform.
 
@@ -40,13 +40,13 @@ THEOplayer_extensionGoogleIMA = true
 <details>
 <summary>iOS/tvOS</summary>
 
-##### 1.x versions: Custom THEOplayer build
+#### 1.x versions: Custom THEOplayer build
 
 To enable GoogleIMA on react-native-theoplayer 1.x versions, a dependency to the THEOplayer SDK
 that includes the Google IMA library needs to be added. See [Custom iOS framework](./custom-ios-framework.md) for more
 details.
 
-##### 2.x versions: Add feature flag to config
+#### 2.x versions: Add feature flag to config
 
 To enable Google IMA on react-native-theoplayer 2.x versions, you can add the "GOOGLE_IMA" [feature flag](./creating-minimal-app.md#getting-started-on-ios-and-tvos) to react-native-theoplayer.json (or theoplayer-config.json)
 
@@ -69,7 +69,7 @@ in the example app's [index.html](../example/web/public/index.html):
 
 </details>
 
-#### Source description
+### Source description
 
 When providing the player with a source that includes a list of ads, make sure to
 set the `integration` property to `"google-ima"`, as shown in one of the sources of the example app:
@@ -96,7 +96,7 @@ const imaSource = {
 The API's [`AdSource`](../src/api/source/ads/Ads.ts) description provides additional information on
 the configurable properties.
 
-### Getting started with Google DAI
+## Getting started with Google DAI
 
 First enable Google DAI support, which requires a different approach on each platform.
 
@@ -138,7 +138,7 @@ in the example app's [index.html](../example/web/public/index.html):
 
 </details>
 
-#### Source description
+### Source description
 
 Providing a Google DAI source description to the player requires providing an `ssai` object and
 specifying `"google-dai"` as integration type:
@@ -159,7 +159,7 @@ const daiSource = {
 A full description of the available source properties can be found in the
 [API](../src/api/source/ads/ssai/GoogleDAIConfiguration.ts) definition.
 
-### Using the Ads API
+## Using the Ads API
 
 [THEOplayer](../src/api/player/THEOplayer.ts) provides an [AdsAPI](../src/api/ads/AdsAPI.ts) that enables additional
 features
@@ -201,7 +201,7 @@ const streamTimeForContentTime = (contentTime: number): Promise<number> | undefi
 };
 ```
 
-### Subscribing to ad events
+## Subscribing to ad events
 
 [THEOplayer](../src/api/player/THEOplayer.ts) allows you to subscribe to ad events:
 

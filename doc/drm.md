@@ -1,12 +1,12 @@
-## Digital Rights Management (DRM)
+# Digital Rights Management (DRM)
 
-### Overview
+## Overview
 
 This section outlines how play-out of DRM protected content can be achieved with `react-native-theoplayer`.
 A detailed explanation on how DRM (Digital Rights Management) works can be found in
 [THEOplayer's knowledge base](https://docs.theoplayer.com/knowledge-base/02-content-protection/00-introduction.md).
 
-### Configuration
+## Configuration
 
 THEOplayer supports Fairplay, PlayReady and Widevine by default. Configuring a DRM
 protected stream source with `react-native-theoplayer` is very similar to how it is
@@ -36,9 +36,9 @@ const onReady = (player: THEOplayer) => {
 <THEOplayerView onPlayerReady={onReady}/>
 ```
 
-### Content Protection Integrations
+## Content Protection Integrations
 
-#### Pre-integrations
+### Pre-integrations
 
 THEOplayer is [pre-integrated](https://docs.theoplayer.com/how-to-guides/04-drm/00-introduction.md#pre-integrations)
 with a number of commercial multi-DRM vendors, which means support for these vendors is already included
@@ -47,7 +47,7 @@ and enabled in the SDK.
 In addition to these pre-integrations, the `react-native-theoplayer` SDK as well as all native THEOplayer
 SDKs, come with the ability to create and register a custom DRM integration.
 
-#### Creating a custom protection integration
+### Creating a custom protection integration
 
 The implementation of a custom DRM integration for `react-native-theoplayer` is almost identical
 to the implementation for the Web SDK, and is explained in detail on our
@@ -55,7 +55,7 @@ to the implementation for the Web SDK, and is explained in detail on our
 repository.
 This repository also contains a number of examples for well-known multi-DRM vendors.
 
-#### Registering a custom protection integration
+### Registering a custom protection integration
 
 Once the custom DRM integrations is created, it needs to be registered up-front as follows:
 

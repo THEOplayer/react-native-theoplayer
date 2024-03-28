@@ -1,6 +1,6 @@
-## Audio Control Management on Android
+# Audio Control Management on Android
 
-### Overview
+## Overview
 
 Android allows multiple apps to play audio concurrently, but this can lead to a disruptive user experience due to
 mixed audio streams. To enhance user experience, Android offers an API for apps to control **audio focus**, ensuring only
@@ -13,7 +13,7 @@ References:
 - [Android for Developers: Audio focus](https://developer.android.com/reference/android/media/AudioFocusRequest)
 - [Android for Developers: "Don't be Noisy"](https://developer.android.com/guide/topics/media/platform/output#becoming-noisy)
 
-### Audio Focus
+## Audio Focus
 
 The `react-native-theoplayer` package is equipped with inherent audio focus management. It initiates an audio focus
 request upon the start of playback and responds to the loss of audio focus by pausing playback.
@@ -21,7 +21,7 @@ request upon the start of playback and responds to the loss of audio focus by pa
 If the loss was *transient*, i.e. lasting only for a short while such as during an incoming phone call,
 the player will regain audio focus afterward and play-out while resume.
 
-#### Audio "ducking"
+### Audio "ducking"
 
 When another app seeks audio focus, it can optionally indicate that the current audio focus holder can
 lower its playback volume to continue playing (AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK). The new focus holder does
@@ -37,7 +37,7 @@ In summary:
 | `AUDIOFOCUS_GAIN`                                | Resume play-out |
 
 
-### Audio Becoming Noisy
+## Audio Becoming Noisy
 
 When headphones are unplugged or a Bluetooth device is disconnected, the audio stream automatically reroutes to the
 device's built-in speaker. This can lead to an abrupt increase in volume, which is an undesired outcome.

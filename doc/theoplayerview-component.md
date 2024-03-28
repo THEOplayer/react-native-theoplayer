@@ -1,4 +1,4 @@
-## The `THEOplayerView` Component
+# The `THEOplayerView` Component
 
 THEOplayer React native SDK is an NPM package, which exposes the THEOplayerView component that can be added to your
 React Native projects.
@@ -12,7 +12,7 @@ its [THEOplayerViewProps interface](../src/api/THEOplayerView.ts).
 THEOplayer React Native SDK uses HTML5/ Tizen/ webOS SDK, Android/ Fire TV SDK, and iOS/ tvOS SDK under the hood through
 bridges that map each THEO SDK API to the THEOplayerView component.
 
-### Table of Contents
+## Table of Contents
 
 - [Properties](#properties)
 - [Configuration](#configuration)
@@ -23,7 +23,7 @@ bridges that map each THEO SDK API to the THEOplayerView component.
 - [Preview thumbnails](#preview-thumbnails)
 - [Buffering state changes](#buffering-state-changes)
 
-### Properties
+## Properties
 
 The `THEOplayerView` component supports the following list of properties.
 
@@ -34,7 +34,7 @@ The `THEOplayerView` component supports the following list of properties.
 | `onPlayerReady`   | A callback that provides the [THEOplayer API](../src/api/player/THEOplayer.ts) when the player instance is ready. | All           |
 | `onPlayerDestroy` | A callback is called when the internal player instance will be destroyed.                                         | All           |
 
-### Configuration
+## Configuration
 
 The `THEOplayerView` component accepts a `config` property that contains basic player configuration.
 
@@ -61,23 +61,23 @@ const license = Platform.select(
 If no license is provided, only sources hosted on the `theoplayer.com` domain can be played. On Web platforms,
 CORS rules applied on `theoplayer.com` will also prohibit playing sources from this domain.
 
-#### Adaptive Bitrate (ABR) configuration
+### Adaptive Bitrate (ABR) configuration
 
 On Android and Web platforms, you can control the ABR configuration using `player.abr` on
 the [THEOplayer API](../src/api/player/THEOplayer.ts).
 We refer to the [Adaptive Bitrate (ABR)](abr.md) page for detailed information, including examples.
 
-#### Chromeless vs. Chromefull
+### Chromeless vs. Chromefull
 
 `PlayerConfiguration.chromeless` relates to whether the underlying _native_ SDK provides the UI or not.
 If `chromeless = true`, the player does not include the native UI provided by the SDK and it is expected the UI is
 created in React Native. The accompanying example application provides a basic UI created in React Native.
 
-#### Native UI language
+### Native UI language
 
 `PlayerConfiguration.ui` has a configuration property 'language' that allows you to set the language for localisation when native UI elements (e.g. 'skip ad' being displayed on the skip butten in the ad UI) are presented to the user. This only applies to UI elements rendered by the native SDK's and not to other UI elements added via your react-native view stack.
 
-### Setting a source
+## Setting a source
 
 You can set a source using the `source` property on the [THEOplayer API](../src/api/player/THEOplayer.ts). The type
 definition of `SourceDescription` maps to the type used in
@@ -92,7 +92,7 @@ player.source = {
 }
 ```
 
-### Seeking to a position in a stream
+## Seeking to a position in a stream
 
 Changing the player's current time, or seeking to a specific timestamp, is done by setting `currentTime`
 on the [THEOplayer API](../src/api/player/THEOplayer.ts).
@@ -102,7 +102,7 @@ Timestamps are measured in milliseconds.
 player.currentTime = 20_000; // msec
 ```
 
-### Text tracks and media tracks
+## Text tracks and media tracks
 
 The text tracks and media tracks available in the stream are provided by the `PlayerEventType.LOADED_METADATA` event,
 which is dispatched by the [THEOplayer API](../src/api/player/THEOplayer.ts).
@@ -126,14 +126,14 @@ The `PlayerEventType.MEDIA_TRACK_LIST` event can be used to dynamically listen t
 removed or changed). On Android and Web, media tracks trigger the `PlayerEventType.MEDIA_TRACK` callback with
 information on quality changes. This information is not available on iOS systems.
 
-### Preview thumbnails
+## Preview thumbnails
 
 Preview thumbnails are contained in a dedicated thumbnail track, which is a text track of kind `metadata` with label
 `thumbnails`. The track can be either side-loaded to the stream source, or contained in a stream manifest, as the demo
 sources in the [example application](./example-app.md) demonstrate. The example also contains an implementation
 of a thumbnail viewer.
 
-### Buffering state changes
+## Buffering state changes
 
 The `PlayerEventType.WAITING` event is dispatched to indicate that the player has stopped playback because the next
 frame's data is currently unavailable, but is expected to come in soon.

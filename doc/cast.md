@@ -1,6 +1,6 @@
-## Casting with Chromecast and Airplay
+# Casting with Chromecast and Airplay
 
-### Overview
+## Overview
 
 The basics of both Chromecast and Airplay are well-described in
 THEOplayer's [Knowledge Base](https://docs.theoplayer.com/how-to-guides/03-cast/01-chromecast/00-introduction.md).
@@ -9,16 +9,16 @@ The `react-native-theoplayer` package has support for both.
 This page first outlines the setup
 needed for Chromecast and Airplay, and then describes the player's cast API and events subscription, which is common for both.
 
-### Chromecast
+## Chromecast
 
-#### Setup
+### Setup
 
 To enable Chromecast, react-native-theoplayer provides a cast module on the player (player.cast) that allows you to start/stop/join/leave chromecast sessions. The THEOplayer SDK will take care of the interactions with the cast receiver (communicating source updates, seeking, play/pause, ...) and route all cast events through its API.
 
 We can also recommend the [`react-native-google-cast`](https://github.com/react-native-google-cast/react-native-google-cast)
 package, which comes with native support for both iOS and Android. It is fully-featured and provides the possibility to
 manage devices and cast sessions, send new source descriptions and listen for cast events. It also includes a `<CastButton>` component that can be added to the app's UI, as demonstrated in
-the [example app](example-app.md). 
+the [example app](example-app.md).
 
 ```tsx
 <CastButton
@@ -48,11 +48,11 @@ THEOplayer_extensionCast = true
 <details>
 <summary>iOS</summary>
 
-##### Add feature flag to config
+#### Add feature flag to config
 
 To enable Chromecast on react-native-theoplayer 2.x versions and higher, you can add the "CHROMECAST" [feature flag](./creating-minimal-app.md#getting-started-on-ios-and-tvos) to react-native-theoplayer.json (or theoplayer-config.json)
 
-##### iOS Configuration
+#### iOS Configuration
 
 Specify NSBonjourServices in your Info.plist to allow local network discovery to succeed on iOS 14. You will need to add
 both _googlecast._tcp and _[your-app-id]._googlecast._tcp as services for device discovery to work properly.
@@ -81,7 +81,7 @@ network.
 </string>
 ```
 
-##### Combining with react-native-google-cast
+#### Combining with react-native-google-cast
 
 When using react-native-google-cast to render the CastButton, their documentation suggest to setup the CastContext as
 soon as possible. We noticed that waiting to prepare this context to a later point in time (i.e. till the AppId is
@@ -123,7 +123,7 @@ The web page hosting the player just needs to load the Google cast sender module
 
 </details>
 
-#### THEOplayerView configuration
+### THEOplayerView configuration
 
 In the configuration of a `THEOplayerView` component you can set the
 receiver's appID. This only makes sense on a Web platform, as for mobile platforms this value
@@ -150,7 +150,7 @@ be created that also handles these parts of the source description.
 We refer to our [sample-google-cast-v3-receiver](https://github.com/THEOplayer/samples-google-cast-v3-receiver/)
 repository for an example on how to interpret a THEOplayer source description and handle a custom DRM flow.
 
-#### Cast strategy
+### Cast strategy
 
 The `strategy` property indicates the *join strategy* that will be used when starting/joining sessions:
 
@@ -181,7 +181,7 @@ useEffect(() => {
 The [example app](./example-app.md) uses strategy `auto` so the player will automatically
 send its source description when a session is created.
 
-#### Providing metadata
+### Providing metadata
 
 The `metadata` object, as part of the source configuration, is used to send additional information
 to the receiver. Common fields include `poster`, `title`, `subtitle`, `album` and `artist`.
@@ -208,7 +208,7 @@ to the receiver. Common fields include `poster`, `title`, `subtitle`, `album` an
 |---------------------------------|
 | Casting a stream with metadata. |
 
-### Airplay
+## Airplay
 
 For iOS and Web Safari, also Airplay is supported. Similar to chromecast, you can listen to or check the airplay cast
 state and use the player's Airplay API to either start or join an Airplay session. When implementing a simple airplay
@@ -225,11 +225,11 @@ player.cast.airplay?.state().then((airplayCastState) => {
 })
 ```
 
-### Cast API
+## Cast API
 
 The `THEOplayerView` provides the [THEOplayer API](../src/api/player/THEOplayer.ts) using the `onPlayerReady` callback,
 where you can access the [CastAPI](../src/api/event/CastEvent.ts) to control or start cast sessions, either Chromecast or Airplay.
-### Subscribing to Cast Events
+## Subscribing to Cast Events
 
 The `THEOplayerView` provides the [THEOplayer API](../src/api/player/THEOplayer.ts) using the `onPlayerReady` callback,
 where you can subscribe to cast events:

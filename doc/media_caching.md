@@ -1,6 +1,6 @@
-## Media Cache
+# Media Cache
 
-### Overview
+## Overview
 
 The Media Cache API is available as of v3.0.0 and facilitates the download of media assets for offline playback.
 This section provides an overview of how to utilize the Media Caching API,
@@ -21,7 +21,7 @@ This page is structured as follows:
 - [Using React hooks](#using-react-hooks)
 - [Known Limitations](#known-limitations)
 
-#### Caching Workflow
+### Caching Workflow
 Caching a media asset encompasses the following stages:
 
 - CachingTask creation: The caching process commences by creating a CachingTask, which orchestrates the downloading of the media content for offline access.
@@ -30,7 +30,7 @@ Caching a media asset encompasses the following stages:
 
 - Offline Playback: After successful caching, the cached media asset can be played offline. This is accomplished by providing the original source to the player. The player checks if the asset is available offline; if it is, playback occurs from the local cache. If not, the player fetches the content from the network.
 
-### Creating a CachingTask
+## Creating a CachingTask
 
 To initiate the download process of a media asset, you need to create a `CachingTask`.
 This task requires two essential parameters: a `SourceDescription` specifying the asset
@@ -68,7 +68,7 @@ const parameters = {
 const task = await MediaCache.createTask(source, parameters);
 ```
 
-### Controlling the CachingTask
+## Controlling the CachingTask
 
 Once the `CachingTask` is created, it enters the `idle` state. To initiate the download process:
 ```typescript
@@ -82,11 +82,11 @@ task.pause();
 task.remove();
 ```
 
-### Listening for Cache events
+## Listening for Cache events
 
 Both `MediaCache` and `CachingTask` instances dispatch events to notify about changes and status updates.
 
-#### MediaCache events
+### MediaCache events
 
 The `MediaCache` dispatches the following events:
 
@@ -105,7 +105,7 @@ MediaCache.addEventListener(CacheEventType.addtask, (event: AddCachingTaskEvent)
 );
 ```
 
-#### CachingTask events
+### CachingTask events
 
 Each individual `CachingTask` also dispatches events to advertise changes in `progress` or `status`.
 
@@ -122,12 +122,12 @@ task.addEventListener(CachingTaskEventType.progress, () => {
 });
 ```
 
-### Using React hooks
+## Using React hooks
 
 For convenience, React hooks are available to simplify handling caching tasks without the need to subscribe or
 unsubscribe to listeners.
 
-#### useCachingTaskList
+### useCachingTaskList
 
 This hooks listens for updates in the `MediaCache.tasks` list, and returns the updated list.
 
@@ -140,7 +140,7 @@ function TaskListView(props: {debug: boolean}) {
 }
 ```
 
-#### useCachingTaskProgress and useCachingTaskStatus
+### useCachingTaskProgress and useCachingTaskStatus
 
 These hooks listen for updates in both progress and status of a `CachingTask`.
 
@@ -156,7 +156,7 @@ function CachingTaskView(props: {task: CachingTask, debug: boolean}) {
 }
 ```
 
-### The Example App
+## The Example App
 
 The example app that is part of this repository demonstrates the Media Cache features through
 a basic user interface. It provides a menu with options to start caching the currently selected
@@ -165,4 +165,4 @@ source, and show a list of the currently available caching tasks.
 | ![main](./media_caching_1.png) | ![main](./media_caching_2.png) |
 |--------------------------------|--------------------------------|
 
-### Known Limitations
+## Known Limitations

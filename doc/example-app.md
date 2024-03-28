@@ -1,4 +1,4 @@
-## Example Application
+# Example Application
 
 The example application on our `react-native-theoplayer`
 [git repository](https://github.com/THEOplayer/react-native-theoplayer/tree/master/example) demonstrates how the use the
@@ -15,7 +15,7 @@ visit [our React Native UI project](https://github.com/THEOplayer/react-native-t
 |-------------------------------------------------------------------------------|--------------------------------------------------------|--------------------------------------------------|
 | The `DefaultTHEOplayerUi` in action.                                          | Choosing a demo source from a custom UI component.     | Preview thumbnails.                              |
 
-### Building the example application
+## Building the example application
 
 Clone the repository and install the dependencies for the `react-native-theoplayer` package:
 
