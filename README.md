@@ -39,8 +39,7 @@ For each platform, a dependency to the corresponding THEOplayer SDK is included 
 - npm for Web
 
 In order to use one of these THEOplayer SDKs, it is necessary to obtain a valid THEOplayer license for that specific platform,
-i.e. HTML5, Android, and/or iOS. You can use your existing THEOplayer SDK license or request a
-[free trial account](https://www.theoplayer.com/free-trial-theoplayer?hsLang=en-us).
+i.e. HTML5, Android, and/or iOS. You can sign up for a THEOplayer SDK license through [our portal](https://portal.theoplayer.com/).
 
 If you have no previous experience in React Native, we encourage you to first explore the
 [React Native Documentation](https://reactnative.dev/docs/getting-started),
