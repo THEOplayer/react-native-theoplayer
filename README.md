@@ -32,6 +32,7 @@ It also gives a description of the properties of the `THEOplayerView` component,
 a list of features and known limitations.
 
 ## Prerequisites
+
 For each platform, a dependency to the corresponding THEOplayer SDK is included through a dependency manager:
 
 - Gradle & Maven for Android
@@ -79,7 +80,7 @@ The `react-native-theoplayer` package can be combined with any number of connect
 functionality. Currently, the following connectors are available:
 
 | Package name                                                                                                              | Purpose                                                  | Registry                                                                                                                                                      |
-|---------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`@theoplayer/react-native-analytics-adobe`](https://github.com/THEOplayer/react-native-theoplayer-analytics)             | Adobe analytics connector                                | [![npm](https://img.shields.io/npm/v/@theoplayer/react-native-analytics-adobe)](https://www.npmjs.com/package/@theoplayer/react-native-analytics-adobe)       |
 | [`@theoplayer/react-native-analytics-agama`](https://github.com/THEOplayer/react-native-theoplayer-analytics)             | Agama analytics connector                                | [![npm](https://img.shields.io/npm/v/@theoplayer/react-native-analytics-agama)](https://www.npmjs.com/package/@theoplayer/react-native-analytics-agama)       |
 | [`@theoplayer/react-native-analytics-comscore`](https://github.com/THEOplayer/react-native-theoplayer-analytics)          | Comscore analytics connector                             | [![npm](https://img.shields.io/npm/v/@theoplayer/react-native-analytics-comscore)](https://www.npmjs.com/package/@theoplayer/react-native-analytics-comscore) |
