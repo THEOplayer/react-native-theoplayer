@@ -102,4 +102,5 @@ This section gives an overview of features, limitations and known issues:
 
 ## API Reference
 
-[API Reference](https://theoplayer.github.io/react-native-theoplayer/api/)
+See the [API Reference](https://theoplayer.github.io/react-native-theoplayer/api/) for detailed documentation
+about all available components and functions.
