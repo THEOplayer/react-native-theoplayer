@@ -41,8 +41,7 @@ For iOS and tvOS, also make sure to install pod dependencies
 $ (cd example/ios && pod install)
 ```
 
-Make sure to configure your [THEOplayer license](https://portal.theoplayer.com/),
-or [free trial license](https://www.theoplayer.com/free-trial-theoplayer?hsLang=en-us), in
+Make sure to configure your [THEOplayer license](https://portal.theoplayer.com/) in
 the [app config](../example/src/App.tsx).
 
 Finally, after making sure the necessary development tools are installed, build & deploy the example:

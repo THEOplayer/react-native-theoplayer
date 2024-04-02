@@ -85,8 +85,7 @@ export default App;
 ```
 
 When configuring a stream that is hosted on another server than `cdn.theoplayer.com`,
-a license for the React Native SDK needs to be obtained through the 'Licenses' built in the [THEOplayer portal](https://portal.theoplayer.com/)
-or request a [free trial license](https://www.theoplayer.com/free-trial-theoplayer?hsLang=en-us).
+a license for the React Native SDK needs to be obtained through the 'Licenses' built in the [THEOplayer portal](https://portal.theoplayer.com/).
 
 ![license_portal](./license_portal.png)
 
