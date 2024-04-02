@@ -97,19 +97,19 @@ and discussed in the next section.
 
 This section gives an overview of features, limitations and known issues:
 
-  - [Adaptive Bitrate (ABR)](./doc/abr.md)
-  - [Advertisements](./doc/ads.md)
-  - [Audio Control Management](./doc/audio-control.md)
-  - [Background playback and notifications](./doc/background.md)
-  - [Casting with Chromecast and Airplay](./doc/cast.md)
-  - [Custom iOS framework](./doc/custom-ios-framework.md)
-  - [Digital Rights Management (DRM)](./doc/drm.md)
-  - [Fullscreen presentation](./doc/fullscreen.md)
-  - [Media Caching](./doc/media_caching.md)
-  - [Migrating to `react-native-theoplayer` v2.x](./doc/migrating_v2.md)
-  - [Picture-in-Picture (PiP)](./doc/pip.md)
-  - [Subtitles, Closed Captions and Metadata tracks](./doc/texttracks.md)
-  - [Limitations and known issues](./doc/limitations.md)
+- [Adaptive Bitrate (ABR)](./doc/abr.md)
+- [Advertisements](./doc/ads.md)
+- [Audio Control Management](./doc/audio-control.md)
+- [Background playback and notifications](./doc/background.md)
+- [Casting with Chromecast and Airplay](./doc/cast.md)
+- [Custom iOS framework](./doc/custom-ios-framework.md)
+- [Digital Rights Management (DRM)](./doc/drm.md)
+- [Fullscreen presentation](./doc/fullscreen.md)
+- [Media Caching](./doc/media_caching.md)
+- [Migrating to `react-native-theoplayer` v2.x](./doc/migrating_v2.md)
+- [Picture-in-Picture (PiP)](./doc/pip.md)
+- [Subtitles, Closed Captions and Metadata tracks](./doc/texttracks.md)
+- [Limitations and known issues](./doc/limitations.md)
 
 ## API Reference
 
