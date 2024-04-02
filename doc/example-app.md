@@ -5,7 +5,7 @@ sidebar_position: 3
 # Example Application
 
 The example application on our `react-native-theoplayer`
-[git repository](https://github.com/THEOplayer/react-native-theoplayer/tree/master/example) demonstrates how the use the
+[git repository](https://github.com/THEOplayer/react-native-theoplayer/tree/develop/example) demonstrates how the use the
 player with the `THEOplayerView` component and the UI components from `@theoplayer/react-native-ui`.
 
 The example app depends on [`react-native-tvos`](https://github.com/react-native-tvos/react-native-tvos),

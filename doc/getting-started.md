@@ -85,7 +85,7 @@ functionality. Currently, the following connectors are available:
 This section starts with creating a minimal demo app that integrates the `react-native-theoplayer` package,
 followed by an overview of the available properties and functionality of the THEOplayerView component.
 An example application including a basic user interface and demo sources is included in the
-[git repository](https://github.com/THEOplayer/react-native-theoplayer/tree/master/example),
+[git repository](https://github.com/THEOplayer/react-native-theoplayer/tree/develop/example),
 and discussed in the next section.
 
 - [Creating a minimal demo app](creating-minimal-app.md)
