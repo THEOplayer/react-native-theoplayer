@@ -199,7 +199,7 @@ Deploying a web app requires a little more work. The example uses [react-native-
 support web-based platforms, which translates React Native components to React DOM components.
 In addition, the project relies on webpack to create the bundle that is loaded in the hosting web page.
 
-We refer to the [example application](example-app.md) and its [code](../example/web/) for a full demonstration.
+We refer to the [example application](example-app.md) and its [code](https://github.com/THEOplayer/react-native-theoplayer/blob/develop/example/web/) for a full demonstration.
 
 ### libraryConfiguration
 

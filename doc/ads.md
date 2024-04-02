@@ -57,7 +57,7 @@ To enable Google IMA on react-native-theoplayer 2.x versions, you can add the "G
 <summary>Web</summary>
 
 To enable Google IMA on web, it suffices to add this script in the web page's header section, as shown
-in the example app's [index.html](../example/web/public/index.html):
+in the example app's [index.html](https://github.com/THEOplayer/react-native-theoplayer/blob/develop/example/web/public/index.html):
 
 ```html
 
@@ -126,7 +126,7 @@ To enable Google DAI for iOS, a dependency to the THEOplayer SDK that includes t
 <summary>Web</summary>
 
 To enable Google DAI on web, it suffices to add this script in the web page's header section, as shown
-in the example app's [index.html](../example/web/public/index.html):
+in the example app's [index.html](https://github.com/THEOplayer/react-native-theoplayer/blob/develop/example/web/public/index.html):
 
 ```html
 
