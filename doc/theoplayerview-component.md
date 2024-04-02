@@ -16,17 +16,6 @@ its [THEOplayerViewProps interface](../src/api/THEOplayerView.ts).
 THEOplayer React Native SDK uses HTML5/ Tizen/ webOS SDK, Android/ Fire TV SDK, and iOS/ tvOS SDK under the hood through
 bridges that map each THEO SDK API to the THEOplayerView component.
 
-## Table of Contents
-
-- [Properties](#properties)
-- [Configuration](#configuration)
-- [Chromeless vs. Chromefull](#chromeless-vs-chromefull)
-- [Setting a source](#setting-a-source)
-- [Seeking to a position in a stream](#seeking-to-a-position-in-a-stream)
-- [Text tracks and media tracks](#text-tracks-and-media-tracks)
-- [Preview thumbnails](#preview-thumbnails)
-- [Buffering state changes](#buffering-state-changes)
-
 ## Properties
 
 The `THEOplayerView` component supports the following list of properties.

@@ -3,15 +3,6 @@
 THEOplayer's `TextTrack` api gives developers the capability to manage and manipulate various types of text-based content.
 Some of its key functionalities include text track selection, styling, and listening to track and cue events.
 
-## Table of Contents
-
-- [Types of text tracks](#types-of-text-tracks)
-- [Side-loaded text tracks](#side-loaded-text-tracks)
-- [Listening to text track events](#listening-to-text-track-events)
-- [Enabling a text track](#enabling-a-text-track)
-- [Preview thumbnails](#preview-thumbnails)
-- [Styling subtitles and closed captions](#styling-subtitles-and-closed-captions)
-
 ## Types of text tracks
 
 In this document we will differentiate between the following kinds of text tracks:

@@ -10,15 +10,6 @@ new screen to present the player, and a second that transitions to fullscreen fr
 We will also discuss the related concept of "React Portals", which, when paired with a video player component,
 offer versatile applications beyond fullscreen display.
 
-## Table of Contents
-
-- [Presenting a fullscreen video player](#presenting-a-fullscreen-video-player)
-  - [A separate player screen](#1-a-separate-player-screen)
-  - [An inline video player](#2-an-inline-video-player)
-- [Portals](#portals)
-- [Using Portals to transition from an inline player to a floating](#using-portals-to-transition-to-an-in-app-mini-player)
-- [Closing remarks](#closing-remarks)
-
 ## Presenting a fullscreen video player
 
 A native iOS or Android video player that transitions into fullscreen typically creates another activity

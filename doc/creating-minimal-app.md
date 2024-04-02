@@ -9,14 +9,6 @@ and deploy it on an Android or iOS device.
 
 A user interface is added using the `@theoplayer/react-native-ui` package.
 
-## Table of Contents
-- [Setting up a new project](#setting-up-a-new-project)
-- [Getting started on Android](#getting-started-on-android)
-- [Getting started on iOS](#getting-started-on-ios-and-tvos)
-- [Getting started on Web](#getting-started-on-web)
-- [Building and running the app](#building-and-running-the-app)
-- [Adding a user interface](#adding-a-user-interface)
-
 ## Setting up a new project
 
 In the following steps we will be using `npm` as the Node.js package manager.
