@@ -78,21 +78,25 @@ functionality. Currently, the following connectors are available:
 | [`@theoplayer/react-native-ui`](https://github.com/THEOplayer/react-native-theoplayer-ui)                                 | React Native user interface                              | [![npm](https://img.shields.io/npm/v/@theoplayer/react-native-ui)](https://www.npmjs.com/package/@theoplayer/react-native-ui)                                 |
 | [`@theoplayer/react-native-connector-template`](https://github.com/THEOplayer/react-native-theoplayer-connector-template) | A template for<br/>`react-native-theoplayer` connectors. | [![npm](https://img.shields.io/npm/v/@theoplayer/react-native-connector-template)](https://www.npmjs.com/package/@theoplayer/react-native-connector-template) |
 
-## Getting Started
+## Creating your first app
 
 This section starts with creating a minimal demo app that integrates the `react-native-theoplayer` package,
 followed by an overview of the available properties and functionality of the THEOplayerView component.
 An example application including a basic user interface and demo sources is included in the
 [git repository](https://github.com/THEOplayer/react-native-theoplayer/tree/master/example),
-and discussed in the next section. Finally, an overview of features, limitations and known issues is listed.
+and discussed in the next section.
 
 - [Creating a minimal demo app](./doc/creating-minimal-app.md)
-    - [Getting started on Android](./doc/creating-minimal-app.md#getting-started-on-android)
-    - [Getting started on iOS](./doc/creating-minimal-app.md#getting-started-on-ios-and-tvos)
-    - [Getting started on Web](./doc/creating-minimal-app.md#getting-started-on-web)
+  - [Getting started on Android](./doc/creating-minimal-app.md#getting-started-on-android)
+  - [Getting started on iOS](./doc/creating-minimal-app.md#getting-started-on-ios-and-tvos)
+  - [Getting started on Web](./doc/creating-minimal-app.md#getting-started-on-web)
 - [The THEOplayerView component](./doc/theoplayerview-component.md)
 - [The example application](./doc/example-app.md)
-- Knowledge Base
+
+## Knowledge Base
+
+This section gives an overview of features, limitations and known issues:
+
   - [Adaptive Bitrate (ABR)](./doc/abr.md)
   - [Advertisements](./doc/ads.md)
   - [Audio Control Management](./doc/audio-control.md)
@@ -106,4 +110,8 @@ and discussed in the next section. Finally, an overview of features, limitations
   - [Picture-in-Picture (PiP)](./doc/pip.md)
   - [Subtitles, Closed Captions and Metadata tracks](./doc/texttracks.md)
   - [Limitations and known issues](./doc/limitations.md)
-- [API Reference](https://theoplayer.github.io/react-native-theoplayer/api/)
+
+## API Reference
+
+See the [API Reference](https://theoplayer.github.io/react-native-theoplayer/api/) for detailed documentation
+about all available components and functions.
