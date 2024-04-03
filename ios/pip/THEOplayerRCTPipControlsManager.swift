@@ -60,23 +60,16 @@ class THEOplayerRCTPipControlsManager: NSObject {
         }
     }
         
+    func newPipConfiguration() -> PiPConfiguration {
+        let builder = PiPConfigurationBuilder()
+        builder.retainPresentationModeOnSourceChange = false
+        builder.requiresLinearPlayback = self.isLive || self.inAd
 #if os(iOS)
-    
-    func newPipConfiguration() -> PiPConfiguration {
-        return PiPConfiguration(retainPresentationModeOnSourceChange: false,
-                                nativePictureInPicture: true,
-                                canStartPictureInPictureAutomaticallyFromInline: self.pipConfig.canStartPictureInPictureAutomaticallyFromInline,
-                                requiresLinearPlayback: self.isLive || self.inAd)
-    }
-    
-#elseif os(tvOS)
-    
-    func newPipConfiguration() -> PiPConfiguration {
-        return PiPConfiguration(retainPresentationModeOnSourceChange: false,
-                                requiresLinearPlayback: self.isLive || self.inAd)
-    }
-    
+        builder.nativePictureInPicture = true
+        builder.canStartPictureInPictureAutomaticallyFromInline = self.pipConfig.canStartPictureInPictureAutomaticallyFromInline
 #endif
+        return builder.build()
+    }
     
     private func attachListeners() {
         guard let player = self.player else {

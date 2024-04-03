@@ -10,23 +10,16 @@ struct PipConfig {
 
 extension THEOplayerRCTView: AVPictureInPictureControllerDelegate {
     
+    func playerPipConfiguration() -> PiPConfiguration {
+        let builder = PiPConfigurationBuilder()
+        builder.retainPresentationModeOnSourceChange = false
+        builder.requiresLinearPlayback = false
 #if os(iOS)
-    
-    func playerPipConfiguration() -> PiPConfiguration {
-        return PiPConfiguration(retainPresentationModeOnSourceChange: false,
-                                nativePictureInPicture: true,
-                                canStartPictureInPictureAutomaticallyFromInline: self.pipConfig.canStartPictureInPictureAutomaticallyFromInline,
-                                requiresLinearPlayback: false)
-    }
-    
-#elseif os(tvOS)
-    
-    func playerPipConfiguration() -> PiPConfiguration {
-        return PiPConfiguration(retainPresentationModeOnSourceChange: false,
-                                requiresLinearPlayback: false)
-    }
-    
+        builder.nativePictureInPicture = true
+        builder.canStartPictureInPictureAutomaticallyFromInline = self.pipConfig.canStartPictureInPictureAutomaticallyFromInline
 #endif
+        return builder.build()
+    }
     
     func initPip() {
         if let player = self.player,
