@@ -1,21 +1,8 @@
-# React Native THEOplayer
+---
+sidebar_position: 0
+---
 
-![](./doc/logo-react-native.png) ![](./doc/logo-theo.png)
-
-## License
-
-This projects falls under the license as defined in https://github.com/THEOplayer/license-and-disclaimer.
-
-## Table of Contents
-
-1. [Overview](#overview)
-2. [Prerequisites](#prerequisites)
-3. [How to use these guides](#how-to-use-these-guides)
-4. [Features](#features)
-5. [Available connectors](#available-connectors)
-6. [Getting Started](#getting-started)
-
-## Overview
+# Getting started with React Native THEOplayer
 
 The `react-native-theoplayer` package provides a `THEOplayerView` component supporting video playback on the
 following platforms:
@@ -39,8 +26,9 @@ For each platform, a dependency to the corresponding THEOplayer SDK is included 
 - Cocoapods for iOS
 - npm for Web
 
-In order to use one of these THEOplayer SDKs, it is necessary to obtain a valid THEOplayer license for that specific platform,
-i.e. HTML5, Android, and/or iOS. You can sign up for a THEOplayer SDK license through [our portal](https://portal.theoplayer.com/).
+In order to use one of these THEOplayer SDKs, it is necessary to obtain a valid THEOplayer license for that specific
+platform, i.e. HTML5, Android, and/or iOS. You can sign up for a THEOplayer SDK license
+through [our portal](https://portal.theoplayer.com/).
 
 If you have no previous experience in React Native, we encourage you to first explore the
 [React Native Documentation](https://reactnative.dev/docs/getting-started),
@@ -152,30 +140,30 @@ An example application including a basic user interface and demo sources is incl
 [git repository](https://github.com/THEOplayer/react-native-theoplayer/tree/develop/example),
 and discussed in the next section.
 
-- [Creating a minimal demo app](./doc/creating-minimal-app.md)
-  - [Getting started on Android](./doc/creating-minimal-app.md#getting-started-on-android)
-  - [Getting started on iOS](./doc/creating-minimal-app.md#getting-started-on-ios-and-tvos)
-  - [Getting started on Web](./doc/creating-minimal-app.md#getting-started-on-web)
-- [The THEOplayerView component](./doc/theoplayerview-component.md)
-- [The example application](./doc/example-app.md)
+- [Creating a minimal demo app](creating-minimal-app.md)
+  - [Getting started on Android](creating-minimal-app.md#getting-started-on-android)
+  - [Getting started on iOS](creating-minimal-app.md#getting-started-on-ios-and-tvos)
+  - [Getting started on Web](creating-minimal-app.md#getting-started-on-web)
+- [The THEOplayerView component](theoplayerview-component.md)
+- [The example application](example-app.md)
 
 ## Knowledge Base
 
 This section gives an overview of features, limitations and known issues:
 
-- [Adaptive Bitrate (ABR)](./doc/abr.md)
-- [Advertisements](./doc/ads.md)
-- [Audio Control Management](./doc/audio-control.md)
-- [Background playback and notifications](./doc/background.md)
-- [Casting with Chromecast and Airplay](./doc/cast.md)
-- [Custom iOS framework](./doc/custom-ios-framework.md)
-- [Digital Rights Management (DRM)](./doc/drm.md)
-- [Fullscreen presentation](./doc/fullscreen.md)
-- [Media Caching](./doc/media-caching.md)
-- [Migrating to `react-native-theoplayer` v2.x](./doc/migrating-v2.md)
-- [Picture-in-Picture (PiP)](./doc/pip.md)
-- [Subtitles, Closed Captions and Metadata tracks](./doc/texttracks.md)
-- [Limitations and known issues](./doc/limitations.md)
+- [Adaptive Bitrate (ABR)](abr.md)
+- [Advertisements](ads.md)
+- [Audio Control Management](audio-control.md)
+- [Background playback and notifications](background.md)
+- [Casting with Chromecast and Airplay](cast.md)
+- [Custom iOS framework](custom-ios-framework.md)
+- [Digital Rights Management (DRM)](drm.md)
+- [Fullscreen presentation](fullscreen.md)
+- [Media Caching](media-caching.md)
+- [Migrating to `react-native-theoplayer` v2.x](migrating-v2.md)
+- [Picture-in-Picture (PiP)](pip.md)
+- [Subtitles, Closed Captions and Metadata tracks](texttracks.md)
+- [Limitations and known issues](limitations.md)
 
 ## API Reference
 

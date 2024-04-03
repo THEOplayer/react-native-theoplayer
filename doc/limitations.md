@@ -1,8 +1,8 @@
-## Limitations and Known Issues
+# Limitations and Known Issues
 
 This sections lists any limitations and known issues in the current package version.
 
-### Custom-built THEOplayer SDKs
+## Custom-built THEOplayer SDKs
 
 Dependencies to the underlying THEOplayer SDKs are currently configured in the `react-native-theoplayer` package using
 various dependency managers:
