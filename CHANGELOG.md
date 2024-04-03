@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Fixed
+
+- Fixed an issue where not enabling autoplay would explicitely pause the stream, reverting a possible play() request right after setting up the source. 
+
 ## [3.10.3] - 24-03-22
 
 ### Fixed

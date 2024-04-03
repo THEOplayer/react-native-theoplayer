@@ -56,7 +56,7 @@ const NativePlayerModule = NativeModules.THEORCTPlayerModule;
 const defaultPlayerState: NativePlayerState = {
   source: undefined,
   autoplay: false,
-  paused: false,
+  paused: true,
   seekable: [],
   buffered: [],
   pipConfig: { startsAutomatically: false },
@@ -264,8 +264,6 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     }
     if (this._state.autoplay) {
       this.play();
-    } else {
-      this.pause();
     }
   }
 
