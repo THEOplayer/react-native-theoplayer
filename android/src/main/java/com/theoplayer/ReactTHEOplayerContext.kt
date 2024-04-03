@@ -235,7 +235,7 @@ class ReactTHEOplayerContext private constructor(
 
       // Set mediaSession active and ready to receive media button events, but not if the player
       // is backgrounded.
-      setActive(!isHostPaused)
+      setActive(!isHostPaused && BuildConfig.EXTENSION_MEDIASESSION)
     }
   }
 
@@ -357,7 +357,7 @@ class ReactTHEOplayerContext private constructor(
    */
   fun onHostResume() {
     isHostPaused = false
-    mediaSessionConnector?.setActive(true)
+    mediaSessionConnector?.setActive(BuildConfig.EXTENSION_MEDIASESSION)
     playerView.onResume()
     if (!player.isPaused) {
       audioFocusManager?.retrieveAudioFocus()
