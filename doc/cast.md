@@ -18,7 +18,7 @@ To enable Chromecast, react-native-theoplayer provides a cast module on the play
 We can also recommend the [`react-native-google-cast`](https://github.com/react-native-google-cast/react-native-google-cast)
 package, which comes with native support for both iOS and Android. It is fully-featured and provides the possibility to
 manage devices and cast sessions, send new source descriptions and listen for cast events. It also includes a `<CastButton>` component that can be added to the app's UI, as demonstrated in
-the [example app](example-app.md). 
+the [example app](example-app.md).
 
 ```tsx
 <CastButton
@@ -35,12 +35,32 @@ For the rest of this document we assume that THEOplayer handles this logic. Enab
 <details>
 <summary>Android</summary>
 
-The Android SDK is modular-based, so enabling Chromecast is limited to including
-the cast extension in gradle by setting this flag in your `gradle.properties`:
+The Android SDK is modular-based, so enabling Chromecast is limited to:
 
-```
+1. Including the cast extension in gradle by setting this flag in your `gradle.properties`:
+
+```bash
 # Enable THEOplayer Extensions (default: disabled)
 THEOplayer_extensionCast = true
+```
+
+2. Adding a native `CastOptionsProvider` class and referring to it from the app's Android manifest:
+
+```xml
+<meta-data
+  android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
+  android:value="com.reactnativetheoplayer.cast.CastOptionsProvider" />
+```
+
+Check the example app for details on this setup.
+
+3. Initializing the `CastContext` in your app's MainActivity:
+
+```java
+@Override
+public void onCreate(Bundle savedInstanceState) {
+    CastContext castContext = CastContext.getSharedInstance(this);
+}
 ```
 
 </details>

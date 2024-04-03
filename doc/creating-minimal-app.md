@@ -53,6 +53,7 @@ $ npm i react-native-theoplayer --legacy-peer-deps
 
 Finally, replace the `App.tsx` with this minimal code:
 
+{% raw %}
 ```tsx
 import React from 'react';
 import {Platform, View} from 'react-native';
@@ -87,6 +88,7 @@ const App = () => {
 
 export default App;
 ```
+{% endraw %}
 
 When configuring a stream that is hosted on another server than `cdn.theoplayer.com`,
 a license for the React Native SDK needs to be obtained through the 'Licenses' built in the [THEOplayer portal](https://portal.theoplayer.com/)
@@ -143,7 +145,8 @@ To define which extra THEOplayer integrations need to be loaded for additional f
 
 Create a json file **[YourApplicationFolder]/react-native-theoplayer.json**, or **[YourApplicationFolder]/theoplayer-config.json**, on the same level as the node_modules folder (both alternatives offer the same functionality).
 
-Edit the file to reflect the features required for your application. The following example adds Google IMA, Chromecast and Sideloaded textTracks to the setup. If one of these is out of your applications scope, you can leave it out to reduce the app's size. When using only basic functionality, leave the features array empty. 
+Edit the file to reflect the features required for your application. The following example adds Google IMA, Chromecast and Sideloaded textTracks to the setup. If one of these is out of your applications scope, you can leave it out to reduce the app's size. When using only basic functionality, leave the features array empty.
+
 Example:
 ```
 {

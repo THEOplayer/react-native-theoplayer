@@ -20,11 +20,10 @@ such as `player.autoplay = true` and `player.pause()`.
 
 <table>
 <th>v1.x</th><th>>= v2.x</th>
-
 <tr valign="top">
 <td>
 
-``` tsx
+```tsx
 const App = () => {
   return (
     <View style={styles.container}>
@@ -40,7 +39,7 @@ const App = () => {
 </td>
 <td>
 
-``` tsx
+```tsx
 const onPlayerReady = (player: THEOplayer) => {
   player.autoplay = true;
   player.source = source;
@@ -58,9 +57,7 @@ const App = () => {
 ```
 
 </td>
-
 </tr>
-
 </table>
 
 ### Listening to Player Events
@@ -70,11 +67,10 @@ by a subscription approach.
 
 <table>
 <th>v1.x</th><th>>= v2.x</th>
-
 <tr valign="top">
 <td>
 
-``` tsx
+```tsx
 const App = () => {
   const [error, setError] = useState<PlayerError | undefined>();
   const [textTracks, setTextTracks] = useState<TextTrack[]>([]);
@@ -104,7 +100,7 @@ const App = () => {
 </td>
 <td>
 
-``` tsx
+```tsx
 const App = () => {
   const theoPlayer = useRef<THEOplayer>();
   const [error, setError] = useState<PlayerError | undefined>();
@@ -132,9 +128,7 @@ const App = () => {
 ```
 
 </td>
-
 </tr>
-
 </table>
 
 ### AdsAPI and CastAPI
@@ -144,11 +138,10 @@ from the view's reference, it can now be requested directly from the player inst
 
 <table>
 <th>v1.x</th><th>>= v2.x</th>
-
 <tr valign="top">
 <td>
 
-``` tsx
+```tsx
 <THEOplayerView
   ref={(ref: THEOplayerView) => {
     this.player = ref;
@@ -165,7 +158,7 @@ const isPlayingAd = () => {
 </td>
 <td>
 
-``` tsx
+```tsx
 <THEOplayerView
   config={playerConfig}
   onPlayerReady={onPlayerReady}
@@ -181,7 +174,5 @@ const onPlayerReady = (player: THEOplayer) => {
 ```
 
 </td>
-
 </tr>
-
 </table>

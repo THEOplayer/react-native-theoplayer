@@ -70,3 +70,10 @@ ios/custom/Frameworks/**/*.zip
 ios/custom/Frameworks/integrations
 ios/build.sh
 ios/custom/Frameworks/tvos/*.xcframework
+
+# TypeDoc
+api/
+
+# Jekyll / GitHub Pages
+_site/
+Gemfile.lock

@@ -3,7 +3,7 @@
  *
  * For Android, this applies to the {@link https://developer.android.com/guide/topics/media-apps/working-with-a-media-session Media Session}
  * functionality, providing the platform with a uniform way of interacting with the player, and the
- * {@link https://developer.android.com/develop/ui/views/notifications Notification to display information on the media currently playing.
+ * {@link https://developer.android.com/develop/ui/views/notifications Notification} to display information on the media currently playing.
  *
  * For Web, this applies to the {@link https://www.w3.org/TR/mediasession/ Media Session} API for customizing media notifications and access to
  * platform media keys.

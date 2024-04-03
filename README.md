@@ -107,3 +107,4 @@ and discussed in the next section. Finally, an overview of features, limitations
   - [Picture-in-Picture (PiP)](./doc/pip.md)
   - [Subtitles, Closed Captions and Metadata tracks](./doc/texttracks.md)
   - [Limitations and known issues](./doc/limitations.md)
+- [API Reference](https://theoplayer.github.io/react-native-theoplayer/api/)
