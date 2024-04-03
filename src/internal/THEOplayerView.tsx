@@ -153,7 +153,10 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
   }
 
   private reset() {
-    this.setState(THEOplayerView.initialState);
+    this.setState( prevState => ({
+      ...prevState,
+      error: undefined
+    }));
   }
 
   private _onDimensionsChanged = () => {

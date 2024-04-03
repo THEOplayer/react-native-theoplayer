@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
+- Fixed an issue where the player had the wrong layout in fullscreen presentationMode, after changing the source.
 - Fixed an issue where not enabling autoplay would explicitely pause the stream, reverting a possible play() request right after setting up the source. 
 
 ## [3.10.3] - 24-03-22
