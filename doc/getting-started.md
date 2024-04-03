@@ -47,20 +47,72 @@ Depending on the platform on which the application is deployed, a different set 
 If a feature missing, additional help is needed, or you need to extend the package,
 please reach out to us for support.
 
-| Feature                                              | Android, Android TV, Fire TV            | Web                                                                        | iOS, tvOS                                                                                                             |
-|:-----------------------------------------------------|:----------------------------------------|:---------------------------------------------------------------------------|:----------------------------------------------------------------------------------------------------------------------|
-| **Streaming**                                        | >                                       | MPEG-DASH (fmp4, CMAF), HLS (TS, CMAF), Progressive MP4, MP3               | HLS (TS, CMAF), Progressive MP4, MP3                                                                                  |
-| **Content Protection**                               | Widevine                                | Widevine, PlayReady, Fairplay                                              | Fairplay                                                                                                              |
-| **DRM Connectors**                                   | >                                       | >                                                                          | BuyDRM, EZDRM, Anvato, Titanium, Axinom, Irdeto, VuDRM, Comcast, Verimatrix, Azure, …                                 |
-| **Analytics Connectors**                             | >                                       | >                                                                          | Adobe, Agama, Comscore, Conviva, Mux, Nielsen, Youbora                                                                |
-| **Subtitles & Closed Captions**                      | >                                       | >                                                                          | CEA-608/708, SRT, TTML, WebVTT                                                                                        |
-| **Metadata**                                         | >                                       | >                                                                          | Event stream, emsg, ID3, EXT-X-DATERANGE, EXT-X-PROGRAM-DATE-TIME                                                     |
-| **Advertising Integration**                          | >                                       | >                                                                          | Google IMA, Google DAI                                                                                                |
-| **Cast Integration**                                 | Chromecast                              | >                                                                          | Chromecast, Airplay                                                                                                   |
-| **Presentation Mode**                                | >                                       | >                                                                          | Inline, Picture-in-Picture, Fullscreen                                                                                |
-| **Audio Control Management**                         | Audio focus & Audio-Becoming-Noisy mgmt | >                                                                          | (Audio control management by platform)                                                                                |
-| **Advanced APIs**                                    | >                                       | Background playback,<br/>Media Session,<br/>Media Cache (offline playback) | Background playback,<br/>NowPlaying,<br/>Media Cache (iOS only)                                                       |
-| **User Interface**<br/>`@theoplayer/react-native-ui` | >                                       | >                                                                          | Basic playback, media & text track selection, progress bar, live & vod, preview thumbnails, customisable & extensible |
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Android, Android TV, Fire TV</th>
+<th>Web</th>
+<th>iOS, tvOS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Streaming</strong></td>
+<td colspan="2">MPEG-DASH (fmp4, CMAF), HLS (TS, CMAF), Progressive MP4, MP3</td>
+<td>HLS (TS, CMAF), Progressive MP4, MP3</td>
+</tr>
+<tr>
+<td><strong>Content Protection</strong></td>
+<td>Widevine</td>
+<td>Widevine, PlayReady, Fairplay</td>
+<td>Fairplay</td>
+</tr>
+<tr>
+<td><strong>DRM Connectors</strong></td>
+<td colspan="3">BuyDRM, EZDRM, Anvato, Titanium, Axinom, Irdeto, VuDRM, Comcast, Verimatrix, Azure, …</td>
+</tr>
+<tr>
+<td><strong>Analytics Connectors</strong></td>
+<td colspan="3">Adobe, Agama, Comscore, Conviva, Mux, Nielsen, Youbora</td>
+</tr>
+<tr>
+<td><strong>Subtitles &amp; Closed Captions</strong></td>
+<td colspan="3">CEA-608/708, SRT, TTML, WebVTT</td>
+</tr>
+<tr>
+<td><strong>Metadata</strong></td>
+<td colspan="3">Event stream, emsg, ID3, EXT-X-DATERANGE, EXT-X-PROGRAM-DATE-TIME</td>
+</tr>
+<tr>
+<td><strong>Advertising Integration</strong></td>
+<td colspan="3">Google IMA, Google DAI</td>
+</tr>
+<tr>
+<td><strong>Cast Integration</strong></td>
+<td>Chromecast</td>
+<td colspan="2">Chromecast, Airplay</td>
+</tr>
+<tr>
+<td><strong>Presentation Mode</strong></td>
+<td colspan="3">Inline, Picture-in-Picture, Fullscreen</td>
+</tr>
+<tr>
+<td><strong>Audio Control Management</strong></td>
+<td>Audio focus &amp; Audio-Becoming-Noisy mgmt</td>
+<td colspan="2">(Audio control management by platform)</td>
+</tr>
+<tr>
+<td><strong>Advanced APIs</strong></td>
+<td colspan="2">Background playback,<br/>Media Session,<br/>Media Cache (offline playback)</td>
+<td>Background playback,<br/>NowPlaying,<br/>Media Cache (iOS only)</td>
+</tr>
+<tr>
+<td><strong>User Interface</strong><br/><code>@theoplayer/react-native-ui</code></td>
+<td colspan="3">Basic playback, media &amp; text track selection, progress bar, live &amp; vod, preview thumbnails, customisable &amp; extensible</td>
+</tr>
+</tbody>
+</table>
 
 ## Available connectors
 
