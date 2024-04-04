@@ -27,7 +27,6 @@
     "typescript": "tsc --noEmit",
     "lint": "eslint \"**/*.{ts,tsx}\"",
     "prepare": "bob build && husky install",
-    "release": "release-it",
     "pods": "cd example && pod-install --quiet",
     "docs": "typedoc --treatWarningsAsErrors"
   },
