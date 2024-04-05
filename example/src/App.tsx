@@ -64,16 +64,16 @@ export default function App() {
   const onPlayerReady = (player: THEOplayer) => {
     setPlayer(player);
     // optional debug logs
-    player.addEventListener(PlayerEventType.SOURCE_CHANGE, console.log);
-    player.addEventListener(PlayerEventType.LOADED_DATA, console.log);
-    player.addEventListener(PlayerEventType.LOADED_METADATA, console.log);
-    player.addEventListener(PlayerEventType.READYSTATE_CHANGE, console.log);
-    player.addEventListener(PlayerEventType.PLAY, console.log);
-    player.addEventListener(PlayerEventType.PLAYING, console.log);
-    player.addEventListener(PlayerEventType.PAUSE, console.log);
-    player.addEventListener(PlayerEventType.SEEKING, console.log);
-    player.addEventListener(PlayerEventType.SEEKED, console.log);
-    player.addEventListener(PlayerEventType.ENDED, console.log);
+    player.addEventListener<PlayerEventType>(PlayerEventType.SOURCE_CHANGE, console.log);
+    player.addEventListener<PlayerEventType>(PlayerEventType.LOADED_DATA, console.log);
+    player.addEventListener<PlayerEventType>(PlayerEventType.LOADED_METADATA, console.log);
+    player.addEventListener<PlayerEventType>(PlayerEventType.READYSTATE_CHANGE, console.log);
+    player.addEventListener<PlayerEventType>(PlayerEventType.PLAY, console.log);
+    player.addEventListener<PlayerEventType>(PlayerEventType.PLAYING, console.log);
+    player.addEventListener<PlayerEventType>(PlayerEventType.PAUSE, console.log);
+    player.addEventListener<PlayerEventType>(PlayerEventType.SEEKING, console.log);
+    player.addEventListener<PlayerEventType>(PlayerEventType.SEEKED, console.log);
+    player.addEventListener<PlayerEventType>(PlayerEventType.ENDED, console.log);
     player.source = SOURCES[0].source;
 
     player.backgroundAudioConfiguration = { enabled: true };
