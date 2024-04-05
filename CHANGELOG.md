@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added support for THEOplayer native SDK 7.0.
 
+### Changed
+
+- Raise minimal ios deployment target to 13.4, to match react native 0.73's minimal deployment target
+
 ## [3.10.3] - 24-03-22
 
 ### Fixed
