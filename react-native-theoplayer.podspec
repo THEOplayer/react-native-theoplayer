@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
   s.license      = package["license"]
   s.authors      = package["author"]
   
-  s.platforms    = { :ios => "13.0", :tvos => "13.0" }
+  s.platforms    = { :ios => "13.4", :tvos => "13.4" }
   s.source       = { :git => "https://www.theoplayer.com/.git", :tag => "#{s.version}" }
   
   s.source_files = 'ios/*.{h,m,swift}', 'ios/ads/*.swift', 'ios/casting/*.swift', 'ios/contentprotection/*.swift', 'ios/pip/*.swift', 'ios/backgroundAudio/*.swift', 'ios/cache/*.swift', 'ios/sideloadedMetadata/*.swift', 'ios/eventBroadcasting/*.swift' , 'ios/ui/*.swift', 'ios/presentationMode/*.swift'
