@@ -17,7 +17,7 @@ module.exports = {
   externalDocumentation: {
     theoplayer: {
       dtsPath: '~/THEOplayer.d.ts',
-      externalBaseURL: 'https://www.theoplayer.com/docs/theoplayer/v6/api-reference/web',
+      externalBaseURL: 'https://www.theoplayer.com/docs/theoplayer/v7/api-reference/web',
     },
   },
 };
