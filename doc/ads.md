@@ -3,10 +3,10 @@
 ## Overview
 
 A good starting point to get acquainted with THEOplayer's advertising features
-is THEOplayer's [Knowledge Base](https://docs.theoplayer.com/knowledge-base/01-advertisement/01-user-guide.md).
+is THEOplayer's [Knowledge Base](https://www.theoplayer.com/docs/theoplayer/knowledge-base/advertisement/user-guide/).
 
 While THEOplayer supports a wide range of
-different [ad types](https://docs.theoplayer.com/knowledge-base/01-advertisement/01-user-guide.md#an-overview-of-theoplayers-different-ad-types),
+different [ad types](https://www.theoplayer.com/docs/theoplayer/knowledge-base/advertisement/user-guide/#an-overview-of-theoplayers-different-ad-types),
 `THEOplayerView` currently supports:
 
 - client-side ad insertion (CSAI) through [Google IMA](#getting-started-with-google-ima)
