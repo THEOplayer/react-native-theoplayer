@@ -18,7 +18,7 @@
     "@theoplayer/react-native-ui": "^0.5.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-native": "npm:react-native-tvos@^0.73.4-0",
+    "react-native": "npm:react-native-tvos@0.73.6-1",
     "react-native-status-bar-height": "^2.6.0",
     "react-native-svg": "^13.14.0",
     "react-native-web": "^0.19.10",
@@ -49,7 +49,7 @@
   },
   "overrides": {
     "react-native-google-cast": {
-      "react-native": "npm:react-native-tvos@^0.73.4-0"
+      "react-native": "npm:react-native-tvos@^0.73.6-1"
     }
   },
   "engines": {
