@@ -3,7 +3,7 @@
 ## Overview
 
 The basics of both Chromecast and Airplay are well-described in
-THEOplayer's [Knowledge Base](https://docs.theoplayer.com/how-to-guides/03-cast/01-chromecast/00-introduction.md).
+THEOplayer's [Knowledge Base](https://www.theoplayer.com/docs/theoplayer/how-to-guides/cast/chromecast/introduction/).
 The `react-native-theoplayer` package has support for both.
 
 This page first outlines the setup

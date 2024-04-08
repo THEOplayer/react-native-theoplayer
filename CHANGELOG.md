@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed an issue where the player had the wrong layout in fullscreen presentationMode, after changing the source.
-- Fixed an issue where not enabling autoplay would explicitely pause the stream, reverting a possible play() request right after setting up the source. 
+- Fixed an issue where not enabling autoplay would explicitely pause the stream, reverting a possible play() request right after setting up the source.
 
 ## [3.10.3] - 24-03-22
 
@@ -203,7 +203,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- Added support for THEOplayer 6.0. See [THEOplayer's changelog](https://docs.theoplayer.com/changelog.md) for details.
+- Added support for THEOplayer 6.0. See [THEOplayer's changelog](https://www.theoplayer.com/docs/theoplayer/changelog/) for details.
 - Bumped minimal version for SideloadedTextTracks connection on iOS to v6.1.1 which contains fix for iOS 17.0.
 
 ### Added

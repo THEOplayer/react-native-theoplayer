@@ -4,7 +4,7 @@
 
 This section outlines how play-out of DRM protected content can be achieved with `react-native-theoplayer`.
 A detailed explanation on how DRM (Digital Rights Management) works can be found in
-[THEOplayer's knowledge base](https://docs.theoplayer.com/knowledge-base/02-content-protection/00-introduction.md).
+[THEOplayer's knowledge base](https://www.theoplayer.com/docs/theoplayer/knowledge-base/content-protection/introduction/).
 
 ## Configuration
 
@@ -40,7 +40,7 @@ const onReady = (player: THEOplayer) => {
 
 ### Pre-integrations
 
-THEOplayer is [pre-integrated](https://docs.theoplayer.com/how-to-guides/04-drm/00-introduction.md#pre-integrations)
+THEOplayer is [pre-integrated](https://www.theoplayer.com/docs/theoplayer/how-to-guides/drm/introduction/#pre-integrations)
 with a number of commercial multi-DRM vendors, which means support for these vendors is already included
 and enabled in the SDK.
 
