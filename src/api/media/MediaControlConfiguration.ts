@@ -20,7 +20,27 @@ export interface MediaControlConfiguration {
    * @defaultValue `true`
    *
    * @remarks
-   * <br/> - This only applies to Web.
+   * <br/> - This property only applies to Web and Android.
    */
   readonly mediaSessionEnabled?: boolean;
+
+  /**
+   * The amount of seconds the player will skip forward.
+   *
+   * @defaultValue 5
+   *
+   * @remarks
+   * <br/> - This property only applies to Web and Android.
+   */
+  readonly skipForwardInterval?: number;
+
+  /**
+   * The amount of seconds the player will skip backward.
+   *
+   * @defaultValue 5
+   *
+   * @remarks
+   * <br/> - This property only applies to Web and Android.
+   */
+  readonly skipBackwardInterval?: number;
 }
