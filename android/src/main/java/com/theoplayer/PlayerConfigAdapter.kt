@@ -11,6 +11,7 @@ import com.theoplayer.android.api.cast.CastConfiguration
 import com.theoplayer.android.api.pip.PipConfiguration
 import com.theoplayer.android.api.player.NetworkConfiguration
 import com.theoplayer.android.api.ui.UIConfiguration
+import com.theoplayer.media.MediaSessionConfig
 
 private const val PROP_LICENSE = "license"
 private const val PROP_LICENSE_URL = "licenseUrl"
@@ -27,6 +28,9 @@ private const val PROP_RETRY_MAX_BACKOFF = "maximumBackoff"
 private const val PROP_CAST_CONFIGURATION = "cast"
 private const val PROP_ADS_CONFIGURATION = "ads"
 private const val PROP_UI_CONFIGURATION = "ui"
+private const val PROP_MEDIASESSION_ENABLED = "mediaSessionEnabled"
+private const val PROP_SKIP_FORWARD_INTERVAL = "skipForwardInterval"
+private const val PROP_SKIP_BACKWARD_INTERVAL = "skipBackwardInterval"
 
 class PlayerConfigAdapter(private val configProps: ReadableMap?) {
 
@@ -152,6 +156,28 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
       "manual" -> CastStrategy.MANUAL
       "disabled" -> CastStrategy.DISABLED
       else -> null
+    }
+  }
+
+  /**
+   * Get MediaSession connector configuration; these properties apply:
+   * - mediaSessionEnabled: whether or not the media session should be enabled.
+   * - skipForwardInterval: the amount of seconds the player will skip forward.
+   * - skipBackwardInterval: the amount of seconds the player will skip backward.
+   */
+  fun mediaSessionConfig(): MediaSessionConfig {
+    return MediaSessionConfig().apply {
+      configProps?.run {
+        if (hasKey(PROP_MEDIASESSION_ENABLED)) {
+          mediaSessionEnabled = getBoolean(PROP_MEDIASESSION_ENABLED)
+        }
+        if (hasKey(PROP_SKIP_FORWARD_INTERVAL)) {
+          skipForwardInterval = getDouble(PROP_SKIP_FORWARD_INTERVAL)
+        }
+        if (hasKey(PROP_SKIP_BACKWARD_INTERVAL)) {
+          skipBackwardInterval = getDouble(PROP_SKIP_BACKWARD_INTERVAL)
+        }
+      }
     }
   }
 }
