@@ -5,16 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [7.0.0] - 24-04-10
 
 ### Fixed
 
 - Fixed an issue where the player had the wrong layout in fullscreen presentationMode, after changing the source.
-- Fixed an issue where not enabling autoplay would explicitely pause the stream, reverting a possible play() request right after setting up the source.
+- Fixed an issue where not enabling autoplay would explicitly pause the stream, reverting a possible play() request right after setting up the source.
 
 ### Added
 
 - Added support for THEOplayer native SDK 7.0.
+- Aligned SDK major version with native player SDKs.
 
 ### Changed
 
