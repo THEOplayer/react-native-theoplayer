@@ -4,9 +4,8 @@ import android.text.TextUtils
 import com.facebook.react.bridge.ReadableMap
 import com.google.ads.interactivemedia.v3.api.AdsRenderingSettings
 import com.google.ads.interactivemedia.v3.api.ImaSdkFactory
+import com.google.ads.interactivemedia.v3.api.ImaSdkSettings
 import com.theoplayer.android.api.THEOplayerConfig
-import com.theoplayer.android.api.ads.AdsConfiguration
-import com.theoplayer.android.api.ads.AdPreloadType
 import com.theoplayer.android.api.cast.CastStrategy
 import com.theoplayer.android.api.cast.CastConfiguration
 import com.theoplayer.android.api.pip.PipConfiguration
@@ -86,24 +85,36 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
   }
 
   /**
-   * Get AdsConfiguration object; these properties apply:
-   * - preload: Whether media files of mid- and postrolls are preloaded.
-   * - uiEnabled: Whether an advertisement UI is shown.
+   * Get ImaSdkSettings object.
+   *
+   * @see <a href="https://developers.google.com/interactive-media-ads/docs/sdks/android/client-side/api/reference/com/google/ads/interactivemedia/v3/api/ImaSdkSettings">IMA SDK for Android</a>.
    */
-  fun adsConfig(): AdsConfiguration {
-    return AdsConfiguration.Builder().apply {
+  fun imaSdkSettings(): ImaSdkSettings{
+    return ImaSdkFactory.getInstance().createImaSdkSettings().apply {
       configProps?.getMap(PROP_ADS_CONFIGURATION)?.run {
+        // TODO: bridge all settings
+      }
+    }
+  }
+
+  /**
+   * Create a AdsRenderingSettings object.
+   *
+   * @see <a href="https://developers.google.com/interactive-media-ads/docs/sdks/android/client-side/api/reference/com/google/ads/interactivemedia/v3/api/AdsRenderingSettings">IMA SDK for Android</a>.
+   */
+  fun adsRenderSettings(): AdsRenderingSettings {
+    return ImaSdkFactory.getInstance().createAdsRenderingSettings().apply {
+      configProps?.getMap(PROP_ADS_CONFIGURATION)?.run {
+        if (hasKey(PROP_UI_ENABLED) && !getBoolean(PROP_UI_ENABLED)) {
+          setUiElements(emptySet())
+          disableUi = true
+        }
         if (hasKey(PROP_PRELOAD)) {
           val preloadTypeString = getString(PROP_PRELOAD)
-          if (!TextUtils.isEmpty(preloadTypeString)) {
-            preload(AdPreloadType.from(preloadTypeString))
-          }
-        }
-        if (hasKey(PROP_UI_ENABLED)) {
-          showCountdown(getBoolean(PROP_UI_ENABLED))
+          enablePreloading = preloadTypeString !== "none"
         }
       }
-    }.build()
+    }
   }
 
   /**
@@ -119,20 +130,6 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
         }
       }
     }.build()
-  }
-
-  /**
-   * Create a AdsRenderingSettings object.
-   */
-  fun adsRenderSettings(): AdsRenderingSettings {
-    return ImaSdkFactory.getInstance().createAdsRenderingSettings().apply {
-      configProps?.getMap(PROP_ADS_CONFIGURATION)?.run {
-        if (hasKey(PROP_UI_ENABLED) && !getBoolean(PROP_UI_ENABLED)) {
-          setUiElements(emptySet())
-          disableUi = true
-        }
-      }
-    }
   }
 
   /**

@@ -106,40 +106,22 @@ public class THEOplayerRCTView: UIView {
         }
     }
     
-#if os(iOS)
     private func initPlayer() -> THEOplayer? {
         let stylePath = Bundle.main.path(forResource:"style", ofType: "css")
         let cssPaths = stylePath != nil ? [stylePath!] : []
-        self.player = THEOplayer(configuration: THEOplayerConfiguration(chromeless: self.chromeless,
-                                                                        cssPaths: cssPaths,
-                                                                        pip: self.playerPipConfiguration(),
-                                                                        ads: self.playerAdsConfiguration(),
-                                                                        ui: self.playerUIConfiguration(),
-                                                                        cast: self.playerCastConfiguration(),
-                                                                        hlsDateRange: self.hlsDateRange,
-                                                                        license: self.license,
-                                                                        licenseUrl: self.licenseUrl))
+        let config = THEOplayerConfigurationBuilder()
+        config.pip = self.playerPipConfiguration()
+        config.hlsDateRange = self.hlsDateRange
+        config.license = self.license
+        config.licenseUrl = self.licenseUrl
+        self.player = THEOplayer(configuration: config.build())
+        
         self.initAdsIntegration()
         self.initCastIntegration()
         self.initBackgroundAudio()
         self.initPip()
         return self.player
     }
-#else
-    private func initPlayer() -> THEOplayer? {
-        self.player = THEOplayer(configuration: THEOplayerConfiguration(chromeless: self.chromeless,
-                                                                        ads: self.playerAdsConfiguration(),
-                                                                        hlsDateRange: self.hlsDateRange,
-                                                                        license: self.license,
-                                                                        licenseUrl: self.licenseUrl,
-                                                                        pip: self.playerPipConfiguration(),
-                                                                        ui: self.playerUIConfiguration()))
-        self.initAdsIntegration()
-        self.initBackgroundAudio()
-        self.initPip()
-        return self.player
-    }
-#endif
     
     // MARK: - Destroy Player
     
