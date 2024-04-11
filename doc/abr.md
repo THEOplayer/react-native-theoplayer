@@ -1,6 +1,6 @@
-## Adaptive Bitrate (ABR)
+# Adaptive Bitrate (ABR)
 
-### Overview
+## Overview
 
 The playback quality during play-out of a stream is determined by the ABR algorithm.
 On starting play-out of a stream, the ABR *strategy* determines which quality to prefer, while during play-out the
@@ -14,7 +14,7 @@ and [demo page](https://www.theoplayer.com/theoplayer-demo-optimized-video-abr).
 In this document we will outline how to affect the ABR algorithm, setting a preferred quality or set of qualities and
 subscribe to related events.
 
-### ABR Configuration
+## ABR Configuration
 
 The [ABR Configuration](../src/api/abr/ABRConfiguration.ts) determines which initial quality the player will download, depending
 on the chosen strategy, as well as various parameters of the playback buffer.
@@ -54,7 +54,7 @@ const strategyConfig: ABRStrategyConfiguration = {
 player.abr.strategy = strategyConfig;
 ```
 
-### Setting Target Video Quality
+## Setting Target Video Quality
 
 By default, the ABR algorithm will choose, depending on the available bandwidth,
 from all the video qualities that are available in the manifest or playlist.
@@ -67,7 +67,7 @@ const selectedVideoQuality: number | number[] | undefined = [33, 34, 35]
 player.targetVideoQuality = selectedVideoQuality;
 ```
 
-### Subscribing to track events
+## Subscribing to track events
 
 The `onMediaTrackListEvent` and `onMediaTrackEvent` callback properties on `THEOplayerView` provide a way to perform actions
 when the track list is modified, or when a track's current quality changes:
@@ -77,7 +77,7 @@ when the track list is modified, or when a track's current quality changes:
 | `onMediaTrackListEvent` | when a media track list event occurs, for `trackType` with value `Audio` or `Video`, and event `type` with values `AddTrack`, `RemoveTrack` or `ChangeTrack`. | Android & Web       |
 | `onMediaTrackEvent`     | when a media track event occurs, for `trackType` with value `Audio` or `Video`, and event `type`, which currently is only `ActiveQualityChanged`.             | Android & Web       |
 
-#### Setting a preferred video quality across period switches and discontinuities
+### Setting a preferred video quality across period switches and discontinuities
 
 Subscribing to the `AddTrack` event on `onMediaTrackListEvent` for video tracks makes it possible set a
 fixed preferred video quality, even when a stream's track list changes due to a DASH period switch or an

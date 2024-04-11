@@ -1,18 +1,9 @@
-## Subtitles, Closed Captions and Metadata tracks
+# Subtitles, Closed Captions and Metadata tracks
 
 THEOplayer's `TextTrack` api gives developers the capability to manage and manipulate various types of text-based content.
 Some of its key functionalities include text track selection, styling, and listening to track and cue events.
 
-### Table of Contents
-
-- [Types of text tracks](#types-of-text-tracks)
-- [Side-loaded text tracks](#side-loaded-text-tracks)
-- [Listening to text track events](#listening-to-text-track-events)
-- [Enabling a text track](#enabling-a-text-track)
-- [Preview thumbnails](#preview-thumbnails)
-- [Styling subtitles and closed captions](#styling-subtitles-and-closed-captions)
-
-### Types of text tracks
+## Types of text tracks
 
 In this document we will differentiate between the following kinds of text tracks:
 
@@ -26,7 +17,7 @@ In addition, a distinction can be made between how a text track is delivered to 
 - **Out-band**, or *out-of-band*, is used to describe text tracks that are delivered separately from the media file. They are typically described in the playlist or manifest.
 - **Side-loaded** text tracks are those that are manually added or loaded by the user through the source description.
 
-### Side-loaded text tracks
+## Side-loaded text tracks
 
 In contrast to in-band and out-band text tracks, which are delivered to the player through the media content itself,
 the side-loaded text tracks can be configured by the user when setting a source to the player:
@@ -52,7 +43,7 @@ player.source = {
 }
 ```
 
-#### iOS/tvOS
+### iOS/tvOS
 
 On iOS and tvOS, support for side-loaded tracks is provided by a separate connector, which is enabled by adding the
 feature to the `react-native-theoplayer.json` (or `theoplayer-config.json`) file in your app folder.
@@ -65,7 +56,7 @@ feature to the `react-native-theoplayer.json` (or `theoplayer-config.json`) file
 }
 ```
 
-### Listening to text track events
+## Listening to text track events
 
 Out-band and side-loaded text tracks become accessible via the text track API once the player has loaded the media
 source. This event is signaled by the `PlayerEventType.LOADED_METADATA` event,
@@ -107,7 +98,7 @@ player.addEventListener(PlayerEventType.TEXT_TRACK, (event: TextTrackEvent) => {
 })
 ```
 
-### Enabling a text track
+## Enabling a text track
 
 A subtitle or closed caption can be enabled by setting the player's `selectedTextTrack` property to
 the `uid` of the track, or `undefined` to select none.
@@ -120,7 +111,7 @@ player.selectedTextTrack = track.uid;
 Note that [THEOplayer React-Native UI](https://github.com/THEOplayer/react-native-theoplayer-ui) package
 provides a visual representation of the list of available text tracks, as well as the ability to enable/disable them.
 
-### Preview thumbnails
+## Preview thumbnails
 
 Preview thumbnails is a feature that allows users to see a visual representation of different points or scenes within
 a video, making it easier to navigate and locate specific content of interest.
@@ -156,12 +147,12 @@ thumbnail viewer the interprets thumbnail cues and displays them above the progr
 [//]: # ( TODO: insert picture from react-native-theoplayer-ui)
 [//]: # (# ![]&#40;&#41;)
 
-### Styling subtitles and closed captions
+## Styling subtitles and closed captions
 
 In this section, we showcase the functionality of THEOplayer's `TextTrackStyle` API,
 which enables the customization of subtitles and closed captions' appearance. We will illustrate the practical implementation of this API through some examples.
 
-#### Style properties
+### Style properties
 
 | Property          | Purpose                                                           | Value                                                                                   | Support                                                            |
 |-------------------|-------------------------------------------------------------------|-----------------------------------------------------------------------------------------|:-------------------------------------------------------------------|
@@ -176,7 +167,7 @@ which enables the customization of subtitles and closed captions' appearance. We
 | `marginBottom`    | The bottom margin of the area where subtitles are being rendered. | A positive numeric value specifying the number of pixels.                               | Web only.                                                          |
 | `marginRight`     | The right margin  of the area where subtitles are being rendered. | A positive numeric value specifying the number of pixels.                               | Web only.                                                          |
 
-#### Examples
+### Examples
 
 <table>
 

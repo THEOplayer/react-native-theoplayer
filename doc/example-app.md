@@ -1,7 +1,11 @@
-## Example Application
+---
+sidebar_position: 3
+---
+
+# Example Application
 
 The example application on our `react-native-theoplayer`
-[git repository](https://github.com/THEOplayer/react-native-theoplayer/tree/master/example) demonstrates how the use the
+[git repository](https://github.com/THEOplayer/react-native-theoplayer/tree/develop/example) demonstrates how the use the
 player with the `THEOplayerView` component and the UI components from `@theoplayer/react-native-ui`.
 
 The example app depends on [`react-native-tvos`](https://github.com/react-native-tvos/react-native-tvos),
@@ -15,7 +19,7 @@ visit [our React Native UI project](https://github.com/THEOplayer/react-native-t
 |-------------------------------------------------------------------------------|--------------------------------------------------------|--------------------------------------------------|
 | The `DefaultTHEOplayerUi` in action.                                          | Choosing a demo source from a custom UI component.     | Preview thumbnails.                              |
 
-### Building the example application
+## Building the example application
 
 Clone the repository and install the dependencies for the `react-native-theoplayer` package:
 
@@ -37,8 +41,7 @@ For iOS and tvOS, also make sure to install pod dependencies
 $ (cd example/ios && pod install)
 ```
 
-Make sure to configure your [THEOplayer license](https://portal.theoplayer.com/),
-or [free trial license](https://www.theoplayer.com/free-trial-theoplayer?hsLang=en-us), in
+Make sure to configure your [THEOplayer license](https://portal.theoplayer.com/) in
 the [app config](../example/src/App.tsx).
 
 Finally, after making sure the necessary development tools are installed, build & deploy the example:

@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [7.0.0] - 24-04-10
+
+### Fixed
+
+- Fixed an issue where the player had the wrong layout in fullscreen presentationMode, after changing the source.
+- Fixed an issue where not enabling autoplay would explicitly pause the stream, reverting a possible play() request right after setting up the source.
+
+### Added
+
+- Added support for THEOplayer native SDK 7.0.
+- Aligned SDK major version with native player SDKs.
+
+### Changed
+
+- Raise minimal ios deployment target to 13.4, to match react native 0.73's minimal deployment target
+
 ## [3.10.3] - 24-03-22
 
 ### Fixed
@@ -196,7 +212,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- Added support for THEOplayer 6.0. See [THEOplayer's changelog](https://docs.theoplayer.com/changelog.md) for details.
+- Added support for THEOplayer 6.0. See [THEOplayer's changelog](https://www.theoplayer.com/docs/theoplayer/changelog/) for details.
 - Bumped minimal version for SideloadedTextTracks connection on iOS to v6.1.1 which contains fix for iOS 17.0.
 
 ### Added
@@ -492,7 +508,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Added `onPlayerReady` callback on `THEOplayerView` to pass a `THEOplayer` instance once it is ready for access. More info on the [migration documentation](./doc/migrating_v2.md) page.
+- Added `onPlayerReady` callback on `THEOplayerView` to pass a `THEOplayer` instance once it is ready for access. More info on the [migration documentation](./doc/migrating-v2.md) page.
 - Added `canplay` event, which is dispatched when the player can start play-out.
 - Added `waiting` event, which is dispatched when the player has stopped play-out because of a temporary lack of data.
 - Added `nativeHandle` property on `THEOplayer` to access the native player instance on web, and view id on mobile.
@@ -513,8 +529,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- Moved all player properties such as `paused`, `muted` and `volume`, from `THEOplayerView` component to `THEOplayer` instance. More info on the [migration documentation](./doc/migrating_v2.md) page.
-- Removed `onEventName` callback methods from `THEOplayerView` component in favor of `THEOplayer` event listener's interface. More info on the [migration documentation](./doc/migrating_v2.md) page.
+- Moved all player properties such as `paused`, `muted` and `volume`, from `THEOplayerView` component to `THEOplayer` instance. More info on the [migration documentation](./doc/migrating-v2.md) page.
+- Removed `onEventName` callback methods from `THEOplayerView` component in favor of `THEOplayer` event listener's interface. More info on the [migration documentation](./doc/migrating-v2.md) page.
 - Changed documentation sample code to reflect API changes.
 - Exposed the `activeQuality` of a `MediaTrack` as a `Quality` instance instead of the quality's `uid`.
 - Set the default container style for web to let the player cover the whole container.

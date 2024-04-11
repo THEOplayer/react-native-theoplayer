@@ -134,7 +134,7 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                 let playbackRateValue = playbackRate.doubleValue
                 if player.playbackRate != playbackRateValue {
                     if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Setting playbackRate on TheoPlayer to \(playbackRateValue)") }
-                    player.setPlaybackRate(playbackRateValue)
+                    player.playbackRate = playbackRateValue
                 }
             }
         }
@@ -271,7 +271,7 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                 let preloadType = THEOplayerRCTTypeUtils.preloadTypeFromString(type)
                 if player.preload != preloadType {
                     if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Changing TheoPlayer preload type to \(type)") }
-                    player.setPreload(preloadType)
+                    player.preload = preloadType
                 }
             }
         }

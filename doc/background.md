@@ -1,12 +1,12 @@
-## Background Playback and Notifications
+# Background Playback and Notifications
 
-### Overview
+## Overview
 
 One of the key features of `react-native-theoplayer` is its support for background playback,
 notifications, and lock-screen controls. This feature allows your users to continue listening
 to audio when the app is not in the foreground, and control playback using notifications and lock-screen controls.
 
-### Configuration
+## Configuration
 
 The `backgroundAudioConfiguration` player configuration affects the play-out behaviour when the app is moved to
 the background: in case the `enabled` property is set to `true`, the current media asset will continue
@@ -19,7 +19,7 @@ properties, or whether an ad is playing or not.
 player.backgroundAudioConfiguration = { enabled: true };
 ```
 
-#### Android
+### Android
 
 On Android, a [service](https://developer.android.com/guide/components/services) is used to
 continue playback in the background while the user is not interacting with the app.
@@ -28,7 +28,7 @@ It is possible to disable the service at build time by setting the build config 
 In that case the background playback feature is always disabled, no notifications are displayed, and the
 player will always pause when the hosting app goes to the background.
 
-### Notifications, Metadata and Lockscreen Controls
+## Notifications, Metadata and Lockscreen Controls
 
 During play-out of a media asset, a notification is displayed that provides some metadata and
 enables basic control. The source description passed to the player should provide the necessary metadata
@@ -81,7 +81,7 @@ As a result, the following setup will result in the same lockscreen info being d
 |-----------------------------------------------------|:-------------------------------------------:|:---:|
 | Android                             |                     iOS                     | Web |
 
-#### Configuration
+### Configuration
 
 The `mediaControl` property of `PlayerConfiguration` hosts properties that affect the notifications, media sessions and
 controls on each platform. Currently, it only contains a property `mediaSessionEnabled`

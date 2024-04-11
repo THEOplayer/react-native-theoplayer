@@ -172,4 +172,4 @@ export class NativeContentProtectionRegistry implements ContentProtectionAPI {
   };
 }
 
-export const ContentProtectionRegistry = new NativeContentProtectionRegistry();
+export const ContentProtectionRegistry: ContentProtectionAPI = new NativeContentProtectionRegistry();

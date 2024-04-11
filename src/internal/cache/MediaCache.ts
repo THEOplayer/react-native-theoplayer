@@ -9,9 +9,9 @@ import type { CachingTaskParameters } from '../../api/cache/CachingTaskParameter
 import type { CachingTask } from '../../api/cache/CachingTask';
 import { NativeEventEmitter, NativeModules } from 'react-native';
 import { NativeCachingTask, NativeCachingTaskAdapter } from './NativeCachingTaskAdapter';
-import { toNativeCachingTaskParameters } from "./NativeCachingTaskParametersAdapter";
+import { toNativeCachingTaskParameters } from './NativeCachingTaskParametersAdapter';
 
-const TAG = "NativeMediaCache";
+const TAG = 'NativeMediaCache';
 
 const NativeCacheModule = NativeModules.THEORCTCacheModule;
 
@@ -95,12 +95,12 @@ export class NativeMediaCache extends DefaultEventDispatcher<CacheEventMap> impl
     this._status = event.status;
     this.dispatchEvent({
       type: CacheEventType.statechange,
-      date: new Date()
+      date: new Date(),
     });
   };
 
   private onAddCachingTaskEvent = (event: NativeAddCachingTaskEvent) => {
-    const task= new NativeCachingTaskAdapter(event.task);
+    const task = new NativeCachingTaskAdapter(event.task);
     this._tasks.push(task);
     this.dispatchEvent({
       type: CacheEventType.addtask,
@@ -119,7 +119,7 @@ export class NativeMediaCache extends DefaultEventDispatcher<CacheEventMap> impl
         date: new Date(),
       });
     } else {
-      console.warn(TAG, `onRemoveCachingTaskEvent: CachingTask with id ${event.task.id} not found.`)
+      console.warn(TAG, `onRemoveCachingTaskEvent: CachingTask with id ${event.task.id} not found.`);
     }
   };
 
@@ -150,4 +150,4 @@ export class NativeMediaCache extends DefaultEventDispatcher<CacheEventMap> impl
   }
 }
 
-export const MediaCache = new NativeMediaCache();
+export const MediaCache: MediaCacheAPI = new NativeMediaCache();

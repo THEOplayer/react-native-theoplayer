@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
   s.license      = package["license"]
   s.authors      = package["author"]
   
-  s.platforms    = { :ios => "13.0", :tvos => "13.0" }
+  s.platforms    = { :ios => "13.4", :tvos => "13.4" }
   s.source       = { :git => "https://www.theoplayer.com/.git", :tag => "#{s.version}" }
   
   s.source_files = 'ios/*.{h,m,swift}', 'ios/ads/*.swift', 'ios/casting/*.swift', 'ios/contentprotection/*.swift', 'ios/pip/*.swift', 'ios/backgroundAudio/*.swift', 'ios/cache/*.swift', 'ios/sideloadedMetadata/*.swift', 'ios/eventBroadcasting/*.swift' , 'ios/ui/*.swift', 'ios/presentationMode/*.swift'
@@ -41,20 +41,20 @@ Pod::Spec.new do |s|
     }
   else 
   	puts "Using THEOplayer-core SDK"
-    s.dependency "THEOplayerSDK-core", "~> 6.11", "!= 6.12.0"
+    s.dependency "THEOplayerSDK-core", "~> 7.0"
     if theofeatures.include?("GOOGLE_IMA") 
 	  puts "Adding THEOplayer-Integration-GoogleIMA"
-      s.dependency "THEOplayer-Integration-GoogleIMA/Base", "~> 6.11", "!= 6.12.0"
-	  s.dependency "THEOplayer-Integration-GoogleIMA/Dependencies", "~> 6.11", "!= 6.12.0"
+      s.dependency "THEOplayer-Integration-GoogleIMA/Base", "~> 7.0"
+	  s.dependency "THEOplayer-Integration-GoogleIMA/Dependencies", "~> 7.0"
     end
     if theofeatures.include?("CHROMECAST")
 	  puts "Adding THEOplayer-Integration-GoogleCast"
-      s.ios.dependency "THEOplayer-Integration-GoogleCast/Base", "~> 6.11", "!= 6.12.0"
+      s.ios.dependency "THEOplayer-Integration-GoogleCast/Base", "~> 7.0"
 	  s.ios.dependency "google-cast-sdk-dynamic-xcframework", "~> 4.8"
     end
     if theofeatures.include?("SIDELOADED_TEXTTRACKS") 
 	  puts "Adding THEOplayer-Connector-SideloadedSubtitle"
-      s.dependency "THEOplayer-Connector-SideloadedSubtitle", "~> 6.11", "!= 6.12.0"
+      s.dependency "THEOplayer-Connector-SideloadedSubtitle", "~> 7.0"
     end
   end
   

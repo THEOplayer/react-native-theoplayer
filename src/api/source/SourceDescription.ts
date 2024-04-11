@@ -60,7 +60,7 @@ export interface SourceConfiguration {
    *
    * @remarks
    * <br/> - An empty string (`''`) clears the current poster.
-   * <br/> - This poster has priority over {@link ChromelessPlayer.poster}.
+   * <br/> - This poster has priority over {@link theoplayer!ChromelessPlayer.poster}.
    */
   poster?: string;
 
@@ -226,7 +226,7 @@ export interface TextTrackDescription {
    * The PTS value used to sync the track with the video.
    *
    * @internal
-   * 
+   *
    * @remarks
    * <br/> - Available on iOS.
    */
@@ -237,8 +237,8 @@ export interface TextTrackDescription {
    *
    * @internal
     * @remarks
-   * <br/> - Available on iOS. 
-   * <br/> - Format: "HH:mm:mm:SSS" 
+   * <br/> - Available on iOS.
+   * <br/> - Format: "HH:mm:mm:SSS"
    * <br/> - Default value is "00:00:00:000"
    */
   subtitleLocaltime?: string;

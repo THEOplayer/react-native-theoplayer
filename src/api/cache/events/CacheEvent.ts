@@ -9,13 +9,13 @@ export enum CacheEventType {
 }
 
 /**
- * The events dispatched by the {@link Cache | cache API}.
+ * The events dispatched by the {@link MediaCacheAPI | cache API}.
  *
  * @public
  */
 export interface CacheEventMap {
   /**
-   * Dispatched when {@link Cache.status} changes.
+   * Dispatched when {@link MediaCacheAPI.status} changes.
    */
   [CacheEventType.statechange]: Event<CacheEventType.statechange>;
 

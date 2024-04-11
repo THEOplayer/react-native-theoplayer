@@ -1,4 +1,4 @@
-## A Fullscreen Video Player Component
+# A Fullscreen Video Player Component
 
 Presenting a fullscreen video player poses challenges due to the need to seamlessly
 transition between the regular view and fullscreen mode, while maintaining playback continuity.
@@ -10,16 +10,7 @@ new screen to present the player, and a second that transitions to fullscreen fr
 We will also discuss the related concept of "React Portals", which, when paired with a video player component,
 offer versatile applications beyond fullscreen display.
 
-### Table of Contents
-
-- [Presenting a fullscreen video player](#presenting-a-fullscreen-video-player)
-  - [A separate player screen](#1-a-separate-player-screen)
-  - [An inline video player](#2-an-inline-video-player)
-- [Portals](#portals)
-- [Using Portals to transition from an inline player to a floating](#using-portals-to-transition-to-an-in-app-mini-player)
-- [Closing remarks](#closing-remarks)
-
-### Presenting a fullscreen video player
+## Presenting a fullscreen video player
 
 A native iOS or Android video player that transitions into fullscreen typically creates another activity
 or view that _overlays the existing view stack_, while activating an immersive mode to maximize
@@ -35,7 +26,7 @@ may encounter issues when elements are generated outside its control.
 When an app integrates a video player that needs the ability to present itself in fullscreen mode, there are
 typically two possibilities to transition to the fullscreen player:
 
-#### 1. A separate player screen
+### 1. A separate player screen
 
 Navigate to a _separate player screen_ that contains only the video player presented in an immersive mode.
 
@@ -44,7 +35,7 @@ transitioning to another screen means recreating (remounting) the player, causin
 Typically, this option is used when the first screen has an inline preview image that transitions to a fullscreen player
 screen when tapped.
 
-#### 2. An inline video player
+### 2. An inline video player
 
 Make the current _inline video player_ component stretch itself while covering all elements in the current screen.
 
@@ -66,7 +57,7 @@ player.presentationMode = PresentationMode.fullscreen;
 
 When the player transitions back to inline mode, the view hierarchy will be restored.
 
-### Portals
+## Portals
 
 A [Portal](https://react.dev/reference/react-dom/createPortal#usage) is a well-known concept in React that
 enables rendering a component in a different location in the DOM view hierarchy. Normally, when a component is
@@ -79,7 +70,7 @@ A typical use case is when the child component needs to "break out" of its conta
 tooltips, and floating or fullscreen video components. In the next section we will outline the creation of an
 in-app mini player.
 
-### Using Portals to transition to an in-app mini player
+## Using Portals to transition to an in-app mini player
 
 This section introduces a basic example illustrating how Portals facilitate the creation of an inline video component
 capable of transitioning to a mini player at the bottom of the screen, overlaying the other components.
@@ -129,7 +120,7 @@ will also be re-parented to the miniPlayer container at the bottom of the screen
 |----------------------------------------|------------------------------------|
 | A mini-player using Portals on Android | A mini-player using Portals on iOS |
 
-### Closing remarks
+## Closing remarks
 
 Variants of the approach discussed above put the `PortalDestination` on a dedicated route in a
 [`NavigationContainer`](https://reactnavigation.org/docs/navigation-container/). This is

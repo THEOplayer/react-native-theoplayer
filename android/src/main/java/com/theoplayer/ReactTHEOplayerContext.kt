@@ -243,7 +243,7 @@ class ReactTHEOplayerContext private constructor(
     try {
       if (BuildConfig.EXTENSION_GOOGLE_IMA) {
         imaIntegration = GoogleImaIntegrationFactory.createGoogleImaIntegration(
-          playerView, configAdapter.adsConfig()
+          playerView, configAdapter.imaSdkSettings()
         ).apply {
           setAdsRenderingSettings(configAdapter.adsRenderSettings())
         }.also {
@@ -256,7 +256,7 @@ class ReactTHEOplayerContext private constructor(
     try {
       if (BuildConfig.EXTENSION_GOOGLE_DAI) {
         daiIntegration = GoogleDaiIntegrationFactory.createGoogleDaiIntegration(
-          playerView, configAdapter.adsConfig()
+          playerView, configAdapter.imaSdkSettings()
         ).apply {
           setAdsRenderingSettings(configAdapter.adsRenderSettings())
         }.also {

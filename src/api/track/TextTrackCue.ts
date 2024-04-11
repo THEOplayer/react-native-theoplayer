@@ -32,7 +32,7 @@ export interface TextTrackCue {
    * The content of the cue.
    *
    * @remarks
-   * The content differs depending on the {@link TextTrackCue.track}'s {@link TextTrack."type" | type }:
+   * The content differs depending on the {@link theoplayer!TextTrackCue.track}'s {@link TextTrack."type" | type }:
    * <br/> - `'emsg'`: Content is a Uint8Array representing the binary message data from the `emsg` box.
    * <br/> - `'eventstream'`: Content is the value of the `messageData` attribute which was specified in the manifest.
    * <br/> - `'ttml'`: Content is an intermediate TTML document’s body element. This is a view of a TTML document where all nodes in the document are active during the cue’s startTime and endTime. As a result, all begin, dur and end properties have been removed. TTML Styles, Regions and Metadata are stored in cue.styles, cue.regions, cue.metadata respectively. Combining those properties with the given content should suffice to render a TTML cue.
