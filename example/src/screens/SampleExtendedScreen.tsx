@@ -62,7 +62,7 @@ const playerConfig: PlayerConfiguration = {
   },
 };
 
-const SampleExtendedScreen = () => {
+export const SampleExtendedScreen = () => {
   const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);
   const chromeless = playerConfig?.chromeless ?? false;
   const onPlayerReady = (player: THEOplayer) => {
@@ -175,5 +175,3 @@ const styles = StyleSheet.create({
     backgroundColor: '#000000',
   },
 });
-
-export default SampleExtendedScreen;

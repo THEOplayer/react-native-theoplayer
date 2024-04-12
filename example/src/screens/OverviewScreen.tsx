@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Button, View, Text } from 'react-native';
 import PropTypes from 'prop-types';
 
-const OverviewScreen = ({ navigation }) => {
+export const OverviewScreen = ({ navigation }) => {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>Samples Overview</Text>
@@ -21,6 +21,16 @@ const OverviewScreen = ({ navigation }) => {
         onPress={() => navigation.navigate('Sample_PresentationModes')}
         color="white"
       />
+      <Button
+        title="DRM Setup"
+        onPress={() => navigation.navigate('Sample_DRM')}
+        color="white"
+      />
+      <Button
+        title="Sideloaded TextTrack Setup"
+        onPress={() => navigation.navigate('Sample_SideloadedTextTrack')}
+        color="white"
+      />
     </View>
   );
 }
@@ -28,5 +38,3 @@ const OverviewScreen = ({ navigation }) => {
 OverviewScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
 };
-
-export default OverviewScreen;

@@ -37,7 +37,7 @@ const playerConfig: PlayerConfiguration = {
   libraryLocation: 'theoplayer',
 };
 
-const SamplePresentationModesScreen = () => {
+export const SamplePresentationModesScreen = () => {
   const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);
   const [activePresentationMode, setActivePresentationMode] = useState<PresentationMode>(PresentationMode.inline
   );
@@ -130,5 +130,3 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   }
 });
-
-export default SamplePresentationModesScreen;
