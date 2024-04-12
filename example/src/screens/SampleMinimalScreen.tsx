@@ -13,7 +13,7 @@ const playerConfig: PlayerConfiguration = {
   libraryLocation: 'theoplayer',
 };
 
-const SampleMinimalScreen = () => {
+export const SampleMinimalScreen = () => {
   const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);
   const onPlayerReady = (player: THEOplayer) => {
     console.log(LOG_TAG, 'THEOplayer is ready:', player.version);
@@ -57,5 +57,3 @@ const styles = StyleSheet.create({
     backgroundColor: '#000000',
   },
 });
-
-export default SampleMinimalScreen;
