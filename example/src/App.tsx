@@ -2,7 +2,7 @@ import * as React from 'react';
 import {NavigationContainer, DarkTheme} from '@react-navigation/native';
 import BottomTabNavigator from "./navigators/BottomTabNavigator";
 import {Platform} from "react-native";
-import SampleExtendedScreen from "./screens/SampleExtendedScreen";
+import { SampleExtendedScreen } from "./screens";
 
 export default function App() {
 

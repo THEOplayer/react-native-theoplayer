@@ -1,6 +1,6 @@
 import React from "react";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import ConfigScreen from "../screens/ConfigScreen";
+import { ConfigScreen } from "../screens";
 import SamplesStackNavigator from "./SamplesStackNavigator";
 
 const Tab = createBottomTabNavigator();

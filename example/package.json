@@ -17,6 +17,7 @@
     "@react-navigation/bottom-tabs": "^6.5.20",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.9.26",
+    "@theoplayer/react-native-drm": "^1.5.0",
     "@theoplayer/react-native-ui": "^0.8.0",
     "install": "^0.13.0",
     "npm": "^10.5.0",

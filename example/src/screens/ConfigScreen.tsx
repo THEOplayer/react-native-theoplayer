@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {StyleSheet, Text, SafeAreaView} from 'react-native';
 
-function ConfigScreen() {
+export const ConfigScreen = () => {
   return (
     <SafeAreaView style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}>
       <Text style={styles.TEXT}>{`work in progress...`}</Text>
@@ -17,5 +17,3 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   }
 });
-
-export default ConfigScreen;
