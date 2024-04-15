@@ -4,10 +4,6 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 
-#if TARGET_OS_TV
-#import <THEOplayerSDK/THEOplayerSDK-Swift.h>
-#endif
-
 #if !TARGET_OS_TV
 #import <GoogleCast/GoogleCast.h>
 #endif
@@ -26,10 +22,6 @@
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];
-  
-#if TARGET_OS_TV
-  [THEOplayer prepareWithFirstViewController: [UIViewController new]];
-#endif
   
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
