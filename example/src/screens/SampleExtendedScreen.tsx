@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useState} from 'react';
+import { useState } from 'react';
 import {
   AirplayButton,
   CastMessage,
@@ -38,13 +38,12 @@ import {MediaCacheDownloadButton} from '../custom/MediaCacheDownloadButton';
 import {MediaCacheMenuButton} from '../custom/MediaCacheMenuButton';
 import {MediaCachingTaskListSubMenu} from '../custom/MediaCachingTaskListSubMenu';
 import {usePlayerFocus} from "../hooks/usePlayerFocus";
+import {THEO_LICENSE} from "../sampleConfig";
 
 const LOG_TAG = "[EXAMPLE - EXTENDED SAMPLE]";
 
 const playerConfig: PlayerConfiguration = {
-  // Get your THEOplayer license from https://portal.theoplayer.com/
-  // Without a license, only demo sources hosted on '*.theoplayer.com' domains can be played.
-  license: undefined,
+  license: THEO_LICENSE,
   chromeless: true,
   hlsDateRange: true,
   libraryLocation: 'theoplayer',

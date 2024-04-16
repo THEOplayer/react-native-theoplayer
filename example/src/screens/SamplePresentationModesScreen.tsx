@@ -27,13 +27,12 @@ import {Platform, SafeAreaView, StyleSheet, View} from 'react-native';
 import {SourceMenuButton, SOURCES} from '../custom/SourceMenuButton';
 import {PiPSubMenu} from '../custom/PipSubMenu';
 import {usePlayerFocus} from "../hooks/usePlayerFocus";
+import {THEO_LICENSE} from "../sampleConfig";
 
 const LOG_TAG = "[EXAMPLE - PRESENTATIONMODES SAMPLE]";
 
 const playerConfig: PlayerConfiguration = {
-  // Get your THEOplayer license from https://portal.theoplayer.com/
-  // Without a license, only demo sources hosted on '*.theoplayer.com' domains can be played.
-  license: undefined,
+  license: THEO_LICENSE,
   libraryLocation: 'theoplayer',
 };
 

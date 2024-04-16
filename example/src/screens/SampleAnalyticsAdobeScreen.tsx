@@ -4,19 +4,29 @@ import { PlayerConfiguration, THEOplayer, THEOplayerView } from 'react-native-th
 import { Platform, SafeAreaView, StyleSheet, View } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { usePlayerFocus } from "../hooks/usePlayerFocus";
-import { THEO_LICENSE } from "../sampleConfig";
+import { useAdobe } from "@theoplayer/react-native-analytics-adobe";
+import { THEO_LICENSE, ADOBE_ECID, ADOBE_SID, ADOBE_TRACKING_URL, ADOBE_URI} from "../sampleConfig";
 
-const LOG_TAG = "[EXAMPLE - MINIMAL SAMPLE]";
+const LOG_TAG = "[EXAMPLE - ANALYTICS ADOBE SAMPLE]";
 const playerConfig: PlayerConfiguration = {
   license: THEO_LICENSE,
   libraryLocation: 'theoplayer',
 };
 
-export const SampleMinimalScreen = () => {
+export const SampleAnalyticsAdobeScreen = () => {
   const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);
+  const [, initAdobe] = useAdobe(ADOBE_URI, ADOBE_ECID, ADOBE_SID, ADOBE_TRACKING_URL);
+
   const onPlayerReady = (player: THEOplayer) => {
     console.log(LOG_TAG, 'THEOplayer is ready:', player.version);
     setPlayer(player);
+
+    // initialize adobe connector, by passing player instance
+    if (ADOBE_URI === '<YOUR_ADOBE_URI>') {
+      console.warn(LOG_TAG, 'Setup a correct configuration to activate Adobe analytics support.');
+    } else {
+      initAdobe(player);
+    }
 
     // set a source
     player.source = {
@@ -25,7 +35,10 @@ export const SampleMinimalScreen = () => {
           "src": "https://cdn.theoplayer.com/video/big_buck_bunny/big_buck_bunny.m3u8",
           "type": "application/x-mpegurl"
         }
-      ]
+      ],
+      metadata: {
+        title: "My metadata title"
+      }
     };
 
     // start playing

@@ -1,8 +1,10 @@
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+require_relative './PodConfig'
 
 source 'https://github.com/react-native-tvos/react-native-tvos-podspecs.git'
 source 'https://cdn.cocoapods.org/'
+nielsen_source
 
 linkage = ENV['USE_FRAMEWORKS']
 if linkage != nil
@@ -23,7 +25,7 @@ target 'ReactNativeTHEOplayer' do
   )
   
   pod 'react-native-theoplayer', :path => '../..'
-  pod 'react-native-google-cast', :git => 'https://github.com/Danesz/react-native-google-cast.git', branch: 'feature/guestmode_apple_silicon'
+  google_cast_redirect
   
   target 'ReactNativeTHEOplayerTests' do
     inherit! :complete
@@ -53,4 +55,5 @@ end
 
 post_install do |installer|
   react_native_post_install(installer)
+  nielsen_post_install(installer, "Pods-ReactNativeTHEOplayer-tvOS")
 end
