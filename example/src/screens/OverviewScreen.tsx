@@ -17,37 +17,37 @@ export const OverviewScreen = ({ navigation }) => {
         color="white"
       />
       <Button
-        title="PresentationModes Setup"
+        title="PresentationModes"
         onPress={() => navigation.navigate('Sample_PresentationModes')}
         color="white"
       />
       <Button
-        title="DRM Setup"
+        title="DRM"
         onPress={() => navigation.navigate('Sample_DRM')}
         color="white"
       />
       <Button
-        title="Sideloaded TextTrack Setup"
+        title="Sideloaded TextTrack"
         onPress={() => navigation.navigate('Sample_SideloadedTextTrack')}
         color="white"
       />
       <Button
-        title="Analytics Setup: Conviva"
+        title="Analytics: Conviva"
         onPress={() => navigation.navigate('Sample_Conviva')}
         color="white"
       />
       <Button
-        title="Analytics Setup: Comscore"
+        title="Analytics: Comscore"
         onPress={() => navigation.navigate('Sample_Comscore')}
         color="white"
       />
       <Button
-        title="Analytics Setup: Nielsen"
+        title="Analytics: Nielsen"
         onPress={() => navigation.navigate('Sample_Nielsen')}
         color="white"
       />
       <Button
-        title="Analytics Setup: Adobe"
+        title="Analytics: Adobe"
         onPress={() => navigation.navigate('Sample_Adobe')}
         color="white"
       />
