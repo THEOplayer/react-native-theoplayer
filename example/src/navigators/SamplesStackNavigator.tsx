@@ -35,25 +35,25 @@ export default function SamplesStackNavigator() {
                     options={{ title: 'Minimal Setup' }} />
       <Stack.Screen name="Sample_PresentationModes"
                     component={SamplePresentationModesScreen}
-                    options={{ title: 'PresentationModes Setup' }} />
+                    options={{ title: 'PresentationModes' }} />
       <Stack.Screen name="Sample_DRM"
                     component={SampleDRMScreen}
-                    options={{ title: 'DRM Setup' }} />
+                    options={{ title: 'DRM' }} />
       <Stack.Screen name="Sample_SideloadedTextTrack"
                     component={SampleSideloadedTextTrackScreen}
-                    options={{ title: 'Sideloaded TextTrack Setup' }} />
+                    options={{ title: 'Sideloaded TextTrack' }} />
       <Stack.Screen name="Sample_Conviva"
                     component={SampleAnalyticsConvivaScreen}
-                    options={{ title: 'Analytics Setup: Conviva' }} />
+                    options={{ title: 'Analytics: Conviva' }} />
       <Stack.Screen name="Sample_Comscore"
                     component={SampleAnalyticsComscoreScreen}
-                    options={{ title: 'Analytics Setup: Comscore' }} />
+                    options={{ title: 'Analytics: Comscore' }} />
       <Stack.Screen name="Sample_Nielsen"
                     component={SampleAnalyticsNielsenScreen}
-                    options={{ title: 'Analytics Setup: Nielsen' }} />
+                    options={{ title: 'Analytics: Nielsen' }} />
       <Stack.Screen name="Sample_Adobe"
                     component={SampleAnalyticsAdobeScreen}
-                    options={{ title: 'Analytics Setup: Adobe' }} />
+                    options={{ title: 'Analytics: Adobe' }} />
     </Stack.Navigator>
   );
 }
