@@ -6,9 +6,12 @@ import {
   SampleExtendedScreen,
   SamplePresentationModesScreen,
   SampleDRMScreen,
-  SampleSideloadedTextTrackScreen
+  SampleSideloadedTextTrackScreen,
+  SampleAnalyticsConvivaScreen,
+  SampleAnalyticsComscoreScreen,
+  SampleAnalyticsNielsenScreen,
+  SampleAnalyticsAdobeScreen
 } from "../screens";
-
 
 const Stack = createNativeStackNavigator();
 export default function SamplesStackNavigator() {
@@ -39,6 +42,18 @@ export default function SamplesStackNavigator() {
       <Stack.Screen name="Sample_SideloadedTextTrack"
                     component={SampleSideloadedTextTrackScreen}
                     options={{ title: 'Sideloaded TextTrack Setup' }} />
+      <Stack.Screen name="Sample_Conviva"
+                    component={SampleAnalyticsConvivaScreen}
+                    options={{ title: 'Analytics Setup: Conviva' }} />
+      <Stack.Screen name="Sample_Comscore"
+                    component={SampleAnalyticsComscoreScreen}
+                    options={{ title: 'Analytics Setup: Comscore' }} />
+      <Stack.Screen name="Sample_Nielsen"
+                    component={SampleAnalyticsNielsenScreen}
+                    options={{ title: 'Analytics Setup: Nielsen' }} />
+      <Stack.Screen name="Sample_Adobe"
+                    component={SampleAnalyticsAdobeScreen}
+                    options={{ title: 'Analytics Setup: Adobe' }} />
     </Stack.Navigator>
   );
 }

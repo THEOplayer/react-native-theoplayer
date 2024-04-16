@@ -4,19 +4,47 @@ import { PlayerConfiguration, THEOplayer, THEOplayerView } from 'react-native-th
 import { Platform, SafeAreaView, StyleSheet, View } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { usePlayerFocus } from "../hooks/usePlayerFocus";
-import { THEO_LICENSE } from "../sampleConfig";
+import {
+  ComscoreMediaType,
+  ComscoreMetadata,
+  useComscore
+} from "@theoplayer/react-native-analytics-comscore";
+import {COMSCORE_CONFIG, COMSCORE_PUBLISHER_ID, THEO_LICENSE} from "../sampleConfig";
 
-const LOG_TAG = "[EXAMPLE - MINIMAL SAMPLE]";
+const LOG_TAG = "[EXAMPLE - ANALYTICS COMSCORE SAMPLE]";
 const playerConfig: PlayerConfiguration = {
   license: THEO_LICENSE,
   libraryLocation: 'theoplayer',
 };
 
-export const SampleMinimalScreen = () => {
+const comscoreMetadata: ComscoreMetadata = {
+  mediaType: ComscoreMediaType.longFormOnDemand,
+  uniqueId: "testuniqueId",
+  length: 634.566,
+  stationTitle: "THEOTV",
+  programTitle: "Big Buck Bunny",
+  episodeTitle: "Intro",
+  genreName: "Animation",
+  classifyAsAudioStream: false,
+  customLabels: {
+    "testcustomlabel": "testcustomvalue"
+  }
+};
+
+export const SampleAnalyticsComscoreScreen = () => {
   const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);
+  const [_, initComscore] = useComscore(comscoreMetadata, COMSCORE_CONFIG);
+
   const onPlayerReady = (player: THEOplayer) => {
     console.log(LOG_TAG, 'THEOplayer is ready:', player.version);
     setPlayer(player);
+
+    // initialize Comscore connector, by passing player instance
+    if (COMSCORE_PUBLISHER_ID === '<YOUR_PUBLISHER_ID>') {
+      console.warn(LOG_TAG, 'Setup a correct configuration to activate Comscore analytics support.');
+    } else {
+      initComscore(player);
+    }
 
     // set a source
     player.source = {
@@ -25,7 +53,10 @@ export const SampleMinimalScreen = () => {
           "src": "https://cdn.theoplayer.com/video/big_buck_bunny/big_buck_bunny.m3u8",
           "type": "application/x-mpegurl"
         }
-      ]
+      ],
+      metadata: {
+        title: "My metadata title"
+      }
     };
 
     // start playing
