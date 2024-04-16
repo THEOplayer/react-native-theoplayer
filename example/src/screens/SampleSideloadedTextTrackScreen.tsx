@@ -18,13 +18,12 @@ import {
 import {Platform, SafeAreaView, StyleSheet, View} from 'react-native';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {usePlayerFocus} from "../hooks/usePlayerFocus";
+import {THEO_LICENSE} from "../sampleConfig";
 
 const LOG_TAG = "[EXAMPLE - SIDELOADED TEXTTRACK SAMPLE]";
 
 const playerConfig: PlayerConfiguration = {
-  // Get your THEOplayer license from https://portal.theoplayer.com/
-  // Without a license, only demo sources hosted on '*.theoplayer.com' domains can be played.
-  license: undefined,
+  license: THEO_LICENSE,
   chromeless: true,
   libraryLocation: 'theoplayer',
 };
