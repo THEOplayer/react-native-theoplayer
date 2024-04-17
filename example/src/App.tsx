@@ -1,6 +1,7 @@
 import * as React from 'react';
+import 'react-native-gesture-handler';
 import {NavigationContainer, DarkTheme} from '@react-navigation/native';
-import BottomTabNavigator from "./navigators/BottomTabNavigator";
+import SamplesDrawerNavigator from "./navigators/SamplesDrawerNavigator";
 import {Platform} from "react-native";
 import { SampleExtendedScreen } from "./screens";
 
@@ -15,11 +16,11 @@ export default function App() {
     },
   };
 
-  const singleScreen = Platform.isTV || Platform.OS === 'web';
+  const singleScreen = Platform.isTV;
 
   return (
     <NavigationContainer theme={navTheme}>
-      {!singleScreen && (<BottomTabNavigator/>)}
+      {!singleScreen && (<SamplesDrawerNavigator/>)}
       {singleScreen && (<SampleExtendedScreen/>)}
     </NavigationContainer>
   );
