@@ -12,7 +12,7 @@ const playerConfig: PlayerConfiguration = {
 };
 
 export const SampleMinimalScreen = () => {
-  const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);
+  const [, setPlayer] = useState<THEOplayer | undefined>(undefined);
   const onPlayerReady = (player: THEOplayer) => {
     console.log(LOG_TAG, 'THEOplayer is ready:', player.version);
     setPlayer(player);
