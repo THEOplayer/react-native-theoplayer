@@ -17,7 +17,6 @@ import {
 
 import {Platform, SafeAreaView, StyleSheet, View} from 'react-native';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
-import {usePlayerFocus} from "../hooks/usePlayerFocus";
 import {THEO_LICENSE} from "../sampleConfig";
 
 const LOG_TAG = "[EXAMPLE - SIDELOADED TEXTTRACK SAMPLE]";
@@ -80,9 +79,6 @@ export const SampleSideloadedTextTrackScreen = () => {
     player.play();
 
   };
-
-  // example app specific setup
-  usePlayerFocus(player);
 
   return (
     <SafeAreaView style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}>
