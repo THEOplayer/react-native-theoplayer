@@ -23,6 +23,7 @@ export default function SamplesDrawerNavigator() {
           headerShown: true,
           headerTitleAlign: "center",
           headerTintColor: '#FFC50F',
+          unmountOnBlur: true
         }}>
       <Drawer.Screen name="SampleOverview"
                     component={OverviewScreen}
