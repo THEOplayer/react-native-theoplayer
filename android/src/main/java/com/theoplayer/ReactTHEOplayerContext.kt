@@ -62,6 +62,12 @@ class ReactTHEOplayerContext private constructor(
       field = value
     }
 
+  var mediaSessionConfig: MediaSessionConfig = configAdapter.mediaSessionConfig()
+    set(value) {
+      applyMediaSessionConfig(mediaSessionConnector, value)
+      field = value
+    }
+
   lateinit var playerView: THEOplayerView
 
   val player: Player
@@ -99,7 +105,7 @@ class ReactTHEOplayerContext private constructor(
 
       // Get media session connector from service
       mediaSessionConnector = binder?.mediaSessionConnector?.also {
-        applyMediaSessionConfig(it, configAdapter.mediaSessionConfig())
+        applyMediaSessionConfig(it, mediaSessionConfig)
       }
 
       // Pass player context
@@ -232,12 +238,12 @@ class ReactTHEOplayerContext private constructor(
 
     // Create a MediaSessionConnector and attach the THEOplayer instance.
     mediaSessionConnector = MediaSessionConnector(mediaSession).also {
-      applyMediaSessionConfig(it, configAdapter.mediaSessionConfig())
+      applyMediaSessionConfig(it, mediaSessionConfig)
     }
   }
 
-  private fun applyMediaSessionConfig(connector: MediaSessionConnector, config: MediaSessionConfig) {
-    connector.apply {
+  private fun applyMediaSessionConfig(connector: MediaSessionConnector?, config: MediaSessionConfig) {
+    connector?.apply {
       debug = BuildConfig.LOG_MEDIASESSION_EVENTS
 
       player = this@ReactTHEOplayerContext.player
