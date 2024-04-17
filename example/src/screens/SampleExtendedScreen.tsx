@@ -37,7 +37,6 @@ import {PiPSubMenu} from '../custom/PipSubMenu';
 import {MediaCacheDownloadButton} from '../custom/MediaCacheDownloadButton';
 import {MediaCacheMenuButton} from '../custom/MediaCacheMenuButton';
 import {MediaCachingTaskListSubMenu} from '../custom/MediaCachingTaskListSubMenu';
-import {usePlayerFocus} from "../hooks/usePlayerFocus";
 import {THEO_LICENSE} from "../sampleConfig";
 
 const LOG_TAG = "[EXAMPLE - EXTENDED SAMPLE]";
@@ -94,9 +93,6 @@ export const SampleExtendedScreen = () => {
     // configure PiP
     player.pipConfiguration = { startsAutomatically: true };
   };
-
-  // example app specific setup
-  usePlayerFocus(player);
 
   return (
     <SafeAreaView style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}>

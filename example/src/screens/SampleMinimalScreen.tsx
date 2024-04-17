@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { PlayerConfiguration, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
 import { Platform, SafeAreaView, StyleSheet, View } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
-import { usePlayerFocus } from "../hooks/usePlayerFocus";
 import { THEO_LICENSE } from "../sampleConfig";
 
 const LOG_TAG = "[EXAMPLE - MINIMAL SAMPLE]";
@@ -31,9 +30,6 @@ export const SampleMinimalScreen = () => {
     // start playing
     player.play();
   };
-
-  // example app specific setup
-  usePlayerFocus(player);
 
   return (
     <SafeAreaView style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}>

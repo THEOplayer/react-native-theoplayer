@@ -16,7 +16,6 @@ import {
 } from 'react-native-theoplayer';
 
 import {Platform, SafeAreaView, StyleSheet, View} from 'react-native';
-import {usePlayerFocus} from "../hooks/usePlayerFocus";
 import {getStatusBarHeight} from "react-native-status-bar-height";
 import {KeyOSDrmFairplayContentProtectionIntegrationFactory} from "@theoplayer/react-native-drm"
 import {THEO_LICENSE} from "../sampleConfig";
@@ -63,9 +62,6 @@ export const SampleDRMScreen = () => {
       }
     };
   };
-
-  // example app specific setup
-  usePlayerFocus(player);
 
   return (
     <SafeAreaView style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}>

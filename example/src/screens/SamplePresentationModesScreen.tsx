@@ -26,7 +26,6 @@ import {
 import {Platform, SafeAreaView, StyleSheet, View} from 'react-native';
 import {SourceMenuButton, SOURCES} from '../custom/SourceMenuButton';
 import {PiPSubMenu} from '../custom/PipSubMenu';
-import {usePlayerFocus} from "../hooks/usePlayerFocus";
 import {THEO_LICENSE} from "../sampleConfig";
 
 const LOG_TAG = "[EXAMPLE - PRESENTATIONMODES SAMPLE]";
@@ -61,9 +60,6 @@ export const SamplePresentationModesScreen = () => {
     // configure PiP
     player.pipConfiguration = { startsAutomatically: true };
   };
-
-  // example app specific setup
-  usePlayerFocus(player);
 
   return (
     <SafeAreaView style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}>

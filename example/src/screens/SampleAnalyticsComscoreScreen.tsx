@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { PlayerConfiguration, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
 import { Platform, SafeAreaView, StyleSheet, View } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
-import { usePlayerFocus } from "../hooks/usePlayerFocus";
 import {
   ComscoreMediaType,
   ComscoreMetadata,
@@ -62,9 +61,6 @@ export const SampleAnalyticsComscoreScreen = () => {
     // start playing
     player.play();
   };
-
-  // example app specific setup
-  usePlayerFocus(player);
 
   return (
     <SafeAreaView style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}>
