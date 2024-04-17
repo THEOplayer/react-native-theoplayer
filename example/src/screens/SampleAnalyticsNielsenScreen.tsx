@@ -13,7 +13,7 @@ const playerConfig: PlayerConfiguration = {
 };
 
 export const SampleAnalyticsNielsenScreen = () => {
-  const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);
+  const [, setPlayer] = useState<THEOplayer | undefined>(undefined);
   const [, initNielsen] = useNielsen(NIELSEN_APP_ID, 'THEOplayer demo', NIELSEN_OPTIONS);
 
   const onPlayerReady = (player: THEOplayer) => {

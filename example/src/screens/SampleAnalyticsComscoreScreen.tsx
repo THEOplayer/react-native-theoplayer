@@ -31,8 +31,8 @@ const comscoreMetadata: ComscoreMetadata = {
 };
 
 export const SampleAnalyticsComscoreScreen = () => {
-  const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);
-  const [_, initComscore] = useComscore(comscoreMetadata, COMSCORE_CONFIG);
+  const [, setPlayer] = useState<THEOplayer | undefined>(undefined);
+  const [, initComscore] = useComscore(comscoreMetadata, COMSCORE_CONFIG);
 
   const onPlayerReady = (player: THEOplayer) => {
     console.log(LOG_TAG, 'THEOplayer is ready:', player.version);
