@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { PlayerConfiguration, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
 import { Platform, SafeAreaView, StyleSheet, View } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
-import { usePlayerFocus } from "../hooks/usePlayerFocus";
 import { useAdobe } from "@theoplayer/react-native-analytics-adobe";
 import { THEO_LICENSE, ADOBE_ECID, ADOBE_SID, ADOBE_TRACKING_URL, ADOBE_URI} from "../sampleConfig";
 
@@ -44,9 +43,6 @@ export const SampleAnalyticsAdobeScreen = () => {
     // start playing
     player.play();
   };
-
-  // example app specific setup
-  usePlayerFocus(player);
 
   return (
     <SafeAreaView style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}>

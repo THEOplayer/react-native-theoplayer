@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { PlayerConfiguration, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
 import { Platform, SafeAreaView, StyleSheet, View } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
-import { usePlayerFocus } from "../hooks/usePlayerFocus";
 import {useNielsen} from "@theoplayer/react-native-analytics-nielsen";
 import {NIELSEN_APP_ID, NIELSEN_OPTIONS, THEO_LICENSE} from "../sampleConfig";
 
@@ -44,9 +43,6 @@ export const SampleAnalyticsNielsenScreen = () => {
     // start playing
     player.play();
   };
-
-  // example app specific setup
-  usePlayerFocus(player);
 
   return (
     <SafeAreaView style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}>
