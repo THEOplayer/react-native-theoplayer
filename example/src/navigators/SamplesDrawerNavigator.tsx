@@ -17,7 +17,7 @@ const Drawer = createDrawerNavigator();
 export default function SamplesDrawerNavigator() {
   return (
     <Drawer.Navigator
-      initialRouteName="Sample_Extended"
+      initialRouteName="SampleOverview"
       screenOptions={
         {
           headerShown: true,
