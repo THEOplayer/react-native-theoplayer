@@ -13,7 +13,7 @@ const playerConfig: PlayerConfiguration = {
 };
 
 export const SampleAnalyticsAdobeScreen = () => {
-  const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);
+  const [, setPlayer] = useState<THEOplayer | undefined>(undefined);
   const [, initAdobe] = useAdobe(ADOBE_URI, ADOBE_ECID, ADOBE_SID, ADOBE_TRACKING_URL);
 
   const onPlayerReady = (player: THEOplayer) => {

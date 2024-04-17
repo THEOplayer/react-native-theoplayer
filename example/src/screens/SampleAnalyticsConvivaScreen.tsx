@@ -19,8 +19,8 @@ const convivaMetadata: ConvivaMetadata = {
 };
 
 export const SampleAnalyticsConvivaScreen = () => {
-  const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);
-  const [_, initConviva] = useConviva(convivaMetadata, CONVIVA_CONFIG);
+  const [, setPlayer] = useState<THEOplayer | undefined>(undefined);
+  const [, initConviva] = useConviva(convivaMetadata, CONVIVA_CONFIG);
 
   const onPlayerReady = (player: THEOplayer) => {
     console.log(LOG_TAG, 'THEOplayer is ready:', player.version);
