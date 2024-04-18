@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added multiple configuration options to `GoogleImaConfiguration` for both iOS and Android. These map to the corresponding IMASettings from the underlying native Google IMA SDKs.
 - Added `skipForwardInterval` and `skipBackwardInterval` properties to `MediaControlConfiguration` for Android and Web, enabling configurable skip intervals for media sessions.
+- Added ios bridging code to make 'forced' property available from native iOS TextTrack API.
 
 ## [7.0.0] - 24-04-10
 
