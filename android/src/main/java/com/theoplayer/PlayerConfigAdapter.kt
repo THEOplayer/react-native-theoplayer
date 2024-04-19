@@ -27,6 +27,7 @@ private const val PROP_RETRY_MIN_BACKOFF = "minimumBackoff"
 private const val PROP_RETRY_MAX_BACKOFF = "maximumBackoff"
 private const val PROP_CAST_CONFIGURATION = "cast"
 private const val PROP_ADS_CONFIGURATION = "ads"
+private const val PROP_IMA_CONFIGURATION = "ima"
 private const val PROP_UI_CONFIGURATION = "ui"
 private const val PROP_PPID = "ppid"
 private const val PROP_MAX_REDIRECTS = "maxRedirects"
@@ -98,7 +99,7 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
    */
   fun imaSdkSettings(): ImaSdkSettings{
     return ImaSdkFactory.getInstance().createImaSdkSettings().apply {
-      configProps?.getMap(PROP_ADS_CONFIGURATION)?.run {
+      configProps?.getMap(PROP_ADS_CONFIGURATION)?.getMap(PROP_IMA_CONFIGURATION)?.run {
         // Specifies whether VMAP and ad rules ad breaks are automatically played.
         if (hasKey(PROP_AUTOPLAY_AD_BREAKS)) {
           autoPlayAdBreaks = getBoolean(PROP_AUTOPLAY_AD_BREAKS)
