@@ -104,7 +104,7 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
         if (hasKey(PROP_AUTOPLAY_AD_BREAKS)) {
           autoPlayAdBreaks = getBoolean(PROP_AUTOPLAY_AD_BREAKS)
         }
-        // The feature flags and their states.
+        // Feature flags and their states. Used to control experimental features.
         if (hasKey(PROP_FEATURE_FLAGS)) {
           val convertedMap: MutableMap<String, String> = mutableMapOf()
           getMap(PROP_FEATURE_FLAGS)?.toHashMap()?.forEach { (key, value) ->
@@ -124,15 +124,16 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
         playerType = "THEOplayer"
         // The partner provided player version.
         playerVersion = THEOplayerGlobal.getVersion()
-        // The ppid.
+        // The Publisher Provided Identification (PPID) sent with ads request.
         if (hasKey(PROP_PPID)) {
           ppid = getString(PROP_PPID) ?: ""
         }
-        // The SessionID.
+        // The session ID to identify a single user session. This should be a UUID. It
+        // is used exclusively for frequency capping across the user session.
         if (hasKey(PROP_SESSION_ID)) {
           sessionId = getString(PROP_PPID) ?: ""
         }
-        // Whether to enable debug mode.
+        // Toggles debug mode which will output detailed log information to the console.
         if (hasKey(PROP_ENABLE_DEBUG_MODE)) {
           isDebugMode = getBoolean(PROP_ENABLE_DEBUG_MODE)
         }
