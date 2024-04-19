@@ -13,7 +13,7 @@ module.exports = {
         },
       },
     ],
-	'@babel/plugin-proposal-export-namespace-from',
+	'@babel/plugin-transform-export-namespace-from',
 	'react-native-reanimated/plugin',
   ],
 };
