@@ -352,17 +352,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
     static func buildContentProtection(_ contentProtectionData: [String:Any]) -> MultiplatformDRMConfiguration? {
         do {
             let data = try JSONSerialization.data(withJSONObject: contentProtectionData)
-            if let integration = contentProtectionData[SD_PROP_INTEGRATION] as? String {
-                switch integration {
-                case DRM_INTEGRATION_ID_EZDRM: return try JSONDecoder().decode(EzdrmDRMConfiguration.self, from: data)
-                case DRM_INTEGRATION_ID_KEYOS: return try JSONDecoder().decode(KeyOSDRMConfiguration.self, from: data)
-                case DRM_INTEGRATION_ID_VERIMATRIX: return try JSONDecoder().decode(VerimatrixDRMConfiguration.self, from: data)
-                default: return try JSONDecoder().decode(MultiplatformDRMConfiguration.self, from: data)
-                }
-            } else {
-                PrintUtils.printLog(logText: "[NATIVE] integration type not specified... trying default drm integration")
-                return try JSONDecoder().decode(MultiplatformDRMConfiguration.self, from: data)
-            }
+            return try JSONDecoder().decode(MultiplatformDRMConfiguration.self, from: data)
         } catch {
             PrintUtils.printLog(logText: "[NATIVE] unsupported contentProtection data format")
         }
