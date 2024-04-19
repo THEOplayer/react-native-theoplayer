@@ -51,7 +51,7 @@ extension THEOplayerRCTView {
         }
     }
 
-#if (GOOGLE_IMA || GOOGLE_DAI) || canImport(THEOplayerGoogleIMAIntegration)
+#if canImport(THEOplayerGoogleIMAIntegration)
     func playerAdsConfiguration() -> AdsConfiguration? {
         return AdsConfiguration(showCountdown: self.adsConfig.adSUIEnabled, preload: self.adPreloadType())
     }
@@ -78,7 +78,7 @@ extension THEOplayerRCTView {
     
     func parseAdsConfig(configDict: NSDictionary) {}
     
-#if (GOOGLE_IMA || GOOGLE_DAI) || canImport(THEOplayerGoogleIMAIntegration)
+#if canImport(THEOplayerGoogleIMAIntegration)
     func playerAdsConfiguration() -> AdsConfiguration? { return AdsConfiguration() }
 #else
     func playerAdsConfiguration() -> AdsConfiguration? { return nil }
