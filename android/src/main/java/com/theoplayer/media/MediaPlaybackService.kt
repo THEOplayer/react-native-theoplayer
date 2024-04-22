@@ -173,7 +173,7 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
       debug = BuildConfig.LOG_MEDIASESSION_EVENTS
 
       // Set mediaSession active
-      setActive(true)
+      setActive(BuildConfig.EXTENSION_MEDIASESSION)
     }
 
     // Set the MediaBrowserServiceCompat's media session.

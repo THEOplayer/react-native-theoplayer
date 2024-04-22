@@ -28,6 +28,7 @@ import com.theoplayer.audio.AudioBecomingNoisyManager
 import com.theoplayer.audio.AudioFocusManager
 import com.theoplayer.audio.BackgroundAudioConfig
 import com.theoplayer.media.MediaPlaybackService
+import com.theoplayer.media.MediaSessionConfig
 import java.util.concurrent.atomic.AtomicBoolean
 
 private const val TAG = "ReactTHEOplayerContext"
@@ -42,7 +43,8 @@ private const val ALLOWED_PLAYBACK_ACTIONS = (
     PlaybackStateCompat.ACTION_SET_PLAYBACK_SPEED)
 
 class ReactTHEOplayerContext private constructor(
-  private val reactContext: ThemedReactContext
+  private val reactContext: ThemedReactContext,
+  private val configAdapter: PlayerConfigAdapter
 ) {
   private val mainHandler = Handler(Looper.getMainLooper())
   private var isBound = AtomicBoolean()
@@ -57,6 +59,12 @@ class ReactTHEOplayerContext private constructor(
   var backgroundAudioConfig: BackgroundAudioConfig = BackgroundAudioConfig(enabled = false)
     set(value) {
       applyBackgroundPlaybackConfig(value, field)
+      field = value
+    }
+
+  var mediaSessionConfig: MediaSessionConfig = configAdapter.mediaSessionConfig()
+    set(value) {
+      applyMediaSessionConfig(mediaSessionConnector, value)
       field = value
     }
 
@@ -85,8 +93,8 @@ class ReactTHEOplayerContext private constructor(
       reactContext: ThemedReactContext,
       configAdapter: PlayerConfigAdapter
     ): ReactTHEOplayerContext {
-      return ReactTHEOplayerContext(reactContext).apply {
-        initializePlayerView(configAdapter)
+      return ReactTHEOplayerContext(reactContext, configAdapter).apply {
+        initializePlayerView()
       }
     }
   }
@@ -96,9 +104,9 @@ class ReactTHEOplayerContext private constructor(
       binder = service as MediaPlaybackService.MediaPlaybackBinder
 
       // Get media session connector from service
-      mediaSessionConnector = binder?.mediaSessionConnector
-      mediaSessionConnector?.player = player
-      mediaSessionConnector?.setMediaSessionMetadata(player.source)
+      mediaSessionConnector = binder?.mediaSessionConnector?.also {
+        applyMediaSessionConfig(it, mediaSessionConfig)
+      }
 
       // Pass player context
       binder?.setPlayerContext(this@ReactTHEOplayerContext)
@@ -184,7 +192,7 @@ class ReactTHEOplayerContext private constructor(
     binder = null
   }
 
-  private fun initializePlayerView(configAdapter: PlayerConfigAdapter) {
+  private fun initializePlayerView() {
     playerView = object : THEOplayerView(reactContext.currentActivity!!, configAdapter.playerConfig()) {
       private fun measureAndLayout() {
         measure(
@@ -205,7 +213,7 @@ class ReactTHEOplayerContext private constructor(
     // By default, the screen should remain on.
     playerView.keepScreenOn = true
 
-    addIntegrations(configAdapter)
+    addIntegrations()
     addListeners()
 
     audioFocusManager = AudioFocusManager(reactContext, player)
@@ -229,17 +237,30 @@ class ReactTHEOplayerContext private constructor(
     mediaSession.setMediaButtonReceiver(null)
 
     // Create a MediaSessionConnector and attach the THEOplayer instance.
-    mediaSessionConnector = MediaSessionConnector(mediaSession).apply {
+    mediaSessionConnector = MediaSessionConnector(mediaSession).also {
+      applyMediaSessionConfig(it, mediaSessionConfig)
+    }
+  }
+
+  private fun applyMediaSessionConfig(connector: MediaSessionConnector?, config: MediaSessionConfig) {
+    connector?.apply {
       debug = BuildConfig.LOG_MEDIASESSION_EVENTS
+
       player = this@ReactTHEOplayerContext.player
 
       // Set mediaSession active and ready to receive media button events, but not if the player
       // is backgrounded.
-      setActive(!isHostPaused)
+      setActive(!isHostPaused && BuildConfig.EXTENSION_MEDIASESSION && config.mediaSessionEnabled)
+
+      skipForwardInterval = config.skipForwardInterval
+      skipBackwardsInterval = config.skipBackwardInterval
+
+      // Pass metadata from source description
+      setMediaSessionMetadata(player?.source)
     }
   }
 
-  private fun addIntegrations(configAdapter: PlayerConfigAdapter) {
+  private fun addIntegrations() {
     try {
       if (BuildConfig.EXTENSION_GOOGLE_IMA) {
         imaIntegration = GoogleImaIntegrationFactory.createGoogleImaIntegration(
@@ -357,7 +378,7 @@ class ReactTHEOplayerContext private constructor(
    */
   fun onHostResume() {
     isHostPaused = false
-    mediaSessionConnector?.setActive(true)
+    mediaSessionConnector?.setActive(BuildConfig.EXTENSION_MEDIASESSION)
     playerView.onResume()
     if (!player.isPaused) {
       audioFocusManager?.retrieveAudioFocus()

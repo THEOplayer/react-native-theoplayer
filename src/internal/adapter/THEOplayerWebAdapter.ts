@@ -58,7 +58,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
 
     // Optionally create a media session connector
     if (config?.mediaControl?.mediaSessionEnabled !== false) {
-      this._mediaSession = new WebMediaSession(this, player);
+      this._mediaSession = new WebMediaSession(this, player, config?.mediaControl);
     }
   }
 

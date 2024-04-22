@@ -9,11 +9,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-- Fixed a build issue on tvOS example app due to the deprecated 'prepare' method.
+- Fixed a build issue on tvOS example app due to the deprecated `prepare` method.
 
 ### Added
 
 - Added multiple configuration options to `GoogleImaConfiguration` for both iOS and Android. These map to the corresponding IMASettings from the underlying native Google IMA SDKs.
+- Added `skipForwardInterval` and `skipBackwardInterval` properties to `MediaControlConfiguration` for Android and Web, enabling configurable skip intervals for media sessions.
 
 ## [7.0.0] - 24-04-10
 

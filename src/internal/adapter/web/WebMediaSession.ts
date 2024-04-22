@@ -1,13 +1,15 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import type { ChromelessPlayer } from 'theoplayer';
 import type { THEOplayerWebAdapter } from '../THEOplayerWebAdapter';
+import { MediaControlConfiguration } from 'react-native-theoplayer';
 
-interface WebMediaSessionConfig {
-  skipTime: number;
-}
+const DEFAULT_SKIP_FORWARD_INTERVAL = 5;
+const DEFAULT_SKIP_BACKWARD_INTERVAL = 5;
 
-export const defaultWebMediaSessionConfig: WebMediaSessionConfig = {
-  skipTime: 15,
+export const defaultMediaControlConfiguration: MediaControlConfiguration = {
+  mediaSessionEnabled: true,
+  skipForwardInterval: DEFAULT_SKIP_FORWARD_INTERVAL,
+  skipBackwardInterval: DEFAULT_SKIP_BACKWARD_INTERVAL,
 };
 
 const NoOp = () => {};
@@ -28,11 +30,11 @@ const mediaSession = (function () {
  * @link https://w3c.github.io/mediasession
  */
 export class WebMediaSession {
-  private readonly _config: WebMediaSessionConfig;
+  private readonly _config: MediaControlConfiguration;
   private readonly _player: ChromelessPlayer;
   private readonly _webAdapter: THEOplayerWebAdapter;
 
-  constructor(adapter: THEOplayerWebAdapter, player: ChromelessPlayer, config: WebMediaSessionConfig = defaultWebMediaSessionConfig) {
+  constructor(adapter: THEOplayerWebAdapter, player: ChromelessPlayer, config: MediaControlConfiguration = defaultMediaControlConfiguration) {
     this._player = player;
     this._webAdapter = adapter;
     this._config = config;
@@ -48,11 +50,11 @@ export class WebMediaSession {
   updateActionHandlers() {
     if (this.isTrickplayEnabled()) {
       mediaSession.setActionHandler('seekbackward', (event) => {
-        const skipTime = event.seekOffset || this._config.skipTime;
+        const skipTime = event.seekOffset || this._config.skipBackwardInterval || DEFAULT_SKIP_BACKWARD_INTERVAL;
         this._player.currentTime = Math.max(this._player.currentTime - skipTime, 0);
       });
       mediaSession.setActionHandler('seekforward', (event) => {
-        const skipTime = event.seekOffset || this._config.skipTime;
+        const skipTime = event.seekOffset || this._config.skipForwardInterval || DEFAULT_SKIP_FORWARD_INTERVAL;
         this._player.currentTime = Math.min(this._player.currentTime + skipTime, this._player.duration);
       });
     } else {
