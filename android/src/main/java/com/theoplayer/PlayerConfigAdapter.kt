@@ -6,6 +6,7 @@ import com.google.ads.interactivemedia.v3.api.AdsRenderingSettings
 import com.google.ads.interactivemedia.v3.api.ImaSdkFactory
 import com.google.ads.interactivemedia.v3.api.ImaSdkSettings
 import com.theoplayer.android.api.THEOplayerConfig
+import com.theoplayer.android.api.THEOplayerGlobal
 import com.theoplayer.android.api.cast.CastStrategy
 import com.theoplayer.android.api.cast.CastConfiguration
 import com.theoplayer.android.api.pip.PipConfiguration
@@ -28,9 +29,15 @@ private const val PROP_RETRY_MIN_BACKOFF = "minimumBackoff"
 private const val PROP_RETRY_MAX_BACKOFF = "maximumBackoff"
 private const val PROP_CAST_CONFIGURATION = "cast"
 private const val PROP_ADS_CONFIGURATION = "ads"
+private const val PROP_IMA_CONFIGURATION = "ima"
 private const val PROP_UI_CONFIGURATION = "ui"
 private const val PROP_MEDIA_CONTROL = "mediaControl"
-
+private const val PROP_PPID = "ppid"
+private const val PROP_MAX_REDIRECTS = "maxRedirects"
+private const val PROP_FEATURE_FLAGS = "featureFlags"
+private const val PROP_AUTOPLAY_AD_BREAKS = "autoPlayAdBreaks"
+private const val PROP_SESSION_ID = "sessionID"
+private const val PROP_ENABLE_DEBUG_MODE = "enableDebugMode"
 
 class PlayerConfigAdapter(private val configProps: ReadableMap?) {
 
@@ -95,8 +102,44 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
    */
   fun imaSdkSettings(): ImaSdkSettings{
     return ImaSdkFactory.getInstance().createImaSdkSettings().apply {
-      configProps?.getMap(PROP_ADS_CONFIGURATION)?.run {
-        // TODO: bridge all settings
+      configProps?.getMap(PROP_ADS_CONFIGURATION)?.getMap(PROP_IMA_CONFIGURATION)?.run {
+        // Specifies whether VMAP and ad rules ad breaks are automatically played.
+        if (hasKey(PROP_AUTOPLAY_AD_BREAKS)) {
+          autoPlayAdBreaks = getBoolean(PROP_AUTOPLAY_AD_BREAKS)
+        }
+        // Feature flags and their states. Used to control experimental features.
+        if (hasKey(PROP_FEATURE_FLAGS)) {
+          val convertedMap: MutableMap<String, String> = mutableMapOf()
+          getMap(PROP_FEATURE_FLAGS)?.toHashMap()?.forEach { (key, value) ->
+            convertedMap[key] = value as String
+          }
+          featureFlags = convertedMap
+        }
+        // The current ISO 639-1 language code, get it from the UI config.
+        uiConfig().language?.let {
+          language = it
+        }
+        // The maximum number of VAST redirects.
+        if (hasKey(PROP_MAX_REDIRECTS)) {
+          maxRedirects = getInt(PROP_MAX_REDIRECTS)
+        }
+        // The partner provided player type.
+        playerType = "THEOplayer"
+        // The partner provided player version.
+        playerVersion = THEOplayerGlobal.getVersion()
+        // The Publisher Provided Identification (PPID) sent with ads request.
+        if (hasKey(PROP_PPID)) {
+          ppid = getString(PROP_PPID) ?: ""
+        }
+        // The session ID to identify a single user session. This should be a UUID. It
+        // is used exclusively for frequency capping across the user session.
+        if (hasKey(PROP_SESSION_ID)) {
+          sessionId = getString(PROP_PPID) ?: ""
+        }
+        // Toggles debug mode which will output detailed log information to the console.
+        if (hasKey(PROP_ENABLE_DEBUG_MODE)) {
+          isDebugMode = getBoolean(PROP_ENABLE_DEBUG_MODE)
+        }
       }
     }
   }

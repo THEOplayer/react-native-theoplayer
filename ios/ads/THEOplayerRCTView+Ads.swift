@@ -5,6 +5,7 @@ import THEOplayerSDK
 
 #if canImport(THEOplayerGoogleIMAIntegration)
 import THEOplayerGoogleIMAIntegration
+import GoogleInteractiveMediaAds
 #endif
 
 extension THEOplayerRCTView {
@@ -21,7 +22,38 @@ extension THEOplayerRCTView {
             return
         }
 #if canImport(THEOplayerGoogleIMAIntegration)
-        let imaIntegration = GoogleIMAIntegrationFactory.createIntegration(on: player)
+        // prepare imaSettings
+        let imaSettings = IMASettings()
+        imaSettings.language = self.uiConfig.language
+        imaSettings.maxRedirects = self.adsConfig.adsImaConfig.maxRedirects
+        imaSettings.enableDebugMode = self.adsConfig.adsImaConfig.enableDebugMode
+        imaSettings.playerType = "THEOplayer"
+        imaSettings.playerVersion = THEOplayer.version
+        imaSettings.enableBackgroundPlayback = true
+        if let ppid = self.adsConfig.adsImaConfig.ppid {
+            imaSettings.ppid = ppid
+        }
+        if let featureFlags = self.adsConfig.adsImaConfig.featureFlags {
+            imaSettings.featureFlags = featureFlags
+        }
+        if let autoPlayAdBreaks = self.adsConfig.adsImaConfig.autoPlayAdBreaks {
+            imaSettings.autoPlayAdBreaks = autoPlayAdBreaks
+        }
+        if let sessionID = self.adsConfig.adsImaConfig.sessionID {
+            imaSettings.sessionID = sessionID
+        }
+        
+        // setup ima render settings
+        let imaRenderSettings = IMAAdsRenderingSettings()
+        let disableUi = !self.adsConfig.adSUIEnabled
+        if disableUi {
+            imaRenderSettings.disableUi = disableUi
+            imaRenderSettings.uiElements = []
+        }
+        
+        // setup integration
+        let imaIntegration = GoogleIMAIntegrationFactory.createIntegration(on: player, with: imaSettings)
+        imaIntegration.renderingSettings = imaRenderSettings
         player.addIntegration(imaIntegration)
 #endif
     }
