@@ -13,13 +13,26 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
     // Create player inside container.
     if (container.current) {
       const chromeless = config?.chromeless === true || config?.chromeless === undefined;
-      const updatedConfig = { ...config, allowNativeFullscreen: true };
+      const ads = {
+        ...config?.ads,
+        googleIma: {
+          useNativeIma: true,
+          language: config?.ui?.language ?? 'en',
+        },
+      };
+      const updatedConfig = {
+        ...config,
+        allowNativeFullscreen: true,
+        ads,
+      };
       if (chromeless) {
         player.current = new ChromelessPlayer(container.current, updatedConfig);
       } else {
         player.current = new Player(container.current, {
           ...updatedConfig,
+          ads,
           ui: {
+            ...config?.ui,
             fluid: true,
           },
         } as PlayerConfiguration);
