@@ -48,7 +48,7 @@ Pod::Spec.new do |s|
   
   if theofeatures.include?("SIDELOADED_TEXTTRACKS") 
 	puts "Adding THEOplayer-Connector-SideloadedSubtitle"
-    s.dependency "THEOplayer-Connector-SideloadedSubtitle", "~> 7.2"
+    s.dependency "THEOplayer-Connector-SideloadedSubtitle", "~> 7.1"
   end
   
 end
