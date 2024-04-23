@@ -116,10 +116,7 @@ More information on Android PiP support can be found on the [Android developer p
 
 ## iOS
 
-No extra configuration is necessary to support picture-in-picture on iOS.
-
-In contrast to Android, only the video view will move to the floating PiP window.
-The react-native UI can remain visible and provide playback control.
+No additional configuration is required to support picture-in-picture on iOS.
 
 ## Web
 

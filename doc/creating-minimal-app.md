@@ -177,20 +177,6 @@ Run pod install in your app's ios folder
 pod install
 ```
 
-## When working with a 4.x tvOS THEOplayer SDK
-When using a 4.x SDK, you need an additional change for tvOS, since the tvOS SDK needs to be prepared before it can be used in a RN context. First, include TheoplayerSDK into your project's AppDelegate:
-```swift
-#if TARGET_OS_TV
-#import <THEOplayerSDK/THEOplayerSDK-Swift.h>
-#endif
-```
-Next, prepare the THEOplayer right after the creation of the rootViewController in your AppDelegate's didFinishLaunchingWithOptions:
-```swift
-#if TARGET_OS_TV
-  [THEOplayer prepareWithFirstViewController: [UIViewController new]];
-#endif
-```
-
 ## Getting started on Web
 
 Make sure to first complete the [initial project setup](#setting-up-a-new-project), which is shared for all platforms.

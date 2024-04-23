@@ -48,9 +48,10 @@ export interface AdsConfiguration {
   /**
    * The Google IMA configuration.
    *
-   * @internal
+   * @remarks
+   * <br/> - This is only available to define IMA Settings on iOS and/or Android.
    */
-  googleImaConfiguration?: GoogleImaConfiguration;
+  ima?: GoogleImaConfiguration;
 }
 
 /**

@@ -15,7 +15,7 @@ extension THEOplayerRCTSourceDescriptionBuilder {
     static func buildAdDescriptions(_ sourceData: NSDictionary) -> [AdDescription]? {
         var adsDescriptions: [AdDescription]?
 
-#if GOOGLE_IMA || canImport(THEOplayerGoogleIMAIntegration)
+#if canImport(THEOplayerGoogleIMAIntegration)
         if let ads = sourceData[SD_PROP_ADS] {
             adsDescriptions = []
             // case: array of ads objects
@@ -53,7 +53,7 @@ extension THEOplayerRCTSourceDescriptionBuilder {
      - returns: a THEOplayer GoogleImaAdDescription
      */
     static func buildSingleAdDescription(_ adsData: [String:Any]) -> AdDescription? {
-#if GOOGLE_IMA || canImport(THEOplayerGoogleIMAIntegration)
+#if canImport(THEOplayerGoogleIMAIntegration)
         if let integration = adsData[SD_PROP_INTEGRATION] as? String,
            integration == AdIntegration.google_ima._rawValue {
             // timeOffset can be Int or String: 10, "01:32:54.78", "1234.56", "start", "end", "10%", ...
@@ -77,7 +77,7 @@ extension THEOplayerRCTSourceDescriptionBuilder {
     }
 
     static func buildDAITypedSource(_ typedSourceData: [String:Any], contentProtection: MultiplatformDRMConfiguration?) -> TypedSource? {
-#if GOOGLE_DAI || canImport(THEOplayerGoogleIMAIntegration)
+#if canImport(THEOplayerGoogleIMAIntegration)
         // check for alternative Google DAI SSAI
         if let ssaiData = typedSourceData[SD_PROP_SSAI] as? [String:Any] {
             if let integration = ssaiData[SD_PROP_INTEGRATION] as? String,

@@ -193,7 +193,7 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
             self?.updateRemoteCommands()
         }
         
-#if (GOOGLE_IMA || GOOGLE_DAI) || canImport(THEOplayerGoogleIMAIntegration)
+#if canImport(THEOplayerGoogleIMAIntegration)
         
         // ADBREAK_BEGIN
         self.adBreakBeginListener = player.ads.addEventListener(type: AdsEventTypes.AD_BREAK_BEGIN) { [weak self] event in
@@ -226,7 +226,7 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
             player.removeEventListener(type: PlayerEventTypes.SOURCE_CHANGE, listener: sourceChangeListener)
         }
         
-#if (GOOGLE_IMA || GOOGLE_DAI) || canImport(THEOplayerGoogleIMAIntegration)
+#if canImport(THEOplayerGoogleIMAIntegration)
         
         // ADBREAK_BEGIN
         if let adBreakBeginListener = self.adBreakBeginListener {

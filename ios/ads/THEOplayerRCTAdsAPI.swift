@@ -34,7 +34,7 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
         return false
     }
 
-#if (GOOGLE_IMA || GOOGLE_DAI) || canImport(THEOplayerGoogleIMAIntegration)
+#if canImport(THEOplayerGoogleIMAIntegration)
     @objc(skip:)
     func skip(_ node: NSNumber) -> Void {
 

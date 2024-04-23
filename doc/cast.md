@@ -70,7 +70,7 @@ public void onCreate(Bundle savedInstanceState) {
 
 #### Add feature flag to config
 
-To enable Chromecast on react-native-theoplayer 2.x versions and higher, you can add the "CHROMECAST" [feature flag](./creating-minimal-app.md#getting-started-on-ios-and-tvos) to react-native-theoplayer.json (or theoplayer-config.json)
+To enable Chromecast you need to add the "CHROMECAST" [feature flag](./creating-minimal-app.md#getting-started-on-ios-and-tvos) to react-native-theoplayer.json (or theoplayer-config.json)
 
 #### iOS Configuration
 

@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [7.1.0] - 24-04-23
+
+### Fixed
+
+- Fixed a build issue on tvOS example app due to the deprecated `prepare` method.
+
+### Added
+
+- Added multiple configuration options to `GoogleImaConfiguration` for both iOS and Android. These map to the corresponding IMASettings from the underlying native Google IMA SDKs.
+- Added `skipForwardInterval` and `skipBackwardInterval` properties to `MediaControlConfiguration` for Android and Web, enabling configurable skip intervals for media sessions.
+- Added ios bridging code to make 'forced' property available from native iOS TextTrack API.
+
+### Removed
+
+- Removed support for the web-based native iOS SDK on the RN iOS Bridge.
+
 ## [7.0.0] - 24-04-10
 
 ### Fixed

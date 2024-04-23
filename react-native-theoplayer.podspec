@@ -31,31 +31,24 @@ Pod::Spec.new do |s|
   # ReactNative Dependency
   s.dependency "React-Core"
   
-  # THEOplayer Dependencies
-  if theofeatures.include?("WEB") 
-  	puts "Using THEOplayer-basic SDK, marked features: #{theofeatures.join(' ')}"
-    s.dependency "THEOplayerSDK-basic"
-    s.pod_target_xcconfig = {
-      'SWIFT_ACTIVE_COMPILATION_CONDITIONS[config=Release]' => theofeatures.join(' '),
-      'SWIFT_ACTIVE_COMPILATION_CONDITIONS[config=Debug]' => theofeatures.join(' ')
-    }
-  else 
-  	puts "Using THEOplayer-core SDK"
-    s.dependency "THEOplayerSDK-core", "~> 7.0"
-    if theofeatures.include?("GOOGLE_IMA") 
-	  puts "Adding THEOplayer-Integration-GoogleIMA"
-      s.dependency "THEOplayer-Integration-GoogleIMA/Base", "~> 7.0"
-	  s.dependency "THEOplayer-Integration-GoogleIMA/Dependencies", "~> 7.0"
-    end
-    if theofeatures.include?("CHROMECAST")
-	  puts "Adding THEOplayer-Integration-GoogleCast"
-      s.ios.dependency "THEOplayer-Integration-GoogleCast/Base", "~> 7.0"
-	  s.ios.dependency "google-cast-sdk-dynamic-xcframework", "~> 4.8"
-    end
-    if theofeatures.include?("SIDELOADED_TEXTTRACKS") 
-	  puts "Adding THEOplayer-Connector-SideloadedSubtitle"
-      s.dependency "THEOplayer-Connector-SideloadedSubtitle", "~> 7.0"
-    end
+  # THEOplayer core Dependency
+  s.dependency "THEOplayerSDK-core", "~> 7.2"
+  
+  if theofeatures.include?("GOOGLE_IMA") 
+	puts "Adding THEOplayer-Integration-GoogleIMA"
+    s.dependency "THEOplayer-Integration-GoogleIMA/Base", "~> 7.2"
+	s.dependency "THEOplayer-Integration-GoogleIMA/Dependencies", "~> 7.2"
+  end
+  
+  if theofeatures.include?("CHROMECAST")
+	puts "Adding THEOplayer-Integration-GoogleCast"
+    s.ios.dependency "THEOplayer-Integration-GoogleCast/Base", "~> 7.2"
+	s.ios.dependency "google-cast-sdk-dynamic-xcframework", "~> 4.8"
+  end
+  
+  if theofeatures.include?("SIDELOADED_TEXTTRACKS") 
+	puts "Adding THEOplayer-Connector-SideloadedSubtitle"
+    s.dependency "THEOplayer-Connector-SideloadedSubtitle", "~> 7.1"
   end
   
 end
