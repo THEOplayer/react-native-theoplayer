@@ -26,6 +26,7 @@ let PROP_CUES: String = "cues"
 let PROP_CUE_CONTENT: String = "content"
 let PROP_CUE_CUSTOM_ATTRIBUTES: String = "customAttributes"
 let PROP_SRC: String = "src"
+let PROP_FORCED: String = "forced"
 let PROP_START_DATE: String = "startDate"
 let PROP_END_DATE: String = "endDate"
 let PROP_ATTRIBUTE_CLASS: String = "class"
@@ -73,6 +74,7 @@ class THEOplayerRCTTrackMetadataAggregator {
         entry[PROP_LABEL] = textTrack.label
         entry[PROP_TYPE] = textTrack.type
         entry[PROP_SRC] = textTrack.src
+        entry[PROP_FORCED] = textTrack.forced
         // process cues when texttrack contains them
         if !textTrack.cues.isEmpty {
             var cueList: [[String:Any]] = []
