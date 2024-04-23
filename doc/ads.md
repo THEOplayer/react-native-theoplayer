@@ -40,15 +40,7 @@ THEOplayer_extensionGoogleIMA = true
 <details>
 <summary>iOS/tvOS</summary>
 
-#### 1.x versions: Custom THEOplayer build
-
-To enable GoogleIMA on react-native-theoplayer 1.x versions, a dependency to the THEOplayer SDK
-that includes the Google IMA library needs to be added. See [Custom iOS framework](./custom-ios-framework.md) for more
-details.
-
-#### 2.x versions: Add feature flag to config
-
-To enable Google IMA on react-native-theoplayer 2.x versions, you can add the "GOOGLE_IMA" [feature flag](./creating-minimal-app.md#getting-started-on-ios-and-tvos) to react-native-theoplayer.json (or theoplayer-config.json)
+To enable Google IMA you can add the "GOOGLE_IMA" [feature flag](./creating-minimal-app.md#getting-started-on-ios-and-tvos) to react-native-theoplayer.json (or theoplayer-config.json)
 
 </details>
 
@@ -117,7 +109,7 @@ Note that DAI support for Android is available as of SDK version 4.3.0.
 <details>
 <summary>iOS</summary>
 
-To enable Google DAI for iOS, a dependency to the THEOplayer SDK that includes the DAI library needs to be added. See [Custom iOS framework](./custom-ios-framework.md) for more details. For tvOS this feature is currently not available yet.
+Google DAI is part of the Google IMA SDK. To enable it, you add the "GOOGLE_IMA" [feature flag](./creating-minimal-app.md#getting-started-on-ios-and-tvos) to react-native-theoplayer.json (or theoplayer-config.json)
 
 </details>
 
