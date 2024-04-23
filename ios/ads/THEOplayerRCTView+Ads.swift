@@ -33,9 +33,11 @@ extension THEOplayerRCTView {
         if let ppid = self.adsConfig.adsImaConfig.ppid {
             imaSettings.ppid = ppid
         }
+        #if os(iOS)
         if let featureFlags = self.adsConfig.adsImaConfig.featureFlags {
             imaSettings.featureFlags = featureFlags
         }
+        #endif
         if let autoPlayAdBreaks = self.adsConfig.adsImaConfig.autoPlayAdBreaks {
             imaSettings.autoPlayAdBreaks = autoPlayAdBreaks
         }
