@@ -108,4 +108,33 @@ export enum AdEventType {
    * Dispatched when the ad has stalled playback to buffer.
    */
   AD_BUFFERING = 'adbuffering',
+
+  /**
+   * Dispatched when an ad is clicked.
+   */
+  AD_CLICKED = 'adclicked',
+
+  /**
+   * Dispatched when a non-clickthrough portion of an ad is tapped.
+   */
+  AD_TAPPED = 'adtapped',
+
+  /**
+   * Dispatched when the user has tapped an ad icon, for example the 'Why this ad' (WTA) icon.
+   *
+   * - On iOS and Android mobile apps, the SDK will navigate to the landing page.
+   * - On tvOS and Android TV, the SDK will present a modal dialog containing the VAST icon fallback image.
+   *
+   * @see <a href="https://developers.google.com/ad-manager/dynamic-ad-insertion/sdk/tvos/reference/Enums/IMAAdEventType#kimaadevent_icon_tapped">iOS IMA reference</a>
+   * @see <a href="https://developers.google.com/interactive-media-ads/docs/sdks/android/client-side/api/reference/com/google/ads/interactivemedia/v3/api/AdEvent.AdEventType#public-static-final-adevent.adeventtype-icon_tapped">Android IMA reference</a>
+   */
+  AD_ICON_TAPPED = 'adicontapped',
+
+  /**
+   * Dispatched when the user has closed the icon fallback image dialog.
+   *
+   * @see <a href="https://developers.google.com/ad-manager/dynamic-ad-insertion/sdk/tvos/reference/Enums/IMAAdEventType#kimaadevent_icon_fallback_image_closed">iOS IMA reference</a>
+   * @see <a href="https://developers.google.com/interactive-media-ads/docs/sdks/android/client-side/api/reference/com/google/ads/interactivemedia/v3/api/AdEvent.AdEventType#public-static-final-adevent.adeventtype-icon_fallback_image_closed">Android IMA reference</a>
+   */
+  AD_ICON_FALLBACK_IMAGE_CLOSED = 'adiconfallbackimageclosed'
 }

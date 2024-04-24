@@ -33,7 +33,11 @@ private val ALL_AD_EVENTS = arrayOf(
   GoogleImaAdEventType.AD_BUFFERING,
   GoogleImaAdEventType.AD_BREAK_FETCH_ERROR,
   GoogleImaAdEventType.CONTENT_PAUSE_REQUESTED,
-  GoogleImaAdEventType.CONTENT_RESUME_REQUESTED
+  GoogleImaAdEventType.CONTENT_RESUME_REQUESTED,
+  GoogleImaAdEventType.CLICKED,
+  GoogleImaAdEventType.TAPPED,
+  GoogleImaAdEventType.ICON_TAPPED,
+  GoogleImaAdEventType.ICON_FALLBACK_IMAGE_CLOSED,
 )
 
 class AdEventAdapter(private val adsApi: AdsApiWrapper, eventEmitter: AdEventEmitter) {
@@ -110,6 +114,10 @@ class AdEventAdapter(private val adsApi: AdsApiWrapper, eventEmitter: AdEventEmi
         "adbuffering" -> GoogleImaAdEventType.AD_BUFFERING
         "adbreakbegin" -> GoogleImaAdEventType.AD_BREAK_STARTED
         "adbreakend" -> GoogleImaAdEventType.AD_BREAK_ENDED
+        "adclicked" -> GoogleImaAdEventType.CLICKED
+        "adtapped" -> GoogleImaAdEventType.TAPPED
+        "adicontapped" -> GoogleImaAdEventType.ICON_TAPPED
+        "adiconfallbackimageclosed" -> GoogleImaAdEventType.ICON_FALLBACK_IMAGE_CLOSED
         else -> null /*unknown*/
       }
     }
@@ -130,6 +138,10 @@ class AdEventAdapter(private val adsApi: AdsApiWrapper, eventEmitter: AdEventEmi
         GoogleImaAdEventType.AD_BREAK_STARTED -> "adbreakbegin"
         GoogleImaAdEventType.AD_BREAK_ENDED -> "adbreakend"
         GoogleImaAdEventType.AD_BREAK_FETCH_ERROR -> "aderror"
+        GoogleImaAdEventType.CLICKED -> "adclicked"
+        GoogleImaAdEventType.TAPPED -> "adtapped"
+        GoogleImaAdEventType.ICON_TAPPED -> "adicontapped"
+        GoogleImaAdEventType.ICON_FALLBACK_IMAGE_CLOSED -> "adiconfallbackimageclosed"
         else -> eventType.getName().lowercase(Locale.getDefault())
       }
     }
