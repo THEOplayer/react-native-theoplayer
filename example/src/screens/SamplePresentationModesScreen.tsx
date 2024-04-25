@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useState} from 'react';
+import { useState } from 'react';
 import { Text } from 'react-native';
 import {
   CenteredControlBar,
@@ -18,17 +18,19 @@ import {
 } from '@theoplayer/react-native-ui';
 import {
   PlayerConfiguration,
-  PlayerEventType, PresentationMode, PresentationModeChangeEvent,
+  PlayerEventType,
+  PresentationMode,
+  PresentationModeChangeEvent,
   THEOplayer,
-  THEOplayerView
+  THEOplayerView,
 } from 'react-native-theoplayer';
 
-import {Platform, SafeAreaView, StyleSheet, View} from 'react-native';
-import {SourceMenuButton, SOURCES} from '../custom/SourceMenuButton';
-import {PiPSubMenu} from '../custom/PipSubMenu';
-import {THEO_LICENSE} from "../sampleConfig";
+import { Platform, SafeAreaView, StyleSheet, View } from 'react-native';
+import { SourceMenuButton, SOURCES } from '../custom/SourceMenuButton';
+import { PiPSubMenu } from '../custom/PipSubMenu';
+import { THEO_LICENSE } from '../sampleConfig';
 
-const LOG_TAG = "[EXAMPLE - PRESENTATIONMODES SAMPLE]";
+const LOG_TAG = '[EXAMPLE - PRESENTATIONMODES SAMPLE]';
 
 const playerConfig: PlayerConfiguration = {
   license: THEO_LICENSE,
@@ -37,8 +39,7 @@ const playerConfig: PlayerConfiguration = {
 
 export const SamplePresentationModesScreen = () => {
   const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);
-  const [activePresentationMode, setActivePresentationMode] = useState<PresentationMode>(PresentationMode.inline
-  );
+  const [activePresentationMode, setActivePresentationMode] = useState<PresentationMode>(PresentationMode.inline);
   const onPlayerReady = (player: THEOplayer) => {
     console.log(LOG_TAG, 'THEOplayer is ready:', player.version);
 
@@ -46,7 +47,7 @@ export const SamplePresentationModesScreen = () => {
     setPlayer(player);
 
     // setup debug logs
-    player.addEventListener<PlayerEventType>(PlayerEventType.PRESENTATIONMODE_CHANGE, (e: PresentationModeChangeEvent) => {
+    player.addEventListener(PlayerEventType.PRESENTATIONMODE_CHANGE, (e: PresentationModeChangeEvent) => {
       console.log(LOG_TAG, `Player transitioned from ${e.previousPresentationMode} to ${e.presentationMode}.`);
       setActivePresentationMode(e.presentationMode);
     });
@@ -66,7 +67,7 @@ export const SamplePresentationModesScreen = () => {
       <Text style={styles.TEXT}>{`Active presentationMode: ${activePresentationMode}`}</Text>
       <View style={styles.PLAYER_CONTAINER_STYLE}>
         <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady}>
-          {player !== undefined  && (
+          {player !== undefined && (
             <UiContainer
               theme={{ ...DEFAULT_THEOPLAYER_THEME }}
               player={player}
@@ -105,15 +106,15 @@ export const SamplePresentationModesScreen = () => {
       </View>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   PLAYER_CONTAINER_STYLE: {
     position: 'absolute',
-    top: "25%",
-    left: "20%",
-    bottom: "25%",
-    right: "20%",
+    top: '25%',
+    left: '20%',
+    bottom: '25%',
+    right: '20%',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#000000',
@@ -121,7 +122,7 @@ const styles = StyleSheet.create({
   TEXT: {
     marginTop: 25,
     marginHorizontal: 20,
-    color: "white",
-    textAlign: 'center'
-  }
+    color: 'white',
+    textAlign: 'center',
+  },
 });
