@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "android": "npx react-native run-android",
-    "android-release": "npx react-native run-android --variant release",
+    "android-release": "npx react-native run-android --mode release",
     "ios": "npx react-native run-ios",
     "web": "webpack-dev-server --config ./web/webpack.config.js --mode development",
     "web-release": "webpack --config ./web/webpack.config.js --mode production",
