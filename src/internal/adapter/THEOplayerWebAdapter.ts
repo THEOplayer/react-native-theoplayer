@@ -349,4 +349,12 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   get broadcast(): EventBroadcastAPI {
     return this._externalEventRouter ?? (this._externalEventRouter = new EventBroadcastAdapter(this));
   }
+
+  get width(): number | undefined {
+    return this._player?.videoWidth;
+  }
+
+  get height(): number | undefined {
+    return this._player?.videoHeight;
+  }
 }

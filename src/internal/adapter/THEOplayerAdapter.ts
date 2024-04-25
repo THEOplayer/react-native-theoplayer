@@ -15,6 +15,7 @@ import type {
   PresentationModeChangeEvent,
   ProgressEvent,
   RateChangeEvent,
+  ResizeEvent,
   SourceDescription,
   TextTrack,
   TextTrackEvent,
@@ -78,6 +79,8 @@ const defaultPlayerState: NativePlayerState = {
   selectedVideoTrack: undefined,
   selectedAudioTrack: undefined,
   selectedTextTrack: undefined,
+  width: undefined,
+  height: undefined,
 };
 
 export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayer {
@@ -114,6 +117,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this.addEventListener(PlayerEventType.MEDIA_TRACK, this.onMediaTrack);
     this.addEventListener(PlayerEventType.MEDIA_TRACK_LIST, this.onMediaTrackList);
     this.addEventListener(PlayerEventType.PRESENTATIONMODE_CHANGE, this.onPresentationModeChange);
+    this.addEventListener(PlayerEventType.RESIZE, this.onResize);
   }
 
   private onSourceChange = () => {
@@ -143,6 +147,11 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._state.currentTime = event.currentTime;
   };
 
+  private onResize = (event: ResizeEvent) => {
+    this._state.width = event.width;
+    this._state.height = event.height;
+  };
+
   private onLoadedMetadata = (event: LoadedMetadataEvent) => {
     this._state.duration = event.duration;
     this._state.audioTracks = event.audioTracks;
@@ -154,6 +163,8 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     if (isFinite(this._state.duration)) {
       this._state.seekable = [{ start: 0, end: this._state.duration }];
     }
+
+    console.log(`[AT] onLoadedMetadata: LoadedMetadataEvent = ${JSON.stringify(event, null, 4)}`);
   };
 
   private onDurationChange = (event: DurationChangeEvent) => {
@@ -295,7 +306,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   }
 
   get seekable() {
-    return this._state.seekable;
+    return this._state.seekable ?? [];
   }
 
   private seekableEnd(): number {
@@ -304,7 +315,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   }
 
   get buffered() {
-    return this._state.buffered;
+    return this._state.buffered ?? [];
   }
 
   get cast(): CastAPI {
@@ -558,5 +569,13 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
       Object.assign(this._state, state);
     }
     this._castAdapter.init_();
+  }
+
+  get width(): number | undefined {
+    return this._state.width;
+  }
+
+  get height(): number | undefined {
+    return this._state.height;
   }
 }

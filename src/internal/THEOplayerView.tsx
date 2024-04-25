@@ -38,6 +38,7 @@ import {
   DefaultTextTrackListEvent,
   DefaultVolumeChangeEvent,
   DefaultTimeupdateEvent,
+  DefaultResizeEvent,
 } from './adapter/event/PlayerEvents';
 import type { NativeCastEvent } from './adapter/event/native/NativeCastEvent';
 import type {
@@ -59,6 +60,7 @@ import type {
   NativeSegmentNotFoundEvent,
   NativeTimeUpdateEvent,
   NativeVolumeChangeEvent,
+  NativeResizeEvent,
 } from './adapter/event/native/NativePlayerEvent';
 import type { NativeAdEvent } from './adapter/event/native/NativeAdEvent';
 import { THEOplayerAdapter } from './adapter/THEOplayerAdapter';
@@ -98,6 +100,7 @@ interface THEOplayerRCTViewProps {
   onNativeAdEvent: (event: NativeSyntheticEvent<NativeAdEvent>) => void;
   onNativeCastEvent: (event: NativeSyntheticEvent<NativeCastEvent>) => void;
   onNativePresentationModeChange: (event: NativeSyntheticEvent<NativePresentationModeChangeEvent>) => void;
+  onNativeResize: (event: NativeSyntheticEvent<NativeResizeEvent>) => void;
 }
 
 interface THEOplayerRCTViewState {
@@ -345,6 +348,10 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
     );
   };
 
+  private _onResize = (event: NativeSyntheticEvent<NativeResizeEvent>) => {
+    this._facade.dispatchEvent(new DefaultResizeEvent(event.nativeEvent.width, event.nativeEvent.height));
+  };
+
   public render(): JSX.Element {
     const { config, style, children } = this.props;
     const { presentationMode, screenSize: fullscreenSize } = this.state;
@@ -383,6 +390,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
           onNativeAdEvent={this._onAdEvent}
           onNativeCastEvent={this._onCastEvent}
           onNativePresentationModeChange={this._onPresentationModeChange}
+          onNativeResize={this._onResize}
         />
         {children}
       </View>
@@ -392,7 +400,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
 
 const LINKING_ERROR =
   `The package 'react-native-theoplayer' doesn't seem to be linked. Make sure: \n\n` +
-  Platform.select({ ios: '- You have run \'pod install\'\n', default: '' }) +
+  Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo managed workflow\n';
 
@@ -402,5 +410,5 @@ const THEOplayerRCTView =
   UIManager.getViewManagerConfig(ComponentName) != null
     ? requireNativeComponent<THEOplayerRCTViewProps>(ComponentName)
     : () => {
-      throw new Error(LINKING_ERROR);
-    };
+        throw new Error(LINKING_ERROR);
+      };
