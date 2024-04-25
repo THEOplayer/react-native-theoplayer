@@ -1,4 +1,3 @@
-import type { AdsEventMap as NativeAdsEventMap, ChromelessPlayer } from 'theoplayer';
 import type {
   AddTrackEvent,
   CastStateChangeEvent,
@@ -16,6 +15,8 @@ import type {
   TimeUpdateEvent as NativeTimeUpdateEvent,
   TrackChangeEvent,
   VolumeChangeEvent as NativeVolumeChangeEvent,
+  ChromelessPlayer,
+  AdsEventMap as NativeAdsEventMap,
   DimensionChangeEvent as NativeDimensionChangeEvent,
 } from 'theoplayer';
 import type { AdEvent, MediaTrack, TextTrack, TimeRange } from 'react-native-theoplayer';
