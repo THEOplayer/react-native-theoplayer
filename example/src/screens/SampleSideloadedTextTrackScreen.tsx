@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useState} from 'react';
+import { useState } from 'react';
 import {
   CenteredControlBar,
   CenteredDelayedActivityIndicator,
@@ -8,18 +8,13 @@ import {
   SkipButton,
   UiContainer,
 } from '@theoplayer/react-native-ui';
-import {
-  PlayerConfiguration,
-  PlayerEventType, TextTrackListEvent,
-  THEOplayer,
-  THEOplayerView, TrackListEventType
-} from 'react-native-theoplayer';
+import { PlayerConfiguration, PlayerEventType, TextTrackListEvent, THEOplayer, THEOplayerView, TrackListEventType } from 'react-native-theoplayer';
 
-import {Platform, SafeAreaView, StyleSheet, View} from 'react-native';
-import {getStatusBarHeight} from 'react-native-status-bar-height';
-import {THEO_LICENSE} from "../sampleConfig";
+import { Platform, SafeAreaView, StyleSheet, View } from 'react-native';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
+import { THEO_LICENSE } from '../sampleConfig';
 
-const LOG_TAG = "[EXAMPLE - SIDELOADED TEXTTRACK SAMPLE]";
+const LOG_TAG = '[EXAMPLE - SIDELOADED TEXTTRACK SAMPLE]';
 
 const playerConfig: PlayerConfiguration = {
   license: THEO_LICENSE,
@@ -69,22 +64,21 @@ export const SampleSideloadedTextTrackScreen = () => {
     };
 
     // enable the textTrack, based on language (required for iOS, where default:true setup is not supported yet)
-    player.addEventListener<PlayerEventType>(PlayerEventType.TEXT_TRACK_LIST, (ttListEvent: TextTrackListEvent) => {
       if (ttListEvent.subType === TrackListEventType.ADD_TRACK && ttListEvent.track.language === 'en') {
+    player.addEventListener(PlayerEventType.TEXT_TRACK_LIST, (ttListEvent: TextTrackListEvent) => {
         player.selectedTextTrack = ttListEvent.track.uid;
       }
     });
 
     // start playing
     player.play();
-
   };
 
   return (
     <SafeAreaView style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}>
       <View style={styles.PLAYER_CONTAINER_STYLE}>
         <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady}>
-          {player !== undefined  && (
+          {player !== undefined && (
             <UiContainer
               theme={{ ...DEFAULT_THEOPLAYER_THEME }}
               player={player}
@@ -96,7 +90,7 @@ export const SampleSideloadedTextTrackScreen = () => {
       </View>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   PLAYER_CONTAINER_STYLE: {
