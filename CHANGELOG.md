@@ -524,7 +524,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Added `onPlayerReady` callback on `THEOplayerView` to pass a `THEOplayer` instance once it is ready for access. More info on the [migration documentation](./doc/migrating-v2.md) page.
+- Added `onPlayerReady` callback on `THEOplayerView` to pass a `THEOplayer` instance once it is ready for access. More info on the [migration documentation](https://github.com/THEOplayer/react-native-theoplayer/blob/v7.0.0/doc/migrating-v2.md) page.
 - Added `canplay` event, which is dispatched when the player can start play-out.
 - Added `waiting` event, which is dispatched when the player has stopped play-out because of a temporary lack of data.
 - Added `nativeHandle` property on `THEOplayer` to access the native player instance on web, and view id on mobile.
