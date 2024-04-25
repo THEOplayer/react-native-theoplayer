@@ -113,8 +113,6 @@ public class THEOplayerRCTView: UIView {
     }
     
     private func initPlayer() -> THEOplayer? {
-        let stylePath = Bundle.main.path(forResource:"style", ofType: "css")
-        let cssPaths = stylePath != nil ? [stylePath!] : []
         let config = THEOplayerConfigurationBuilder()
         config.pip = self.playerPipConfiguration()
         config.hlsDateRange = self.hlsDateRange
