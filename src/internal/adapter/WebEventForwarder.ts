@@ -1,4 +1,4 @@
-import type { ChromelessPlayer } from 'theoplayer';
+import type { AdsEventMap as NativeAdsEventMap, ChromelessPlayer } from 'theoplayer';
 import type {
   AddTrackEvent,
   CastStateChangeEvent,
@@ -377,7 +377,7 @@ export class WebEventForwarder {
   };
 }
 
-const FORWARDED_AD_EVENTS: Array<AdEventType> = [
+const FORWARDED_AD_EVENTS = [
   AdEventType.ADD_AD_BREAK,
   AdEventType.REMOVE_AD_BREAK,
   AdEventType.AD_LOADED,
@@ -397,7 +397,7 @@ const FORWARDED_AD_EVENTS: Array<AdEventType> = [
   AdEventType.AD_ERROR,
   AdEventType.AD_METADATA,
   AdEventType.AD_BUFFERING,
-];
+] as (keyof NativeAdsEventMap)[];
 
 function fromTimeRanges(timeRanges: TimeRanges): TimeRange[] {
   const result: TimeRange[] = [];
