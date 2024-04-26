@@ -24,17 +24,16 @@ the player will regain audio focus afterward and play-out while resume.
 ### Audio "ducking"
 
 When another app seeks audio focus, it can optionally indicate that the current audio focus holder can
-lower its playback volume to continue playing (AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK). The new focus holder does
+lower its playback volume to continue playing (`AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK`). The new focus holder does
 not require other apps to be silent. This behavior is known as "ducking."
-
-However, `react-native-theoplayer` does not perform audio "ducking"; it consistently pauses playback.
 
 In summary:
 
-| Event                                            | Action          |
-|--------------------------------------------------|-----------------|
-| `AUDIOFOCUS_LOSS`, `AUDIOFOCUS_LOSS_TRANSIENT`, `AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK` | Pause play-out  |
-| `AUDIOFOCUS_GAIN`                                | Resume play-out |
+| Event                                          | Action                            |
+|------------------------------------------------|-----------------------------------|
+| `AUDIOFOCUS_LOSS`, `AUDIOFOCUS_LOSS_TRANSIENT` | Pause play-out                    |
+| `AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK`           | Lower volume                      |
+| `AUDIOFOCUS_GAIN`                              | Resume play-out or restore volume |
 
 
 ## Audio Becoming Noisy

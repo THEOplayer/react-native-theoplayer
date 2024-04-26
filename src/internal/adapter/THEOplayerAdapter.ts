@@ -242,9 +242,15 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
         if (isAudio) {
           this._state.audioTracks = removeTrack(this._state.audioTracks, track);
           this._state.audioTracks = addTrack(this._state.audioTracks, track);
+          if (track.enabled) {
+            this._state.selectedAudioTrack = track.uid;
+          }
         } else {
           this._state.videoTracks = removeTrack(this._state.videoTracks, track);
           this._state.videoTracks = addTrack(this._state.videoTracks, track);
+          if (track.enabled) {
+            this._state.selectedVideoTrack = track.uid;
+          }
         }
         break;
     }
