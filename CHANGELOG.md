@@ -545,8 +545,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- Moved all player properties such as `paused`, `muted` and `volume`, from `THEOplayerView` component to `THEOplayer` instance. More info on the [migration documentation](./doc/migrating-v2.md) page.
-- Removed `onEventName` callback methods from `THEOplayerView` component in favor of `THEOplayer` event listener's interface. More info on the [migration documentation](./doc/migrating-v2.md) page.
+- Moved all player properties such as `paused`, `muted` and `volume`, from `THEOplayerView` component to `THEOplayer` instance. More info on the [migration documentation](https://github.com/THEOplayer/react-native-theoplayer/blob/v7.0.0/doc/migrating-v2.md) page.
+- Removed `onEventName` callback methods from `THEOplayerView` component in favor of `THEOplayer` event listener's interface. More info on the [migration documentation](https://github.com/THEOplayer/react-native-theoplayer/blob/v7.0.0/doc/migrating-v2.md) page.
 - Changed documentation sample code to reflect API changes.
 - Exposed the `activeQuality` of a `MediaTrack` as a `Quality` instance instead of the quality's `uid`.
 - Set the default container style for web to let the player cover the whole container.
