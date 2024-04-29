@@ -3,17 +3,27 @@ import { useState } from 'react';
 import { PlayerConfiguration, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
 import { Platform, SafeAreaView, StyleSheet, View } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
-import { useAdobe } from "@theoplayer/react-native-analytics-adobe";
-import { THEO_LICENSE, ADOBE_ECID, ADOBE_SID, ADOBE_TRACKING_URL, ADOBE_URI} from "../sampleConfig";
+import { useAdobe } from '@theoplayer/react-native-analytics-adobe';
+import { THEO_LICENSE, ADOBE_ECID, ADOBE_SID, ADOBE_TRACKING_URL, ADOBE_URI } from '../sampleConfig';
+import {
+  CenteredControlBar,
+  CenteredDelayedActivityIndicator,
+  ControlBar,
+  DEFAULT_THEOPLAYER_THEME,
+  PlayButton,
+  SeekBar,
+  SkipButton,
+  UiContainer,
+} from '@theoplayer/react-native-ui';
 
-const LOG_TAG = "[EXAMPLE - ANALYTICS ADOBE SAMPLE]";
+const LOG_TAG = '[EXAMPLE - ANALYTICS ADOBE SAMPLE]';
 const playerConfig: PlayerConfiguration = {
   license: THEO_LICENSE,
   libraryLocation: 'theoplayer',
 };
 
 export const SampleAnalyticsAdobeScreen = () => {
-  const [, setPlayer] = useState<THEOplayer | undefined>(undefined);
+  const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);
   const [, initAdobe] = useAdobe(ADOBE_URI, ADOBE_ECID, ADOBE_SID, ADOBE_TRACKING_URL);
 
   const onPlayerReady = (player: THEOplayer) => {
@@ -31,13 +41,13 @@ export const SampleAnalyticsAdobeScreen = () => {
     player.source = {
       sources: [
         {
-          "src": "https://cdn.theoplayer.com/video/big_buck_bunny/big_buck_bunny.m3u8",
-          "type": "application/x-mpegurl"
-        }
+          src: 'https://cdn.theoplayer.com/video/big_buck_bunny/big_buck_bunny.m3u8',
+          type: 'application/x-mpegurl',
+        },
       ],
       metadata: {
-        title: "My metadata title"
-      }
+        title: 'My metadata title',
+      },
     };
 
     // start playing
@@ -47,11 +57,32 @@ export const SampleAnalyticsAdobeScreen = () => {
   return (
     <SafeAreaView style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}>
       <View style={styles.PLAYER_CONTAINER_STYLE}>
-        <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady} />
+        <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady}>
+          {player !== undefined && (
+            <UiContainer
+              theme={{ ...DEFAULT_THEOPLAYER_THEME }}
+              player={player}
+              behind={<CenteredDelayedActivityIndicator size={50} />}
+              center={<CenteredControlBar left={<SkipButton skip={-10} />} middle={<PlayButton />} right={<SkipButton skip={30} />} />}
+              bottom={
+                <>
+                  {
+                    /*Note: RNSlider is not available on tvOS */
+                    !(Platform.isTV && Platform.OS === 'ios') && (
+                      <ControlBar>
+                        <SeekBar />
+                      </ControlBar>
+                    )
+                  }
+                </>
+              }
+            />
+          )}
+        </THEOplayerView>
       </View>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   PLAYER_CONTAINER_STYLE: {
