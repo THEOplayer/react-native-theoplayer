@@ -47,25 +47,25 @@ export const SampleSideloadedTextTrackScreen = () => {
     player.source = {
       sources: [
         {
-          src: "https://cdn.theoplayer.com/video/big_buck_bunny/big_buck_bunny.m3u8",
-          type: "application/x-mpegurl"
-        }
+          src: 'https://cdn.theoplayer.com/video/big_buck_bunny/big_buck_bunny.m3u8',
+          type: 'application/x-mpegurl',
+        },
       ],
       textTracks: [
         {
           default: true,
-          src: "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/test_sideloaded.webvtt",
-          label: "testSubs",
-          kind: "subtitles",
-          format: "webvtt",
-          srclang: "en"
-        }
-      ]
+          src: 'https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/test_sideloaded.webvtt',
+          label: 'testSubs',
+          kind: 'subtitles',
+          format: 'webvtt',
+          srclang: 'en',
+        },
+      ],
     };
 
     // enable the textTrack, based on language (required for iOS, where default:true setup is not supported yet)
-      if (ttListEvent.subType === TrackListEventType.ADD_TRACK && ttListEvent.track.language === 'en') {
     player.addEventListener(PlayerEventType.TEXT_TRACK_LIST, (ttListEvent: TextTrackListEvent) => {
+      if (ttListEvent.subType === TrackListEventType.ADD_TRACK && ttListEvent.track.language === 'en') {
         player.selectedTextTrack = ttListEvent.track.uid;
       }
     });
