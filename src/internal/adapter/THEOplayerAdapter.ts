@@ -163,8 +163,6 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     if (isFinite(this._state.duration)) {
       this._state.seekable = [{ start: 0, end: this._state.duration }];
     }
-
-    console.log(`[AT] onLoadedMetadata: LoadedMetadataEvent = ${JSON.stringify(event, null, 4)}`);
   };
 
   private onDurationChange = (event: DurationChangeEvent) => {
