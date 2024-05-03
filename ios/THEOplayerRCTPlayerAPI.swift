@@ -120,10 +120,19 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
             }
         }
     }
-
+    
     @objc(setVolume:volume:)
     func setVolume(_ node: NSNumber, volume: NSNumber) -> Void {
-        if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Setting volume: TheoPlayer does not handle volume changes for iOS. This is handled by the device.") }
+        DispatchQueue.main.async {
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let player = theView.player {
+                let newVolume = Float(truncating: volume)
+                if player.volume != newVolume {
+                    if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Changing TheoPlayer volume to \(newVolume)")}
+                    player.volume = newVolume
+                }
+            }
+        }
     }
 
     @objc(setPlaybackRate:playbackRate:)
