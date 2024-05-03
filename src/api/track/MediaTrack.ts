@@ -53,6 +53,11 @@ export interface MediaTrack extends Track {
    * The qualities of the media track.
    */
   readonly qualities: Quality[];
+
+  /**
+   * Marks the track to be the selected track for playout
+   */
+  readonly enabled: boolean;
 }
 
 export function findMediaTrackByUid(mediaTracks: MediaTrack[], uid: number | undefined): MediaTrack | undefined {

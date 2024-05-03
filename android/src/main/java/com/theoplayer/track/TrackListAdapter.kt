@@ -23,6 +23,7 @@ private const val PROP_LABEL = "label"
 private const val PROP_TYPE = "type"
 private const val PROP_CODECS = "codecs"
 private const val PROP_NAME = "name"
+private const val PROP_ENABLED = "enabled"
 private const val PROP_SRC = "src"
 private const val PROP_FORCED = "forced"
 private const val PROP_AUDIO_SAMPLING_RATE = "audioSamplingRate"
@@ -165,6 +166,7 @@ object TrackListAdapter {
     audioTrackPayload.putString(PROP_KIND, audioTrack.kind)
     audioTrackPayload.putString(PROP_LABEL, audioTrack.label)
     audioTrackPayload.putString(PROP_LANGUAGE, audioTrack.language)
+    audioTrackPayload.putBoolean(PROP_ENABLED, audioTrack.isEnabled)
     val qualityList = audioTrack.qualities
     val qualities = Arguments.createArray()
     try {
@@ -209,6 +211,7 @@ object TrackListAdapter {
     videoTrackPayload.putString(PROP_KIND, videoTrack.kind)
     videoTrackPayload.putString(PROP_LABEL, videoTrack.label)
     videoTrackPayload.putString(PROP_LANGUAGE, videoTrack.language)
+    videoTrackPayload.putBoolean(PROP_ENABLED, videoTrack.isEnabled)
     val qualities = Arguments.createArray()
     try {
       val qualityList = videoTrack.qualities
