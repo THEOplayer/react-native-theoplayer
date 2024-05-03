@@ -97,6 +97,18 @@ export interface NativeProgressEvent {
   readonly buffered: TimeRange[];
 }
 
+export interface NativeResizeEvent {
+  /**
+   * The width of the player.
+   */
+  readonly width: number;
+
+  /**
+   * The height of the player.
+   */
+  readonly height: number;
+}
+
 export interface NativeSegmentNotFoundEvent {
   /**
    * Start time of the segment.

@@ -16,6 +16,7 @@ import type {
   TimeUpdateEvent as NativeTimeUpdateEvent,
   TrackChangeEvent,
   VolumeChangeEvent as NativeVolumeChangeEvent,
+  DimensionChangeEvent as NativeDimensionChangeEvent,
 } from 'theoplayer';
 import type { AdEvent, MediaTrack, TextTrack, TimeRange } from 'react-native-theoplayer';
 import {
@@ -46,6 +47,7 @@ import {
   DefaultProgressEvent,
   DefaultRateChangeEvent,
   DefaultReadyStateChangeEvent,
+  DefaultResizeEvent,
   DefaultSegmentNotFoundEvent,
   DefaultTextTrackEvent,
   DefaultTextTrackListEvent,
@@ -85,6 +87,7 @@ export class WebEventForwarder {
     this._player.addEventListener('ratechange', this.onPlaybackRateChange);
     this._player.addEventListener('segmentnotfound', this.onSegmentNotFound);
     this._player.addEventListener('volumechange', this.onVolumeChangeEvent);
+    this._player.addEventListener('dimensionchange', this.onDimensionChange);
     this._player.presentation.addEventListener('presentationmodechange', this.onPresentationModeChange);
 
     this._player.textTracks.addEventListener('addtrack', this.onAddTextTrack);
@@ -249,6 +252,10 @@ export class WebEventForwarder {
 
   private readonly onPresentationModeChange = (event: PresentationModeChangeEvent) => {
     this._facade.dispatchEvent(new DefaultPresentationModeChangeEvent(event.presentationMode as PresentationMode, PresentationMode.inline)); // TODO: move to extended event
+  };
+
+  private readonly onDimensionChange = (event: NativeDimensionChangeEvent) => {
+    this._facade.dispatchEvent(new DefaultResizeEvent(event.width, event.height));
   };
 
   private readonly onAddTextTrack = (event: AddTrackEvent) => {

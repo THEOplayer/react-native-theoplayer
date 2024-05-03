@@ -76,6 +76,7 @@ private const val EVENT_AD_EVENT = "onNativeAdEvent"
 private const val EVENT_CAST_EVENT = "onNativeCastEvent"
 private const val EVENT_PRESENTATIONMODECHANGE = "onNativePresentationModeChange"
 private const val EVENT_VOLUMECHANGE = "onNativeVolumeChange"
+private const val EVENT_RESIZE = "onNativeResize"
 
 private const val EVENT_PROP_TYPE = "type"
 private const val EVENT_PROP_STATE = "state"
@@ -116,7 +117,8 @@ class PlayerEventEmitter internal constructor(
     EVENT_AD_EVENT,
     EVENT_CAST_EVENT,
     EVENT_PRESENTATIONMODECHANGE,
-    EVENT_VOLUMECHANGE
+    EVENT_VOLUMECHANGE,
+    EVENT_RESIZE
   )
   annotation class VideoEvents
 
@@ -149,7 +151,8 @@ class PlayerEventEmitter internal constructor(
       EVENT_AD_EVENT,
       EVENT_CAST_EVENT,
       EVENT_PRESENTATIONMODECHANGE,
-      EVENT_VOLUMECHANGE
+      EVENT_VOLUMECHANGE,
+      EVENT_RESIZE
     )
   }
 
@@ -164,6 +167,11 @@ class PlayerEventEmitter internal constructor(
   private var castEventAdapter: CastEventAdapter? = null
   private var lastTimeUpdate: Long = 0
   private var lastCurrentTime = 0.0
+  private var resizeListener = View.OnLayoutChangeListener { v, _, _, _, _, oldLeft, oldTop, oldRight, oldBottom ->
+    if (v.width != oldRight - oldLeft || v.height != oldBottom - oldTop) {
+      onResize(v.width, v.height)
+    }
+  }
 
   init {
     eventEmitter = ReactEventEmitter(reactContext)
@@ -422,6 +430,13 @@ class PlayerEventEmitter internal constructor(
     )
   }
 
+  private fun onResize(width: Int, height: Int) {
+    receiveEvent(
+      EVENT_RESIZE,
+      PayloadBuilder().size(width, height).build()
+    )
+  }
+
   private val onTextTrackAddCue = EventListener<AddCueEvent> { event ->
     val payload = PayloadBuilder().textTrackCue(event.cue, event.track).build().apply {
       putInt(EVENT_PROP_TYPE, TextTrackCueEventType.ADD_CUE.type)
@@ -654,6 +669,9 @@ class PlayerEventEmitter internal constructor(
         })
       }
     }
+
+    // Attach view size listener
+    playerView.addOnLayoutChangeListener(resizeListener)
   }
 
   fun removeListeners(player: Player?) {
@@ -688,6 +706,10 @@ class PlayerEventEmitter internal constructor(
         value as EventListener<TrackListEvent<*, *>>
       )
     }
+
+    // Remove view size listener
+    playerView.removeOnLayoutChangeListener(resizeListener)
+
     castEventAdapter?.destroy()
     adEventAdapter?.destroy()
   }

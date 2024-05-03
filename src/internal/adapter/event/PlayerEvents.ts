@@ -27,6 +27,7 @@ import {
   Quality,
   RateChangeEvent,
   ReadyStateChangeEvent,
+  ResizeEvent,
   SegmentNotFoundEvent,
   TextTrack,
   TextTrackCue,
@@ -72,6 +73,12 @@ export class DefaultPresentationModeChangeEvent extends BaseEvent<PlayerEventTyp
 export class DefaultVolumeChangeEvent extends BaseEvent<PlayerEventType.VOLUME_CHANGE> implements VolumeChangeEvent {
   constructor(public volume: number, public muted: boolean) {
     super(PlayerEventType.VOLUME_CHANGE);
+  }
+}
+
+export class DefaultResizeEvent extends BaseEvent<PlayerEventType.RESIZE> implements ResizeEvent {
+  constructor(public width: number, public height: number) {
+    super(PlayerEventType.RESIZE);
   }
 }
 

@@ -5,10 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [Unreleased]
 
 ### Added
 
+- Added `resize` player event enabling monitoring of player resizes.
+- Added `width` and `height` properties to `THEOplayer` containing the player's current dimensions in pixels.
 - Added the possibility to set the player volume on iOS programmatically via the player API.
 
 ## [7.1.1] - 26-04-23

@@ -5,8 +5,8 @@ export interface NativePlayerState {
   source: SourceDescription | undefined;
   autoplay: boolean;
   paused: boolean;
-  seekable: TimeRange[];
-  buffered: TimeRange[];
+  seekable: TimeRange[] | undefined;
+  buffered: TimeRange[] | undefined;
   pipConfig: PiPConfiguration;
   backgroundAudioConfig: BackgroundAudioConfiguration;
   presentationMode: PresentationMode;
@@ -26,4 +26,6 @@ export interface NativePlayerState {
   selectedVideoTrack: number | undefined;
   selectedAudioTrack: number | undefined;
   selectedTextTrack: number | undefined;
+  width: number | undefined;
+  height: number | undefined;
 }
