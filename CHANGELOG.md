@@ -12,10 +12,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added `resize` player event enabling monitoring of player resizes.
 - Added `width` and `height` properties to `THEOplayer` containing the player's current dimensions in pixels.
 - Added the possibility to set the player volume on iOS programmatically via the player API.
+- Added `AD_CLICKED`, `AD_TAPPED`, `AD_ICON_TAPPED` and `AD_ICON_FALLBACK_IMAGE_CLOSED` ad events for Android platforms.
+
+### Fixed
+
+- Fixed an issue on Android where the `scheduledAdBreaks` list did not include the pre-roll ad on play-out of a Google DAI stream.
 
 ## [7.1.1] - 26-04-23
 
-### Fixed 
+### Fixed
 
 - Fixed an issue where the selectedAudioTrack and selectedVideoTrack were not in sync with the actual selected mediatracks on the native player.
 
