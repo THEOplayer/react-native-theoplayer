@@ -24,8 +24,7 @@ import {
 } from '@theoplayer/react-native-ui';
 import { PlayerConfiguration, PlayerEventType, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
 
-import { Platform, SafeAreaView, StyleSheet, View } from 'react-native';
-import { getStatusBarHeight } from 'react-native-status-bar-height';
+import { Platform, SafeAreaView, StyleSheet } from 'react-native';
 import { SourceMenuButton, SOURCES } from '../custom/SourceMenuButton';
 import { BackgroundAudioSubMenu } from '../custom/BackgroundAudioSubMenu';
 import { PiPSubMenu } from '../custom/PipSubMenu';
@@ -90,78 +89,70 @@ export const SampleExtendedScreen = () => {
   };
 
   return (
-    <SafeAreaView style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}>
-      <View style={styles.PLAYER_CONTAINER_STYLE}>
-        <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady}>
-          {player !== undefined && chromeless && (
-            <UiContainer
-              theme={{ ...DEFAULT_THEOPLAYER_THEME }}
-              player={player}
-              behind={<CenteredDelayedActivityIndicator size={50} />}
-              top={
-                <ControlBar>
-                  <MediaCacheMenuButton>
-                    <MediaCacheDownloadButton />
-                    <MediaCachingTaskListSubMenu />
-                  </MediaCacheMenuButton>
-                  {/*This is a custom menu for source selection.*/}
-                  <SourceMenuButton />
-                  {!Platform.isTV && (
-                    <>
-                      <AirplayButton />
-                      <ChromecastButton />
-                    </>
-                  )}
-                  <LanguageMenuButton />
-                  <SettingsMenuButton>
-                    {/*Note: quality selection is not available on iOS */}
-                    <QualitySubMenu />
-                    <PlaybackRateSubMenu />
-                    <BackgroundAudioSubMenu />
-                    <PiPSubMenu />
-                  </SettingsMenuButton>
+    <SafeAreaView style={styles.PLAYER_CONTAINER_STYLE}>
+      <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady}>
+        {player !== undefined && chromeless && (
+          <UiContainer
+            theme={{ ...DEFAULT_THEOPLAYER_THEME }}
+            player={player}
+            behind={<CenteredDelayedActivityIndicator size={50} />}
+            top={
+              <ControlBar>
+                <MediaCacheMenuButton>
+                  <MediaCacheDownloadButton />
+                  <MediaCachingTaskListSubMenu />
+                </MediaCacheMenuButton>
+                {/*This is a custom menu for source selection.*/}
+                <SourceMenuButton />
+                {!Platform.isTV && (
+                  <>
+                    <AirplayButton />
+                    <ChromecastButton />
+                  </>
+                )}
+                <LanguageMenuButton />
+                <SettingsMenuButton>
+                  {/*Note: quality selection is not available on iOS */}
+                  <QualitySubMenu />
+                  <PlaybackRateSubMenu />
+                  <BackgroundAudioSubMenu />
+                  <PiPSubMenu />
+                </SettingsMenuButton>
+              </ControlBar>
+            }
+            center={<CenteredControlBar left={<SkipButton skip={-10} />} middle={<PlayButton />} right={<SkipButton skip={30} />} />}
+            bottom={
+              <>
+                <ControlBar style={{ justifyContent: 'flex-start' }}>
+                  <CastMessage />
                 </ControlBar>
-              }
-              center={<CenteredControlBar left={<SkipButton skip={-10} />} middle={<PlayButton />} right={<SkipButton skip={30} />} />}
-              bottom={
-                <>
-                  <ControlBar style={{ justifyContent: 'flex-start' }}>
-                    <CastMessage />
-                  </ControlBar>
-                  {
-                    /*Note: RNSlider is not available on tvOS */
-                    !(Platform.isTV && Platform.OS === 'ios') && (
-                      <ControlBar>
-                        <SeekBar />
-                      </ControlBar>
-                    )
-                  }
-                  <ControlBar>
-                    <MuteButton />
-                    <TimeLabel showDuration={true} />
-                    <Spacer />
-                    <PipButton />
-                    <FullscreenButton />
-                  </ControlBar>
-                </>
-              }
-            />
-          )}
-        </THEOplayerView>
-      </View>
+                {
+                  /*Note: RNSlider is not available on tvOS */
+                  !(Platform.isTV && Platform.OS === 'ios') && (
+                    <ControlBar>
+                      <SeekBar />
+                    </ControlBar>
+                  )
+                }
+                <ControlBar>
+                  <MuteButton />
+                  <TimeLabel showDuration={true} />
+                  <Spacer />
+                  <PipButton />
+                  <FullscreenButton />
+                </ControlBar>
+              </>
+            }
+          />
+        )}
+      </THEOplayerView>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   PLAYER_CONTAINER_STYLE: {
-    position: 'absolute',
-    top: Platform.OS === 'ios' ? getStatusBarHeight() : 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
+    flex: 1,
     backgroundColor: '#000000',
   },
 });

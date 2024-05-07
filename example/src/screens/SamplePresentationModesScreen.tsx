@@ -63,9 +63,9 @@ export const SamplePresentationModesScreen = () => {
   };
 
   return (
-    <SafeAreaView style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}>
+    <SafeAreaView style={styles.PLAYER_CONTAINER_STYLE}>
       <Text style={styles.TEXT}>{`Active presentationMode: ${activePresentationMode}`}</Text>
-      <View style={styles.PLAYER_CONTAINER_STYLE}>
+      <View style={styles.PLAYER_STYLE}>
         <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady}>
           {player !== undefined && (
             <UiContainer
@@ -110,19 +110,23 @@ export const SamplePresentationModesScreen = () => {
 
 const styles = StyleSheet.create({
   PLAYER_CONTAINER_STYLE: {
-    position: 'absolute',
-    top: '25%',
-    left: '20%',
-    bottom: '25%',
-    right: '20%',
+    flex: 1,
+    flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#000000',
+    justifyContent: 'flex-start',
+    backgroundColor: '#333333',
   },
   TEXT: {
-    marginTop: 25,
+    marginVertical: 20,
     marginHorizontal: 20,
     color: 'white',
     textAlign: 'center',
+  },
+  PLAYER_STYLE: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: Platform.OS === 'web' ? 640 : 320,
+    height: Platform.OS === 'web' ? 480 : 240,
+    backgroundColor: '#000000',
   },
 });

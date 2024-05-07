@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { PlayerConfiguration, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
-import { Platform, SafeAreaView, StyleSheet, View } from 'react-native';
-import { getStatusBarHeight } from 'react-native-status-bar-height';
+import { Platform, SafeAreaView, StyleSheet } from 'react-native';
 import { useNielsen } from '@theoplayer/react-native-analytics-nielsen';
 import { NIELSEN_APP_ID, NIELSEN_OPTIONS, THEO_LICENSE } from '../sampleConfig';
 import {
@@ -55,44 +54,36 @@ export const SampleAnalyticsNielsenScreen = () => {
   };
 
   return (
-    <SafeAreaView style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}>
-      <View style={styles.PLAYER_CONTAINER_STYLE}>
-        <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady}>
-          {player !== undefined && (
-            <UiContainer
-              theme={{ ...DEFAULT_THEOPLAYER_THEME }}
-              player={player}
-              behind={<CenteredDelayedActivityIndicator size={50} />}
-              center={<CenteredControlBar left={<SkipButton skip={-10} />} middle={<PlayButton />} right={<SkipButton skip={30} />} />}
-              bottom={
-                <>
-                  {
-                    /*Note: RNSlider is not available on tvOS */
-                    !(Platform.isTV && Platform.OS === 'ios') && (
-                      <ControlBar>
-                        <SeekBar />
-                      </ControlBar>
-                    )
-                  }
-                </>
-              }
-            />
-          )}
-        </THEOplayerView>
-      </View>
+    <SafeAreaView style={styles.PLAYER_CONTAINER_STYLE}>
+      <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady}>
+        {player !== undefined && (
+          <UiContainer
+            theme={{ ...DEFAULT_THEOPLAYER_THEME }}
+            player={player}
+            behind={<CenteredDelayedActivityIndicator size={50} />}
+            center={<CenteredControlBar left={<SkipButton skip={-10} />} middle={<PlayButton />} right={<SkipButton skip={30} />} />}
+            bottom={
+              <>
+                {
+                  /*Note: RNSlider is not available on tvOS */
+                  !(Platform.isTV && Platform.OS === 'ios') && (
+                    <ControlBar>
+                      <SeekBar />
+                    </ControlBar>
+                  )
+                }
+              </>
+            }
+          />
+        )}
+      </THEOplayerView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   PLAYER_CONTAINER_STYLE: {
-    position: 'absolute',
-    top: Platform.OS === 'ios' ? getStatusBarHeight() : 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
+    flex: 1,
     backgroundColor: '#000000',
   },
 });

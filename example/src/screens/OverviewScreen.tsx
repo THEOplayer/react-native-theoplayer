@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 const c = Platform.OS === 'ios' ? 'white' : 'transparent';
 export const OverviewScreen = ({ navigation }) => {
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <View style={{ flex: 1 }}>
       <Text>Samples Overview</Text>
       <Button title="Minimal Setup" onPress={() => navigation.navigate('Sample_Minimal')} color={c} />
       <Button title="Extended Setup" onPress={() => navigation.navigate('Sample_Extended')} color={c} />
