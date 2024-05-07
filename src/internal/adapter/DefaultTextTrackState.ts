@@ -36,6 +36,10 @@ export class DefaultTextTrackState implements TextTrackState {
     return this._textTracks;
   }
 
+  set textTracks(tracks: TextTrack[]) {
+    this._textTracks = tracks;
+  }
+
   private onLoadedMetadata = (event: LoadedMetadataEvent) => {
     this._textTracks = event.textTracks;
     this._selectedTextTrack = event.selectedTextTrack;

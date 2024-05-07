@@ -44,40 +44,13 @@ import { NativeModules, Platform, StatusBar } from 'react-native';
 import { TextTrackStyleAdapter } from './track/TextTrackStyleAdapter';
 import type { NativePlayerState } from './NativePlayerState';
 import { EventBroadcastAdapter } from './broadcast/EventBroadcastAdapter';
-import { DefaultTextTrackState } from './DefaultTextTrackState';
+import { DefaultNativePlayerState } from './DefaultNativePlayerState';
 
 const NativePlayerModule = NativeModules.THEORCTPlayerModule;
 
-class DefaultNativePlayerState extends DefaultTextTrackState implements NativePlayerState {
-  source = undefined;
-  autoplay = false;
-  paused = true;
-  seekable = [];
-  buffered = [];
-  pipConfig: PiPConfiguration = { startsAutomatically: false };
-  backgroundAudioConfig: BackgroundAudioConfiguration = { enabled: false };
-  presentationMode: PresentationMode = PresentationMode.inline;
-  muted = false;
-  seeking = false;
-  volume = 1;
-  currentTime = 0;
-  duration = 0;
-  playbackRate = 1;
-  preload: PreloadType = 'none';
-  aspectRatio: AspectRatio = AspectRatio.FIT;
-  keepScreenOn = true;
-  audioTracks: MediaTrack[] = [];
-  videoTracks = [];
-  targetVideoQuality = undefined;
-  selectedAudioTrack = undefined;
-  selectedVideoTrack = undefined;
-  width = undefined;
-  height = undefined;
-}
-
 export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayer {
   private readonly _view: THEOplayerView;
-  private readonly _state: NativePlayerState;
+  private readonly _state: DefaultNativePlayerState;
   private readonly _adsAdapter: THEOplayerNativeAdsAdapter;
   private readonly _castAdapter: THEOplayerNativeCastAdapter;
   private readonly _abrAdapter: AbrAdapter;
@@ -421,7 +394,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._state.source = source;
     NativePlayerModule.setSource(this._view.nativeHandle, source);
     // Reset state for play-out of new source
-    Object.assign(this._state, {
+    this._state.apply({
       playbackRate: 1,
       seeking: false,
       audioTracks: [],
@@ -512,10 +485,16 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     return this._externalEventRouter ?? (this._externalEventRouter = new EventBroadcastAdapter(this));
   }
 
+  /**
+   * initializeFromNativePlayer is called when the native player is ready and has sent the `onNativePlayerReady` event.
+   *
+   * @param version The native player version.
+   * @param state An optional initial player state.
+   */
   initializeFromNativePlayer_(version: PlayerVersion, state: NativePlayerState | undefined) {
     this._playerVersion = version;
     if (state) {
-      Object.assign(this._state, state);
+      this._state.apply(state);
     }
     this._castAdapter.init_();
   }
