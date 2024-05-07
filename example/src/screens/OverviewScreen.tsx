@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Button, View, Text, Platform } from 'react-native';
 import PropTypes from 'prop-types';
 
-const c = Platform.OS === 'ios' ? 'white' : 'black';
+const c = Platform.OS === 'ios' ? 'white' : 'transparent';
 export const OverviewScreen = ({ navigation }) => {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>

@@ -22,24 +22,19 @@ import {
   TimeLabel,
   UiContainer,
 } from '@theoplayer/react-native-ui';
-import {
-  PlayerConfiguration,
-  PlayerEventType,
-  THEOplayer,
-  THEOplayerView
-} from 'react-native-theoplayer';
+import { PlayerConfiguration, PlayerEventType, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
 
-import {Platform, SafeAreaView, StyleSheet, View} from 'react-native';
-import {getStatusBarHeight} from 'react-native-status-bar-height';
-import {SourceMenuButton, SOURCES} from '../custom/SourceMenuButton';
-import {BackgroundAudioSubMenu} from '../custom/BackgroundAudioSubMenu';
-import {PiPSubMenu} from '../custom/PipSubMenu';
-import {MediaCacheDownloadButton} from '../custom/MediaCacheDownloadButton';
-import {MediaCacheMenuButton} from '../custom/MediaCacheMenuButton';
-import {MediaCachingTaskListSubMenu} from '../custom/MediaCachingTaskListSubMenu';
-import {THEO_LICENSE} from "../sampleConfig";
+import { Platform, SafeAreaView, StyleSheet, View } from 'react-native';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
+import { SourceMenuButton, SOURCES } from '../custom/SourceMenuButton';
+import { BackgroundAudioSubMenu } from '../custom/BackgroundAudioSubMenu';
+import { PiPSubMenu } from '../custom/PipSubMenu';
+import { MediaCacheDownloadButton } from '../custom/MediaCacheDownloadButton';
+import { MediaCacheMenuButton } from '../custom/MediaCacheMenuButton';
+import { MediaCachingTaskListSubMenu } from '../custom/MediaCachingTaskListSubMenu';
+import { THEO_LICENSE } from '../sampleConfig';
 
-const LOG_TAG = "[EXAMPLE - EXTENDED SAMPLE]";
+const LOG_TAG = '[EXAMPLE - EXTENDED SAMPLE]';
 
 const playerConfig: PlayerConfiguration = {
   license: THEO_LICENSE,
