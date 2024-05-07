@@ -3,6 +3,7 @@ const path = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
+const webpack = require('webpack');
 
 const projectDirectory = path.resolve(__dirname, '../..');
 
@@ -100,7 +101,7 @@ module.exports = {
       react: path.resolve(appDirectory, 'node_modules/react'),
     },
   },
-  plugins: [HTMLWebpackPluginConfig, CopyWebpackPluginConfig, new NodePolyfillPlugin()],
+  plugins: [HTMLWebpackPluginConfig, CopyWebpackPluginConfig, new NodePolyfillPlugin(), new webpack.DefinePlugin({__DEV__: true})],
   devServer: {
     // Tells dev-server to open the browser after server had been started.
     open: true,
