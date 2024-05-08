@@ -6,6 +6,7 @@ export const navTheme = {
   colors: {
     ...DarkTheme.colors,
     primary: '#FFC50F',
+    background: 'transparent',
   },
 };
 
