@@ -12,6 +12,7 @@ import {
   SampleAnalyticsNielsenScreen,
   SampleAnalyticsAdobeScreen,
 } from '../screens';
+import { Platform } from 'react-native';
 
 const Stack = createStackNavigator();
 export default function SamplesStackNavigator() {
@@ -19,7 +20,7 @@ export default function SamplesStackNavigator() {
     <Stack.Navigator
       initialRouteName="SampleOverview"
       screenOptions={{
-        headerShown: true,
+        headerShown: Platform.OS !== 'web',
         headerTitleAlign: 'center',
         headerTintColor: '#FFC50F',
       }}>
