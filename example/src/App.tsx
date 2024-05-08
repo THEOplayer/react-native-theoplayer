@@ -7,7 +7,7 @@ import { SampleExtendedScreen } from './screens';
 import { linking, navTheme } from './navigators/NavigationConfig';
 
 export default function App() {
-  const singleScreen = false || Platform.isTV;
+  const singleScreen = Platform.isTV;
 
   return (
     <NavigationContainer linking={linking} theme={navTheme}>
