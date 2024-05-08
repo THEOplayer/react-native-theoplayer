@@ -84,6 +84,6 @@ export const SampleAnalyticsNielsenScreen = () => {
 const styles = StyleSheet.create({
   PLAYER_CONTAINER_STYLE: {
     flex: 1,
-    backgroundColor: '#000000',
+    backgroundColor: 'transparent',
   },
 });

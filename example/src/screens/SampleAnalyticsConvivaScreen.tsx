@@ -90,6 +90,6 @@ export const SampleAnalyticsConvivaScreen = () => {
 const styles = StyleSheet.create({
   PLAYER_CONTAINER_STYLE: {
     flex: 1,
-    backgroundColor: '#000000',
+    backgroundColor: 'transparent',
   },
 });
