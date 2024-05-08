@@ -15,31 +15,25 @@ import type {
   PresentationModeChangeEvent,
   ProgressEvent,
   RateChangeEvent,
+  ResizeEvent,
   SourceDescription,
   TextTrack,
-  TextTrackEvent,
-  TextTrackListEvent,
   THEOplayer,
   THEOplayerView,
   TimeUpdateEvent,
 } from 'react-native-theoplayer';
 import {
-  addTextTrackCue,
   addTrack,
   AspectRatio,
   BackgroundAudioConfiguration,
   findMediaTrackByUid,
-  findTextTrackByUid,
   MediaTrackEventType,
   MediaTrackType,
   PlayerEventType,
   PlayerVersion,
   PreloadType,
   PresentationMode,
-  removeTextTrackCue,
   removeTrack,
-  TextTrackEventType,
-  TextTrackMode,
   TextTrackStyle,
   TrackListEventType,
 } from 'react-native-theoplayer';
@@ -50,39 +44,13 @@ import { NativeModules, Platform, StatusBar } from 'react-native';
 import { TextTrackStyleAdapter } from './track/TextTrackStyleAdapter';
 import type { NativePlayerState } from './NativePlayerState';
 import { EventBroadcastAdapter } from './broadcast/EventBroadcastAdapter';
+import { DefaultNativePlayerState } from './DefaultNativePlayerState';
 
 const NativePlayerModule = NativeModules.THEORCTPlayerModule;
 
-const defaultPlayerState: NativePlayerState = {
-  source: undefined,
-  autoplay: false,
-  paused: true,
-  seekable: [],
-  buffered: [],
-  pipConfig: { startsAutomatically: false },
-  backgroundAudioConfig: { enabled: false },
-  presentationMode: PresentationMode.inline,
-  muted: false,
-  seeking: false,
-  volume: 1,
-  currentTime: 0,
-  duration: NaN,
-  playbackRate: 1,
-  preload: 'none',
-  aspectRatio: AspectRatio.FIT,
-  keepScreenOn: true,
-  audioTracks: [],
-  videoTracks: [],
-  textTracks: [],
-  targetVideoQuality: undefined,
-  selectedVideoTrack: undefined,
-  selectedAudioTrack: undefined,
-  selectedTextTrack: undefined,
-};
-
 export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayer {
   private readonly _view: THEOplayerView;
-  private readonly _state: NativePlayerState;
+  private readonly _state: DefaultNativePlayerState;
   private readonly _adsAdapter: THEOplayerNativeAdsAdapter;
   private readonly _castAdapter: THEOplayerNativeCastAdapter;
   private readonly _abrAdapter: AbrAdapter;
@@ -90,10 +58,10 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   private _externalEventRouter: EventBroadcastAPI | undefined = undefined;
   private _playerVersion!: PlayerVersion;
 
-  constructor(view: THEOplayerView, initialState: NativePlayerState = defaultPlayerState) {
+  constructor(view: THEOplayerView) {
     super();
     this._view = view;
-    this._state = { ...initialState };
+    this._state = new DefaultNativePlayerState(this);
     this._adsAdapter = new THEOplayerNativeAdsAdapter(this._view);
     this._castAdapter = new THEOplayerNativeCastAdapter(this, this._view);
     this._abrAdapter = new AbrAdapter(this._view);
@@ -109,11 +77,10 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this.addEventListener(PlayerEventType.SEEKING, this.onSeeking);
     this.addEventListener(PlayerEventType.SEEKED, this.onSeeked);
     this.addEventListener(PlayerEventType.PROGRESS, this.onProgress);
-    this.addEventListener(PlayerEventType.TEXT_TRACK_LIST, this.onTextTrackList);
-    this.addEventListener(PlayerEventType.TEXT_TRACK, this.onTextTrack);
     this.addEventListener(PlayerEventType.MEDIA_TRACK, this.onMediaTrack);
     this.addEventListener(PlayerEventType.MEDIA_TRACK_LIST, this.onMediaTrackList);
     this.addEventListener(PlayerEventType.PRESENTATIONMODE_CHANGE, this.onPresentationModeChange);
+    this.addEventListener(PlayerEventType.RESIZE, this.onResize);
   }
 
   private onSourceChange = () => {
@@ -143,14 +110,17 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._state.currentTime = event.currentTime;
   };
 
+  private onResize = (event: ResizeEvent) => {
+    this._state.width = event.width;
+    this._state.height = event.height;
+  };
+
   private onLoadedMetadata = (event: LoadedMetadataEvent) => {
     this._state.duration = event.duration;
     this._state.audioTracks = event.audioTracks;
     this._state.videoTracks = event.videoTracks;
-    this._state.textTracks = event.textTracks;
     this._state.selectedAudioTrack = event.selectedAudioTrack;
     this._state.selectedVideoTrack = event.selectedVideoTrack;
-    this._state.selectedTextTrack = event.selectedTextTrack;
     if (isFinite(this._state.duration)) {
       this._state.seekable = [{ start: 0, end: this._state.duration }];
     }
@@ -175,35 +145,6 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   private onProgress = (event: ProgressEvent) => {
     this._state.seekable = event.seekable?.sort((a, b) => a.end - b.end);
     this._state.buffered = event.buffered?.sort((a, b) => a.end - b.end);
-  };
-
-  private onTextTrack = (event: TextTrackEvent) => {
-    const { subType, cue, trackUid } = event;
-    const track = findTextTrackByUid(this._state.textTracks, trackUid);
-    switch (subType) {
-      case TextTrackEventType.ADD_CUE:
-        addTextTrackCue(track, cue);
-        break;
-      case TextTrackEventType.REMOVE_CUE:
-        removeTextTrackCue(track, cue);
-        break;
-    }
-  };
-
-  private onTextTrackList = (event: TextTrackListEvent) => {
-    const { subType, track } = event;
-    switch (subType) {
-      case TrackListEventType.ADD_TRACK:
-        this._state.textTracks = addTrack(this._state.textTracks, track);
-        break;
-      case TrackListEventType.REMOVE_TRACK:
-        this._state.textTracks = removeTrack(this._state.textTracks, track);
-        break;
-      case TrackListEventType.CHANGE_TRACK:
-        this._state.textTracks = removeTrack(this._state.textTracks, track);
-        this._state.textTracks = addTrack(this._state.textTracks, track);
-        break;
-    }
   };
 
   private onMediaTrack = (event: MediaTrackEvent) => {
@@ -295,7 +236,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   }
 
   get seekable() {
-    return this._state.seekable;
+    return this._state.seekable ?? [];
   }
 
   private seekableEnd(): number {
@@ -304,7 +245,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   }
 
   get buffered() {
-    return this._state.buffered;
+    return this._state.buffered ?? [];
   }
 
   get cast(): CastAPI {
@@ -433,17 +374,9 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   }
 
   set selectedTextTrack(trackUid: number | undefined) {
-    if (!this.hasValidSource()) {
-      return;
-    }
     this._state.selectedTextTrack = trackUid;
-    this.textTracks.forEach((track) => {
-      if (track.uid === trackUid) {
-        track.mode = TextTrackMode.showing;
-      } else if (track.mode === TextTrackMode.showing) {
-        track.mode = TextTrackMode.disabled;
-      }
-    });
+
+    // Apply native selection
     NativePlayerModule.setSelectedTextTrack(this._view.nativeHandle, trackUid !== undefined ? trackUid : -1);
   }
 
@@ -461,7 +394,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._state.source = source;
     NativePlayerModule.setSource(this._view.nativeHandle, source);
     // Reset state for play-out of new source
-    Object.assign(this._state, {
+    this._state.apply({
       playbackRate: 1,
       seeking: false,
       audioTracks: [],
@@ -552,11 +485,25 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     return this._externalEventRouter ?? (this._externalEventRouter = new EventBroadcastAdapter(this));
   }
 
+  /**
+   * initializeFromNativePlayer is called when the native player is ready and has sent the `onNativePlayerReady` event.
+   *
+   * @param version The native player version.
+   * @param state An optional initial player state.
+   */
   initializeFromNativePlayer_(version: PlayerVersion, state: NativePlayerState | undefined) {
     this._playerVersion = version;
     if (state) {
-      Object.assign(this._state, state);
+      this._state.apply(state);
     }
     this._castAdapter.init_();
+  }
+
+  get width(): number | undefined {
+    return this._state.width;
+  }
+
+  get height(): number | undefined {
+    return this._state.height;
   }
 }

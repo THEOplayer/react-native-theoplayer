@@ -28,6 +28,18 @@ export interface TimeUpdateEvent extends Event<PlayerEventType.TIME_UPDATE> {
   readonly currentProgramDateTime?: number;
 }
 
+export interface ResizeEvent extends Event<PlayerEventType.RESIZE> {
+  /**
+   * The player's current width.
+   */
+  readonly width: number;
+
+  /**
+   * The player's current height.
+   */
+  readonly height: number;
+}
+
 export interface DurationChangeEvent extends Event<PlayerEventType.DURATION_CHANGE> {
   /**
    * The player's new duration, in msecs.

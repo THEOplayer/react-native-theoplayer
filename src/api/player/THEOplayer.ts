@@ -227,4 +227,14 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
    * Event Broadcast API.
    */
   readonly broadcast: EventBroadcastAPI;
+
+  /**
+   * The width of the player.
+   */
+  readonly width: number | undefined;
+
+  /**
+   * The height of the player.
+   */
+  readonly height: number | undefined;
 }

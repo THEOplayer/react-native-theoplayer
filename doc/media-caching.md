@@ -41,7 +41,7 @@ Below is an example of creating a caching task:
 ```typescript
 // The source we want to cache.
 const source = {
-    source: [
+    sources: [
         {
             src: "https://cdn.theoplayer.com/video/big_buck_bunny/big_buck_bunny.m3u8",
             type: "application/x-mpegurl"

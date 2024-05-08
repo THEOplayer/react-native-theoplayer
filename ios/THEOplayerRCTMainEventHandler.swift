@@ -29,6 +29,7 @@ public class THEOplayerRCTMainEventHandler {
     var onNativeRateChange: RCTDirectEventBlock?
     var onNativeWaiting: RCTDirectEventBlock?
     var onNativeCanPlay: RCTDirectEventBlock?
+    var onNativeResize: RCTDirectEventBlock?
     
     // MARK: player Listeners
     private var playListener: EventListener?
@@ -50,7 +51,11 @@ public class THEOplayerRCTMainEventHandler {
     private var rateChangeListener: EventListener?
     private var waitingListener: EventListener?
     private var canPlayListener: EventListener?
+    private var resizeListener: EventListener?
     private var presentationModeChangeListener: EventListener?
+    
+    // MARK: player observer
+    private var videoRectObserver: NSKeyValueObservation?
     
     // MARK: - destruction
     func destroy() {
@@ -303,7 +308,36 @@ public class THEOplayerRCTMainEventHandler {
                 forwardedCanPlayEvent([:])
             }
         }
-        if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] Waiting listener attached to THEOplayer") }
+        if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] CanPlay listener attached to THEOplayer") }
+        
+        // RESIZE: TODO on iOS SDK
+        /*self.resizeListener = player.addEventListener(type: PlayerEventTypes.RESIZE) { [weak self, weak player] event in
+            if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received RESIZE event from THEOplayer") }
+            if let wplayer = player,
+               let forwardedResizeEvent = self?.onNativeResize {
+                forwardedResizeEvent(
+                    [
+                        "width": wplayer.videoWidth,
+                        "height": wplayer.videoHeight,
+                    ]
+                )
+            }
+        }
+        if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] Resize listener attached to THEOplayer") }*/
+        
+        // RESIZE: implemented using videoRect Observation
+        self.videoRectObserver = player.observe(\.videoRect, options: [.new]) { [weak self, weak player] view, change in
+            if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Observed videoRect change on THEOplayer") }
+            if let wplayer = player,
+               let forwardedResizeEvent = self?.onNativeResize {
+                forwardedResizeEvent(
+                    [
+                        "width": wplayer.frame.width,
+                        "height": wplayer.frame.height,
+                    ]
+                )
+            }
+        }
     }
     
     private func dettachListeners() {
@@ -418,5 +452,13 @@ public class THEOplayerRCTMainEventHandler {
             player.removeEventListener(type: PlayerEventTypes.CAN_PLAY, listener: canPlayListener)
             if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] CanPlay listener dettached from THEOplayer") }
         }
+        
+        // RESIZE
+        /*if let resizeListener = self.resizeListener {
+            player.removeEventListener(type: PlayerEventTypes.RESIZE, listener: resizeListener)
+            if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] Resize listener dettached from THEOplayer") }
+        }*/
+        self.videoRectObserver?.invalidate()
+        self.videoRectObserver = nil
     }
 }

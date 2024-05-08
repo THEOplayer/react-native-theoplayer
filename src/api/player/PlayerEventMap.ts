@@ -10,6 +10,7 @@ import type {
   TimeUpdateEvent,
   PresentationModeChangeEvent,
   VolumeChangeEvent,
+  ResizeEvent,
 } from '../event/PlayerEvent';
 import type { MediaTrackEvent, MediaTrackListEvent, TextTrackEvent, TextTrackListEvent } from '../event/TrackEvent';
 import type { AdEvent } from '../event/AdEvent';
@@ -44,6 +45,7 @@ export enum PlayerEventType {
   WAITING = 'waiting',
   PRESENTATIONMODE_CHANGE = 'presentationmodechange',
   DESTROY = 'destroy',
+  RESIZE = 'resize',
 }
 
 /**
@@ -195,4 +197,9 @@ export interface PlayerEventMap {
    * Dispatched when the player will be destroyed.
    */
   [PlayerEventType.DESTROY]: Event<PlayerEventType.DESTROY>;
+
+  /**
+   * Dispatched when the player size changes.
+   */
+  [PlayerEventType.RESIZE]: ResizeEvent;
 }

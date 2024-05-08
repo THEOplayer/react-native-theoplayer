@@ -1,4 +1,4 @@
-import type { ChromelessPlayer } from 'theoplayer';
+import type { AdsEventMap as NativeAdsEventMap, ChromelessPlayer } from 'theoplayer';
 import type {
   AddTrackEvent,
   CastStateChangeEvent,
@@ -16,6 +16,7 @@ import type {
   TimeUpdateEvent as NativeTimeUpdateEvent,
   TrackChangeEvent,
   VolumeChangeEvent as NativeVolumeChangeEvent,
+  DimensionChangeEvent as NativeDimensionChangeEvent,
 } from 'theoplayer';
 import type { AdEvent, MediaTrack, TextTrack, TimeRange } from 'react-native-theoplayer';
 import {
@@ -46,6 +47,7 @@ import {
   DefaultProgressEvent,
   DefaultRateChangeEvent,
   DefaultReadyStateChangeEvent,
+  DefaultResizeEvent,
   DefaultSegmentNotFoundEvent,
   DefaultTextTrackEvent,
   DefaultTextTrackListEvent,
@@ -85,6 +87,7 @@ export class WebEventForwarder {
     this._player.addEventListener('ratechange', this.onPlaybackRateChange);
     this._player.addEventListener('segmentnotfound', this.onSegmentNotFound);
     this._player.addEventListener('volumechange', this.onVolumeChangeEvent);
+    this._player.addEventListener('dimensionchange', this.onDimensionChange);
     this._player.presentation.addEventListener('presentationmodechange', this.onPresentationModeChange);
 
     this._player.textTracks.addEventListener('addtrack', this.onAddTextTrack);
@@ -251,6 +254,10 @@ export class WebEventForwarder {
     this._facade.dispatchEvent(new DefaultPresentationModeChangeEvent(event.presentationMode as PresentationMode, PresentationMode.inline)); // TODO: move to extended event
   };
 
+  private readonly onDimensionChange = (event: NativeDimensionChangeEvent) => {
+    this._facade.dispatchEvent(new DefaultResizeEvent(event.width, event.height));
+  };
+
   private readonly onAddTextTrack = (event: AddTrackEvent) => {
     const track = event.track as NativeTextTrack;
     if (track.kind === TextTrackKind.metadata) {
@@ -370,7 +377,7 @@ export class WebEventForwarder {
   };
 }
 
-const FORWARDED_AD_EVENTS: Array<AdEventType> = [
+const FORWARDED_AD_EVENTS = [
   AdEventType.ADD_AD_BREAK,
   AdEventType.REMOVE_AD_BREAK,
   AdEventType.AD_LOADED,
@@ -390,7 +397,7 @@ const FORWARDED_AD_EVENTS: Array<AdEventType> = [
   AdEventType.AD_ERROR,
   AdEventType.AD_METADATA,
   AdEventType.AD_BUFFERING,
-];
+] as (keyof NativeAdsEventMap)[];
 
 function fromTimeRanges(timeRanges: TimeRanges): TimeRange[] {
   const result: TimeRange[] = [];

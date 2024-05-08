@@ -54,6 +54,8 @@ private const val EVENT_PROP_CUE = "cue"
 private const val EVENT_PROP_QUALITIES = "qualities"
 private const val EVENT_PROP_VOLUME = "volume"
 private const val EVENT_PROP_MUTED = "muted"
+private const val EVENT_PROP_WIDTH = "width"
+private const val EVENT_PROP_HEIGHT = "height"
 
 class PayloadBuilder {
   private val payload: WritableMap = Arguments.createMap()
@@ -131,6 +133,10 @@ class PayloadBuilder {
     payload.putBoolean(EVENT_PROP_MUTED, muted)
   }
 
+  fun size(width: Int, height: Int) = apply {
+    payload.putInt(EVENT_PROP_WIDTH, width)
+    payload.putInt(EVENT_PROP_HEIGHT, height)
+  }
   fun seekable(ranges: TimeRanges?) = apply {
     payload.putArray(EVENT_PROP_SEEKABLE, fromTimeRanges(ranges))
   }
