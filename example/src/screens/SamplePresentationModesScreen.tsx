@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    backgroundColor: '#333333',
+    backgroundColor: 'transparent',
   },
   TEXT: {
     marginVertical: 20,
@@ -127,6 +127,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: Platform.OS === 'web' ? 640 : 320,
     height: Platform.OS === 'web' ? 480 : 240,
-    backgroundColor: '#000000',
+    backgroundColor: 'transparent',
   },
 });
