@@ -1,4 +1,7 @@
 import { DarkTheme } from '@react-navigation/native';
+import { Platform } from 'react-native';
+
+const backgroundColor = Platform.OS === 'web' ? 'transparent' : 'black';
 
 export const navTheme = {
   ...DarkTheme,
@@ -6,7 +9,7 @@ export const navTheme = {
   colors: {
     ...DarkTheme.colors,
     primary: '#FFC50F',
-    background: 'transparent',
+    background: backgroundColor,
   },
 };
 
