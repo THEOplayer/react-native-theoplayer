@@ -17,7 +17,7 @@ import { THEOplayerWebAdsAdapter } from './ads/THEOplayerWebAdsAdapter';
 import { THEOplayerWebCastAdapter } from './cast/THEOplayerWebCastAdapter';
 import { ChromelessPlayer as NativeChromelessPlayer, SourceDescription as NativeSourceDescription, version as nativeVersion } from 'theoplayer';
 import type { MediaTrack as NativeMediaTrack, TextTrack as NativeTextTrack } from 'theoplayer';
-import { findNativeQualitiesByUid, fromNativeMediaTrackList, fromNativeTextTrackList } from './web/TrackUtils';
+import { findNativeQualitiesByUid, fromNativeMediaTrackList } from './web/TrackUtils';
 import type { ABRConfiguration, SourceDescription } from 'src/api/barrel';
 import { WebEventForwarder } from './WebEventForwarder';
 import type { PiPConfiguration } from 'src/api/pip/PiPConfiguration';
@@ -25,7 +25,9 @@ import type { BackgroundAudioConfiguration } from 'src/api/backgroundAudio/Backg
 import { WebPresentationModeManager } from './web/WebPresentationModeManager';
 import { WebMediaSession } from './web/WebMediaSession';
 import { BaseEvent } from './event/BaseEvent';
-import { EventBroadcastAdapter } from "./broadcast/EventBroadcastAdapter";
+import { EventBroadcastAdapter } from './broadcast/EventBroadcastAdapter';
+import { TextTrackState } from './NativePlayerState';
+import { DefaultTextTrackState } from './DefaultTextTrackState';
 
 const defaultBackgroundAudioConfiguration: BackgroundAudioConfiguration = {
   enabled: false,
@@ -38,6 +40,7 @@ const defaultPipConfiguration: PiPConfiguration = {
 export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayer {
   private readonly _adsAdapter: THEOplayerWebAdsAdapter;
   private readonly _castAdapter: THEOplayerWebCastAdapter;
+  private readonly _textTrackState: TextTrackState;
   private readonly _presentationModeManager: WebPresentationModeManager;
   private _player: NativeChromelessPlayer | undefined;
   private _eventForwarder: WebEventForwarder | undefined;
@@ -52,6 +55,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     this._player = player;
     this._adsAdapter = new THEOplayerWebAdsAdapter(this._player);
     this._castAdapter = new THEOplayerWebCastAdapter(this._player);
+    this._textTrackState = new DefaultTextTrackState(this);
     this._eventForwarder = new WebEventForwarder(this._player, this);
     this._presentationModeManager = new WebPresentationModeManager(this._player, this);
     document.addEventListener('visibilitychange', this.onVisibilityChange);
@@ -195,22 +199,20 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   }
 
   get textTracks(): TextTrack[] {
-    return this._player ? fromNativeTextTrackList(this._player.textTracks) : [];
+    return this._textTrackState.textTracks;
   }
 
   get selectedTextTrack(): number | undefined {
-    if (this._player) {
-      return this._player.textTracks.find((textTrack: NativeTextTrack) => {
-        return textTrack.mode === 'showing';
-      })?.uid;
-    }
-    return undefined;
+    return this._player ? this._textTrackState.selectedTextTrack : undefined;
   }
 
-  set selectedTextTrack(selectedTextTrack: number | undefined) {
+  set selectedTextTrack(trackUid: number | undefined) {
     if (this._player) {
+      this._textTrackState.selectedTextTrack = trackUid;
+
+      // Apply native selection
       this._player.textTracks.forEach((textTrack: NativeTextTrack) => {
-        textTrack.mode = textTrack.uid === selectedTextTrack ? 'showing' : 'disabled';
+        textTrack.mode = textTrack.uid === trackUid ? 'showing' : 'disabled';
       });
     }
   }

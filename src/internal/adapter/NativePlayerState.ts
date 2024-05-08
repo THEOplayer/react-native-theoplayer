@@ -1,31 +1,43 @@
-import type { MediaTrack, PreloadType, PresentationMode, SourceDescription, TextTrack, TimeRange } from 'react-native-theoplayer';
+import { MediaTrack, PreloadType, PresentationMode, SourceDescription, TextTrack, TimeRange } from 'react-native-theoplayer';
 import type { PiPConfiguration, AspectRatio, BackgroundAudioConfiguration } from 'react-native-theoplayer';
 
-export interface NativePlayerState {
+export interface PlayerConfigState {
   source: SourceDescription | undefined;
   autoplay: boolean;
-  paused: boolean;
-  seekable: TimeRange[] | undefined;
-  buffered: TimeRange[] | undefined;
   pipConfig: PiPConfiguration;
   backgroundAudioConfig: BackgroundAudioConfiguration;
-  presentationMode: PresentationMode;
+  preload: PreloadType;
+  keepScreenOn: boolean;
+  width: number | undefined;
+  height: number | undefined;
+}
+
+export interface PlaybackState {
+  paused: boolean;
   muted: boolean;
   seeking: boolean;
   volume: number;
   currentTime: number;
   duration: number;
   playbackRate: number;
-  preload: PreloadType;
+  seekable: TimeRange[];
+  buffered: TimeRange[];
+  presentationMode: PresentationMode;
   aspectRatio: AspectRatio;
-  keepScreenOn: boolean;
+}
+
+export interface MediaTrackState {
   audioTracks: MediaTrack[];
   videoTracks: MediaTrack[];
-  textTracks: TextTrack[];
   targetVideoQuality: number | number[] | undefined;
   selectedVideoTrack: number | undefined;
   selectedAudioTrack: number | undefined;
+}
+
+export interface TextTrackState {
+  textTracks: TextTrack[];
   selectedTextTrack: number | undefined;
-  width: number | undefined;
-  height: number | undefined;
+}
+
+export interface NativePlayerState extends PlayerConfigState, PlaybackState, TextTrackState, MediaTrackState {
 }
