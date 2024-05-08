@@ -183,6 +183,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [7.4.0] - 24-06-11
 
+### Changed
+
+- Updated the example app to a stack navigation based setup with sample screens for different features.
+
 ### Added
 
 - Added support for `SourceDescription.poster` for Android & iOS.
