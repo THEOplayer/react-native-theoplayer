@@ -155,10 +155,12 @@ class ReactTHEOplayerContext private constructor(
     // Reduce allowed set of remote control playback actions for ads & live streams.
     val isLive = player.duration.isInfinite()
     val isInAd = player.ads.isPlaying
-    mediaSessionConnector?.enabledPlaybackActions = if (isInAd || isLive && !isTV) {
-      0
-    } else {
-      ALLOWED_PLAYBACK_ACTIONS
+    mediaSessionConnector?.enabledPlaybackActions = when {
+      isInAd || isLive && !isTV -> 0
+      isLive && isTV -> ALLOWED_PLAYBACK_ACTIONS xor
+        PlaybackStateCompat.ACTION_FAST_FORWARD xor
+        PlaybackStateCompat.ACTION_REWIND
+      else -> ALLOWED_PLAYBACK_ACTIONS
     }
   }
 

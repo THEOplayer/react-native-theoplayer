@@ -53,23 +53,22 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
     playerContext = ReactTHEOplayerContext.create(
       reactContext,
       PlayerConfigAdapter(configProps)
-    )
-    playerContext?.let {
+    ).apply {
       if (BuildConfig.EXTENSION_ADS) {
-        adsApi.initialize(it.player, it.imaIntegration, it.daiIntegration)
+        adsApi.initialize(player, imaIntegration, daiIntegration)
       }
       val layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-      it.playerView.layoutParams = layoutParams
-      (it.playerView.parent as? ViewGroup)?.removeView(it.playerView)
-      addView(it.playerView, 0, layoutParams)
+      playerView.layoutParams = layoutParams
+      (playerView.parent as? ViewGroup)?.removeView(playerView)
+      addView(playerView, 0, layoutParams)
 
       presentationManager = PresentationManager(
-        it,
+        this,
         reactContext,
         eventEmitter
       )
 
-      eventEmitter.preparePlayer(it.player)
+      eventEmitter.preparePlayer(player)
     }
   }
 
