@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Disabled skip forward/backward remote control buttons by default for Live content on Android TV platforms.
 
+### Added
+
+- Added support for React Native 0.74 and upgraded the example application to depend on `react-native-tvos` 0.74.1.
+
 ### Fixed
 
 - Fixed an issue where on the iOS bridge the wrong value was extracted from the CachingParameters to configure the bandwidth setting on the MediaCache.
