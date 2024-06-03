@@ -41,7 +41,7 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
   /**
    * The player's adaptive bitrate (ABR) configuration.
    */
-  readonly abr: ABRConfiguration;
+  readonly abr: ABRConfiguration | undefined;
 
   /**
    * A source description that determines the current media resource.

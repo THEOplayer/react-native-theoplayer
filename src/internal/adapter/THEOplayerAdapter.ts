@@ -197,7 +197,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     }
   };
 
-  get abr(): ABRConfiguration {
+  get abr(): ABRConfiguration | undefined {
     return this._abrAdapter;
   }
 
