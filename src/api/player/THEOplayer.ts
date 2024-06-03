@@ -12,7 +12,7 @@ import type { PresentationMode } from '../presentation/PresentationMode';
 import type { PiPConfiguration } from '../pip/PiPConfiguration';
 import type { BackgroundAudioConfiguration } from '../backgroundAudio/BackgroundAudioConfiguration';
 import type { PlayerVersion } from './PlayerVersion';
-import type { EventBroadcastAPI } from "../broadcast/EventBroadcastAPI";
+import type { EventBroadcastAPI } from '../broadcast/EventBroadcastAPI';
 
 export type PreloadType = 'none' | 'metadata' | 'auto' | '';
 
@@ -40,11 +40,8 @@ export type NativeHandleType = unknown;
 export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
   /**
    * The player's adaptive bitrate (ABR) configuration.
-   *
-   * @remarks
-   * <br/> - This property is supported on Android & Web platforms only.
    */
-  readonly abr: ABRConfiguration | undefined;
+  readonly abr: ABRConfiguration;
 
   /**
    * A source description that determines the current media resource.
