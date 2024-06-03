@@ -197,8 +197,8 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     }
   };
 
-  get abr(): ABRConfiguration | undefined {
-    return Platform.OS === 'android' ? this._abrAdapter : undefined;
+  get abr(): ABRConfiguration {
+    return this._abrAdapter;
   }
 
   get ads(): AdsAPI {

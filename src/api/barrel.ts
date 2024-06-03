@@ -12,6 +12,7 @@ export * from './media/barrel';
 export * from './drm/barrel';
 export * from './source/barrel';
 export * from './timeranges/barrel';
+export * from './resolution/barrel';
 export * from './track/barrel';
 export * from './ui/barrel';
 export * from './utils/barrel';
