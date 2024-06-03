@@ -7,7 +7,8 @@ import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.bridge.WritableNativeMap
-import com.facebook.react.uimanager.events.ReactEventEmitter
+import com.facebook.react.uimanager.UIManagerHelper
+import com.facebook.react.uimanager.common.ViewUtil
 import com.theoplayer.ads.AdEventAdapter
 import com.theoplayer.ads.AdEventAdapter.AdEventEmitter
 import com.theoplayer.android.api.THEOplayerGlobal
@@ -45,6 +46,7 @@ import com.theoplayer.presentation.PresentationModeChangeContext
 import com.theoplayer.track.*
 import com.theoplayer.util.PayloadBuilder
 import kotlin.math.floor
+
 
 private val TAG = PlayerEventEmitter::class.java.name
 
@@ -85,7 +87,7 @@ private const val EVENT_PROP_SUITE_VERSION = "playerSuiteVersion"
 
 @Suppress("UNCHECKED_CAST")
 class PlayerEventEmitter internal constructor(
-  reactContext: ReactApplicationContext,
+  private val reactContext: ReactApplicationContext,
   playerView: ReactTHEOplayerView
 ) {
   @Retention(AnnotationRetention.SOURCE)
@@ -156,7 +158,6 @@ class PlayerEventEmitter internal constructor(
     )
   }
 
-  private val eventEmitter: ReactEventEmitter
   private var viewId = View.NO_ID
   private val playerListeners = HashMap<EventType<*>, EventListener<*>>()
   private val textTrackListeners = HashMap<EventType<*>, EventListener<*>>()
@@ -174,7 +175,6 @@ class PlayerEventEmitter internal constructor(
   }
 
   init {
-    eventEmitter = ReactEventEmitter(reactContext)
     this.playerView = playerView
 
     // Create listeners
@@ -615,7 +615,8 @@ class PlayerEventEmitter internal constructor(
       } catch (ignore: RuntimeException) {
       }
     }
-    eventEmitter.receiveEvent(viewId, type, event)
+    val uiManager = UIManagerHelper.getUIManager(reactContext, ViewUtil.getUIManagerType(viewId))
+    uiManager?.receiveEvent(UIManagerHelper.getSurfaceId(reactContext), viewId, type, event)
   }
 
   private fun attachListeners(player: Player) {

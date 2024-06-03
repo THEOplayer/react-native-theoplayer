@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [7.3.0] - 24-06-03
+
+### Changed
+
+- Disabled skip forward/backward remote control buttons by default for Live content on Android TV platforms.
+
+### Added
+
+- Added support for React Native 0.74 and upgraded the example application to depend on `react-native-tvos` 0.74.1.
+
+### Fixed
+
+- Fixed an issue where on the iOS bridge the wrong value was extracted from the CachingParameters to configure the bandwidth setting on the MediaCache.
+
 ## [7.2.0] - 24-05-12
 
 ### Added

@@ -11,7 +11,7 @@ class THEOplayerRCTCachingParametersBuilder {
         if let expirationDateTimestamp = paramsData[CACHETASK_PROP_PARAMETERS_EXPIRATION_DATE] as? Double {
             expirationDate = Date(timeIntervalSince1970: expirationDateTimestamp * 0.001) // msec -> sec
         }
-        let bandWidth = paramsData[CACHETASK_PROP_PARAMETERS_EXPIRATION_DATE] as? Int
+        let bandWidth = paramsData[CACHETASK_PROP_PARAMETERS_BANDWIDTH] as? Int
         let cachingParameters = CachingParameters(expirationDate: expirationDate, bandwidth: bandWidth)
         let preferredTrackSelection = paramsData[CACHETASK_PROP_PARAMETERS_TRACK_SELECTION] as? [String:Any]
         cachingParameters.preferredTrackSelection = THEOplayerRCTCachingParametersBuilder.buildPreferredTrackSelection(preferredTrackSelection)
