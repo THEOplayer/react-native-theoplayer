@@ -10,7 +10,6 @@ import THEOplayerSDK
 import THEOplayerConnectorSideloadedSubtitle
 #endif
 
-let ERROR_MESSAGE_PLAYER_ABR_UNSUPPORTED_FEATURE: String = "Setting an ABRconfig is not supported on iOS/tvOS."
 let ERROR_MESSAGE_PLAYER_QUALITY_UNSUPPORTED_FEATURE: String = "Setting a target video quality is not supported on iOS/tvOS."
 
 let TTS_PROP_BACKGROUND_COLOR = "backgroundColor"
