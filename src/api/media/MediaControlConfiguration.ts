@@ -27,20 +27,14 @@ export interface MediaControlConfiguration {
   /**
    * The amount of seconds the player will skip forward.
    *
-   * @defaultValue 5
-   *
-   * @remarks
-   * <br/> - This property only applies to Web and Android.
+   * @defaultValue 5 on Web and android, 15 on iOS.
    */
   readonly skipForwardInterval?: number;
 
   /**
    * The amount of seconds the player will skip backward.
    *
-   * @defaultValue 5
-   *
-   * @remarks
-   * <br/> - This property only applies to Web and Android.
+   * @defaultValue 5 on Web and android, 15 on iOS.
    */
   readonly skipBackwardInterval?: number;
 }

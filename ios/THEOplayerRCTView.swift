@@ -18,10 +18,16 @@ public class THEOplayerRCTView: UIView {
     var nowPlayingManager: THEOplayerRCTNowPlayingManager
     var remoteCommandsManager: THEOplayerRCTRemoteCommandsManager
     var pipControlsManager: THEOplayerRCTPipControlsManager
+    
     var adsConfig = AdsConfig()
     var castConfig = CastConfig()
     var uiConfig = UIConfig()
     
+    var mediaControlConfig = MediaControlConfig() {
+        didSet {
+            self.remoteCommandsManager.setMediaControlConfig(mediaControlConfig)
+        }
+    }
     var pipConfig = PipConfig() {
         didSet {
             self.pipControlsManager.setPipConfig(pipConfig)
@@ -161,6 +167,7 @@ public class THEOplayerRCTView: UIView {
         self.parseAdsConfig(configDict: configDict)
         self.parseCastConfig(configDict: configDict)
         self.parseUIConfig(configDict: configDict)
+        self.parseMediaControlConfig(configDict: configDict)
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] config prop updated.") }
         
         // Given the bridged config, create the initial THEOplayer instance
