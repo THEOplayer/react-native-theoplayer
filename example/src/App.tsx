@@ -51,6 +51,8 @@ const playerConfig: PlayerConfiguration = {
   },
   mediaControl: {
     mediaSessionEnabled: true,
+    skipForwardInterval: 30,
+    skipBackwardInterval: 10,
   },
 };
 
@@ -77,7 +79,7 @@ export default function App() {
     player.source = SOURCES[0].source;
 
     player.backgroundAudioConfiguration = { enabled: true };
-    player.pipConfiguration = { startsAutomatically: true };
+    player.pipConfiguration = { startsAutomatically: false };
     console.log('THEOplayer is ready:', player.version);
   };
 
