@@ -113,7 +113,7 @@ class MediaPlaybackService : Service() {
     super.onTaskRemoved(rootIntent)
     if (STOP_SERVICE_IF_APP_REMOVED) {
       notificationManager.cancel(NOTIFICATION_ID)
-      stopForegroundService()
+      stopSelf()
     }
   }
 
@@ -221,8 +221,6 @@ class MediaPlaybackService : Service() {
         }
       }
       PlaybackStateCompat.STATE_STOPPED -> {
-        // Fixes the crash where the service is stopped
-        startForegroundWithPlaybackState(playbackState, largeIcon = loadPlaceHolderIcon(this))
         // Remove this service from foreground state, allowing it to be killed if more memory is
         // needed. This does not stop the service from running (for that you use stopSelf()
         // or related methods), just takes it out of the foreground state.
