@@ -4,14 +4,13 @@ import Foundation
 import THEOplayerSDK
 import MediaPlayer
 
-let DEFAULT_SKIP_INTERVAL: UInt = 15
-
 class THEOplayerRCTRemoteCommandsManager: NSObject {
     // MARK: Members
     private weak var player: THEOplayer?
     private var isLive: Bool = false
     private var inAd: Bool = false
     private var backgroundaudioConfig = BackgroundAudioConfig()
+    private var mediaControlConfig = MediaControlConfig()
     
     // MARK: player Listeners
     private var durationChangeListener: EventListener?
@@ -39,6 +38,11 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         self.updateRemoteCommands()
     }
     
+    func setMediaControlConfig(_ newMediaControlConfig: MediaControlConfig) {
+        self.mediaControlConfig = newMediaControlConfig
+        self.updateRemoteCommands()
+    }
+    
     private func initRemoteCommands() {
         self.isLive = false
         self.inAd = false
@@ -61,10 +65,10 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         // SCRUBBER
         commandCenter.changePlaybackPositionCommand.addTarget(self, action: #selector(onScrubCommand(_:)))
         // ADD SEEK FORWARD
-        commandCenter.skipForwardCommand.preferredIntervals = [NSNumber(value: DEFAULT_SKIP_INTERVAL)]
+        commandCenter.skipForwardCommand.preferredIntervals = [NSNumber(value: self.mediaControlConfig.skipForwardInterval)]
         commandCenter.skipForwardCommand.addTarget(self, action: #selector(onSkipForwardCommand(_:)))
         // ADD SEEK BACKWARD
-        commandCenter.skipBackwardCommand.preferredIntervals = [NSNumber(value: DEFAULT_SKIP_INTERVAL)]
+        commandCenter.skipBackwardCommand.preferredIntervals = [NSNumber(value: self.mediaControlConfig.skipBackwardInterval)]
         commandCenter.skipBackwardCommand.addTarget(self, action: #selector(onSkipBackwardCommand(_:)))
         
         if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Remote commands initialised.") }
@@ -81,6 +85,10 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         commandCenter.changePlaybackPositionCommand.isEnabled = !self.isLive && !self.inAd && self.backgroundaudioConfig.enabled
         commandCenter.skipForwardCommand.isEnabled = !self.isLive && !self.inAd && self.backgroundaudioConfig.enabled
         commandCenter.skipBackwardCommand.isEnabled = !self.isLive && !self.inAd && self.backgroundaudioConfig.enabled
+        
+        // set configured skip forward/backward intervals
+        commandCenter.skipForwardCommand.preferredIntervals = [NSNumber(value: self.mediaControlConfig.skipForwardInterval)]
+        commandCenter.skipBackwardCommand.preferredIntervals = [NSNumber(value: self.mediaControlConfig.skipBackwardInterval)]
         
         if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Remote commands updated for \(self.isLive ? "LIVE" : "VOD") (\(self.inAd ? "AD IS PLAYING" : "NO AD PLAYING"), \(self.backgroundaudioConfig.enabled ? "BGAUDIO ENABLED" : "BGAUDIO DISABLED") ).") }
     }
