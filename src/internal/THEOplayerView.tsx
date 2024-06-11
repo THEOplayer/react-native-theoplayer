@@ -65,6 +65,7 @@ import type {
 import type { NativeAdEvent } from './adapter/event/native/NativeAdEvent';
 import { THEOplayerAdapter } from './adapter/THEOplayerAdapter';
 import { getFullscreenSize } from './utils/Dimensions';
+import { Poster } from './poster/Poster';
 
 const INVALID_HANDLE = -1;
 
@@ -107,6 +108,8 @@ interface THEOplayerRCTViewState {
   error?: PlayerError;
   presentationMode?: PresentationMode | undefined;
   screenSize: ScaledSize;
+  posterActive: boolean;
+  poster: string | undefined;
 }
 
 type THEOplayerViewNativeComponent = HostComponent<THEOplayerRCTViewProps>;
@@ -120,6 +123,8 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
     error: undefined,
     presentationMode: PresentationMode.inline,
     screenSize: getFullscreenSize(),
+    posterActive: false,
+    poster: undefined,
   };
 
   constructor(props: THEOplayerViewProps) {
@@ -176,6 +181,8 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
   private _onSourceChange = () => {
     this.reset();
     this._facade.dispatchEvent(new BaseEvent(PlayerEventType.SOURCE_CHANGE));
+    this._updatePoster();
+    this._showPoster();
   };
 
   private _onLoadStart = () => {
@@ -221,6 +228,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
 
   private _onPlay = () => {
     this._facade.dispatchEvent(new BaseEvent(PlayerEventType.PLAY));
+    this._hidePoster();
   };
 
   private _onPlaying = () => {
@@ -352,9 +360,21 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
     this._facade.dispatchEvent(new DefaultResizeEvent(event.nativeEvent.width, event.nativeEvent.height));
   };
 
+  private _updatePoster = () => {
+    this.setState({ poster: this._facade.source?.poster });
+  };
+
+  private _showPoster = () => {
+    this.setState({ posterActive: true });
+  };
+
+  private _hidePoster = () => {
+    this.setState({ posterActive: false });
+  };
+
   public render(): JSX.Element {
     const { config, style, children } = this.props;
-    const { presentationMode, screenSize: fullscreenSize } = this.state;
+    const { presentationMode, screenSize: fullscreenSize, posterActive, poster } = this.state;
 
     return (
       <View style={[styles.base, style, presentationMode === PresentationMode.fullscreen ? fullscreenSize : {}]}>
@@ -392,6 +412,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
           onNativePresentationModeChange={this._onPresentationModeChange}
           onNativeResize={this._onResize}
         />
+        {posterActive && <Poster uri={poster} />}
         {children}
       </View>
     );

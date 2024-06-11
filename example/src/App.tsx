@@ -51,6 +51,8 @@ const playerConfig: PlayerConfiguration = {
   },
   mediaControl: {
     mediaSessionEnabled: true,
+    skipForwardInterval: 30,
+    skipBackwardInterval: 10,
   },
 };
 

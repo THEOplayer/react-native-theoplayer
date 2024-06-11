@@ -60,7 +60,6 @@ export interface SourceConfiguration {
    *
    * @remarks
    * <br/> - An empty string (`''`) clears the current poster.
-   * <br/> - This poster has priority over {@link theoplayer!ChromelessPlayer.poster}.
    */
   poster?: string;
 

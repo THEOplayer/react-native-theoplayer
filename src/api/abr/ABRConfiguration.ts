@@ -1,3 +1,5 @@
+import { Resolution } from '../resolution/Resolution';
+
 /**
  * The adaptive bitrate strategy of the first segment, represented by a value from the following list:
  * <br/> - `'performance'`: The player will optimize ABR behavior to focus on the performance of the player. This strategy initiates playback with the lowest quality suitable for the device which means faster start-up time.
@@ -62,6 +64,8 @@ export interface ABRConfiguration {
    * The adaptive bitrate strategy.
    *
    * @defaultValue `'bandwidth'`
+   * @remarks
+   * <br/> - This property is currently supported on Web and Android platforms only.
    */
   strategy?: ABRStrategy;
 
@@ -104,4 +108,26 @@ export interface ABRConfiguration {
    * <br/> - This property is currently supported on Web platforms only.
    */
   readonly maxBufferLength?: number;
+
+  /**
+   * The desired limit of network bandwidth consumption for this item.
+   *
+   * Set preferredPeakBitRate to non-zero to indicate that the player should attempt to limit item playback to that bit rate, expressed in bits per second.
+   * If network bandwidth consumption cannot be lowered to meet the preferredPeakBitRate, it will be reduced as much as possible while continuing to play the item.
+   *
+   * @remarks
+   * <br/> - This property is supported on iOS platforms only.
+   */
+  preferredPeakBitRate?: number;
+
+  /**
+   * A preferred upper limit on the resolution of the video to be downloaded (or otherwise transferred) and rendered by the player.
+   *
+   * The default value is (0,0), which indicates that the client enforces no limit on video resolution. Other values indicate a preferred maximum video resolution.
+   * It only applies to HTTP Live Streaming asset.
+   *
+   * @remarks
+   * <br/> - This property is supported on iOS platforms only.
+   */
+  preferredMaximumResolution?: Resolution;
 }
