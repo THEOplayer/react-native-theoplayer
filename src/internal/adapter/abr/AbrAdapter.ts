@@ -1,4 +1,4 @@
-import type { ABRConfiguration, ABRStrategy, THEOplayerView } from 'react-native-theoplayer';
+import type { ABRConfiguration, ABRStrategy, Resolution, THEOplayerView } from 'react-native-theoplayer';
 import { NativeModules } from 'react-native';
 
 const NativePlayerModule = NativeModules.THEORCTPlayerModule;
@@ -7,6 +7,8 @@ export class AbrAdapter implements ABRConfiguration {
   private readonly _view: THEOplayerView;
   private _strategy: ABRStrategy | undefined;
   private _targetBuffer: number | undefined;
+  private _preferredPeakBitRate: number | undefined;
+  private _preferredMaximumResolution: Resolution | undefined;
 
   constructor(view: THEOplayerView) {
     this._view = view;
@@ -30,10 +32,30 @@ export class AbrAdapter implements ABRConfiguration {
     this.updateConfig();
   }
 
+  get preferredPeakBitRate(): number | undefined {
+    return this._preferredPeakBitRate;
+  }
+
+  set preferredPeakBitRate(preferredPeakBitRate: number | undefined) {
+    this._preferredPeakBitRate = preferredPeakBitRate;
+    this.updateConfig();
+  }
+
+  get preferredMaximumResolution(): Resolution | undefined {
+    return this._preferredMaximumResolution;
+  }
+
+  set preferredMaximumResolution(preferredMaximumResolution: Resolution | undefined) {
+    this._preferredMaximumResolution = preferredMaximumResolution;
+    this.updateConfig();
+  }
+
   private updateConfig() {
     NativePlayerModule.setABRConfig(this._view.nativeHandle, {
       targetBuffer: this._targetBuffer,
       strategy: this._strategy,
+      preferredPeakBitRate: this._preferredPeakBitRate,
+      preferredMaximumResolution: this._preferredMaximumResolution,
     });
   }
 }

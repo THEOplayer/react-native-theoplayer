@@ -10,7 +10,6 @@ import THEOplayerSDK
 import THEOplayerConnectorSideloadedSubtitle
 #endif
 
-let ERROR_MESSAGE_PLAYER_ABR_UNSUPPORTED_FEATURE: String = "Setting an ABRconfig is not supported on iOS/tvOS."
 let ERROR_MESSAGE_PLAYER_QUALITY_UNSUPPORTED_FEATURE: String = "Setting a target video quality is not supported on iOS/tvOS."
 
 let TTS_PROP_BACKGROUND_COLOR = "backgroundColor"
@@ -92,8 +91,34 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
     }
 
     @objc(setABRConfig:abrConfig:)
-    func setABRConfig(_ node: NSNumber, setABRConfig: NSDictionary) -> Void {
-        if DEBUG_PLAYER_API { print(ERROR_MESSAGE_PLAYER_ABR_UNSUPPORTED_FEATURE) }
+    func setABRConfig(_ node: NSNumber, abrConfig: NSDictionary) -> Void {
+        DispatchQueue.main.async {
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let player = theView.player {
+                if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Setting abrConfig on TheoPlayer") }
+                if let configuredTargetBuffer = abrConfig["targetBuffer"] as? Double {
+                    player.abr.targetBuffer = configuredTargetBuffer
+                } else if let configuredTargetBuffer = abrConfig["targetBuffer"] as? Int {
+                    player.abr.targetBuffer = Double(configuredTargetBuffer)
+                }
+                if let configuredPreferredPeakBitRate = abrConfig["preferredPeakBitRate"] as? Double {
+                    player.abr.preferredPeakBitRate = configuredPreferredPeakBitRate
+                } else if let configuredPreferredPeakBitRate = abrConfig["preferredPeakBitRate"] as? Int {
+                    player.abr.preferredPeakBitRate = Double(configuredPreferredPeakBitRate)
+                }
+                if let configuredPreferredMaximumResolution = abrConfig["preferredMaximumResolution"] as? [String:Double] {
+                    if let width = configuredPreferredMaximumResolution["width"],
+                       let height = configuredPreferredMaximumResolution["height"] {
+                        player.abr.preferredMaximumResolution = CGSize(width: width, height: height)
+                    }
+                } else if let configuredPreferredMaximumResolution = abrConfig["preferredMaximumResolution"] as? [String:Int] {
+                    if let width = configuredPreferredMaximumResolution["width"],
+                       let height = configuredPreferredMaximumResolution["height"] {
+                        player.abr.preferredMaximumResolution = CGSize(width: Double(width), height: Double(height))
+                    }
+                }
+            }
+        }
     }
 
     @objc(setCurrentTime:time:)
