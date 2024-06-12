@@ -27,9 +27,9 @@ export class THEOplayerNativeCastAdapter implements CastAPI {
     return this._airplay;
   }
 
-  init_(): void {
-    void this._chromecast?.init_();
-    void this._airplay?.init_();
+  async init_(): Promise<void> {
+    await this._chromecast?.init_();
+    await this._airplay?.init_();
   }
 
   unload_(): void {
