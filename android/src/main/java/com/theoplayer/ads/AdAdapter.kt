@@ -16,6 +16,7 @@ import java.lang.Exception
 
 private const val PROP_AD_SYSTEM = "adSystem"
 private const val PROP_AD_INTEGRATION = "integration"
+private const val PROP_AD_CUSTOM_INTEGRATION = "customIntegration"
 private const val PROP_AD_TYPE = "type"
 private const val PROP_AD_ID = "id"
 private const val PROP_AD_BREAK = "adBreak"
@@ -208,6 +209,10 @@ object AdAdapter {
         return AdIntegrationKind.from(ad.getString(PROP_AD_INTEGRATION))
       }
 
+      override fun getCustomIntegration(): String? {
+        return ad.getString(PROP_AD_CUSTOM_INTEGRATION)
+      }
+
       override fun getImaAd(): com.google.ads.interactivemedia.v3.api.Ad {
         return parseImaAd(ad)
       }
@@ -278,6 +283,10 @@ object AdAdapter {
 
       override fun getIntegration(): AdIntegrationKind {
         return AdIntegrationKind.from(adBreak.getString(PROP_ADBREAK_INTEGRATION))
+      }
+
+      override fun getCustomIntegration(): String? {
+        return adBreak.getString(PROP_AD_CUSTOM_INTEGRATION)
       }
     }
   }
