@@ -17,7 +17,12 @@ export type YospaceSSAIIntegrationID = 'yospace';
  *
  * @public
  */
-export type YospaceStreamType = 'vod' | 'live' | 'livepause' | 'nonlinear';
+export enum YospaceStreamType {
+  vod = 'vod',
+  live = 'live',
+  livepause = 'livepause',
+  nonlinear = 'nonlinear'
+}
 
 /**
  * Represents a configuration for server-side ad insertion with the Yospace pre-integration.
