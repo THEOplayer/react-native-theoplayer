@@ -20,9 +20,6 @@ export type DAIAvailabilityType = 'vod' | 'live';
 /**
  * Represents a configuration for server-side ad insertion with the Google DAI pre-integration.
  *
- * @remarks
- * <br/> - Available since v2.30.0.
- *
  * @public
  */
 export interface GoogleDAIConfiguration extends ServerSideAdInsertionConfiguration {
@@ -75,9 +72,6 @@ export interface GoogleDAIConfiguration extends ServerSideAdInsertionConfigurati
 /**
  * Represents a configuration for server-side ad insertion with the Google DAI pre-integration for a Live media stream.
  *
- * @remarks
- * <br/> - Available since v2.30.0.
- *
  * @public
  */
 export interface GoogleDAILiveConfiguration extends GoogleDAIConfiguration {
@@ -98,9 +92,6 @@ export interface GoogleDAILiveConfiguration extends GoogleDAIConfiguration {
 
 /**
  * Represents a configuration for server-side ad insertion with the Google DAI pre-integration for a VOD media stream.
- *
- * @remarks
- * <br/> - Available since v2.30.0.
  *
  * @public
  */
