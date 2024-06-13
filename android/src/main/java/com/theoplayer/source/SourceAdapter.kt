@@ -64,9 +64,7 @@ class SourceAdapter {
     init {
       // Register default SSAI adapter for Google DAI.
       SSAIAdapterRegistry.register(PROP_SSAI_INTEGRATION_GOOGLE_DAI) { json, currentBuilder ->
-        currentBuilder.apply {
-          googleDaiBuilderFromJson(currentBuilder, json)
-        }
+        googleDaiBuilderFromJson(currentBuilder, json)
       }
     }
   }
