@@ -2,11 +2,9 @@ package com.theoplayer.source
 
 import android.text.TextUtils
 import android.util.Log
-import com.facebook.react.bridge.Arguments
 import com.google.gson.Gson
 import com.theoplayer.android.api.error.THEOplayerException
 import com.facebook.react.bridge.ReadableMap
-import com.facebook.react.bridge.WritableArray
 import com.facebook.react.bridge.WritableMap
 import com.theoplayer.android.api.source.SourceDescription
 import com.theoplayer.android.api.source.TypedSource
@@ -14,10 +12,6 @@ import com.theoplayer.android.api.source.metadata.MetadataDescription
 import com.theoplayer.android.api.source.addescription.AdDescription
 import com.theoplayer.android.api.source.TextTrackDescription
 import com.theoplayer.android.api.source.SourceType
-import com.theoplayer.android.api.source.ssai.SsaiIntegration
-import com.theoplayer.android.api.source.GoogleDaiTypedSource
-import com.theoplayer.android.api.source.ssai.dai.GoogleDaiVodConfiguration
-import com.theoplayer.android.api.source.ssai.dai.GoogleDaiLiveConfiguration
 import com.theoplayer.android.api.source.hls.HlsPlaybackConfiguration
 import com.theoplayer.android.api.event.ads.AdIntegrationKind
 import com.theoplayer.android.api.source.addescription.GoogleImaAdDescription
@@ -55,18 +49,25 @@ private const val PROP_INTEGRATION = "integration"
 private const val PROP_TEXT_TRACKS = "textTracks"
 private const val PROP_POSTER = "poster"
 private const val PROP_ADS = "ads"
-private const val PROP_AVAILABILITY_TYPE = "availabilityType"
 private const val PROP_DASH = "dash"
 private const val PROP_DASH_IGNORE_AVAILABILITYWINDOW = "ignoreAvailabilityWindow"
-private const val ERROR_DAI_NOT_ENABLED = "Google DAI support not enabled."
-private const val ERROR_UNSUPPORTED_SSAI_INTEGRATION = "Unsupported SSAI integration"
-private const val ERROR_MISSING_SSAI_INTEGRATION = "Missing SSAI integration"
 private const val ERROR_IMA_NOT_ENABLED = "Google IMA support not enabled."
 private const val ERROR_UNSUPPORTED_CSAI_INTEGRATION = "Unsupported CSAI integration"
 private const val ERROR_MISSING_CSAI_INTEGRATION = "Missing CSAI integration"
 
+private const val PROP_SSAI_INTEGRATION_GOOGLE_DAI = "google-dai"
+
 class SourceAdapter {
   private val gson = Gson()
+
+  companion object {
+    init {
+      // Register default SSAI adapter for Google DAI.
+      SSAIAdapterRegistry.register(PROP_SSAI_INTEGRATION_GOOGLE_DAI) { json, currentBuilder ->
+        googleDaiBuilderFromJson(currentBuilder, json)
+      }
+    }
+  }
 
   @Throws(THEOplayerException::class)
   fun parseSourceFromJS(source: ReadableMap?): SourceDescription? {
@@ -83,17 +84,11 @@ class SourceAdapter {
       val jsonSources = jsonSourceObject.optJSONArray(PROP_SOURCES)
       if (jsonSources != null) {
         for (i in 0 until jsonSources.length()) {
-          val typedSource = parseTypedSource(jsonSources[i] as JSONObject)
-          if (typedSource != null) {
-            typedSources.add(typedSource)
-          }
+          typedSources.add(parseTypedSource(jsonSources[i] as JSONObject))
         }
       } else {
         val jsonSource = jsonSourceObject.optJSONObject(PROP_SOURCES) ?: return null
-        val typedSource = parseTypedSource(jsonSource)
-        if (typedSource != null) {
-          typedSources.add(typedSource)
-        }
+        typedSources.add(parseTypedSource(jsonSource))
       }
 
       // poster
@@ -142,48 +137,13 @@ class SourceAdapter {
   }
 
   @Throws(THEOplayerException::class)
-  private fun parseTypedSource(jsonTypedSource: JSONObject): TypedSource? {
+  private fun parseTypedSource(jsonTypedSource: JSONObject): TypedSource {
     try {
       var tsBuilder = TypedSource.Builder(jsonTypedSource.optString(PROP_SRC))
       val sourceType = parseSourceType(jsonTypedSource)
       if (jsonTypedSource.has(PROP_SSAI)) {
         val ssaiJson = jsonTypedSource.getJSONObject(PROP_SSAI)
-
-        // Check for valid SsaiIntegration
-        val ssaiIntegrationStr = ssaiJson.optString(PROP_INTEGRATION)
-        if (!TextUtils.isEmpty(ssaiIntegrationStr)) {
-          val ssaiIntegration = SsaiIntegration.from(ssaiIntegrationStr)
-            ?: throw THEOplayerException(
-              ErrorCode.AD_ERROR,
-              "$ERROR_UNSUPPORTED_SSAI_INTEGRATION: $ssaiIntegrationStr"
-            )
-          when (ssaiIntegration) {
-            SsaiIntegration.GOOGLE_DAI -> {
-              if (!BuildConfig.EXTENSION_GOOGLE_DAI) {
-                throw THEOplayerException(ErrorCode.AD_ERROR, ERROR_DAI_NOT_ENABLED)
-              }
-              tsBuilder = if (ssaiJson.optString(PROP_AVAILABILITY_TYPE) == "vod") {
-                GoogleDaiTypedSource.Builder(
-                  gson.fromJson(ssaiJson.toString(), GoogleDaiVodConfiguration::class.java)
-                )
-              } else {
-                GoogleDaiTypedSource.Builder(
-                  gson.fromJson(ssaiJson.toString(), GoogleDaiLiveConfiguration::class.java)
-                )
-              }
-              // Prefer DASH if not SSAI type specified
-              if (sourceType == null) {
-                tsBuilder.type(SourceType.DASH)
-              }
-            }
-            else -> throw THEOplayerException(
-              ErrorCode.AD_ERROR,
-              "$ERROR_UNSUPPORTED_SSAI_INTEGRATION: $ssaiIntegrationStr"
-            )
-          }
-        } else {
-          throw THEOplayerException(ErrorCode.AD_ERROR, ERROR_MISSING_SSAI_INTEGRATION)
-        }
+        tsBuilder = SSAIAdapterRegistry.typedSourceBuilderFromJson(ssaiJson, tsBuilder, sourceType)
       }
       if (sourceType != null) {
         tsBuilder.type(sourceType)
@@ -216,10 +176,13 @@ class SourceAdapter {
         }
       }
       return tsBuilder.build()
-    } catch (e: JSONException) {
-      e.printStackTrace()
+    } catch (e: THEOplayerException) {
+      // Rethrow THEOplayerException
+      throw e
+    } catch (e: Exception) {
+      // Wrap exception
+      throw THEOplayerException(ErrorCode.SOURCE_INVALID, "Invalid source: ${e.message}")
     }
-    return null
   }
 
   @Throws(THEOplayerException::class)
@@ -281,12 +244,14 @@ class SourceAdapter {
         AdIntegrationKind.GOOGLE_IMA -> parseImaAdFromJS(
           jsonAdDescription
         )
+
         AdIntegrationKind.DEFAULT -> {
           throw THEOplayerException(
             ErrorCode.AD_ERROR,
             "$ERROR_UNSUPPORTED_CSAI_INTEGRATION: $integrationKindStr"
           )
         }
+
         else -> {
           throw THEOplayerException(
             ErrorCode.AD_ERROR,
