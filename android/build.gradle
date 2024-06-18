@@ -117,7 +117,7 @@ dependencies {
 
   println("Using THEOplayer (${versionString(theoplayer_sdk_version)})")
   implementation "com.theoplayer.theoplayer-sdk-android:core:${theoplayer_sdk_version}"
-  implementation "com.theoplayer.theoplayer-sdk-android:ads-wrapper:7.0.0"
+  implementation "com.theoplayer.theoplayer-sdk-android:ads-wrapper:7.6.0"
   implementation "com.theoplayer.android-connector:mediasession:${theoplayer_sdk_version}"
 
   if (enabledGoogleIMA) {
