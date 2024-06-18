@@ -491,12 +491,12 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
    * @param version The native player version.
    * @param state An optional initial player state.
    */
-  initializeFromNativePlayer_(version: PlayerVersion, state: NativePlayerState | undefined) {
+  async initializeFromNativePlayer_(version: PlayerVersion, state: NativePlayerState | undefined) {
     this._playerVersion = version;
     if (state) {
       this._state.apply(state);
     }
-    this._castAdapter.init_();
+    await this._castAdapter.init_();
   }
 
   get width(): number | undefined {
