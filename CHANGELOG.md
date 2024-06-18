@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed an issue where the Cast API wouldn't be initialized yet when in the `onPlayerReady` callback.
+- Added support for THEOplayer Android v7.6.0.
 
 ## [7.4.0] - 24-06-11
 
