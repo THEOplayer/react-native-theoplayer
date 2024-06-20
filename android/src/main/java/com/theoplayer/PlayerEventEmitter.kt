@@ -652,15 +652,14 @@ class PlayerEventEmitter internal constructor(
       )
     }
 
-    // Attach AdStateHolder
-    if (BuildConfig.EXTENSION_ADS) {
-      adEventAdapter = AdEventAdapter(playerView.adsApi,
-        object : AdEventEmitter {
-          override fun emit(payload: WritableMap?) {
-            receiveEvent(EVENT_AD_EVENT, payload)
-          }
-        })
-    }
+    // Attach ad event adapter
+    adEventAdapter = AdEventAdapter(playerView.adsApi,
+      object : AdEventEmitter {
+        override fun emit(payload: WritableMap?) {
+          receiveEvent(EVENT_AD_EVENT, payload)
+        }
+      })
+
     if (BuildConfig.EXTENSION_CAST) {
       castEventAdapter = playerView.castApi?.let {
         CastEventAdapter(it, object : CastEventAdapter.Emitter {
