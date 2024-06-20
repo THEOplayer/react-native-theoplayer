@@ -54,9 +54,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
       reactContext,
       PlayerConfigAdapter(configProps)
     ).apply {
-      if (BuildConfig.EXTENSION_ADS) {
-        adsApi.initialize(player, imaIntegration, daiIntegration)
-      }
+      adsApi.initialize(player, imaIntegration, daiIntegration)
       val layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
       playerView.layoutParams = layoutParams
       (playerView.parent as? ViewGroup)?.removeView(playerView)
