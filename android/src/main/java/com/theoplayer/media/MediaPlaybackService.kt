@@ -119,7 +119,7 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
     super.onTaskRemoved(rootIntent)
     if (STOP_SERVICE_IF_APP_REMOVED) {
       notificationManager.cancel(NOTIFICATION_ID)
-      stopSelf()
+      stopForegroundService()
     }
   }
 
@@ -279,6 +279,8 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
         }
       }
       PlaybackStateCompat.STATE_STOPPED -> {
+        // Fixes the crash where the service is stopped
+        startForegroundWithPlaybackState(playbackState, largeIcon = loadPlaceHolderIcon(this))
         // Remove this service from foreground state, allowing it to be killed if more memory is
         // needed. This does not stop the service from running (for that you use stopSelf()
         // or related methods), just takes it out of the foreground state.
@@ -293,18 +295,14 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
 
   private fun startForegroundWithPlaybackState(@PlaybackStateCompat.State playbackState: Int, largeIcon: Bitmap? = null) {
     try {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        startForeground(
-          NOTIFICATION_ID,
-          notificationBuilder.build(playbackState, largeIcon, enableMediaControls),
+      ServiceCompat.startForeground(
+        this,
+        NOTIFICATION_ID,
+        notificationBuilder.build(playbackState, largeIcon, enableMediaControls),
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
           ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
-        )
-      } else {
-        startForeground(
-          NOTIFICATION_ID,
-          notificationBuilder.build(playbackState, largeIcon, enableMediaControls)
-        )
-      }
+        else 0
+      )
     } catch (e: IllegalStateException) {
       // Make sure that app does not crash in case anything goes wrong with starting the service.
       // https://issuetracker.google.com/issues/229000935
