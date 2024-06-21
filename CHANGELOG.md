@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+- Added 'root' as an alternative id for the root div for the application, allowing our fullscreen setup on an expo based application. 
+
 ## [7.5.1] - 24-06-20
 
 ### Added
