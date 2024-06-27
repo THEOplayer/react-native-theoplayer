@@ -454,7 +454,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   set renderingTarget(target: RenderingTarget) {
     if (Platform.OS === 'android') {
       this._state.renderingTarget = target;
-      NativePlayerModule.setAspectRatio(this._view.nativeHandle, target);
+      NativePlayerModule.setRenderingTarget(this._view.nativeHandle, target);
     }
   }
 
