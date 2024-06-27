@@ -27,5 +27,5 @@ export const BackgroundAudioSubMenu = (props?: BackgroundAudioSubMenuProps) => {
         ctx.player.backgroundAudioConfiguration = { enabled: option.value };
       }
     }}
-    currentOption={() => ctx.player.pipConfiguration.startsAutomatically ?? false} />;
+    currentOption={() => ctx.player.backgroundAudioConfiguration.enabled ?? false} />;
 }
