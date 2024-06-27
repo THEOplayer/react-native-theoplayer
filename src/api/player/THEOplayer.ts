@@ -19,7 +19,7 @@ export type PreloadType = 'none' | 'metadata' | 'auto' | '';
 /**
  * Specifies an aspect ratio for the player.
  *
- * <br/> - `FIT` (default): Scales the player so that all content fits inside its bounding box, keeping the original aspect ratio of the content..
+ * <br/> - `FIT` (default): Scales the player so that all content fits inside its bounding box, keeping the original aspect ratio of the content.
  * <br/> - `FILL`: Scales the player so that all content fits inside the bounding box, which will be stretched to fill it entirely.
  * <br/> - `ASPECT_FILL`: Scales the player so that the content fills up the entire bounding box, keeping the original aspect ratio of the content.
  *
@@ -30,6 +30,20 @@ export enum AspectRatio {
   FIT = 'fit',
   FILL = 'fill',
   ASPECT_FILL = 'aspectFill',
+}
+
+/**
+ * Specifies the rendering target for the player.
+ *
+ * <br/> - `SURFACE_VIEW` (default): Render video to a {@link https://developer.android.com/reference/android/view/SurfaceView | SurfaceView}.
+ * <br/> - `TEXTURE_VIEW`: Render video to a {@link https://developer.android.com/reference/android/view/TextureView | TextureView}.
+ *
+ * @public
+ * @defaultValue `'SURFACE_VIEW'`
+ */
+export enum RenderingTarget {
+  SURFACE_VIEW = 'surfaceView',
+  TEXTURE_VIEW = 'textureView',
 }
 
 export type NativeHandleType = unknown;
@@ -175,6 +189,15 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
    * Only available for iOS and Android.
    */
   aspectRatio: AspectRatio;
+
+  /**
+   * Specifies where the player is displaying the video.
+   *
+   * @defaultValue `SURFACE_VIEW`
+   * @remarks
+   * Only available for Android.
+   */
+  renderingTarget?: RenderingTarget;
 
   /**
    * Toggle the wake-lock on the player view. The screen will time out if disabled.
