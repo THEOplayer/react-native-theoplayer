@@ -317,8 +317,8 @@ public class THEOplayerRCTMainEventHandler {
                let forwardedResizeEvent = self?.onNativeResize {
                 forwardedResizeEvent(
                     [
-                        "width": wplayer.videoWidth,
-                        "height": wplayer.videoHeight,
+                        "width": wplayer.frame.width,
+                        "height": wplayer.frame.height,
                     ]
                 )
             }
