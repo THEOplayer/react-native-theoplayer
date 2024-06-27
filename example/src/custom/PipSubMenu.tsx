@@ -20,9 +20,7 @@ export function PiPSubMenu(props?: PipSubMenuProps) {
     label={'Auto PiP'}
     options={[{ label: 'Disabled', value: false }, { label: 'Enabled', value: true }]}
     onOptionSelected={(option: Option<boolean>) => {
-      if (ctx.player) {
-        ctx.player.pipConfiguration = { startsAutomatically: option.value };
-      }
+      ctx.player.pipConfiguration = { startsAutomatically: option.value };
     }}
     currentOption={() => ctx.player.pipConfiguration.startsAutomatically ?? false} />;
 }

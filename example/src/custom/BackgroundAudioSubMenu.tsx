@@ -23,9 +23,7 @@ export const BackgroundAudioSubMenu = (props?: BackgroundAudioSubMenuProps) => {
     label={'Bg Audio'}
     options={[{ label: 'Disabled', value: false }, { label: 'Enabled', value: true }]}
     onOptionSelected={(option: Option<boolean>) => {
-      if (ctx.player) {
-        ctx.player.backgroundAudioConfiguration = { enabled: option.value };
-      }
+      ctx.player.backgroundAudioConfiguration = { enabled: option.value };
     }}
     currentOption={() => ctx.player.backgroundAudioConfiguration.enabled ?? false} />;
 }

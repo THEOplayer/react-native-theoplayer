@@ -24,9 +24,7 @@ export function RenderingTargetSubMenu(props?: RenderingTargetSubMenuProps) {
       value: RenderingTarget.TEXTURE_VIEW,
     }]}
     onOptionSelected={(option: Option<RenderingTarget>) => {
-      if (ctx.player) {
-        ctx.player.renderingTarget = option.value;
-      }
+      ctx.player.renderingTarget = option.value;
     }}
     currentOption={() => ctx.player.renderingTarget ?? RenderingTarget.SURFACE_VIEW} />;
 }
