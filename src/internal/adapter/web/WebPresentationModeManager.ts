@@ -31,10 +31,12 @@ export class WebPresentationModeManager {
     if (fullscreenAPI !== undefined) {
       // All other browsers
       if (presentationMode === PresentationMode.fullscreen) {
-        const appElement = document.getElementById('app')!;
-        const promise = appElement[fullscreenAPI.requestFullscreen_]();
-        if (promise && promise.then) {
-          promise.then(noOp, noOp);
+        const appElement = document.getElementById('app') ?? document.getElementById('root');
+        if (appElement !== null) {
+          const promise = appElement[fullscreenAPI.requestFullscreen_]();
+          if (promise && promise.then) {
+            promise.then(noOp, noOp);
+          }
         }
       } else if (presentationMode === PresentationMode.pip) {
         void this._element?.requestPictureInPicture?.();
