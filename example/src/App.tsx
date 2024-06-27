@@ -32,6 +32,7 @@ import { PiPSubMenu } from './custom/PipSubMenu';
 import { MediaCacheDownloadButton } from './custom/MediaCacheDownloadButton';
 import { MediaCacheMenuButton } from './custom/MediaCacheMenuButton';
 import { MediaCachingTaskListSubMenu } from './custom/MediaCachingTaskListSubMenu';
+import { RenderingTargetSubMenu } from './custom/RenderingTargetSubMenu';
 
 const playerConfig: PlayerConfiguration = {
   // Get your THEOplayer license from https://portal.theoplayer.com/
@@ -125,6 +126,7 @@ export default function App() {
                     <PlaybackRateSubMenu />
                     <BackgroundAudioSubMenu />
                     <PiPSubMenu />
+                    {Platform.OS === 'android' && <RenderingTargetSubMenu />}
                   </SettingsMenuButton>
                 </ControlBar>
               }
