@@ -2,7 +2,7 @@ import { CustomSubMenu, Option } from './CustomSubMenu';
 import * as React from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';
 import { useContext } from 'react';
-import { PlayerContext } from '@theoplayer/react-native-ui/src/ui/components/util/PlayerContext';
+import { PlayerContext } from '@theoplayer/react-native-ui';
 
 export interface PipSubMenuProps {
   /**
@@ -12,7 +12,7 @@ export interface PipSubMenuProps {
 }
 
 export function PiPSubMenu(props?: PipSubMenuProps) {
-  const player = useContext(PlayerContext).player;
+  const ctx = useContext(PlayerContext);
 
   return <CustomSubMenu
     title={'Automatically Start Picture-in-Picture'}
@@ -20,9 +20,9 @@ export function PiPSubMenu(props?: PipSubMenuProps) {
     label={'Auto PiP'}
     options={[{ label: 'Disabled', value: false }, { label: 'Enabled', value: true }]}
     onOptionSelected={(option: Option<boolean>) => {
-      if (player) {
-        player.pipConfiguration = { startsAutomatically: option.value };
+      if (ctx.player) {
+        ctx.player.pipConfiguration = { startsAutomatically: option.value };
       }
     }}
-    currentOption={() => player.pipConfiguration.startsAutomatically ?? false} />;
+    currentOption={() => ctx.player.pipConfiguration.startsAutomatically ?? false} />;
 }

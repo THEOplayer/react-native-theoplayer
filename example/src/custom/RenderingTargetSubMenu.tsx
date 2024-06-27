@@ -3,7 +3,7 @@ import { RenderingTarget } from 'react-native-theoplayer';
 import * as React from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';
 import { useContext } from 'react';
-import { PlayerContext } from '@theoplayer/react-native-ui/src/ui/components/util/PlayerContext';
+import { PlayerContext } from '@theoplayer/react-native-ui';
 
 export interface RenderingTargetSubMenuProps {
   /**
@@ -13,7 +13,7 @@ export interface RenderingTargetSubMenuProps {
 }
 
 export function RenderingTargetSubMenu(props?: RenderingTargetSubMenuProps) {
-  const player = useContext(PlayerContext).player;
+  const ctx = useContext(PlayerContext);
 
   return <CustomSubMenu
     title={'Rendering Target'}
@@ -24,9 +24,9 @@ export function RenderingTargetSubMenu(props?: RenderingTargetSubMenuProps) {
       value: RenderingTarget.TEXTURE_VIEW,
     }]}
     onOptionSelected={(option: Option<RenderingTarget>) => {
-      if (player) {
-        player.renderingTarget = option.value;
+      if (ctx.player) {
+        ctx.player.renderingTarget = option.value;
       }
     }}
-    currentOption={() => player?.renderingTarget ?? RenderingTarget.SURFACE_VIEW} />;
+    currentOption={() => ctx.player.renderingTarget ?? RenderingTarget.SURFACE_VIEW} />;
 }
