@@ -6,6 +6,7 @@ import com.theoplayer.abr.ABRConfigurationAdapter
 import com.theoplayer.android.api.player.AspectRatio
 import com.theoplayer.android.api.player.PreloadType
 import com.theoplayer.android.api.player.PresentationMode
+import com.theoplayer.android.api.player.RenderingTarget
 import com.theoplayer.android.api.player.track.mediatrack.MediaTrack
 import com.theoplayer.android.api.player.track.mediatrack.quality.VideoQuality
 import com.theoplayer.android.api.player.track.texttrack.TextTrackMode
@@ -226,6 +227,16 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
       view?.player?.let { player ->
         TextTrackStyleAdapter.applyTextTrackStyle(player.textTrackStyle, style)
       }
+    }
+  }
+
+  @ReactMethod
+  fun setRenderingTarget(tag: Int, target: String) {
+    viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
+      view?.player?.setRenderingTarget(when (target) {
+        "textureView" -> RenderingTarget.TEXTURE_VIEW
+        else -> RenderingTarget.SURFACE_VIEW
+      })
     }
   }
 }
