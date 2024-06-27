@@ -20,8 +20,8 @@ class THEOplayerRCTMediaTrackEventHandler {
     private var videoChangeTrackListener: EventListener?
     
     // MARK: mediaTrack listeners (attached dynamically to new mediatracks)
-    private var audioChangeTrackListeners: [Int:EventListener] = [:]
-    private var videoChangeTrackListeners: [Int:EventListener] = [:]
+    private var videoQualityChangeListeners: [Int:EventListener] = [:]
+    private var audioQualityChangeListeners: [Int:EventListener] = [:]
     
     
     // MARK: - destruction
@@ -56,6 +56,10 @@ class THEOplayerRCTMediaTrackEventHandler {
                     "type" : TrackListEventType.ADD_TRACK.rawValue,
                     "trackType": MediaTrackType.AUDIO.rawValue
                 ])
+                
+                // start listening for qualityChange events on this track
+                welf.audioQualityChangeListeners[audioTrack.uid] = audioTrack.addEventListener(type: MediaTrackEventTypes.ACTIVE_QUALITY_CHANGED, listener: welf.addAudioQualityChangeListener(_:))
+                if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] QualityChange listener attached to THEOplayer audioTrack with uid \(audioTrack.uid)") }
             }
         }
         if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] AddTrack listener attached to THEOplayer audioTrack list") }
@@ -72,6 +76,12 @@ class THEOplayerRCTMediaTrackEventHandler {
                     "type" : TrackListEventType.REMOVE_TRACK.rawValue,
                     "trackType": MediaTrackType.AUDIO.rawValue
                 ])
+                
+                // stop listening for qualityChange events on this track
+                if let audioQualityChangeListener = welf.audioQualityChangeListeners.removeValue(forKey: audioTrack.uid) {
+                    audioTrack.removeEventListener(type: MediaTrackEventTypes.ACTIVE_QUALITY_CHANGED, listener: audioQualityChangeListener)
+                    if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] ActiveQuality listener removed from THEOplayer audioTrack with uid \(audioTrack.uid)") }
+                }
             }
         }
         if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] RemoveTrack listener attached to THEOplayer audioTrack list") }
@@ -104,6 +114,10 @@ class THEOplayerRCTMediaTrackEventHandler {
                     "type" : TrackListEventType.ADD_TRACK.rawValue,
                     "trackType": MediaTrackType.VIDEO.rawValue
                 ])
+                
+                // start listening for qualityChange events on this track
+                welf.videoQualityChangeListeners[videoTrack.uid] = videoTrack.addEventListener(type: MediaTrackEventTypes.ACTIVE_QUALITY_CHANGED, listener: welf.addVideoQualityChangeListener(_:))
+                if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] QualityChange listener attached to THEOplayer videoTrack with uid \(videoTrack.uid)") }
             }
         }
         if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] AddTrack listener attached to THEOplayer videoTrack list") }
@@ -120,6 +134,12 @@ class THEOplayerRCTMediaTrackEventHandler {
                     "type" : TrackListEventType.REMOVE_TRACK.rawValue,
                     "trackType": MediaTrackType.VIDEO.rawValue
                 ])
+                
+                // stop listening for qualityChange events on this track
+                if let videoQualityChangeListener = welf.videoQualityChangeListeners.removeValue(forKey: videoTrack.uid) {
+                    videoTrack.removeEventListener(type: MediaTrackEventTypes.ACTIVE_QUALITY_CHANGED, listener: videoQualityChangeListener)
+                    if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] ActiveQuality listener removed from THEOplayer videoTrack with uid \(videoTrack.uid)") }
+                }
             }
         }
         if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] RemoveTrack listener attached to THEOplayer videoTrack list") }
@@ -180,6 +200,107 @@ class THEOplayerRCTMediaTrackEventHandler {
         if let videoChangeTrackListener = self.videoChangeTrackListener {
             player.videoTracks.removeEventListener(type: VideoTrackListEventTypes.CHANGE, listener: videoChangeTrackListener)
             if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] ChangeTrack listener dettached from THEOplayer videoTrack list") }
+        }
+        
+        // QUALITY CHANGE - AUDIO
+        let audioTrackCount = player.audioTracks.count
+        if audioTrackCount > 0 {
+            for i in 0..<audioTrackCount {
+                let audioTrack = player.audioTracks[i]
+                // stop listening for quality change events on this track
+                if let audioQualityChangeListener = self.audioQualityChangeListeners.removeValue(forKey: audioTrack.uid) {
+                    audioTrack.removeEventListener(type: MediaTrackEventTypes.ACTIVE_QUALITY_CHANGED, listener: audioQualityChangeListener)
+                    if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] ActiveQuality listener removed from THEOplayer audioTrack with uid \(audioTrack.uid)") }
+                }
+            }
+        }
+        
+        // QUALITY CHANGE - VIDEO
+        let videoTrackCount = player.videoTracks.count
+        if videoTrackCount > 0 {
+            for i in 0..<videoTrackCount {
+                let videoTrack = player.videoTracks[i]
+                // stop listening for quality change events on this track
+                if let videoQualityChangeListener = self.videoQualityChangeListeners.removeValue(forKey: videoTrack.uid) {
+                    videoTrack.removeEventListener(type: MediaTrackEventTypes.ACTIVE_QUALITY_CHANGED, listener: videoQualityChangeListener)
+                    if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] ActiveQuality listener removed from THEOplayer videoTrack with uid \(videoTrack.uid)") }
+                }
+            }
+        }
+    }
+    
+    // MARK: - dynamic mediaTrack Listeners
+    private func addVideoQualityChangeListener(_ event: ActiveQualityChangedEvent) {
+        if let forwardedMediaTrackEvent = self.onNativeMediaTrackEvent,
+           let player = self.player,
+           let track = self.activeTrack(tracks: player.videoTracks) {
+            if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received ACTIVE_QUALITY_CHANGED event for videoTrack") }
+            let identifier = String(track.activeQualityBandwidth)
+            let label = self.labelFromBandWidth(track.activeQualityBandwidth)
+            forwardedMediaTrackEvent([
+                "trackUid" : track.uid,
+                "type" : MediaTrackEventType.ACTIVE_QUALITY_CHANGED.rawValue,
+                "trackType": MediaTrackType.VIDEO.rawValue,
+                "qualities": [
+                    "bandwidth": track.activeQualityBandwidth,
+                    "codecs": "",
+                    "id": identifier,
+                    "uid": identifier,
+                    "name": label,
+                    "label": label,
+                    "available": true
+                ]
+            ])
+        }
+    }
+    
+    private func addAudioQualityChangeListener(_ event: ActiveQualityChangedEvent) {
+        if let forwardedMediaTrackEvent = self.onNativeMediaTrackEvent,
+           let player = self.player,
+           let track = self.activeTrack(tracks: player.audioTracks) {
+            if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received ACTIVE_QUALITY_CHANGED event for audioTrack") }
+            let identifier = String(track.activeQualityBandwidth)
+            let label = self.labelFromBandWidth(track.activeQualityBandwidth)
+            
+            forwardedMediaTrackEvent([
+                "trackUid" : track.uid,
+                "type" : MediaTrackEventType.ACTIVE_QUALITY_CHANGED.rawValue,
+                "trackType": MediaTrackType.AUDIO.rawValue,
+                "qualities": [
+                    "bandwidth": track.activeQualityBandwidth,
+                    "codecs": "",
+                    "id": identifier,
+                    "uid": identifier,
+                    "name": label,
+                    "label": label,
+                    "available": true
+                ]
+            ])
+        }
+    }
+
+    // MARK: - Helpers
+    private func activeTrack(tracks: THEOplayerSDK.MediaTrackList) -> MediaTrack? {
+        guard tracks.count > 0 else {
+            return nil;
+        }
+        var track: MediaTrack?
+        for i in 0...tracks.count-1 {
+           track = tracks.get(i)
+            if (track != nil && track!.enabled) {
+                return track
+            }
+        }
+        return nil;
+    }
+    
+    private func labelFromBandWidth(_ bandWidth: Int) -> String {
+        if bandWidth > 1000000 {
+            return "\(Double(bandWidth / 1000) / 1000) Mbps"
+        } else if bandWidth > 1000 {
+            return "\(bandWidth / 1000) kbps"
+        } else {
+            return "No Label"
         }
     }
 }
