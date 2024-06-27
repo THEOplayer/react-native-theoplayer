@@ -7,7 +7,9 @@ import {
   PiPConfiguration,
   PreloadType,
   PresentationMode,
-  SourceDescription, TimeRange,
+  RenderingTarget,
+  SourceDescription,
+  TimeRange,
 } from 'react-native-theoplayer';
 
 export class DefaultNativePlayerState extends DefaultTextTrackState implements NativePlayerState {
@@ -27,6 +29,7 @@ export class DefaultNativePlayerState extends DefaultTextTrackState implements N
   playbackRate = 1;
   preload: PreloadType = 'none';
   aspectRatio: AspectRatio = AspectRatio.FIT;
+  renderingTarget: RenderingTarget = RenderingTarget.SURFACE_VIEW;
   keepScreenOn = true;
   audioTracks: MediaTrack[] = [];
   videoTracks: MediaTrack[] = [];

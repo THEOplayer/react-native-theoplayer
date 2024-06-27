@@ -1,5 +1,5 @@
 import { DefaultEventDispatcher } from './event/DefaultEventDispatcher';
-import type {
+import {
   ABRConfiguration,
   AdsAPI,
   CastAPI,
@@ -15,6 +15,7 @@ import type {
   PresentationModeChangeEvent,
   ProgressEvent,
   RateChangeEvent,
+  RenderingTarget,
   ResizeEvent,
   SourceDescription,
   TextTrack,
@@ -444,6 +445,17 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   set aspectRatio(ratio: AspectRatio) {
     this._state.aspectRatio = ratio;
     NativePlayerModule.setAspectRatio(this._view.nativeHandle, ratio);
+  }
+
+  get renderingTarget(): RenderingTarget {
+    return this._state.renderingTarget;
+  }
+
+  set renderingTarget(target: RenderingTarget) {
+    if (Platform.OS === 'android') {
+      this._state.renderingTarget = target;
+      NativePlayerModule.setAspectRatio(this._view.nativeHandle, target);
+    }
   }
 
   get keepScreenOn(): boolean {
