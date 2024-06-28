@@ -248,7 +248,12 @@ class THEOplayerRCTMediaTrackEventHandler {
                     "uid": identifier,
                     "name": label,
                     "label": label,
-                    "available": true
+                    "available": true,
+                    "width": player.videoWidth,
+                    "height": player.videoHeight,
+                    //"frameRate": 0, // not available on iOS SDK
+                    //"firstFrame": 0 // not available on iOS SDK
+                        
                 ]
             ])
         }
@@ -273,7 +278,8 @@ class THEOplayerRCTMediaTrackEventHandler {
                     "uid": identifier,
                     "name": label,
                     "label": label,
-                    "available": true
+                    "available": true,
+                    //"audioSamplingRate": 0 // not available on iOS SDK
                 ]
             ])
         }
