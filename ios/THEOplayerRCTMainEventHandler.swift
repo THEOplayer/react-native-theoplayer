@@ -277,7 +277,6 @@ public class THEOplayerRCTMainEventHandler {
                let welf = self,
                let forwardedLoadedMetadataEvent = self?.onNativeLoadedMetadata {
                 let metadata = THEOplayerRCTTrackMetadataAggregator.aggregateTrackMetadata(player: wplayer, metadataTracksInfo: welf.loadedMetadataTracksInfo)
-                print(metadata)
                 forwardedLoadedMetadataEvent(metadata)
             }
         }
@@ -317,8 +316,8 @@ public class THEOplayerRCTMainEventHandler {
                let forwardedResizeEvent = self?.onNativeResize {
                 forwardedResizeEvent(
                     [
-                        "width": wplayer.videoWidth,
-                        "height": wplayer.videoHeight,
+                        "width": wplayer.frame.width,
+                        "height": wplayer.frame.height,
                     ]
                 )
             }
