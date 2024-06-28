@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added ActiveQualityChanged event support for iOS.
 
+### Fixed
+
+- Fixed an issue where on iOS the createTask method (CacheAPI) was not returning the created task.
+
 ## [7.6.0] - 24-07-01
 
 ### Added
