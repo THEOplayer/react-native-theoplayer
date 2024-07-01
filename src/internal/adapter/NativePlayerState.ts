@@ -1,4 +1,4 @@
-import { MediaTrack, PreloadType, PresentationMode, SourceDescription, TextTrack, TimeRange } from 'react-native-theoplayer';
+import { MediaTrack, PreloadType, PresentationMode, RenderingTarget, SourceDescription, TextTrack, TimeRange } from 'react-native-theoplayer';
 import type { PiPConfiguration, AspectRatio, BackgroundAudioConfiguration } from 'react-native-theoplayer';
 
 export interface PlayerConfigState {
@@ -24,6 +24,7 @@ export interface PlaybackState {
   buffered: TimeRange[];
   presentationMode: PresentationMode;
   aspectRatio: AspectRatio;
+  renderingTarget: RenderingTarget;
 }
 
 export interface MediaTrackState {

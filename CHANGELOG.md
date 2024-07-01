@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [7.6.0] - 24-07-01
+
+### Added
+
+- Added `'root'` as an alternative id for the root div element in Web applications, supporting fullscreen presentation mode in Expo-based apps.
+- Added `renderingTarget` property to `THEOplayer` API for Android, enabling the option to choose between either rendering to a `SurfaceView` (default) or `TextureView`.
+
+### Changed
+
+- Lowered the required node version to v16+.
+
 ## [7.5.1] - 24-06-20
 
 ### Added
