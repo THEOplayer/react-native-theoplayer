@@ -228,7 +228,9 @@ RCT_EXTERN_METHOD(getInitialState:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(createTask:(NSDictionary)src
-                  params:(NSDictionary)params)
+                  params:(NSDictionary)params
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(startCachingTask:(nonnull NSString *)id)
 

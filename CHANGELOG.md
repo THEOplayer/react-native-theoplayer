@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Lowered the required node version to v16+.
 
+### Fixed
+
+- Fixed an issue where on iOS the createTask method (CacheAPI) was not returning the created task.
+
 ## [7.5.1] - 24-06-20
 
 ### Added
