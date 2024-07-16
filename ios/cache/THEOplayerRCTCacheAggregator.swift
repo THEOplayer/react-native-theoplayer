@@ -41,7 +41,7 @@ class THEOplayerRCTCacheAggregator {
         aggregatedData[CACHETASK_PROP_ID] = task.id
         aggregatedData[CACHETASK_PROP_STATUS] = THEOplayerRCTTypeUtils.cachingTaskStatusToString(task.status)
         aggregatedData[CACHETASK_PROP_PARAMETERS] = THEOplayerRCTCacheAggregator.aggregateCacheTaskParameters(params: task.parameters)
-        aggregatedData[CACHETASK_PROP_SOURCE] = THEOplayerRCTSourceDescriptionAggregator.aggregateCacheTaskSourceDescription(sourceDescription: task.source)
+        aggregatedData[CACHETASK_PROP_SOURCE] = THEOplayerRCTSourceDescriptionAggregator.aggregateCacheTaskSourceDescription(sourceDescription: task.source, cachingTaskId: task.id)
         for (key, value) in THEOplayerRCTCacheAggregator.aggregateCacheTaskProgress(task: task) {
             aggregatedData[key] = value
         }
