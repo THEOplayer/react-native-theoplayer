@@ -17,3 +17,7 @@ enum TrackCueEventType: Int {
     case ENTER_CUE = 2
     case EXIT_CUE = 3
 }
+
+enum MediaTrackEventType: Int {
+    case ACTIVE_QUALITY_CHANGED = 0
+}
