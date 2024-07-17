@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
+- Fixed an issue where on iOS a cached asset would not play when setting the tasks's source on the player.
 - Fixed an issue where on iOS the createTask method (CacheAPI) was not returning the created task.
 
 ## [7.6.0] - 24-07-01
