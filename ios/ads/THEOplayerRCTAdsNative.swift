@@ -22,8 +22,14 @@ class NativeAd: THEOplayerSDK.Ad {
     var height: Int? = nil
     /** The kind of the ad integration.*/
     var integration: THEOplayerSDK.AdIntegrationKind = THEOplayerSDK.AdIntegrationKind.defaultKind
+    /** The duration of the LinearAd, as provided by the VAST file, in seconds.*/
+    var duration: Int? = 0
+    /** The url that redirects to the website of the advertiser.*/
+    var clickThrough: String? = nil
+    /**The type of custom ad integration.*/
+    var customIntegration: String? = nil
     
-    init(adBreak: AdBreak? = nil, companions: [THEOplayerSDK.CompanionAd?], type: String, id: String? = nil, skipOffset: Int? = nil, resourceURI: String? = nil, width: Int? = nil, height: Int? = nil, integration: THEOplayerSDK.AdIntegrationKind) {
+    init(adBreak: AdBreak? = nil, companions: [THEOplayerSDK.CompanionAd?], type: String, id: String? = nil, skipOffset: Int? = nil, resourceURI: String? = nil, width: Int? = nil, height: Int? = nil, integration: THEOplayerSDK.AdIntegrationKind, duration: Int? = 0, clickThrough: String?, customIntegration: String?) {
         self.adBreak = adBreak
         self.companions = companions
         self.type = type
@@ -33,18 +39,18 @@ class NativeAd: THEOplayerSDK.Ad {
         self.width = width
         self.height = height
         self.integration = integration
+        self.duration = duration
+        self.clickThrough = clickThrough
+        self.customIntegration = customIntegration
     }
 }
 
 class NativeLinearAd: NativeAd, THEOplayerSDK.LinearAd {
-    /** The duration of the LinearAd, as provided by the VAST file, in seconds.*/
-    var duration: Int? = 0
     /** An array of mediafiles, which provides some meta data retrieved from the VAST file.*/
     var mediaFiles: [THEOplayerSDK.MediaFile] = []
     
-    init(adBreak: AdBreak? = nil, companions: [THEOplayerSDK.CompanionAd?], type: String, id: String? = nil, skipOffset: Int? = nil, resourceURI: String? = nil, width: Int? = nil, height: Int? = nil, integration: THEOplayerSDK.AdIntegrationKind, duration: Int? = 0, mediaFiles: [THEOplayerSDK.MediaFile] = []) {
+    init(adBreak: AdBreak? = nil, companions: [THEOplayerSDK.CompanionAd?], type: String, id: String? = nil, skipOffset: Int? = nil, resourceURI: String? = nil, width: Int? = nil, height: Int? = nil, integration: THEOplayerSDK.AdIntegrationKind, duration: Int? = 0, clickThrough: String? = nil, customIntegration: String? = nil, mediaFiles: [THEOplayerSDK.MediaFile] = []) {
         
-        self.duration = duration
         self.mediaFiles = mediaFiles
         
         super.init(adBreak:adBreak,
@@ -55,7 +61,10 @@ class NativeLinearAd: NativeAd, THEOplayerSDK.LinearAd {
                    resourceURI: resourceURI,
                    width: width,
                    height: height,
-                   integration: integration)
+                   integration: integration,
+                   duration: duration,
+                   clickThrough: clickThrough,
+                   customIntegration: customIntegration)
     }
 }
 
@@ -77,7 +86,7 @@ class NativeLinearGoogleImaAd: NativeLinearAd, THEOplayerSDK.GoogleImaAd {
     /** The String representing custom trafficking parameters from the VAST response.*/
     var traffickingParameters: String = ""
     
-    init(adBreak: AdBreak? = nil, companions: [THEOplayerSDK.CompanionAd?], type: String, id: String? = nil, skipOffset: Int? = nil, resourceURI: String? = nil, width: Int? = nil, height: Int? = nil, integration: THEOplayerSDK.AdIntegrationKind, duration: Int? = 0, mediaFiles: [THEOplayerSDK.MediaFile] = [], adSystem: String? = nil, creativeId: String? = nil, wrapperAdIds: [String], wrapperAdSystems: [String], wrapperCreativeIds: [String], vastMediaBitrate: Int, universalAdIds: [UniversalAdId], traffickingParameters: String) {
+    init(adBreak: AdBreak? = nil, companions: [THEOplayerSDK.CompanionAd?], type: String, id: String? = nil, skipOffset: Int? = nil, resourceURI: String? = nil, width: Int? = nil, height: Int? = nil, integration: THEOplayerSDK.AdIntegrationKind, duration: Int? = 0, clickThrough: String? = nil, customIntegration: String? = nil, mediaFiles: [THEOplayerSDK.MediaFile] = [], adSystem: String? = nil, creativeId: String? = nil, wrapperAdIds: [String], wrapperAdSystems: [String], wrapperCreativeIds: [String], vastMediaBitrate: Int, universalAdIds: [UniversalAdId], traffickingParameters: String) {
         self.adSystem = adSystem
         self.creativeId = creativeId
         self.wrapperAdIds = wrapperAdIds
@@ -97,6 +106,8 @@ class NativeLinearGoogleImaAd: NativeLinearAd, THEOplayerSDK.GoogleImaAd {
                    height: height,
                    integration:integration,
                    duration: duration,
+                   clickThrough: clickThrough,
+                   customIntegration: customIntegration,
                    mediaFiles: mediaFiles)
     }
 }
@@ -110,12 +121,18 @@ class NativeAdBreak: THEOplayerSDK.AdBreak {
     var maxRemainingDuration: Double = -1
     /** The time offset at which point the content will be paused to play the ad break, in seconds.*/
     var timeOffset: Int = 0
+    /** The kind of the ad integration.*/
+    var integration: THEOplayerSDK.AdIntegrationKind = THEOplayerSDK.AdIntegrationKind.defaultKind
+    /**The type of custom ad integration.*/
+    var customIntegration: String? = nil
     
-    init(ads: [Ad], maxDuration: Int, maxRemainingDuration: Double, timeOffset: Int) {
+    init(ads: [Ad], maxDuration: Int, maxRemainingDuration: Double, timeOffset: Int, integration: THEOplayerSDK.AdIntegrationKind, customIntegration: String? = nil) {
         self.ads = ads
         self.maxDuration = maxDuration
         self.maxRemainingDuration = maxRemainingDuration
         self.timeOffset = timeOffset
+        self.integration = integration
+        self.customIntegration = customIntegration
     }
 }
 
