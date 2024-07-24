@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed an issue where on iOS a cached asset would not play when setting the tasks's source on the player.
 - Fixed an issue where on iOS the createTask method (CacheAPI) was not returning the created task.
+- Fixed an issue where on iOS the Ad and AdBreak protocols where extended in the underlying native SDK and required some modifications.
 - Fixed an issue where on Android the native module preparation would fail due to a change in the Android SDK 7.8.0 on eventDispatching.
 
 ## [7.6.0] - 24-07-01
