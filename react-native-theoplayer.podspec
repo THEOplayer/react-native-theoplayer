@@ -32,23 +32,23 @@ Pod::Spec.new do |s|
   s.dependency "React-Core"
   
   # THEOplayer core Dependency
-  s.dependency "THEOplayerSDK-core", "~> 7.4"
+  s.dependency "THEOplayerSDK-core", "~> 7.8"
   
   if theofeatures.include?("GOOGLE_IMA") 
 	puts "Adding THEOplayer-Integration-GoogleIMA"
-    s.dependency "THEOplayer-Integration-GoogleIMA/Base", "~> 7.4"
-	s.dependency "THEOplayer-Integration-GoogleIMA/Dependencies", "~> 7.4"
+    s.dependency "THEOplayer-Integration-GoogleIMA/Base", "~> 7.8"
+	s.dependency "THEOplayer-Integration-GoogleIMA/Dependencies", "~> 7.8"
   end
   
   if theofeatures.include?("CHROMECAST")
 	puts "Adding THEOplayer-Integration-GoogleCast"
-    s.ios.dependency "THEOplayer-Integration-GoogleCast/Base", "~> 7.4"
+    s.ios.dependency "THEOplayer-Integration-GoogleCast/Base", "~> 7.8"
 	s.ios.dependency "google-cast-sdk-dynamic-xcframework", "~> 4.8"
   end
   
   if theofeatures.include?("SIDELOADED_TEXTTRACKS") 
 	puts "Adding THEOplayer-Connector-SideloadedSubtitle"
-    s.dependency "THEOplayer-Connector-SideloadedSubtitle", "~> 7.4"
+    s.dependency "THEOplayer-Connector-SideloadedSubtitle", "~> 7.8"
   end
   
 end

@@ -17,6 +17,8 @@ let CACHE_EVENT_PROP_TASKS: String = "tasks"
 let CACHE_TAG: String = "[CacheAPI]"
 
 let ERROR_MESSAGE_CACHE_API_UNSUPPORTED_FEATURE = "Cache API is not supported for tvOS"
+let ERROR_CODE_CREATE_CACHINGTASK_FAILED = "create_cachingtask_failure"
+let ERROR_MESSAGE_CREATE_CACHINGTASK_FAILURE = "Creating a new cachingTask failed."
 
 @objc(THEOplayerRCTCacheAPI)
 class THEOplayerRCTCacheAPI: RCTEventEmitter {
@@ -140,15 +142,15 @@ class THEOplayerRCTCacheAPI: RCTEventEmitter {
         ] as [String : Any])
     }
 
-    @objc(createTask:params:)
-    func createTask(_ src: NSDictionary, params: NSDictionary) -> Void {
+    @objc(createTask:params:resolver:rejecter:)
+    func createTask(_ src: NSDictionary, params: NSDictionary, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if DEBUG_CACHE_API { PrintUtils.printLog(logText: "[NATIVE] createTask triggered on Cache API.") }
 		let params = THEOplayerRCTCachingParametersBuilder.buildCachingParameters(params)
 		let (sourceDescription, _) = THEOplayerRCTSourceDescriptionBuilder.buildSourceDescription(src)
 		if let srcDescription = sourceDescription,
 		   let newTask = THEOplayer.cache.createTask(source: srcDescription, parameters: params) {
             if DEBUG_CACHE_API { PrintUtils.printLog(logText: "[NATIVE] New cache task created with id \(newTask.id)") }
-
+            resolve(THEOplayerRCTCacheAggregator.aggregateCacheTask(task: newTask))
             // emit onAddCachingTaskEvent
             self.sendEvent(withName: "onAddCachingTaskEvent", body: [
                 CACHE_EVENT_PROP_TASK: THEOplayerRCTCacheAggregator.aggregateCacheTask(task: newTask)
@@ -156,6 +158,8 @@ class THEOplayerRCTCacheAPI: RCTEventEmitter {
 
             // attach the state and progress listeners to the new task
             self.attachTaskListenersToTask(newTask)
+        } else {
+            reject(ERROR_CODE_CREATE_CACHINGTASK_FAILED, ERROR_MESSAGE_CREATE_CACHINGTASK_FAILURE, nil)
         }
     }
 
