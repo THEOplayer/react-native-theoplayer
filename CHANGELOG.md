@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [7.7.1] - 24-07-29
+
+### Fixed
+
+- Fixed an issue on tvOS where native cache functionality was not excluded correctly resulting in build errors.
+
 ## [7.7.0] - 24-07-25
 
 ### Added
