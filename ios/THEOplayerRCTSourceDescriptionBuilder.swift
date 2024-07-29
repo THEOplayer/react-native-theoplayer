@@ -75,6 +75,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
             return (nil, nil)
         }
         
+#if os(iOS)
         if let metadataData = sourceData[SD_PROP_METADATA] as? [String:Any],
            let cachingTaskId = metadataData[SD_PROP_METADATA_CACHINGTASK_ID] as? String {
             // this is a MediaCache src, so fetch the original SourceDescription from the MediaCache
@@ -85,6 +86,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
                 return (foundTask.source, nil)
             }
         }
+#endif
 
         var typedSources: [TypedSource] = []
         // case: array of source objects
