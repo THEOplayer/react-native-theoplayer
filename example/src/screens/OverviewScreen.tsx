@@ -15,6 +15,7 @@ export const OverviewScreen = ({ navigation }) => {
       <Button title="Analytics: Comscore" onPress={() => navigation.navigate('Sample_Comscore')} color={c} />
       <Button title="Analytics: Nielsen" onPress={() => navigation.navigate('Sample_Nielsen')} color={c} />
       <Button title="Analytics: Adobe" onPress={() => navigation.navigate('Sample_Adobe')} color={c} />
+      <Button title="Analytics: Mux" onPress={() => navigation.navigate('Sample_Mux')} color={c} />
     </View>
   );
 };

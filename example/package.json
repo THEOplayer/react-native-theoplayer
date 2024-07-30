@@ -13,13 +13,14 @@
     "lint": "eslint \"**/*.{ts,tsx}\""
   },
   "dependencies": {
-    "@react-native-community/slider": "^4.5.2",
     "@babel/plugin-transform-export-namespace-from": "^7.24.1",
+    "@react-native-community/slider": "^4.5.2",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/stack": "^6.3.29",
     "@theoplayer/react-native-analytics-adobe": "^1.4.0",
     "@theoplayer/react-native-analytics-comscore": "^1.6.0",
     "@theoplayer/react-native-analytics-conviva": "^1.6.0",
+    "@theoplayer/react-native-analytics-mux": "^1.3.0",
     "@theoplayer/react-native-analytics-nielsen": "^1.4.0",
     "@theoplayer/react-native-drm": "^1.5.0",
     "@theoplayer/react-native-ui": "^0.8.0",
