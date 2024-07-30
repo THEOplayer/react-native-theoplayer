@@ -8,3 +8,4 @@ export * from './SampleAnalyticsConvivaScreen';
 export * from './SampleAnalyticsComscoreScreen';
 export * from './SampleAnalyticsNielsenScreen';
 export * from './SampleAnalyticsAdobeScreen';
+export * from './SampleAnalyticsMuxScreen';

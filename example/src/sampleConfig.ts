@@ -57,3 +57,8 @@ export const ADOBE_URI = '<YOUR_ADOBE_URI>' // Media Collection API end point
 export const ADOBE_ECID = '<YOUR_ADOBE_ECID>' // Visitor Experience Cloud Org ID
 export const ADOBE_SID = '<YOUR_ADOBE_SID>' // Report Suite ID
 export const ADOBE_TRACKING_URL = '<YOUR_ADOBE_TRCKING_URL>' // Tracking Server URL
+
+// ----------------------
+// Sample Analytics: Mux
+// ----------------------
+export const MUX_ENV_KEY = '<YOUR_ENV_KEY>'; // Mux env key.

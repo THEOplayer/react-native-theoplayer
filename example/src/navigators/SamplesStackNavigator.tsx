@@ -11,6 +11,7 @@ import {
   SampleAnalyticsComscoreScreen,
   SampleAnalyticsNielsenScreen,
   SampleAnalyticsAdobeScreen,
+  SampleAnalyticsMuxScreen,
 } from '../screens';
 import { Platform } from 'react-native';
 
@@ -34,6 +35,7 @@ export default function SamplesStackNavigator() {
       <Stack.Screen name="Sample_Comscore" component={SampleAnalyticsComscoreScreen} options={{ title: 'Analytics: Comscore' }} />
       <Stack.Screen name="Sample_Nielsen" component={SampleAnalyticsNielsenScreen} options={{ title: 'Analytics: Nielsen' }} />
       <Stack.Screen name="Sample_Adobe" component={SampleAnalyticsAdobeScreen} options={{ title: 'Analytics: Adobe' }} />
+      <Stack.Screen name="Sample_Mux" component={SampleAnalyticsMuxScreen} options={{ title: 'Analytics: Mux' }} />
     </Stack.Navigator>
   );
 }

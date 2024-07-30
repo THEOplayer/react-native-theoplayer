@@ -27,6 +27,7 @@ export const linking = {
       Sample_Comscore: 'sampleComscore',
       Sample_Nielsen: 'sampleNielsen',
       Sample_Adobe: 'sampleAdobe',
+      Sample_Mux: 'sampleMux',
     },
   },
 };
