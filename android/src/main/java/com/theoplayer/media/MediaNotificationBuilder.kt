@@ -168,7 +168,13 @@ class MediaNotificationBuilder(
       style.setMediaSession(mediaSession.sessionToken)
 
       // Add up to 3 actions to be shown in the notification's standard-sized contentView.
-      style.setShowActionsInCompactView(0)
+      if (enableMediaControls) {
+        // The Rewind, Play/Pause and FastForward actions.
+        style.setShowActionsInCompactView(0,1,2)
+      } else {
+        // The placeholder action, which was added above.
+        style.setShowActionsInCompactView(0)
+      }
 
       if (enableCancelButton) {
         // In Android 5.0 (API level 21) and later you can swipe away a notification to
