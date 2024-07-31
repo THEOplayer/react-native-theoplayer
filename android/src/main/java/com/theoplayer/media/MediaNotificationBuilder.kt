@@ -67,6 +67,22 @@ class MediaNotificationBuilder(
     )
   )
 
+  private val forwardAction = NotificationCompat.Action(
+    R.drawable.ic_fast_forward, context.getString(R.string.ffd_pip),
+    MediaButtonReceiver.buildMediaButtonPendingIntent(
+      context,
+      PlaybackStateCompat.ACTION_FAST_FORWARD
+    )
+  )
+
+  private val rewindAction = NotificationCompat.Action(
+    R.drawable.ic_rewind, context.getString(R.string.rwd_pip),
+    MediaButtonReceiver.buildMediaButtonPendingIntent(
+      context,
+      PlaybackStateCompat.ACTION_REWIND
+    )
+  )
+
   fun build(
     @PlaybackStateCompat.State playbackState: Int,
     largeIcon: Bitmap?,
@@ -130,13 +146,15 @@ class MediaNotificationBuilder(
       // on the eyes and avoid extremely bright or fluorescent colors.
       color = ContextCompat.getColor(context, R.color.app_primary_color)
 
-      // Add a play/pause button
+      // Add play/pause, rewind and fast-forward buttons.
       if (enableMediaControls) {
+        addAction(rewindAction)
         if (playbackState == PlaybackStateCompat.STATE_PAUSED) {
           addAction(playAction)
         } else if (playbackState == PlaybackStateCompat.STATE_PLAYING) {
           addAction(pauseAction)
         }
+        addAction(forwardAction)
       } else {
         // Add empty placeholder action as clearActions() does not work.
         addAction(0, null, null)
