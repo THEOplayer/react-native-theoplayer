@@ -57,14 +57,10 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
         DispatchQueue.main.async {
             if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView {
                 let (sourceDescription, metadataTrackDescriptions) = THEOplayerRCTSourceDescriptionBuilder.buildSourceDescription(src)
-                if let srcDescription = sourceDescription {
-                    if let player = theView.player {
-                        self.triggerViewHierarchyValidation(player)
-                        self.setNewSourceDescription(player: player, srcDescription: srcDescription)
-                        theView.processMetadataTracks(metadataTrackDescriptions: metadataTrackDescriptions)
-                    }
-                } else {
-                    if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Failed to update THEOplayer source.") }
+                if let player = theView.player {
+                    self.triggerViewHierarchyValidation(player)
+                    self.setNewSourceDescription(player: player, srcDescription: sourceDescription)
+                    theView.processMetadataTracks(metadataTrackDescriptions: metadataTrackDescriptions)
                 }
             } else {
                 if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Failed to update THEOplayer source.") }
@@ -81,7 +77,7 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
 #endif
     }
 
-    private func setNewSourceDescription(player: THEOplayer, srcDescription: SourceDescription) {
+    private func setNewSourceDescription(player: THEOplayer, srcDescription: SourceDescription?) {
         if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Setting new source on TheoPlayer") }
 #if canImport(THEOplayerConnectorSideloadedSubtitle)
         player.setSourceWithSubtitles(source: srcDescription)
