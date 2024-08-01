@@ -112,7 +112,7 @@ class ReactTHEOplayerContext private constructor(
       binder?.setPlayerContext(this@ReactTHEOplayerContext)
 
       // Apply background audio config
-      binder?.setEnablePlaybackControls(backgroundAudioConfig.enabled)
+      binder?.setEnablePlaybackControls(mediaSessionConfig)
     }
 
     override fun onServiceDisconnected(className: ComponentName?) {
