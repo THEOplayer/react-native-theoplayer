@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { PlayerConfiguration, PlayerEventType, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
+import { PlayerConfiguration, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import { MuxOptions, useMux } from '@theoplayer/react-native-analytics-mux';
 import { THEO_LICENSE, MUX_ENV_KEY } from '../sampleConfig';
