@@ -200,12 +200,11 @@ class MediaPlaybackService : Service() {
   }
 
   private fun updateNotification() {
-    player?.let {
-      if (it.isPaused) {
-        updateNotification(PlaybackStateCompat.STATE_PAUSED)
-      } else {
-        updateNotification(PlaybackStateCompat.STATE_PLAYING)
-      }
+    val player = player
+    when {
+      player?.source == null -> updateNotification(PlaybackStateCompat.STATE_STOPPED)
+      !player.isPaused -> updateNotification(PlaybackStateCompat.STATE_PLAYING)
+      else -> updateNotification(PlaybackStateCompat.STATE_PAUSED)
     }
   }
 
