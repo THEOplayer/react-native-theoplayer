@@ -1,16 +1,14 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { PlayerConfiguration, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
-import { Platform, SafeAreaView, StyleSheet } from 'react-native';
+import { PlayerConfiguration, PlayerEventType, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
+import { SafeAreaView, StyleSheet } from 'react-native';
 import { useConviva, ConvivaMetadata } from '@theoplayer/react-native-analytics-conviva';
 import { CONVIVA_CONFIG, CONVIVA_CUSTOMER_KEY, THEO_LICENSE } from '../sampleConfig';
 import {
   CenteredControlBar,
   CenteredDelayedActivityIndicator,
-  ControlBar,
   DEFAULT_THEOPLAYER_THEME,
   PlayButton,
-  SeekBar,
   SkipButton,
   UiContainer,
 } from '@theoplayer/react-native-ui';
@@ -19,6 +17,9 @@ const LOG_TAG = '[EXAMPLE - ANALYTICS CONVIVA SAMPLE]';
 const playerConfig: PlayerConfiguration = {
   license: THEO_LICENSE,
   libraryLocation: 'theoplayer',
+  retryConfiguration: {
+    maxRetries: 5,
+  },
 };
 
 const convivaMetadata: ConvivaMetadata = {
@@ -43,10 +44,12 @@ export const SampleAnalyticsConvivaScreen = () => {
     }
 
     // set a source
+    player.autoplay = true;
     player.source = {
       sources: [
         {
-          src: 'https://cdn.theoplayer.com/video/big_buck_bunny/big_buck_bunny.m3u8',
+          //src: 'https://cdn.theoplayer.com/video/big_buck_bunny/big_buck_bunny.m3u8', // VOD
+          src: 'https://cph-msl.akamaized.net/hls/live/2000341/test/master.m3u8', // LIVE
           type: 'application/x-mpegurl',
         },
       ],
@@ -54,9 +57,6 @@ export const SampleAnalyticsConvivaScreen = () => {
         title: 'My metadata title',
       },
     };
-
-    // start playing
-    player.play();
   };
 
   return (
@@ -68,18 +68,6 @@ export const SampleAnalyticsConvivaScreen = () => {
             player={player}
             behind={<CenteredDelayedActivityIndicator size={50} />}
             center={<CenteredControlBar left={<SkipButton skip={-10} />} middle={<PlayButton />} right={<SkipButton skip={30} />} />}
-            bottom={
-              <>
-                {
-                  /*Note: RNSlider is not available on tvOS */
-                  !(Platform.isTV && Platform.OS === 'ios') && (
-                    <ControlBar>
-                      <SeekBar />
-                    </ControlBar>
-                  )
-                }
-              </>
-            }
           />
         )}
       </THEOplayerView>
