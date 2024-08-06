@@ -130,8 +130,8 @@ class PipUtils(
           buildRemoteAction(
             ACTION_RWD,
             R.drawable.ic_rewind,
-            R.string.rwd_pip,
-            R.string.rwd_desc_pip
+            R.string.rewind,
+            R.string.rewind_description
           )
         )
       }
@@ -144,16 +144,16 @@ class PipUtils(
           buildRemoteAction(
             ACTION_PLAY,
             R.drawable.ic_play,
-            R.string.play_pip,
-            R.string.play_desc_pip,
+            R.string.play,
+            R.string.play_description,
             enablePlayPause
           )
         } else {
           buildRemoteAction(
             ACTION_PAUSE,
             R.drawable.ic_pause,
-            R.string.pause_pip,
-            R.string.pause_desc_pip,
+            R.string.play,
+            R.string.pause_description,
             enablePlayPause
           )
         }
@@ -165,8 +165,8 @@ class PipUtils(
           buildRemoteAction(
             ACTION_FFD,
             R.drawable.ic_fast_forward,
-            R.string.ffd_pip,
-            R.string.ffd_desc_pip
+            R.string.fast_forward,
+            R.string.fast_forward_description
           )
         )
       }

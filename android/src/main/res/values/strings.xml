@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="pause">Pause</string>
   <string name="play">Play</string>
-  <string name="pause_pip">Pause</string>
-  <string name="pause_desc_pip">Pause video</string>
-  <string name="play_pip">Play</string>
-  <string name="play_desc_pip">Play video</string>
-  <string name="ffd_pip">Fast Forward</string>
-  <string name="ffd_desc_pip">Fast Forward video</string>
-  <string name="rwd_pip">Rewind</string>
-  <string name="rwd_desc_pip">Rewind video</string>
+  <string name="play_description">Play video</string>
+  <string name="pause">Pause</string>
+  <string name="pause_description">Pause video</string>
+  <string name="fast_forward">Fast Forward</string>
+  <string name="fast_forward_description">Fast Forward video</string>
+  <string name="rewind">Rewind</string>
+  <string name="rewind_description">Rewind video</string>
 
   <string name="background_playback_service_description">THEOplayer service providing background playback.</string>
   <string name="notification_channel_id">theoplayer_default_channel</string>
