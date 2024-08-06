@@ -22,7 +22,6 @@ import com.theoplayer.ReactTHEOplayerContext
 import com.theoplayer.android.api.player.Player
 import com.theoplayer.android.connector.mediasession.MediaSessionConnector
 import com.theoplayer.android.connector.mediasession.MediaSessionListener
-import com.theoplayer.android.connector.mediasession.QueueNavigator
 
 private const val BROWSABLE_ROOT = "/"
 private const val EMPTY_ROOT = "@empty@"
@@ -198,18 +197,6 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
   private val mediaSessionListener = object : MediaSessionListener() {
     override fun onStop() {
       stopForegroundService()
-    }
-
-    override fun onSkipToNext() {
-      if (!mediaSessionConfig.convertSkipToSeek) return
-      val currentPlayer = player?: return
-      currentPlayer.currentTime += mediaSessionConfig.skipForwardInterval
-    }
-
-    override fun onSkipToPrevious() {
-      if (!mediaSessionConfig.convertSkipToSeek) return
-      val currentPlayer = player?: return
-      currentPlayer.currentTime -= mediaSessionConfig.skipBackwardInterval
     }
   }
 
