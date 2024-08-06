@@ -12,9 +12,10 @@ PODS:
   - google-cast-sdk-dynamic-xcframework (4.8.0)
   - GoogleAds-IMA-iOS-SDK (3.23.0)
   - GoogleAds-IMA-tvOS-SDK (4.9.1)
-  - Mux-Stats-Core (3.14.0)
-  - Mux-Stats-THEOplayer (0.7.0):
-    - Mux-Stats-Core (~> 3.10)
+  - Mux-Stats-Core (4.7.1)
+  - Mux-Stats-THEOplayer (0.11.0):
+    - Mux-Stats-Core (~> 4.7.1)
+    - THEOplayerSDK-core (~> 7.0)
   - NielsenAppSDK-XC (9.0.0.0)
   - PromisesObjC (2.4.0)
   - RCT-Folly (2024.01.01.00):
@@ -952,8 +953,8 @@ PODS:
     - React-Core
     - react-native-theoplayer
     - THEOplayer-Connector-Conviva (>= 7.0)
-  - react-native-theoplayer-mux (1.3.0):
-    - Mux-Stats-THEOplayer (~> 0.7)
+  - react-native-theoplayer-mux (1.4.0):
+    - Mux-Stats-THEOplayer (~> 0.11)
     - React-Core
     - react-native-theoplayer
   - react-native-theoplayer-nielsen (1.4.0):
@@ -1238,30 +1239,30 @@ PODS:
   - SwiftSubtitles (0.9.1):
     - DSFRegex (~> 3.3.1)
     - TinyCSV (~> 0.6.1)
-  - THEOplayer-Connector-Comscore (7.8.0):
+  - THEOplayer-Connector-Comscore (7.9.0):
     - ComScore (~> 6.10.0)
     - THEOplayerSDK-core (~> 7)
-  - THEOplayer-Connector-Conviva (7.8.0):
+  - THEOplayer-Connector-Conviva (7.9.0):
     - ConvivaSDK (~> 4.0.30)
-    - THEOplayer-Connector-Utilities (>= 7.8.0, ~> 7.8)
+    - THEOplayer-Connector-Utilities (>= 7.9.0, ~> 7.9)
     - THEOplayerSDK-core (~> 7)
   - THEOplayer-Connector-Nielsen (7.0.0):
     - NielsenAppSDK-XC (= 9.0.0.0)
     - THEOplayer-Connector-Utilities (>= 7.0.0, ~> 7.0)
     - THEOplayerSDK-core (~> 7)
-  - THEOplayer-Connector-SideloadedSubtitle (7.8.0):
+  - THEOplayer-Connector-SideloadedSubtitle (7.9.0):
     - Swifter (= 1.5.0)
     - SwiftSubtitles (= 0.9.1)
     - THEOplayerSDK-core (~> 7)
-  - THEOplayer-Connector-Utilities (7.8.0):
+  - THEOplayer-Connector-Utilities (7.9.0):
     - ConvivaSDK (~> 4.0.30)
     - THEOplayerSDK-core (~> 7)
-  - THEOplayer-Integration-GoogleCast/Base (7.8.0)
-  - THEOplayer-Integration-GoogleIMA/Base (7.8.0)
-  - THEOplayer-Integration-GoogleIMA/Dependencies (7.8.0):
+  - THEOplayer-Integration-GoogleCast/Base (7.9.0)
+  - THEOplayer-Integration-GoogleIMA/Base (7.9.0)
+  - THEOplayer-Integration-GoogleIMA/Dependencies (7.9.0):
     - GoogleAds-IMA-iOS-SDK (~> 3.18)
     - GoogleAds-IMA-tvOS-SDK (~> 4.8)
-  - THEOplayerSDK-core (7.8.0)
+  - THEOplayerSDK-core (7.9.0)
   - TinyCSV (0.6.1)
   - Yoga (0.0.0)
 
@@ -1507,8 +1508,8 @@ SPEC CHECKSUMS:
   google-cast-sdk-dynamic-xcframework: d1323732742c979b2d7e5b061cbe665915981f3d
   GoogleAds-IMA-iOS-SDK: ee2a68ed7a1a17c7bb81bdb1b81590b35a3fc8f3
   GoogleAds-IMA-tvOS-SDK: 85e799c35051454693492480ef7e4ae2e701a05f
-  Mux-Stats-Core: 222a9b4607728d6a770f81e061669f706f90a2e4
-  Mux-Stats-THEOplayer: bbea7fc805fa703f758942fa9efc532d7b0e30a7
+  Mux-Stats-Core: b3b61726282ee28e84656734469636ea42787581
+  Mux-Stats-THEOplayer: a626e29ea7a022f8a2f2a91895032ce0d1618da2
   NielsenAppSDK-XC: 8877317bed8261bc6bdcb7d8655f5ba314ba9610
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   RCT-Folly: b54b39c7532acfa0216d988bdeb706883e71416e
@@ -1541,7 +1542,7 @@ SPEC CHECKSUMS:
   react-native-theoplayer: 28d5ae534d662694f84368cf7ca9baf3589135ab
   react-native-theoplayer-comscore: 251f4281ceb3ed3bee41c6c7b6f9dcc6630ccb9c
   react-native-theoplayer-conviva: 4171c508a4675606e5374a4b02c49acb713650de
-  react-native-theoplayer-mux: 342cb0883551212c8e3acfc769ec91a847e50233
+  react-native-theoplayer-mux: 610aba5c49aae4972f370fd7cf78ea69c27677c7
   react-native-theoplayer-nielsen: 253d7ab7c4817eb3363cccbafb8ffb59f1a82ef2
   React-nativeconfig: 0e309fafbbfbb8eac2f1999d0756732624ac5b39
   React-NativeModulesApple: e188581dd4412e6d075df93e9fc505d9956d93b8
@@ -1572,14 +1573,14 @@ SPEC CHECKSUMS:
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   Swifter: e71dd674404923d7f03ebb03f3f222d1c570bc8e
   SwiftSubtitles: c659af19d710a2946779015464c0577d07fe4666
-  THEOplayer-Connector-Comscore: e710a2eb9737a49a88ef25e2edecb5fab1e5de8b
-  THEOplayer-Connector-Conviva: ab90dfff9af2b8abdb5d5d84d14ebc54446b9a4e
+  THEOplayer-Connector-Comscore: cd49621bdcccb57d834270ace80700f9a10480d0
+  THEOplayer-Connector-Conviva: 1c64d579c09172f1a3a52c2a28d2a93043b02ce5
   THEOplayer-Connector-Nielsen: 32bbf41bc312770162f7736e56d84436accbab53
-  THEOplayer-Connector-SideloadedSubtitle: a458ce38a5d686dccc5acdf9bf3edc312ab70cd3
-  THEOplayer-Connector-Utilities: 47e920c9a92397fc2b7b4e93329828c03263d19d
-  THEOplayer-Integration-GoogleCast: 345adf295f90a8ab78ba77c3e1eff251c5447109
-  THEOplayer-Integration-GoogleIMA: c8281e46454d152095410bbe994a31b0e55834b8
-  THEOplayerSDK-core: d8551e4b9f38c73503a91b778df4c0412ddfadd1
+  THEOplayer-Connector-SideloadedSubtitle: cca2a8dd61452291ece23dbe7f896f80878d51f9
+  THEOplayer-Connector-Utilities: 9e9ca54ab85e01d945e8d33c6c5ae9f536e0aa49
+  THEOplayer-Integration-GoogleCast: 73ba7f17f73e501d0071b946f7777c99e2f69bc0
+  THEOplayer-Integration-GoogleIMA: a8e48f78c181ba828fcb6f5f2c00c3eb2c304db8
+  THEOplayerSDK-core: 4bb9949cea618992d339bb90bfc45624e5ee1394
   TinyCSV: fd6228edbcf1c07466ac34b76dac5e052143eaba
   Yoga: d84d1e521e3f8fa3cdd139d617ddf6514d061c78
 
