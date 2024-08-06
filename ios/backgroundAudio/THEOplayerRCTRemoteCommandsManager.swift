@@ -9,6 +9,7 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     private weak var player: THEOplayer?
     private var isLive: Bool = false
     private var inAd: Bool = false
+    private var hasSource: Bool = false
     private var mediaControlConfig = MediaControlConfig()
     
     // MARK: player Listeners
@@ -40,6 +41,7 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     private func initRemoteCommands() {
         self.isLive = false
         self.inAd = false
+        self.hasSource = false
         let commandCenter = MPRemoteCommandCenter.shared()
         
         commandCenter.playCommand.isEnabled = false
@@ -80,13 +82,14 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         let commandCenter = MPRemoteCommandCenter.shared()
         
         // update the enabled state to have correct visual representation in the lockscreen
-        commandCenter.playCommand.isEnabled = !self.inAd
-        commandCenter.pauseCommand.isEnabled = !self.inAd
-        commandCenter.togglePlayPauseCommand.isEnabled = !self.inAd
-        commandCenter.stopCommand.isEnabled = !self.inAd
-        commandCenter.changePlaybackPositionCommand.isEnabled = !self.isLive && !self.inAd
-        commandCenter.skipForwardCommand.isEnabled = !self.isLive && !self.inAd
-        commandCenter.skipBackwardCommand.isEnabled = !self.isLive && !self.inAd
+        commandCenter.pauseCommand.isEnabled =  self.hasSource && !self.inAd
+        commandCenter.playCommand.isEnabled = self.hasSource && !self.inAd
+        commandCenter.pauseCommand.isEnabled =  self.hasSource && !self.inAd
+        commandCenter.togglePlayPauseCommand.isEnabled =  self.hasSource && !self.inAd
+        commandCenter.stopCommand.isEnabled =  self.hasSource && !self.inAd
+        commandCenter.changePlaybackPositionCommand.isEnabled =  self.hasSource && !self.isLive && !self.inAd
+        commandCenter.skipForwardCommand.isEnabled =  self.hasSource && !self.isLive && !self.inAd
+        commandCenter.skipBackwardCommand.isEnabled =  self.hasSource && !self.isLive && !self.inAd
         commandCenter.nextTrackCommand.isEnabled = !self.isLive && !self.inAd
         commandCenter.previousTrackCommand.isEnabled = !self.isLive && !self.inAd
         
@@ -228,6 +231,7 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         self.sourceChangeListener = player.addEventListener(type: PlayerEventTypes.SOURCE_CHANGE) { [weak self] event in
             self?.isLive = false
             self?.inAd = false
+            self?.hasSource = (event.source != nil)
             self?.updateRemoteCommands()
         }
         
