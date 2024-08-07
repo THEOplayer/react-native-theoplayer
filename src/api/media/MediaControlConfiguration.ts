@@ -39,9 +39,10 @@ export interface MediaControlConfiguration {
   readonly skipBackwardInterval?: number;
 
   /**
-   * The amount of seconds the player will skip backward.
+   * A flag that allows next/previous track commands to be interpreted as skip
+   * forward/backward commands, according to the configured skip intervals.
    *
-   * @defaultValue 5 on Web and android, 15 on iOS.
+   * @defaultValue `false`
    */
   readonly convertSkipToSeek?: boolean;
 }
