@@ -68,6 +68,10 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         // ADD SEEK BACKWARD
         commandCenter.skipBackwardCommand.preferredIntervals = [NSNumber(value: self.mediaControlConfig.skipBackwardInterval)]
         commandCenter.skipBackwardCommand.addTarget(self, action: #selector(onSkipBackwardCommand(_:)))
+        // ADD NEXT TRACK
+        commandCenter.nextTrackCommand.addTarget(self, action: #selector(onNextTrackCommand(_:)))
+        // ADD PREVIOUS TRACK
+        commandCenter.previousTrackCommand.addTarget(self, action: #selector(onPreviousTrackCommand(_:)))
         
         if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Remote commands initialised.") }
     }
@@ -83,6 +87,8 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         commandCenter.changePlaybackPositionCommand.isEnabled = !self.isLive && !self.inAd
         commandCenter.skipForwardCommand.isEnabled = !self.isLive && !self.inAd
         commandCenter.skipBackwardCommand.isEnabled = !self.isLive && !self.inAd
+        commandCenter.nextTrackCommand.isEnabled = !self.isLive && !self.inAd
+        commandCenter.previousTrackCommand.isEnabled = !self.isLive && !self.inAd
         
         // set configured skip forward/backward intervals
         commandCenter.skipForwardCommand.preferredIntervals = [NSNumber(value: self.mediaControlConfig.skipForwardInterval)]
@@ -175,6 +181,32 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
             if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Skip backward command handled.") }
         } else {
             if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Skip backward command not handled.") }
+        }
+        return .success
+    }
+    
+    @objc private func onPreviousTrackCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
+        if let player = self.player,
+           self.mediaControlConfig.convertSkipToSeek,
+           !self.isLive,
+           !self.inAd {
+            player.currentTime = player.currentTime - Double(self.mediaControlConfig.skipBackwardInterval)
+            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] previous track command handled as skip backward command.") }
+        } else {
+            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] previous track command not handled.") }
+        }
+        return .success
+    }
+    
+    @objc private func onNextTrackCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
+        if let player = self.player,
+           self.mediaControlConfig.convertSkipToSeek,
+           !self.isLive,
+           !self.inAd {
+            player.currentTime = player.currentTime + Double(self.mediaControlConfig.skipForwardInterval)
+            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] next track command handled as skip forward command.") }
+        } else {
+            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] next track command not handled.") }
         }
         return .success
     }
