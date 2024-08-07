@@ -43,6 +43,9 @@ export interface MediaControlConfiguration {
    * forward/backward commands, according to the configured skip intervals.
    *
    * @defaultValue `false`
+   *
+   * @remarks
+   * <br/> - This property only applies to iOS and Android.
    */
   readonly convertSkipToSeek?: boolean;
 }
