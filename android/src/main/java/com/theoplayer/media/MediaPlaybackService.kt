@@ -38,7 +38,7 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
 
   private var playerContext: ReactTHEOplayerContext? = null
 
-  private var enableMediaControls: Boolean = true
+  private var mediaSessionConfig: MediaSessionConfig = MediaSessionConfig()
 
   private val player: Player?
     get() = playerContext?.player
@@ -58,8 +58,8 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
       service.connectPlayerContext(playerContext)
     }
 
-    fun setEnablePlaybackControls(enable: Boolean) {
-      enableMediaControls = enable
+    fun setEnablePlaybackControls(newConfig: MediaSessionConfig) {
+      mediaSessionConfig = newConfig
       updateNotification()
     }
 
@@ -262,7 +262,7 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
       PlaybackStateCompat.STATE_PAUSED -> {
         // Fetch large icon asynchronously
         fetchImageFromUri(mediaSession.controller.metadata?.description?.iconUri) { largeIcon ->
-          notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build(playbackState, largeIcon, enableMediaControls))
+          notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build(playbackState, largeIcon, mediaSessionConfig.mediaSessionEnabled))
         }
       }
       PlaybackStateCompat.STATE_PLAYING -> {
@@ -296,13 +296,13 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         startForeground(
           NOTIFICATION_ID,
-          notificationBuilder.build(playbackState, largeIcon, enableMediaControls),
+          notificationBuilder.build(playbackState, largeIcon, mediaSessionConfig.mediaSessionEnabled),
           ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
         )
       } else {
         startForeground(
           NOTIFICATION_ID,
-          notificationBuilder.build(playbackState, largeIcon, enableMediaControls)
+          notificationBuilder.build(playbackState, largeIcon, mediaSessionConfig.mediaSessionEnabled)
         )
       }
     } catch (e: IllegalStateException) {

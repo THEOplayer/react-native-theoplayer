@@ -37,4 +37,15 @@ export interface MediaControlConfiguration {
    * @defaultValue 5 on Web and android, 15 on iOS.
    */
   readonly skipBackwardInterval?: number;
+
+  /**
+   * A flag that allows next/previous track commands to be interpreted as skip
+   * forward/backward commands, according to the configured skip intervals.
+   *
+   * @defaultValue `false`
+   *
+   * @remarks
+   * <br/> - This property only applies to iOS and Android.
+   */
+  readonly convertSkipToSeek?: boolean;
 }

@@ -6,6 +6,7 @@ object MediaSessionConfigAdapter {
   private const val PROP_ENABLED = "mediaSessionEnabled"
   private const val PROP_SKIP_FORWARD_INTERVAL = "skipForwardInterval"
   private const val PROP_SKIP_BACKWARD_INTERVAL = "skipBackwardInterval"
+  private const val PROP_CONVERT_SKIP = "convertSkipToSeek"
 
   fun fromProps(props: ReadableMap?): MediaSessionConfig {
     return MediaSessionConfig().apply {
@@ -17,6 +18,9 @@ object MediaSessionConfigAdapter {
       }
       if (props?.hasKey(PROP_SKIP_BACKWARD_INTERVAL) == true) {
         skipBackwardInterval = props.getDouble(PROP_SKIP_BACKWARD_INTERVAL)
+      }
+      if (props?.hasKey(PROP_CONVERT_SKIP) == true) {
+        convertSkipToSeek = props.getBoolean(PROP_CONVERT_SKIP)
       }
     }
   }

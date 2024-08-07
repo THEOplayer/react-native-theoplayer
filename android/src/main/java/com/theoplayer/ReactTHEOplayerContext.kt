@@ -28,6 +28,7 @@ import com.theoplayer.audio.AudioBecomingNoisyManager
 import com.theoplayer.audio.AudioFocusManager
 import com.theoplayer.audio.BackgroundAudioConfig
 import com.theoplayer.media.MediaPlaybackService
+import com.theoplayer.media.MediaQueueNavigator
 import com.theoplayer.media.MediaSessionConfig
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -112,7 +113,7 @@ class ReactTHEOplayerContext private constructor(
       binder?.setPlayerContext(this@ReactTHEOplayerContext)
 
       // Apply background audio config
-      binder?.setEnablePlaybackControls(backgroundAudioConfig.enabled)
+      binder?.setEnablePlaybackControls(mediaSessionConfig)
     }
 
     override fun onServiceDisconnected(className: ComponentName?) {
@@ -259,6 +260,11 @@ class ReactTHEOplayerContext private constructor(
 
       // Pass metadata from source description
       setMediaSessionMetadata(player?.source)
+
+      // Install a queue navigator, but only if we want to handle skip buttons.
+      if (mediaSessionConfig.convertSkipToSeek) {
+        queueNavigator = MediaQueueNavigator(mediaSessionConfig)
+      }
     }
   }
 
