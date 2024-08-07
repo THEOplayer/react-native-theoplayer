@@ -9,7 +9,6 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     private weak var player: THEOplayer?
     private var isLive: Bool = false
     private var inAd: Bool = false
-    private var backgroundaudioConfig = BackgroundAudioConfig()
     private var mediaControlConfig = MediaControlConfig()
     
     // MARK: player Listeners
@@ -31,11 +30,6 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         
         // attach listeners
         self.attachListeners()
-    }
-    
-    func setBackGroundAudioConfig(_ newBackgroundAudioConfig: BackgroundAudioConfig) {
-        self.backgroundaudioConfig = newBackgroundAudioConfig
-        self.updateRemoteCommands()
     }
     
     func setMediaControlConfig(_ newMediaControlConfig: MediaControlConfig) {
@@ -78,19 +72,19 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         let commandCenter = MPRemoteCommandCenter.shared()
         
         // update the enabled state to have correct visual representation in the lockscreen
-        commandCenter.playCommand.isEnabled = !self.inAd && self.backgroundaudioConfig.enabled
-        commandCenter.pauseCommand.isEnabled = !self.inAd && self.backgroundaudioConfig.enabled
-        commandCenter.togglePlayPauseCommand.isEnabled = !self.inAd && self.backgroundaudioConfig.enabled
-        commandCenter.stopCommand.isEnabled = !self.inAd && self.backgroundaudioConfig.enabled
-        commandCenter.changePlaybackPositionCommand.isEnabled = !self.isLive && !self.inAd && self.backgroundaudioConfig.enabled
-        commandCenter.skipForwardCommand.isEnabled = !self.isLive && !self.inAd && self.backgroundaudioConfig.enabled
-        commandCenter.skipBackwardCommand.isEnabled = !self.isLive && !self.inAd && self.backgroundaudioConfig.enabled
+        commandCenter.playCommand.isEnabled = !self.inAd
+        commandCenter.pauseCommand.isEnabled = !self.inAd
+        commandCenter.togglePlayPauseCommand.isEnabled = !self.inAd
+        commandCenter.stopCommand.isEnabled = !self.inAd
+        commandCenter.changePlaybackPositionCommand.isEnabled = !self.isLive && !self.inAd
+        commandCenter.skipForwardCommand.isEnabled = !self.isLive && !self.inAd
+        commandCenter.skipBackwardCommand.isEnabled = !self.isLive && !self.inAd
         
         // set configured skip forward/backward intervals
         commandCenter.skipForwardCommand.preferredIntervals = [NSNumber(value: self.mediaControlConfig.skipForwardInterval)]
         commandCenter.skipBackwardCommand.preferredIntervals = [NSNumber(value: self.mediaControlConfig.skipBackwardInterval)]
         
-        if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Remote commands updated for \(self.isLive ? "LIVE" : "VOD") (\(self.inAd ? "AD IS PLAYING" : "NO AD PLAYING"), \(self.backgroundaudioConfig.enabled ? "BGAUDIO ENABLED" : "BGAUDIO DISABLED") ).") }
+        if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Remote commands updated for \(self.isLive ? "LIVE" : "VOD") (\(self.inAd ? "AD IS PLAYING" : "NO AD PLAYING")).") }
     }
     
     @objc private func onPlayCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
