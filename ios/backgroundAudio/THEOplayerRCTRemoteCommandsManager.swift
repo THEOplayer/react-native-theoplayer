@@ -42,11 +42,15 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         self.inAd = false
         let commandCenter = MPRemoteCommandCenter.shared()
         
-        commandCenter.playCommand.isEnabled = true
-        commandCenter.pauseCommand.isEnabled = true
-        commandCenter.togglePlayPauseCommand.isEnabled = true
-        commandCenter.stopCommand.isEnabled = true
-        commandCenter.changePlaybackPositionCommand.isEnabled = true
+        commandCenter.playCommand.isEnabled = false
+        commandCenter.pauseCommand.isEnabled = false
+        commandCenter.togglePlayPauseCommand.isEnabled = false
+        commandCenter.stopCommand.isEnabled = false
+        commandCenter.changePlaybackPositionCommand.isEnabled = false
+        commandCenter.skipForwardCommand.isEnabled = false
+        commandCenter.skipBackwardCommand.isEnabled = false
+        commandCenter.previousTrackCommand.isEnabled = false
+        commandCenter.nextTrackCommand.isEnabled = false
         
         // PLAY
         commandCenter.playCommand.addTarget(self, action: #selector(onPlayCommand(_:)))
