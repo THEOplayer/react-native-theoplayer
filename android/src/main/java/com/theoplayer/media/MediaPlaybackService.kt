@@ -77,7 +77,7 @@ class MediaPlaybackService : Service() {
     initMediaSession()
 
     notificationManager = (getSystemService(NOTIFICATION_SERVICE) as NotificationManager)
-    notificationBuilder = MediaNotificationBuilder(this, notificationManager, mediaSession)
+    notificationBuilder = MediaNotificationBuilder(this, notificationManager, mediaSessionConnector)
 
     // This ensures that the service starts and continues to run, even when all
     // UI MediaBrowser activities that are bound to it unbind.
@@ -215,7 +215,7 @@ class MediaPlaybackService : Service() {
     when (playbackState) {
       PlaybackStateCompat.STATE_PAUSED -> {
         // Fetch large icon asynchronously
-        fetchImageFromUri(mediaSession.controller.metadata?.description?.iconUri) { largeIcon ->
+        fetchImageFromMetadata(player?.source) { largeIcon ->
           notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build(playbackState, largeIcon, mediaSessionConfig.mediaSessionEnabled))
         }
       }
@@ -228,7 +228,7 @@ class MediaPlaybackService : Service() {
         startForegroundWithPlaybackState(playbackState, loadPlaceHolderIcon(this))
 
         // Fetch the correct large icon asynchronously.
-        fetchImageFromUri(mediaSession.controller.metadata?.description?.iconUri) { largeIcon ->
+        fetchImageFromMetadata(player?.source) { largeIcon ->
           startForegroundWithPlaybackState(playbackState, largeIcon)
         }
       }
