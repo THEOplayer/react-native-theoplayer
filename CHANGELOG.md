@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [7.8.0] - 24-08-09
+
+### Added
+
+- Added shouldResumeAfterInterruptions to the BackgroundAudioConfiguration which toggles playback resume after an interruption (e.g. phone call) on the lockscreen.
+- Added the option to set a nil source on the iOS Bridge, to 'unset' the previous source.
+- Added the fast-forward & rewind buttons for the Android notification when `mediaControl.mediaSessionEnabled` is set to `true`.
+- Added a `mediaControl.convertSkipToSeek` player config property to allow seeking with the `NEXT` and `PREVIOUS` media buttons. Its default value is `false`.
+
+### Fixed
+
+- Fixed an issue where the Lockscreen showed enabled controls when the player has no valid source.
+- Fixed an issue on Android where the notification would not disappear when setting an undefined source.
+
+### Changed
+
+- Replaced the `MediaBrowserService` with a regular `Service` to facilitate background playback on Android.
+
 ## [7.7.1] - 24-07-29
 
 ### Fixed

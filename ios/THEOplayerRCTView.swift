@@ -34,10 +34,10 @@ public class THEOplayerRCTView: UIView {
         }
     }
     var backgroundAudioConfig = BackgroundAudioConfig() {
-        didSet {
-            self.remoteCommandsManager.setBackGroundAudioConfig(backgroundAudioConfig)
-        }
-    }
+          didSet {
+              self.updateInterruptionNotifications()
+          }
+      }
 
     // MARK: Events
     var onNativePlayerReady: RCTDirectEventBlock?

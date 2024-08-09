@@ -9,7 +9,7 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     private weak var player: THEOplayer?
     private var isLive: Bool = false
     private var inAd: Bool = false
-    private var backgroundaudioConfig = BackgroundAudioConfig()
+    private var hasSource: Bool = false
     private var mediaControlConfig = MediaControlConfig()
     
     // MARK: player Listeners
@@ -33,11 +33,6 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         self.attachListeners()
     }
     
-    func setBackGroundAudioConfig(_ newBackgroundAudioConfig: BackgroundAudioConfig) {
-        self.backgroundaudioConfig = newBackgroundAudioConfig
-        self.updateRemoteCommands()
-    }
-    
     func setMediaControlConfig(_ newMediaControlConfig: MediaControlConfig) {
         self.mediaControlConfig = newMediaControlConfig
         self.updateRemoteCommands()
@@ -46,13 +41,18 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     private func initRemoteCommands() {
         self.isLive = false
         self.inAd = false
+        self.hasSource = false
         let commandCenter = MPRemoteCommandCenter.shared()
         
-        commandCenter.playCommand.isEnabled = true
-        commandCenter.pauseCommand.isEnabled = true
-        commandCenter.togglePlayPauseCommand.isEnabled = true
-        commandCenter.stopCommand.isEnabled = true
-        commandCenter.changePlaybackPositionCommand.isEnabled = true
+        commandCenter.playCommand.isEnabled = false
+        commandCenter.pauseCommand.isEnabled = false
+        commandCenter.togglePlayPauseCommand.isEnabled = false
+        commandCenter.stopCommand.isEnabled = false
+        commandCenter.changePlaybackPositionCommand.isEnabled = false
+        commandCenter.skipForwardCommand.isEnabled = false
+        commandCenter.skipBackwardCommand.isEnabled = false
+        commandCenter.previousTrackCommand.isEnabled = false
+        commandCenter.nextTrackCommand.isEnabled = false
         
         // PLAY
         commandCenter.playCommand.addTarget(self, action: #selector(onPlayCommand(_:)))
@@ -70,6 +70,10 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         // ADD SEEK BACKWARD
         commandCenter.skipBackwardCommand.preferredIntervals = [NSNumber(value: self.mediaControlConfig.skipBackwardInterval)]
         commandCenter.skipBackwardCommand.addTarget(self, action: #selector(onSkipBackwardCommand(_:)))
+        // ADD NEXT TRACK
+        commandCenter.nextTrackCommand.addTarget(self, action: #selector(onNextTrackCommand(_:)))
+        // ADD PREVIOUS TRACK
+        commandCenter.previousTrackCommand.addTarget(self, action: #selector(onPreviousTrackCommand(_:)))
         
         if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Remote commands initialised.") }
     }
@@ -78,19 +82,22 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         let commandCenter = MPRemoteCommandCenter.shared()
         
         // update the enabled state to have correct visual representation in the lockscreen
-        commandCenter.playCommand.isEnabled = !self.inAd && self.backgroundaudioConfig.enabled
-        commandCenter.pauseCommand.isEnabled = !self.inAd && self.backgroundaudioConfig.enabled
-        commandCenter.togglePlayPauseCommand.isEnabled = !self.inAd && self.backgroundaudioConfig.enabled
-        commandCenter.stopCommand.isEnabled = !self.inAd && self.backgroundaudioConfig.enabled
-        commandCenter.changePlaybackPositionCommand.isEnabled = !self.isLive && !self.inAd && self.backgroundaudioConfig.enabled
-        commandCenter.skipForwardCommand.isEnabled = !self.isLive && !self.inAd && self.backgroundaudioConfig.enabled
-        commandCenter.skipBackwardCommand.isEnabled = !self.isLive && !self.inAd && self.backgroundaudioConfig.enabled
+        commandCenter.pauseCommand.isEnabled =  self.hasSource && !self.inAd
+        commandCenter.playCommand.isEnabled = self.hasSource && !self.inAd
+        commandCenter.pauseCommand.isEnabled =  self.hasSource && !self.inAd
+        commandCenter.togglePlayPauseCommand.isEnabled =  self.hasSource && !self.inAd
+        commandCenter.stopCommand.isEnabled =  self.hasSource && !self.inAd
+        commandCenter.changePlaybackPositionCommand.isEnabled =  self.hasSource && !self.isLive && !self.inAd
+        commandCenter.skipForwardCommand.isEnabled =  self.hasSource && !self.isLive && !self.inAd
+        commandCenter.skipBackwardCommand.isEnabled =  self.hasSource && !self.isLive && !self.inAd
+        commandCenter.nextTrackCommand.isEnabled = !self.isLive && !self.inAd
+        commandCenter.previousTrackCommand.isEnabled = !self.isLive && !self.inAd
         
         // set configured skip forward/backward intervals
         commandCenter.skipForwardCommand.preferredIntervals = [NSNumber(value: self.mediaControlConfig.skipForwardInterval)]
         commandCenter.skipBackwardCommand.preferredIntervals = [NSNumber(value: self.mediaControlConfig.skipBackwardInterval)]
         
-        if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Remote commands updated for \(self.isLive ? "LIVE" : "VOD") (\(self.inAd ? "AD IS PLAYING" : "NO AD PLAYING"), \(self.backgroundaudioConfig.enabled ? "BGAUDIO ENABLED" : "BGAUDIO DISABLED") ).") }
+        if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Remote commands updated for \(self.isLive ? "LIVE" : "VOD") (\(self.inAd ? "AD IS PLAYING" : "NO AD PLAYING")).") }
     }
     
     @objc private func onPlayCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
@@ -181,6 +188,32 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         return .success
     }
     
+    @objc private func onPreviousTrackCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
+        if let player = self.player,
+           self.mediaControlConfig.convertSkipToSeek,
+           !self.isLive,
+           !self.inAd {
+            player.currentTime = player.currentTime - Double(self.mediaControlConfig.skipBackwardInterval)
+            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] previous track command handled as skip backward command.") }
+        } else {
+            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] previous track command not handled.") }
+        }
+        return .success
+    }
+    
+    @objc private func onNextTrackCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
+        if let player = self.player,
+           self.mediaControlConfig.convertSkipToSeek,
+           !self.isLive,
+           !self.inAd {
+            player.currentTime = player.currentTime + Double(self.mediaControlConfig.skipForwardInterval)
+            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] next track command handled as skip forward command.") }
+        } else {
+            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] next track command not handled.") }
+        }
+        return .success
+    }
+    
     private func attachListeners() {
         guard let player = self.player else {
             return
@@ -198,6 +231,7 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         self.sourceChangeListener = player.addEventListener(type: PlayerEventTypes.SOURCE_CHANGE) { [weak self] event in
             self?.isLive = false
             self?.inAd = false
+            self?.hasSource = (event.source != nil)
             self?.updateRemoteCommands()
         }
         

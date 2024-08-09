@@ -15,4 +15,9 @@ data class MediaSessionConfig (
    * The amount of seconds the player will skip backward.
    */
   var skipBackwardInterval: Double = 5.0,
+
+  /**
+   * Whether "skip track" events should be handled the same as "fast-forward/rewind".
+   */
+  var convertSkipToSeek: Boolean = false,
 )

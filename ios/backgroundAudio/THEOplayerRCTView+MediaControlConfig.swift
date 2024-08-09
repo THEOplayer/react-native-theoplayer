@@ -6,6 +6,7 @@ import THEOplayerSDK
 struct MediaControlConfig {
     var skipForwardInterval: Int = 15
     var skipBackwardInterval: Int = 15
+    var convertSkipToSeek: Bool = false
 }
 
 extension THEOplayerRCTView {
@@ -17,6 +18,9 @@ extension THEOplayerRCTView {
             }
             if let skipBackwardInterval = mediaControlConfig["skipBackwardInterval"] as? Int {
                 self.mediaControlConfig.skipBackwardInterval = skipBackwardInterval
+            }
+            if let convertSkipToSeek = mediaControlConfig["convertSkipToSeek"] as? Bool {
+                self.mediaControlConfig.convertSkipToSeek = convertSkipToSeek
             }
         }
     }
