@@ -17,13 +17,19 @@ export interface BackgroundAudioSubMenuProps {
 export const BackgroundAudioSubMenu = (props?: BackgroundAudioSubMenuProps) => {
   const ctx = useContext(PlayerContext);
 
-  return <CustomSubMenu
-    title={'Background Audio'}
-    menuStyle={props?.menuStyle}
-    label={'Bg Audio'}
-    options={[{ label: 'Disabled', value: false }, { label: 'Enabled', value: true }]}
-    onOptionSelected={(option: Option<boolean>) => {
-      ctx.player.backgroundAudioConfiguration = { enabled: option.value };
-    }}
-    currentOption={() => ctx.player.backgroundAudioConfiguration.enabled ?? false} />;
-}
+  return (
+    <CustomSubMenu
+      title={'Background Audio'}
+      menuStyle={props?.menuStyle}
+      label={'Bg Audio'}
+      options={[
+        { label: 'Disabled', value: false },
+        { label: 'Enabled', value: true },
+      ]}
+      onOptionSelected={(option: Option<boolean>) => {
+        ctx.player.backgroundAudioConfiguration = { ...ctx.player.backgroundAudioConfiguration, enabled: option.value };
+      }}
+      currentOption={() => ctx.player.backgroundAudioConfiguration.enabled ?? false}
+    />
+  );
+};
