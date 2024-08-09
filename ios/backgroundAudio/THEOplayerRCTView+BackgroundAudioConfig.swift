@@ -5,6 +5,7 @@ import THEOplayerSDK
 
 struct BackgroundAudioConfig {
     var enabled: Bool = false
+    var shouldResumeAfterInterruption: Bool = false
 }
 
 extension THEOplayerRCTView: BackgroundPlaybackDelegate {

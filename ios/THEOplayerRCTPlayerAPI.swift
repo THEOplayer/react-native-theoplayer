@@ -223,6 +223,7 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
     private func parseBackgroundAudioConfig(configDict: NSDictionary) -> BackgroundAudioConfig {
         var backgroundAudio = BackgroundAudioConfig()
         backgroundAudio.enabled = configDict["enabled"] as? Bool ?? false
+        backgroundAudio.shouldResumeAfterInterruption = configDict["shouldResumeAfterInterruption"] as? Bool ?? false
         return backgroundAudio
     }
 
