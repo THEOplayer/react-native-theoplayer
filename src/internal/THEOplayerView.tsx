@@ -161,9 +161,9 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
   }
 
   private reset() {
-    this.setState( prevState => ({
+    this.setState((prevState) => ({
       ...prevState,
-      error: undefined
+      error: undefined,
     }));
   }
 
