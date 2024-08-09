@@ -17,6 +17,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added the fast-forward & rewind buttons for the Android notification when `mediaControl.mediaSessionEnabled` is set to `true`.
 - Added a `mediaControl.convertSkipToSeek` player config property to allow seeking with the `NEXT` and `PREVIOUS` media buttons. Its default value is `false`.
 
+### Fixed
+
+- Fixed an issue on Android where the notification would not disappear when setting an undefined source.
+
+### Changed
+
+- Replaced the `MediaBrowserService` with a regular `Service` to facilitate background playback on Android.
+
 ## [7.7.1] - 24-07-29
 
 ### Fixed
