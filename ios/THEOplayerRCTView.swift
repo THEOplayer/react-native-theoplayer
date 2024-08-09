@@ -22,7 +22,6 @@ public class THEOplayerRCTView: UIView {
     var adsConfig = AdsConfig()
     var castConfig = CastConfig()
     var uiConfig = UIConfig()
-    var backgroundAudioConfig = BackgroundAudioConfig()
     
     var mediaControlConfig = MediaControlConfig() {
         didSet {
@@ -34,6 +33,11 @@ public class THEOplayerRCTView: UIView {
             self.pipControlsManager.setPipConfig(pipConfig)
         }
     }
+    var backgroundAudioConfig = BackgroundAudioConfig() {
+          didSet {
+              self.updateInterruptionNotifications()
+          }
+      }
 
     // MARK: Events
     var onNativePlayerReady: RCTDirectEventBlock?
