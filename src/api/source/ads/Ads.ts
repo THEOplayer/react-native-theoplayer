@@ -92,6 +92,7 @@ export interface AdDescription {
  * <br/> - `'google-ima'`: {@link https://developers.google.com/interactive-media-ads/docs/sdks/html5|Google IMA} pre-integrated ad playback.
  * <br/> - `'spotx'`: {@link https://developer.spotxchange.com/|SpotX} pre-integrated ad playback.
  * <br/> - `'freewheel'`: {@link https://vi.freewheel.tv/|FreeWheel} pre-integrated ad playback.
+ * <br/> - `'theoads'`: [Experimental] - API under development, do not use without consulting THEO Technologies.
  *
  * @remarks
  * <br/> - An empty string defaults to `'theo'`.
@@ -103,4 +104,5 @@ export enum AdIntegrationKind {
   google_ima = 'google-ima',
   spotx = 'spotx',
   theo = 'theo',
+  theoads = 'theoads',
 }
