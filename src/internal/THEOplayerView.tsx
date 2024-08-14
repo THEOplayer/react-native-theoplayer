@@ -75,6 +75,7 @@ interface THEOplayerRCTViewProps {
   config?: PlayerConfiguration;
   onNativePlayerReady: (event: NativeSyntheticEvent<NativePlayerStateEvent>) => void;
   onNativeSourceChange: () => void;
+  onNativeEncrypted: () => void;
   onNativeLoadStart: () => void;
   onNativeLoadedData: () => void;
   onNativeLoadedMetadata: (event: NativeSyntheticEvent<NativeLoadedMetadataEvent>) => void;
@@ -184,6 +185,10 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
     this._facade.dispatchEvent(new BaseEvent(PlayerEventType.SOURCE_CHANGE));
     this._updatePoster();
     this._showPoster();
+  };
+
+  private _onEncrypted = () => {
+    this._facade.dispatchEvent(new BaseEvent(PlayerEventType.ENCRYPTED));
   };
 
   private _onLoadStart = () => {
@@ -385,6 +390,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
           config={config || {}}
           onNativePlayerReady={this._onNativePlayerReady}
           onNativeSourceChange={this._onSourceChange}
+          onNativeEncrypted={this._onEncrypted}
           onNativeLoadStart={this._onLoadStart}
           onNativeLoadedData={this._onLoadedData}
           onNativeLoadedMetadata={this._onLoadedMetadata}
