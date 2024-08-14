@@ -135,6 +135,7 @@ export class WebEventForwarder {
     this._player.removeEventListener('ratechange', this.onPlaybackRateChange);
     this._player.removeEventListener('segmentnotfound', this.onSegmentNotFound);
     this._player.removeEventListener('volumechange', this.onVolumeChangeEvent);
+    this._player.removeEventListener('dimensionchange', this.onDimensionChange);
     this._player.removeEventListener('encrypted', this.onEncrypted);
     this._player.presentation.removeEventListener('presentationmodechange', this.onPresentationModeChange);
 
