@@ -54,6 +54,8 @@ class THEOplayerRCTNowPlayingManager {
             self.updatePlaybackState()
             self.nowPlayingInfo = [String : Any]()
             self.updateTitle(metadata.title)
+            self.updateArtist(metadata.metadataKeys?["artist"] as? String)
+            self.updateAlbum(metadata.metadataKeys?["album"] as? String)
             self.updateSubtitle(metadata.metadataKeys?["subtitle"] as? String)
             self.updateDuration(player.duration)
             self.updateMediaType() // video
@@ -103,6 +105,18 @@ class THEOplayerRCTNowPlayingManager {
     private func updateTitle(_ metadataTitle: String?) {
         if let title = metadataTitle {
             self.nowPlayingInfo[MPMediaItemPropertyTitle] = title
+        }
+    }
+    
+    private func updateArtist(_ metadataArtist: String?) {
+        if let artist = metadataArtist {
+            self.nowPlayingInfo[MPMediaItemPropertyArtist] = artist
+        }
+    }
+    
+    private func updateAlbum(_ metadataAlbum: String?) {
+        if let album = metadataAlbum {
+            self.nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = album
         }
     }
     
