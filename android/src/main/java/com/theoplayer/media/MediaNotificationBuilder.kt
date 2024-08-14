@@ -23,15 +23,18 @@ import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber
 import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.request.ImageRequest
 import com.theoplayer.R
+import com.theoplayer.android.api.source.SourceDescription
+import com.theoplayer.android.connector.mediasession.MediaSessionConnector
 
 private const val TAG = "MediaNotification"
 
 class MediaNotificationBuilder(
   private val context: Context,
   private val notificationManager: NotificationManager,
-  private val mediaSession: MediaSessionCompat
+  private val mediaSessionConnector: MediaSessionConnector
 ) {
-
+  private val mediaSession: MediaSessionCompat
+    get() = mediaSessionConnector.mediaSession
   private var channel: NotificationChannel? = null
   private var channelId: String? = null
 
@@ -136,8 +139,16 @@ class MediaNotificationBuilder(
       // Add an app icon and set its accent color
       setSmallIcon(R.drawable.ic_notification_small)
 
-      // Set the large icon that is shown in the notification
-      setLargeIcon(largeIcon)
+      largeIcon?.let {
+        // Set the large icon that is shown in the notification
+        setLargeIcon(largeIcon)
+
+        // Also provide the mediaSession with our downloaded asset
+        mediaSessionConnector.getMediaSessionMetadataProvider().apply {
+          setArt(largeIcon)
+          invalidateMediaSessionMetadata()
+        }
+      }
 
       // Be careful when you set the background color. In an ordinary notification in
       // Android version 5.0 or later, the color is applied only to the background of the
@@ -170,7 +181,7 @@ class MediaNotificationBuilder(
       // Add up to 3 actions to be shown in the notification's standard-sized contentView.
       if (enableMediaControls) {
         // The Rewind, Play/Pause and FastForward actions.
-        style.setShowActionsInCompactView(0,1,2)
+        style.setShowActionsInCompactView(0, 1, 2)
       } else {
         // The placeholder action, which was added above.
         style.setShowActionsInCompactView(0)
@@ -193,16 +204,13 @@ class MediaNotificationBuilder(
   }
 }
 
-fun fetchImageFromUri(uri: Uri?, block: (Bitmap?) -> Unit) {
-  if (uri == null) {
+fun fetchImageFromMetadata(source: SourceDescription?, block: (Bitmap?) -> Unit) {
+  val img = source?.poster ?: source?.metadata?.get("displayIconUri")
+  if (img == null) {
     block(null)
     return
   }
-
-  val imageRequest = ImageRequest.fromUri(uri)
-  val imagePipeline = Fresco.getImagePipeline()
-
-  imagePipeline.fetchDecodedImage(imageRequest, null).also {
+  Fresco.getImagePipeline().fetchDecodedImage(ImageRequest.fromUri(Uri.parse(img)), null).also {
     it.subscribe(
       object : BaseBitmapDataSubscriber() {
         override fun onNewResultImpl(bitmap: Bitmap?) {
@@ -211,7 +219,7 @@ fun fetchImageFromUri(uri: Uri?, block: (Bitmap?) -> Unit) {
 
         override fun onFailureImpl(dataSource: DataSource<CloseableReference<CloseableImage>>) {
           if (dataSource.failureCause != null) {
-            Log.w(TAG, "Failed to get image $uri")
+            Log.w(TAG, "Failed to get image $img")
           }
           block(null)
         }
@@ -224,7 +232,7 @@ fun fetchImageFromUri(uri: Uri?, block: (Bitmap?) -> Unit) {
 fun loadPlaceHolderIcon(context: Context, res: Int = R.drawable.ic_notification_large): Bitmap? {
   return try {
     BitmapFactory.decodeResource(context.resources, res)
-  } catch(e: Exception) {
+  } catch (e: Exception) {
     // Make sure we never crash on trying to decode a possibly overridden icon resource.
     Log.w(TAG, "Failed to decode placeHolderIcon: ${e.message}")
     null
