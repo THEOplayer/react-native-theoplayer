@@ -46,6 +46,7 @@ export enum PlayerEventType {
   PRESENTATIONMODE_CHANGE = 'presentationmodechange',
   DESTROY = 'destroy',
   RESIZE = 'resize',
+  ENCRYPTED = 'encrypted',
 }
 
 /**
@@ -77,6 +78,11 @@ export interface PlayerEventMap {
    * Dispatched when the player's source changes.
    */
   [PlayerEventType.SOURCE_CHANGE]: Event<PlayerEventType.SOURCE_CHANGE>;
+
+  /**
+   * Dispatched when the player's loads a DRM protected segment that requires a new encryption key.
+   */
+  [PlayerEventType.ENCRYPTED]: Event<PlayerEventType.ENCRYPTED>;
 
   /**
    * Dispatched when the player starts loading the manifest.
