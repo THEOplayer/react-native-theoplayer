@@ -3,6 +3,7 @@ package com.theoplayer.source
 import android.text.TextUtils
 import android.util.Log
 import com.google.gson.Gson
+import com.theoplayer.android.api.ads.theoads.TheoAdsDescription
 import com.theoplayer.android.api.error.THEOplayerException
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableMap
@@ -13,12 +14,12 @@ import com.theoplayer.android.api.source.addescription.AdDescription
 import com.theoplayer.android.api.source.TextTrackDescription
 import com.theoplayer.android.api.source.SourceType
 import com.theoplayer.android.api.source.hls.HlsPlaybackConfiguration
-import com.theoplayer.android.api.event.ads.AdIntegrationKind
 import com.theoplayer.android.api.source.addescription.GoogleImaAdDescription
 import com.theoplayer.android.api.player.track.texttrack.TextTrackKind
 import com.theoplayer.android.api.source.metadata.ChromecastMetadataImage
 import com.theoplayer.BuildConfig
 import com.theoplayer.android.api.error.ErrorCode
+import com.theoplayer.android.api.source.AdIntegration
 import com.theoplayer.android.api.source.dash.DashPlaybackConfiguration
 import com.theoplayer.drm.ContentProtectionAdapter
 import com.theoplayer.util.BridgeUtils
@@ -51,7 +52,15 @@ private const val PROP_POSTER = "poster"
 private const val PROP_ADS = "ads"
 private const val PROP_DASH = "dash"
 private const val PROP_DASH_IGNORE_AVAILABILITYWINDOW = "ignoreAvailabilityWindow"
+private const val PROP_BACKDROP_DOUBLE_BOX = "backdropDoubleBox"
+private const val PROP_BACKDROP_LSHAPE = "backdropLShape"
+private const val PROP_CUSTOM_ASSET_KEY = "customAssetKey"
+private const val PROP_IS_DEMO = "isDemo"
+private const val PROP_NETWORK_CODE = "networkCode"
+private const val PROP_USE_ID3 = "useId3"
+
 private const val ERROR_IMA_NOT_ENABLED = "Google IMA support not enabled."
+private const val ERROR_THEOADS_NOT_ENABLED = "THEOads support not enabled."
 private const val ERROR_UNSUPPORTED_CSAI_INTEGRATION = "Unsupported CSAI integration"
 private const val ERROR_MISSING_CSAI_INTEGRATION = "Missing CSAI integration"
 
@@ -238,35 +247,29 @@ class SourceAdapter {
 
   @Throws(JSONException::class, THEOplayerException::class)
   fun parseAdFromJS(jsonAdDescription: JSONObject): AdDescription {
-    val integrationKindStr = jsonAdDescription.optString(PROP_INTEGRATION)
-    return if (!TextUtils.isEmpty(integrationKindStr)) {
-      when (AdIntegrationKind.from(integrationKindStr)) {
-        AdIntegrationKind.GOOGLE_IMA -> parseImaAdFromJS(
+    val integrationStr = jsonAdDescription.optString(PROP_INTEGRATION)
+    return if (!TextUtils.isEmpty(integrationStr)) {
+      when (integrationStr) {
+        AdIntegration.GOOGLE_IMA.adIntegration -> parseImaAdFromJS(
           jsonAdDescription
         )
-
-        AdIntegrationKind.DEFAULT -> {
-          throw THEOplayerException(
-            ErrorCode.AD_ERROR,
-            "$ERROR_UNSUPPORTED_CSAI_INTEGRATION: $integrationKindStr"
-          )
-        }
-
+        AdIntegration.THEO_ADS.adIntegration -> parseTheoAdFromJS(
+          jsonAdDescription
+        )
         else -> {
           throw THEOplayerException(
             ErrorCode.AD_ERROR,
-            "$ERROR_UNSUPPORTED_CSAI_INTEGRATION: $integrationKindStr"
+            "$ERROR_UNSUPPORTED_CSAI_INTEGRATION: $integrationStr"
           )
         }
       }
     } else {
       throw THEOplayerException(
         ErrorCode.AD_ERROR,
-        "$ERROR_MISSING_CSAI_INTEGRATION: $integrationKindStr"
+        "$ERROR_MISSING_CSAI_INTEGRATION: $integrationStr"
       )
     }
   }
-
 
   @Throws(THEOplayerException::class)
   private fun parseImaAdFromJS(jsonAdDescription: JSONObject): GoogleImaAdDescription {
@@ -284,6 +287,22 @@ class SourceAdapter {
     return GoogleImaAdDescription.Builder(source)
       .timeOffset(jsonAdDescription.optString(PROP_TIME_OFFSET))
       .build()
+  }
+
+  @Suppress("UnstableApiUsage")
+  @Throws(JSONException::class)
+  private fun parseTheoAdFromJS(jsonAdDescription: JSONObject): TheoAdsDescription {
+    if (!BuildConfig.EXTENSION_THEOADS) {
+      throw THEOplayerException(ErrorCode.AD_ERROR, ERROR_THEOADS_NOT_ENABLED)
+    }
+    return TheoAdsDescription(
+      networkCode = jsonAdDescription.optString(PROP_NETWORK_CODE),
+      backdropDoubleBox = jsonAdDescription.optString(PROP_BACKDROP_DOUBLE_BOX),
+      backdropLShape = jsonAdDescription.optString(PROP_BACKDROP_LSHAPE),
+      customAssetKey = jsonAdDescription.optString(PROP_CUSTOM_ASSET_KEY),
+      isDemo = jsonAdDescription.optBoolean(PROP_IS_DEMO),
+      useId3 = jsonAdDescription.optBoolean(PROP_USE_ID3),
+    )
   }
 
   @Throws(JSONException::class)
