@@ -22,9 +22,22 @@ import {
   TimeLabel,
   UiContainer,
 } from '@theoplayer/react-native-ui';
-import { PlayerConfiguration, PlayerEventType, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
+import {
+  AdIntegrationKind,
+  PlayerConfiguration,
+  PlayerEventType,
+  THEOplayer,
+  THEOplayerView,
+} from 'react-native-theoplayer';
 
-import { Platform, SafeAreaView, StyleSheet, View, ViewStyle } from 'react-native';
+import {
+  Button,
+  Platform,
+  SafeAreaView,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { SourceMenuButton, SOURCES } from './custom/SourceMenuButton';
 import { BackgroundAudioSubMenu } from './custom/BackgroundAudioSubMenu';
@@ -78,7 +91,14 @@ export default function App() {
     player.addEventListener(PlayerEventType.SEEKING, console.log);
     player.addEventListener(PlayerEventType.SEEKED, console.log);
     player.addEventListener(PlayerEventType.ENDED, console.log);
-    player.source = SOURCES[0].source;
+    player.source = {
+      "sources": [
+        {
+          "src": "https://livesim.dashif.org/livesim2/testpic4_8s/Manifest.mpd",
+          "type": "application/dash+xml"
+        }
+      ]
+    };
 
     player.backgroundAudioConfiguration = { enabled: true };
     player.pipConfiguration = { startsAutomatically: true };
@@ -97,8 +117,27 @@ export default function App() {
     backgroundColor: '#000000',
   };
 
+  const handleMidRoll = () => {
+    player?.ads.schedule({
+      integration: AdIntegrationKind.google_ima,
+      sources: 'https://cdn.theoplayer.com/demos/ads/vast/dfp-preroll-no-skip.xml',
+      timeOffset: Math.floor(player.currentTime / 1000.0),
+    });
+  };
+
   return (
-    <SafeAreaView style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}>
+    <SafeAreaView
+      style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}
+    >
+      <View
+        style={{ position: 'absolute', top: 150, left: 0, right: 0, zIndex: 2 }}
+      >
+        <Button
+          color={'white'}
+          title='start mid roll'
+          onPress={() => handleMidRoll()}
+        />
+      </View>
       <View style={PLAYER_CONTAINER_STYLE}>
         <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady}>
           {player !== undefined && chromeless && (
@@ -114,12 +153,12 @@ export default function App() {
                   </MediaCacheMenuButton>
                   {/*This is a custom menu for source selection.*/}
                   <SourceMenuButton />
-                  {!Platform.isTV && (
+                  {/* {!Platform.isTV && (
                     <>
                       <AirplayButton />
                       <ChromecastButton />
                     </>
-                  )}
+                  )} */}
                   <LanguageMenuButton />
                   <SettingsMenuButton>
                     {/*Note: quality selection is not available on iOS */}
@@ -131,7 +170,13 @@ export default function App() {
                   </SettingsMenuButton>
                 </ControlBar>
               }
-              center={<CenteredControlBar left={<SkipButton skip={-10} />} middle={<PlayButton />} right={<SkipButton skip={30} />} />}
+              center={
+                <CenteredControlBar
+                  left={<SkipButton skip={-10} />}
+                  middle={<PlayButton />}
+                  right={<SkipButton skip={30} />}
+                />
+              }
               bottom={
                 <>
                   <ControlBar style={{ justifyContent: 'flex-start' }}>
