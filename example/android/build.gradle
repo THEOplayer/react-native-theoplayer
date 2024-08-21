@@ -30,7 +30,7 @@ allprojects {
     maven {
       url("$rootDir/../../android/local")
     }
-    maven { url 'https://jitpack.io' }
+    maven { url "https://maven.theoplayer.com/releases" }
     google()
     mavenCentral()
   }
