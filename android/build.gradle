@@ -104,7 +104,7 @@ repositories {
   google()
   mavenCentral()
   maven { url("local") }
-  maven { url 'https://jitpack.io' }
+  maven { url "https://maven.theoplayer.com/releases" }
 }
 
 dependencies {
