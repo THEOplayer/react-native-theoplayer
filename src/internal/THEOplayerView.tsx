@@ -229,11 +229,11 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
 
   private _onPlay = () => {
     this._facade.dispatchEvent(new BaseEvent(PlayerEventType.PLAY));
-    this._hidePoster();
   };
 
   private _onPlaying = () => {
     this._facade.dispatchEvent(new BaseEvent(PlayerEventType.PLAYING));
+    this._hidePoster();
   };
 
   private _onPause = () => {
