@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [7.8.2] - 24-08-21
+
+### Changed
+
+- Modified the poster behavior on iOS and Android to remain visible until the first frame is displayed.
+
 ## [7.8.1] - 24-08-14
 
 ### Fixed
