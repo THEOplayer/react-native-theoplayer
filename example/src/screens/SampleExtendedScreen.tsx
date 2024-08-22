@@ -82,7 +82,7 @@ export const SampleExtendedScreen = () => {
     player.source = SOURCES[0].source;
 
     // configure backgroundAudio
-    player.backgroundAudioConfiguration = { enabled: true };
+    player.backgroundAudioConfiguration = { enabled: true, shouldResumeAfterInterruption: true };
 
     // configure PiP
     player.pipConfiguration = { startsAutomatically: true };
