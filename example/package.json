@@ -17,6 +17,7 @@
     "@react-native-community/slider": "^4.5.2",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/stack": "^6.3.29",
+    "@shopify/flash-list": "^1.7.1",
     "@theoplayer/react-native-analytics-adobe": "^1.4.0",
     "@theoplayer/react-native-analytics-comscore": "^1.6.0",
     "@theoplayer/react-native-analytics-conviva": "^1.6.0",

@@ -7,6 +7,7 @@ import {
   SamplePresentationModesScreen,
   SampleDRMScreen,
   SampleSideloadedTextTrackScreen,
+  SampleFlashlistScreen,
   SampleAnalyticsConvivaScreen,
   SampleAnalyticsComscoreScreen,
   SampleAnalyticsNielsenScreen,
@@ -31,6 +32,7 @@ export default function SamplesStackNavigator() {
       <Stack.Screen name="Sample_PresentationModes" component={SamplePresentationModesScreen} options={{ title: 'PresentationModes' }} />
       <Stack.Screen name="Sample_DRM" component={SampleDRMScreen} options={{ title: 'DRM' }} />
       <Stack.Screen name="Sample_SideloadedTextTrack" component={SampleSideloadedTextTrackScreen} options={{ title: 'Sideloaded TextTrack' }} />
+      <Stack.Screen name="Sample_Flashlist" component={SampleFlashlistScreen} options={{ title: 'Flashlist' }} />
       <Stack.Screen name="Sample_Conviva" component={SampleAnalyticsConvivaScreen} options={{ title: 'Analytics: Conviva' }} />
       <Stack.Screen name="Sample_Comscore" component={SampleAnalyticsComscoreScreen} options={{ title: 'Analytics: Comscore' }} />
       <Stack.Screen name="Sample_Nielsen" component={SampleAnalyticsNielsenScreen} options={{ title: 'Analytics: Nielsen' }} />
