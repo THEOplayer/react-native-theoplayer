@@ -4,6 +4,7 @@ export * from './SamplePresentationModesScreen';
 export * from './SampleExtendedScreen';
 export * from './SampleMinimalScreen';
 export * from './SampleSideloadedTextTrackScreen';
+export * from './SampleFlashlistScreen';
 export * from './SampleAnalyticsConvivaScreen';
 export * from './SampleAnalyticsComscoreScreen';
 export * from './SampleAnalyticsNielsenScreen';

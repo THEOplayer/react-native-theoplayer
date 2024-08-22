@@ -23,6 +23,7 @@ export const linking = {
       Sample_PresentationModes: 'samplePresentationmodes',
       Sample_DRM: 'sampleDrm',
       Sample_SideloadedTextTrack: 'sampleSideloadedTexttracks',
+      Sample_Flashlist: 'sampleFlashlist',
       Sample_Conviva: 'sampleConviva',
       Sample_Comscore: 'sampleComscore',
       Sample_Nielsen: 'sampleNielsen',
