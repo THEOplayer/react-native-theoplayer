@@ -139,23 +139,101 @@
     }
   },
   {
-    "name": "HLS - VOD - Clear - The Venture Bros",
-    "os": ["ios", "android", "web"],
+    "name": "HLS - VOD - CLEAR - Adult swim 1 (toaster)",
+    "os": [
+      "ios",
+      "android",
+      "web"
+    ],
     "source": {
       "sources": {
         "src": "https://cdn.theoplayer.com/video/adultswim/clip.m3u8",
         "type": "application/x-mpegurl"
       },
-      "poster": "https://cdn.theoplayer.com/video/adultswim/poster.jpg",
+      "poster": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/test_streams/ventureBros1/poster.png",
       "metadata": {
-        "title": "The Venture Bros",
-        "subtitle": "Adult Swim",
-        "album": "React-Native THEOplayer demos",
+        "title": "Adult Swim",
+        "subtitle": "The toaster",
+        "album": "React-Native THEOplayer samples",
         "displayIconUri": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
-        "artist": "THEOplayer",
+        "artist": "The Venture Dros",
         "type": "tv-show",
         "releaseDate": "november 29th",
         "releaseYear": 1997
+      }
+    }
+  },
+  {
+    "name": "HLS - VOD - CLEAR - Mojito",
+    "os": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "source": {
+      "sources": {
+        "src": "https://assets.afcdn.com/video49/20210722/v_645516.m3u8",
+        "type": "application/x-mpegurl"
+      },
+      "poster": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/test_streams/mojito/poster.png",
+      "metadata": {
+        "title": "Mojito",
+        "subtitle": "Drinks",
+        "album": "React-Native THEOplayer samples",
+        "displayIconUri": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
+        "artist": "THEOplayer",
+        "type": "tv-show",
+        "releaseDate": "november 28th",
+        "releaseYear": 1998
+      }
+    }
+  },
+  {
+    "name": "HLS - VOD - CLEAR - Adult swim 2 (predator)",
+    "os": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "source": {
+      "sources": {
+        "src": "https://cdn.theoplayer.com/video/adultswim2/clip.m3u8",
+        "type": "application/x-mpegurl"
+      },
+      "poster": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/test_streams/ventureBros2/poster.png",
+      "metadata": {
+        "title": "Adult Swim 2",
+        "subtitle": "The predator",
+        "album": "React-Native THEOplayer samples",
+        "displayIconUri": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
+        "artist": "The Venture Bros",
+        "type": "tv-show",
+        "releaseDate": "november 27th",
+        "releaseYear": 1999
+      }
+    }
+  },
+  {
+    "name": "HLS - VOD - CLEAR - BigBuckBunny, single Quality",
+    "os": [
+      "ios",
+      "android"
+    ],
+    "source": {
+      "sources": {
+        "src": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/test_streams/bigBuckBunnyShort/bigBuckBunny.m3u8",
+        "type": "application/x-mpegurl"
+      },
+      "poster": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/test_streams/bigBuckBunnyShort/poster.png",
+      "metadata": {
+        "title": "Big Buck Bunny",
+        "subtitle": "Single Quality",
+        "album": "React-Native THEOplayer samples",
+        "displayIconUri": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
+        "artist": "Blender",
+        "type": "tv-show",
+        "releaseDate": "september 20th",
+        "releaseYear": 2000
       }
     }
   },
