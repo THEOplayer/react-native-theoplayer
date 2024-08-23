@@ -12,7 +12,13 @@ export const PlayerOverlay = (props: PlayerOverlayProps) => {
 
   return (
     <View style={[{ margin: 15 }, props.style]}>
-      <Text style={{ padding: 3, backgroundColor: '#0008', color: '#fffa', fontSize: 12 }}>{`${data.index}: ${data.name}`}</Text>
+      <Text
+        style={{
+          padding: 3,
+          backgroundColor: '#0008',
+          color: '#fffa',
+          fontSize: 12,
+        }}>{`Row ${data.index}: ${data.name}`}</Text>
     </View>
   );
 };

@@ -1,26 +1,26 @@
 import * as React from 'react';
 import { Button, View, Platform } from 'react-native';
-import PropTypes from 'prop-types';
+import { StackScreenProps } from '@react-navigation/stack';
+import { RootStackParamList } from '../navigators/SamplesStackNavigator';
 
 const c = Platform.OS === 'ios' ? 'white' : 'transparent';
-export const OverviewScreen = ({ navigation }) => {
+
+type OverviewScreenProps = StackScreenProps<RootStackParamList, 'SampleOverview'>;
+export const OverviewScreen = ({ navigation }: OverviewScreenProps) => {
   return (
     <View style={{ flex: 1, margin: 25 }}>
-      <Button title="Minimal Setup" onPress={() => navigation.navigate('Sample_Minimal')} color={c} />
-      <Button title="Extended Setup" onPress={() => navigation.navigate('Sample_Extended')} color={c} />
-      <Button title="PresentationModes" onPress={() => navigation.navigate('Sample_PresentationModes')} color={c} />
-      <Button title="DRM" onPress={() => navigation.navigate('Sample_DRM')} color={c} />
-      <Button title="Sideloaded TextTrack" onPress={() => navigation.navigate('Sample_SideloadedTextTrack')} color={c} />
-      <Button title="Flashlist" onPress={() => navigation.navigate('Sample_Flashlist')} color={c} />
-      <Button title="Analytics: Conviva" onPress={() => navigation.navigate('Sample_Conviva')} color={c} />
-      <Button title="Analytics: Comscore" onPress={() => navigation.navigate('Sample_Comscore')} color={c} />
-      <Button title="Analytics: Nielsen" onPress={() => navigation.navigate('Sample_Nielsen')} color={c} />
-      <Button title="Analytics: Adobe" onPress={() => navigation.navigate('Sample_Adobe')} color={c} />
-      <Button title="Analytics: Mux" onPress={() => navigation.navigate('Sample_Mux')} color={c} />
+      <Button title="Minimal Setup" onPress={() => navigation.navigate('SampleMinimal')} color={c} />
+      <Button title="Extended Setup" onPress={() => navigation.navigate('SampleExtended')} color={c} />
+      <Button title="PresentationModes" onPress={() => navigation.navigate('SamplePresentationModes')} color={c} />
+      <Button title="DRM" onPress={() => navigation.navigate('SampleDRM')} color={c} />
+      <Button title="Sideloaded TextTrack" onPress={() => navigation.navigate('SampleSideloadedTextTrack')} color={c} />
+      <Button title="Flashlist Multi" onPress={() => navigation.navigate('SampleFlashlist', { reelMode: false })} color={c} />
+      <Button title="Flashlist Reel" onPress={() => navigation.navigate('SampleFlashlist', { reelMode: true })} color={c} />
+      <Button title="Analytics: Conviva" onPress={() => navigation.navigate('SampleConviva')} color={c} />
+      <Button title="Analytics: Comscore" onPress={() => navigation.navigate('SampleComscore')} color={c} />
+      <Button title="Analytics: Nielsen" onPress={() => navigation.navigate('SampleNielsen')} color={c} />
+      <Button title="Analytics: Adobe" onPress={() => navigation.navigate('SampleAdobe')} color={c} />
+      <Button title="Analytics: Mux" onPress={() => navigation.navigate('SampleMux')} color={c} />
     </View>
   );
-};
-
-OverviewScreen.propTypes = {
-  navigation: PropTypes.object.isRequired,
 };

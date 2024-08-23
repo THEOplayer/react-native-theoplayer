@@ -2,8 +2,8 @@ import { PlayerConfiguration, PlayerEventType, SourceDescription, THEOplayer, TH
 import { StyleProp, ViewStyle } from 'react-native';
 import * as React from 'react';
 import { useCallback, useEffect, useRef } from 'react';
-import { CenteredControlBar, CenteredDelayedActivityIndicator, DEFAULT_THEOPLAYER_THEME, PlayButton, UiContainer } from '@theoplayer/react-native-ui';
 import { THEO_LICENSE } from '../../sampleConfig';
+import { PlayerIdGenerator } from './PlayListData';
 
 const LOG_TAG = '[EXAMPLE - FLASHLIST SAMPLE]';
 
@@ -12,14 +12,6 @@ const playerConfig: PlayerConfiguration = {
   chromeless: true,
   libraryLocation: 'theoplayer',
 };
-
-class PlayerId {
-  private static current = -1;
-  static generate = () => {
-    PlayerId.current++;
-    return PlayerId.current;
-  };
-}
 
 export interface VideoPlayerProps {
   style?: StyleProp<ViewStyle>;
@@ -43,10 +35,9 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
     }
   }, [props.source]);
 
-  const chromeless = playerConfig?.chromeless ?? false;
   const onPlayerReady = useCallback(async (player: THEOplayer) => {
     playerRef.current = player;
-    playerId.current = PlayerId.generate();
+    playerId.current = PlayerIdGenerator.generate();
     console.log(LOG_TAG, `Player ${playerId.current} is ready.`);
 
     // Extra logging
@@ -54,7 +45,7 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
       console.log(LOG_TAG, `Player ${playerId.current} now has a new source.`);
     });
 
-    /*player.addEventListener(PlayerEventType.PROGRESS, () => {
+    player.addEventListener(PlayerEventType.PROGRESS, () => {
       let bufferStart = 9999999999;
       let bufferEnd = 0;
       if (playerRef.current?.buffered !== undefined && playerRef.current.buffered.length > 0) {
@@ -68,7 +59,7 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
         });
         console.log(LOG_TAG, `Player ${playerId.current} buffer size is updated to ${(bufferEnd - bufferStart) / 1000} sec`);
       }
-    });*/
+    });
 
     // Restart source when ended.
     player.addEventListener(PlayerEventType.ENDED, () => {
@@ -92,18 +83,7 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
     console.log(LOG_TAG, `Player ${playerId.current} is destroyed.`);
   }, []);
 
-  return (
-    <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady} onPlayerDestroy={onPlayerDestroy}>
-      {playerRef.current !== undefined && !chromeless && (
-        <UiContainer
-          theme={{ ...DEFAULT_THEOPLAYER_THEME }}
-          player={playerRef.current}
-          behind={<CenteredDelayedActivityIndicator size={50} />}
-          center={<CenteredControlBar middle={<PlayButton />} />}
-        />
-      )}
-    </THEOplayerView>
-  );
+  return <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady} onPlayerDestroy={onPlayerDestroy} />;
 };
 
 VideoPlayer.displayName = 'VideoPlayer';
