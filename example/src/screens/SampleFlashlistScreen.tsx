@@ -51,7 +51,7 @@ export const SampleFlashlistScreen = () => {
           onPlayerReady={(player: THEOplayer | undefined, playerId: number) => {
             props.item.playerRef = player;
             props.item.playerId = playerId;
-            console.log(LOG_TAG, 'Item', props.item.index, 'is now recycling player', playerId);
+            console.log(LOG_TAG, 'List item', props.item.index, 'is now using player', playerId);
             if (props.item.viewable && props.item.playerRef != undefined) {
               props.item.playerRef.play();
             }
@@ -77,12 +77,12 @@ export const SampleFlashlistScreen = () => {
         const currentData = store.items[token.index];
         if (currentData.playerRef !== undefined) {
           if (!token.isViewable) {
-            console.log(LOG_TAG, 'Item', currentData.index, 'is no longer viewable and should pause.');
+            console.log(LOG_TAG, 'List item', currentData.index, 'is no longer viewable and should pause.');
             currentData.playerRef.pause();
             // store bookmark
             //currentData.bookmark = currentData.player.currentTime;
           } else {
-            console.log(LOG_TAG, 'Item', currentData.index, 'is now viewable and should play.');
+            console.log(LOG_TAG, 'List item', currentData.index, 'is now viewable and should play.');
             // apply bookmark
             // currentData.player.currentTime = currentData.bookmark
             currentData.playerRef.play();
@@ -131,7 +131,7 @@ export const SampleFlashlistScreen = () => {
           }}
           // Draw distance for advanced rendering (in dp/px).
           // Platform default: 250
-          drawDistance={itemHeight()}
+          drawDistance={1.5 * itemHeight()}
         />
       </View>
     </View>
