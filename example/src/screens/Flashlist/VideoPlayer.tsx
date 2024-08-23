@@ -54,7 +54,7 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
       console.log(LOG_TAG, `Player ${playerId.current} now has a new source.`);
     });
 
-    player.addEventListener(PlayerEventType.PROGRESS, () => {
+    /*player.addEventListener(PlayerEventType.PROGRESS, () => {
       let bufferStart = 9999999999;
       let bufferEnd = 0;
       if (playerRef.current?.buffered !== undefined && playerRef.current.buffered.length > 0) {
@@ -68,7 +68,7 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
         });
         console.log(LOG_TAG, `Player ${playerId.current} buffer size is updated to ${(bufferEnd - bufferStart) / 1000} sec`);
       }
-    });
+    });*/
 
     // Restart source when ended.
     player.addEventListener(PlayerEventType.ENDED, () => {
