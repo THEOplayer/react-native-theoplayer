@@ -1,64 +1,42 @@
 import * as React from 'react';
 import { THEOplayer } from 'react-native-theoplayer';
-import { SOURCES } from '../custom/SourceMenuButton';
-import { Source } from '../custom/Source';
 import { StyleSheet, View, Dimensions } from 'react-native';
 import { useContext } from 'react';
-import { PlayerOverlay, PlayListData, VideoPlayer } from './Flashlist';
+import { generateMockPlaylist, PlayerOverlay, PlayListData, VideoPlayer } from './Flashlist';
 import { FlashList, ViewToken } from '@shopify/flash-list';
+import { RootStackParamList } from '../navigators/SamplesStackNavigator';
+import { StackScreenProps } from '@react-navigation/stack';
 
 const LOG_TAG = '[EXAMPLE - FLASHLIST SAMPLE]';
 const LIST_WIDTH = Math.min(Dimensions.get('screen').width, 400.0);
 const LIST_HEIGHT = Dimensions.get('screen').height * 0.85;
 
-function generateMockPlaylist(n: number): PlayListData[] {
-  const entries = new Array(n);
-  const flashlistSources: Source[] = (SOURCES as Source[]).filter((source) => source.name.startsWith('HLS - VOD - CLEAR'));
-  for (let i = 0; i < n; i++) {
-    const source: Source = flashlistSources[i % flashlistSources.length];
-    entries[i] = {
-      index: i,
-      name: source.name,
-      bookmark: 0,
-      source: source.source,
-      playerId: -1,
-      playerRef: undefined,
-      viewable: false,
-    };
-  }
-  return entries;
-}
-
 const DataContext = React.createContext<{ items: PlayListData[] }>({
   items: generateMockPlaylist(50),
 });
 
-export const SampleFlashlistScreen = () => {
+type SampleFlashlistScreenProps = StackScreenProps<RootStackParamList, 'SampleFlashlist'>;
+export const SampleFlashlistScreen = ({ route }: SampleFlashlistScreenProps) => {
   const store = useContext(DataContext);
+  const { reelMode } = route.params;
+  const rowWidth = LIST_WIDTH;
+  const rowHeight = reelMode ? LIST_HEIGHT : (rowWidth * 9.0) / 16.0;
 
-  const itemHeight = () => {
-    const reelMode = false;
-    return reelMode ? LIST_HEIGHT : (LIST_WIDTH * 9.0) / 16.0;
-  };
-
-  // Given type and data, return the view component.
-  // Do not add key prop to the output of rowRenderer. Adding it will stop recycling and cause random mounts/unmounts.
-  const rowRenderer = React.useCallback((props: { item: PlayListData }) => {
+  const rowRenderer = React.useCallback((row: { item: PlayListData }) => {
     return (
-      <View style={{ height: itemHeight(), width: LIST_WIDTH, borderWidth: 1, borderColor: '#333' }}>
+      <View style={{ height: rowHeight, width: rowWidth, borderWidth: 1, borderColor: '#333' }}>
         <VideoPlayer
-          source={props.item.source}
+          source={row.item.source}
           onPlayerReady={(player: THEOplayer | undefined, playerId: number) => {
-            props.item.playerRef = player;
-            props.item.playerId = playerId;
-            console.log(LOG_TAG, 'List item', props.item.index, 'is now using player', playerId);
-            if (props.item.viewable && props.item.playerRef != undefined) {
-              props.item.playerRef.play();
+            row.item.playerRef = player;
+            row.item.playerId = playerId;
+            console.log(LOG_TAG, 'List item', row.item.index, 'is now using player', playerId);
+            if (row.item.viewable && row.item.playerRef != undefined) {
+              row.item.playerRef.play();
             }
           }}
         />
-
-        <PlayerOverlay data={props.item} />
+        <PlayerOverlay data={row.item} />
       </View>
     );
   }, []);
@@ -82,11 +60,13 @@ export const SampleFlashlistScreen = () => {
             // store bookmark
             //currentData.bookmark = currentData.player.currentTime;
           } else {
-            console.log(LOG_TAG, 'List item', currentData.index, 'is now viewable and should play.');
+            console.log(LOG_TAG, 'List item', currentData.index, 'became viewable and should play.');
             // apply bookmark
             // currentData.player.currentTime = currentData.bookmark
             currentData.playerRef.play();
           }
+        } else {
+          console.log(LOG_TAG, 'List item', currentData.index, 'has no playerRef.');
         }
       }
     });
@@ -99,7 +79,7 @@ export const SampleFlashlistScreen = () => {
         {
           flex: 1,
           flexDirection: 'column',
-          justifyContent: 'space-between',
+          justifyContent: 'center',
           alignItems: 'center',
         },
       ]}>
@@ -107,17 +87,19 @@ export const SampleFlashlistScreen = () => {
         style={{
           width: LIST_WIDTH,
           height: LIST_HEIGHT,
+          borderWidth: 2,
+          borderColor: 'grey',
         }}>
         <FlashList
           // A plain array of items of a given type.
           data={store.items}
           // Takes an item from data and renders it into the list.
           renderItem={rowRenderer}
-          snapToInterval={itemHeight()}
+          snapToInterval={rowHeight}
           decelerationRate={'fast'}
           disableIntervalMomentum={false}
           // A single numeric value that hints FlashList about the approximate size of the items before they're rendered.
-          estimatedItemSize={itemHeight()}
+          estimatedItemSize={rowHeight}
           // Called when the viewability of rows changes.
           onViewableItemsChanged={onViewableItemsChanged}
           // Configuration for determining whether items are viewable.
@@ -131,7 +113,7 @@ export const SampleFlashlistScreen = () => {
           }}
           // Draw distance for advanced rendering (in dp/px).
           // Platform default: 250
-          drawDistance={1.5 * itemHeight()}
+          drawDistance={0.5 * rowHeight}
         />
       </View>
     </View>
