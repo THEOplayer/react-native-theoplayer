@@ -8,7 +8,7 @@ struct UIConfig {
 }
 
 extension THEOplayerRCTView {
-    
+
     func parseUIConfig(configDict: NSDictionary) {
         if let uiConfig = configDict["ui"] as? NSDictionary {
             if let uiLanguage = uiConfig["language"] as? String {
@@ -16,8 +16,5 @@ extension THEOplayerRCTView {
             }
         }
     }
-    
-    func playerUIConfiguration() -> UIConfiguration? {
-        return UIConfiguration(language: self.uiConfig.language)
-    }
+
 }
