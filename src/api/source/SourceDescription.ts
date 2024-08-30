@@ -40,6 +40,17 @@ export type Sources = Source | Source[];
 export type CrossOriginSetting = '' | 'anonymous' | 'use-credentials';
 
 /**
+ * The integration identifier of a source specific to a pre-integration, represented by a value from the following list:
+ * <br/> - `'theolive'`: The source contains the THEOlive initialization url.
+ *
+ * @category Source
+ * @public
+ */
+export enum SourceIntegrationId {
+  THEO_LIVE = 'theolive'
+}
+
+/**
  * Describes the configuration of a player's source.
  *
  * @public
@@ -249,6 +260,13 @@ export interface TextTrackDescription {
  * @public
  */
 export interface BaseSource {
+  /**
+   * The integration ID of the source.
+   *
+   * @remarks
+   * <br/> - This can be used to signal that a source is specific to an integration.
+   */
+  integration?: SourceIntegrationId;
 
   /**
    * The cross-origin setting of the source.
