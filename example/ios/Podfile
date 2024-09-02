@@ -11,6 +11,7 @@ if linkage != nil
   Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
   use_frameworks! :linkage => linkage.to_sym
 end
+install! 'cocoapods', :deterministic_uuids => false
 
 install! 'cocoapods', :deterministic_uuids => false
 
