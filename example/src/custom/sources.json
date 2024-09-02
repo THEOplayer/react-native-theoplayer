@@ -217,7 +217,8 @@
     "name": "HLS - VOD - CLEAR - BigBuckBunny, single Quality",
     "os": [
       "ios",
-      "android"
+      "android",
+      "web"
     ],
     "source": {
       "sources": {
