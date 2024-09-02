@@ -11,7 +11,7 @@ export const PlayerOverlay = (props: PlayerOverlayProps) => {
   const { data } = props;
 
   return (
-    <View style={[{ margin: 15 }, props.style]}>
+    <View style={[{ position: 'absolute', margin: 15 }, props.style]}>
       <Text
         style={{
           padding: 3,
