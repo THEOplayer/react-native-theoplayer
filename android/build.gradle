@@ -25,6 +25,14 @@ static def versionString(version) {
   return "${version == '+' ? 'latest' : version}"
 }
 
+def isNewArchitectureEnabled() {
+  // To opt-in for the New Architecture, you can either:
+  // - Set `newArchEnabled` to true inside the `gradle.properties` file
+  // - Invoke gradle with `-newArchEnabled=true`
+  // - Set an environment variable `ORG_GRADLE_PROJECT_newArchEnabled=true`
+  return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
+}
+
 // Extensions
 def enabledGoogleIMA = safeExtGet("THEOplayer_extensionGoogleIMA", 'false').toBoolean()
 def enabledGoogleDAI = safeExtGet("THEOplayer_extensionGoogleDAI", 'false').toBoolean()
@@ -64,6 +72,8 @@ android {
     buildConfigField "boolean", "EXTENSION_ADS", "${enabledAds}"
     buildConfigField "boolean", "EXTENSION_CAST", "${enabledCast}"
     buildConfigField "boolean", "EXTENSION_MEDIASESSION", "${enabledMediaSession}"
+
+    buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
   }
 
   buildTypes {
