@@ -79,6 +79,8 @@ android {
 
     buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
 
+    buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
+
     consumerProguardFiles 'proguard-rules.pro'
   }
 
