@@ -210,6 +210,11 @@ object AdAdapter {
         return ad.getString(PROP_AD_CUSTOM_INTEGRATION)
       }
 
+      override fun getCustomData(): Any? {
+        // Not supported yet
+        return null
+      }
+
       override fun getImaAd(): com.google.ads.interactivemedia.v3.api.Ad {
         return parseImaAd(ad)
       }
@@ -284,6 +289,11 @@ object AdAdapter {
 
       override fun getCustomIntegration(): String? {
         return adBreak.getString(PROP_AD_CUSTOM_INTEGRATION)
+      }
+
+      override fun getCustomData(): Any? {
+        // Not supported yet
+        return null
       }
     }
   }
