@@ -1,7 +1,6 @@
 package com.theoplayer
 
 import android.annotation.SuppressLint
-import android.content.*
 import android.util.Log
 import android.view.ViewGroup
 import android.widget.FrameLayout
