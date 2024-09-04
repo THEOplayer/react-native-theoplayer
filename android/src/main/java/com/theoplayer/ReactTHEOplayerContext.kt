@@ -300,7 +300,6 @@ class ReactTHEOplayerContext private constructor(
     }
     try {
       if (BuildConfig.EXTENSION_THEOADS) {
-        @Suppress("UnstableApiUsage")
         theoAdsIntegration = TheoAdsIntegrationFactory.createTheoAdsIntegration(
           playerView
         ).also {
