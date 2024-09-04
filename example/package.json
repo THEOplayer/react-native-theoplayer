@@ -10,7 +10,6 @@
     "web": "webpack-dev-server --config ./web/webpack.config.js --mode development",
     "web-release": "webpack --config ./web/webpack.config.js --mode production",
     "start": "npx react-native start",
-    "test": "jest",
     "lint": "eslint \"**/*.{ts,tsx}\""
   },
   "dependencies": {

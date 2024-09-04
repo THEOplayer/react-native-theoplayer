@@ -8,50 +8,47 @@
  *         }]
  *     ]
  */
-const {withProjectBuildGradle, withGradleProperties} = require('@expo/config-plugins');
+const { withProjectBuildGradle, withGradleProperties } = require('@expo/config-plugins');
 
 function mapAndroidExtensionKey(ext) {
-    switch (ext) {
-        case "ima":
-            return "THEOplayer_extensionGoogleIMA";
-        case "dai":
-            return "THEOplayer_extensionGoogleDAI";
-        case "cast":
-            return "THEOplayer_extensionCast";
-        default:
-            return undefined;
-    }
+  switch (ext) {
+    case 'ima':
+      return 'THEOplayer_extensionGoogleIMA';
+    case 'dai':
+      return 'THEOplayer_extensionGoogleDAI';
+    case 'cast':
+      return 'THEOplayer_extensionCast';
+    default:
+      return undefined;
+  }
 }
 
 const applyAndroidExtensions = (config, extensions) => {
-    return withGradleProperties(config, (config) => {
-        extensions?.forEach(ext => {
-            const key = mapAndroidExtensionKey(ext);
-            if (key) {
-                config.modResults.push({type: "property", key, value: true});
-            }
-        });
-        return config;
+  return withGradleProperties(config, (config) => {
+    extensions?.forEach((ext) => {
+      const key = mapAndroidExtensionKey(ext);
+      if (key) {
+        config.modResults.push({ type: 'property', key, value: true });
+      }
     });
-}
+    return config;
+  });
+};
 
 const withAndroidTHEOplayer = (config, props) => {
-    // Apply Android extensions
-    const {extensions} = props | {};
-    config = applyAndroidExtensions(config, extensions);
+  // Apply Android extensions
+  const { extensions } = props | {};
+  config = applyAndroidExtensions(config, extensions);
 
-    // Add the localMaven repo to the project's repositories
-    return withProjectBuildGradle(config, (config) => {
-        const localMaven = 'maven { url("$rootDir/../node_modules/react-native-theoplayer/android/local") }';
-        config.modResults.contents = config.modResults.contents.replace(
-            /allprojects\s*\{\s*repositories\s*\{/,
-            `$&\n\t\t${localMaven}`
-        )
-        return config;
-    });
+  // Add the localMaven repo to the project's repositories
+  return withProjectBuildGradle(config, (config) => {
+    const localMaven = 'maven { url("$rootDir/../node_modules/react-native-theoplayer/android/local") }';
+    config.modResults.contents = config.modResults.contents.replace(/allprojects\s*\{\s*repositories\s*\{/, `$&\n\t\t${localMaven}`);
+    return config;
+  });
 };
 
 module.exports = (config, props) => {
-    // Apply Android modifications
-    return withAndroidTHEOplayer(config, props);
-}
+  // Apply Android modifications
+  return withAndroidTHEOplayer(config, props);
+};
