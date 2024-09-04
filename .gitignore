@@ -77,3 +77,4 @@ ios/custom/Frameworks/tvos/*.xcframework
 # Jekyll / GitHub Pages
 _site/
 Gemfile.lock
+vendor
