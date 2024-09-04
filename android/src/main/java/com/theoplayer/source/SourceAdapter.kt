@@ -3,7 +3,6 @@ package com.theoplayer.source
 import android.text.TextUtils
 import android.util.Log
 import com.google.gson.Gson
-import com.theoplayer.android.api.ads.theoads.TheoAdsDescription
 import com.theoplayer.android.api.error.THEOplayerException
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableMap
@@ -18,6 +17,8 @@ import com.theoplayer.android.api.source.addescription.GoogleImaAdDescription
 import com.theoplayer.android.api.player.track.texttrack.TextTrackKind
 import com.theoplayer.android.api.source.metadata.ChromecastMetadataImage
 import com.theoplayer.BuildConfig
+import com.theoplayer.android.api.ads.theoads.TheoAdDescription
+import com.theoplayer.android.api.ads.theoads.TheoAdsLayoutOverride
 import com.theoplayer.android.api.error.ErrorCode
 import com.theoplayer.android.api.source.AdIntegration
 import com.theoplayer.android.api.source.dash.DashPlaybackConfiguration
@@ -56,7 +57,7 @@ private const val PROP_HEADERS = "headers"
 private const val PROP_BACKDROP_DOUBLE_BOX = "backdropDoubleBox"
 private const val PROP_BACKDROP_LSHAPE = "backdropLShape"
 private const val PROP_CUSTOM_ASSET_KEY = "customAssetKey"
-private const val PROP_IS_DEMO = "isDemo"
+private const val PROP_OVERRIDE_LAYOUT = "overrideLayout"
 private const val PROP_NETWORK_CODE = "networkCode"
 private const val PROP_USE_ID3 = "useId3"
 
@@ -299,18 +300,28 @@ class SourceAdapter {
 
   @Suppress("UnstableApiUsage")
   @Throws(JSONException::class)
-  private fun parseTheoAdFromJS(jsonAdDescription: JSONObject): TheoAdsDescription {
+  private fun parseTheoAdFromJS(jsonAdDescription: JSONObject): TheoAdDescription {
     if (!BuildConfig.EXTENSION_THEOADS) {
       throw THEOplayerException(ErrorCode.AD_ERROR, ERROR_THEOADS_NOT_ENABLED)
     }
-    return TheoAdsDescription(
+    return TheoAdDescription(
       networkCode = jsonAdDescription.optString(PROP_NETWORK_CODE),
       backdropDoubleBox = jsonAdDescription.optString(PROP_BACKDROP_DOUBLE_BOX),
       backdropLShape = jsonAdDescription.optString(PROP_BACKDROP_LSHAPE),
       customAssetKey = jsonAdDescription.optString(PROP_CUSTOM_ASSET_KEY),
-      isDemo = jsonAdDescription.optBoolean(PROP_IS_DEMO),
+      overrideLayout = parseOverrideLayout(jsonAdDescription.optString(PROP_OVERRIDE_LAYOUT)),
       useId3 = jsonAdDescription.optBoolean(PROP_USE_ID3),
     )
+  }
+
+  private fun parseOverrideLayout(layout: String?): TheoAdsLayoutOverride? {
+    return when (layout) {
+      "single" -> TheoAdsLayoutOverride.SINGLE
+      "l-shape" -> TheoAdsLayoutOverride.LSHAPE
+      "double" -> TheoAdsLayoutOverride.DOUBLE
+      "single-if-mobile" -> null /* Not supported yet */
+      else -> null
+    }
   }
 
   @Throws(JSONException::class)
