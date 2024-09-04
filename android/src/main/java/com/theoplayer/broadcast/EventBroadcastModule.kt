@@ -14,11 +14,7 @@ private const val TAG = "THEORCTEventBroadcastModule"
 @ReactModule(name = TAG)
 class EventBroadcastModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(context) {
 
-  private val viewResolver: ViewResolver
-
-  init {
-    viewResolver = ViewResolver(context)
-  }
+  private val viewResolver: ViewResolver = ViewResolver(context)
 
   override fun getName(): String {
     return TAG

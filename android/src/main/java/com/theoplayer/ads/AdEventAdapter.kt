@@ -21,36 +21,35 @@ private const val EVENT_PROP_TYPE = "type"
 private const val EVENT_PROP_SUBTYPE = "subType"
 
 class AdEventAdapter(private val adsApi: AdsApiWrapper, eventEmitter: AdEventEmitter) {
-  private val eventListener: AdEventListener
+  private val eventListener: AdEventListener = object : AdEventListener {
+    override fun <E : AdEvent<*>?> onAdEvent(type: EventType<E>?, ad: Ad?, adData: Map<String, String>?, adError: AdError?) {
+      val payload = Arguments.createMap()
+      if (type != null) {
+        payload.putString(EVENT_PROP_TYPE, mapAdType(type))
+      }
+      if (ad != null) {
+        payload.putMap(EVENT_PROP_AD, AdAdapter.fromAd(ad))
+      }
+      eventEmitter.emit(payload)
+    }
+
+    override fun <E : AdEvent<*>?> onAdBreakEvent(type: EventType<E>?, adBreak: AdBreak?, adData: Map<String, String>?, adError: AdError?) {
+      val payload = Arguments.createMap()
+      if (type != null) {
+        payload.putString(EVENT_PROP_TYPE, mapAdType(type))
+      }
+      if (adBreak != null) {
+        payload.putMap(EVENT_PROP_AD, AdAdapter.fromAdBreak(adBreak))
+      }
+      eventEmitter.emit(payload)
+    }
+  }
 
   interface AdEventEmitter {
     fun emit(payload: WritableMap?)
   }
 
   init {
-    eventListener = object : AdEventListener {
-      override fun <E : AdEvent<*>?> onAdEvent(type: EventType<E>?, ad: Ad?, adData: Map<String, String>?, adError: AdError?) {
-        val payload = Arguments.createMap()
-        if (type != null) {
-          payload.putString(EVENT_PROP_TYPE, mapAdType(type))
-        }
-        if (ad != null) {
-          payload.putMap(EVENT_PROP_AD, AdAdapter.fromAd(ad))
-        }
-        eventEmitter.emit(payload)
-      }
-
-      override fun <E : AdEvent<*>?> onAdBreakEvent(type: EventType<E>?, adBreak: AdBreak?, adData: Map<String, String>?, adError: AdError?) {
-        val payload = Arguments.createMap()
-        if (type != null) {
-          payload.putString(EVENT_PROP_TYPE, mapAdType(type))
-        }
-        if (adBreak != null) {
-          payload.putMap(EVENT_PROP_AD, AdAdapter.fromAdBreak(adBreak))
-        }
-        eventEmitter.emit(payload)
-      }
-    }
     adsApi.addAllEventsListener(eventListener)
   }
 

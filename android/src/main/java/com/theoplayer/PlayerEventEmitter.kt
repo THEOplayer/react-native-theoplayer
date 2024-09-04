@@ -88,7 +88,7 @@ private const val EVENT_PROP_SUITE_VERSION = "playerSuiteVersion"
 @Suppress("UNCHECKED_CAST")
 class PlayerEventEmitter internal constructor(
   private val reactContext: ReactApplicationContext,
-  playerView: ReactTHEOplayerView
+  private val playerView: ReactTHEOplayerView
 ) {
   @Retention(AnnotationRetention.SOURCE)
   @StringDef(
@@ -163,7 +163,6 @@ class PlayerEventEmitter internal constructor(
   private val textTrackListeners = HashMap<EventType<*>, EventListener<*>>()
   private val audioTrackListeners = HashMap<EventType<*>, EventListener<*>>()
   private val videoTrackListeners = HashMap<EventType<*>, EventListener<*>>()
-  private val playerView: ReactTHEOplayerView
   private var adEventAdapter: AdEventAdapter? = null
   private var castEventAdapter: CastEventAdapter? = null
   private var lastTimeUpdate: Long = 0
@@ -175,7 +174,6 @@ class PlayerEventEmitter internal constructor(
   }
 
   init {
-    this.playerView = playerView
 
     // Create listeners
     playerListeners[PlayerEventTypes.SOURCECHANGE] = EventListener<PlayerEvent<*>> {

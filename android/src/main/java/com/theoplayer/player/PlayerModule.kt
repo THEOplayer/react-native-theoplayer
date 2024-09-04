@@ -19,11 +19,7 @@ private const val TAG = "THEORCTPlayerModule"
 
 @Suppress("unused")
 class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(context) {
-  private val viewResolver: ViewResolver
-
-  init {
-    viewResolver = ViewResolver(context)
-  }
+  private val viewResolver: ViewResolver = ViewResolver(context)
 
   override fun getName(): String {
     return TAG
