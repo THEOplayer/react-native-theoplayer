@@ -1,8 +1,14 @@
-require_relative '../node_modules/react-native/scripts/react_native_pods'
-require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+require Pod::Executable.execute_command('node', ['-p',
+  'require.resolve(
+    "react-native/scripts/react_native_pods.rb",
+    {paths: [process.argv[1]]},
+  )', __dir__]).strip
 
 source 'https://github.com/react-native-tvos/react-native-tvos-podspecs.git'
 source 'https://cdn.cocoapods.org/'
+
+prepare_react_native_project!
+config = use_native_modules!
 
 linkage = ENV['USE_FRAMEWORKS']
 if linkage != nil
@@ -16,15 +22,14 @@ target 'ReactNativeTHEOplayer' do
 
   platform :ios, '13.4'
 
-  config = use_native_modules!
-
   use_react_native!(
-    :path => config[:reactNativePath]
+    :path => config[:reactNativePath],
+    :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
-  
+
   pod 'react-native-theoplayer', :path => '../..'
   pod 'react-native-google-cast', :git => 'https://github.com/Danesz/react-native-google-cast.git', branch: 'feature/guestmode_apple_silicon'
-  
+
   target 'ReactNativeTHEOplayerTests' do
     inherit! :complete
     # Pods for testing
@@ -36,12 +41,11 @@ target 'ReactNativeTHEOplayer-tvOS' do
 
   platform :tvos, '13.4'
 
-  config = use_native_modules!
-
   use_react_native!(
-    :path => config[:reactNativePath]
+    :path => config[:reactNativePath],
+    :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
-  
+
   pod 'react-native-theoplayer', :path => '../..'
 
   target 'ReactNativeTHEOplayer-tvOSTests' do
@@ -52,5 +56,9 @@ target 'ReactNativeTHEOplayer-tvOS' do
 end
 
 post_install do |installer|
-  react_native_post_install(installer)
+  react_native_post_install(
+        installer,
+        config[:reactNativePath],
+        :mac_catalyst_enabled => false
+      )
 end
