@@ -298,7 +298,6 @@ class SourceAdapter {
       .build()
   }
 
-  @Suppress("UnstableApiUsage")
   @Throws(JSONException::class)
   private fun parseTheoAdFromJS(jsonAdDescription: JSONObject): TheoAdDescription {
     if (!BuildConfig.EXTENSION_THEOADS) {
