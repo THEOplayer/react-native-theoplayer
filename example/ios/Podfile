@@ -10,6 +10,8 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
+install! 'cocoapods', :deterministic_uuids => false
+
 target 'ReactNativeTHEOplayer' do
 
   platform :ios, '13.4'
