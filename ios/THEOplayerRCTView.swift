@@ -3,7 +3,18 @@
 import Foundation
 import UIKit
 import THEOplayerSDK
- 
+
+#if canImport(THEOplayerTheoAdsIntegration)
+import THEOplayerTheoAdsIntegration
+#endif
+#if canImport(THEOplayerGoogleIMAIntegration)
+import THEOplayerGoogleIMAIntegration
+import GoogleInteractiveMediaAds
+#endif
+#if canImport(THEOplayerGoogleCastIntegration)
+import THEOplayerGoogleCastIntegration
+#endif
+
 public class THEOplayerRCTView: UIView {
     // MARK: Members
     public private(set) var player: THEOplayer?
@@ -22,6 +33,11 @@ public class THEOplayerRCTView: UIView {
     var adsConfig = AdsConfig()
     var castConfig = CastConfig()
     var uiConfig = UIConfig()
+    
+    // integrations
+    var theoAdsIntegration: THEOplayerTheoAdsIntegration.TheoAdsIntegration?
+    var imaIntegration: THEOplayerGoogleIMAIntegration.GoogleImaIntegration?
+    var castIntegration: THEOplayerGoogleCastIntegration.CastIntegration?
     
     var mediaControlConfig = MediaControlConfig() {
         didSet {
@@ -122,6 +138,7 @@ public class THEOplayerRCTView: UIView {
         
         self.initAdsIntegration()
         self.initCastIntegration()
+        self.initTheoAdsIntegration()
         self.initBackgroundAudio()
         self.initPip()
         return self.player
@@ -140,7 +157,12 @@ public class THEOplayerRCTView: UIView {
         self.pipControlsManager.destroy()
         
         self.destroyBackgroundAudio()
+        
+        self.theoAdsIntegration = nil;
+        self.imaIntegration = nil;
+        self.castIntegration = nil;
         self.player?.removeAllIntegrations()
+        
         self.player?.destroy()
         self.player = nil
         if DEBUG_THEOPLAYER_INTERACTION { PrintUtils.printLog(logText: "[NATIVE] THEOplayer instance destroyed.") }
