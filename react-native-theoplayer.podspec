@@ -50,6 +50,11 @@ Pod::Spec.new do |s|
     s.ios.dependency "THEOplayer-Integration-GoogleCast", "~> 8.6"
   end
 
+  if theofeatures.include?("THEO_ADS")
+	puts "Adding THEOplayer-Integration-TheoAds"
+    s.dependency "THEOplayer-Integration-TheoAds", "~> 8.6"
+  end
+
   if theofeatures.include?("SIDELOADED_TEXTTRACKS")
 	puts "Adding THEOplayer-Connector-SideloadedSubtitle"
     s.dependency "THEOplayer-Connector-SideloadedSubtitle", "~> 8.6"
