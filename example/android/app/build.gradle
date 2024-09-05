@@ -109,7 +109,7 @@ def safeExtGet(prop, fallback) {
 }
 
 dependencies {
-    implementation project(path: ':reactnativetheoplayer')
+    implementation project(path: ':react-native-theoplayer')
     implementation "com.google.android.gms:play-services-cast-framework:${safeExtGet('castFrameworkVersion', '+')}"
 
     // The version of react-native is set by the React Native Gradle Plugin
