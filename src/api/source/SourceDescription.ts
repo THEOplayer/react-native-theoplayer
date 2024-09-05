@@ -11,8 +11,8 @@ import type { DRMConfiguration } from './drm/DRMConfiguration';
 import type { HlsPlaybackConfiguration } from './hls/HlsPlaybackConfiguration';
 import type { AdDescription } from './ads/Ads';
 import type { MetadataDescription } from './metadata/MetadataDescription';
-import type { ServerSideAdInsertionConfiguration } from "./ads/ssai/ServerSideAdInsertionConfiguration";
-import type { AnalyticsDescription } from "./analytics/AnalyticsDescription";
+import type { ServerSideAdInsertionConfiguration } from './ads/ssai/ServerSideAdInsertionConfiguration';
+import type { AnalyticsDescription } from './analytics/AnalyticsDescription';
 
 export type Source = TypedSource;
 
@@ -246,7 +246,7 @@ export interface TextTrackDescription {
    * The localTime that matches the PTS value that is used to sync the track with the video.
    *
    * @internal
-    * @remarks
+   * @remarks
    * <br/> - Available on iOS.
    * <br/> - Format: "HH:mm:mm:SSS"
    * <br/> - Default value is "00:00:00:000"
@@ -350,6 +350,15 @@ export interface TypedSource extends BaseSource {
    * <br/> - Available since v2.15.0.
    */
   contentProtection?: DRMConfiguration;
+
+  /**
+   * The headers included in the request when retrieving the resource.
+   *
+   * @remarks
+   * <br/> - Available on iOS and Android.
+   * <br/> - Available since v7.9.0.
+   */
+  headers?: { [key: string]: string };
 
   /**
    * The Server-side Ad Insertion parameters for the media resource.
