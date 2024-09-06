@@ -39,7 +39,7 @@ export interface AdDescription {
   /**
    * The integration of the ad break.
    *
-   * @defaultValue `'theo'`
+   * @defaultValue `'csai'`
    */
   integration?: AdIntegrationKind;
 
@@ -88,8 +88,10 @@ export interface AdDescription {
 
 /**
  * The integration of an ad break, represented by a value from the following list:
- * <br/> - `'theo'`: Default ad playback.
- * <br/> - `'google-ima'`: {@link https://developers.google.com/interactive-media-ads/docs/sdks/html5|Google IMA} pre-integrated ad playback.
+ * <br/> - `'csai'`: Default CSAI ad playback.
+ * <br/> - `'theo'`: Old naming for `'csai'` - Default ad playback. (Deprecated)
+ * <br/> - `'google-ima'`: {@link https://developers.google.com/interactive-media-ads/docs/sdks/html5|Google IMA}.
+ * <br/> - `'google-dai'`: {@link https://developers.google.com/ad-manager/dynamic-ad-insertion/sdk/html5 | Google DAI}.
  * <br/> - `'spotx'`: {@link https://developer.spotxchange.com/|SpotX} pre-integrated ad playback.
  * <br/> - `'freewheel'`: {@link https://vi.freewheel.tv/|FreeWheel} pre-integrated ad playback.
  * <br/> - `'theoads'`: [Experimental] - API under development, do not use without consulting THEO Technologies.
@@ -102,7 +104,9 @@ export interface AdDescription {
 export enum AdIntegrationKind {
   freewheel = 'freewheel',
   google_ima = 'google-ima',
+  google_dai = 'google-dai',
   spotx = 'spotx',
+  csai = 'csai',
   theo = 'theo',
   theoads = 'theoads',
 }
