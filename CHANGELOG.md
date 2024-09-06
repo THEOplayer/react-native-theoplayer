@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added THEOlive source integration type to `SourceDescription`.
 - Added THEOads as `AdIntegrationKind`.
+- Added a `headers` property to `TypedSource`. The player will add the headers to the HTTP requests for the given resource.
 
 ## [7.8.2] - 24-08-21
 

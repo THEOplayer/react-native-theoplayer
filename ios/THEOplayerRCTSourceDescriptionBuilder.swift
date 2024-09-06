@@ -170,9 +170,11 @@ class THEOplayerRCTSourceDescriptionBuilder {
         if let src = typedSourceData[SD_PROP_SRC] as? String {
             // extract the type
             let type = typedSourceData[SD_PROP_TYPE] as? String ?? THEOplayerRCTSourceDescriptionBuilder.extractMimeType(src)
+            let headers = typedSourceData[SD_PROP_HEADERS] as? [String:String]
             return TypedSource(src: src,
                                type: type,
-                               drm: contentProtection)
+                               drm: contentProtection,
+                               headers: headers)
         }
 
         // Check if we can extract a DAI source
