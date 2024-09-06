@@ -1,6 +1,5 @@
 package com.theoplayer
 
-import android.text.TextUtils
 import com.facebook.react.bridge.ReadableMap
 import com.google.ads.interactivemedia.v3.api.AdsRenderingSettings
 import com.google.ads.interactivemedia.v3.api.ImaSdkFactory
@@ -11,14 +10,12 @@ import com.theoplayer.android.api.cast.CastStrategy
 import com.theoplayer.android.api.cast.CastConfiguration
 import com.theoplayer.android.api.pip.PipConfiguration
 import com.theoplayer.android.api.player.NetworkConfiguration
-import com.theoplayer.android.api.ui.UIConfiguration
 import com.theoplayer.media.MediaSessionConfig
 import com.theoplayer.media.MediaSessionConfigAdapter
 
 private const val PROP_LICENSE = "license"
 private const val PROP_LICENSE_URL = "licenseUrl"
 private const val PROP_PRELOAD = "preload"
-private const val PROP_LANGUAGE = "language"
 private const val PROP_LIVE_OFFSET = "liveOffset"
 private const val PROP_UI_ENABLED = "uiEnabled"
 private const val PROP_CAST_STRATEGY = "strategy"
@@ -30,7 +27,6 @@ private const val PROP_RETRY_MAX_BACKOFF = "maximumBackoff"
 private const val PROP_CAST_CONFIGURATION = "cast"
 private const val PROP_ADS_CONFIGURATION = "ads"
 private const val PROP_IMA_CONFIGURATION = "ima"
-private const val PROP_UI_CONFIGURATION = "ui"
 private const val PROP_MEDIA_CONTROL = "mediaControl"
 private const val PROP_PPID = "ppid"
 private const val PROP_MAX_REDIRECTS = "maxRedirects"
@@ -61,9 +57,6 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
         }
         if (hasKey(PROP_LIVE_OFFSET)) {
           liveOffset(getDouble(PROP_LIVE_OFFSET))
-        }
-        if (hasKey(PROP_UI_CONFIGURATION)) {
-          ui(uiConfig())
         }
         if (hasKey(PROP_HLS_DATE_RANGE)) {
           hlsDateRange(getBoolean(PROP_HLS_DATE_RANGE))
@@ -115,10 +108,6 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
           }
           featureFlags = convertedMap
         }
-        // The current ISO 639-1 language code, get it from the UI config.
-        uiConfig().language?.let {
-          language = it
-        }
         // The maximum number of VAST redirects.
         if (hasKey(PROP_MAX_REDIRECTS)) {
           maxRedirects = getInt(PROP_MAX_REDIRECTS)
@@ -162,21 +151,6 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
         }
       }
     }
-  }
-
-  /**
-   * Get UIConfiguration object; these properties apply:
-   * - language: The language used to localize the ui elements.
-   */
-  private fun uiConfig(): UIConfiguration {
-    return UIConfiguration.Builder().apply {
-      configProps?.getMap(PROP_UI_CONFIGURATION)?.run {
-        val languageString = getString(PROP_LANGUAGE)
-        if (languageString != null && !TextUtils.isEmpty(languageString)) {
-          language(languageString)
-        }
-      }
-    }.build()
   }
 
   /**
