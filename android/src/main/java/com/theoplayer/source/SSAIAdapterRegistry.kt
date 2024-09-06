@@ -20,7 +20,7 @@ object SSAIAdapterRegistry {
     _adapters[integration] = adapter
   }
 
-  fun hasIntegration(integration: String): Boolean {
+  private fun hasIntegration(integration: String): Boolean {
     return _adapters[integration] != null
   }
 
