@@ -203,7 +203,7 @@ object AdAdapter {
       }
 
       override fun getIntegration(): AdIntegrationKind {
-        return AdIntegrationKind.from(ad.getString(PROP_AD_INTEGRATION))
+        return AdIntegrationKind.from(ad.getString(PROP_AD_INTEGRATION)) ?: AdIntegrationKind.CUSTOM
       }
 
       override fun getCustomIntegration(): String? {
@@ -284,7 +284,7 @@ object AdAdapter {
       }
 
       override fun getIntegration(): AdIntegrationKind {
-        return AdIntegrationKind.from(adBreak.getString(PROP_ADBREAK_INTEGRATION))
+        return AdIntegrationKind.from(adBreak.getString(PROP_ADBREAK_INTEGRATION)) ?: AdIntegrationKind.CUSTOM
       }
 
       override fun getCustomIntegration(): String? {
