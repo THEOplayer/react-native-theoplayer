@@ -51,6 +51,7 @@ private const val PROP_POSTER = "poster"
 private const val PROP_ADS = "ads"
 private const val PROP_DASH = "dash"
 private const val PROP_DASH_IGNORE_AVAILABILITYWINDOW = "ignoreAvailabilityWindow"
+private const val PROP_HEADERS = "headers"
 private const val ERROR_IMA_NOT_ENABLED = "Google IMA support not enabled."
 private const val ERROR_UNSUPPORTED_CSAI_INTEGRATION = "Unsupported CSAI integration"
 private const val ERROR_MISSING_CSAI_INTEGRATION = "Missing CSAI integration"
@@ -150,6 +151,13 @@ class SourceAdapter {
       }
       if (jsonTypedSource.has(PROP_DASH)) {
         tsBuilder.dash(parseDashConfig(jsonTypedSource.getJSONObject(PROP_DASH)))
+      }
+      jsonTypedSource.optJSONObject(PROP_HEADERS)?.let { headersJson ->
+        tsBuilder.headers(mutableMapOf<String, String>().apply {
+          headersJson.keys().forEach { key ->
+            put(key, headersJson.getString(key))
+          }
+        })
       }
       if (jsonTypedSource.has(PROP_LIVE_OFFSET)) {
         tsBuilder.liveOffset(jsonTypedSource.getDouble(PROP_LIVE_OFFSET))

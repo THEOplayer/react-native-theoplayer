@@ -112,9 +112,9 @@ dependencies {
   implementation "androidx.appcompat:appcompat:${safeExtGet('appcompatVersion', '1.6.1')}"
   implementation "androidx.core:core-ktx:${safeExtGet('corektxVersion', '1.10.1')}"
 
-  // The minimum supported THEOplayer version is 7.6.0
-  def theoplayer_sdk_version = safeExtGet('THEOplayer_sdk', '[7.10.0, 8.0.0)')
-  def theoplayer_mediasession_version = safeExtGet('THEOplayer_mediasession', '[7.10.0, 8.0.0)')
+  // The minimum supported THEOplayer version is 7.12.0
+  def theoplayer_sdk_version = safeExtGet('THEOplayer_sdk', '[7.12.0, 8.0.0)')
+  def theoplayer_mediasession_version = safeExtGet('THEOplayer_mediasession', '[7.12.0, 8.0.0)')
 
   println("Using THEOplayer (${versionString(theoplayer_sdk_version)})")
   implementation "com.theoplayer.theoplayer-sdk-android:core:${theoplayer_sdk_version}"

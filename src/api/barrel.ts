@@ -11,6 +11,7 @@ export * from './event/barrel';
 export * from './media/barrel';
 export * from './drm/barrel';
 export * from './source/barrel';
+export * from './theolive/barrel';
 export * from './timeranges/barrel';
 export * from './resolution/barrel';
 export * from './track/barrel';
