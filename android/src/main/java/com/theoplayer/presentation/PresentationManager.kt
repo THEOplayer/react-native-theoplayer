@@ -40,6 +40,8 @@ class PresentationManager(
 
   var currentPresentationMode: PresentationMode = PresentationMode.INLINE
     private set
+  var currentPresentationModeChangeContext: PresentationModeChangeContext? = null
+    private set
 
   var pipConfig: PipConfig = PipConfig()
 
@@ -54,12 +56,14 @@ class PresentationManager(
     }
     onPictureInPictureModeChanged = object : BroadcastReceiver() {
       override fun onReceive(context: Context?, intent: Intent?) {
-        // Dispatch event on every PiP mode change
+        val transitioningToPip = intent
+          ?.getBooleanExtra("isTransitioningToPip", false) ?: false
         val inPip = intent?.getBooleanExtra("isInPictureInPictureMode", false) ?: false
-        if (inPip) {
-          onEnterPip()
-        } else {
-          onExitPip()
+        // Dispatch event on every PiP mode change
+        when {
+          transitioningToPip -> onEnterPip(true)
+          inPip -> onEnterPip()
+          else -> onExitPip()
         }
       }
     }
@@ -104,9 +108,11 @@ class PresentationManager(
       PresentationMode.INLINE -> {
         setFullscreen(false)
       }
+
       PresentationMode.FULLSCREEN -> {
         setFullscreen(true)
       }
+
       PresentationMode.PICTURE_IN_PICTURE -> {
         setFullscreen(false)
         enterPip()
@@ -144,8 +150,13 @@ class PresentationManager(
     }
   }
 
-  private fun onEnterPip() {
-    updatePresentationMode(PresentationMode.PICTURE_IN_PICTURE)
+  private fun onEnterPip(transitioningToPip: Boolean = false) {
+    updatePresentationMode(
+      PresentationMode.PICTURE_IN_PICTURE,
+      if (transitioningToPip)
+        PresentationModeChangeContext(PresentationModeChangePipContext.TRANSITIONING_TO_PIP)
+      else null
+    )
   }
 
   private fun onExitPip() {
@@ -241,11 +252,14 @@ class PresentationManager(
     presentationMode: PresentationMode,
     context: PresentationModeChangeContext? = null
   ) {
-    if (presentationMode == currentPresentationMode) {
+    if (presentationMode == currentPresentationMode &&
+      context == currentPresentationModeChangeContext
+    ) {
       return
     }
     val prevPresentationMode = currentPresentationMode
     currentPresentationMode = presentationMode
+    currentPresentationModeChangeContext = context
     eventEmitter.emitPresentationModeChange(presentationMode, prevPresentationMode, context)
 
     // Resume playing when going to PiP and player was playing
