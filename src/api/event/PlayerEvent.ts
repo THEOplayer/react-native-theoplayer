@@ -57,6 +57,11 @@ export enum PresentationModeChangePipContext {
    * The PiP window was restored/maximized.
    */
   RESTORED = 'restored',
+
+  /**
+   * The app is transitioning to the PiP frame.
+   */
+  TRANSITIONING_TO_PIP = 'transitioning-to-pip',
 }
 
 export interface PresentationModeChangeContext {
