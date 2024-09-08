@@ -115,6 +115,8 @@ override fun onPictureInPictureUiStateChanged(pipState: PictureInPictureUiState)
 }
 ```
 
+Then it should set the `context?.pip` to `PresentationModeChangePipContext.TRANSITIONING_TO_PIP` in the event `PlayerEventType.PRESENTATIONMODE_CHANGE`.
+
 ### PiP controls
 
 The PiP window will show the default controls to configure, maximize and close the PiP window.
