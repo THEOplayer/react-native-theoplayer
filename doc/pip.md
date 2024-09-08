@@ -96,6 +96,25 @@ override fun onPictureInPictureModeChanged(
 }
 ```
 
+### Enabling early transitioning to PiP event
+
+You might want to enable [transitioning to PiP](<https://developer.android.com/reference/android/app/PictureInPictureUiState#isTransitioningToPip()>) event for Android 15+ (API 35+). To enable it make sure that
+the compile SDK version is set to 35 in your build.gradle `compileSdkVersion = 35`. Also the appropriate intent should be sent from the `MainActivity` to let react-native know when the app starts the PiP animation:
+
+```kotlin
+override fun onPictureInPictureUiStateChanged(pipState: PictureInPictureUiState) {
+    super.onPictureInPictureUiStateChanged(pipState)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM &&
+        pipState.isTransitioningToPip
+    ) {
+        Intent("onPictureInPictureModeChanged").also {
+            it.putExtra("isTransitioningToPip", true)
+            sendBroadcast(it)
+        }
+    }
+}
+```
+
 ### PiP controls
 
 The PiP window will show the default controls to configure, maximize and close the PiP window.
