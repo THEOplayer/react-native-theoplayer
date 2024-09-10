@@ -61,7 +61,7 @@
     "react": "^18.2.0",
     "react-native": "^0.74.5",
     "react-native-builder-bob": "^0.23.2",
-    "theoplayer": "^7.11.0",
+    "theoplayer": "^8.0.0",
     "typedoc": "^0.25.13",
     "typedoc-plugin-external-resolver": "^1.0.3",
     "typedoc-plugin-mdn-links": "^3.2.11",
