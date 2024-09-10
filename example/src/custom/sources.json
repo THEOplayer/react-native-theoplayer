@@ -415,7 +415,7 @@
         "ssai": {
           "integration": "google-dai",
           "availabilityType": "vod",
-          "contentSourceID": "2528370",
+          "contentSourceID": "2548831",
           "videoID": "tears-of-steel"
         }
       }
@@ -432,7 +432,7 @@
         "ssai": {
           "integration": "google-dai",
           "availabilityType": "live",
-          "assetKey": "sN_IYUG8STe1ZzhIIE_ksA"
+          "assetKey": "c-rArva4ShKVIAkNfy6HUQ"
         }
       }
     }
