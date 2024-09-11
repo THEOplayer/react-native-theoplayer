@@ -10,7 +10,7 @@ import type {
 import type { CacheTaskStatus } from 'react-native-theoplayer';
 import { NativeModules } from 'react-native';
 import type { DRMConfiguration } from 'react-native-theoplayer';
-import { fromNativeCachingTaskParameters, NativeCachingTaskParameters } from "./NativeCachingTaskParametersAdapter";
+import { fromNativeCachingTaskParameters, NativeCachingTaskParameters } from './NativeCachingTaskParametersAdapter';
 
 const NativeCacheModule = NativeModules.THEORCTCacheModule;
 

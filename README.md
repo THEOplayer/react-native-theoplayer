@@ -13,7 +13,9 @@ This projects falls under the license as defined in https://github.com/THEOplaye
 3. [How to use these guides](#how-to-use-these-guides)
 4. [Features](#features)
 5. [Available connectors](#available-connectors)
-6. [Getting Started](#getting-started)
+6. [Creating your first app](#creating-your-first-app)
+7. [Knowledge Base](#knowledge-base)
+8. [API Reference](#api-reference)
 
 ## Overview
 
@@ -89,6 +91,11 @@ please reach out to us for support.
 <td colspan="3">Adobe, Agama, Comscore, Conviva, Mux, Nielsen, Youbora</td>
 </tr>
 <tr>
+<td><strong>Other Connectors</strong></td>
+<td colspan="1">Yospace SSAI</td>
+<td colspan="2"></td>
+</tr>
+<tr>
 <td><strong>Subtitles &amp; Closed Captions</strong></td>
 <td colspan="3">CEA-608/708, SRT, TTML, WebVTT</td>
 </tr>
@@ -141,6 +148,7 @@ functionality. Currently, the following connectors are available:
 | Mux analytics                                             | [![%40theoplayer/react-native-analytics-mux](https://img.shields.io/npm/v/%40theoplayer%2Freact-native-analytics-mux?label=%40theoplayer/react-native-analytics-mux)](https://www.npmjs.com/package/%40theoplayer%2Freact-native-analytics-mux)                        | [`Mux`](https://github.com/THEOplayer/react-native-connectors/tree/main/mux)                     |
 | Nielsen analytics                                         | [![%40theoplayer/react-native-analytics-nielsen](https://img.shields.io/npm/v/%40theoplayer%2Freact-native-analytics-nielsen?label=%40theoplayer/react-native-analytics-nielsen)](https://www.npmjs.com/package/%40theoplayer%2Freact-native-analytics-nielsen)        | [`Nielsen`](https://github.com/THEOplayer/react-native-connectors/tree/main/nielsen)             |
 | Youbora analytics                                         | [![%40theoplayer/react-native-analytics-youbora](https://img.shields.io/npm/v/%40theoplayer%2Freact-native-analytics-youbora?label=%40theoplayer/react-native-analytics-youbora)](https://www.npmjs.com/package/%40theoplayer%2Freact-native-analytics-youbora)        | [`Youbora`](https://github.com/THEOplayer/react-native-connectors/tree/main/youbora)             |
+| Yospace SSAI                                              | [![%40theoplayer/react-native-yospace](https://img.shields.io/npm/v/%40theoplayer%2Freact-native-yospace?label=%40theoplayer/react-native-yospace)](https://www.npmjs.com/package/%40theoplayer%2Freact-native-yospace)                                                | [`Yospace`](https://github.com/THEOplayer/react-native-connectors/tree/main/yospace)             |
 | Content protection (DRM)                                  | [![%40theoplayer/react-native-drm](https://img.shields.io/npm/v/%40theoplayer%2Freact-native-drm?label=%40theoplayer/react-native-drm)](https://www.npmjs.com/package/%40theoplayer%2Freact-native-drm)                                                                | [`DRM`](https://github.com/THEOplayer/react-native-theoplayer-drm)                               |
 | React Native Open UI                                      | [![%40theoplayer/react-native-ui](https://img.shields.io/npm/v/%40theoplayer%2Freact-native-ui?label=%40theoplayer/react-native-ui)](https://www.npmjs.com/package/%40theoplayer%2Freact-native-ui)                                                                    | [`Open UI`](https://github.com/THEOplayer/react-native-theoplayer-ui)                            |
 | A template for<br/>`react-native-theoplayer` connectors.  | [![%40theoplayer/react-native-connector-template](https://img.shields.io/npm/v/%40theoplayer%2Freact-native-connector-template?label=%40theoplayer/react-native-connector-template)](https://www.npmjs.com/package/%40theoplayer%2Freact-native-connector-template)    | [`Connector template`](https://github.com/THEOplayer/react-native-theoplayer-connector-template) |

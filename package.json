@@ -25,7 +25,10 @@
   ],
   "scripts": {
     "typescript": "tsc --noEmit",
+    "prettier": "prettier --check .",
+    "prettier:fix": "prettier --write .",
     "lint": "eslint \"**/*.{ts,tsx}\"",
+    "lint:fix": "npm run lint -- --fix",
     "prepare": "bob build && husky install",
     "pods": "cd example && pod-install --quiet",
     "docs": "typedoc --treatWarningsAsErrors"
@@ -47,26 +50,28 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
-    "@react-native/eslint-config": "^0.74.83",
-    "@types/react": "^18.2.24",
-    "@types/react-native": "^0.73.0",
-    "eslint": "^8.56.0",
-    "husky": "^6.0.0",
+    "@eslint/js": "^9.9.1",
+    "@react-native/eslint-config": "^0.74.87",
+    "@types/react": "^18.3.5",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "husky": "^9.1.5",
     "pod-install": "^0.1.39",
-    "prettier": "^3.2.5",
+    "prettier": "^3.3.3",
     "react": "^18.2.0",
-    "react-native": "^0.74.1",
+    "react-native": "^0.74.5",
     "react-native-builder-bob": "^0.23.2",
-    "theoplayer": "^7.6.0",
-    "typedoc": "^0.25.12",
+    "theoplayer": "^8.0.0",
+    "typedoc": "^0.25.13",
     "typedoc-plugin-external-resolver": "^1.0.3",
-    "typedoc-plugin-mdn-links": "^3.1.18",
-    "typescript": "5.0.4"
+    "typedoc-plugin-mdn-links": "^3.2.11",
+    "typescript": "5.1.6",
+    "typescript-eslint": "^8.4.0"
   },
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
-    "theoplayer": "^6.0.0 || ^7.0.0"
+    "theoplayer": "^6 || ^7 || ^8"
   },
   "peerDependenciesMeta": {
     "theoplayer": {

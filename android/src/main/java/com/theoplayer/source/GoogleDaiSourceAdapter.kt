@@ -14,6 +14,7 @@ private const val PROP_AVAILABILITY_TYPE = "availabilityType"
 private const val AVAILABILITY_TYPE_VOD = "vod"
 private const val ERROR_DAI_NOT_ENABLED = "Google DAI support not enabled."
 
+@Suppress("UNUSED_PARAMETER")
 @Throws(THEOplayerException::class)
 fun googleDaiBuilderFromJson(builder: TypedSource.Builder, json: JSONObject): TypedSource.Builder {
   // Check whether the integration was enabled

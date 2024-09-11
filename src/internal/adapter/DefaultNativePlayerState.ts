@@ -25,7 +25,7 @@ export class DefaultNativePlayerState extends DefaultTextTrackState implements N
   seeking = false;
   volume = 1;
   currentTime = 0;
-  duration = 0;
+  duration = NaN;
   playbackRate = 1;
   preload: PreloadType = 'none';
   aspectRatio: AspectRatio = AspectRatio.FIT;

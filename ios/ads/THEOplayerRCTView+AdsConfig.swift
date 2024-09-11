@@ -5,7 +5,6 @@ import THEOplayerSDK
 
 struct AdsConfig {
     var adSUIEnabled: Bool = true
-    var adPreloadTypeString: String = "none"
     var adsImaConfig = AdsImaConfig()
 }
 
@@ -25,9 +24,6 @@ extension THEOplayerRCTView {
     func parseAdsConfig(configDict: NSDictionary) {
         if let adsConfig = configDict["ads"] as? NSDictionary {
             self.adsConfig.adSUIEnabled = adsConfig["uiEnabled"] as? Bool ?? true
-            if let adPreloadType = adsConfig["preload"] as? String {
-                self.adsConfig.adPreloadTypeString = adPreloadType
-            }
             if let adsImaConfig = adsConfig["ima"] as? NSDictionary {
                 if let ppid = adsImaConfig["ppid"] as? String {
                     self.adsConfig.adsImaConfig.ppid = ppid
@@ -50,26 +46,6 @@ extension THEOplayerRCTView {
             }
         }
     }
-
-#if canImport(THEOplayerGoogleIMAIntegration)
-    func playerAdsConfiguration() -> AdsConfiguration? {
-        return AdsConfiguration(showCountdown: self.adsConfig.adSUIEnabled, preload: self.adPreloadType())
-    }
-    
-    private func adPreloadType() -> THEOplayerSDK.AdPreloadType {
-        switch self.adsConfig.adPreloadTypeString {
-        case "midroll-and-postroll":
-            return THEOplayerSDK.AdPreloadType.MIDROLL_AND_POSTROLL
-        case "none":
-            return THEOplayerSDK.AdPreloadType.NONE
-        default :
-            return THEOplayerSDK.AdPreloadType.NONE
-        }
-    }
-#else
-    func playerAdsConfiguration() -> AdsConfiguration? { return nil }
-#endif
-    
 }
 
 #elseif os(tvOS)
@@ -77,12 +53,6 @@ extension THEOplayerRCTView {
 extension THEOplayerRCTView {
     
     func parseAdsConfig(configDict: NSDictionary) {}
-    
-#if canImport(THEOplayerGoogleIMAIntegration)
-    func playerAdsConfiguration() -> AdsConfiguration? { return AdsConfiguration() }
-#else
-    func playerAdsConfiguration() -> AdsConfiguration? { return nil }
-#endif
     
 }
 

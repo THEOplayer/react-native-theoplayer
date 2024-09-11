@@ -40,5 +40,4 @@ export interface TextTrackState {
   selectedTextTrack: number | undefined;
 }
 
-export interface NativePlayerState extends PlayerConfigState, PlaybackState, TextTrackState, MediaTrackState {
-}
+export interface NativePlayerState extends PlayerConfigState, PlaybackState, TextTrackState, MediaTrackState {}

@@ -101,20 +101,14 @@ class THEOplayerRCTTypeUtils {
     
     class func adIntegrationKind(_ integration: String) -> AdIntegrationKind {
         switch integration {
-#if os(iOS)
-        case "theo":
-            return AdIntegrationKind.theo
-        case "freewheel":
-            return AdIntegrationKind.freewheel
-#endif
         case "google-ima":
             return AdIntegrationKind.google_ima
         case "google-dai":
             return AdIntegrationKind.google_dai
         case "":
-            return AdIntegrationKind.defaultKind
+            return AdIntegrationKind.custom
         default:
-            return AdIntegrationKind.defaultKind
+            return AdIntegrationKind.custom
         }
     }
 

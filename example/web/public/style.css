@@ -1,15 +1,15 @@
 h1,
 h5,
 span {
-    color: #ffffff;
+  color: #ffffff;
 }
 
 body {
-    background-color: #373a3c;
+  background-color: #373a3c;
 }
 
 .container {
-  flex: 1
+  flex: 1;
 }
 
 .theoplayer-container {
