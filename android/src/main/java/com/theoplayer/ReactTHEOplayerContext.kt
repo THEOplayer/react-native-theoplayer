@@ -82,7 +82,7 @@ class ReactTHEOplayerContext private constructor(
 
   var daiIntegration: GoogleDaiIntegration? = null
   var imaIntegration: GoogleImaIntegration? = null
-  var theoAdsIntegration: TheoAdsIntegration? = null
+  private var theoAdsIntegration: TheoAdsIntegration? = null
   var castIntegration: CastIntegration? = null
   var wasPlayingOnHostPause: Boolean = false
   private var isHostPaused: Boolean = false
