@@ -9,12 +9,14 @@ export function getFullscreenSize(): ScaledSize {
 
   // Adjust for statusBar height on Android, depending on the device's current orientation.
   if (Platform.OS === 'android' && Platform.Version >= 29) {
-    const statusBarHeight = (StatusBar.currentHeight || 0);
-    if (screenSize.width < screenSize.height) { // portrait
+    const statusBarHeight = StatusBar.currentHeight || 0;
+    if (screenSize.width < screenSize.height) {
+      // portrait
       if (screenSize.height !== Dimensions.get('window').height + statusBarHeight) {
         screenSize.height = screenSize.height - statusBarHeight;
       }
-    } else { // landscape
+    } else {
+      // landscape
       if (screenSize.width !== Dimensions.get('window').width) {
         screenSize.width = screenSize.width - statusBarHeight;
       }

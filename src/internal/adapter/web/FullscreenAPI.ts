@@ -24,7 +24,7 @@ export const fullscreenAPI: FullscreenAPIMap | undefined = (() => {
       'webkitFullscreenElement',
       'webkitFullscreenEnabled',
       'webkitfullscreenchange',
-      'webkitfullscreenerror'
+      'webkitfullscreenerror',
     ],
     // Old WebKit (Safari 5.1)
     [
@@ -33,12 +33,12 @@ export const fullscreenAPI: FullscreenAPIMap | undefined = (() => {
       'webkitCurrentFullScreenElement',
       'webkitCancelFullScreen',
       'webkitfullscreenchange',
-      'webkitfullscreenerror'
+      'webkitfullscreenerror',
     ],
     // Mozilla
     ['mozRequestFullScreen', 'mozCancelFullScreen', 'mozFullScreenElement', 'mozFullScreenEnabled', 'mozfullscreenchange', 'mozfullscreenerror'],
     // Microsoft
-    ['msRequestFullscreen', 'msExitFullscreen', 'msFullscreenElement', 'msFullscreenEnabled', 'MSFullscreenChange', 'MSFullscreenError']
+    ['msRequestFullscreen', 'msExitFullscreen', 'msFullscreenElement', 'msFullscreenEnabled', 'MSFullscreenChange', 'MSFullscreenError'],
   ];
 
   for (const browserMap of apiMap) {
@@ -50,7 +50,7 @@ export const fullscreenAPI: FullscreenAPIMap | undefined = (() => {
         fullscreenElement_: browserMap[2],
         fullscreenEnabled_: browserMap[3],
         fullscreenchange_: browserMap[4],
-        fullscreenerror_: browserMap[5]
+        fullscreenerror_: browserMap[5],
       } as FullscreenAPIMap;
     }
   }

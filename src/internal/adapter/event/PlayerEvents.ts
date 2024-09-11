@@ -71,13 +71,19 @@ export class DefaultPresentationModeChangeEvent extends BaseEvent<PlayerEventTyp
 }
 
 export class DefaultVolumeChangeEvent extends BaseEvent<PlayerEventType.VOLUME_CHANGE> implements VolumeChangeEvent {
-  constructor(public volume: number, public muted: boolean) {
+  constructor(
+    public volume: number,
+    public muted: boolean,
+  ) {
     super(PlayerEventType.VOLUME_CHANGE);
   }
 }
 
 export class DefaultResizeEvent extends BaseEvent<PlayerEventType.RESIZE> implements ResizeEvent {
-  constructor(public width: number, public height: number) {
+  constructor(
+    public width: number,
+    public height: number,
+  ) {
     super(PlayerEventType.RESIZE);
   }
 }
@@ -89,13 +95,19 @@ export class DefaultErrorEvent extends BaseEvent<PlayerEventType.ERROR> implemen
 }
 
 export class DefaultProgressEvent extends BaseEvent<PlayerEventType.PROGRESS> implements ProgressEvent {
-  constructor(public seekable: TimeRange[], public buffered: TimeRange[]) {
+  constructor(
+    public seekable: TimeRange[],
+    public buffered: TimeRange[],
+  ) {
     super(PlayerEventType.PROGRESS);
   }
 }
 
 export class DefaultTimeupdateEvent extends BaseEvent<PlayerEventType.TIME_UPDATE> implements TimeUpdateEvent {
-  constructor(public currentTime: number, public currentProgramDateTime?: number) {
+  constructor(
+    public currentTime: number,
+    public currentProgramDateTime?: number,
+  ) {
     super(PlayerEventType.TIME_UPDATE);
   }
 }
@@ -113,25 +125,40 @@ export class DefaultRateChangeEvent extends BaseEvent<PlayerEventType.RATE_CHANG
 }
 
 export class DefaultSegmentNotFoundEvent extends BaseEvent<PlayerEventType.SEGMENT_NOT_FOUND> implements SegmentNotFoundEvent {
-  constructor(public readonly segmentStartTime: number, public error: string, public retryCount: number) {
+  constructor(
+    public readonly segmentStartTime: number,
+    public error: string,
+    public retryCount: number,
+  ) {
     super(PlayerEventType.SEGMENT_NOT_FOUND);
   }
 }
 
 export class DefaultTextTrackListEvent extends BaseEvent<PlayerEventType.TEXT_TRACK_LIST> implements TextTrackListEvent {
-  constructor(public subType: TrackListEventType, public track: TextTrack) {
+  constructor(
+    public subType: TrackListEventType,
+    public track: TextTrack,
+  ) {
     super(PlayerEventType.TEXT_TRACK_LIST);
   }
 }
 
 export class DefaultTextTrackEvent extends BaseEvent<PlayerEventType.TEXT_TRACK> implements TextTrackEvent {
-  constructor(public subType: TextTrackEventType, public trackUid: number, public cue: TextTrackCue) {
+  constructor(
+    public subType: TextTrackEventType,
+    public trackUid: number,
+    public cue: TextTrackCue,
+  ) {
     super(PlayerEventType.TEXT_TRACK);
   }
 }
 
 export class DefaultMediaTrackListEvent extends BaseEvent<PlayerEventType.MEDIA_TRACK_LIST> implements MediaTrackListEvent {
-  constructor(public subType: TrackListEventType, public trackType: MediaTrackType, public track: MediaTrack) {
+  constructor(
+    public subType: TrackListEventType,
+    public trackType: MediaTrackType,
+    public track: MediaTrack,
+  ) {
     super(PlayerEventType.MEDIA_TRACK_LIST);
   }
 }
@@ -148,7 +175,10 @@ export class DefaultMediaTrackEvent extends BaseEvent<PlayerEventType.MEDIA_TRAC
 }
 
 export class DefaultAdEvent extends BaseEvent<PlayerEventType.AD_EVENT> implements AdEvent {
-  constructor(public subType: AdEventType, public ad: Ad | AdBreak) {
+  constructor(
+    public subType: AdEventType,
+    public ad: Ad | AdBreak,
+  ) {
     super(PlayerEventType.AD_EVENT);
   }
 }

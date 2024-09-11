@@ -1,10 +1,7 @@
 [
   {
     "name": "DASH - Thumbnails in manifest",
-    "os": [
-      "android",
-      "web"
-    ],
+    "os": ["android", "web"],
     "source": {
       "sources": [
         {
@@ -25,10 +22,7 @@
   },
   {
     "name": "DASH - Thumbnails Side-loaded",
-    "os": [
-      "android",
-      "web"
-    ],
+    "os": ["android", "web"],
     "source": {
       "sources": [
         {
@@ -48,10 +42,7 @@
   },
   {
     "name": "DASH - VOD - Clear",
-    "os": [
-      "android",
-      "web"
-    ],
+    "os": ["android", "web"],
     "source": {
       "sources": [
         {
@@ -63,10 +54,7 @@
   },
   {
     "name": "DASH - VOD - Widevine",
-    "os": [
-      "android",
-      "web"
-    ],
+    "os": ["android", "web"],
     "source": {
       "sources": {
         "src": "https://cdn.theoplayer.com/video/dash/tos-dash-widevine/tos_h264_main.mpd",
@@ -82,10 +70,7 @@
   },
   {
     "name": "DASH - Live - Clear",
-    "os": [
-      "android",
-      "web"
-    ],
+    "os": ["android", "web"],
     "source": {
       "sources": {
         "src": "https://livesim.dashif.org/livesim/chunkdur_1/ato_7/testpic4_8s/Manifest.mpd"
@@ -94,10 +79,7 @@
   },
   {
     "name": "DASH - CSAI - Google IMA pre-roll",
-    "os": [
-      "android",
-      "web"
-    ],
+    "os": ["android", "web"],
     "source": {
       "sources": [
         {
@@ -117,10 +99,7 @@
   },
   {
     "name": "DASH - CSAI - Google IMA mid-roll VAST",
-    "os": [
-      "android",
-      "web"
-    ],
+    "os": ["android", "web"],
     "source": {
       "sources": [
         {
@@ -141,10 +120,7 @@
   },
   {
     "name": "DASH - CSAI - Google IMA mid-roll VMAP",
-    "os": [
-      "android",
-      "web"
-    ],
+    "os": ["android", "web"],
     "source": {
       "sources": [
         {
@@ -164,11 +140,7 @@
   },
   {
     "name": "HLS - VOD - Clear - The Venture Bros",
-    "os": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "os": ["ios", "android", "web"],
     "source": {
       "sources": {
         "src": "https://cdn.theoplayer.com/video/adultswim/clip.m3u8",
@@ -189,11 +161,7 @@
   },
   {
     "name": "HLS - VOD - Clear - DateRange Metadata",
-    "os": [
-      "ios",
-      "web",
-      "android"
-    ],
+    "os": ["ios", "web", "android"],
     "source": {
       "sources": {
         "src": "https://cdn.theoplayer.com/video/star_wars_episode_vii-the_force_awakens_official_comic-con_2015_reel_(2015)/index-daterange.m3u8",
@@ -207,11 +175,7 @@
   },
   {
     "name": "HLS - LIVE - Clear - TOS",
-    "os": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "os": ["ios", "android", "web"],
     "source": {
       "sources": {
         "src": "https://cph-msl.akamaized.net/hls/live/2000341/test/master.m3u8",
@@ -232,10 +196,7 @@
   },
   {
     "name": "HLS - VOD - Clear - bipbop (id3 meta)",
-    "os": [
-      "ios",
-      "web"
-    ],
+    "os": ["ios", "web"],
     "source": {
       "sources": {
         "src": "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8",
@@ -253,10 +214,7 @@
   },
   {
     "name": "HLS - VOD - Clear - elephants-dream (id3 meta)",
-    "os": [
-      "ios",
-      "web"
-    ],
+    "os": ["ios", "web"],
     "source": {
       "sources": {
         "src": "https://cdn.theoplayer.com/video/elephants-dream/playlist-single-audio.m3u8",
@@ -274,10 +232,7 @@
   },
   {
     "name": "HLS - CSAI - Google IMA pre-roll",
-    "os": [
-      "ios",
-      "web"
-    ],
+    "os": ["ios", "web"],
     "source": {
       "sources": [
         {
@@ -303,9 +258,7 @@
   },
   {
     "name": "HLS - SGAI (THEOads)",
-    "os": [
-      "web"
-    ],
+    "os": ["web"],
     "source": {
       "sources": {
         "src": "https://cluster.dev.theostream.live/nfl-unified-channel/hls/k8s/live/scte35.isml/.m3u8",
@@ -325,10 +278,7 @@
   },
   {
     "name": "HLS - CSAI - Google IMA mid-roll VAST",
-    "os": [
-      "ios",
-      "web"
-    ],
+    "os": ["ios", "web"],
     "source": {
       "sources": [
         {
@@ -357,10 +307,7 @@
   },
   {
     "name": "HLS - CSAI - Google IMA VMAP",
-    "os": [
-      "ios",
-      "web"
-    ],
+    "os": ["ios", "web"],
     "source": {
       "sources": [
         {
@@ -388,10 +335,7 @@
   },
   {
     "name": "DASH - SSAI - Google DAI",
-    "os": [
-      "android",
-      "web"
-    ],
+    "os": ["android", "web"],
     "source": {
       "sources": {
         "type": "application/dash+xml",
@@ -406,10 +350,7 @@
   },
   {
     "name": "HLS - SSAI - Google DAI - VOD",
-    "os": [
-      "ios",
-      "web"
-    ],
+    "os": ["ios", "web"],
     "source": {
       "sources": {
         "ssai": {
@@ -423,10 +364,7 @@
   },
   {
     "name": "HLS - SSAI - Google DAI - LIVE",
-    "os": [
-      "ios",
-      "web"
-    ],
+    "os": ["ios", "web"],
     "source": {
       "sources": {
         "ssai": {
@@ -439,10 +377,7 @@
   },
   {
     "name": "HLS - VOD/Thumbnails - Clear - Big Buck Bunny",
-    "os": [
-      "ios",
-      "web"
-    ],
+    "os": ["ios", "web"],
     "source": {
       "sources": {
         "src": "https://cdn.theoplayer.com/video/big_buck_bunny/big_buck_bunny.m3u8",
@@ -470,10 +405,7 @@
   },
   {
     "name": "HLS - VOD - ezDRM - Drop",
-    "os": [
-      "ios",
-      "web"
-    ],
+    "os": ["ios", "web"],
     "source": {
       "sources": {
         "src": "https://fps.ezdrm.com/demo/video/ezdrm.m3u8",
@@ -489,11 +421,7 @@
   },
   {
     "name": "MP4 - Elephants Dream",
-    "os": [
-      "ios",
-      "web",
-      "android"
-    ],
+    "os": ["ios", "web", "android"],
     "source": {
       "sources": {
         "src": "https://cdn.theoplayer.com/video/elephants-dream.mp4"
@@ -502,10 +430,7 @@
   },
   {
     "name": "MP3 - SoundHelix Song1",
-    "os": [
-      "ios",
-      "web"
-    ],
+    "os": ["ios", "web"],
     "source": {
       "sources": {
         "src": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"

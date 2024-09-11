@@ -17,7 +17,7 @@ export const MediaCacheDownloadButton = () => {
         preferredTrackSelection: {
           audioTrackSelection: ['en-US'],
           textTrackSelection: ['en-US'],
-        }
+        },
       });
     }
   }, []);
