@@ -10,7 +10,9 @@
     "web": "webpack-dev-server --config ./web/webpack.config.js --mode development",
     "web-release": "webpack --config ./web/webpack.config.js --mode production",
     "start": "npx react-native start",
-    "lint": "eslint \"**/*.{ts,tsx}\""
+    "lint": "eslint \"**/*.{ts,tsx}\"",
+    "pod-install": "cd ios && RCT_NEW_ARCH_ENABLED=1 bundle exec pod install",
+    "pod-update": "cd ios && RCT_NEW_ARCH_ENABLED=1 bundle exec pod update"
   },
   "dependencies": {
     "@react-native-community/slider": "^4.5.2",
