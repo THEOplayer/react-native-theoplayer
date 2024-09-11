@@ -25,8 +25,8 @@
   ],
   "scripts": {
     "typescript": "tsc --noEmit",
-    "prettier": "prettier --check .",
-    "prettier:fix": "prettier --write .",
+    "prettier": "prettier --check \"*/(src|test)/**/*.{js,jsx,ts,tsx}\"",
+    "prettier:fix": "prettier --write \"*/(src|test)/**/*.{js,jsx,ts,tsx}\"",
     "lint": "eslint \"**/*.{ts,tsx}\"",
     "lint:fix": "npm run lint -- --fix",
     "prepare": "bob build && husky install",
