@@ -49,7 +49,7 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
   private val requestQueue: HashMap<String, BridgeRequest> = HashMap()
 
   override fun getName(): String {
-    return TAG
+    return "THEORCTContentProtectionModule"
   }
 
   @ReactMethod
