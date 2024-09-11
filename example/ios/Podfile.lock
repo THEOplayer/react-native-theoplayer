@@ -954,13 +954,11 @@ PODS:
     - ReactCommon/turbomodule/core
     - Yoga
   - react-native-theoplayer (7.9.0):
-    - google-cast-sdk-dynamic-xcframework (~> 4.8)
     - React-Core
-    - THEOplayer-Connector-SideloadedSubtitle (~> 7.12)
-    - THEOplayer-Integration-GoogleCast/Base (~> 7.12)
-    - THEOplayer-Integration-GoogleIMA/Base (~> 7.12)
-    - THEOplayer-Integration-GoogleIMA/Dependencies (~> 7.12)
-    - THEOplayerSDK-core (~> 7.12)
+    - THEOplayer-Connector-SideloadedSubtitle (~> 8.0)
+    - THEOplayer-Integration-GoogleCast (~> 8.0)
+    - THEOplayer-Integration-GoogleIMA (~> 8.0)
+    - THEOplayerSDK-core (~> 8.0)
   - React-nativeconfig (0.74.1-0)
   - React-NativeModulesApple (0.74.1-0):
     - glog
@@ -1190,16 +1188,24 @@ PODS:
   - SwiftSubtitles (0.9.1):
     - DSFRegex (~> 3.3.1)
     - TinyCSV (~> 0.6.1)
-  - THEOplayer-Connector-SideloadedSubtitle (7.12.0):
+  - THEOplayer-Connector-SideloadedSubtitle (8.0.0):
     - Swifter (= 1.5.0)
     - SwiftSubtitles (= 0.9.1)
-    - THEOplayerSDK-core (~> 7.10)
-  - THEOplayer-Integration-GoogleCast/Base (7.12.0)
-  - THEOplayer-Integration-GoogleIMA/Base (7.12.0)
-  - THEOplayer-Integration-GoogleIMA/Dependencies (7.12.0):
+    - THEOplayerSDK-core (~> 8)
+  - THEOplayer-Integration-GoogleCast (8.0.0):
+    - THEOplayer-Integration-GoogleCast/Base (= 8.0.0)
+    - THEOplayer-Integration-GoogleCast/Dependencies (= 8.0.0)
+  - THEOplayer-Integration-GoogleCast/Base (8.0.0)
+  - THEOplayer-Integration-GoogleCast/Dependencies (8.0.0):
+    - google-cast-sdk-dynamic-xcframework (~> 4.8)
+  - THEOplayer-Integration-GoogleIMA (8.0.0):
+    - THEOplayer-Integration-GoogleIMA/Base (= 8.0.0)
+    - THEOplayer-Integration-GoogleIMA/Dependencies (= 8.0.0)
+  - THEOplayer-Integration-GoogleIMA/Base (8.0.0)
+  - THEOplayer-Integration-GoogleIMA/Dependencies (8.0.0):
     - GoogleAds-IMA-iOS-SDK (~> 3.18)
     - GoogleAds-IMA-tvOS-SDK (~> 4.8)
-  - THEOplayerSDK-core (7.12.0)
+  - THEOplayerSDK-core (8.0.0)
   - TinyCSV (0.6.1)
   - Yoga (0.0.0)
 
@@ -1441,7 +1447,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: e1da272870606f17a64520bf78d85e1b73bb0778
   react-native-google-cast: d7bdfd1a0eeba84afde03b9722351ec29543e74c
   react-native-slider: 315e6552460f5d7753c71cf3142b00161cb2d5a5
-  react-native-theoplayer: 89adf55885db50bebb334a35ef2ce7b495b0f332
+  react-native-theoplayer: e4daf5338a365078a7dc4f3a12b9a973941bbea7
   React-nativeconfig: 0e309fafbbfbb8eac2f1999d0756732624ac5b39
   React-NativeModulesApple: a53141b07c57c53cdc1f2043e5acf3b9318bc340
   React-perflogger: e4f171200bc71bb8cf0686a0ad41a242f53b6b36
@@ -1468,13 +1474,13 @@ SPEC CHECKSUMS:
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   Swifter: e71dd674404923d7f03ebb03f3f222d1c570bc8e
   SwiftSubtitles: c659af19d710a2946779015464c0577d07fe4666
-  THEOplayer-Connector-SideloadedSubtitle: d85e580211d4327be7ed8faf0633bcd6401f38dd
-  THEOplayer-Integration-GoogleCast: c4d49b120b05005a90b03fff6d711ef0300b64a1
-  THEOplayer-Integration-GoogleIMA: 64505e6feee971c0ebec3ab4ab14296e009a290c
-  THEOplayerSDK-core: b162d868db9229c3c9bc6f2e2e2ba0edab47035b
+  THEOplayer-Connector-SideloadedSubtitle: fa670934a06129946edbb491430ba821fddc01bb
+  THEOplayer-Integration-GoogleCast: f3ed8efac262a6c1debb7ba86fd60d1026015250
+  THEOplayer-Integration-GoogleIMA: 214226b5d17d722091fd924dd8597604bec05345
+  THEOplayerSDK-core: bffd1defb5031cc6b257f71f57931a87d4b3877c
   TinyCSV: fd6228edbcf1c07466ac34b76dac5e052143eaba
   Yoga: d84d1e521e3f8fa3cdd139d617ddf6514d061c78
 
-PODFILE CHECKSUM: 22a3708c326424dd82e5daeb33310b76706c03b4
+PODFILE CHECKSUM: cde44975d89d0413eb0e568fb525618efb0ece50
 
 COCOAPODS: 1.15.2

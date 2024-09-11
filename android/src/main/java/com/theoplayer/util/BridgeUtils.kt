@@ -37,7 +37,7 @@ object BridgeUtils {
   /**
    * Convert a JSONArray to bridge data.
    */
-  fun fromJSONArrayToBridge(jsonArray: JSONArray): WritableArray {
+  private fun fromJSONArrayToBridge(jsonArray: JSONArray): WritableArray {
     return Arguments.createArray().apply {
       try {
         for (i in 0 until jsonArray.length()) {

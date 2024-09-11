@@ -75,10 +75,7 @@ object AdAdapter {
    */
   private fun fromAd(ad: Ad, includeAdBreak: Boolean): WritableMap {
     val adPayload = Arguments.createMap()
-    adPayload.putString(
-      PROP_AD_INTEGRATION, if (ad.integration != null) ad.integration!!
-        .type else ""
-    )
+    adPayload.putString(PROP_AD_INTEGRATION, ad.integration.type)
     adPayload.putString(PROP_AD_TYPE, ad.type)
     adPayload.putString(PROP_AD_ID, ad.id)
     val adBreak = ad.adBreak
@@ -206,11 +203,16 @@ object AdAdapter {
       }
 
       override fun getIntegration(): AdIntegrationKind {
-        return AdIntegrationKind.from(ad.getString(PROP_AD_INTEGRATION))
+        return AdIntegrationKind.from(ad.getString(PROP_AD_INTEGRATION)) ?: AdIntegrationKind.CUSTOM
       }
 
       override fun getCustomIntegration(): String? {
         return ad.getString(PROP_AD_CUSTOM_INTEGRATION)
+      }
+
+      override fun getCustomData(): Any? {
+        // Not supported yet
+        return null
       }
 
       override fun getImaAd(): com.google.ads.interactivemedia.v3.api.Ad {
@@ -282,11 +284,16 @@ object AdAdapter {
       }
 
       override fun getIntegration(): AdIntegrationKind {
-        return AdIntegrationKind.from(adBreak.getString(PROP_ADBREAK_INTEGRATION))
+        return AdIntegrationKind.from(adBreak.getString(PROP_ADBREAK_INTEGRATION)) ?: AdIntegrationKind.CUSTOM
       }
 
       override fun getCustomIntegration(): String? {
         return adBreak.getString(PROP_AD_CUSTOM_INTEGRATION)
+      }
+
+      override fun getCustomData(): Any? {
+        // Not supported yet
+        return null
       }
     }
   }

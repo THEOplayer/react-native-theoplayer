@@ -102,7 +102,7 @@ repositories {
   google()
   mavenCentral()
   maven { url("local") }
-  maven { url 'https://jitpack.io' }
+  maven { url "https://maven.theoplayer.com/releases" }
 }
 
 dependencies {
@@ -118,7 +118,7 @@ dependencies {
 
   println("Using THEOplayer (${versionString(theoplayer_sdk_version)})")
   implementation "com.theoplayer.theoplayer-sdk-android:core:${theoplayer_sdk_version}"
-  implementation "com.theoplayer.theoplayer-sdk-android:ads-wrapper:7.6.1"
+  implementation "com.theoplayer.theoplayer-sdk-android:ads-wrapper:8.0.0"
   implementation "com.theoplayer.android-connector:mediasession:${theoplayer_mediasession_version}"
 
   if (enabledGoogleIMA) {

@@ -13,11 +13,7 @@ private const val TAG = "THEORCTAdsModule"
 
 class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(context) {
   private val sourceHelper = SourceAdapter()
-  private val viewResolver: ViewResolver
-
-  init {
-    viewResolver = ViewResolver(context)
-  }
+  private val viewResolver: ViewResolver = ViewResolver(context)
 
   override fun getName(): String {
     return TAG

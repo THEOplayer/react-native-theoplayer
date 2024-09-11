@@ -4,26 +4,13 @@ import com.theoplayer.android.api.player.track.mediatrack.quality.Quality
 import com.theoplayer.android.api.player.track.mediatrack.quality.QualityList
 import java.util.*
 
-fun <Q: Quality> emptyQualityList(): QualityList<Q>  {
-  return QualityListAdapter()
-}
-
 /**
  * Adapts an Android List to a QualityList.
  */
-class QualityListAdapter<Q : Quality> : QualityList<Q> {
-  private var qualities: MutableList<Q>
+class QualityListAdapter<Q : Quality>(qualities: QualityList<Q>) : QualityList<Q> {
+  private var qualities: MutableList<Q> = ArrayList()
 
-  constructor() {
-    this.qualities = arrayListOf()
-  }
-
-  constructor(qualities: MutableList<Q>) {
-    this.qualities = qualities
-  }
-
-  constructor(qualities: QualityList<Q>) {
-    this.qualities = ArrayList()
+  init {
     for (quality in qualities) {
       this.qualities.add(quality)
     }
@@ -39,10 +26,6 @@ class QualityListAdapter<Q : Quality> : QualityList<Q> {
 
   override fun iterator(): MutableIterator<Q?> {
     return qualities.iterator()
-  }
-
-  fun asList(): List<Q> {
-    return qualities
   }
 
   fun sort(comparator: Comparator<Q>) {

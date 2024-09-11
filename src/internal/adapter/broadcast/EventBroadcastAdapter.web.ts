@@ -1,14 +1,13 @@
-import type { EventBroadcastAPI } from "react-native-theoplayer";
-import type { THEOplayer } from "react-native-theoplayer";
-import type { THEOplayerWebAdapter } from "../THEOplayerWebAdapter";
-import type { StringKeyOf } from "../../../api/event/EventDispatcher";
-import type { PlayerEventMap } from "react-native-theoplayer";
+import type { EventBroadcastAPI } from 'react-native-theoplayer';
+import type { THEOplayer } from 'react-native-theoplayer';
+import type { THEOplayerWebAdapter } from '../THEOplayerWebAdapter';
+import type { StringKeyOf } from '../../../api/event/EventDispatcher';
+import type { PlayerEventMap } from 'react-native-theoplayer';
 import type { Event as WebEvent, EventMap } from 'theoplayer';
-import { AdEvent, PlayerEventType } from "react-native-theoplayer";
-import { DefaultWebEventDispatcher } from "./web/DefaultWebEventDispatcher";
+import { AdEvent, PlayerEventType } from 'react-native-theoplayer';
+import { DefaultWebEventDispatcher } from './web/DefaultWebEventDispatcher';
 
 export class EventBroadcastAdapter extends DefaultWebEventDispatcher<EventMap<string>> implements EventBroadcastAPI {
-
   constructor(private _player: THEOplayer) {
     super();
   }
@@ -27,10 +26,11 @@ export class EventBroadcastAdapter extends DefaultWebEventDispatcher<EventMap<st
 
 function toNativeEvent<K extends StringKeyOf<PlayerEventMap>>(event: PlayerEventMap[K]): WebEvent | undefined {
   switch (event.type) {
-    case PlayerEventType.AD_EVENT: return toNativeAdEvent(event);
+    case PlayerEventType.AD_EVENT:
+      return toNativeAdEvent(event);
     default: {
-      console.warn(`EventBroadcastAdapter: native event of type ${event?.type}} not supported`)
-      return undefined
+      console.warn(`EventBroadcastAdapter: native event of type ${event?.type}} not supported`);
+      return undefined;
     }
   }
 }
@@ -39,6 +39,6 @@ function toNativeAdEvent(event: AdEvent): WebEvent | undefined {
   return {
     type: event.subType,
     ad: event.ad,
-    date: event.date
+    date: event.date,
   } as WebEvent;
 }

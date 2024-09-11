@@ -1,7 +1,5 @@
-import type {
-  CachingTaskParameters,
-} from 'react-native-theoplayer';
-import type { CachingPreferredTrackSelection } from "../../api/cache/CachingPreferredTrackSelection";
+import type { CachingTaskParameters } from 'react-native-theoplayer';
+import type { CachingPreferredTrackSelection } from '../../api/cache/CachingPreferredTrackSelection';
 
 export interface NativeCachingTaskParameters {
   readonly amount: number | string;
@@ -14,11 +12,11 @@ export interface NativeCachingTaskParameters {
 export function fromNativeCachingTaskParameters(parameters: NativeCachingTaskParameters): CachingTaskParameters {
   return {
     amount: parameters.amount,
-    expirationDate: parameters?.expirationDate? new Date(parameters?.expirationDate) : undefined,
+    expirationDate: parameters?.expirationDate ? new Date(parameters?.expirationDate) : undefined,
     bandwidth: parameters.bandwidth,
     preferredTrackSelection: parameters.preferredTrackSelection,
-    allowsCellularAccess: parameters.allowsCellularAccess
-  }
+    allowsCellularAccess: parameters.allowsCellularAccess,
+  };
 }
 
 export function toNativeCachingTaskParameters(parameters: CachingTaskParameters): NativeCachingTaskParameters {
@@ -27,6 +25,6 @@ export function toNativeCachingTaskParameters(parameters: CachingTaskParameters)
     expirationDate: parameters?.expirationDate?.getTime(),
     bandwidth: parameters.bandwidth,
     preferredTrackSelection: parameters.preferredTrackSelection,
-    allowsCellularAccess: parameters.allowsCellularAccess
-  }
+    allowsCellularAccess: parameters.allowsCellularAccess,
+  };
 }

@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [8.0.0] - 24-09-11
+
+### Added
+
+- Added support for THEOplayer 8.0.
+
+### Changed
+
+- Deprecated Jitpack.io in favor of the THEOplayer Maven repository on Android.
+
+### Fixed
+
+- Fixed an issue on iOS where the initial `duration` property of the player would be `0` instead of `NaN`.
+
 ## [7.9.0] - 24-09-06
 
 ### Added

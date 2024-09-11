@@ -1,7 +1,8 @@
 import {
   addTextTrackCue,
   addTrack,
-  findTextTrackByUid, type LoadedMetadataEvent,
+  findTextTrackByUid,
+  type LoadedMetadataEvent,
   PlayerEventType,
   removeTextTrackCue,
   removeTrack,
@@ -16,7 +17,6 @@ import {
 import { TextTrackState } from './NativePlayerState';
 
 export class DefaultTextTrackState implements TextTrackState {
-
   private _textTracks: TextTrack[] = [];
   private _selectedTextTrack: number | undefined;
 
