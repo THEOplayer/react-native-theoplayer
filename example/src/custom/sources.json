@@ -140,11 +140,7 @@
   },
   {
     "name": "HLS - VOD - CLEAR - Adult swim 1 (toaster)",
-    "os": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "os": ["ios", "android", "web"],
     "source": {
       "sources": {
         "src": "https://cdn.theoplayer.com/video/adultswim/clip.m3u8",
@@ -165,11 +161,7 @@
   },
   {
     "name": "HLS - VOD - CLEAR - Mojito",
-    "os": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "os": ["ios", "android", "web"],
     "source": {
       "sources": {
         "src": "https://assets.afcdn.com/video49/20210722/v_645516.m3u8",
@@ -190,11 +182,7 @@
   },
   {
     "name": "HLS - VOD - CLEAR - Adult swim 2 (predator)",
-    "os": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "os": ["ios", "android", "web"],
     "source": {
       "sources": {
         "src": "https://cdn.theoplayer.com/video/adultswim2/clip.m3u8",
@@ -215,11 +203,7 @@
   },
   {
     "name": "HLS - VOD - CLEAR - BigBuckBunny, single Quality",
-    "os": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "os": ["ios", "android", "web"],
     "source": {
       "sources": {
         "src": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/test_streams/bigBuckBunnyShort/bigBuckBunny.m3u8",
