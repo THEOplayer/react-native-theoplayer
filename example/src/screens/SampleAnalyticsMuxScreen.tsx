@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import { PlayerConfiguration, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
 import { SafeAreaView, StyleSheet } from 'react-native';
-import { MuxOptions, useMux } from '@theoplayer/react-native-analytics-mux';
+//import { MuxOptions, useMux } from '@theoplayer/react-native-analytics-mux';
 import { THEO_LICENSE, MUX_ENV_KEY } from '../sampleConfig';
 import {
   CenteredControlBar,
@@ -19,7 +19,7 @@ const playerConfig: PlayerConfiguration = {
   libraryLocation: 'theoplayer',
 };
 
-const MUX_OPTIONS: MuxOptions = {
+/*const MUX_OPTIONS: MuxOptions = {
   debug: true,
   data: {
     env_key: MUX_ENV_KEY, // required
@@ -39,11 +39,11 @@ const MUX_OPTIONS: MuxOptions = {
     video_stream_type: 'on-demand', // 'live' or 'on-demand'
     video_cdn: 'Akamai',
   },
-};
+};*/
 
 export const SampleAnalyticsMuxScreen = () => {
   const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);
-  const [, initMux] = useMux(MUX_OPTIONS);
+  //const [, initMux] = useMux(MUX_OPTIONS);
 
   const onPlayerReady = (player: THEOplayer) => {
     console.log(LOG_TAG, 'THEOplayer is ready:', player.version);
@@ -53,7 +53,7 @@ export const SampleAnalyticsMuxScreen = () => {
     if (MUX_ENV_KEY === '<YOUR_ENV_KEY>') {
       console.warn(LOG_TAG, 'Setup a correct configuration to activate Conviva analytics support.');
     } else {
-      initMux(player);
+      //initMux(player);
     }
 
     // set a source
