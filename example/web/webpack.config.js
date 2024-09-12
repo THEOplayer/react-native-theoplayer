@@ -101,7 +101,7 @@ module.exports = {
       react: path.resolve(appDirectory, 'node_modules/react'),
     },
   },
-  plugins: [HTMLWebpackPluginConfig, CopyWebpackPluginConfig, new NodePolyfillPlugin(), new webpack.DefinePlugin({__DEV__: true})],
+  plugins: [HTMLWebpackPluginConfig, CopyWebpackPluginConfig, new NodePolyfillPlugin(), new webpack.DefinePlugin({ __DEV__: true })],
   devServer: {
     // Tells dev-server to open the browser after server had been started.
     open: true,
