@@ -52,6 +52,7 @@ extension THEOplayerRCTView {
             imaRenderSettings.disableUi = disableUi
             imaRenderSettings.uiElements = []
         }
+        imaRenderSettings.bitrate = self.adsConfig.adsImaConfig.bitrate
         
         // setup integration
         let imaIntegration = GoogleIMAIntegrationFactory.createIntegration(on: player, with: imaSettings)
