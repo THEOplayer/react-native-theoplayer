@@ -34,6 +34,7 @@ private const val PROP_FEATURE_FLAGS = "featureFlags"
 private const val PROP_AUTOPLAY_AD_BREAKS = "autoPlayAdBreaks"
 private const val PROP_SESSION_ID = "sessionID"
 private const val PROP_ENABLE_DEBUG_MODE = "enableDebugMode"
+private const val PROP_BITRATE = "bitrate"
 
 class PlayerConfigAdapter(private val configProps: ReadableMap?) {
 
@@ -148,6 +149,11 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
         if (hasKey(PROP_PRELOAD)) {
           val preloadTypeString = getString(PROP_PRELOAD)
           enablePreloading = preloadTypeString !== "none"
+        }
+      }
+      configProps?.getMap(PROP_ADS_CONFIGURATION)?.getMap(PROP_IMA_CONFIGURATION)?.run {
+        if (hasKey(PROP_BITRATE)) {
+          bitrateKbps = getInt(PROP_BITRATE)
         }
       }
     }
