@@ -16,6 +16,7 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
       const ads = {
         ...config?.ads,
         googleIma: {
+          ...config?.ads?.ima,
           useNativeIma: true,
           language: config?.ui?.language ?? 'en',
         },
