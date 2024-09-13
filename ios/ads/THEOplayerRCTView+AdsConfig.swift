@@ -10,6 +10,7 @@ import GoogleInteractiveMediaAds
 struct AdsConfig {
     var adSUIEnabled: Bool = true
     var adsImaConfig = AdsImaConfig()
+    var allowedMimeTypes: [String]?
 }
 
 struct AdsImaConfig {
@@ -29,6 +30,7 @@ extension THEOplayerRCTView {
     func parseAdsConfig(configDict: NSDictionary) {
         if let adsConfig = configDict["ads"] as? NSDictionary {
             self.adsConfig.adSUIEnabled = adsConfig["uiEnabled"] as? Bool ?? true
+            self.adsConfig.allowedMimeTypes = adsConfig["allowedMimeTypes"] as? [String]
             if let adsImaConfig = adsConfig["ima"] as? NSDictionary {
                 if let ppid = adsImaConfig["ppid"] as? String {
                     self.adsConfig.adsImaConfig.ppid = ppid
