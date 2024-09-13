@@ -35,6 +35,7 @@ private const val PROP_AUTOPLAY_AD_BREAKS = "autoPlayAdBreaks"
 private const val PROP_SESSION_ID = "sessionID"
 private const val PROP_ENABLE_DEBUG_MODE = "enableDebugMode"
 private const val PROP_BITRATE = "bitrate"
+private const val PROP_ALLOWED_MIMETYPES = "allowedMimeTypes"
 
 class PlayerConfigAdapter(private val configProps: ReadableMap?) {
 
@@ -150,7 +151,17 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
           val preloadTypeString = getString(PROP_PRELOAD)
           enablePreloading = preloadTypeString !== "none"
         }
+        if (hasKey(PROP_ALLOWED_MIMETYPES)) {
+           val mimeTypeList: MutableList<String> = ArrayList()
+           getArray(PROP_ALLOWED_MIMETYPES)?.toArrayList()?.forEach {
+              mimeTypeList.add(it as String)
+           }
+           if (mimeTypeList.size > 0) {
+             mimeTypes = mimeTypeList
+           }
+        }
       }
+      // bitrate is configured under the ima config
       configProps?.getMap(PROP_ADS_CONFIGURATION)?.getMap(PROP_IMA_CONFIGURATION)?.run {
         if (hasKey(PROP_BITRATE)) {
           bitrateKbps = getInt(PROP_BITRATE)
