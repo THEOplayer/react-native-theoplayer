@@ -89,6 +89,7 @@ android {
 
 rootProject.allprojects {
   repositories {
+    maven { url "https://maven.theoplayer.com/releases" }
     maven { url("$rootDir/../node_modules/react-native-theoplayer/android/local") }
   }
 }
