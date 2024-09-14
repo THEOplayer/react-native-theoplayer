@@ -13,12 +13,12 @@ import com.theoplayer.android.api.source.addescription.AdDescription
 import com.theoplayer.android.api.source.TextTrackDescription
 import com.theoplayer.android.api.source.SourceType
 import com.theoplayer.android.api.source.hls.HlsPlaybackConfiguration
-import com.theoplayer.android.api.event.ads.AdIntegrationKind
 import com.theoplayer.android.api.source.addescription.GoogleImaAdDescription
 import com.theoplayer.android.api.player.track.texttrack.TextTrackKind
 import com.theoplayer.android.api.source.metadata.ChromecastMetadataImage
 import com.theoplayer.BuildConfig
 import com.theoplayer.android.api.error.ErrorCode
+import com.theoplayer.android.api.source.AdIntegration
 import com.theoplayer.android.api.source.dash.DashPlaybackConfiguration
 import com.theoplayer.drm.ContentProtectionAdapter
 import com.theoplayer.util.BridgeUtils
@@ -246,35 +246,26 @@ class SourceAdapter {
 
   @Throws(JSONException::class, THEOplayerException::class)
   fun parseAdFromJS(jsonAdDescription: JSONObject): AdDescription {
-    val integrationKindStr = jsonAdDescription.optString(PROP_INTEGRATION)
-    return if (!TextUtils.isEmpty(integrationKindStr)) {
-      when (AdIntegrationKind.from(integrationKindStr)) {
-        AdIntegrationKind.GOOGLE_IMA -> parseImaAdFromJS(
+    val integrationStr = jsonAdDescription.optString(PROP_INTEGRATION)
+    return if (!TextUtils.isEmpty(integrationStr)) {
+      when (integrationStr) {
+        AdIntegration.GOOGLE_IMA.adIntegration -> parseImaAdFromJS(
           jsonAdDescription
         )
-
-        AdIntegrationKind.DEFAULT -> {
-          throw THEOplayerException(
-            ErrorCode.AD_ERROR,
-            "$ERROR_UNSUPPORTED_CSAI_INTEGRATION: $integrationKindStr"
-          )
-        }
-
         else -> {
           throw THEOplayerException(
             ErrorCode.AD_ERROR,
-            "$ERROR_UNSUPPORTED_CSAI_INTEGRATION: $integrationKindStr"
+            "$ERROR_UNSUPPORTED_CSAI_INTEGRATION: $integrationStr"
           )
         }
       }
     } else {
       throw THEOplayerException(
         ErrorCode.AD_ERROR,
-        "$ERROR_MISSING_CSAI_INTEGRATION: $integrationKindStr"
+        "$ERROR_MISSING_CSAI_INTEGRATION: $integrationStr"
       )
     }
   }
-
 
   @Throws(THEOplayerException::class)
   private fun parseImaAdFromJS(jsonAdDescription: JSONObject): GoogleImaAdDescription {
