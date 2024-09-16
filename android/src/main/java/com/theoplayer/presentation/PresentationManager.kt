@@ -16,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.Lifecycle
 import com.facebook.react.ReactRootView
+import com.facebook.react.runtime.ReactSurfaceView
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.views.view.ReactViewGroup
 import com.theoplayer.BuildConfig
@@ -200,7 +201,7 @@ class PresentationManager(
     // Get the player's ReactViewGroup parent, which contains THEOplayerView and its children (typically the UI).
     val reactPlayerGroup: ReactViewGroup? = getClosestParentOfType(this.viewCtx.playerView)
 
-    // Get ReactNative's root node or the render hiearchy
+    // Get ReactNative's root node or the render hierarchy
     val root: ReactRootView? = getClosestParentOfType(reactPlayerGroup)
 
     if (fullscreen) {
@@ -212,7 +213,11 @@ class PresentationManager(
       if (!BuildConfig.REPARENT_ON_FULLSCREEN) {
         return
       }
-      playerGroupParentNode = (reactPlayerGroup?.parent as ReactViewGroup?)?.also { parent ->
+      playerGroupParentNode = if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
+        reactPlayerGroup?.parent as? ReactSurfaceView?
+      } else {
+        reactPlayerGroup?.parent as? ReactViewGroup?
+      }?.also { parent ->
         playerGroupChildIndex = parent.indexOfChild(reactPlayerGroup)
         // Re-parent the playerViewGroup to the root node
         parent.removeView(reactPlayerGroup)
