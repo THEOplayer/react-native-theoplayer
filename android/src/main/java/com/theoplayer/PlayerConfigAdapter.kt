@@ -95,7 +95,7 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
    *
    * @see <a href="https://developers.google.com/interactive-media-ads/docs/sdks/android/client-side/api/reference/com/google/ads/interactivemedia/v3/api/ImaSdkSettings">IMA SDK for Android</a>.
    */
-  fun imaSdkSettings(): ImaSdkSettings{
+  fun imaSdkSettings(): ImaSdkSettings {
     return ImaSdkFactory.getInstance().createImaSdkSettings().apply {
       configProps?.getMap(PROP_ADS_CONFIGURATION)?.getMap(PROP_IMA_CONFIGURATION)?.run {
         // Specifies whether VMAP and ad rules ad breaks are automatically played.
@@ -152,13 +152,11 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
           enablePreloading = preloadTypeString !== "none"
         }
         if (hasKey(PROP_ALLOWED_MIMETYPES)) {
-           val mimeTypeList: MutableList<String> = ArrayList()
-           getArray(PROP_ALLOWED_MIMETYPES)?.toArrayList()?.forEach {
-              mimeTypeList.add(it as String)
-           }
-           if (mimeTypeList.size > 0) {
-             mimeTypes = mimeTypeList
-           }
+          mimeTypes = ArrayList<String>().apply {
+            getArray(PROP_ALLOWED_MIMETYPES)?.toArrayList()?.forEach {
+              add(it as String)
+            }
+          }
         }
       }
       // bitrate is configured under the ima config
