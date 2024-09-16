@@ -53,9 +53,6 @@
   "overrides": {
     "react-native-google-cast": {
       "react-native": "npm:react-native-tvos@^0.74.1-0"
-    },
-    "@theoplayer/react-native-ui": {
-      "react-native-svg": "^15.6.0"
     }
   },
   "engines": {
