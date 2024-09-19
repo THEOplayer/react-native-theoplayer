@@ -52,7 +52,8 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
     playerContext = ReactTHEOplayerContext.create(
       reactContext,
       PlayerConfigAdapter(configProps)
-    ).apply {
+    )
+    playerContext?.apply {
       adsApi.initialize(player, imaIntegration, daiIntegration)
       val layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
       playerView.layoutParams = layoutParams
