@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added support for `bitrate` config on the GoogleIMAConfiguration, to be passed to the IMA SDK rendering settings.
 - Added support on iOS and Android for `allowedMimeTypes` config on the AdsConfiguration, to be passed to the IMA SDK rendering settings.
 
+### Fixed
+
+- Fixed an issue where cast events were not forwarded from the hative Android SDK.
+
 ## [8.0.3] - 24-09-14
 
 ### Fixed
