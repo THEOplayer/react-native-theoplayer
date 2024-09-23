@@ -2,6 +2,7 @@
 
 import Foundation
 import THEOplayerSDK
+import UIKit
 
 public class THEOplayerRCTPresentationModeManager {
     // MARK: Members
@@ -10,9 +11,9 @@ public class THEOplayerRCTPresentationModeManager {
     var presentationModeContext = THEOplayerRCTPresentationModeContext()
     var presentationMode: THEOplayerSDK.PresentationMode = .inline
     
-    private var containerView: UIView?              // view containing the playerView and it's siblings (e.g. UI)
-    private var fullscreenParentView: UIView?       // target view for fulllscreen representation
-    private var inlineParentView: UIView?           // target view for inline representation
+    private var containerView: UIView?                  // view containing the playerView and it's siblings (e.g. UI)
+    private var inlineParentView: UIView?               // target view for inline representation
+    private var movingChildVCs: [UIViewController] = []  // list of playerView's child VCs that need to be reparented while moving the playerView
         
     // MARK: Events
     var onNativePresentationModeChange: RCTDirectEventBlock?
@@ -37,25 +38,54 @@ public class THEOplayerRCTPresentationModeManager {
     
     // MARK: - logic
     
+    private func storeMovingVCs(for view: UIView) {
+        if let viewController = view.findViewController() {
+            viewController.children.forEach { childVC in
+                self.movingChildVCs.append(childVC)
+            }
+        }
+    }
+    
+    private func clearMovingVCs() {
+        self.movingChildVCs = []
+    }
+    
+    private func moveView(_ movingView: UIView, to targetView: UIView, with movingViewControllers: [UIViewController]) {
+        // detach the moving viewControllers from their parent
+        movingViewControllers.forEach { movedVC in
+            movedVC.removeFromParent()
+        }
+        
+        // move the actual view
+        movingView.removeFromSuperview()
+        targetView.addSubview(movingView)
+        targetView.bringSubviewToFront(movingView)
+        
+        // attach the moving viewControllers to their new parent
+        if let targetViewController = targetView.findViewController() {
+            movingViewControllers.forEach { movedVC in
+                targetViewController.addChild(movedVC)
+                movedVC.didMove(toParent: targetViewController)
+            }
+        }
+    }
+    
     private func enterFullscreen() {
         self.containerView = self.view?.findParentViewOfType(RCTView.self)
-        self.fullscreenParentView = self.view?.findParentViewOfType(RCTRootContentView.self)
         self.inlineParentView = self.containerView?.findParentViewOfType(RCTView.self)
         
         if let containerView = self.containerView,
-           let fullscreenParentView = self.fullscreenParentView {
-            containerView.removeFromSuperview()
-            fullscreenParentView.addSubview(containerView)
-            fullscreenParentView.bringSubviewToFront(containerView)
+           let fullscreenParentView = self.view?.findParentViewOfType(RCTRootContentView.self) {
+            self.storeMovingVCs(for: containerView)
+            self.moveView(containerView, to: fullscreenParentView, with: self.movingChildVCs)
         }
     }
     
     private func exitFullscreen() {
         if let containerView = self.containerView,
            let inlineParentView = self.inlineParentView {
-            containerView.removeFromSuperview()
-            inlineParentView.addSubview(containerView)
-            inlineParentView.bringSubviewToFront(containerView)
+            self.moveView(containerView, to: inlineParentView, with: self.movingChildVCs)
+            self.clearMovingVCs()
         }
     }
     
@@ -155,5 +185,15 @@ extension UIView {
             currentView = view.superview
         }
         return nil
+    }
+    
+    func findViewController() -> UIViewController? {
+        if let nextResponder = self.next as? UIViewController {
+            return nextResponder
+        } else if let nextResponder = self.next as? UIView {
+            return nextResponder.findViewController()
+        } else {
+            return nil
+        }
     }
 }
