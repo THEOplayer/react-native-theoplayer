@@ -34,6 +34,8 @@ private const val PROP_FEATURE_FLAGS = "featureFlags"
 private const val PROP_AUTOPLAY_AD_BREAKS = "autoPlayAdBreaks"
 private const val PROP_SESSION_ID = "sessionID"
 private const val PROP_ENABLE_DEBUG_MODE = "enableDebugMode"
+private const val PROP_BITRATE = "bitrate"
+private const val PROP_ALLOWED_MIMETYPES = "allowedMimeTypes"
 
 class PlayerConfigAdapter(private val configProps: ReadableMap?) {
 
@@ -93,7 +95,7 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
    *
    * @see <a href="https://developers.google.com/interactive-media-ads/docs/sdks/android/client-side/api/reference/com/google/ads/interactivemedia/v3/api/ImaSdkSettings">IMA SDK for Android</a>.
    */
-  fun imaSdkSettings(): ImaSdkSettings{
+  fun imaSdkSettings(): ImaSdkSettings {
     return ImaSdkFactory.getInstance().createImaSdkSettings().apply {
       configProps?.getMap(PROP_ADS_CONFIGURATION)?.getMap(PROP_IMA_CONFIGURATION)?.run {
         // Specifies whether VMAP and ad rules ad breaks are automatically played.
@@ -148,6 +150,19 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
         if (hasKey(PROP_PRELOAD)) {
           val preloadTypeString = getString(PROP_PRELOAD)
           enablePreloading = preloadTypeString !== "none"
+        }
+        if (hasKey(PROP_ALLOWED_MIMETYPES)) {
+          mimeTypes = ArrayList<String>().apply {
+            getArray(PROP_ALLOWED_MIMETYPES)?.toArrayList()?.forEach {
+              add(it as String)
+            }
+          }
+        }
+      }
+      // bitrate is configured under the ima config
+      configProps?.getMap(PROP_ADS_CONFIGURATION)?.getMap(PROP_IMA_CONFIGURATION)?.run {
+        if (hasKey(PROP_BITRATE)) {
+          bitrateKbps = getInt(PROP_BITRATE)
         }
       }
     }

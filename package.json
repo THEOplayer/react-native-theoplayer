@@ -1,6 +1,6 @@
 {
   "name": "react-native-theoplayer",
-  "version": "8.0.3",
+  "version": "8.1.0",
   "description": "A THEOplayer video component for react-native.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -25,13 +25,18 @@
   ],
   "scripts": {
     "typescript": "tsc --noEmit",
-    "prettier": "prettier --check .",
-    "prettier:fix": "prettier --write .",
+    "prettier": "prettier --check \"(src|example)/**/*.{js,jsx,ts,tsx}\"",
+    "prettier:fix": "prettier --write \"(src|example)/**/*.{js,jsx,ts,tsx}\"",
     "lint": "eslint \"**/*.{ts,tsx}\"",
     "lint:fix": "npm run lint -- --fix",
     "prepare": "bob build && husky install",
     "pods": "cd example && pod-install --quiet",
     "docs": "typedoc --treatWarningsAsErrors"
+  },
+  "lint-staged": {
+    "(src|example)/**/*.{js,jsx,ts,tsx}": [
+      "prettier --write"
+    ]
   },
   "keywords": [
     "react-native",
@@ -56,6 +61,7 @@
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "husky": "^9.1.5",
+    "lint-staged": "^15.2.10",
     "pod-install": "^0.1.39",
     "prettier": "^3.3.3",
     "react": "^18.2.0",
