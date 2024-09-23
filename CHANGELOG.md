@@ -14,8 +14,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-- Fixed an issue where cast events were not forwarded from the hative Android SDK.
-- Fixed an issue where presentationMode changes on iOS would cause a UIViewControllerHierarchyInconsistency when an ad is playing
+- Fixed an issue where cast events were not forwarded from the native Android SDK.
+- Fixed an issue where presentationMode changes on iOS would cause a UIViewControllerHierarchyInconsistency when an ad is playing.
+- Fixed an issue where some ad event types could not be resolved at runtime when excluding the IMA integration on Android.
 
 ## [8.0.3] - 24-09-14
 
