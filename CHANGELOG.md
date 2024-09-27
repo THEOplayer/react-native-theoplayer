@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [8.2.1] - 24-09-27
+
+### Fixed
+
+- Fixed a build issue on Android when pinning a specific Android player SDK version, while also disabling the Google IMA extension.
+
 ## [8.2.0] - 24-09-26
 
 ### Added
