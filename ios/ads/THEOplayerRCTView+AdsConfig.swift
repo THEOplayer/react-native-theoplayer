@@ -9,7 +9,7 @@ import GoogleInteractiveMediaAds
 
 struct AdsConfig {
     var adSUIEnabled: Bool = true
-    var adsImaConfig = AdsImaConfig()
+    var adsImaConfig = AdsImaConfig(maxRedirects: 4, enableDebugMode: false)
     var allowedMimeTypes: [String]?
 }
 
@@ -20,7 +20,21 @@ struct AdsImaConfig {
     var featureFlags: [String:String]?
     var autoPlayAdBreaks: Bool?
     var sessionID: String?
-    var bitrate: Int = kIMAAutodetectBitrate
+    var bitrate: Int
+    
+    init(maxRedirects: UInt, enableDebugMode: Bool, ppid: String? = nil, featureFlags: [String : String]? = nil, autoPlayAdBreaks: Bool? = nil, sessionID: String? = nil, bitrate: Int? = -1) {
+        self.maxRedirects = maxRedirects
+        self.enableDebugMode = enableDebugMode
+        self.ppid = ppid
+        self.featureFlags = featureFlags
+        self.autoPlayAdBreaks = autoPlayAdBreaks
+        self.sessionID = sessionID
+#if canImport(THEOplayerGoogleIMAIntegration)
+        self.bitrate = bitrate ?? kIMAAutodetectBitrate
+#else
+        self.bitrate = bitrate ?? -1
+#endif
+    }
 }
 
 #if os(iOS)
@@ -50,7 +64,9 @@ extension THEOplayerRCTView {
                 if let enableDebugMode = adsImaConfig["enableDebugMode"] as? Bool {
                     self.adsConfig.adsImaConfig.enableDebugMode = enableDebugMode
                 }
-                self.adsConfig.adsImaConfig.bitrate = adsImaConfig["bitrate"] as? Int ?? kIMAAutodetectBitrate
+                if let bitrate = adsImaConfig["bitrate"] as? Int {
+                    self.adsConfig.adsImaConfig.bitrate = bitrate
+                }
             }
         }
     }
