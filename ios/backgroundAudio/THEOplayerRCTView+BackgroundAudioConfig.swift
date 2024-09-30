@@ -3,10 +3,12 @@
 import Foundation
 import THEOplayerSDK
 import AVFAudio
+import AVKit
 
 struct BackgroundAudioConfig {
     var enabled: Bool = false
     var shouldResumeAfterInterruption: Bool = false
+    var audioSessionMode: AVAudioSession.Mode = .moviePlayback
 }
 
 extension THEOplayerRCTView: BackgroundPlaybackDelegate {
@@ -46,6 +48,17 @@ extension THEOplayerRCTView: BackgroundPlaybackDelegate {
         }
     }
     
+    func updateAVAudioSessionMode() {
+        do {
+            THEOplayer.automaticallyManageAudioSession = (self.backgroundAudioConfig.audioSessionMode == .moviePlayback)
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback, mode: self.backgroundAudioConfig.audioSessionMode)
+            if self.backgroundAudioConfig.audioSessionMode != .moviePlayback {
+                print("[NATIVE] AVAudioSession mode updated to \(self.backgroundAudioConfig.audioSessionMode.rawValue)")
+            }
+        } catch {
+            print("[NATIVE] Unable to update AVAudioSession mode to \(self.backgroundAudioConfig.audioSessionMode.rawValue): ", error)
+        }
+    }
     
     @objc func handleInterruption(notification: Notification) {
         guard let userInfo = notification.userInfo,

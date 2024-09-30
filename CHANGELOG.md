@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [8.3.0] - 24-09-30
+
+### Added
+
+- Added the option to specify the AVAudioSession mode for iOS (moviePlayback versus spokenAudio).
+
 ## [8.2.2] - 24-09-28
 
 - Fixed a build issue on iOS for applications that run without the GOOGLE_IMA feature flag

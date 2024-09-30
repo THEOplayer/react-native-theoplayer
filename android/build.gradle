@@ -106,6 +106,10 @@ repositories {
   maven { url "https://maven.theoplayer.com/releases" }
 }
 
+// The minimum supported THEOplayer version is 8.1.0
+def theoplayer_sdk_version = safeExtGet('THEOplayer_sdk', '[8.1.0, 9.0.0)')
+def theoplayer_mediasession_version = safeExtGet('THEOplayer_mediasession', '[8.1.0, 9.0.0)')
+
 dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"  // From node_modules
@@ -113,10 +117,6 @@ dependencies {
   implementation "androidx.appcompat:appcompat:${safeExtGet('appcompatVersion', '1.6.1')}"
   implementation "androidx.core:core-ktx:${safeExtGet('corektxVersion', '1.10.1')}"
   implementation "com.google.code.gson:gson:2.11.0"
-
-  // The minimum supported THEOplayer version is 8.1.0
-  def theoplayer_sdk_version = safeExtGet('THEOplayer_sdk', '[8.1.0, 9.0.0)')
-  def theoplayer_mediasession_version = safeExtGet('THEOplayer_mediasession', '[8.1.0, 9.0.0)')
 
   println("Using THEOplayer (${versionString(theoplayer_sdk_version)})")
   implementation "com.theoplayer.theoplayer-sdk-android:core:${theoplayer_sdk_version}"
@@ -151,3 +151,13 @@ dependencies {
     compileOnly "com.theoplayer.theoplayer-sdk-android:integration-cast:${theoplayer_sdk_version}"
   }
 }
+
+// Make sure to align all ads extension versions
+configurations.configureEach {
+  resolutionStrategy {
+    force "com.theoplayer.theoplayer-sdk-android:integration-ads:${theoplayer_sdk_version}"
+    force "com.theoplayer.theoplayer-sdk-android:integration-ads-ima:${theoplayer_sdk_version}"
+    force "com.theoplayer.theoplayer-sdk-android:integration-ads-dai:${theoplayer_sdk_version}"
+  }
+}
+
