@@ -1,6 +1,7 @@
 // THEOplayerRCTTypeUtils.swift
 
 import Foundation
+import AVKit
 import THEOplayerSDK
 
 let NAN_VALUE: Double = -1.0
@@ -109,6 +110,17 @@ class THEOplayerRCTTypeUtils {
             return AdIntegrationKind.custom
         default:
             return AdIntegrationKind.custom
+        }
+    }
+    
+    class func audioSessionModeFromString(_ audioSessionModeString: String) -> AVAudioSession.Mode {
+        switch audioSessionModeString {
+        case "moviePlayback":
+            return .moviePlayback
+        case "spokenAudio":
+            return .spokenAudio
+        default:
+            return .moviePlayback
         }
     }
 

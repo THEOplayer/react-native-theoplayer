@@ -224,6 +224,9 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
         var backgroundAudio = BackgroundAudioConfig()
         backgroundAudio.enabled = configDict["enabled"] as? Bool ?? false
         backgroundAudio.shouldResumeAfterInterruption = configDict["shouldResumeAfterInterruption"] as? Bool ?? false
+        if let audioSessionModeString = configDict["audioSessionMode"] as? String {
+            backgroundAudio.audioSessionMode = THEOplayerRCTTypeUtils.audioSessionModeFromString(audioSessionModeString)
+        }
         return backgroundAudio
     }
 

@@ -36,6 +36,7 @@ public class THEOplayerRCTView: UIView {
     var backgroundAudioConfig = BackgroundAudioConfig() {
           didSet {
               self.updateInterruptionNotifications()
+              self.updateAVAudioSessionMode()
           }
       }
 
