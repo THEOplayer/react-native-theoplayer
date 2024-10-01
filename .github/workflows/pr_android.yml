@@ -35,9 +35,8 @@ jobs:
           npm ci
 
       - name: Build application
-        run: |
-          cd example/android
-          ./gradlew assembleRelease
+        working-directory: example/android
+        run: ./gradlew assembleRelease
 
       - name: Upload application
         uses: actions/upload-artifact@v4

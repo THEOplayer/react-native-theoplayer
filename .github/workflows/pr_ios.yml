@@ -33,11 +33,11 @@ jobs:
           npm ci
 
       - name: Run pod install
+        working-directory: example/ios
         run: |
           pod install
-        working-directory: example/ios
 
       - name: Build application
-        run: npx react-native build-ios #--mode Release
         working-directory: example
+        run: npx react-native build-ios #--mode Release
 
