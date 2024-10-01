@@ -38,6 +38,6 @@ jobs:
         working-directory: example/ios
 
       - name: Build application
-        run: npx react-native build-ios --mode Release
+        run: npx react-native build-ios #--mode Release
         working-directory: example
 
