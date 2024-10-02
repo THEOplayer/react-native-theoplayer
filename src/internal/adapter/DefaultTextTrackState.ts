@@ -70,6 +70,9 @@ export class DefaultTextTrackState implements TextTrackState {
       case TrackListEventType.CHANGE_TRACK:
         this._textTracks = removeTrack(this._textTracks, track);
         this._textTracks = addTrack(this._textTracks, track);
+        if (event.track.mode === TextTrackMode.showing) {
+          this._selectedTextTrack = event.track.uid;
+        }
         break;
     }
   };
