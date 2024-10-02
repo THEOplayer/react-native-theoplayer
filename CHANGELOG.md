@@ -137,6 +137,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+- Added ActiveQualityChanged event support for iOS.
 - Added `'root'` as an alternative id for the root div element in Web applications, supporting fullscreen presentation mode in Expo-based apps.
 - Added `renderingTarget` property to `THEOplayer` API for Android, enabling the option to choose between either rendering to a `SurfaceView` (default) or `TextureView`.
 
@@ -158,6 +159,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added support for THEOplayer Android v7.6.0.
 
 ## [7.4.0] - 24-06-11
+
+### Changed
+
+- Updated the example app to a stack navigation based setup with sample screens for different features.
 
 ### Added
 
