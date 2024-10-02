@@ -6,11 +6,11 @@ buildscript {
     // React Native 0.74+ needs minSdkVersion 23+
     // supportsPictureInPicture and networkSecurityConfig need minSdkVersion 24+
     minSdkVersion = 24
-    compileSdkVersion = 34
-    targetSdkVersion = 34
+    compileSdkVersion = 35
+    targetSdkVersion = 35
     ndkVersion = "26.1.10909125"
     castFrameworkVersion = "21.4.0"
-    kotlinVersion = "1.9.22"
+    kotlinVersion = "1.9.24"
   }
   repositories {
     google()
