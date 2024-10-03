@@ -45,5 +45,5 @@ jobs:
 
       - name: Build application
         working-directory: example
-        run: npx react-native build-ios --mode Release
+        run: npx react-native build-ios --mode Debug
 
