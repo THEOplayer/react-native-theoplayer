@@ -37,6 +37,12 @@ jobs:
         run: |
           pod install
 
+      - name: Start iOS simulator
+        uses: futureware-tech/simulator-action@v3
+        with:
+          model: 'iPhone 14'
+          os_version: '>=16.0'
+
       - name: Build application
         working-directory: example
         run: npx react-native build-ios --mode Release
