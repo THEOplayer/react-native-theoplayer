@@ -64,7 +64,7 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
     };
   }, [container]);
 
-  const chromeless = config?.chromeless === undefined || config?.chromeless === true;
+  const chromeless = config?.chromeless === undefined || config?.chromeless;
   return (
     <>
       <div
