@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
+- Fixed an issue on Android where on some Android SDK versions controlling playback with the notification buttons would not work.
 - Fixed an issue on Web and Android where a text track with attribute `DEFAULT` was not set as the player's `selectedTextTrack` property.
 
 ## [8.3.0] - 24-09-30
