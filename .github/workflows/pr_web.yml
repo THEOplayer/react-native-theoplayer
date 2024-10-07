@@ -1,0 +1,32 @@
+name: Build Web on PRs
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run npm install SDK
+        run: |
+          npm i -g corepack
+          npm ci
+
+      - name: Run npm install example
+        working-directory: example
+        run: npm ci
+
+      - name: Build Web example
+        working-directory: example
+        run: npm run web-release
+
+      - name: Save WEB to artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-release
+          path: example/dist
+          retention-days: 3

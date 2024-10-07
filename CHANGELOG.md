@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [8.3.1] - 24-10-07
+
+### Fixed
+
+- Fixed an issue on Android where on some Android SDK versions controlling playback with the notification buttons would not work.
+- Fixed an issue on Web and Android where a text track with attribute `DEFAULT` was not set as the player's `selectedTextTrack` property.
+
 ## [8.3.0] - 24-09-30
 
 ### Added

@@ -141,25 +141,9 @@ class MediaPlaybackService : Service() {
         )
       }
 
-    // Sets a pending intent for your media button receiver to allow restarting playback after
-    // the session has been stopped.
-    val mediaButtonPendingIntent = PendingIntent.getBroadcast(
-      this@MediaPlaybackService,
-      0,
-      Intent(
-        Intent.ACTION_MEDIA_BUTTON, null, applicationContext, MediaButtonReceiver::class.java
-      ),
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        PendingIntent.FLAG_IMMUTABLE
-      } else {
-        PendingIntent.FLAG_ONE_SHOT
-      }
-    )
-
     // Create and initialize the media session
     val mediaSession = MediaSessionCompat(this, TAG).apply {
       setSessionActivity(sessionActivityPendingIntent)
-      setMediaButtonReceiver(mediaButtonPendingIntent)
     }
 
     // Create a MediaSessionConnector.
