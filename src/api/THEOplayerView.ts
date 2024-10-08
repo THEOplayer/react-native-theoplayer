@@ -16,6 +16,8 @@ export interface THEOplayerViewProps {
 
   /**
    * The style applied to the optional Poster component.
+   *
+   * @defaultValue A style that enforces aspectRatio 16:9.
    */
   posterStyle?: StyleProp<ImageStyle> | undefined;
 
