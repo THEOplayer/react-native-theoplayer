@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Added a `posterStyle` property on `THEOplayerView` to allow overriding the default 16:9 poster style.
+- Added a `theoads` property on `PlayerConfiguration.ads` to allow play-out of THEOads sources on Web platforms.
+- Added a `hlsDateRange` property on `SourceDescription` to enable parsing and exposing date ranges from HLS playlists. This flag was already available on `PlayerConfiguration`, which applies for all HLS sources.
 
 ## [8.3.1] - 24-10-07
 
