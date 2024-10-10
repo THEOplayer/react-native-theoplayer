@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [8.4.0] - 24-10-10
+
+### Added
+
+- Added a `posterStyle` property on `THEOplayerView` to allow overriding the default 16:9 poster style.
+
+### Fixed
+
+- Added support for a breaking change to `ContentProtectionIntegrationFactory`'s signature in THEOplayer Android 8.2.0.
+
 ## [8.3.1] - 24-10-07
 
 ### Fixed
