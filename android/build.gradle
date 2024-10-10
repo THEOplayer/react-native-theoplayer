@@ -125,21 +125,17 @@ dependencies {
 
   if (enabledGoogleIMA) {
     println('Enable THEOplayer IMA extension.')
-    implementation "com.theoplayer.theoplayer-sdk-android:integration-ads:${theoplayer_sdk_version}"
     implementation "com.theoplayer.theoplayer-sdk-android:integration-ads-ima:${theoplayer_sdk_version}"
   } else {
     println('Disable THEOplayer IMA extension.')
-    compileOnly "com.theoplayer.theoplayer-sdk-android:integration-ads:${theoplayer_sdk_version}"
     compileOnly "com.theoplayer.theoplayer-sdk-android:integration-ads-ima:${theoplayer_sdk_version}"
   }
 
   if (enabledGoogleDAI) {
     println('Enable THEOplayer DAI extension.')
-    implementation "com.theoplayer.theoplayer-sdk-android:integration-ads:${theoplayer_sdk_version}"
     implementation "com.theoplayer.theoplayer-sdk-android:integration-ads-dai:${theoplayer_sdk_version}"
   } else {
     println('Disable THEOplayer DAI extension.')
-    compileOnly "com.theoplayer.theoplayer-sdk-android:integration-ads:${theoplayer_sdk_version}"
     compileOnly "com.theoplayer.theoplayer-sdk-android:integration-ads-dai:${theoplayer_sdk_version}"
   }
 
@@ -155,7 +151,6 @@ dependencies {
 // Make sure to align all ads extension versions
 configurations.configureEach {
   resolutionStrategy {
-    force "com.theoplayer.theoplayer-sdk-android:integration-ads:${theoplayer_sdk_version}"
     force "com.theoplayer.theoplayer-sdk-android:integration-ads-ima:${theoplayer_sdk_version}"
     force "com.theoplayer.theoplayer-sdk-android:integration-ads-dai:${theoplayer_sdk_version}"
   }
