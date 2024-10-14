@@ -109,6 +109,7 @@ class PayloadBuilder {
     val contextPayload = Arguments.createMap()
     context.pip?.let { pipCtx ->
       contextPayload.putString(EVENT_PROP_PIP, when (pipCtx) {
+        PresentationModeChangePipContext.TRANSITIONING_TO_PIP -> "transitioning-to-pip"
         PresentationModeChangePipContext.RESTORED -> "restored"
         else -> "closed"
       })
