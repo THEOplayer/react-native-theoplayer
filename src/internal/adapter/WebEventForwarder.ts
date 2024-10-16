@@ -1,4 +1,3 @@
-import type { AdsEventMap as NativeAdsEventMap, ChromelessPlayer } from 'theoplayer';
 import type {
   AddTrackEvent,
   CastStateChangeEvent,
@@ -16,6 +15,8 @@ import type {
   TimeUpdateEvent as NativeTimeUpdateEvent,
   TrackChangeEvent,
   VolumeChangeEvent as NativeVolumeChangeEvent,
+  ChromelessPlayer,
+  AdsEventMap as NativeAdsEventMap,
   DimensionChangeEvent as NativeDimensionChangeEvent,
 } from 'theoplayer';
 import type { AdEvent, MediaTrack, TextTrack, TimeRange } from 'react-native-theoplayer';
@@ -88,6 +89,7 @@ export class WebEventForwarder {
     this._player.addEventListener('segmentnotfound', this.onSegmentNotFound);
     this._player.addEventListener('volumechange', this.onVolumeChangeEvent);
     this._player.addEventListener('dimensionchange', this.onDimensionChange);
+    this._player.addEventListener('encrypted', this.onEncrypted);
     this._player.presentation.addEventListener('presentationmodechange', this.onPresentationModeChange);
 
     this._player.textTracks.addEventListener('addtrack', this.onAddTextTrack);
@@ -134,6 +136,8 @@ export class WebEventForwarder {
     this._player.removeEventListener('ratechange', this.onPlaybackRateChange);
     this._player.removeEventListener('segmentnotfound', this.onSegmentNotFound);
     this._player.removeEventListener('volumechange', this.onVolumeChangeEvent);
+    this._player.removeEventListener('dimensionchange', this.onDimensionChange);
+    this._player.removeEventListener('encrypted', this.onEncrypted);
     this._player.presentation.removeEventListener('presentationmodechange', this.onPresentationModeChange);
 
     this._player.textTracks.removeEventListener('addtrack', this.onAddTextTrack);
@@ -256,6 +260,10 @@ export class WebEventForwarder {
 
   private readonly onDimensionChange = (event: NativeDimensionChangeEvent) => {
     this._facade.dispatchEvent(new DefaultResizeEvent(event.width, event.height));
+  };
+
+  private readonly onEncrypted = () => {
+    this._facade.dispatchEvent(new BaseEvent(PlayerEventType.ENCRYPTED));
   };
 
   private readonly onAddTextTrack = (event: AddTrackEvent) => {
