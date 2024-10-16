@@ -9,7 +9,7 @@ import mp4 from '../res/mp4.json';
 function testBasicPlayout(spec: TestScope, title: string, source: SourceDescription, autoplay: boolean) {
   spec.describe(title, function() {
     spec.it('dispatches sourcechange, play and playing in order', async function() {
-      // We are not epecting any player errors.
+      // We are not expecting any player errors.
       await failOnPlayerError();
 
       // Start autoplay and expect events.
