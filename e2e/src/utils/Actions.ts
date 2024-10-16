@@ -40,20 +40,25 @@ export const applyActionAndExpectPlayerEventsInOrder = async (
 };
 
 const withTimeOut = (promise: Promise<void>, timeout: number) => {
-  return new Promise<void>(async (resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     const handle = setTimeout(() => {
       reject('Timeout waiting for event');
     }, timeout);
-    await promise;
-    clearTimeout(handle);
-    resolve();
+    promise
+      .then(() => {
+        clearTimeout(handle);
+        resolve();
+      })
+      .catch((reason) => {
+        reject(reason);
+      });
   });
 };
 
 const expectPlayerEvents = async (eventTypes: PlayerEventType[], inOrder: boolean): Promise<void> => {
   const player = await getTestPlayer();
   return new Promise<void>((resolve, reject) => {
-    let eventMap = eventTypes.map(type => ({
+    let eventMap = eventTypes.map((type) => ({
       eventType: type,
       onEvent() {
         if (inOrder && eventMap[0].eventType !== type) {
@@ -62,7 +67,7 @@ const expectPlayerEvents = async (eventTypes: PlayerEventType[], inOrder: boolea
           reject(err);
         }
         console.debug('[expectPlayerEvents]', `Received event '${type}'`);
-        eventMap = eventMap.filter(event => {
+        eventMap = eventMap.filter((event) => {
           if (event.eventType === type) {
             player.removeEventListener(type, event.onEvent);
           }
