@@ -31,16 +31,9 @@ jobs:
         run: |
           npm i -g corepack
           npm ci
-          cd example
+          cd e2e
           npm ci
 
-      - name: Build application
-        working-directory: example/android
-        run: ./gradlew assembleRelease
-
-      - name: Upload application
-        uses: actions/upload-artifact@v4
-        with:
-          name: app
-          path: example/android/app/build/outputs/apk/release/app-release.apk
-          retention-days: 3
+      - name: Build & run e2e test
+        working-directory: e2e/android
+        run: npm run test:e2e:android:release
