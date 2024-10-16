@@ -6,15 +6,22 @@
   "scripts": {
     "start": "npx react-native start",
     "test:e2e:android": "cavy run-android --file index.js --terminal bash",
+    "test:e2e:android:release": "cavy run-android --file index.js --terminal bash --mode release",
     "test:e2e:ios": "cavy run-ios --file index.js --terminal bash",
+    "test:e2e:ios:release": "cavy run-ios --file index.js --terminal bash --mode release",
     "lint": "eslint \"**/*.{ts,tsx}\""
   },
   "dependencies": {
     "@react-native-community/slider": "^4.5.2",
+    "@theoplayer/react-native-analytics-adobe": "^1.6.0",
+    "@theoplayer/react-native-analytics-comscore": "^1.7.1",
+    "@theoplayer/react-native-analytics-conviva": "^1.7.1",
+    "@theoplayer/react-native-analytics-nielsen": "^1.5.1",
     "@theoplayer/react-native-ui": "^0.8.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "npm:react-native-tvos@^0.74.1-0",
+    "react-native-device-info": "^13.1.0",
     "react-native-status-bar-height": "^2.6.0",
     "react-native-svg": "^13.14.1",
     "react-native-web": "^0.19.12",

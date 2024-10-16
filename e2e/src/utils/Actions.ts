@@ -15,7 +15,7 @@ export const failOnPlayerError = async () => {
     const { errorCode, errorMessage } = event.error;
     throw Error(`An error occurred: ${errorCode} ${errorMessage}`);
   });
-}
+};
 
 export const applyActionAndExpectPlayerEvents = async (
   action: (player: THEOplayer) => Promise<void> | void,
@@ -71,8 +71,40 @@ const expectPlayerEvents = async (eventTypes: PlayerEventType[], inOrder: boolea
         if (!eventMap.length) {
           resolve();
         }
-      }
+      },
     }));
     eventMap.forEach(({ eventType, onEvent }) => player.addEventListener(eventType, onEvent));
   });
 };
+
+export function expect(actual: any) {
+  return {
+    toBe(expected: any) {
+      if (actual !== expected) {
+        throw new Error(`Expected ${actual} to be ${expected} ❌`);
+      }
+      console.log(`Passed: ${actual} == ${expected} ✅`);
+    },
+
+    toEqual(expected: any) {
+      if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+        throw new Error(`Expected ${JSON.stringify(actual)} to equal ${JSON.stringify(expected)} ❌`);
+      }
+      console.log(`Passed: ${JSON.stringify(actual)} !== ${JSON.stringify(expected)} ✅`);
+    },
+
+    toBeTruthy() {
+      if (!actual) {
+        throw new Error(`Expected ${actual} to be truthy ❌`);
+      }
+      console.log(`Passed: ${actual} is truthy ✅`);
+    },
+
+    toBeFalsy() {
+      if (actual) {
+        throw new Error(`Expected ${actual} to be falsy ❌`);
+      }
+      console.log(`Passed: ${actual} is falsy ✅`);
+    },
+  };
+}
