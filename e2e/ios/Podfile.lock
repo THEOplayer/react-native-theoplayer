@@ -1,5 +1,9 @@
 PODS:
   - boost (1.83.0)
+  - ComScore (6.10.2):
+    - ComScore/Dynamic (= 6.10.2)
+  - ComScore/Dynamic (6.10.2)
+  - ConvivaSDK (4.0.51)
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.74.1-0)
   - fmt (9.1.0)
@@ -8,6 +12,7 @@ PODS:
   - hermes-engine (0.74.1-0):
     - hermes-engine/Pre-built (= 0.74.1-0)
   - hermes-engine/Pre-built (0.74.1-0)
+  - NielsenAppSDK-XC (9.0.0.0)
   - PromisesObjC (2.4.0)
   - RCT-Folly (2024.01.01.00):
     - boost
@@ -953,6 +958,18 @@ PODS:
   - react-native-theoplayer (8.4.0):
     - React-Core
     - THEOplayerSDK-core (~> 8.0)
+  - react-native-theoplayer-comscore (1.7.1):
+    - React-Core
+    - react-native-theoplayer
+    - THEOplayer-Connector-Comscore (~> 8.0)
+  - react-native-theoplayer-conviva (1.7.1):
+    - React-Core
+    - react-native-theoplayer
+    - THEOplayer-Connector-Conviva (~> 8.0)
+  - react-native-theoplayer-nielsen (1.5.1):
+    - React-Core
+    - react-native-theoplayer
+    - THEOplayer-Connector-Nielsen (~> 8.0)
   - React-nativeconfig (0.74.1-0)
   - React-NativeModulesApple (0.74.1-0):
     - glog
@@ -1175,9 +1192,25 @@ PODS:
     - React-logger (= 0.74.1-0)
     - React-perflogger (= 0.74.1-0)
     - React-utils (= 0.74.1-0)
+  - RNDeviceInfo (13.1.0):
+    - React-Core
   - RNSVG (13.14.1):
     - React-Core
   - SocketRocket (0.7.0)
+  - THEOplayer-Connector-Comscore (8.2.1):
+    - ComScore (~> 6.10.0)
+    - THEOplayerSDK-core (~> 8)
+  - THEOplayer-Connector-Conviva (8.2.1):
+    - ConvivaSDK (~> 4.0.30)
+    - THEOplayer-Connector-Utilities (>= 8.2.1, ~> 8.2)
+    - THEOplayerSDK-core (~> 8)
+  - THEOplayer-Connector-Nielsen (8.0.0):
+    - NielsenAppSDK-XC (= 9.0.0.0)
+    - THEOplayer-Connector-Utilities (>= 8.0.0, ~> 8.0)
+    - THEOplayerSDK-core (~> 8)
+  - THEOplayer-Connector-Utilities (8.2.1):
+    - ConvivaSDK (~> 4.0.30)
+    - THEOplayerSDK-core (~> 8)
   - THEOplayerSDK-core (8.0.0)
   - Yoga (0.0.0)
 
@@ -1217,6 +1250,9 @@ DEPENDENCIES:
   - react-native-google-cast (from `https://github.com/Danesz/react-native-google-cast.git`, branch `feature/guestmode_apple_silicon`)
   - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
   - react-native-theoplayer (from `../..`)
+  - "react-native-theoplayer-comscore (from `../node_modules/@theoplayer/react-native-analytics-comscore`)"
+  - "react-native-theoplayer-conviva (from `../node_modules/@theoplayer/react-native-analytics-conviva`)"
+  - "react-native-theoplayer-nielsen (from `../node_modules/@theoplayer/react-native-analytics-nielsen`)"
   - React-nativeconfig (from `../node_modules/react-native/ReactCommon`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -1239,14 +1275,23 @@ DEPENDENCIES:
   - React-runtimescheduler (from `../node_modules/react-native/ReactCommon/react/renderer/runtimescheduler`)
   - React-utils (from `../node_modules/react-native/ReactCommon/react/utils`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
+  https://github.com/NielsenDigitalSDK/nielsenappsdk-ios-specs-dynamic.git:
+    - NielsenAppSDK-XC
   trunk:
+    - ComScore
+    - ConvivaSDK
     - google-cast-sdk-dynamic-xcframework
     - PromisesObjC
     - SocketRocket
+    - THEOplayer-Connector-Comscore
+    - THEOplayer-Connector-Conviva
+    - THEOplayer-Connector-Nielsen
+    - THEOplayer-Connector-Utilities
     - THEOplayerSDK-core
 
 EXTERNAL SOURCES:
@@ -1318,6 +1363,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/slider"
   react-native-theoplayer:
     :path: "../.."
+  react-native-theoplayer-comscore:
+    :path: "../node_modules/@theoplayer/react-native-analytics-comscore"
+  react-native-theoplayer-conviva:
+    :path: "../node_modules/@theoplayer/react-native-analytics-conviva"
+  react-native-theoplayer-nielsen:
+    :path: "../node_modules/@theoplayer/react-native-analytics-nielsen"
   React-nativeconfig:
     :path: "../node_modules/react-native/ReactCommon"
   React-NativeModulesApple:
@@ -1362,6 +1413,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/react/utils"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNDeviceInfo:
+    :path: "../node_modules/react-native-device-info"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   Yoga:
@@ -1374,12 +1427,15 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   boost: 88202336c3ba1e7a264a83c0c888784b0f360c28
+  ComScore: 3669769a26adf769adddc51ffa34e48ee51a8661
+  ConvivaSDK: c5d877bf5a830a8dd0b0696c538a11fc96208ec5
   DoubleConversion: 00143ab27d470b28035933623e1a3ea37e68889c
   FBLazyVector: f13c7f203117288def36bfc9a195216ff4fea859
   fmt: 1568fa7b2f242362c45c42d4a15e9dd4b2e621b3
   glog: f0ddebfc00a905e9213e37801095a0a705d2e5f6
   google-cast-sdk-dynamic-xcframework: d1323732742c979b2d7e5b061cbe665915981f3d
   hermes-engine: 075dd41a8f260f99d7c5c77ad79b0b9632ee920d
+  NielsenAppSDK-XC: 8877317bed8261bc6bdcb7d8655f5ba314ba9610
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   RCT-Folly: b54b39c7532acfa0216d988bdeb706883e71416e
   RCTDeprecation: a6e6151fa6cb426065ec2997b746fe76e079db8d
@@ -1408,6 +1464,9 @@ SPEC CHECKSUMS:
   react-native-google-cast: d7bdfd1a0eeba84afde03b9722351ec29543e74c
   react-native-slider: ce295d2bf830a7990af05b0bd70ab28c133e230c
   react-native-theoplayer: 69d089798cee2eefae1c4bdb0db517ee29132d78
+  react-native-theoplayer-comscore: 8a191ac8ed445b0c36780905e3c03ade036c1afe
+  react-native-theoplayer-conviva: f68b57dd9158653c0643d3b1c4b8b94b314fe380
+  react-native-theoplayer-nielsen: d65a269d9245326b8eb4ed6fc6ba76f79bf464f1
   React-nativeconfig: 0e309fafbbfbb8eac2f1999d0756732624ac5b39
   React-NativeModulesApple: a53141b07c57c53cdc1f2043e5acf3b9318bc340
   React-perflogger: e4f171200bc71bb8cf0686a0ad41a242f53b6b36
@@ -1430,11 +1489,16 @@ SPEC CHECKSUMS:
   React-runtimescheduler: 4780cdba710de22aae5ea6769266cec9a89b2bba
   React-utils: 45e9ba5a0ec387d31de5d24043bdcf7915b9658b
   ReactCommon: 678c6fdb479e7533859f29000d899af37d3a6c7a
+  RNDeviceInfo: e13b7d68878fba693c9fbb13ca4d56ad57d95917
   RNSVG: af3907ac5d4fa26a862b75a16d8f15bc74f2ceda
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
+  THEOplayer-Connector-Comscore: fa33eabf8893203acf42210aa67b736a9366540d
+  THEOplayer-Connector-Conviva: e7c975ccf3c78e5e7b82f899a60b06983ab3e20b
+  THEOplayer-Connector-Nielsen: cb2d511f62f212d8e7a20660c4a6bfb8508d00a5
+  THEOplayer-Connector-Utilities: bf421cb4c63567f5bc0b0f8f9e14462a3f6087ce
   THEOplayerSDK-core: bffd1defb5031cc6b257f71f57931a87d4b3877c
   Yoga: d84d1e521e3f8fa3cdd139d617ddf6514d061c78
 
-PODFILE CHECKSUM: cde44975d89d0413eb0e568fb525618efb0ece50
+PODFILE CHECKSUM: f44eee13563fe347754d375fbbe1036dbf27c1d1
 
 COCOAPODS: 1.15.2
