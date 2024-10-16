@@ -35,5 +35,5 @@ jobs:
           npm ci
 
       - name: Build & run e2e test
-        working-directory: e2e/android
+        working-directory: e2e
         run: npm run test:e2e:android:release

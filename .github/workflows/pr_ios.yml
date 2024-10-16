@@ -29,11 +29,11 @@ jobs:
         run: |
           npm i -g corepack
           npm ci
-          cd example
+          cd e2e
           npm ci
 
       - name: Run pod install
-        working-directory: example/ios
+        working-directory: e2e/ios
         run: |
           pod install
 
@@ -44,6 +44,6 @@ jobs:
           os_version: '>=16.0'
 
       - name: Build application
-        working-directory: example
-        run: npx react-native build-ios --mode Debug
+        working-directory: e2e
+        run: npm run test:e2e:ios
 
