@@ -43,7 +43,7 @@ jobs:
           model: 'iPhone 14'
           os_version: '>=16.0'
 
-      - name: Build application
+      - name: Run e2e tests
         working-directory: e2e
         run: npm run test:e2e:ios
 
