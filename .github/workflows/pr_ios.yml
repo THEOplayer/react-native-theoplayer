@@ -25,6 +25,10 @@ jobs:
           node-version: '18'
           cache: 'npm'
 
+      - name: Run patch scripts
+        working-directory: e2e
+        run: bash ./scripts/patch_ios_podspec.sh
+
       - name: Run npm install
         run: |
           npm i -g corepack
