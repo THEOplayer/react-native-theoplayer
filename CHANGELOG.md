@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Added SdkVersion interface to be used by the sdk and it's connectors to report version info.
+
 ### Fixed
 
 - Fixed an issue on Web where all text tracks other than the selected would be set to `disabled` when enabling a text track.
