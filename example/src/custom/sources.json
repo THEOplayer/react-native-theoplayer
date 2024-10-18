@@ -436,5 +436,25 @@
         "src": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
       }
     }
+  },
+  {
+    "name": "HLS - THEOads",
+    "os": ["ios", "web", "android"],
+    "source": {
+      "sources": {
+        "src": "https://cluster.dev.theostream.live/nfl-unified-channel/hls/k8s/live/scte35.isml/.m3u8",
+        "type": "application/x-mpegurl",
+        "hlsDateRange": true
+      },
+      "ads": [
+        {
+          "integration": "theoads",
+          "networkCode": "51636543",
+          "customAssetKey": "nfl-sgai-demo",
+          "backdropDoubleBox": "https://demo.theoads.live/img/THEOads_double_box.svg",
+          "backdropLShape": "https://demo.theoads.live/img/THEOads_L_Shape.svg"
+        }
+      ]
+    }
   }
 ]

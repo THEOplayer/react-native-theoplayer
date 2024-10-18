@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Added the `THEOads` SGAI ad integration for Android. See [THEOads](https://www.theoplayer.com/product/theoads) for more details.
+
 ### Fixed
 
 - Fixed an issue on Web where all text tracks other than the selected would be set to `disabled` when enabling a text track.
