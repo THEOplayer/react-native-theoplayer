@@ -18,6 +18,8 @@ import com.theoplayer.android.api.ads.dai.GoogleDaiIntegration
 import com.theoplayer.android.api.ads.dai.GoogleDaiIntegrationFactory
 import com.theoplayer.android.api.ads.ima.GoogleImaIntegration
 import com.theoplayer.android.api.ads.ima.GoogleImaIntegrationFactory
+import com.theoplayer.android.api.ads.theoads.TheoAdsIntegration
+import com.theoplayer.android.api.ads.theoads.TheoAdsIntegrationFactory
 import com.theoplayer.android.api.cast.CastIntegration
 import com.theoplayer.android.api.cast.CastIntegrationFactory
 import com.theoplayer.android.api.event.EventListener
@@ -80,6 +82,7 @@ class ReactTHEOplayerContext private constructor(
 
   var daiIntegration: GoogleDaiIntegration? = null
   var imaIntegration: GoogleImaIntegration? = null
+  private var theoAdsIntegration: TheoAdsIntegration? = null
   var castIntegration: CastIntegration? = null
   var wasPlayingOnHostPause: Boolean = false
   private var isHostPaused: Boolean = false
@@ -294,6 +297,17 @@ class ReactTHEOplayerContext private constructor(
       }
     } catch (e: Exception) {
       Log.w(TAG, "Failed to configure Google DAI integration ${e.message}")
+    }
+    try {
+      if (BuildConfig.EXTENSION_THEOADS) {
+        theoAdsIntegration = TheoAdsIntegrationFactory.createTheoAdsIntegration(
+          playerView
+        ).also {
+          playerView.player.addIntegration(it)
+        }
+      }
+    } catch (e: Exception) {
+      Log.w(TAG, "Failed to configure THEOAds integration ${e.message}")
     }
     try {
       if (BuildConfig.EXTENSION_CAST) {

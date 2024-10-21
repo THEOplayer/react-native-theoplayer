@@ -3,6 +3,7 @@ package com.theoplayer.source
 import android.text.TextUtils
 import android.util.Log
 import com.google.gson.Gson
+import com.theoplayer.android.api.ads.theoads.TheoAdDescription
 import com.theoplayer.android.api.error.THEOplayerException
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableMap
@@ -17,6 +18,7 @@ import com.theoplayer.android.api.source.addescription.GoogleImaAdDescription
 import com.theoplayer.android.api.player.track.texttrack.TextTrackKind
 import com.theoplayer.android.api.source.metadata.ChromecastMetadataImage
 import com.theoplayer.BuildConfig
+import com.theoplayer.android.api.ads.theoads.TheoAdsLayoutOverride
 import com.theoplayer.android.api.error.ErrorCode
 import com.theoplayer.android.api.source.AdIntegration
 import com.theoplayer.android.api.source.dash.DashPlaybackConfiguration
@@ -52,7 +54,16 @@ private const val PROP_ADS = "ads"
 private const val PROP_DASH = "dash"
 private const val PROP_DASH_IGNORE_AVAILABILITYWINDOW = "ignoreAvailabilityWindow"
 private const val PROP_HEADERS = "headers"
+private const val PROP_AD_TAG_PARAMETERS = "adTagParameters"
+private const val PROP_BACKDROP_DOUBLE_BOX = "backdropDoubleBox"
+private const val PROP_BACKDROP_LSHAPE = "backdropLShape"
+private const val PROP_CUSTOM_ASSET_KEY = "customAssetKey"
+private const val PROP_OVERRIDE_LAYOUT = "overrideLayout"
+private const val PROP_NETWORK_CODE = "networkCode"
+private const val PROP_USE_ID3 = "useId3"
+
 private const val ERROR_IMA_NOT_ENABLED = "Google IMA support not enabled."
+private const val ERROR_THEOADS_NOT_ENABLED = "THEOads support not enabled."
 private const val ERROR_UNSUPPORTED_CSAI_INTEGRATION = "Unsupported CSAI integration"
 private const val ERROR_MISSING_CSAI_INTEGRATION = "Missing CSAI integration"
 
@@ -252,6 +263,9 @@ class SourceAdapter {
         AdIntegration.GOOGLE_IMA.adIntegration -> parseImaAdFromJS(
           jsonAdDescription
         )
+        AdIntegration.THEO_ADS.adIntegration -> parseTheoAdFromJS(
+          jsonAdDescription
+        )
         else -> {
           throw THEOplayerException(
             ErrorCode.AD_ERROR,
@@ -283,6 +297,40 @@ class SourceAdapter {
     return GoogleImaAdDescription.Builder(source)
       .timeOffset(jsonAdDescription.optString(PROP_TIME_OFFSET))
       .build()
+  }
+
+  @Throws(JSONException::class)
+  private fun parseTheoAdFromJS(jsonAdDescription: JSONObject): TheoAdDescription {
+    if (!BuildConfig.EXTENSION_THEOADS) {
+      throw THEOplayerException(ErrorCode.AD_ERROR, ERROR_THEOADS_NOT_ENABLED)
+    }
+    return TheoAdDescription(
+      adTagParameters = parseAdTagParameters(jsonAdDescription.optJSONObject(PROP_AD_TAG_PARAMETERS)),
+      backdropDoubleBox = jsonAdDescription.optString(PROP_BACKDROP_DOUBLE_BOX),
+      backdropLShape = jsonAdDescription.optString(PROP_BACKDROP_LSHAPE),
+      customAssetKey = jsonAdDescription.optString(PROP_CUSTOM_ASSET_KEY),
+      networkCode = jsonAdDescription.optString(PROP_NETWORK_CODE),
+      overrideLayout = parseOverrideLayout(jsonAdDescription.optString(PROP_OVERRIDE_LAYOUT)),
+      useId3 = jsonAdDescription.optBoolean(PROP_USE_ID3),
+    )
+  }
+
+  private fun parseAdTagParameters(params: JSONObject?): Map<String, String> =
+    params?.keys()?.asSequence()
+      ?.mapNotNull { key -> key to params.optString(key) }
+      ?.toMap() ?: emptyMap()
+
+  private fun parseOverrideLayout(override: String?): TheoAdsLayoutOverride? {
+    if (override == null) {
+      return null
+    }
+    when (override) {
+      "single" -> return TheoAdsLayoutOverride.SINGLE
+      "single-if-mobile" -> return TheoAdsLayoutOverride.SINGLE
+      "l-shape" -> return TheoAdsLayoutOverride.LSHAPE
+      "double" -> return TheoAdsLayoutOverride.DOUBLE
+    }
+    return null
   }
 
   @Throws(JSONException::class)
