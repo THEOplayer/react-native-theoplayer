@@ -52,6 +52,20 @@ export interface AdsConfiguration {
    * <br/> - This is only available to define IMA Settings on iOS and/or Android.
    */
   ima?: GoogleImaConfiguration;
+
+  /**
+   * Whether to enable THEOads support.
+   *
+   * @since React Native THEOplayer SDK v8.4.0.
+   * @since Native THEOplayer SDK v8.2.0.
+   *
+   * @remarks
+   * <br/> - This must be set to `true` in order to schedule a {@link TheoAdDescription}.
+   * <br/> - This only applies to Web platforms.
+   *
+   * @defaultValue `false`
+   */
+  theoads?: boolean;
 }
 
 /**
