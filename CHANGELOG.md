@@ -5,11 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [8.5.0] - 24-10-21
 
 ### Added
 
-- Added SdkVersion interface to be used by the sdk and it's connectors to report version info.
+- Added `SdkVersion` interface to be used by the sdk and its connectors to report version info.
 - Added the `THEOads` SGAI ad integration for Android. See [THEOads](https://www.theoplayer.com/product/theoads) for more details.
 
 ### Fixed
