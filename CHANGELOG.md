@@ -5,11 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [8.5.0] - 24-10-21
+
+### Added
+
+- Added `SdkVersion` interface to be used by the sdk and its connectors to report version info.
+- Added the `THEOads` SGAI ad integration for Android. See [THEOads](https://www.theoplayer.com/product/theoads) for more details.
+
+### Fixed
+
+- Fixed an issue on Web where all text tracks other than the selected would be set to `disabled` when enabling a text track.
+- Fixed an issue on iOS where the player would crash when changing the presentationMode from fullscreen to picture-in-picture during ad playout.
+
+### Changed
+
+- On iOS, after closing picture-in-picture the player returns back to the previous presentationMode instead of always returning to inline.
+
 ## [8.4.0] - 24-10-10
 
 ### Added
 
 - Added a `posterStyle` property on `THEOplayerView` to allow overriding the default 16:9 poster style.
+- Added a `theoads` property on `PlayerConfiguration.ads` to allow play-out of THEOads sources on Web platforms.
+- Added a `hlsDateRange` property on `SourceDescription` to enable parsing and exposing date ranges from HLS playlists. This flag was already available on `PlayerConfiguration`, which applies for all HLS sources.
 
 ### Fixed
 

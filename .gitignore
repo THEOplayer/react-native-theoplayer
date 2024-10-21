@@ -78,3 +78,4 @@ ios/custom/Frameworks/tvos/*.xcframework
 _site/
 Gemfile.lock
 vendor
+.bundle
