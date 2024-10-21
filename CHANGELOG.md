@@ -14,6 +14,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed an issue on Web where all text tracks other than the selected would be set to `disabled` when enabling a text track.
+- Fixed an issue on iOS where the player would crash when changing the presentationMode from fullscreen to picture-in-picture during ad playout.
+
+### Changed
+
+- On iOS, after closing picture-in-picture the player returns back to the previous presentationMode instead of always returning to inline.
 
 ## [8.4.0] - 24-10-10
 
