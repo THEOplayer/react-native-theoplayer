@@ -25,16 +25,16 @@
   ],
   "scripts": {
     "typescript": "tsc --noEmit",
-    "prettier": "prettier --check \"(src|example)/**/*.{js,jsx,ts,tsx}\"",
-    "prettier:fix": "prettier --write \"(src|example)/**/*.{js,jsx,ts,tsx}\"",
+    "prettier": "prettier --check \"(src|example|e2e)/**/*.{js,jsx,ts,tsx}\"",
+    "prettier:fix": "prettier --write \"(src|example|e2e)/**/*.{js,jsx,ts,tsx}\"",
     "lint": "eslint \"**/*.{ts,tsx}\"",
     "lint:fix": "npm run lint -- --fix",
-    "prepare": "bob build && husky install",
+    "prepare": "bob build && husky",
     "pods": "cd example && pod-install --quiet",
     "docs": "typedoc --treatWarningsAsErrors"
   },
   "lint-staged": {
-    "(src|example)/**/*.{js,jsx,ts,tsx}": [
+    "(src|example|e2e)/**/*.{js,jsx,ts,tsx}": [
       "prettier --write"
     ]
   },
