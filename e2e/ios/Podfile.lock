@@ -1197,21 +1197,21 @@ PODS:
   - RNSVG (13.14.1):
     - React-Core
   - SocketRocket (0.7.0)
-  - THEOplayer-Connector-Comscore (8.2.1):
+  - THEOplayer-Connector-Comscore (8.2.2):
     - ComScore (~> 6.10.0)
     - THEOplayerSDK-core (~> 8)
-  - THEOplayer-Connector-Conviva (8.2.1):
+  - THEOplayer-Connector-Conviva (8.2.2):
     - ConvivaSDK (~> 4.0.30)
-    - THEOplayer-Connector-Utilities (>= 8.2.1, ~> 8.2)
+    - THEOplayer-Connector-Utilities (>= 8.2.2, ~> 8.2)
     - THEOplayerSDK-core (~> 8)
   - THEOplayer-Connector-Nielsen (8.0.0):
     - NielsenAppSDK-XC (= 9.0.0.0)
     - THEOplayer-Connector-Utilities (>= 8.0.0, ~> 8.0)
     - THEOplayerSDK-core (~> 8)
-  - THEOplayer-Connector-Utilities (8.2.1):
+  - THEOplayer-Connector-Utilities (8.2.2):
     - ConvivaSDK (~> 4.0.30)
     - THEOplayerSDK-core (~> 8)
-  - THEOplayerSDK-core (8.0.0)
+  - THEOplayerSDK-core (8.2.2)
   - Yoga (0.0.0)
 
 DEPENDENCIES:
@@ -1492,11 +1492,11 @@ SPEC CHECKSUMS:
   RNDeviceInfo: 59344c19152c4b2b32283005f9737c5c64b42fba
   RNSVG: af3907ac5d4fa26a862b75a16d8f15bc74f2ceda
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
-  THEOplayer-Connector-Comscore: fa33eabf8893203acf42210aa67b736a9366540d
-  THEOplayer-Connector-Conviva: e7c975ccf3c78e5e7b82f899a60b06983ab3e20b
+  THEOplayer-Connector-Comscore: 5a256d2645e86134f31fd888394c2d3661b35618
+  THEOplayer-Connector-Conviva: a8925bea78a9cef9a5dd413d5b47f2dd8ab22ad1
   THEOplayer-Connector-Nielsen: cb2d511f62f212d8e7a20660c4a6bfb8508d00a5
-  THEOplayer-Connector-Utilities: bf421cb4c63567f5bc0b0f8f9e14462a3f6087ce
-  THEOplayerSDK-core: bffd1defb5031cc6b257f71f57931a87d4b3877c
+  THEOplayer-Connector-Utilities: 55461c2943af83ebdc5d332fa60b77837ed52e6b
+  THEOplayerSDK-core: 46f95f30a83fa01a67492ebfa130b1692505d594
   Yoga: bb33480fd76c5cb82ef4ba27c49276abfdd692d1
 
 PODFILE CHECKSUM: f44eee13563fe347754d375fbbe1036dbf27c1d1

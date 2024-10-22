@@ -1,4 +1,4 @@
 import { AppRegistry } from 'react-native';
-import { App } from './src/App';
+import { TestableApp } from './src/TestableApp';
 
-AppRegistry.registerComponent('ReactNativeTHEOplayerE2E', () => App);
+AppRegistry.registerComponent('ReactNativeTHEOplayerE2E', () => TestableApp);

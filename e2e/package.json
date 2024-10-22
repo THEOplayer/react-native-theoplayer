@@ -5,10 +5,10 @@
   "private": true,
   "scripts": {
     "start": "npx react-native start",
-    "test:e2e:android": "cavy run-android --file index.js --terminal bash",
-    "test:e2e:android:release": "cavy run-android --file index.js --terminal bash --mode release",
-    "test:e2e:ios": "cavy run-ios --file index.js --terminal bash",
-    "test:e2e:ios:release": "cavy run-ios --file index.js --terminal bash --mode release",
+    "test:e2e:android": "npx react-native run-android --terminal bash",
+    "test:e2e:android:release": "npx react-native run-android --terminal bash --mode release",
+    "test:e2e:ios": "npx react-native run-ios --terminal bash",
+    "test:e2e:ios:release": "npx react-native run-ios --terminal bash --mode release",
     "lint": "eslint \"**/*.{ts,tsx}\""
   },
   "dependencies": {
