@@ -955,7 +955,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-theoplayer (8.4.0):
+  - react-native-theoplayer (8.5.0):
     - React-Core
     - THEOplayerSDK-core (~> 8.0)
   - react-native-theoplayer-comscore (1.7.1):
@@ -1192,7 +1192,7 @@ PODS:
     - React-logger (= 0.74.1-0)
     - React-perflogger (= 0.74.1-0)
     - React-utils (= 0.74.1-0)
-  - RNDeviceInfo (13.1.0):
+  - RNDeviceInfo (10.14.0):
     - React-Core
   - RNSVG (13.14.1):
     - React-Core
@@ -1463,7 +1463,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: e1da272870606f17a64520bf78d85e1b73bb0778
   react-native-google-cast: d7bdfd1a0eeba84afde03b9722351ec29543e74c
   react-native-slider: ce295d2bf830a7990af05b0bd70ab28c133e230c
-  react-native-theoplayer: 69d089798cee2eefae1c4bdb0db517ee29132d78
+  react-native-theoplayer: 17d8a46df5e3e6e75f9afb96f5d409e5e0384d3d
   react-native-theoplayer-comscore: 8a191ac8ed445b0c36780905e3c03ade036c1afe
   react-native-theoplayer-conviva: f68b57dd9158653c0643d3b1c4b8b94b314fe380
   react-native-theoplayer-nielsen: d65a269d9245326b8eb4ed6fc6ba76f79bf464f1
@@ -1489,7 +1489,7 @@ SPEC CHECKSUMS:
   React-runtimescheduler: 4780cdba710de22aae5ea6769266cec9a89b2bba
   React-utils: 45e9ba5a0ec387d31de5d24043bdcf7915b9658b
   ReactCommon: 678c6fdb479e7533859f29000d899af37d3a6c7a
-  RNDeviceInfo: e13b7d68878fba693c9fbb13ca4d56ad57d95917
+  RNDeviceInfo: 59344c19152c4b2b32283005f9737c5c64b42fba
   RNSVG: af3907ac5d4fa26a862b75a16d8f15bc74f2ceda
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   THEOplayer-Connector-Comscore: fa33eabf8893203acf42210aa67b736a9366540d
@@ -1497,7 +1497,7 @@ SPEC CHECKSUMS:
   THEOplayer-Connector-Nielsen: cb2d511f62f212d8e7a20660c4a6bfb8508d00a5
   THEOplayer-Connector-Utilities: bf421cb4c63567f5bc0b0f8f9e14462a3f6087ce
   THEOplayerSDK-core: bffd1defb5031cc6b257f71f57931a87d4b3877c
-  Yoga: d84d1e521e3f8fa3cdd139d617ddf6514d061c78
+  Yoga: bb33480fd76c5cb82ef4ba27c49276abfdd692d1
 
 PODFILE CHECKSUM: f44eee13563fe347754d375fbbe1036dbf27c1d1
 

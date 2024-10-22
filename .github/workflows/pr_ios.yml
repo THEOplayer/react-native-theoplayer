@@ -25,6 +25,14 @@ jobs:
           node-version: '18'
           cache: 'npm'
 
+      - name: Cache CocoaPods
+        uses: actions/cache@v4
+        with:
+          path: e2e/ios/Pods
+          key: pods-${{ runner.os }}-${{ hashFiles('Podfile.lock') }}
+          restore-keys: |
+            pods-${{ runner.os }}-
+
       - name: Run patch scripts
         working-directory: e2e
         run: bash ./scripts/patch_ios_podspec.sh
@@ -36,10 +44,11 @@ jobs:
           cd e2e
           npm ci
 
-      - name: Run pod install
+      - name: Run pod install & update dependencies
         working-directory: e2e/ios
         run: |
           pod install
+          pod update
 
       - name: Start iOS simulator
         uses: futureware-tech/simulator-action@v3
