@@ -1,5 +1,6 @@
-import { PlayerEventType, THEOplayer } from 'react-native-theoplayer';
-import { getTestPlayer } from '../components/TestableTHEOplayerView';
+// noinspection JSUnusedGlobalSymbols
+
+import { ErrorEvent, type Event, PlayerEventType, THEOplayer } from 'react-native-theoplayer';
 
 export interface TestOptions {
   timeout: number;
@@ -9,76 +10,101 @@ export const defaultTestOptions: TestOptions = {
   timeout: 10000,
 };
 
-export const failOnPlayerError = async () => {
-  const player = await getTestPlayer();
-  player.addEventListener(PlayerEventType.ERROR, (event) => {
-    const { errorCode, errorMessage } = event.error;
-    throw Error(`An error occurred: ${errorCode} ${errorMessage}`);
-  });
+export const waitForPlayerEventType = async (
+  player: THEOplayer,
+  type: PlayerEventType,
+  options = defaultTestOptions,
+): Promise<Event<PlayerEventType>[]> => {
+  return waitForPlayerEventTypes(player, [type], false, options);
 };
 
-export const applyActionAndExpectPlayerEvents = async (
-  action: (player: THEOplayer) => Promise<void> | void,
-  events: PlayerEventType[],
-  options: TestOptions = defaultTestOptions,
-) => {
-  const player = await getTestPlayer();
-  const eventsPromise = withTimeOut(expectPlayerEvents(events, false), options.timeout);
-  await action(player);
-  await eventsPromise;
+export const waitForPlayerEventTypes = async (
+  player: THEOplayer,
+  eventTypes: PlayerEventType[],
+  inOrder: boolean = true,
+  options = defaultTestOptions,
+): Promise<Event<PlayerEventType>[]> => {
+  return waitForPlayerEvents(
+    player,
+    eventTypes.map((type) => ({ type })),
+    inOrder,
+    options,
+  );
 };
 
-export const applyActionAndExpectPlayerEventsInOrder = async (
-  action: (player: THEOplayer) => Promise<void> | void,
-  events: PlayerEventType[],
-  options: TestOptions = defaultTestOptions,
-) => {
-  const player = await getTestPlayer();
-  const eventsPromise = withTimeOut(expectPlayerEvents(events, true), options.timeout);
-  await action(player);
-  await eventsPromise;
+export const waitForPlayerEvent = async <EType extends Event<PlayerEventType>>(
+  player: THEOplayer,
+  expectedEvent: Partial<EType>,
+  options = defaultTestOptions,
+): Promise<Event<PlayerEventType>[]> => {
+  return waitForPlayerEvents(player, [expectedEvent], false, options);
 };
 
-const withTimeOut = (promise: Promise<void>, timeout: number) => {
+export const waitForPlayerEvents = async <EType extends Event<PlayerEventType>>(
+  player: THEOplayer,
+  expectedEvents: Partial<EType>[],
+  inOrder: boolean = true,
+  options = defaultTestOptions,
+): Promise<Event<PlayerEventType>[]> => {
+  return withTimeOut(
+    new Promise<Event<PlayerEventType>[]>((resolve, reject) => {
+      const events: Event<PlayerEventType>[] = [];
+      const onError = (err: ErrorEvent) => {
+        console.error('[waitForPlayerEvents]', err);
+        player.removeEventListener(PlayerEventType.ERROR, onError);
+        reject(err);
+      };
+      let eventMap = expectedEvents.map((_expected: Partial<EType>) => ({
+        event: _expected as Event<PlayerEventType>,
+        onEvent(receivedEvent: Event<PlayerEventType>) {
+          if (!eventMap.length) {
+            // No more events expected
+            return;
+          }
+          const expectedEvent = eventMap[0].event;
+          events.push(receivedEvent);
+          console.debug('[waitForPlayerEvents]', `Received event '${JSON.stringify(receivedEvent.type)}' - waiting for ${expectedEvent.type}`);
+          const index = eventMap.findIndex((e) => propsMatch(e.event, receivedEvent));
+          const isExpected = index <= 0;
+
+          // Check order
+          if (inOrder && eventMap.length && !isExpected) {
+            const err = `Expected event '${expectedEvent.type}'\nbut received '${receivedEvent.type}'`;
+            console.error('[waitForPlayerEvents]', err);
+            reject(err);
+          }
+          eventMap = eventMap.filter((entry) => {
+            if (entry.event.type === expectedEvent.type) {
+              player.removeEventListener(expectedEvent.type, entry.onEvent);
+            }
+            return entry.event.type !== expectedEvent.type;
+          });
+          if (!eventMap.length) {
+            // Done
+            resolve(events);
+          }
+        },
+      }));
+      player.addEventListener(PlayerEventType.ERROR, onError);
+      eventMap.forEach(({ event, onEvent }) => player.addEventListener(event.type, onEvent));
+    }),
+    options.timeout,
+  );
+};
+
+const withTimeOut = (promise: Promise<any>, timeout: number): Promise<any> => {
   return new Promise<void>((resolve, reject) => {
     const handle = setTimeout(() => {
       reject('Timeout waiting for event');
     }, timeout);
     promise
-      .then(() => {
+      .then((result: any) => {
         clearTimeout(handle);
-        resolve();
+        resolve(result);
       })
       .catch((reason) => {
         reject(reason);
       });
-  });
-};
-
-const expectPlayerEvents = async (eventTypes: PlayerEventType[], inOrder: boolean): Promise<void> => {
-  const player = await getTestPlayer();
-  return new Promise<void>((resolve, reject) => {
-    let eventMap = eventTypes.map((type) => ({
-      eventType: type,
-      onEvent() {
-        if (inOrder && eventMap[0].eventType !== type) {
-          const err = `Expected event '${eventMap[0].eventType}' but received '${type}'`;
-          console.error('[expectPlayerEvents]', err);
-          reject(err);
-        }
-        console.debug('[expectPlayerEvents]', `Received event '${type}'`);
-        eventMap = eventMap.filter((event) => {
-          if (event.eventType === type) {
-            player.removeEventListener(type, event.onEvent);
-          }
-          return event.eventType !== type;
-        });
-        if (!eventMap.length) {
-          resolve();
-        }
-      },
-    }));
-    eventMap.forEach(({ eventType, onEvent }) => player.addEventListener(eventType, onEvent));
   });
 };
 
@@ -112,4 +138,8 @@ export function expect(actual: any) {
       console.log(`Passed: ${actual} is falsy ✅`);
     },
   };
+}
+
+function propsMatch(obj1: any, obj2: any): boolean {
+  return Object.keys(obj1).every((key) => obj1[key] === obj2[key]);
 }
