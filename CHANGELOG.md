@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Added `AdEvent.AD_CLICKED` and `AdEvent.AD_TAPPED` ad events for iOS, Android and Web. The events are dispatched when a user taps or clicks on an ad that has a `clickThrough` link.
+
 ### Changed
 
 - Upgrade example app to support React Native v0.75.
