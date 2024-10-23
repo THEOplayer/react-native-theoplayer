@@ -9,7 +9,10 @@ enum class PresentationModeChangePipContext {
   CLOSED,
 
   // The PiP window transitioned back into the app.
-  RESTORED
+  RESTORED,
+
+  // The app transitioning to PiP frame
+  TRANSITIONING_TO_PIP
 }
 
 data class PresentationModeChangeContext(
