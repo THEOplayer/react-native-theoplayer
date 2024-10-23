@@ -60,6 +60,9 @@ export enum PresentationModeChangePipContext {
 
   /**
    * The app is transitioning to the PiP frame.
+   *
+   * @remarks
+   * <br/> - This property only applies to Android platforms.
    */
   TRANSITIONING_TO_PIP = 'transitioning-to-pip',
 }
