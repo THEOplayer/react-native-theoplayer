@@ -47,7 +47,6 @@ jobs:
       - name: Run pod install & update dependencies
         working-directory: e2e/ios
         run: |
-          pod install
           pod update
 
       - name: Start iOS simulator
