@@ -113,7 +113,7 @@ export enum AdEventType {
    * Dispatched when an ad is clicked.
    *
    * @remarks
-   * <br/> - Available only on Android.
+   * <br/> - Available only on iOS and Android.
    */
   AD_CLICKED = 'adclicked',
 
@@ -121,7 +121,7 @@ export enum AdEventType {
    * Dispatched when a non-clickthrough portion of an ad is tapped.
    *
    * @remarks
-   * <br/> - Available only on Android.
+   * <br/> - Available only on iOS and Android.
    */
   AD_TAPPED = 'adtapped',
 
