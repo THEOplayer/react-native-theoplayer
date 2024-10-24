@@ -5,7 +5,7 @@ package = JSON.parse(File.read(File.join(__dir__, "package.json")))
 theofeatures = []
 theoconfigfiles = ["theoplayer-config.json", "react-native-theoplayer.json"]
 theoconfigfiles.each do |configfile|
-  configpath = File.join(__dir__ + "/../../", configfile)
+  configpath = File.join(__dir__ + "/e2e/", configfile)
   if File.exist?(configpath)
     puts "THEOplayer config found: #{configfile}"
     theoconfig = JSON.parse(File.read(configpath))

@@ -83,6 +83,8 @@ export default function App() {
     player.backgroundAudioConfiguration = { enabled: true };
     player.pipConfiguration = { startsAutomatically: true };
     console.log('THEOplayer is ready:', player.version);
+
+    checkNewArchitecture();
   };
 
   const needsBorder = Platform.OS === 'ios';
@@ -161,3 +163,11 @@ export default function App() {
     </SafeAreaView>
   );
 }
+
+const checkNewArchitecture = () => {
+  // @ts-expect-error
+  const turbo = global.__turboModuleProxy != null;
+  // @ts-expect-error
+  const fabric = global.nativeFabricUIManager != null;
+  console.log(`Using ${turbo ? 'turbo' : 'native'} modules and ${fabric ? 'fabric' : 'native'} components.`);
+};
