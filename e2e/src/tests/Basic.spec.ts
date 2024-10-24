@@ -4,28 +4,9 @@ import { PlayerEventType, SourceDescription } from 'react-native-theoplayer';
 import dash from '../res/dash.json';
 import hls from '../res/hls.json';
 import mp4 from '../res/mp4.json';
-import { getTestPlayer } from '../components/TestableTHEOplayerView';
-import { expect, waitForPlayerEventType, waitForPlayerEventTypes } from '../utils/Actions';
+import { expect, preparePlayerWithSource, waitForPlayerEventType, waitForPlayerEventTypes } from '../utils/Actions';
 
 const SEEK_THRESHOLD = 1e-1;
-
-async function preparePlayerWithSource(source: SourceDescription, autoplay: boolean) {
-  const player = await getTestPlayer();
-  const eventsPromise = waitForPlayerEventType(player, PlayerEventType.SOURCE_CHANGE);
-  const eventsPromiseAutoPlay = waitForPlayerEventTypes(player, [PlayerEventType.SOURCE_CHANGE, PlayerEventType.PLAY, PlayerEventType.PLAYING]);
-
-  // Start autoplay
-  player.autoplay = autoplay;
-  player.source = source;
-
-  // Wait for `sourcechange`, `play` and `playing` events.
-  if (autoplay) {
-    await eventsPromiseAutoPlay;
-  } else {
-    await eventsPromise;
-  }
-  return player;
-}
 
 function testBasicPlayout(spec: TestScope, title: string, source: SourceDescription) {
   spec.describe(title, function () {
@@ -39,7 +20,7 @@ function testBasicPlayout(spec: TestScope, title: string, source: SourceDescript
 
     spec.it('dispatches sourcechange, play and playing events in order on setting a source with autoplay', async function () {
       // Set source and wait for playback
-      const player = await preparePlayerWithSource(source, true);
+      const player = await preparePlayerWithSource(source);
 
       // Still playing
       expect(player.paused).toBeFalsy();
@@ -47,7 +28,7 @@ function testBasicPlayout(spec: TestScope, title: string, source: SourceDescript
 
     spec.it('dispatches a seeked event after seeking', async function () {
       // Set source and wait for playback
-      const player = await preparePlayerWithSource(source, true);
+      const player = await preparePlayerWithSource(source);
 
       // Seek
       const seekPromise = waitForPlayerEventType(player, PlayerEventType.SEEKED);
@@ -63,7 +44,7 @@ function testBasicPlayout(spec: TestScope, title: string, source: SourceDescript
 
     spec.it('dispatches paused, play and playing events after pausing & resuming playback', async function () {
       // Set source and wait for playback
-      const player = await preparePlayerWithSource(source, true);
+      const player = await preparePlayerWithSource(source);
 
       // Pause play-out.
       const pausePromise = waitForPlayerEventType(player, PlayerEventType.PAUSE);

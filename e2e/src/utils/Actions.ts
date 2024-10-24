@@ -1,6 +1,7 @@
 // noinspection JSUnusedGlobalSymbols
 
-import { ErrorEvent, type Event, PlayerEventType, THEOplayer } from 'react-native-theoplayer';
+import { ErrorEvent, type Event, PlayerEventType, SourceDescription, THEOplayer } from 'react-native-theoplayer';
+import { getTestPlayer } from '../components/TestableTHEOplayerView';
 
 export interface TestOptions {
   timeout: number;
@@ -9,6 +10,24 @@ export interface TestOptions {
 export const defaultTestOptions: TestOptions = {
   timeout: 10000,
 };
+
+export async function preparePlayerWithSource(source: SourceDescription, autoplay: boolean = true): Promise<THEOplayer> {
+  const player = await getTestPlayer();
+  const eventsPromise = waitForPlayerEventType(player, PlayerEventType.SOURCE_CHANGE);
+  const eventsPromiseAutoPlay = waitForPlayerEventTypes(player, [PlayerEventType.SOURCE_CHANGE, PlayerEventType.PLAY, PlayerEventType.PLAYING]);
+
+  // Start autoplay
+  player.autoplay = autoplay;
+  player.source = source;
+
+  // Wait for `sourcechange`, `play` and `playing` events.
+  if (autoplay) {
+    await eventsPromiseAutoPlay;
+  } else {
+    await eventsPromise;
+  }
+  return player;
+}
 
 export const waitForPlayerEventType = async (
   player: THEOplayer,
