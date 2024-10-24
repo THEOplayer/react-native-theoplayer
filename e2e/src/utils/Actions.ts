@@ -1,6 +1,7 @@
 // noinspection JSUnusedGlobalSymbols
 
-import { ErrorEvent, type Event, PlayerEventType, THEOplayer } from 'react-native-theoplayer';
+import { ErrorEvent, type Event, PlayerEventType, SourceDescription, THEOplayer } from 'react-native-theoplayer';
+import { getTestPlayer } from '../components/TestableTHEOplayerView';
 
 export interface TestOptions {
   timeout: number;
@@ -9,6 +10,24 @@ export interface TestOptions {
 export const defaultTestOptions: TestOptions = {
   timeout: 10000,
 };
+
+export async function preparePlayerWithSource(source: SourceDescription, autoplay: boolean = true): Promise<THEOplayer> {
+  const player = await getTestPlayer();
+  const eventsPromise = waitForPlayerEventType(player, PlayerEventType.SOURCE_CHANGE);
+  const eventsPromiseAutoPlay = waitForPlayerEventTypes(player, [PlayerEventType.SOURCE_CHANGE, PlayerEventType.PLAY, PlayerEventType.PLAYING]);
+
+  // Start autoplay
+  player.autoplay = autoplay;
+  player.source = source;
+
+  // Wait for `sourcechange`, `play` and `playing` events.
+  if (autoplay) {
+    await eventsPromiseAutoPlay;
+  } else {
+    await eventsPromise;
+  }
+  return player;
+}
 
 export const waitForPlayerEventType = async (
   player: THEOplayer,
@@ -63,7 +82,7 @@ export const waitForPlayerEvents = async <EType extends Event<PlayerEventType>>(
           }
           const expectedEvent = eventMap[0].event;
           events.push(receivedEvent);
-          console.debug('[waitForPlayerEvents]', `Received event '${JSON.stringify(receivedEvent.type)}' - waiting for ${expectedEvent.type}`);
+          console.debug('[waitForPlayerEvents]', `Received event ${JSON.stringify(receivedEvent.type)} - waiting for ${expectedEvent.type}`);
           const index = eventMap.findIndex((e) => propsMatch(e.event, receivedEvent));
           const isExpected = index <= 0;
 
@@ -108,34 +127,58 @@ const withTimeOut = (promise: Promise<any>, timeout: number): Promise<any> => {
   });
 };
 
-export function expect(actual: any) {
+export function expect(actual: any, desc?: string) {
+  const descPrefix = desc ? `${desc}: ` : '';
+
+  const logPass = (msg: string) => console.log(`${descPrefix}${msg} ✅`);
+  const throwErr = (msg: string) => {
+    throw new Error(`${descPrefix}${msg} ❌`);
+  };
+
   return {
     toBe(expected: any) {
-      if (actual !== expected) {
-        throw new Error(`Expected ${actual} to be ${expected} ❌`);
-      }
-      console.log(`Passed: ${actual} == ${expected} ✅`);
+      if (actual === expected) logPass(`${actual} == ${expected}`);
+      else throwErr(`Expected ${actual} to be ${expected}`);
+    },
+
+    toNotBe(expected: any) {
+      if (actual !== expected) logPass(`${actual} != ${expected}`);
+      else throwErr(`Expected ${actual} not to be ${expected}`);
     },
 
     toEqual(expected: any) {
-      if (JSON.stringify(actual) !== JSON.stringify(expected)) {
-        throw new Error(`Expected ${JSON.stringify(actual)} to equal ${JSON.stringify(expected)} ❌`);
-      }
-      console.log(`Passed: ${JSON.stringify(actual)} !== ${JSON.stringify(expected)} ✅`);
+      if (JSON.stringify(actual) === JSON.stringify(expected)) logPass(`Expected ${actual} to equal ${expected}`);
+      else throwErr(`Expected ${actual} to equal ${expected}`);
+    },
+
+    toBeGreaterThan(expected: number) {
+      if (actual > expected) logPass(`${actual} > ${expected}`);
+      else throwErr(`Expected ${actual} to be greater than ${expected}`);
+    },
+
+    toBeGreaterThanOrEqual(expected: number) {
+      if (actual >= expected) logPass(`${actual} >= ${expected}`);
+      else throwErr(`Expected ${actual} to be greater than or equal to ${expected}`);
+    },
+
+    toBeSmallerThan(expected: number) {
+      if (actual < expected) logPass(`${actual} < ${expected}`);
+      else throwErr(`Expected ${actual} to be smaller than ${expected}`);
+    },
+
+    toBeSmallerThanOrEqual(expected: number) {
+      if (actual <= expected) logPass(`${actual} <= ${expected}`);
+      else throwErr(`Expected ${actual} to be smaller than or equal to ${expected}`);
     },
 
     toBeTruthy() {
-      if (!actual) {
-        throw new Error(`Expected ${actual} to be truthy ❌`);
-      }
-      console.log(`Passed: ${actual} is truthy ✅`);
+      if (actual) logPass(`${actual} is truthy`);
+      else throwErr(`Expected ${actual} to be truthy`);
     },
 
     toBeFalsy() {
-      if (actual) {
-        throw new Error(`Expected ${actual} to be falsy ❌`);
-      }
-      console.log(`Passed: ${actual} is falsy ✅`);
+      if (!actual) logPass(`${actual} is falsy`);
+      else throwErr(`Expected ${actual} to be falsy`);
     },
   };
 }

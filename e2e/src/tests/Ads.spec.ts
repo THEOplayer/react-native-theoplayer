@@ -1,5 +1,5 @@
 import { TestScope } from 'cavy';
-import { AdDescription, AdEventType, PlayerEventType, SourceDescription } from 'react-native-theoplayer';
+import { AdDescription, AdEventType, PlayerEventType, SourceDescription, AdEvent } from 'react-native-theoplayer';
 import hls from '../res/hls.json';
 import ads from '../res/ads.json';
 import { getTestPlayer } from '../components/TestableTHEOplayerView';
@@ -16,8 +16,8 @@ export default function (spec: TestScope) {
       const playEventsPromise = waitForPlayerEventTypes(player, [PlayerEventType.SOURCE_CHANGE, PlayerEventType.PLAY, PlayerEventType.PLAYING]);
 
       const adEventsPromise = waitForPlayerEvents(player, [
-        { type: PlayerEventType.AD_EVENT, subType: AdEventType.AD_BREAK_BEGIN },
-        { type: PlayerEventType.AD_EVENT, subType: AdEventType.AD_BEGIN },
+        { type: PlayerEventType.AD_EVENT, subType: AdEventType.AD_BREAK_BEGIN } as AdEvent,
+        { type: PlayerEventType.AD_EVENT, subType: AdEventType.AD_BEGIN } as AdEvent,
       ]);
 
       // Start autoplay
