@@ -1253,6 +1253,27 @@ PODS:
   - react-native-google-cast/RNGoogleCast (4.6.2):
     - PromisesObjC
     - React
+  - react-native-slider (4.5.4):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - react-native-theoplayer (8.5.0):
     - React-Core
     - THEOplayerSDK-core (~> 8.0)
@@ -1589,6 +1610,7 @@ DEPENDENCIES:
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
   - react-native-google-cast (from `https://github.com/Danesz/react-native-google-cast.git`, branch `feature/guestmode_apple_silicon`)
+  - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
   - react-native-theoplayer (from `../..`)
   - "react-native-theoplayer-comscore (from `../node_modules/@theoplayer/react-native-analytics-comscore`)"
   - "react-native-theoplayer-conviva (from `../node_modules/@theoplayer/react-native-analytics-conviva`)"
@@ -1713,6 +1735,8 @@ EXTERNAL SOURCES:
   react-native-google-cast:
     :branch: feature/guestmode_apple_silicon
     :git: https://github.com/Danesz/react-native-google-cast.git
+  react-native-slider:
+    :path: "../node_modules/@react-native-community/slider"
   react-native-theoplayer:
     :path: "../.."
   react-native-theoplayer-comscore:
@@ -1827,6 +1851,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: d9594fa247e7866b44249d5e04a68ace76af2841
   React-microtasksnativemodule: a3489ca37b515f6f685ec1a86c8df364343ac578
   react-native-google-cast: d7bdfd1a0eeba84afde03b9722351ec29543e74c
+  react-native-slider: caf709802c97955d1dc369fc2ca6250f18bd58fb
   react-native-theoplayer: 17d8a46df5e3e6e75f9afb96f5d409e5e0384d3d
   react-native-theoplayer-comscore: 8a191ac8ed445b0c36780905e3c03ade036c1afe
   react-native-theoplayer-conviva: f68b57dd9158653c0643d3b1c4b8b94b314fe380
@@ -1867,6 +1892,6 @@ SPEC CHECKSUMS:
   THEOplayerSDK-core: 03e55ca6dfe3f16d52fdc9e4bdc6bff150d63531
   Yoga: 07ebe50bd234e51e5e3e07befa14a3078a0fcbbd
 
-PODFILE CHECKSUM: f44eee13563fe347754d375fbbe1036dbf27c1d1
+PODFILE CHECKSUM: f413b08b773bbfc40241bc377a26913fccbe8b92
 
 COCOAPODS: 1.15.2
