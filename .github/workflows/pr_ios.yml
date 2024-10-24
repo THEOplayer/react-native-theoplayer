@@ -45,6 +45,9 @@ jobs:
           cd e2e
           npm ci
 
+      - name: Install dependencies
+        run: bundle install
+
       - name: Run pod install & update dependencies
         working-directory: e2e/ios
         run: |
