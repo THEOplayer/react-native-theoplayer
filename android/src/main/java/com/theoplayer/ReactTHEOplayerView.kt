@@ -57,7 +57,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
     isInitialized = true
     playerContext = ReactTHEOplayerContext.create(
       reactContext,
-      PlayerConfigAdapter(configProps)
+      config
     )
     playerContext?.apply {
       adsApi.initialize(player, imaIntegration, daiIntegration)

@@ -3,11 +3,7 @@ package com.theoplayer.util
 import android.util.Log
 import android.view.View
 import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.fabric.FabricUIManager
 import com.facebook.react.uimanager.UIManagerHelper
-import com.facebook.react.uimanager.UIManagerModule
-import com.facebook.react.uimanager.common.UIManagerType
-import com.theoplayer.BuildConfig
 
 private const val TAG = "ViewResolver"
 private const val INVALID_TAG = -1
@@ -20,12 +16,8 @@ class ViewResolver(private val reactContext: ReactApplicationContext) {
       onResolved(null)
     }
     try {
-      if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
-        (UIManagerHelper.getUIManager(this.reactContext, UIManagerType.FABRIC) as? FabricUIManager)?.let {
-          onResolved(it.resolveView(tag) as? T?)
-        }
-      } else {
-        reactContext.getNativeModule(UIManagerModule::class.java)?.let {
+      reactContext.runOnUiQueueThread {
+        UIManagerHelper.getUIManagerForReactTag(reactContext, tag)?.let {
           onResolved(it.resolveView(tag) as? T?)
         }
       }
