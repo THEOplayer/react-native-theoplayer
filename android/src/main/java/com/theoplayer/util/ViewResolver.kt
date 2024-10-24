@@ -19,12 +19,8 @@ class ViewResolver(private val reactContext: ReactApplicationContext) {
       onResolved(null)
     }
     try {
-      if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
-        (UIManagerHelper.getUIManager(this.reactContext, UIManagerType.FABRIC) as? FabricUIManager)?.addUIBlock {
-          onResolved(it.resolveView(tag) as ReactTHEOplayerView)
-        }
-      } else {
-        reactContext.getNativeModule(UIManagerModule::class.java)?.addUIBlock {
+      reactContext.runOnUiQueueThread {
+        UIManagerHelper.getUIManagerForReactTag(reactContext, tag)?.let {
           onResolved(it.resolveView(tag) as ReactTHEOplayerView)
         }
       }
