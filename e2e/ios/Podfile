@@ -5,7 +5,7 @@ require Pod::Executable.execute_command('node', ['-p',
   )', __dir__]).strip
 
 source 'https://github.com/react-native-tvos/react-native-tvos-podspecs.git'
-source 'https://github.com/NielsenDigitalSDK/nielsenappsdk-ios-specs-dynamic.git'
+# source 'https://github.com/NielsenDigitalSDK/nielsenappsdk-ios-specs-dynamic.git'
 source 'https://cdn.cocoapods.org/'
 
 prepare_react_native_project!

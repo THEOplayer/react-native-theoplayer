@@ -10,11 +10,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  self.moduleName = @"ReactNativeTHEOplayerE2E";
+  self.moduleName = @"ReactNativeTHEOplayer";
   // You can add your custom initial props in the dictionary below.
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
-
+  
 #if !TARGET_OS_TV
   NSString *receiverAppID = @"CC1AD845"; // default receiver
   GCKDiscoveryCriteria *criteria = [[GCKDiscoveryCriteria alloc] initWithApplicationID:receiverAppID];
