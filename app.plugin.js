@@ -40,10 +40,11 @@ const withAndroidTHEOplayer = (config, props) => {
   const { extensions } = props | {};
   config = applyAndroidExtensions(config, extensions);
 
-  // Add the localMaven repo to the project's repositories
+  // Add THEOplayer and local Maven repos to the project's repositories
   return withProjectBuildGradle(config, (config) => {
     const localMaven = 'maven { url("$rootDir/../node_modules/react-native-theoplayer/android/local") }';
-    config.modResults.contents = config.modResults.contents.replace(/allprojects\s*\{\s*repositories\s*\{/, `$&\n\t\t${localMaven}`);
+    const THEOplayerMaven = 'maven { url("https://maven.theoplayer.com/releases") }';
+    config.modResults.contents = config.modResults.contents.replace(/allprojects\s*\{\s*repositories\s*\{/, `$&\n\t\t${localMaven}\n\t\t${THEOplayerMaven}`);
     return config;
   });
 };
