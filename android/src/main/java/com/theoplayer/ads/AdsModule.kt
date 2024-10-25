@@ -3,13 +3,20 @@
 package com.theoplayer.ads
 
 import android.util.Log
+import android.view.View
 import com.facebook.react.bridge.*
 import com.theoplayer.source.SourceAdapter
 import com.theoplayer.util.ViewResolver
 import com.theoplayer.ReactTHEOplayerView
+import com.theoplayer.android.api.ads.OmidFriendlyObstruction
+import com.theoplayer.android.api.ads.OmidFriendlyObstructionPurpose
 import com.theoplayer.android.api.error.THEOplayerException
 
 private const val TAG = "THEORCTAdsModule"
+
+private const val PROP_OMID_VIEW = "view"
+private const val PROP_OMID_PURPOSE = "purpose"
+private const val PROP_OMID_REASON = "reason"
 
 class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(context) {
   private val sourceHelper = SourceAdapter()
@@ -131,6 +138,50 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
       } else {
         promise.resolve((1e03 * daiIntegration.streamTimeForContentTime(1e-03 * time)).toInt())
       }
+    }
+  }
+
+  @ReactMethod
+  fun addFriendlyObstruction(tag: Int, obstruction: ReadableMap) {
+    val obsTag =
+      if (obstruction.hasKey(PROP_OMID_VIEW)) obstruction.getInt(PROP_OMID_VIEW) else null
+    val purpose = if (obstruction.hasKey(PROP_OMID_PURPOSE)) {
+      when (obstruction.getString(PROP_OMID_PURPOSE)) {
+        "videoControls" -> OmidFriendlyObstructionPurpose.VIDEO_CONTROLS
+        "closeAd" -> OmidFriendlyObstructionPurpose.CLOSE_AD
+        "notVisible" -> OmidFriendlyObstructionPurpose.NOT_VISIBLE
+        else -> OmidFriendlyObstructionPurpose.OTHER
+      }
+    } else null
+    val reason =
+      if (obstruction.hasKey(PROP_OMID_REASON)) obstruction.getString(PROP_OMID_REASON) else null
+
+    if (obsTag !== null) {
+      viewResolver.resolveViewByTag(obsTag) { obsView: View? ->
+        addFriendlyObstruction(tag, obsView, purpose, reason)
+      }
+    }
+  }
+
+  private fun addFriendlyObstruction(
+    tag: Int,
+    obsView: View?,
+    purpose: OmidFriendlyObstructionPurpose?,
+    reason: String?
+  ) {
+    if (obsView != null && purpose != null) {
+      viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
+        view?.player?.ads?.omid?.addFriendlyObstruction(
+          OmidFriendlyObstruction(obsView, purpose, reason)
+        )
+      }
+    }
+  }
+
+  @ReactMethod
+  fun removeAllFriendlyObstructions(tag: Int) {
+    viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
+      view?.player?.ads?.omid?.removeAllFriendlyObstructions()
     }
   }
 }
