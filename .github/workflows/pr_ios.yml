@@ -25,17 +25,29 @@ jobs:
           node-version: '18'
           cache: 'npm'
 
+      - name: Cache CocoaPods
+        uses: actions/cache@v4
+        with:
+          path: e2e/ios/Pods
+          key: pods-${{ runner.os }}-${{ hashFiles('Podfile.lock') }}
+          restore-keys: |
+            pods-${{ runner.os }}-
+
+      - name: Run patch scripts
+        working-directory: e2e
+        run: bash ./scripts/patch_ios_podspec.sh
+
       - name: Run npm install
         run: |
           npm i -g corepack
           npm ci
-          cd example
+          cd e2e
           npm ci
 
-      - name: Run pod install
-        working-directory: example/ios
+      - name: Run pod install & update dependencies
+        working-directory: e2e/ios
         run: |
-          pod install
+          pod update
 
       - name: Start iOS simulator
         uses: futureware-tech/simulator-action@v3
@@ -43,7 +55,7 @@ jobs:
           model: 'iPhone 14'
           os_version: '>=16.0'
 
-      - name: Build application
-        working-directory: example
-        run: npx react-native build-ios --mode Debug
+      - name: Run e2e tests
+        working-directory: e2e
+        run: npm run test:e2e:ios
 

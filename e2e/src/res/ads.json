@@ -1,0 +1,6 @@
+[
+  {
+    "integration": "google-ima",
+    "sources": "https://cdn.theoplayer.com/demos/ads/vast/dfp-preroll-no-skip.xml"
+  }
+]

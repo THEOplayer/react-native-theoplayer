@@ -1,0 +1,65 @@
+{
+  "name": "react-native-theoplayer-e2e",
+  "description": "E2E test app for react-native-theoplayer",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "npx react-native start",
+    "test:e2e:android": "npx react-native run-android --terminal bash",
+    "test:e2e:android:release": "npx react-native run-android --terminal bash --mode release",
+    "test:e2e:ios": "npx react-native run-ios --terminal bash",
+    "test:e2e:ios:release": "npx react-native run-ios --terminal bash --mode release",
+    "lint": "eslint \"**/*.{ts,tsx}\""
+  },
+  "dependencies": {
+    "@theoplayer/react-native-analytics-adobe": "^1.6.0",
+    "@theoplayer/react-native-analytics-comscore": "^1.7.1",
+    "@theoplayer/react-native-analytics-conviva": "^1.7.1",
+    "@theoplayer/react-native-analytics-nielsen": "^1.5.1",
+    "@theoplayer/react-native-ui": "^0.8.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-native": "npm:react-native-tvos@^0.75.4-0",
+    "react-native-device-info": "^10.14.0",
+    "react-native-status-bar-height": "^2.6.0",
+    "react-native-svg": "^13.14.1",
+    "react-native-web": "^0.19.13",
+    "react-native-web-image-loader": "^0.1.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.9",
+    "@babel/preset-env": "^7.25.9",
+    "@babel/runtime": "^7.25.9",
+    "@react-native/babel-preset": "0.75.4",
+    "@react-native/eslint-config": "0.75.4",
+    "@react-native/metro-config": "0.75.4",
+    "@react-native/typescript-config": "0.75.4",
+    "@types/cavy": "^3.2.9",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "babel-loader": "^8.4.1",
+    "babel-plugin-module-resolver": "^5.0.2",
+    "babel-plugin-react-native-web": "^0.17.7",
+    "cavy": "^4.0.2",
+    "copy-webpack-plugin": "^12.0.2",
+    "eslint": "^8.57.1",
+    "html-webpack-plugin": "^5.6.3",
+    "react-native-svg-web": "^1.0.9",
+    "typescript": "5.0.4",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.1.0"
+  },
+  "overrides": {
+    "react-native-google-cast": {
+      "react-native": "npm:react-native-tvos@^0.75.4-0"
+    },
+    "cavy": {
+      "react": "18.3.1",
+      "react-native": "npm:react-native-tvos@^0.75.4-0"
+    }
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
