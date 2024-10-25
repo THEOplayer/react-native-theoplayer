@@ -123,6 +123,22 @@ class THEOplayerRCTTypeUtils {
             return .moviePlayback
         }
     }
+  
+    class func omidFriendlyObstructionPurposeFromString(_ purposeString: String) -> OmidFriendlyObstructionPurpose {
+      switch purposeString {
+      case "videoControls":
+        return OmidFriendlyObstructionPurpose.mediaControls
+      case "closeAd":
+        return OmidFriendlyObstructionPurpose.closeAd
+      case "notVisible":
+        return OmidFriendlyObstructionPurpose.notVisible
+      case "other":
+        return OmidFriendlyObstructionPurpose.other
+      default:
+        return OmidFriendlyObstructionPurpose.other
+      }
+      
+    }
 
 #if os(iOS)
     class func cacheStatusToString(_ status: CacheStatus) -> String {
