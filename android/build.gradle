@@ -108,9 +108,9 @@ repositories {
   maven { url "https://maven.theoplayer.com/releases" }
 }
 
-// The minimum supported THEOplayer version is 8.1.0
-def theoplayer_sdk_version = safeExtGet('THEOplayer_sdk', '[8.1.0, 9.0.0)')
-def theoplayer_mediasession_version = safeExtGet('THEOplayer_mediasession', '[8.1.0, 9.0.0)')
+// The minimum supported THEOplayer version is 8.3.0
+def theoplayer_sdk_version = safeExtGet('THEOplayer_sdk', '[8.3.0, 9.0.0)')
+def theoplayer_mediasession_version = safeExtGet('THEOplayer_mediasession', '[8.0.0, 9.0.0)')
 
 dependencies {
   //noinspection GradleDynamicVersion
