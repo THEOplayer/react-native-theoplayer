@@ -82,7 +82,12 @@ export default function App() {
 
     player.backgroundAudioConfiguration = { enabled: true };
     player.pipConfiguration = { startsAutomatically: true };
-    console.log('THEOplayer is ready:', sdkVersions);
+
+    sdkVersions().then((versions) => {
+      console.log('THEOplayer SDK versions:', versions);
+    });
+
+    console.log('THEOplayer is ready');
   };
 
   const needsBorder = Platform.OS === 'ios';
