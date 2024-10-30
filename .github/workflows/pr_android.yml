@@ -80,5 +80,7 @@ jobs:
           force-avd-creation: true
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: npm run test:e2e:android:release
+          script: |
+            npm run test:e2e:android
+            cat cavy_results.md >> $GITHUB_STEP_SUMMARY
           working-directory: e2e

@@ -5,7 +5,7 @@ import { expect, preparePlayerWithSource, waitForPlayerEvent } from '../utils/Ac
 import { sleep } from '../utils/TimeUtils';
 
 export default function (spec: TestScope) {
-  spec.describe('Switches between presentation modes.', function () {
+  spec.describe('Switch between presentation modes', function () {
     spec.it('dispatches presentationmodechange events between inline and fullscreen.', async function () {
       const player = await preparePlayerWithSource(hls[0]);
 
