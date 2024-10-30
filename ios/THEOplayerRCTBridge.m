@@ -157,6 +157,11 @@ RCT_EXTERN_METHOD(daiStreamTimeForContentTime:(nonnull NSNumber *)node
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(addFriendlyObstruction:(nonnull NSNumber *)node
+                  obstruction:(NSDictionary)obstruction)
+
+RCT_EXTERN_METHOD(removeAllFriendlyObstructions:(nonnull NSNumber *)node)
+
 @end
 
 // ----------------------------------------------------------------------------
