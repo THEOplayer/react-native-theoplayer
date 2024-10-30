@@ -169,12 +169,13 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
     purpose: OmidFriendlyObstructionPurpose?,
     reason: String?
   ) {
-    if (obsView != null && purpose != null) {
-      viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-        view?.player?.ads?.omid?.addFriendlyObstruction(
-          OmidFriendlyObstruction(obsView, purpose, reason)
-        )
-      }
+    if (obsView == null || purpose == null) {
+      return
+    }
+    viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
+      view?.player?.ads?.omid?.addFriendlyObstruction(
+        OmidFriendlyObstruction(obsView, purpose, reason)
+      )
     }
   }
 
