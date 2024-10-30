@@ -14,12 +14,12 @@ type PlayerFn = (player: THEOplayer) => Promise<void> | void;
 const NoOpPlayerFn: PlayerFn = (_player: THEOplayer) => {};
 
 function testConnector(spec: TestScope, onCreate: PlayerFn, onUseAPI: PlayerFn, onDestroy: PlayerFn) {
-  spec.it('successfully creates the connector and connects to the player', async function () {
-    await onCreate(await getTestPlayer());
-  });
-
-  spec.it('handles sourcechange, play and playing events on play-out', async function () {
+  spec.it('successfully creates the connector, connects to the player, uses API, and cleans up and destroys.', async function () {
     const player = await getTestPlayer();
+
+    // Create connector.
+    await onCreate(player);
+
     const eventsPromise = waitForPlayerEventTypes(player, [PlayerEventType.SOURCE_CHANGE, PlayerEventType.PLAY, PlayerEventType.PLAYING]);
 
     // Start autoplay
@@ -28,16 +28,14 @@ function testConnector(spec: TestScope, onCreate: PlayerFn, onUseAPI: PlayerFn, 
 
     // Expect events.
     await eventsPromise;
-  });
 
-  if (onUseAPI !== NoOpPlayerFn) {
-    spec.it('successfully uses connector API', async function () {
-      await onUseAPI(await getTestPlayer());
-    });
-  }
+    // Use connector API
+    if (onUseAPI !== NoOpPlayerFn) {
+      await onUseAPI(player);
+    }
 
-  spec.it('successfully cleans up on destroy', async function () {
-    await onDestroy(await getTestPlayer());
+    // Clean-up and destroy connector.
+    await onDestroy(player);
   });
 }
 
