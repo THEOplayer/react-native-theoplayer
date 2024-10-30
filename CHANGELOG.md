@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
+- Fixed an issue on iOS where the dynamic island (iphone 14 plus and higher) briefly disappeared when updating the nowPlayingInfo on for example backgrounding the app.
 - Fixed an issue on Android when using Expo, where the Expo plugin would not add THEOplayer's Maven repo to the project's repositories list.
 
 ## [8.6.0] - 24-10-25
