@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed an issue on Android when using Expo, where the Expo plugin would not add THEOplayer's Maven repo to the project's repositories list.
 
+### Added
+
+- Added the `Omid` API for ads, which can be used to manage friendly video controls overlay obstructions.
+
 ## [8.6.0] - 24-10-25
 
 ### Added
