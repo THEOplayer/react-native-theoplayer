@@ -1,4 +1,1 @@
-import { AppRegistry } from 'react-native';
-import { TestableApp } from './src/TestableApp';
-
-AppRegistry.registerComponent('ReactNativeTHEOplayerE2E', () => TestableApp);
+console.error('This app can only be used with cavy-cli');

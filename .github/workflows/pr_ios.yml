@@ -59,3 +59,6 @@ jobs:
         working-directory: e2e
         run: npm run test:e2e:ios
 
+      - name: Summarize results
+        working-directory: e2e
+        run: cat cavy_results.md >> $GITHUB_STEP_SUMMARY
