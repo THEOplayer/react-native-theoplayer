@@ -4,7 +4,7 @@
   "description": "A THEOplayer video component for react-native.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
-  "types": "lib/typescript/src/index.d.ts",
+  "types": "lib/typescript/index.d.ts",
   "react-native": "src/index",
   "source": "src/index",
   "files": [
@@ -29,7 +29,8 @@
     "prettier:fix": "prettier --write \"(src|example|e2e)/**/*.{js,jsx,ts,tsx}\"",
     "lint": "eslint \"**/*.{ts,tsx}\"",
     "lint:fix": "npm run lint -- --fix",
-    "prepare": "bob build && husky",
+    "manifest": "node manifest.js > src/manifest.json",
+	"prepare": "npm run manifest && bob build && husky",
     "pods": "cd example && pod-install --quiet",
     "docs": "typedoc --treatWarningsAsErrors"
   },
