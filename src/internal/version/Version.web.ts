@@ -1,10 +1,11 @@
-import { SdkVersions } from '../../api/version/SdkVersions';
-import { version as nativeVersion } from 'theoplayer';
-import * as pkg from '../../../package.json';
+import { SdkVersions } from 'react-native-theoplayer';
+import { version as nativeVersionString } from 'theoplayer';
+import manifest from '../../manifest.json';
 
 export const sdkVersions = async (): Promise<SdkVersions> => {
+  const rnVersionString = manifest.version ?? '';
   return {
-    rn: pkg.version,
-    native: nativeVersion,
+    rn: rnVersionString,
+    native: nativeVersionString,
   };
 };

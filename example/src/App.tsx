@@ -78,14 +78,13 @@ export default function App() {
     player.addEventListener(PlayerEventType.SEEKING, console.log);
     player.addEventListener(PlayerEventType.SEEKED, console.log);
     player.addEventListener(PlayerEventType.ENDED, console.log);
+
+    sdkVersions().then((versions) => console.log(`[theoplayer] ${JSON.stringify(versions, null, 4)}`));
+
     player.source = SOURCES[0].source;
 
     player.backgroundAudioConfiguration = { enabled: true };
     player.pipConfiguration = { startsAutomatically: true };
-
-    sdkVersions().then((versions) => {
-      console.log('THEOplayer SDK versions:', versions);
-    });
 
     console.log('THEOplayer is ready');
   };
