@@ -6,3 +6,4 @@ export * from './CompanionAd';
 export * from './GoogleDai';
 export * from './GoogleImaAd';
 export * from './GoogleImaConfiguration';
+export * from './Omid';

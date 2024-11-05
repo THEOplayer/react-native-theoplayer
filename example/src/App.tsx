@@ -22,7 +22,7 @@ import {
   TimeLabel,
   UiContainer,
 } from '@theoplayer/react-native-ui';
-import { PlayerConfiguration, PlayerEventType, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
+import { PlayerConfiguration, PlayerEventType, THEOplayer, THEOplayerView, sdkVersions } from 'react-native-theoplayer';
 
 import { Platform, SafeAreaView, StyleSheet, View, ViewStyle } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
@@ -78,11 +78,15 @@ export default function App() {
     player.addEventListener(PlayerEventType.SEEKING, console.log);
     player.addEventListener(PlayerEventType.SEEKED, console.log);
     player.addEventListener(PlayerEventType.ENDED, console.log);
+
+    sdkVersions().then((versions) => console.log(`[theoplayer] ${JSON.stringify(versions, null, 4)}`));
+
     player.source = SOURCES[0].source;
 
     player.backgroundAudioConfiguration = { enabled: true };
     player.pipConfiguration = { startsAutomatically: true };
-    console.log('THEOplayer is ready:', player.version);
+
+    console.log('THEOplayer is ready');
   };
 
   const needsBorder = Platform.OS === 'ios';

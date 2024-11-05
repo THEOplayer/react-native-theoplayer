@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [8.7.0] - 24-11-05
+
+### Fixed
+
+- Fixed an issue on iOS where the dynamic island (iphone 14 plus and higher) briefly disappeared when updating the nowPlayingInfo on for example backgrounding the app.
+- Fixed an issue on Android when using Expo, where the Expo plugin would not add THEOplayer's Maven repo to the project's repositories list.
+
+### Added
+
+- Added the `Omid` API for ads, which can be used to manage friendly video controls overlay obstructions.
+
 ## [8.6.0] - 24-10-25
 
 ### Added
@@ -49,6 +60,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed an issue on Android where on some Android SDK versions controlling playback with the notification buttons would not work.
 - Fixed an issue on Web and Android where a text track with attribute `DEFAULT` was not set as the player's `selectedTextTrack` property.
+
+### Added
+
+- Added `sdkVersions` to react-native-theoplayer, which contains the current RN SDK version and the version of the underlying native THEOplayer SDK.
 
 ## [8.3.0] - 24-09-30
 

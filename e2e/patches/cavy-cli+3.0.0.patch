@@ -1,0 +1,37 @@
+diff --git a/node_modules/cavy-cli/server.js b/node_modules/cavy-cli/server.js
+index 64faf22..b453ebb 100644
+--- a/node_modules/cavy-cli/server.js
++++ b/node_modules/cavy-cli/server.js
+@@ -2,6 +2,7 @@ const http = require('http');
+ const WebSocket = require('ws');
+ const chalk = require('chalk');
+ const constructXML = require('./src/junitFormatter');
++const { writeFileSync } = require('fs');
+ 
+ // Initialize a server
+ const server = http.createServer();
+@@ -80,6 +81,7 @@ function finishTesting(reportJson) {
+   if (server.locals.outputAsXml) {
+     constructXML(fullResults);
+   }
++  constructMarkdown(fullResults);
+ 
+   // If all tests pass, exit with code 0, else code 42.
+   // Code 42 chosen at random so that a test failure can be distinuguished from
+@@ -98,4 +100,16 @@ function finishTesting(reportJson) {
+   console.log('--------------------');
+ };
+ 
++function constructMarkdown(results) {
++  const filename = 'cavy_results.md';
++  console.log(`Writing results to ${filename}`);
++  const data =
++    `### E2E Test Summary\n` +
++    `|Description 📝|Test results 🧪|Duration ⏰|\n` +
++    `|---|---|---|\n` +
++    results.testCases.map((result) => `|${result.description}|${result.passed ? `✅` : `❌`}|${result.time}s|`).join('\n');
++
++  writeFileSync(filename, data);
++};
++
+ module.exports = server;

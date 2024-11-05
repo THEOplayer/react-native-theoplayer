@@ -10,6 +10,7 @@ import com.theoplayer.android.api.player.RenderingTarget
 import com.theoplayer.android.api.player.track.mediatrack.MediaTrack
 import com.theoplayer.android.api.player.track.mediatrack.quality.VideoQuality
 import com.theoplayer.android.api.player.track.texttrack.TextTrackMode
+import com.theoplayer.android.api.THEOplayerGlobal
 import com.theoplayer.audio.BackgroundAudioConfigAdapter
 import com.theoplayer.presentation.PipConfigAdapter
 import com.theoplayer.track.TextTrackStyleAdapter
@@ -23,6 +24,12 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
 
   override fun getName(): String {
     return TAG
+  }
+
+  // The native version string of the Android THEOplayer SDK.
+  @ReactMethod
+  fun version(promise: Promise) {
+    promise.resolve(THEOplayerGlobal.getVersion())
   }
 
   @ReactMethod

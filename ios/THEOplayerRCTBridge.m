@@ -60,6 +60,9 @@ RCT_EXTERN_METHOD(destroy:(nonnull NSNumber *)node);
 // ----------------------------------------------------------------------------
 @interface RCT_EXTERN_REMAP_MODULE(THEORCTPlayerModule, THEOplayerRCTPlayerAPI, NSObject)
 
+RCT_EXTERN_METHOD(version:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN_METHOD(setPaused:(nonnull NSNumber *)node
                   paused:(BOOL)paused)
 
@@ -156,6 +159,11 @@ RCT_EXTERN_METHOD(daiStreamTimeForContentTime:(nonnull NSNumber *)node
                   time:(nonnull NSNumber *)timeValue
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(addFriendlyObstruction:(nonnull NSNumber *)node
+                  obstruction:(NSDictionary)obstruction)
+
+RCT_EXTERN_METHOD(removeAllFriendlyObstructions:(nonnull NSNumber *)node)
 
 @end
 

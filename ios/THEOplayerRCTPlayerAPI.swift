@@ -35,6 +35,12 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
     static func requiresMainQueueSetup() -> Bool {
         return false
     }
+  
+    @objc(version:rejecter:)
+    func version(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+        let versionString = THEOplayer.version
+        resolve(versionString)
+    }
 
     @objc(setPaused:paused:)
     func setPaused(_ node: NSNumber, paused: Bool) -> Void {

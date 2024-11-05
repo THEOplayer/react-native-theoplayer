@@ -44,7 +44,6 @@ class THEOplayerRCTNowPlayingManager {
     func updateNowPlaying() {
         // Reset any existing playing info
         self.nowPlayingInfo = [:]
-        self.clearNowPlayingOnInfoCenter()
         
         // Gather new playing info
         if let player = self.player,
@@ -66,13 +65,19 @@ class THEOplayerRCTNowPlayingManager {
             self.updateArtWork(artWorkUrlString) { [weak self] in
                 self?.processNowPlayingToInfoCenter()
             }
+        } else {
+          self.clearNowPlayingOnInfoCenter()
         }
     }
     
     private func processNowPlayingToInfoCenter() {
         let nowPlayingInfo = self.nowPlayingInfo
         DispatchQueue.main.async {
-            MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+            if !nowPlayingInfo.isEmpty {
+                MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+            } else {
+                MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
+            }
         }
     }
 
