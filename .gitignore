@@ -80,3 +80,4 @@ _site/
 Gemfile.lock
 vendor
 .bundle
+src/manifest.json
