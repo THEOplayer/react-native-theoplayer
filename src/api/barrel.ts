@@ -21,3 +21,4 @@ export * from './THEOplayerView';
 export * from './playback/barrel';
 export * from './player/barrel';
 export * from './presentation/barrel';
+export * from './version/barrel';
