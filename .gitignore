@@ -81,3 +81,4 @@ Gemfile.lock
 vendor
 .bundle
 src/manifest.json
+e2e/cavy_results.md
