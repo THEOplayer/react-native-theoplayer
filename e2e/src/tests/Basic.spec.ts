@@ -6,7 +6,7 @@ import hls from '../res/hls.json';
 import mp4 from '../res/mp4.json';
 import { expect, preparePlayerWithSource, waitForPlayerEventType, waitForPlayerEventTypes } from '../utils/Actions';
 
-const SEEK_THRESHOLD = 1e-1;
+const SEEK_THRESHOLD = 250;
 
 function testBasicPlayout(spec: TestScope, title: string, source: SourceDescription) {
   spec.describe(title, function () {
