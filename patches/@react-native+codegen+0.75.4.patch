@@ -1,0 +1,44 @@
+diff --git a/node_modules/@react-native/codegen/lib/generators/components/GenerateEventEmitterCpp.js b/node_modules/@react-native/codegen/lib/generators/components/GenerateEventEmitterCpp.js
+index 3cf4edb..3c28468 100644
+--- a/node_modules/@react-native/codegen/lib/generators/components/GenerateEventEmitterCpp.js
++++ b/node_modules/@react-native/codegen/lib/generators/components/GenerateEventEmitterCpp.js
+@@ -71,7 +71,7 @@ function generateSetter(
+ ) {
+   const eventChain = usingEvent
+     ? `$event.${[...propertyParts, propertyName].join('.')}`
+-    : [propertyParts, propertyName].join('.');
++    : [...propertyParts, propertyName].join('.');
+   return `${variableName}.setProperty(runtime, "${propertyName}", ${valueMapper(
+     eventChain,
+   )});`;
+@@ -121,7 +121,7 @@ function generateArraySetter(
+ ) {
+   const eventChain = usingEvent
+     ? `$event.${[...propertyParts, propertyName].join('.')}`
+-    : [propertyParts, propertyName].join('.');
++    : [...propertyParts, propertyName].join('.');
+   const indexVar = `${propertyName}Index`;
+   const innerLoopVar = `${propertyName}Value`;
+   return `
+diff --git a/node_modules/@react-native/codegen/lib/generators/components/GenerateEventEmitterCpp.js.flow b/node_modules/@react-native/codegen/lib/generators/components/GenerateEventEmitterCpp.js.flow
+index 2f2a829..d6fbdba 100644
+--- a/node_modules/@react-native/codegen/lib/generators/components/GenerateEventEmitterCpp.js.flow
++++ b/node_modules/@react-native/codegen/lib/generators/components/GenerateEventEmitterCpp.js.flow
+@@ -104,7 +104,7 @@ function generateSetter(
+ ) {
+   const eventChain = usingEvent
+     ? `$event.${[...propertyParts, propertyName].join('.')}`
+-    : [propertyParts, propertyName].join('.');
++    : [...propertyParts, propertyName].join('.');
+   return `${variableName}.setProperty(runtime, "${propertyName}", ${valueMapper(
+     eventChain,
+   )});`;
+@@ -157,7 +157,7 @@ function generateArraySetter(
+ ): string {
+   const eventChain = usingEvent
+     ? `$event.${[...propertyParts, propertyName].join('.')}`
+-    : [propertyParts, propertyName].join('.');
++    : [...propertyParts, propertyName].join('.');
+   const indexVar = `${propertyName}Index`;
+   const innerLoopVar = `${propertyName}Value`;
+   return `

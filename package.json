@@ -32,7 +32,8 @@
     "manifest": "node manifest.js > src/manifest.json",
     "prepare": "npm run manifest && bob build && husky",
     "pods": "cd example && pod-install --quiet",
-    "docs": "typedoc --treatWarningsAsErrors"
+    "docs": "typedoc --treatWarningsAsErrors",
+    "codegen": "npx @react-native-community/cli codegen --platform all"
   },
   "lint-staged": {
     "(src|example|e2e)/**/*.{js,jsx,ts,tsx}": [
@@ -63,6 +64,7 @@
     "eslint-config-prettier": "^9.1.0",
     "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
+    "patch-package": "^8.0.0",
     "pod-install": "^0.1.39",
     "prettier": "^3.3.3",
     "react": "^18.3.1",
@@ -96,8 +98,18 @@
     "source": "src",
     "output": "lib",
     "targets": [
-      "commonjs",
-      "module",
+      [
+        "commonjs",
+        {
+          "esm": true
+        }
+      ],
+      [
+        "module",
+        {
+          "esm": true
+        }
+      ],
       [
         "typescript",
         {
@@ -108,5 +120,18 @@
   },
   "dependencies": {
     "buffer": "^6.0.3"
+  },
+  "codegenConfig": {
+    "name": "rntheo",
+    "type": "all",
+    "outputDir": {
+      "ios": "ios/newarch",
+      "android": "android/src/newarch"
+    },
+    "jsSrcsDir": "src/specs",
+    "includesGeneratedCode": true,
+    "android": {
+      "javaPackageName": "com.facebook.fbreact.specs"
+    }
   }
 }
