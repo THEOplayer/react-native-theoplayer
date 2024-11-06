@@ -81,6 +81,11 @@ _site/
 Gemfile.lock
 vendor
 .bundle
+
+# Turborepo
+.turbo/
+
+# Generated manifest
 src/manifest.json
 
 # E2E app
