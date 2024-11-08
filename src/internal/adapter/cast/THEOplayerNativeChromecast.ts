@@ -1,8 +1,8 @@
 import type { CastEvent, Chromecast, THEOplayerView } from 'react-native-theoplayer';
 import { CastEventType, CastState, PlayerEventType, THEOplayer } from 'react-native-theoplayer';
-import { NativeModules } from 'react-native';
+import { getNativeModule } from '../../utils/ModuleUtils';
 
-const NativeCastModule = NativeModules.THEORCTCastModule;
+const NativeCastModule = getNativeModule('Cast');
 
 export class THEOplayerNativeChromecast implements Chromecast {
   private readonly _player: THEOplayer;
