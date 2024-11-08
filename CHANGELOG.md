@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - The `MediaPlaybackService` on Android is never restarted if a MediaButton event is received after the app was closed.
 - Added a consumer R8 config file on Android, telling R8 not to throw errors or warnings because of classes that are expected to be missing.
+- Simplified the viewController reparenting mechanism on iOS that is applied when changing the `presentationMode` to/from fullscreen.
 
 ## [8.7.0] - 24-11-05
 
