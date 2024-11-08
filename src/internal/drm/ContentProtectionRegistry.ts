@@ -1,7 +1,7 @@
 import type { CertificateRequest, ContentProtectionAPI, DRMConfiguration, LicenseRequest } from 'react-native-theoplayer';
 import type { KeySystemId } from 'react-native-theoplayer';
 import type { ContentProtectionIntegrationFactory } from 'react-native-theoplayer';
-import { NativeEventEmitter, NativeModules } from 'react-native';
+import { NativeEventEmitter } from 'react-native';
 import type { ContentProtectionIntegration } from 'react-native-theoplayer';
 import type { NativeContentProtectionEvent } from './NativeContentProtectionEvent';
 import { fromNativeLicenseRequest, NativeLicenseRequest, toNativeLicenseRequest } from './NativeLicenseRequest';
@@ -9,8 +9,9 @@ import { fromNativeLicenseResponse, NativeLicenseResponse, toNativeLicenseRespon
 import { fromNativeCertificateRequest, NativeCertificateRequest, toNativeCertificateRequest } from './NativeCertificateRequest';
 import { fromNativeCertificateResponse, NativeCertificateResponse, toNativeCertificateResponseResult } from './NativeCertificateResponse';
 import { isBufferSource } from '../utils/TypeUtils';
+import { getNativeModule } from '../utils/ModuleUtils';
 
-const NativeContentProtectionModule = NativeModules.THEORCTContentProtectionModule;
+const NativeContentProtectionModule = getNativeModule('ContentProtection');
 
 interface WrappedContentProtectionIntegrationFactory {
   integrationId: string;
