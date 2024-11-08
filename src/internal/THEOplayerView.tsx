@@ -1,19 +1,43 @@
 import React, { PureComponent } from 'react';
 import {
-  Dimensions,
-  findNodeHandle,
-  HostComponent,
-  NativeSyntheticEvent,
-  Platform,
-  requireNativeComponent,
-  StyleProp,
-  StyleSheet,
-  UIManager,
-  View,
-  ViewStyle,
-} from 'react-native';
+  default as THEOplayerRCTView,
+  NativeAdEvent,
+  NativeCastEvent,
+  NativeDurationChangeEvent,
+  NativeErrorEvent,
+  NativeLoadedMetadataEvent,
+  NativeMediaTrackEvent,
+  NativeMediaTrackListEvent,
+  NativePlayerStateEvent,
+  NativePresentationModeChangeEvent,
+  NativeProgressEvent,
+  NativeRateChangeEvent,
+  NativeReadyStateChangeEvent,
+  NativeResizeEvent,
+  NativeSegmentNotFoundEvent,
+  NativeTextTrackEvent,
+  NativeTextTrackListEvent,
+  NativeTimeUpdateEvent,
+  NativeVolumeChangeEvent,
+} from '../specs/THEOplayerRCTViewNativeComponent';
+import { Dimensions, findNodeHandle, NativeSyntheticEvent, Platform, StyleSheet, UIManager, View } from 'react-native';
 import type { ScaledSize, EmitterSubscription } from 'react-native';
-import { isDateRangeCue, PlayerConfiguration, PlayerError, PresentationMode, TextTrackCue, THEOplayerViewProps } from 'react-native-theoplayer';
+import {
+  Ad,
+  AdBreak,
+  AdEventType,
+  CastState,
+  ChromecastError,
+  isDateRangeCue,
+  MediaTrack,
+  PlayerError,
+  PresentationMode,
+  PresentationModeChangeContext,
+  Quality,
+  TextTrack,
+  TextTrackCue,
+  THEOplayerViewProps,
+} from 'react-native-theoplayer';
 import { CastEventType, PlayerEventType } from 'react-native-theoplayer';
 
 import styles from './THEOplayerView.style';
@@ -40,69 +64,13 @@ import {
   DefaultTimeupdateEvent,
   DefaultResizeEvent,
 } from './adapter/event/PlayerEvents';
-import type { NativeCastEvent } from './adapter/event/native/NativeCastEvent';
-import type {
-  NativeMediaTrackEvent,
-  NativeMediaTrackListEvent,
-  NativeTextTrackEvent,
-  NativeTextTrackListEvent,
-} from './adapter/event/native/NativeTrackEvent';
-import { toMediaTrackType, toMediaTrackTypeEventType, toTextTrackEventType, toTrackListEventType } from './adapter/event/native/NativeTrackEvent';
-import type {
-  NativeDurationChangeEvent,
-  NativeErrorEvent,
-  NativeLoadedMetadataEvent,
-  NativePlayerStateEvent,
-  NativePresentationModeChangeEvent,
-  NativeProgressEvent,
-  NativeRateChangeEvent,
-  NativeReadyStateChangeEvent,
-  NativeSegmentNotFoundEvent,
-  NativeTimeUpdateEvent,
-  NativeVolumeChangeEvent,
-  NativeResizeEvent,
-} from './adapter/event/native/NativePlayerEvent';
-import type { NativeAdEvent } from './adapter/event/native/NativeAdEvent';
 import { THEOplayerAdapter } from './adapter/THEOplayerAdapter';
 import { getFullscreenSize } from './utils/Dimensions';
 import { Poster } from './poster/Poster';
+import type { NativePlayerState } from './adapter/NativePlayerState';
+import { toMediaTrackType, toMediaTrackTypeEventType, toTextTrackEventType, toTrackListEventType } from './adapter/event/TrackEventUtils';
 
 const INVALID_HANDLE = -1;
-
-interface THEOplayerRCTViewProps {
-  ref: React.RefObject<THEOplayerViewNativeComponent>;
-  style?: StyleProp<ViewStyle>;
-  config?: PlayerConfiguration;
-  onNativePlayerReady: (event: NativeSyntheticEvent<NativePlayerStateEvent>) => void;
-  onNativeSourceChange: () => void;
-  onNativeLoadStart: () => void;
-  onNativeLoadedData: () => void;
-  onNativeLoadedMetadata: (event: NativeSyntheticEvent<NativeLoadedMetadataEvent>) => void;
-  onNativeReadyStateChange?: (event: NativeSyntheticEvent<NativeReadyStateChangeEvent>) => void;
-  onNativeError: (event: NativeSyntheticEvent<NativeErrorEvent>) => void;
-  onNativeProgress: (event: NativeSyntheticEvent<NativeProgressEvent>) => void;
-  onNativeVolumeChange: (event: NativeSyntheticEvent<NativeVolumeChangeEvent>) => void;
-  onNativeCanPlay: () => void;
-  onNativePlay: () => void;
-  onNativePlaying: () => void;
-  onNativePause: () => void;
-  onNativeSeeking: () => void;
-  onNativeSeeked: () => void;
-  onNativeEnded: () => void;
-  onNativeWaiting: () => void;
-  onNativeTimeUpdate: (event: NativeSyntheticEvent<NativeTimeUpdateEvent>) => void;
-  onNativeDurationChange: (event: NativeSyntheticEvent<NativeDurationChangeEvent>) => void;
-  onNativeRateChange: (event: NativeSyntheticEvent<NativeRateChangeEvent>) => void;
-  onNativeSegmentNotFound: (event: NativeSyntheticEvent<NativeSegmentNotFoundEvent>) => void;
-  onNativeTextTrackListEvent: (event: NativeSyntheticEvent<NativeTextTrackListEvent>) => void;
-  onNativeTextTrackEvent: (event: NativeSyntheticEvent<NativeTextTrackEvent>) => void;
-  onNativeMediaTrackListEvent: (event: NativeSyntheticEvent<NativeMediaTrackListEvent>) => void;
-  onNativeMediaTrackEvent: (event: NativeSyntheticEvent<NativeMediaTrackEvent>) => void;
-  onNativeAdEvent: (event: NativeSyntheticEvent<NativeAdEvent>) => void;
-  onNativeCastEvent: (event: NativeSyntheticEvent<NativeCastEvent>) => void;
-  onNativePresentationModeChange: (event: NativeSyntheticEvent<NativePresentationModeChangeEvent>) => void;
-  onNativeResize: (event: NativeSyntheticEvent<NativeResizeEvent>) => void;
-}
 
 interface THEOplayerRCTViewState {
   error?: PlayerError;
@@ -112,10 +80,8 @@ interface THEOplayerRCTViewState {
   poster: string | undefined;
 }
 
-type THEOplayerViewNativeComponent = HostComponent<THEOplayerRCTViewProps>;
-
 export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOplayerViewProps>, THEOplayerRCTViewState> {
-  private readonly _root: React.RefObject<THEOplayerViewNativeComponent>;
+  private readonly _root: React.RefObject<any>;
   private readonly _facade: THEOplayerAdapter;
   private _dimensionsHandler?: EmitterSubscription = undefined;
 
@@ -168,7 +134,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
   private _onNativePlayerReady = (event: NativeSyntheticEvent<NativePlayerStateEvent>) => {
     // Optionally apply an initial player state
     const { version, state } = event.nativeEvent;
-    this._facade.initializeFromNativePlayer_(version, state).then(() => {
+    this._facade.initializeFromNativePlayer_(version, state as NativePlayerState).then(() => {
       this.props.onPlayerReady?.(this._facade);
     });
   };
@@ -192,9 +158,9 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
     const nativeEvent = event.nativeEvent;
     this._facade.dispatchEvent(
       new DefaultLoadedMetadataEvent(
-        nativeEvent.textTracks,
-        nativeEvent.audioTracks,
-        nativeEvent.videoTracks,
+        nativeEvent.textTracks as TextTrack[],
+        nativeEvent.audioTracks as MediaTrack[],
+        nativeEvent.videoTracks as MediaTrack[],
         decodeNanInf(nativeEvent.duration),
         nativeEvent.selectedTextTrack,
         nativeEvent.selectedVideoTrack,
@@ -273,7 +239,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
 
   private _onTextTrackListEvent = (event: NativeSyntheticEvent<NativeTextTrackListEvent>) => {
     const nativeEvent = event.nativeEvent;
-    this._facade.dispatchEvent(new DefaultTextTrackListEvent(toTrackListEventType(nativeEvent.type), nativeEvent.track));
+    this._facade.dispatchEvent(new DefaultTextTrackListEvent(toTrackListEventType(nativeEvent.type), nativeEvent.track as TextTrack));
   };
 
   private _onTextTrackEvent = (event: NativeSyntheticEvent<NativeTextTrackEvent>) => {
@@ -305,7 +271,11 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
   private _onMediaTrackListEvent = (event: NativeSyntheticEvent<NativeMediaTrackListEvent>) => {
     const nativeEvent = event.nativeEvent;
     this._facade.dispatchEvent(
-      new DefaultMediaTrackListEvent(toTrackListEventType(nativeEvent.type), toMediaTrackType(nativeEvent.trackType), nativeEvent.track),
+      new DefaultMediaTrackListEvent(
+        toTrackListEventType(nativeEvent.type),
+        toMediaTrackType(nativeEvent.trackType),
+        nativeEvent.track as MediaTrack,
+      ),
     );
   };
 
@@ -316,37 +286,37 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
         toMediaTrackTypeEventType(nativeEvent.type),
         toMediaTrackType(nativeEvent.trackType),
         nativeEvent.trackUid,
-        nativeEvent.qualities,
+        nativeEvent.qualities as Quality[],
       ),
     );
   };
 
   private _onAdEvent = (event: NativeSyntheticEvent<NativeAdEvent>) => {
     const nativeEvent = event.nativeEvent;
-    this._facade.dispatchEvent(new DefaultAdEvent(nativeEvent.type, nativeEvent.ad));
+    this._facade.dispatchEvent(new DefaultAdEvent(nativeEvent.type as AdEventType, nativeEvent.ad as Ad | AdBreak));
   };
 
   private _onCastEvent = (event: NativeSyntheticEvent<NativeCastEvent>) => {
     switch (event.nativeEvent.type) {
       case CastEventType.CHROMECAST_STATE_CHANGE:
-        this._facade.dispatchEvent(new DefaultChromecastChangeEvent(event.nativeEvent.state));
+        this._facade.dispatchEvent(new DefaultChromecastChangeEvent(event.nativeEvent.state as CastState));
         break;
       case CastEventType.AIRPLAY_STATE_CHANGE:
-        this._facade.dispatchEvent(new DefaultAirplayStateChangeEvent(event.nativeEvent.state));
+        this._facade.dispatchEvent(new DefaultAirplayStateChangeEvent(event.nativeEvent.state as CastState));
         break;
       case CastEventType.CHROMECAST_ERROR:
-        this._facade.dispatchEvent(new DefaultChromecastErrorEvent(event.nativeEvent.error));
+        this._facade.dispatchEvent(new DefaultChromecastErrorEvent(event.nativeEvent.error as ChromecastError));
         break;
     }
   };
 
   private _onPresentationModeChange = (event: NativeSyntheticEvent<NativePresentationModeChangeEvent>) => {
-    this.setState({ presentationMode: event.nativeEvent.presentationMode });
+    this.setState({ presentationMode: event.nativeEvent.presentationMode as PresentationMode });
     this._facade.dispatchEvent(
       new DefaultPresentationModeChangeEvent(
-        event.nativeEvent.presentationMode,
-        event.nativeEvent.previousPresentationMode,
-        event.nativeEvent.context,
+        event.nativeEvent.presentationMode as PresentationMode,
+        event.nativeEvent.previousPresentationMode as PresentationMode,
+        event.nativeEvent.context as PresentationModeChangeContext,
       ),
     );
   };
@@ -413,18 +383,3 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
     );
   }
 }
-
-const LINKING_ERROR =
-  `The package 'react-native-theoplayer' doesn't seem to be linked. Make sure: \n\n` +
-  Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
-  '- You rebuilt the app after installing the package\n' +
-  '- You are not using Expo managed workflow\n';
-
-const ComponentName = 'THEOplayerRCTView';
-
-const THEOplayerRCTView =
-  UIManager.getViewManagerConfig(ComponentName) != null
-    ? requireNativeComponent<THEOplayerRCTViewProps>(ComponentName)
-    : () => {
-        throw new Error(LINKING_ERROR);
-      };

@@ -1,8 +1,9 @@
 import type { THEOplayerView } from 'react-native-theoplayer';
-import { findNodeHandle, NativeModules } from 'react-native';
+import { findNodeHandle } from 'react-native';
 import { Omid, OmidFriendlyObstruction } from '../../../api/ads/Omid';
+import { getNativeModule } from '../../utils/ModuleUtils';
 
-const NativeAdsModule = NativeModules.THEORCTAdsModule;
+const NativeAdsModule = getNativeModule('Ads');
 
 export class THEOplayerNativeOmid implements Omid {
   public constructor(private readonly _player: THEOplayerView) {}

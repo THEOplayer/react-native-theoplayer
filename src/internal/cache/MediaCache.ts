@@ -7,13 +7,14 @@ import type { CachingTaskProgressEvent, CachingTaskStatusChangeEvent, SourceDesc
 import { CacheTaskStatus, CachingTaskEventType, TimeRange } from 'react-native-theoplayer';
 import type { CachingTaskParameters } from '../../api/cache/CachingTaskParameters';
 import type { CachingTask } from '../../api/cache/CachingTask';
-import { NativeEventEmitter, NativeModules } from 'react-native';
+import { NativeEventEmitter } from 'react-native';
 import { NativeCachingTask, NativeCachingTaskAdapter } from './NativeCachingTaskAdapter';
 import { toNativeCachingTaskParameters } from './NativeCachingTaskParametersAdapter';
+import { getNativeModule } from '../utils/ModuleUtils';
 
 const TAG = 'NativeMediaCache';
 
-const NativeCacheModule = NativeModules.THEORCTCacheModule;
+const NativeCacheModule = getNativeModule('Cache');
 
 interface NativeCachingStatusChangeEvent {
   readonly id: string;

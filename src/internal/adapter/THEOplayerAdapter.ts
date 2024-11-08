@@ -41,13 +41,14 @@ import {
 import { THEOplayerNativeAdsAdapter } from './ads/THEOplayerNativeAdsAdapter';
 import { THEOplayerNativeCastAdapter } from './cast/THEOplayerNativeCastAdapter';
 import { AbrAdapter } from './abr/AbrAdapter';
-import { NativeModules, Platform, StatusBar } from 'react-native';
+import { Platform, StatusBar } from 'react-native';
 import { TextTrackStyleAdapter } from './track/TextTrackStyleAdapter';
 import type { NativePlayerState } from './NativePlayerState';
 import { EventBroadcastAdapter } from './broadcast/EventBroadcastAdapter';
 import { DefaultNativePlayerState } from './DefaultNativePlayerState';
+import { getNativeModule } from '../utils/ModuleUtils';
 
-const NativePlayerModule = NativeModules.THEORCTPlayerModule;
+const NativePlayerModule = getNativeModule('Player');
 
 export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayer {
   private readonly _view: THEOplayerView;
