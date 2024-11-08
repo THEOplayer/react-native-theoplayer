@@ -14,8 +14,20 @@ buildscript {
   }
 }
 
+def isNewArchitectureEnabled() {
+  // To opt-in for the New Architecture, you can either:
+  // - Set `newArchEnabled` to true inside the `gradle.properties` file
+  // - Invoke gradle with `-newArchEnabled=true`
+  // - Set an environment variable `ORG_GRADLE_PROJECT_newArchEnabled=true`
+  return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
+}
+
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+
+if (isNewArchitectureEnabled()) {
+  apply plugin: "com.facebook.react"
+}
 
 def safeExtGet(prop, fallback) {
   rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
@@ -23,14 +35,6 @@ def safeExtGet(prop, fallback) {
 
 static def versionString(version) {
   return "${version == '+' ? 'latest' : version}"
-}
-
-def isNewArchitectureEnabled() {
-  // To opt-in for the New Architecture, you can either:
-  // - Set `newArchEnabled` to true inside the `gradle.properties` file
-  // - Invoke gradle with `-newArchEnabled=true`
-  // - Set an environment variable `ORG_GRADLE_PROJECT_newArchEnabled=true`
-  return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
 }
 
 // Extensions
@@ -102,6 +106,17 @@ android {
   packagingOptions {
     exclude 'META-INF/kotlin-stdlib.kotlin_module'
     exclude 'META-INF/annotation-experimental_release.kotlin_module'
+  }
+  sourceSets {
+    main {
+      if (isNewArchitectureEnabled()) {
+        java.srcDirs += [
+          "src/newarch",
+        ]
+      } else {
+        java.srcDirs += ["src/oldarch"]
+      }
+    }
   }
 }
 
