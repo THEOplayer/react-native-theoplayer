@@ -5,6 +5,8 @@ package com.theoplayer.ads
 import android.util.Log
 import android.view.View
 import com.facebook.react.bridge.*
+import com.facebook.react.module.annotations.ReactModule
+import com.theoplayer.specs.AdsModuleSpec
 import com.theoplayer.source.SourceAdapter
 import com.theoplayer.util.ViewResolver
 import com.theoplayer.ReactTHEOplayerView
@@ -12,23 +14,27 @@ import com.theoplayer.android.api.ads.OmidFriendlyObstruction
 import com.theoplayer.android.api.ads.OmidFriendlyObstructionPurpose
 import com.theoplayer.android.api.error.THEOplayerException
 
-private const val TAG = "THEORCTAdsModule"
-
 private const val PROP_OMID_VIEW = "view"
 private const val PROP_OMID_PURPOSE = "purpose"
 private const val PROP_OMID_REASON = "reason"
 
-class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(context) {
+@ReactModule(name = AdsModule.NAME)
+class AdsModule(context: ReactApplicationContext) : AdsModuleSpec(context) {
   private val sourceHelper = SourceAdapter()
   private val viewResolver: ViewResolver = ViewResolver(context)
 
+  companion object {
+    const val NAME = "THEORCTAdsModule"
+    const val TAG = "AdsModule"
+  }
+
   override fun getName(): String {
-    return TAG
+    return NAME
   }
 
   // Add an ad break request.
   @ReactMethod
-  fun schedule(tag: Int, ad: ReadableMap) {
+  override fun schedule(tag: Double, ad: ReadableMap) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       if (view != null) {
         try {
@@ -42,7 +48,7 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
 
   // The currently playing ad break.
   @ReactMethod
-  fun currentAdBreak(tag: Int, promise: Promise) {
+  override fun currentAdBreak(tag: Double, promise: Promise) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       if (view == null) {
         promise.resolve(Arguments.createMap())
@@ -54,7 +60,7 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
 
   // List of currently playing ads.
   @ReactMethod
-  fun currentAds(tag: Int, promise: Promise) {
+  override fun currentAds(tag: Double, promise: Promise) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       if (view == null) {
         promise.resolve(Arguments.createMap())
@@ -66,7 +72,7 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
 
   // List of ad breaks which still need to be played.
   @ReactMethod
-  fun scheduledAdBreaks(tag: Int, promise: Promise) {
+  override fun scheduledAdBreaks(tag: Double, promise: Promise) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       if (view == null) {
         promise.resolve(Arguments.createMap())
@@ -78,7 +84,7 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
 
   // Whether a linear ad is currently playing.
   @ReactMethod
-  fun playing(tag: Int, promise: Promise) {
+  override fun playing(tag: Double, promise: Promise) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       if (view == null) {
         promise.resolve(false)
@@ -91,12 +97,12 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
   // Skip the current linear ad.
   // NOTE: This will have no effect when the current linear ad is (not yet) skippable.
   @ReactMethod
-  fun skip(tag: Int) {
+  override fun skip(tag: Double) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? -> view?.adsApi?.skip() }
   }
 
   @ReactMethod
-  fun daiSnapback(tag: Int, promise: Promise) {
+  override fun daiSnapback(tag: Double, promise: Promise) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       val daiIntegration = view?.playerContext?.daiIntegration
       if (daiIntegration == null) {
@@ -108,17 +114,17 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
   }
 
   @ReactMethod
-  fun daiSetSnapback(tag: Int, enabled: Boolean?) {
+  override fun daiSetSnapback(tag: Double, enabled: Boolean) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       val daiIntegration = view?.playerContext?.daiIntegration
       if (daiIntegration != null) {
-        daiIntegration.enableSnapback = enabled!!
+        daiIntegration.enableSnapback = enabled
       }
     }
   }
 
   @ReactMethod
-  fun daiContentTimeForStreamTime(tag: Int, time: Int, promise: Promise) {
+  override fun daiContentTimeForStreamTime(tag: Double, time: Double, promise: Promise) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       val daiIntegration = view?.playerContext?.daiIntegration
       if (daiIntegration == null) {
@@ -130,7 +136,7 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
   }
 
   @ReactMethod
-  fun daiStreamTimeForContentTime(tag: Int, time: Int, promise: Promise) {
+  override fun daiStreamTimeForContentTime(tag: Double, time: Double, promise: Promise) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       val daiIntegration = view?.playerContext?.daiIntegration
       if (daiIntegration == null) {
@@ -142,7 +148,7 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
   }
 
   @ReactMethod
-  fun addFriendlyObstruction(tag: Int, obstruction: ReadableMap) {
+  override fun addFriendlyObstruction(tag: Double, obstruction: ReadableMap) {
     val obsTag =
       if (obstruction.hasKey(PROP_OMID_VIEW)) obstruction.getInt(PROP_OMID_VIEW) else null
     val purpose = if (obstruction.hasKey(PROP_OMID_PURPOSE)) {
@@ -164,7 +170,7 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
   }
 
   private fun addFriendlyObstruction(
-    tag: Int,
+    tag: Double,
     obsView: View?,
     purpose: OmidFriendlyObstructionPurpose?,
     reason: String?
@@ -180,7 +186,7 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
   }
 
   @ReactMethod
-  fun removeAllFriendlyObstructions(tag: Int) {
+  override fun removeAllFriendlyObstructions(tag: Double) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.player?.ads?.omid?.removeAllFriendlyObstructions()
     }

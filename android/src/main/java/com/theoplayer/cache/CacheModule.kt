@@ -8,12 +8,13 @@ import android.util.Log
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableMap
+import com.facebook.react.module.annotations.ReactModule
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.google.gson.Gson
+import com.theoplayer.specs.CacheModuleSpec
 import com.theoplayer.util.ViewResolver
 import com.theoplayer.android.api.THEOplayerGlobal
 import com.theoplayer.android.api.cache.Cache
@@ -30,8 +31,6 @@ import com.theoplayer.source.SourceAdapter
 import org.json.JSONException
 import org.json.JSONObject
 
-private const val TAG = "THEORCTCacheModule"
-
 private const val PROP_STATUS = "status"
 private const val PROP_ID = "id"
 private const val PROP_TASK = "task"
@@ -39,8 +38,8 @@ private const val PROP_TASKS = "tasks"
 private const val PROP_PROGRESS = "progress"
 private const val PROP_ERROR = "error"
 
-class CacheModule(private val context: ReactApplicationContext) :
-  ReactContextBaseJavaModule(context) {
+@ReactModule(name = CacheModule.NAME)
+class CacheModule(private val context: ReactApplicationContext) : CacheModuleSpec(context) {
   private val viewResolver: ViewResolver = ViewResolver(context)
   private val onTaskProgress = mutableMapOf<String, EventListener<CachingTaskProgressEvent>>()
   private val onTaskError = mutableMapOf<String, EventListener<CachingTaskErrorEvent>>()
@@ -49,6 +48,11 @@ class CacheModule(private val context: ReactApplicationContext) :
   private val cache: Cache
     get() = THEOplayerGlobal.getSharedInstance(context.applicationContext).cache
   private val handler = Handler(Looper.getMainLooper())
+
+  companion object {
+    const val NAME = "THEORCTCacheModule"
+    const val TAG = "CacheModule"
+  }
 
   init {
     // Add cache event listeners
@@ -59,7 +63,7 @@ class CacheModule(private val context: ReactApplicationContext) :
           emit("onCacheStatusChange", Arguments.createMap().apply {
             putString(PROP_STATUS, CacheAdapter.fromCacheStatus(event.status))
           })
-       }
+        }
         // Listen for add task events
         tasks.addEventListener(CachingTaskListEventTypes.ADD_TASK) { event ->
           event.task?.let { task ->
@@ -88,7 +92,7 @@ class CacheModule(private val context: ReactApplicationContext) :
   }
 
   override fun getName(): String {
-    return TAG
+    return NAME
   }
 
   private fun addCachingTaskListeners(task: CachingTask) {
@@ -153,7 +157,7 @@ class CacheModule(private val context: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun getInitialState(promise: Promise) {
+  override fun getInitialState(promise: Promise) {
     handler.post {
       cache.apply {
 
@@ -171,7 +175,7 @@ class CacheModule(private val context: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun createTask(source: ReadableMap, parameters: ReadableMap) {
+  override fun createTask(source: ReadableMap, parameters: ReadableMap) {
     val sourceDescription = sourceAdapter.parseSourceFromJS(source)
     if (sourceDescription != null) {
       handler.post {
@@ -184,28 +188,28 @@ class CacheModule(private val context: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun pauseCachingTask(id: String) {
+  override fun pauseCachingTask(id: String) {
     handler.post {
       cache.tasks.getTaskById(id)?.pause()
     }
   }
 
   @ReactMethod
-  fun removeCachingTask(id: String) {
+  override fun removeCachingTask(id: String) {
     handler.post {
       cache.tasks.getTaskById(id)?.remove()
     }
   }
 
   @ReactMethod
-  fun startCachingTask(id: String) {
+  override fun startCachingTask(id: String) {
     handler.post {
       cache.tasks.getTaskById(id)?.start()
     }
   }
 
   @ReactMethod
-  fun renewLicense(id: String, drmConfiguration: ReadableMap?) {
+  override fun renewLicense(id: String, drmConfiguration: ReadableMap?) {
     handler.post {
       if (drmConfiguration == null) {
         taskById(id)?.license()?.renew()

@@ -2,35 +2,45 @@
 
 package com.theoplayer.cast
 
-import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.bridge.ReactContextBaseJavaModule
-import com.theoplayer.util.ViewResolver
-import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.Promise
+import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.ReactMethod
+import com.facebook.react.module.annotations.ReactModule
+import com.theoplayer.specs.CastModuleSpec
 import com.theoplayer.ReactTHEOplayerView
 import com.theoplayer.android.api.cast.chromecast.PlayerCastState
+import com.theoplayer.util.ViewResolver
 
-class CastModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(context) {
+@ReactModule(name = CastModule.NAME)
+class CastModule(context: ReactApplicationContext) : CastModuleSpec(context) {
   private val viewResolver: ViewResolver = ViewResolver(context)
 
+  companion object {
+    const val NAME = "THEORCTCastModule"
+  }
+
   override fun getName(): String {
-    return "THEORCTCastModule"
+    return NAME
   }
 
   @ReactMethod
-  fun casting(tag: Int, promise: Promise) {
+  override fun casting(tag: Double, promise: Promise) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       promise.resolve(view?.playerContext?.castIntegration?.isCasting() ?: false)
     }
   }
 
   @ReactMethod
-  fun chromecastCasting(tag: Int, promise: Promise) {
+  override fun chromecastCasting(tag: Double, promise: Promise) {
     casting(tag, promise)
   }
 
+  override fun airplayCasting(tag: Double, promise: Promise) {
+    promise.resolve(false)
+  }
+
   @ReactMethod
-  fun chromecastState(tag: Int, promise: Promise) {
+  override fun chromecastState(tag: Double, promise: Promise) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       promise.resolve(
         castStateToString(
@@ -38,6 +48,10 @@ class CastModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(
         )
       )
     }
+  }
+
+  override fun airplayState(tag: Double, promise: Promise) {
+    promise.resolve(false)
   }
 
   private fun castStateToString(state: PlayerCastState): String {
@@ -51,30 +65,38 @@ class CastModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(
   }
 
   @ReactMethod
-  fun chromecastStart(tag: Int) {
+  override fun chromecastStart(tag: Double) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.playerContext?.castIntegration?.start()
     }
   }
 
   @ReactMethod
-  fun chromecastStop(tag: Int) {
+  override fun chromecastStop(tag: Double) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.playerContext?.castIntegration?.stop()
     }
   }
 
   @ReactMethod
-  fun chromecastJoin(tag: Int) {
+  override fun chromecastJoin(tag: Double) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.playerContext?.castIntegration?.join()
     }
   }
 
   @ReactMethod
-  fun chromecastLeave(tag: Int) {
+  override fun chromecastLeave(tag: Double) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.playerContext?.castIntegration?.leave()
     }
+  }
+
+  override fun airplayStart(tag: Double) {
+    // ignore
+  }
+
+  override fun airplayStop(tag: Double) {
+    // ignore
   }
 }

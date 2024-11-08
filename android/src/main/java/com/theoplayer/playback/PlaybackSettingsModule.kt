@@ -1,28 +1,34 @@
 package com.theoplayer.playback
 
 import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
+import com.facebook.react.module.annotations.ReactModule
+import com.theoplayer.specs.PlaybackSettingsModuleSpec
 import com.theoplayer.android.api.THEOplayerGlobal
 import com.theoplayer.android.api.settings.PlaybackSettings
 
+@ReactModule(name = PlaybackSettingsModule.NAME)
 class PlaybackSettingsModule(private val context: ReactApplicationContext) :
-  ReactContextBaseJavaModule(context) {
+  PlaybackSettingsModuleSpec(context) {
+
+  companion object {
+    const val NAME = "THEORCTPlaybackSettingsModule"
+  }
 
   private val playbackSettings: PlaybackSettings
     get() = THEOplayerGlobal.getSharedInstance(context.applicationContext).playbackSettings
 
   override fun getName(): String {
-    return "THEORCTPlaybackSettingsModule"
+    return NAME
   }
 
   @ReactMethod
-  fun useFastStartup(useFastStartup: Boolean) {
+  override fun useFastStartup(useFastStartup: Boolean) {
     playbackSettings.useFastStartup(useFastStartup)
   }
 
   @ReactMethod
-  fun setLipSyncCorrection(correctionMs: Double) {
+  override fun setLipSyncCorrection(correctionMs: Double) {
     playbackSettings.setLipSyncCorrection(correctionMs.toLong())
   }
 }

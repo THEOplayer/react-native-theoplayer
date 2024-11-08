@@ -2,6 +2,7 @@ package com.theoplayer.player
 
 import android.os.Build
 import com.facebook.react.bridge.*
+import com.facebook.react.module.annotations.ReactModule
 import com.theoplayer.*
 import com.theoplayer.abr.ABRConfigurationAdapter
 import com.theoplayer.android.api.player.AspectRatio
@@ -14,48 +15,52 @@ import com.theoplayer.android.api.player.track.texttrack.TextTrackMode
 import com.theoplayer.android.api.THEOplayerGlobal
 import com.theoplayer.audio.BackgroundAudioConfigAdapter
 import com.theoplayer.presentation.PipConfigAdapter
+import com.theoplayer.specs.PlayerModuleSpec
 import com.theoplayer.track.TextTrackStyleAdapter
 import com.theoplayer.util.ViewResolver
 
-private const val TAG = "THEORCTPlayerModule"
-
 @Suppress("unused")
-class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(context) {
+@ReactModule(name = PlayerModule.NAME)
+class PlayerModule(context: ReactApplicationContext) : PlayerModuleSpec(context) {
   private val viewResolver: ViewResolver = ViewResolver(context)
 
+  companion object {
+    const val NAME = "THEORCTPlayerModule"
+  }
+
   override fun getName(): String {
-    return TAG
+    return NAME
   }
 
   // The native version string of the Android THEOplayer SDK.
   @ReactMethod
-  fun version(promise: Promise) {
+  override fun version(promise: Promise) {
     promise.resolve(THEOplayerGlobal.getVersion())
   }
 
   @ReactMethod
-  fun setABRConfig(tag: Int, config: ReadableMap?) {
+  override fun setABRConfig(tag: Double, config: ReadableMap?) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       ABRConfigurationAdapter.applyABRConfigurationFromProps(view?.player, config)
     }
   }
 
   @ReactMethod
-  fun setSource(tag: Int, src: ReadableMap?) {
+  override fun setSource(tag: Double, src: ReadableMap?) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.setSource(src)
     }
   }
 
   @ReactMethod
-  fun setCurrentTime(tag: Int, time: Double) {
+  override fun setCurrentTime(tag: Double, time: Double) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.player?.currentTime = 1e-03 * time
     }
   }
 
   @ReactMethod
-  fun setPaused(tag: Int, paused: Boolean) {
+  override fun setPaused(tag: Double, paused: Boolean) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       if (paused) {
         view?.player?.pause()
@@ -66,39 +71,39 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
   }
 
   @ReactMethod
-  fun setAutoplay(tag: Int, autoplay: Boolean) {
+  override fun setAutoplay(tag: Double, autoplay: Boolean) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.player?.isAutoplay = autoplay
     }
   }
 
   @ReactMethod
-  fun setMuted(tag: Int, muted: Boolean) {
+  override fun setMuted(tag: Double, muted: Boolean) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.player?.isMuted = muted
     }
   }
 
   @ReactMethod
-  fun setVolume(tag: Int, volume: Double) {
+  override fun setVolume(tag: Double, volume: Double) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.player?.volume = volume
     }
   }
 
   @ReactMethod
-  fun setPlaybackRate(tag: Int, playbackRate: Double) {
+  override fun setPlaybackRate(tag: Double, playbackRate: Double) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.player?.playbackRate = playbackRate
     }
   }
 
   @ReactMethod
-  fun setSelectedTextTrack(tag: Int, uid: Int) {
+  override fun setSelectedTextTrack(tag: Double, uid: Double?) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.player?.let {
         for (track in it.textTracks) {
-          if (track.uid == uid) {
+          if (track.uid == uid?.toInt()) {
             track.mode = TextTrackMode.SHOWING
           } else if (track.mode == TextTrackMode.SHOWING) {
             track.mode = TextTrackMode.DISABLED
@@ -109,30 +114,30 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
   }
 
   @ReactMethod
-  fun setSelectedAudioTrack(tag: Int, uid: Int) {
-    if (uid == -1) {
+  override fun setSelectedAudioTrack(tag: Double, uid: Double?) {
+    if (uid == null || uid.toInt() == -1) {
       // Do not allow disabling all audio tracks
       return
     }
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.player?.let {
         for (track in it.audioTracks) {
-          track.isEnabled = track.uid == uid
+          track.isEnabled = track.uid == uid.toInt()
         }
       }
     }
   }
 
   @ReactMethod
-  fun setSelectedVideoTrack(tag: Int, uid: Int) {
-    if (uid == -1) {
+  override fun setSelectedVideoTrack(tag: Double, uid: Double?) {
+    if (uid == null || uid.toInt() == -1) {
       // Do not allow disabling all video tracks
       return
     }
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.player?.let {
         for (track in it.videoTracks) {
-          track.isEnabled = track.uid == uid
+          track.isEnabled = track.uid == uid.toInt()
         }
       }
     }
@@ -151,7 +156,7 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
   }
 
   @ReactMethod
-  fun setTargetVideoQuality(tag: Int, uids: ReadableArray) {
+  override fun setTargetVideoQuality(tag: Double, uids: ReadableArray) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.player?.let {
         // Apply the target quality to the current enabled video track
@@ -179,7 +184,7 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
   }
 
   @ReactMethod
-  fun setPreload(tag: Int, type: String?) {
+  override fun setPreload(tag: Double, type: String?) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.player?.preload = when (type) {
         "auto" -> PreloadType.AUTO
@@ -190,7 +195,7 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
   }
 
   @ReactMethod
-  fun setPresentationMode(tag: Int, type: String?) {
+  override fun setPresentationMode(tag: Double, type: String?) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.presentationManager?.setPresentation(
         when (type) {
@@ -203,21 +208,21 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
   }
 
   @ReactMethod
-  fun setPipConfig(tag: Int, config: ReadableMap?) {
+  override fun setPipConfig(tag: Double, config: ReadableMap?) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.presentationManager?.pipConfig = PipConfigAdapter.fromProps(config)
     }
   }
 
   @ReactMethod
-  fun setBackgroundAudioConfig(tag: Int, config: ReadableMap) {
+  override fun setBackgroundAudioConfig(tag: Double, config: ReadableMap) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.playerContext?.backgroundAudioConfig = BackgroundAudioConfigAdapter.fromProps(config)
     }
   }
 
   @ReactMethod
-  fun setAspectRatio(tag: Int, ratio: String) {
+  override fun setAspectRatio(tag: Double, ratio: String) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.player?.setAspectRatio(
         when (ratio) {
@@ -230,14 +235,14 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
   }
 
   @ReactMethod
-  fun setKeepScreenOn(tag: Int, value: Boolean) {
+  override fun setKeepScreenOn(tag: Double, value: Boolean) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.playerContext?.playerView?.keepScreenOn = value
     }
   }
 
   @ReactMethod
-  fun setTextTrackStyle(tag: Int, style: ReadableMap?) {
+  override fun setTextTrackStyle(tag: Double, style: ReadableMap?) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.player?.let { player ->
         TextTrackStyleAdapter.applyTextTrackStyle(player.textTrackStyle, style)
@@ -246,7 +251,7 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
   }
 
   @ReactMethod
-  fun setRenderingTarget(tag: Int, target: String) {
+  override fun setRenderingTarget(tag: Double, target: String) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.player?.setRenderingTarget(
         when (target) {

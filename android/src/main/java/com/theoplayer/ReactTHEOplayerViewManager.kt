@@ -2,17 +2,17 @@
 
 package com.theoplayer
 
-import com.facebook.react.uimanager.ViewGroupManager
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.annotations.ReactProp
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.common.MapBuilder
+import com.theoplayer.specs.THEOplayerViewManagerSpec
 
 private const val REACT_CLASS = "THEOplayerRCTView"
 
 private const val PROP_CONFIG = "config"
 
-class ReactTHEOplayerViewManager : ViewGroupManager<ReactTHEOplayerView>() {
+class ReactTHEOplayerViewManager : THEOplayerViewManagerSpec<ReactTHEOplayerView>() {
   override fun getName(): String {
     return REACT_CLASS
   }
@@ -30,7 +30,7 @@ class ReactTHEOplayerViewManager : ViewGroupManager<ReactTHEOplayerView>() {
   }
 
   @ReactProp(name = PROP_CONFIG)
-  fun setConfig(videoView: ReactTHEOplayerView, config: ReadableMap?) {
+  override fun setConfig(videoView: ReactTHEOplayerView, config: ReadableMap?) {
     videoView.initialize(PlayerConfigAdapter(config))
   }
 
