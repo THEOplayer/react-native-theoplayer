@@ -5,8 +5,10 @@ import android.os.Looper
 import android.util.Base64
 import android.util.Log
 import com.facebook.react.bridge.*
+import com.facebook.react.module.annotations.ReactModule
 import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter
 import com.theoplayer.BuildConfig
+import com.theoplayer.specs.ContentProtectionModuleSpec
 import com.theoplayer.android.api.THEOplayerGlobal
 import com.theoplayer.android.api.contentprotection.*
 import com.theoplayer.android.api.error.ErrorCode
@@ -18,8 +20,6 @@ data class BridgeRequest(
   val onError: (exception: THEOplayerException) -> Unit,
   val onTimeout: Runnable
 )
-
-private const val TAG = "ContentProtectionModule"
 
 private const val EVENT_CERTIFICATE_REQUEST = "onCertificateRequest"
 private const val EVENT_CERTIFICATE_REQUEST_PROCESSED_AS_REQUEST = "onCertificateRequestProcessedAsRequest"
@@ -35,10 +35,13 @@ private const val EVENT_LICENSE_RESPONSE = "onLicenseResponse"
 private const val EVENT_LICENSE_RESPONSE_PROCESSED = "onLicenseResponseProcessed"
 
 @Suppress("unused")
+@ReactModule(name = ContentProtectionModule.NAME)
 class ContentProtectionModule(private val context: ReactApplicationContext) :
-  ReactContextBaseJavaModule(context) {
+  ContentProtectionModuleSpec(context) {
 
   companion object {
+    const val NAME = "THEORCTContentProtectionModule"
+    const val TAG = "ContentProtectionModule"
     const val REQUEST_TIMEOUT_MS = 10000L
   }
 
@@ -49,11 +52,11 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
   private val requestQueue: HashMap<String, BridgeRequest> = HashMap()
 
   override fun getName(): String {
-    return "THEORCTContentProtectionModule"
+    return NAME
   }
 
   @ReactMethod
-  fun registerContentProtectionIntegration(integrationId: String, keySystemIdStr: String) {
+  override fun registerContentProtectionIntegration(integrationId: String, keySystemIdStr: String) {
     val keySystemId = KeySystemAdapter.fromString(keySystemIdStr)
     if (keySystemId != null) {
       // We only support Widevine currently.
@@ -71,38 +74,46 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun onBuildProcessed(payload: ReadableMap) {
+  override fun onBuildProcessed(payload: ReadableMap) {
     receive(EVENT_BUILD_PROCESSED, payload)
   }
 
+  override fun onCertificateRequest(payload: ReadableMap?) {
+    // ignore: Fairplay is not supported
+  }
+
   @ReactMethod
-  fun onCertificateRequestProcessedAsCertificate(payload: ReadableMap) {
+  override fun onCertificateRequestProcessedAsCertificate(payload: ReadableMap) {
     receive(EVENT_CERTIFICATE_REQUEST_PROCESSED_AS_CERTIFICATE, payload)
   }
 
   @ReactMethod
-  fun onCertificateRequestProcessedAsRequest(payload: ReadableMap) {
+  override fun onCertificateRequestProcessedAsRequest(payload: ReadableMap) {
     receive(EVENT_CERTIFICATE_REQUEST_PROCESSED_AS_REQUEST, payload)
   }
 
   @ReactMethod
-  fun onCertificateResponseProcessed(payload: ReadableMap) {
+  override fun onCertificateResponseProcessed(payload: ReadableMap) {
     receive(EVENT_CERTIFICATE_RESPONSE_PROCESSED, payload)
   }
 
   @ReactMethod
-  fun onLicenseRequestProcessedAsLicense(payload: ReadableMap) {
+  override fun onLicenseRequestProcessedAsLicense(payload: ReadableMap) {
     receive(EVENT_LICENSE_REQUEST_PROCESSED_AS_LICENSE, payload)
   }
 
   @ReactMethod
-  fun onLicenseRequestProcessedAsRequest(payload: ReadableMap) {
+  override fun onLicenseRequestProcessedAsRequest(payload: ReadableMap) {
     receive(EVENT_LICENSE_REQUEST_PROCESSED_AS_REQUEST, payload)
   }
 
   @ReactMethod
-  fun onLicenseResponseProcessed(payload: ReadableMap) {
+  override fun onLicenseResponseProcessed(payload: ReadableMap) {
     receive(EVENT_LICENSE_RESPONSE_PROCESSED, payload)
+  }
+
+  override fun onExtractFairplayContentIdProcessed(payload: ReadableMap?) {
+    // ignore: Fairplay is not supported
   }
 
   fun onBuild(integrationId: String, keySystemId: KeySystemId, config: DRMConfiguration?) {
