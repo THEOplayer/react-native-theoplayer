@@ -10,15 +10,15 @@ private const val INVALID_TAG = -1
 
 @Suppress("UNCHECKED_CAST")
 class ViewResolver(private val reactContext: ReactApplicationContext) {
-  fun <T: View> resolveViewByTag(tag: Int, onResolved: (view: T?) -> Unit) {
+  fun <T: View> resolveViewByTag(tag: Number, onResolved: (view: T?) -> Unit) {
     if (tag == INVALID_TAG) {
       // Don't bother trying to resolve an invalid tag.
       onResolved(null)
     }
     try {
       reactContext.runOnUiQueueThread {
-        UIManagerHelper.getUIManagerForReactTag(reactContext, tag)?.let {
-          onResolved(it.resolveView(tag) as? T?)
+        UIManagerHelper.getUIManagerForReactTag(reactContext, tag.toInt())?.let {
+          onResolved(it.resolveView(tag.toInt()) as? T?)
         }
       }
     } catch (e: Exception) {
