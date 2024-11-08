@@ -1,8 +1,8 @@
 import type { Airplay } from 'react-native-theoplayer';
 import { CastEvent, CastEventType, CastState, PlayerEventType, THEOplayer } from 'react-native-theoplayer';
-import { NativeModules } from 'react-native';
+import { getNativeModule } from '../../utils/ModuleUtils';
 
-const NativeCastModule = NativeModules.THEORCTCastModule;
+const NativeCastModule = getNativeModule('Cast');
 
 export class THEOplayerNativeAirplay implements Airplay {
   private readonly _player: THEOplayer;

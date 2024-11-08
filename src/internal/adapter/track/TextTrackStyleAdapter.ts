@@ -1,9 +1,9 @@
 import type { EdgeStyle, TextTrackStyle, THEOplayerView } from 'react-native-theoplayer';
-import { NativeModules } from 'react-native';
 import NamedColors from './NamedColors.json';
+import { getNativeModule } from '../../utils/ModuleUtils';
 
 const namedColorsMap = NamedColors as { [name: string]: string };
-const NativePlayerModule = NativeModules.THEORCTPlayerModule;
+const NativePlayerModule = getNativeModule('Player');
 
 export class TextTrackStyleAdapter implements TextTrackStyle {
   private _backgroundColor: string | undefined = undefined;

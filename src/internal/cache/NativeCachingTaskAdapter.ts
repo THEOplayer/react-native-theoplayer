@@ -8,11 +8,11 @@ import type {
   TimeRange,
 } from 'react-native-theoplayer';
 import type { CacheTaskStatus } from 'react-native-theoplayer';
-import { NativeModules } from 'react-native';
 import type { DRMConfiguration } from 'react-native-theoplayer';
 import { fromNativeCachingTaskParameters, NativeCachingTaskParameters } from './NativeCachingTaskParametersAdapter';
+import { getNativeModule } from '../utils/ModuleUtils';
 
-const NativeCacheModule = NativeModules.THEORCTCacheModule;
+const NativeCacheModule = getNativeModule('Cache');
 
 export interface NativeCachingTask {
   readonly id: string;

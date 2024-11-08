@@ -1,7 +1,7 @@
 import type { ABRConfiguration, ABRStrategy, Resolution, THEOplayerView } from 'react-native-theoplayer';
-import { NativeModules } from 'react-native';
+import { getNativeModule } from '../../utils/ModuleUtils';
 
-const NativePlayerModule = NativeModules.THEORCTPlayerModule;
+const NativePlayerModule = getNativeModule('Player');
 
 export class AbrAdapter implements ABRConfiguration {
   private readonly _view: THEOplayerView;
