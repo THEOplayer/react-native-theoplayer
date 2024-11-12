@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+
+- Added HomeIndicatorViewController to iOS, which can be used as an alternative rootViewController for the native App. It will automatically show/hide the home indicator when transitioning from/to fullscreen presentationMode.
+
 ### Changed
 
 - Simplified the viewController reparenting mechanism on iOS that is applied when changing the presentationMode to/from fullscreen.
