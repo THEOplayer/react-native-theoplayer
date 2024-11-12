@@ -88,6 +88,17 @@ export interface PlayerConfiguration {
    * <br/> - This parameter only applies to Web and Android platforms.
    */
   liveOffset?: number;
+
+  /**
+   * Sets whether the Media3 extension is used for play-out on Android.
+   *
+   * @experimental
+   * @remarks
+   * <br/> - This parameter only applies to Android platforms.
+   *
+   * @defaultValue `false`.
+   */
+  useMedia3?: boolean;
 }
 
 /**
