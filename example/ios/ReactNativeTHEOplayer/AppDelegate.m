@@ -1,6 +1,7 @@
 #import "AppDelegate.h"
 
 #import <React/RCTBundleURLProvider.h>
+@import react_native_theoplayer;
 
 #if !TARGET_OS_TV
 #import <GoogleCast/GoogleCast.h>
@@ -25,6 +26,10 @@
 #endif
   
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
+}
+
+- (UIViewController *)createRootViewController {
+  return [HomeIndicatorViewController new];
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
