@@ -60,14 +60,29 @@ public class THEOplayerRCTPresentationModeManager {
         self.containerView = self.view?.findParentViewOfType(RCTView.self)
         self.inlineParentView = self.containerView?.findParentViewOfType(RCTView.self)
         
+        // move the player
         if let containerView = self.containerView,
            let fullscreenParentView = self.view?.findParentViewOfType(RCTRootContentView.self) {
             self.moveView(containerView, to: fullscreenParentView)
+          
+            // start hiding home indicator
+            if let customRootViewController = fullscreenParentView.findViewController() as? HomeIndicatorViewController {
+                customRootViewController.prefersAutoHidden = true
+                customRootViewController.setNeedsUpdateOfHomeIndicatorAutoHidden()
+          }
         }
         self.rnInlineMode = .fullscreen
     }
     
     private func exitFullscreen() {
+        // stop hiding home indicator
+        if let fullscreenParentView = self.view?.findParentViewOfType(RCTRootContentView.self),
+           let customRootViewController = fullscreenParentView.findViewController() as? HomeIndicatorViewController {
+            customRootViewController.prefersAutoHidden = false
+            customRootViewController.setNeedsUpdateOfHomeIndicatorAutoHidden()
+        }
+      
+        // move the player
         if let containerView = self.containerView,
            let inlineParentView = self.inlineParentView {
             self.moveView(containerView, to: inlineParentView)
