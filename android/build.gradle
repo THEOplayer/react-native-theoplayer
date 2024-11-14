@@ -66,6 +66,8 @@ android {
     buildConfigField "boolean", "EXTENSION_ADS", "${enabledAds}"
     buildConfigField "boolean", "EXTENSION_CAST", "${enabledCast}"
     buildConfigField "boolean", "EXTENSION_MEDIASESSION", "${enabledMediaSession}"
+
+    consumerProguardFiles 'proguard-rules.pro'
   }
 
   buildTypes {
