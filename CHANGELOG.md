@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 - The `MediaPlaybackService` on Android is never restarted if a MediaButton event is received after the app was closed.
+- Added a consumer R8 config file on Android, telling R8 not to throw errors or warnings because of classes that are expected to be missing.
 
 ## [8.7.0] - 24-11-05
 
