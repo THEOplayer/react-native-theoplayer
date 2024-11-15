@@ -69,7 +69,7 @@ public class THEOplayerRCTPresentationModeManager {
             if let customRootViewController = fullscreenParentView.findViewController() as? HomeIndicatorViewController {
                 customRootViewController.prefersAutoHidden = true
                 customRootViewController.setNeedsUpdateOfHomeIndicatorAutoHidden()
-          }
+            }
         }
         self.rnInlineMode = .fullscreen
     }
