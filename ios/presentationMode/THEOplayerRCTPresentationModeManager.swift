@@ -14,7 +14,6 @@ public class THEOplayerRCTPresentationModeManager {
   
     private var containerView: UIView?                  // view containing the playerView and it's siblings (e.g. UI)
     private var inlineParentView: UIView?               // target view for inline representation
-    private var movingChildVCs: [UIViewController] = []  // list of playerView's child VCs that need to be reparented while moving the playerView
         
     // MARK: Events
     var onNativePresentationModeChange: RCTDirectEventBlock?
@@ -39,35 +38,21 @@ public class THEOplayerRCTPresentationModeManager {
     
     // MARK: - logic
     
-    private func storeMovingVCs(for view: UIView) {
-        if let viewController = view.findViewController() {
-            viewController.children.forEach { childVC in
-                self.movingChildVCs.append(childVC)
-            }
-        }
-    }
-    
-    private func clearMovingVCs() {
-        self.movingChildVCs = []
-    }
-    
-    private func moveView(_ movingView: UIView, to targetView: UIView, with movingViewControllers: [UIViewController]) {
-        // detach the moving viewControllers from their parent
-        movingViewControllers.forEach { movedVC in
-            movedVC.removeFromParent()
-        }
+    private func moveView(_ movingView: UIView, to targetView: UIView) {
+        guard let theoPlayerViewController = (self.view as? THEOplayerRCTView)?.theoPlayerViewController else { return }
+      
+        // detach the viewController from its parent
+        theoPlayerViewController.removeFromParent()
         
         // move the actual view
         movingView.removeFromSuperview()
         targetView.addSubview(movingView)
         targetView.bringSubviewToFront(movingView)
         
-        // attach the moving viewControllers to their new parent
+        // attach the viewController to its new parent
         if let targetViewController = targetView.findViewController() {
-            movingViewControllers.forEach { movedVC in
-                targetViewController.addChild(movedVC)
-                movedVC.didMove(toParent: targetViewController)
-            }
+            targetViewController.addChild(theoPlayerViewController)
+            theoPlayerViewController.didMove(toParent: targetViewController)
         }
     }
     
@@ -77,8 +62,7 @@ public class THEOplayerRCTPresentationModeManager {
         
         if let containerView = self.containerView,
            let fullscreenParentView = self.view?.findParentViewOfType(RCTRootContentView.self) {
-            self.storeMovingVCs(for: containerView)
-            self.moveView(containerView, to: fullscreenParentView, with: self.movingChildVCs)
+            self.moveView(containerView, to: fullscreenParentView)
         }
         self.rnInlineMode = .fullscreen
     }
@@ -86,8 +70,7 @@ public class THEOplayerRCTPresentationModeManager {
     private func exitFullscreen() {
         if let containerView = self.containerView,
            let inlineParentView = self.inlineParentView {
-            self.moveView(containerView, to: inlineParentView, with: self.movingChildVCs)
-            self.clearMovingVCs()
+            self.moveView(containerView, to: inlineParentView)
         }
         self.rnInlineMode = .inline
     }
