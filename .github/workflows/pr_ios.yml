@@ -13,9 +13,11 @@ on:
 
 jobs:
   build:
+    runs-on: macos-latest
     strategy:
       matrix:
         xcode_version: [ '15.4.0' ]
+        newArchEnabled: [ 0, 1 ]
         platform: [iOS, tvOS]
     runs-on: macos-latest
     name: Build for ${{ matrix.platform }} using XCode version ${{ matrix.xcode_version }}
@@ -34,11 +36,19 @@ jobs:
           node-version: '18'
           cache: 'npm'
 
+      - name: Cache Ruby Gems
+        uses: actions/cache@v4
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+
       - name: Cache CocoaPods
         uses: actions/cache@v4
         with:
           path: e2e/ios/Pods
-          key: pods-${{ runner.os }}-${{ hashFiles('Podfile.lock') }}
+          key: pods-${{ runner.os }}-${{ hashFiles('Podfile.lock') }}-${{ matrix.newArchEnabled }}
           restore-keys: |
             pods-${{ runner.os }}-
 
@@ -53,10 +63,13 @@ jobs:
           cd e2e
           npm ci
 
+      - name: Install Ruby dependencies
+        run: bundle install
+
       - name: Run pod install & update dependencies
         working-directory: e2e/ios
         run: |
-          pod update
+          RCT_NEW_ARCH_ENABLED=${{ matrix.newArchEnabled }} bundle exec pod update
 
       - name: Start iOS simulator
         uses: futureware-tech/simulator-action@v4
@@ -71,4 +84,5 @@ jobs:
 
       - name: Summarize results
         working-directory: e2e
+        if: always()
         run: cat cavy_results.md >> $GITHUB_STEP_SUMMARY
