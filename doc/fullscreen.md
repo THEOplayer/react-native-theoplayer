@@ -57,6 +57,31 @@ player.presentationMode = PresentationMode.fullscreen;
 
 When the player transitions back to inline mode, the view hierarchy will be restored.
 
+### iOS home indicator
+
+On iOS, a visual bar at the bottom of the screen called the home indicator, allows the user to return to the device's home screen when dragging it up. This is often preceived as a disturbing visual element when viewing a stream in fullscreen mode. To hide the home indicator, The rootViewController of the application needs to be setup accordingly, via inheritance. As part of react-native-theoplayer we've prepared a basic ViewController setup (HomeIndicatorViewController) that takes care of this. To hide the home indicator you change the default rootViewcontroller from a basic UIViewController to our HomeIndicatorViewController:
+
+Import the react-native-theoplayer swift code:
+```swift
+@import react_native_theoplayer;
+```
+
+And, when using RCTAppDelegate in the native app:
+```swift
+- (UIViewController *)createRootViewController {
+  return [HomeIndicatorViewController new];
+}
+```
+
+or otherwise:
+```swift
+HomeIndicatorViewController *rootViewController = [HomeIndicatorViewController new];
+...
+self.window.rootViewController = rootViewController;
+``` 
+
+Our iOS presentationMode changing code checks if the rootViewController is of type HomeIndicatorViewController and will, in that case, automatically take care of showing/hiding the home indicator.
+
 ## Portals
 
 A [Portal](https://react.dev/reference/react-dom/createPortal#usage) is a well-known concept in React that

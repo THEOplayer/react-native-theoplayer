@@ -5,10 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## Unreleased
+
+### Added
+
+- Added HomeIndicatorViewController to iOS, which can be used as an alternative rootViewController for the native App. It will automatically show/hide the home indicator when transitioning from/to fullscreen presentationMode.
 
 ### Changed
 
+- Simplified the viewController reparenting mechanism on iOS that is applied when changing the presentationMode to/from fullscreen.
 - The `MediaPlaybackService` on Android is never restarted if a MediaButton event is received after the app was closed.
 - Added a consumer R8 config file on Android, telling R8 not to throw errors or warnings because of classes that are expected to be missing.
 - Simplified the viewController reparenting mechanism on iOS that is applied when changing the `presentationMode` to/from fullscreen.
