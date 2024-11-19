@@ -26,6 +26,19 @@ index 1cdeb38..f7e9e35 100644
    // Private: Determines whether data can be sent over the websocket.
    websocketReady() {
      // WebSocket.readyState 1 means the web socket connection is OPEN.
+diff --git a/node_modules/cavy/src/TestRunner.js b/node_modules/cavy/src/TestRunner.js
+index 40552bf..5b98f72 100644
+--- a/node_modules/cavy/src/TestRunner.js
++++ b/node_modules/cavy/src/TestRunner.js
+@@ -148,7 +148,7 @@ export default class TestRunner {
+       const stop = new Date();
+       const time = (stop - start) / 1000;
+ 
+-      let fullErrorMessage = `${description}  ❌\n   ${e.message}`;
++      let fullErrorMessage = `${description}  ❌\n   ${JSON.stringify(e)}`;
+       console.warn(fullErrorMessage);
+ 
+       this.results.push({
 diff --git a/node_modules/cavy/src/Tester.js b/node_modules/cavy/src/Tester.js
 index c61e31a..8d222ae 100644
 --- a/node_modules/cavy/src/Tester.js
