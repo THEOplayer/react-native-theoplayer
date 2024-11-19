@@ -68,7 +68,9 @@ public class THEOplayerRCTPresentationModeManager {
             // start hiding home indicator
             if let customRootViewController = fullscreenParentView.findViewController() as? HomeIndicatorViewController {
                 customRootViewController.prefersAutoHidden = true
+#if !os(tvOS)
                 customRootViewController.setNeedsUpdateOfHomeIndicatorAutoHidden()
+#endif
             }
         }
         self.rnInlineMode = .fullscreen
@@ -79,7 +81,9 @@ public class THEOplayerRCTPresentationModeManager {
         if let fullscreenParentView = self.view?.findParentViewOfType(RCTRootContentView.self),
            let customRootViewController = fullscreenParentView.findViewController() as? HomeIndicatorViewController {
             customRootViewController.prefersAutoHidden = false
+#if !os(tvOS)
             customRootViewController.setNeedsUpdateOfHomeIndicatorAutoHidden()
+#endif
         }
       
         // move the player
