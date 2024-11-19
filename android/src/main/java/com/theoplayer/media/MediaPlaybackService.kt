@@ -152,6 +152,10 @@ class MediaPlaybackService : Service() {
 
       // Set mediaSession active
       setActive(BuildConfig.EXTENSION_MEDIASESSION)
+
+      // Do not let MediaButtons restart the player when media session is not active.
+      // https://developer.android.com/media/legacy/media-buttons#restarting-inactive-mediasessions
+      mediaSession.setMediaButtonReceiver(null)
     }
   }
 
