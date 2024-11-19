@@ -6,7 +6,7 @@ import UIKit
 public class HomeIndicatorViewController: UIViewController {
   public var prefersAutoHidden = false
   
-#if !os(tvOS)
+#if os(iOS)
   public override var prefersHomeIndicatorAutoHidden: Bool {
     get {
       return self.prefersAutoHidden

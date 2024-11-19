@@ -66,25 +66,14 @@ public class THEOplayerRCTPresentationModeManager {
             self.moveView(containerView, to: fullscreenParentView)
 
             // start hiding home indicator
-            if let customRootViewController = fullscreenParentView.findViewController() as? HomeIndicatorViewController {
-                customRootViewController.prefersAutoHidden = true
-#if !os(tvOS)
-                customRootViewController.setNeedsUpdateOfHomeIndicatorAutoHidden()
-#endif
-            }
+            setHomeIndicatorHidden(true)
         }
         self.rnInlineMode = .fullscreen
     }
     
     private func exitFullscreen() {
         // stop hiding home indicator
-        if let fullscreenParentView = self.view?.findParentViewOfType(RCTRootContentView.self),
-           let customRootViewController = fullscreenParentView.findViewController() as? HomeIndicatorViewController {
-            customRootViewController.prefersAutoHidden = false
-#if !os(tvOS)
-            customRootViewController.setNeedsUpdateOfHomeIndicatorAutoHidden()
-#endif
-        }
+        setHomeIndicatorHidden(false)
       
         // move the player
         if let containerView = self.containerView,
@@ -92,6 +81,16 @@ public class THEOplayerRCTPresentationModeManager {
             self.moveView(containerView, to: inlineParentView)
         }
         self.rnInlineMode = .inline
+    }
+
+    private func setHomeIndicatorHidden(_ hidden: Bool) {
+#if os(iOS)
+        if let fullscreenParentView = self.view?.findParentViewOfType(RCTRootContentView.self),
+           let customRootViewController = fullscreenParentView.findViewController() as? HomeIndicatorViewController {
+              customRootViewController.prefersAutoHidden = hidden
+              customRootViewController.setNeedsUpdateOfHomeIndicatorAutoHidden()
+        }
+#endif
     }
   
     func setPresentationModeFromRN(newPresentationMode: THEOplayerSDK.PresentationMode) {
