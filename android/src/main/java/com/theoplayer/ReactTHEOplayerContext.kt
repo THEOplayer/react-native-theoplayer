@@ -239,7 +239,8 @@ class ReactTHEOplayerContext private constructor(
     // Create and initialize the media session
     val mediaSession = MediaSessionCompat(reactContext, TAG)
 
-    // Do not let MediaButtons restart the player when the app is not visible
+    // Do not let MediaButtons restart the player when media session is not active.
+    // https://developer.android.com/media/legacy/media-buttons#restarting-inactive-mediasessions
     mediaSession.setMediaButtonReceiver(null)
 
     // Create a MediaSessionConnector and attach the THEOplayer instance.

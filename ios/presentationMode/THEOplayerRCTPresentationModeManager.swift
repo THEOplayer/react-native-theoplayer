@@ -64,7 +64,7 @@ public class THEOplayerRCTPresentationModeManager {
         if let containerView = self.containerView,
            let fullscreenParentView = self.view?.findParentViewOfType(RCTRootContentView.self) {
             self.moveView(containerView, to: fullscreenParentView)
-          
+
             // start hiding home indicator
             if let customRootViewController = fullscreenParentView.findViewController() as? HomeIndicatorViewController {
                 customRootViewController.prefersAutoHidden = true
