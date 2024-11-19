@@ -65,9 +65,9 @@ export const waitForPlayerEvents = async <EType extends Event<PlayerEventType>>(
   inOrder: boolean = true,
   options = defaultTestOptions,
 ): Promise<Event<PlayerEventType>[]> => {
-  return withTimeOut(
+  const receivedEvents: Event<PlayerEventType>[] = [];
+  return withEventTimeOut(
     new Promise<Event<PlayerEventType>[]>((resolve, reject) => {
-      const events: Event<PlayerEventType>[] = [];
       const onError = (err: ErrorEvent) => {
         console.error('[waitForPlayerEvents]', err);
         player.removeEventListener(PlayerEventType.ERROR, onError);
@@ -81,14 +81,14 @@ export const waitForPlayerEvents = async <EType extends Event<PlayerEventType>>(
             return;
           }
           const expectedEvent = eventMap[0].event;
-          events.push(receivedEvent);
+          receivedEvents.push(receivedEvent);
           console.debug('[waitForPlayerEvents]', `Received event ${JSON.stringify(receivedEvent.type)} - waiting for ${expectedEvent.type}`);
           const index = eventMap.findIndex((e) => propsMatch(e.event, receivedEvent));
           const isExpected = index <= 0;
 
           // Check order
           if (inOrder && eventMap.length && !isExpected) {
-            const err = `Expected event '${expectedEvent.type}'\nbut received '${receivedEvent.type}'`;
+            const err = `Expected event '${expectedEvent.type}' but received '${receivedEvent.type}'`;
             console.error('[waitForPlayerEvents]', err);
             reject(err);
           }
@@ -100,7 +100,7 @@ export const waitForPlayerEvents = async <EType extends Event<PlayerEventType>>(
           });
           if (!eventMap.length) {
             // Done
-            resolve(events);
+            resolve(receivedEvents);
           }
         },
       }));
@@ -108,13 +108,23 @@ export const waitForPlayerEvents = async <EType extends Event<PlayerEventType>>(
       eventMap.forEach(({ event, onEvent }) => player.addEventListener(event.type, onEvent));
     }),
     options.timeout,
+    expectedEvents,
+    receivedEvents,
   );
 };
 
-const withTimeOut = (promise: Promise<any>, timeout: number): Promise<any> => {
+const withEventTimeOut = <EType extends Event<PlayerEventType>>(
+  promise: Promise<any>,
+  timeout: number,
+  expectedEvents: Partial<EType>[],
+  receivedEvents: EType[],
+): Promise<any> => {
   return new Promise<void>((resolve, reject) => {
     const handle = setTimeout(() => {
-      reject('Timeout waiting for event');
+      reject(
+        `Timeout waiting for next event, expecting [${expectedEvents.map((ev) => JSON.stringify(ev)).join(',')}] ` +
+          `already received [${receivedEvents.map((ev) => JSON.stringify(ev)).join(',')}]`,
+      );
     }, timeout);
     promise
       .then((result: any) => {
