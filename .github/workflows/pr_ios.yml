@@ -19,8 +19,8 @@ jobs:
         xcode_version: [ '15.4.0' ]
         newArchEnabled: [ 0, 1 ]
         platform: [iOS, tvOS]
-    runs-on: macos-latest
-    name: Build for ${{ matrix.platform }} using XCode version ${{ matrix.xcode_version }}
+    name: Build for ${{ matrix.platform }} using XCode version ${{ matrix.xcode_version }} and ${{matrix.newArchEnabled  == 1 && 'New' || 'Old' }} Architecture
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
