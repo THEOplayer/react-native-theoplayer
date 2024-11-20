@@ -9,6 +9,7 @@ jobs:
     strategy:
       matrix:
         xcode_version: [ '15.4.0' ]
+        platform: [ios, tvos]
     runs-on: macos-latest
     steps:
       - name: Checkout repository
@@ -52,7 +53,7 @@ jobs:
       - name: Start iOS simulator
         uses: futureware-tech/simulator-action@v4
         with:
-          model: 'iPhone 15'
+          model: ${{ matrix.platform == 'ios' && 'iPhone 15' || 'Apple TV 4K' }}
           os_version: '>=14.0'
 
       - name: Run e2e tests
