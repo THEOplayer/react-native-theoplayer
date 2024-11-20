@@ -54,4 +54,29 @@ end
 
 post_install do |installer|
   react_native_post_install(installer)
+
+  # modify XCFramework configuration files to update NielsenAppApi.framework -> NielsenTVAppApi.framework
+  installer.pods_project.targets.each do |target|
+    if target.name == 'Pods-NielsenVideoPlayerTVOSPodsXC'
+      # update Pods-NielsenVideoPlayerTVOSPodsXC.debug.xcconfig file
+      # update Pods-NielsenVideoPlayerTVOSPodsXC.release.xcconfig file
+      target.build_configurations.each do |config|
+          xcconfig_path = config.base_configuration_reference.real_path
+          puts "post_install: Found #{File.basename(xcconfig_path)}"
+          xcconfig = File.read(xcconfig_path)
+          new_xcconfig = xcconfig.sub('-framework "NielsenAppApi"', '-framework "NielsenTVAppApi"')
+          File.open(xcconfig_path, "w") { |file| file << new_xcconfig }
+          puts "post_install: Updated #{File.basename(xcconfig_path)} file with a value: NielsenTVAppApi.framework"
+      end
+      # update Pods-NielsenVideoPlayerTVOSPodsXC-frameworks.sh file
+      frameworksh_path = "Pods/Target Support Files/#{target.name}/#{target.name}-frameworks.sh"
+      if File.exist?(frameworksh_path)
+        puts "post_install: Found #{File.basename(frameworksh_path)}"
+        text = File.read(frameworksh_path)
+        new_contents = text.gsub('NielsenAppApi.framework', 'NielsenTVAppApi.framework')
+        File.open(frameworksh_path, "w") {|file| file.puts new_contents}
+        puts "post_install: Updated #{File.basename(frameworksh_path)} file with a value: NielsenTVAppApi.framework"
+      end
+    end
+  end
 end
