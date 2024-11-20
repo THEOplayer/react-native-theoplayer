@@ -17,6 +17,7 @@ jobs:
     strategy:
       matrix:
         api-level: [ 34 ]
+    name: Build for API Level ${{ matrix.api-level }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

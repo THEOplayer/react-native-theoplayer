@@ -18,6 +18,7 @@ jobs:
         xcode_version: [ '15.4.0' ]
         platform: [iOS, tvOS]
     runs-on: macos-latest
+    name: Build for ${{ matrix.platform }} using XCode version ${{ matrix.xcode_version }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
