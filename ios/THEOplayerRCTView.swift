@@ -154,6 +154,9 @@ public class THEOplayerRCTView: UIView {
         self.player?.destroy()
         self.player = nil
         if DEBUG_THEOPLAYER_INTERACTION { PrintUtils.printLog(logText: "[NATIVE] THEOplayer instance destroyed.") }
+      
+        self.theoPlayerViewController.view = nil
+        self.theoPlayerViewController.removeFromParent()
     }
     
     func processMetadataTracks(metadataTrackDescriptions: [TextTrackDescription]?) {
