@@ -483,6 +483,12 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     }
   }
 
+  destroy(): void {
+    if (Platform.OS === 'ios') {
+      NativePlayerModule.destroyPlayer(this._view.nativeHandle);
+    }
+  }
+
   public get version(): PlayerVersion {
     return this._playerVersion;
   }

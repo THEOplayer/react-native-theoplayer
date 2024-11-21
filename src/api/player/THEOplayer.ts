@@ -73,6 +73,11 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
   pause(): void;
 
   /**
+   * destroy the player.
+   */
+  destroy(): void;
+
+  /**
    * Whether the player is paused.
    */
   readonly paused: boolean;
