@@ -139,7 +139,7 @@ public class THEOplayerRCTView: UIView {
     
     // MARK: - Destroy Player
     
-    func destroyPlayer() {
+    public func destroyPlayer() {
         self.mainEventHandler.destroy()
         self.textTrackEventHandler.destroy()
         self.mediaTrackEventHandler.destroy()

@@ -51,8 +51,6 @@ RCT_EXPORT_VIEW_PROPERTY(onNativeAdEvent, RCTDirectEventBlock);
 
 RCT_EXPORT_VIEW_PROPERTY(onNativeCastEvent, RCTDirectEventBlock);
 
-RCT_EXTERN_METHOD(destroy:(nonnull NSNumber *)node);
-
 @end
 
 // ----------------------------------------------------------------------------
@@ -113,6 +111,8 @@ RCT_EXTERN_METHOD(setPreload:(nonnull NSNumber *)node
 
 RCT_EXTERN_METHOD(setTextTrackStyle:(nonnull NSNumber *)node
                   textTrackStyle:(NSDictionary)textTrackStyle)
+
+RCT_EXTERN_METHOD(destroyPlayer:(nonnull NSNumber *)node);
 
 @end
 
