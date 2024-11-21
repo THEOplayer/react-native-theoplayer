@@ -9,6 +9,8 @@
     "test:e2e:ios": "npx cavy run-ios --terminal bash --scheme ReactNativeTHEOplayer",
     "test:e2e:tvos": "npx cavy run-ios --terminal bash --scheme ReactNativeTHEOplayer-tvOS",
     "lint": "eslint \"**/*.{ts,tsx}\"",
+    "pod-install": "cd ios && RCT_NEW_ARCH_ENABLED=1 bundle exec pod install",
+    "pod-update": "cd ios && RCT_NEW_ARCH_ENABLED=1 bundle exec pod update",
     "postinstall": "patch-package"
   },
   "dependencies": {
