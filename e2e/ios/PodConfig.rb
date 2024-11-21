@@ -6,6 +6,10 @@ def google_cast_redirect
   pod 'react-native-google-cast', :git => 'https://github.com/Danesz/react-native-google-cast.git', branch: 'feature/guestmode_apple_silicon'
 end
 
+def include_slider
+  pod 'react-native-slider', :path => '../node_modules/@react-native-community/slider'
+end
+
 def nielsen_post_install(installer, targetName)
   # modify XCFramework configuration files to update NielsenAppApi.framework -> NielsenTVAppApi.framework
   installer.pods_project.targets.each do |target|
