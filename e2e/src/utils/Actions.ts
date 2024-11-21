@@ -1,6 +1,6 @@
 // noinspection JSUnusedGlobalSymbols
 
-import { ErrorEvent, type Event, PlayerEventType, SourceDescription, THEOplayer } from 'react-native-theoplayer';
+import { ErrorEvent, type Event, EventMap, PlayerEventType, SourceDescription, StringKeyOf, THEOplayer } from 'react-native-theoplayer';
 import { getTestPlayer } from '../components/TestableTHEOplayerView';
 
 export interface TestOptions {
@@ -133,7 +133,7 @@ export const waitForPlayerEvents = async <EType extends Event<PlayerEventType>>(
   );
 };
 
-const withEventTimeOut = <EType extends Event<PlayerEventType>>(
+const withEventTimeOut = <TType extends StringKeyOf<EventMap<string>>, EType extends Event<TType>>(
   promise: Promise<any>,
   timeout: number,
   expectedEvents: Partial<EType>[],
