@@ -20,7 +20,7 @@ import {
   NativeTimeUpdateEvent,
   NativeVolumeChangeEvent,
 } from '../specs/THEOplayerRCTViewNativeComponent';
-import { Dimensions, findNodeHandle, NativeSyntheticEvent, Platform, StyleSheet, UIManager, View } from 'react-native';
+import { Dimensions, findNodeHandle, NativeSyntheticEvent, StyleSheet, View } from 'react-native';
 import type { ScaledSize, EmitterSubscription } from 'react-native';
 import {
   Ad,
