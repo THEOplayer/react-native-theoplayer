@@ -28,8 +28,8 @@ Pod::Spec.new do |s|
   s.source_files = 'ios/*.{h,m,swift}', 'ios/ads/*.swift', 'ios/casting/*.swift', 'ios/contentprotection/*.swift', 'ios/pip/*.swift', 'ios/backgroundAudio/*.swift', 'ios/cache/*.swift', 'ios/sideloadedMetadata/*.swift', 'ios/eventBroadcasting/*.swift' , 'ios/ui/*.swift', 'ios/presentationMode/*.swift', 'ios/viewController/*.swift', 'ios/theolive/*.swift', 'ios/theoAds/*.swift'
   s.resources = ['ios/*.css']
 
-  # ReactNative Dependency
-  s.dependency "React-Core"
+  # ReactNative Dependencies
+  install_modules_dependencies(s)
 
   # THEOplayer Dependency
   puts "Adding THEOplayerSDK-core"
