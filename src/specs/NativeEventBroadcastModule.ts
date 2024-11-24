@@ -7,4 +7,5 @@ export interface Spec extends TurboModule {
   broadcastEvent(tag: Int32, event: Object): void;
 }
 
-export default TurboModuleRegistry?.getEnforcing<Spec>('THEORCTEventBroadcastModule');
+// Note: codegen does not like `TurboModuleRegistry?.getEnforcing`
+export default TurboModuleRegistry ? TurboModuleRegistry.getEnforcing<Spec>('THEORCTEventBroadcastModule') : undefined;

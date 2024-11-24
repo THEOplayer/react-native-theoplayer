@@ -16,4 +16,5 @@ export interface Spec extends TurboModule {
   startCachingTask(taskId: string): void;
 }
 
-export default TurboModuleRegistry?.getEnforcing<Spec>('THEORCTCacheModule');
+// Note: codegen does not like `TurboModuleRegistry?.getEnforcing`
+export default TurboModuleRegistry ? TurboModuleRegistry.getEnforcing<Spec>('THEORCTCacheModule') : undefined;
