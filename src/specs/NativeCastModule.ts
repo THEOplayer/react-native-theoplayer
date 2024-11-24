@@ -27,4 +27,5 @@ export interface Spec extends TurboModule {
   airplayStop(tag: Int32): void;
 }
 
-export default TurboModuleRegistry?.getEnforcing<Spec>('THEORCTCastModule');
+// Note: codegen does not like `TurboModuleRegistry?.getEnforcing`
+export default TurboModuleRegistry ? TurboModuleRegistry.getEnforcing<Spec>('THEORCTCastModule') : undefined;

@@ -24,4 +24,5 @@ export interface Spec extends TurboModule {
   onExtractFairplayContentIdProcessed(payload: Object): void;
 }
 
-export default TurboModuleRegistry?.getEnforcing<Spec>('THEORCTContentProtectionModule');
+// Note: codegen does not like `TurboModuleRegistry?.getEnforcing`
+export default TurboModuleRegistry ? TurboModuleRegistry.getEnforcing<Spec>('THEORCTContentProtectionModule') : undefined;
