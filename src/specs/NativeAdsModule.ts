@@ -50,4 +50,5 @@ export interface Spec extends TurboModule {
   removeAllFriendlyObstructions(tag: Int32): void;
 }
 
-export default TurboModuleRegistry?.getEnforcing<Spec>('THEORCTAdsModule');
+// Note: codegen does not like `TurboModuleRegistry?.getEnforcing`
+export default TurboModuleRegistry ? TurboModuleRegistry.getEnforcing<Spec>('THEORCTAdsModule') : undefined;

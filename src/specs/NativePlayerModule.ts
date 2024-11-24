@@ -45,4 +45,5 @@ export interface Spec extends TurboModule {
   setABRConfig(tag: Int32, config: Object): void;
 }
 
-export default TurboModuleRegistry?.getEnforcing<Spec>('THEORCTPlayerModule');
+// Note: codegen does not like `TurboModuleRegistry?.getEnforcing`
+export default TurboModuleRegistry ? TurboModuleRegistry.getEnforcing<Spec>('THEORCTPlayerModule') : undefined;
