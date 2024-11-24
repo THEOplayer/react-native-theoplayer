@@ -8,4 +8,5 @@ export interface Spec extends TurboModule {
   setLipSyncCorrection(correctionMs: Double): void;
 }
 
-export default TurboModuleRegistry?.getEnforcing<Spec>('THEORCTPlaybackSettingsModule');
+// Note: codegen does not like `TurboModuleRegistry?.getEnforcing`
+export default TurboModuleRegistry ? TurboModuleRegistry.getEnforcing<Spec>('THEORCTPlaybackSettingsModule') : undefined;
