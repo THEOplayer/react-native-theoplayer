@@ -2,6 +2,7 @@
 
 import { ErrorEvent, type Event, EventMap, PlayerEventType, SourceDescription, StringKeyOf, THEOplayer } from 'react-native-theoplayer';
 import { getTestPlayer } from '../components/TestableTHEOplayerView';
+import { logPlayerBuffer } from './PlayerUtils';
 
 export interface TestOptions {
   timeout: number;
@@ -66,51 +67,52 @@ export const waitForPlayerEvents = async <EType extends Event<PlayerEventType>>(
   options = defaultTestOptions,
 ): Promise<Event<PlayerEventType>[]> => {
   const receivedEvents: Event<PlayerEventType>[] = [];
-  return withEventTimeOut(
-    new Promise<Event<PlayerEventType>[]>((resolve, reject) => {
-      const onError = (err: ErrorEvent) => {
-        console.error('[waitForPlayerEvents]', err);
-        player.removeEventListener(PlayerEventType.ERROR, onError);
-        reject(err);
-      };
-      let eventMap = expectedEvents.map((_expected: Partial<EType>) => ({
-        event: _expected as Event<PlayerEventType>,
-        onEvent(receivedEvent: Event<PlayerEventType>) {
-          if (!eventMap.length) {
-            // No more events expected
-            return;
-          }
-          const expectedEvent = eventMap[0].event;
-          receivedEvents.push(receivedEvent);
-          console.debug('[waitForPlayerEvents]', `Received event ${JSON.stringify(receivedEvent.type)} - waiting for ${expectedEvent.type}`);
-          const index = eventMap.findIndex((e) => propsMatch(e.event, receivedEvent));
-          const isExpected = index <= 0;
+  const eventsPromise = new Promise<Event<PlayerEventType>[]>((resolve, reject) => {
+    const onError = (err: ErrorEvent) => {
+      console.error('[waitForPlayerEvents]', err);
+      player.removeEventListener(PlayerEventType.ERROR, onError);
+      reject(err);
+    };
+    let eventMap = expectedEvents.map((_expected: Partial<EType>) => ({
+      event: _expected as Event<PlayerEventType>,
+      onEvent(receivedEvent: Event<PlayerEventType>) {
+        if (!eventMap.length) {
+          // No more events expected
+          return;
+        }
+        const expectedEvent = eventMap[0].event;
+        receivedEvents.push(receivedEvent);
+        console.debug('[waitForPlayerEvents]', `Received event ${JSON.stringify(receivedEvent.type)} - waiting for ${expectedEvent.type}`);
+        const index = eventMap.findIndex((e) => propsMatch(e.event, receivedEvent));
+        const isExpected = index <= 0;
 
-          // Check order
-          if (inOrder && eventMap.length && !isExpected) {
-            const err = `Expected event '${expectedEvent.type}' but received '${receivedEvent.type}'`;
-            console.error('[waitForPlayerEvents]', err);
-            reject(err);
+        // Check order
+        if (inOrder && eventMap.length && !isExpected) {
+          const err = `Expected event '${expectedEvent.type}' but received '${receivedEvent.type}'`;
+          console.error('[waitForPlayerEvents]', err);
+          reject(err);
+        }
+        eventMap = eventMap.filter((entry) => {
+          if (entry.event.type === expectedEvent.type) {
+            player.removeEventListener(expectedEvent.type, entry.onEvent);
           }
-          eventMap = eventMap.filter((entry) => {
-            if (entry.event.type === expectedEvent.type) {
-              player.removeEventListener(expectedEvent.type, entry.onEvent);
-            }
-            return entry.event.type !== expectedEvent.type;
-          });
-          if (!eventMap.length) {
-            // Done
-            resolve(receivedEvents);
-          }
-        },
-      }));
-      player.addEventListener(PlayerEventType.ERROR, onError);
-      eventMap.forEach(({ event, onEvent }) => player.addEventListener(event.type, onEvent));
-    }),
-    options.timeout,
-    expectedEvents,
-    receivedEvents,
-  );
+          return entry.event.type !== expectedEvent.type;
+        });
+        if (!eventMap.length) {
+          // Done
+          resolve(receivedEvents);
+        }
+      },
+    }));
+    player.addEventListener(PlayerEventType.ERROR, onError);
+    eventMap.forEach(({ event, onEvent }) => player.addEventListener(event.type, onEvent));
+  });
+
+  // Add rejection on time-out
+  const timeOutPromise = withEventTimeOut(eventsPromise, options.timeout, expectedEvents, receivedEvents);
+
+  // Add extra logging on error
+  return withPlayerStateLogOnError(player, timeOutPromise);
 };
 
 const withEventTimeOut = <TType extends StringKeyOf<EventMap<string>>, EType extends Event<TType>>(
@@ -135,6 +137,14 @@ const withEventTimeOut = <TType extends StringKeyOf<EventMap<string>>, EType ext
         reject(reason);
       });
   });
+};
+
+const withPlayerStateLogOnError = async (player: THEOplayer, promise: Promise<any>) => {
+  try {
+    return await promise;
+  } catch (e) {
+    throw e + ` buffer: ${logPlayerBuffer(player)};` + ` currenTime: ${player.currentTime};` + ` paused: ${player.paused};`;
+  }
 };
 
 export function expect(actual: any, desc?: string) {
