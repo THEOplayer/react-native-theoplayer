@@ -13,21 +13,11 @@ export default function (spec: TestScope) {
   spec.describe('Set source with ads and auto-play', function () {
     spec.it('dispatches sourcechange, play, playing and ad events', async function () {
       const player = await getTestPlayer();
-      const playEventsPromise = waitForPlayerEventTypes(
-        player,
-        [PlayerEventType.SOURCE_CHANGE, PlayerEventType.PLAY, PlayerEventType.PLAYING],
-        true,
-        { timeout: 60000 },
-      );
-      const adEventsPromise = waitForPlayerEvents(
-        player,
-        [
-          { type: PlayerEventType.AD_EVENT, subType: AdEventType.AD_BREAK_BEGIN } as AdEvent,
-          { type: PlayerEventType.AD_EVENT, subType: AdEventType.AD_BEGIN } as AdEvent,
-        ],
-        true,
-        { timeout: 60000 },
-      );
+      const playEventsPromise = waitForPlayerEventTypes(player, [PlayerEventType.SOURCE_CHANGE, PlayerEventType.PLAY, PlayerEventType.PLAYING]);
+      const adEventsPromise = waitForPlayerEvents(player, [
+        { type: PlayerEventType.AD_EVENT, subType: AdEventType.AD_BREAK_BEGIN } as AdEvent,
+        { type: PlayerEventType.AD_EVENT, subType: AdEventType.AD_BEGIN } as AdEvent,
+      ]);
 
       // Start autoplay
       player.autoplay = true;
