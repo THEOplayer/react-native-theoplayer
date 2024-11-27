@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
@@ -27,6 +28,7 @@ import com.theoplayer.android.api.event.player.*
 import com.theoplayer.android.api.media3.Media3PlayerIntegration
 import com.theoplayer.android.api.media3.Media3PlayerIntegrationFactory
 import com.theoplayer.android.api.player.Player
+import com.theoplayer.android.api.player.RenderingTarget
 import com.theoplayer.android.connector.mediasession.MediaSessionConnector
 import com.theoplayer.audio.AudioBecomingNoisyManager
 import com.theoplayer.audio.AudioFocusManager
@@ -218,6 +220,13 @@ class ReactTHEOplayerContext private constructor(
         // schedule a forced layout
         mainHandler.post { measureAndLayout() }
       }
+    }
+
+    // By default, choose SURFACE_CONTROL/SURFACE_VIEW rendering target, based on API level.
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      player.setRenderingTarget(RenderingTarget.SURFACE_CONTROL)
+    } else {
+      player.setRenderingTarget(RenderingTarget.SURFACE_VIEW)
     }
 
     // By default, the screen should remain on.
