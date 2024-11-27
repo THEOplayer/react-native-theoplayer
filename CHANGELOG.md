@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Added support for the `SURFACE_CONTROL` rendering target on Android, which improves switching from/to fullscreen presentation mode on API level 29+.
+
 ### Fixed
 
 - Fixed a memory leak on iOS, caused by the wrapping ViewController that was keeping a strong reference to the THEOplayerRCTView.
