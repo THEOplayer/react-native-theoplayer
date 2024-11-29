@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Added support for the `SURFACE_CONTROL` rendering target on Android, which improves switching from/to fullscreen presentation mode on API level 29+.
+- Added support for the `SURFACE_CONTROL` rendering target on Android, which improves switching from/to fullscreen presentation mode. Rendering target `SURFACE_CONTROL` will be selected instead of `SURFACE_VIEW` on API level 29+.
 
 ### Fixed
 
