@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
@@ -24,7 +25,10 @@ import com.theoplayer.android.api.cast.CastIntegration
 import com.theoplayer.android.api.cast.CastIntegrationFactory
 import com.theoplayer.android.api.event.EventListener
 import com.theoplayer.android.api.event.player.*
+import com.theoplayer.android.api.media3.Media3PlayerIntegration
+import com.theoplayer.android.api.media3.Media3PlayerIntegrationFactory
 import com.theoplayer.android.api.player.Player
+import com.theoplayer.android.api.player.RenderingTarget
 import com.theoplayer.android.connector.mediasession.MediaSessionConnector
 import com.theoplayer.audio.AudioBecomingNoisyManager
 import com.theoplayer.audio.AudioFocusManager
@@ -84,6 +88,8 @@ class ReactTHEOplayerContext private constructor(
   var imaIntegration: GoogleImaIntegration? = null
   private var theoAdsIntegration: TheoAdsIntegration? = null
   var castIntegration: CastIntegration? = null
+  @Suppress("UnstableApiUsage")
+  private var media3Integration: Media3PlayerIntegration? = null
   var wasPlayingOnHostPause: Boolean = false
   private var isHostPaused: Boolean = false
 
@@ -216,6 +222,13 @@ class ReactTHEOplayerContext private constructor(
       }
     }
 
+    // By default, choose SURFACE_CONTROL/SURFACE_VIEW rendering target, based on API level.
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      player.setRenderingTarget(RenderingTarget.SURFACE_CONTROL)
+    } else {
+      player.setRenderingTarget(RenderingTarget.SURFACE_VIEW)
+    }
+
     // By default, the screen should remain on.
     playerView.keepScreenOn = true
 
@@ -321,6 +334,23 @@ class ReactTHEOplayerContext private constructor(
     } catch (e: Exception) {
       Log.w(TAG, "Failed to configure Cast integration ${e.message}")
     }
+    try {
+      if (BuildConfig.EXTENSION_MEDIA3) {
+        @Suppress("UnstableApiUsage")
+        media3Integration =
+          Media3PlayerIntegrationFactory.createMedia3PlayerIntegration { _, _ ->
+            // selectedSource -> represents the TypedSource the player picked to play.
+            // source -> represents the SourceDescription passed to the player.
+            // return true -> the Media3 integration pipeline will be used to play the selected source.
+            // return false -> the default pipeline will be used to play the selected source.
+            configAdapter.useMedia3
+          }
+        playerView.player.addIntegration(media3Integration)
+      }
+    } catch (e: Exception) {
+      Log.w(TAG, "Failed to configure Cast integration ${e.message}")
+    }
+
     // Add other future integrations here.
   }
 

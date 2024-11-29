@@ -6,7 +6,8 @@
   "scripts": {
     "start": "npx react-native start",
     "test:e2e:android": "npx cavy run-android --terminal bash --mode release",
-    "test:e2e:ios": "npx cavy run-ios --terminal bash",
+    "test:e2e:ios": "npx cavy run-ios --terminal bash --scheme ReactNativeTHEOplayer",
+    "test:e2e:tvos": "npx cavy run-ios --terminal bash --scheme ReactNativeTHEOplayer-tvOS",
     "lint": "eslint \"**/*.{ts,tsx}\"",
     "postinstall": "patch-package"
   },

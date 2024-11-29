@@ -1,5 +1,6 @@
 package com.theoplayer.player
 
+import android.os.Build
 import com.facebook.react.bridge.*
 import com.theoplayer.*
 import com.theoplayer.abr.ABRConfigurationAdapter
@@ -184,11 +185,13 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
   @ReactMethod
   fun setPresentationMode(tag: Int, type: String?) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      view?.presentationManager?.setPresentation(when (type) {
-        "picture-in-picture" -> PresentationMode.PICTURE_IN_PICTURE
-        "fullscreen" -> PresentationMode.FULLSCREEN
-        else -> PresentationMode.INLINE
-      })
+      view?.presentationManager?.setPresentation(
+        when (type) {
+          "picture-in-picture" -> PresentationMode.PICTURE_IN_PICTURE
+          "fullscreen" -> PresentationMode.FULLSCREEN
+          else -> PresentationMode.INLINE
+        }
+      )
     }
   }
 
@@ -209,11 +212,13 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
   @ReactMethod
   fun setAspectRatio(tag: Int, ratio: String) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      view?.player?.setAspectRatio(when (ratio) {
-        "fill" -> AspectRatio.FILL
-        "aspectFill" -> AspectRatio.ASPECT_FILL
-        else -> AspectRatio.FIT
-      })
+      view?.player?.setAspectRatio(
+        when (ratio) {
+          "fill" -> AspectRatio.FILL
+          "aspectFill" -> AspectRatio.ASPECT_FILL
+          else -> AspectRatio.FIT
+        }
+      )
     }
   }
 
@@ -236,10 +241,19 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
   @ReactMethod
   fun setRenderingTarget(tag: Int, target: String) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      view?.player?.setRenderingTarget(when (target) {
-        "textureView" -> RenderingTarget.TEXTURE_VIEW
-        else -> RenderingTarget.SURFACE_VIEW
-      })
+      view?.player?.setRenderingTarget(
+        when (target) {
+          "textureView" -> RenderingTarget.TEXTURE_VIEW
+          else -> {
+            // Prefer SURFACE_CONTROL
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+              RenderingTarget.SURFACE_CONTROL
+            } else {
+              RenderingTarget.SURFACE_VIEW
+            }
+          }
+        }
+      )
     }
   }
 }

@@ -32,6 +32,7 @@ def enabledTHEOads = safeExtGet("THEOplayer_extensionTHEOads", 'false').toBoolea
 def enabledAds = enabledGoogleIMA || enabledGoogleDAI || enabledTHEOads
 def enabledCast = safeExtGet("THEOplayer_extensionCast", 'false').toBoolean()
 def enabledMediaSession = safeExtGet("THEOplayer_extensionMediaSession", 'true').toBoolean()
+def enabledMedia3 = safeExtGet("THEOplayer_extensionMedia3", 'true').toBoolean()
 
 android {
   compileSdk safeExtGet('THEOplayer_compileSdkVersion', 34)
@@ -66,6 +67,7 @@ android {
     buildConfigField "boolean", "EXTENSION_ADS", "${enabledAds}"
     buildConfigField "boolean", "EXTENSION_CAST", "${enabledCast}"
     buildConfigField "boolean", "EXTENSION_MEDIASESSION", "${enabledMediaSession}"
+    buildConfigField "boolean", "EXTENSION_MEDIA3", "${enabledMedia3}"
 
     consumerProguardFiles 'proguard-rules.pro'
   }
@@ -93,7 +95,9 @@ android {
 
 rootProject.allprojects {
   repositories {
+    mavenLocal()
     maven { url "https://maven.theoplayer.com/releases" }
+    maven { url "https://maven.theoplayer.com/snapshots" }
     maven { url("$rootDir/../node_modules/react-native-theoplayer/android/local") }
   }
 }
@@ -110,8 +114,8 @@ repositories {
   maven { url "https://maven.theoplayer.com/releases" }
 }
 
-// The minimum supported THEOplayer version is 8.3.0
-def theoplayer_sdk_version = safeExtGet('THEOplayer_sdk', '[8.3.0, 9.0.0)')
+// The minimum supported THEOplayer version is 8.5.1
+def theoplayer_sdk_version = safeExtGet('THEOplayer_sdk', '[8.5.1, 9.0.0)')
 def theoplayer_mediasession_version = safeExtGet('THEOplayer_mediasession', '[8.0.0, 9.0.0)')
 
 dependencies {
@@ -157,6 +161,14 @@ dependencies {
   } else {
     println('Disable THEOplayer cast extension.')
     compileOnly "com.theoplayer.theoplayer-sdk-android:integration-cast:${theoplayer_sdk_version}"
+  }
+
+  if (enabledMedia3) {
+    println('Enable THEOplayer media3 extension.')
+    implementation "com.theoplayer.theoplayer-sdk-android:integration-media3:${theoplayer_sdk_version}"
+  } else {
+    println('Disable THEOplayer media3 extension.')
+    compileOnly "com.theoplayer.theoplayer-sdk-android:integration-media3:${theoplayer_sdk_version}"
   }
 }
 

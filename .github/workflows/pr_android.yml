@@ -3,6 +3,13 @@ on:
   workflow_dispatch:
   pull_request:
     types: [opened, reopened, synchronize]
+    paths:
+      - .github/workflows/pr_android.yml
+      - example/**
+      - e2e/**
+      - package.json
+      - src/**
+      - android/**
 
 jobs:
   build:
@@ -10,6 +17,7 @@ jobs:
     strategy:
       matrix:
         api-level: [ 34 ]
+    name: Build for API Level ${{ matrix.api-level }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

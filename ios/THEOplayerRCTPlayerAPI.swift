@@ -356,5 +356,14 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
             }
         }
     }
+  
+    @objc(destroyPlayer:)
+    func destroyPlayer(_ node: NSNumber) -> Void {
+        DispatchQueue.main.async {
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView {
+                theView.destroyPlayer()
+            }
+        }
+    }
 
 }

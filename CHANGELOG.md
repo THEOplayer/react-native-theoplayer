@@ -5,9 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [8.9.0] - 24-11-29
+
+### Added
+
+- Added support for the `SURFACE_CONTROL` rendering target on Android, which improves switching from/to fullscreen presentation mode. Rendering target `SURFACE_CONTROL` will be selected instead of `SURFACE_VIEW` on API level 29+.
+
+### Fixed
+
+- Fixed a memory leak on iOS, caused by the wrapping ViewController that was keeping a strong reference to the THEOplayerRCTView.
+
+### Added
+
+- Added support for the experimental media3 player pipeline on Android.
+
+### Changed
+
+- **BREAKING**: Changed the `view` parameter in the `Omid` API from a ref container to a native node handle when registering "friendly" obstructions.
+
 ## [8.8.1] - 24-11-20
 
-### Fixed 
+### Fixed
 
 - Fixed build issue on tvOS caused by HomeIndicatorViewController
 

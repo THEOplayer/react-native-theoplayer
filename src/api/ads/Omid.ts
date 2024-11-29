@@ -1,5 +1,4 @@
-import React from 'react';
-import { View } from 'react-native';
+import { NodeHandle } from 'react-native';
 
 export enum OmidFriendlyObstructionPurpose {
   /**
@@ -26,8 +25,10 @@ export enum OmidFriendlyObstructionPurpose {
 export interface OmidFriendlyObstruction {
   /**
    * The View of the friendly obstruction.
+   *
+   * Use `React.findNodeHandle(component)` to get a component's native handle.
    */
-  view: React.RefObject<View>;
+  viewNodeHandle: NodeHandle | null;
 
   /**
    * The {@link OmidFriendlyObstructionPurpose} of the friendly obstruction.
