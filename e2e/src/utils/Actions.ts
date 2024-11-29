@@ -1,6 +1,16 @@
 // noinspection JSUnusedGlobalSymbols
 
-import { ErrorEvent, type Event, EventMap, PlayerEventType, SourceDescription, StringKeyOf, THEOplayer } from 'react-native-theoplayer';
+import {
+  AdEvent,
+  AdEventType,
+  ErrorEvent,
+  type Event,
+  EventMap,
+  PlayerEventType,
+  SourceDescription,
+  StringKeyOf,
+  THEOplayer,
+} from 'react-native-theoplayer';
 import { getTestPlayer } from '../components/TestableTHEOplayerView';
 import { logPlayerBuffer } from './PlayerUtils';
 
@@ -73,6 +83,14 @@ export const waitForPlayerEvents = async <EType extends Event<PlayerEventType>>(
       player.removeEventListener(PlayerEventType.ERROR, onError);
       reject(err);
     };
+    const onAdError = (e: AdEvent) => {
+      if (e.subType === AdEventType.AD_ERROR) {
+        const err = 'Ad error';
+        console.error('[waitForPlayerEvents]', err);
+        player.removeEventListener(PlayerEventType.AD_EVENT, onAdError);
+        reject(err);
+      }
+    };
     let eventMap = expectedEvents.map((_expected: Partial<EType>) => ({
       event: _expected as Event<PlayerEventType>,
       onEvent(receivedEvent: Event<PlayerEventType>) {
@@ -105,6 +123,7 @@ export const waitForPlayerEvents = async <EType extends Event<PlayerEventType>>(
       },
     }));
     player.addEventListener(PlayerEventType.ERROR, onError);
+    player.addEventListener(PlayerEventType.AD_EVENT, onAdError);
     eventMap.forEach(({ event, onEvent }) => player.addEventListener(event.type, onEvent));
   });
 
