@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed a memory leak on iOS, caused by the wrapping ViewController that was keeping a strong reference to the THEOplayerRCTView.
 
+### Added
+
+- Added support for the experimental media3 player pipeline on Android.
+
 ### Changed
 
 - **BREAKING**: Changed the `view` parameter in the `Omid` API from a ref container to a native node handle when registering "friendly" obstructions.

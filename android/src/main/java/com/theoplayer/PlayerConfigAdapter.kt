@@ -21,6 +21,7 @@ private const val PROP_UI_ENABLED = "uiEnabled"
 private const val PROP_CAST_STRATEGY = "strategy"
 private const val PROP_RETRY_CONFIG = "retryConfiguration"
 private const val PROP_HLS_DATE_RANGE = "hlsDateRange"
+private const val PROP_USE_MEDIA3 = "useMedia3"
 private const val PROP_RETRY_MAX_RETRIES = "maxRetries"
 private const val PROP_RETRY_MIN_BACKOFF = "minimumBackoff"
 private const val PROP_RETRY_MAX_BACKOFF = "maximumBackoff"
@@ -38,6 +39,12 @@ private const val PROP_BITRATE = "bitrate"
 private const val PROP_ALLOWED_MIMETYPES = "allowedMimeTypes"
 
 class PlayerConfigAdapter(private val configProps: ReadableMap?) {
+
+  /**
+   * Whether the Media3 extension is used for play-out.
+   */
+  var useMedia3: Boolean = false
+    private set
 
   /**
    * Get general THEOplayerConfig object; these properties apply:
@@ -62,6 +69,9 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
         }
         if (hasKey(PROP_HLS_DATE_RANGE)) {
           hlsDateRange(getBoolean(PROP_HLS_DATE_RANGE))
+        }
+        if (hasKey(PROP_USE_MEDIA3)) {
+          useMedia3 = getBoolean(PROP_USE_MEDIA3)
         }
         pipConfiguration(PipConfiguration.Builder().build())
       }
