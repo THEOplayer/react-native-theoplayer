@@ -162,7 +162,12 @@ const withPlayerStateLogOnError = async (player: THEOplayer, promise: Promise<an
   try {
     return await promise;
   } catch (e) {
-    throw e + ` buffer: ${logPlayerBuffer(player)};` + ` currenTime: ${player.currentTime};` + ` paused: ${player.paused};`;
+    throw (
+      (typeof e === 'string' ? e : JSON.stringify(e)) +
+      ` buffer: ${logPlayerBuffer(player)};` +
+      ` currentTime: ${player.currentTime};` +
+      ` paused: ${player.paused};`
+    );
   }
 };
 
