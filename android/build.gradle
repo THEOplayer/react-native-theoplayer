@@ -32,7 +32,7 @@ def enabledTHEOads = safeExtGet("THEOplayer_extensionTHEOads", 'false').toBoolea
 def enabledAds = enabledGoogleIMA || enabledGoogleDAI || enabledTHEOads
 def enabledCast = safeExtGet("THEOplayer_extensionCast", 'false').toBoolean()
 def enabledMediaSession = safeExtGet("THEOplayer_extensionMediaSession", 'true').toBoolean()
-def enabledMedia3 = safeExtGet("THEOplayer_extensionMedia3", 'true').toBoolean()
+def enabledMedia3 = safeExtGet("THEOplayer_extensionMedia3", 'false').toBoolean()
 
 android {
   compileSdk safeExtGet('THEOplayer_compileSdkVersion', 34)
