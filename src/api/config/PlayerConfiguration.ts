@@ -99,6 +99,13 @@ export interface PlayerConfiguration {
    * @defaultValue `false`.
    */
   useMedia3?: boolean;
+
+  /**
+   * Sets whether support for THEOlive sources should be enabled.
+   *
+   * @defaultValue `false`.
+   */
+  enableTHEOlive?: boolean;
 }
 
 /**
