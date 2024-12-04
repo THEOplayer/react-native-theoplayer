@@ -56,6 +56,7 @@ const playerConfig: PlayerConfiguration = {
     skipBackwardInterval: 10,
     convertSkipToSeek: true,
   },
+  enableTHEOlive: true,
 };
 
 /**
