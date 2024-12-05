@@ -31,6 +31,12 @@ const CopyWebpackPluginConfig = new CopyWebpackPlugin({
       to: `${libraryLocation}/[name][ext]`,
     },
     {
+      // Copy service worker
+      // THEOplayer will find them by setting `libraryLocation` in the playerConfiguration.
+      from: path.resolve(projectDirectory, './node_modules/theoplayer/theoplayer.sw.js').replace(/\\/g, '/'),
+      to: `${libraryLocation}/[name][ext]`,
+    },
+    {
       // Copy CSS files
       from: path.resolve(appDirectory, './web/public/*.css').replace(/\\/g, '/'),
       to: `[name][ext]`,
