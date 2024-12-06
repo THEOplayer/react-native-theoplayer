@@ -31,23 +31,29 @@ Pod::Spec.new do |s|
   # ReactNative Dependency
   s.dependency "React-Core"
 
-  # THEOplayer core Dependency
+  # THEOplayer Dependency
   puts "Adding THEOplayerSDK-core"
-  s.dependency "THEOplayerSDK-core", "~> 8.3"
+  s.dependency "THEOplayerSDK-core", "~> 8.6"
+  
+  # THEOlive Dependency
+  puts "Adding THEOplayer-Integration-THEOlive"
+  s.ios.dependency "THEOplayer-Integration-THEOlive/Base", "~> 8.6"
+  s.ios.dependency "THEOliveSDK", "~> 3.18.4"
 
+  # Feature based dependencies
   if theofeatures.include?("GOOGLE_IMA")
 	puts "Adding THEOplayer-Integration-GoogleIMA"
-    s.dependency "THEOplayer-Integration-GoogleIMA", "~> 8.3"
+    s.dependency "THEOplayer-Integration-GoogleIMA", "~> 8.6"
   end
 
   if theofeatures.include?("CHROMECAST")
 	puts "Adding THEOplayer-Integration-GoogleCast"
-    s.ios.dependency "THEOplayer-Integration-GoogleCast", "~> 8.3"
+    s.ios.dependency "THEOplayer-Integration-GoogleCast", "~> 8.6"
   end
 
   if theofeatures.include?("SIDELOADED_TEXTTRACKS")
 	puts "Adding THEOplayer-Connector-SideloadedSubtitle"
-    s.dependency "THEOplayer-Connector-SideloadedSubtitle", "~> 8.3"
+    s.dependency "THEOplayer-Connector-SideloadedSubtitle", "~> 8.6"
   end
 
 end
