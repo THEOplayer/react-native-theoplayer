@@ -167,10 +167,16 @@ class THEOplayerRCTSourceDescriptionBuilder {
      */
     private static func buildTypedSource(_ typedSourceData: [String:Any]) -> TypedSource? {
         let contentProtection = extractDrmConfiguration(from: typedSourceData)
+        
+        if let integration = typedSourceData[SD_PROP_INTEGRATION] as? String, integration == "theolive" {
+            return THEOplayerRCTSourceDescriptionBuilder.buildTHEOliveDescription(typedSourceData)
+        }
+      
         if let src = typedSourceData[SD_PROP_SRC] as? String {
-            // extract the type
+        // extract the type
             let type = typedSourceData[SD_PROP_TYPE] as? String ?? THEOplayerRCTSourceDescriptionBuilder.extractMimeType(src)
             let headers = typedSourceData[SD_PROP_HEADERS] as? [String:String]
+        
             return TypedSource(src: src,
                                type: type,
                                drm: contentProtection,
