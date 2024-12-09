@@ -31,7 +31,7 @@ class ReactTHEOplayerViewManager : ViewGroupManager<ReactTHEOplayerView>() {
 
   @ReactProp(name = PROP_CONFIG)
   fun setConfig(videoView: ReactTHEOplayerView, config: ReadableMap?) {
-    videoView.initialize(config)
+    videoView.initialize(PlayerConfigAdapter(config))
   }
 
   override fun getExportedCustomDirectEventTypeConstants(): Map<String, Any> {

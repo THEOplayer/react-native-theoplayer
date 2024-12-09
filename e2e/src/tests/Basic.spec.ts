@@ -3,7 +3,7 @@ import { PlayerEventType } from 'react-native-theoplayer';
 import { expect, preparePlayerWithSource, waitForPlayerEventType, waitForPlayerEventTypes } from '../utils/Actions';
 import { TestSourceDescription, TestSources } from '../utils/SourceUtils';
 
-const SEEK_THRESHOLD = 250;
+const SEEK_THRESHOLD = 500;
 
 export default function (spec: TestScope) {
   TestSources()

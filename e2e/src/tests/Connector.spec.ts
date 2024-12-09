@@ -1,14 +1,18 @@
 import { TestScope } from 'cavy';
 import hls from '../res/hls.json';
-import { ConvivaConnector } from '@theoplayer/react-native-analytics-conviva';
 import { getTestPlayer } from '../components/TestableTHEOplayerView';
 import { PlayerEventType, THEOplayer } from 'react-native-theoplayer';
-import { NielsenConnector } from '@theoplayer/react-native-analytics-nielsen';
 import { AdobeConnector } from '@theoplayer/react-native-analytics-adobe';
-import { ComscoreConfiguration, ComscoreConnector, ComscoreMetadata, ComscoreUserConsent } from '@theoplayer/react-native-analytics-comscore';
-import { ComscoreMediaType } from '@theoplayer/react-native-analytics-comscore/src/api/ComscoreMetadata';
-import { Platform } from 'react-native';
 import { waitForPlayerEventTypes } from '../utils/Actions';
+import { ConvivaConnector } from '@theoplayer/react-native-analytics-conviva';
+import { NielsenConnector } from '@theoplayer/react-native-analytics-nielsen';
+import {
+  ComscoreConfiguration,
+  ComscoreConnector,
+  ComscoreMediaType,
+  ComscoreMetadata,
+  ComscoreUserConsent,
+} from '@theoplayer/react-native-analytics-comscore';
 
 type PlayerFn = (player: THEOplayer) => Promise<void> | void;
 const NoOpPlayerFn: PlayerFn = (_player: THEOplayer) => {};
@@ -102,38 +106,35 @@ export default function (spec: TestScope) {
     );
   });
 
-  // TODO: flaky on iOS
-  if (Platform.OS !== 'ios') {
-    spec.describe(`Setup Comscore connector`, function () {
-      let connector: ComscoreConnector;
-      const metadata: ComscoreMetadata = {
-        mediaType: ComscoreMediaType.live,
-        uniqueId: 'uniqueId',
-        length: 0,
-        stationTitle: 'stationTitle',
-        programTitle: 'programTitle',
-        episodeTitle: 'episodeTitle',
-        genreName: 'genreName',
-        classifyAsAudioStream: false,
-      };
-      const config: ComscoreConfiguration = {
-        publisherId: 'publisherId',
-        applicationName: 'applicationName',
-        userConsent: ComscoreUserConsent.granted,
-      };
+  spec.describe(`Setup Comscore connector`, function () {
+    let connector: ComscoreConnector;
+    const metadata: ComscoreMetadata = {
+      mediaType: ComscoreMediaType.live,
+      uniqueId: 'uniqueId',
+      length: 0,
+      stationTitle: 'stationTitle',
+      programTitle: 'programTitle',
+      episodeTitle: 'episodeTitle',
+      genreName: 'genreName',
+      classifyAsAudioStream: false,
+    };
+    const config: ComscoreConfiguration = {
+      publisherId: 'publisherId',
+      applicationName: 'applicationName',
+      userConsent: ComscoreUserConsent.granted,
+    };
 
-      testConnector(
-        spec,
-        (player: THEOplayer) => {
-          connector = new ComscoreConnector(player, metadata, config);
-        },
-        () => {
-          connector.update(metadata);
-        },
-        () => {
-          connector.destroy();
-        },
-      );
-    });
-  }
+    testConnector(
+      spec,
+      (player: THEOplayer) => {
+        connector = new ComscoreConnector(player, metadata, config);
+      },
+      () => {
+        connector.update(metadata);
+      },
+      () => {
+        connector.destroy();
+      },
+    );
+  });
 }
