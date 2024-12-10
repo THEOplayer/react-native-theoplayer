@@ -17,7 +17,8 @@ jobs:
     strategy:
       matrix:
         api-level: [ 34 ]
-    name: Build for API Level ${{ matrix.api-level }}
+        newArchEnabled: [ false, true ]
+    name: Build for API Level ${{ matrix.api-level }} using ${{matrix.newArchEnabled  == true && 'New' || 'Old' }} Architecture
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -76,6 +77,13 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           script: echo "Generated AVD snapshot for caching."
+
+      - name: Modify gradle.properties for newArchEnabled
+        working-directory: e2e/android
+        run: |
+          # Modify or add the newArchEnabled property in gradle.properties
+          echo "newArchEnabled=${{ matrix.newArchEnabled }}" >> ./gradle.properties
+          cat ./gradle.properties
 
       - name: Run e2e tests
         uses: reactivecircus/android-emulator-runner@v2
