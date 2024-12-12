@@ -1,14 +1,8 @@
 import { TestScope } from 'cavy';
-import { AdDescription, AdEventType, PlayerEventType, SourceDescription, AdEvent } from 'react-native-theoplayer';
-import hls from '../res/hls.json';
-import ads from '../res/ads.json';
+import { AdEventType, PlayerEventType, AdEvent } from 'react-native-theoplayer';
 import { getTestPlayer } from '../components/TestableTHEOplayerView';
 import { waitForPlayerEvents, waitForPlayerEventTypes } from '../utils/Actions';
 import { TestSourceDescription, TestSources } from '../utils/SourceUtils';
-
-function extendSourceWithAds(source: SourceDescription, ad: AdDescription): SourceDescription {
-  return { ...source, ads: [ad] };
-}
 
 export default function (spec: TestScope) {
   TestSources()
@@ -26,7 +20,7 @@ export default function (spec: TestScope) {
 
           // Start autoplay
           player.autoplay = true;
-          player.source = extendSourceWithAds(hls[0], ads[0] as AdDescription);
+          player.source = testSource.source;
 
           // Expect events.
           await playEventsPromise;
