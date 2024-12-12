@@ -59,6 +59,7 @@ export const waitForPlayerEvent = async <EType extends Event<PlayerEventType>>(
   return waitForPlayerEvents(player, [expectedEvent], false, options);
 };
 
+let eventListIndex = 0; // increments for every playerEvent list that is evaluated.
 export const waitForPlayerEvents = async <EType extends Event<PlayerEventType>>(
   player: THEOplayer,
   expectedEvents: Partial<EType>[],
@@ -73,39 +74,58 @@ export const waitForPlayerEvents = async <EType extends Event<PlayerEventType>>(
         player.removeEventListener(PlayerEventType.ERROR, onError);
         reject(err);
       };
-      let eventMap = expectedEvents.map((_expected: Partial<EType>) => ({
-        event: _expected as Event<PlayerEventType>,
-        onEvent(receivedEvent: Event<PlayerEventType>) {
-          if (!eventMap.length) {
-            // No more events expected
-            return;
-          }
-          const expectedEvent = eventMap[0].event;
-          receivedEvents.push(receivedEvent);
-          console.debug('[waitForPlayerEvents]', `Received event ${JSON.stringify(receivedEvent.type)} - waiting for ${expectedEvent.type}`);
-          const index = eventMap.findIndex((e) => propsMatch(e.event, receivedEvent));
-          const isExpected = index <= 0;
 
-          // Check order
-          if (inOrder && eventMap.length && !isExpected) {
-            const err = `Expected event '${expectedEvent.type}' but received '${receivedEvent.type}'`;
-            console.error('[waitForPlayerEvents]', err);
-            reject(err);
-          }
-          eventMap = eventMap.filter((entry) => {
-            if (entry.event.type === expectedEvent.type) {
-              player.removeEventListener(expectedEvent.type, entry.onEvent);
+      const TAG: string = `[waitForPlayerEvents] eventList ${eventListIndex}:`;
+      eventListIndex += 1;
+
+      let unReceivedEvents = [...expectedEvents];
+      const uniqueEventTypes = [...new Set(unReceivedEvents.map((event) => event.type))];
+      uniqueEventTypes.forEach((eventType) => {
+        const onEvent = (receivedEvent: Event<PlayerEventType>) => {
+          receivedEvents.push(receivedEvent);
+          if (inOrder && unReceivedEvents.length) {
+            const expectedEvent = unReceivedEvents[0];
+            console.debug(TAG, `Handling received event ${JSON.stringify(receivedEvent)}`);
+            console.debug(TAG, `Was waiting for ${JSON.stringify(expectedEvent)}`);
+
+            // Received events must either not be in the expected, or be the first
+            const index = unReceivedEvents.findIndex((e) => propsMatch(e, receivedEvent));
+            if (index > 0) {
+              const err = `Expected '${expectedEvent.type}' event but received '${receivedEvent.type} event'`;
+              console.error(TAG, err);
+              reject(err);
+            } else {
+              console.debug(TAG, `Received ${receivedEvent.type} event is allowed.`);
             }
-            return entry.event.type !== expectedEvent.type;
+          }
+
+          unReceivedEvents = unReceivedEvents.filter((event) => {
+            // When found, remove the listener
+            if (propsMatch(event, receivedEvent)) {
+              console.debug(TAG, `   -> removing: ${JSON.stringify(event)}`);
+              return false;
+            }
+            // Only keep the unreceived events
+            console.debug(TAG, `   -> keeping: ${JSON.stringify(event)}`);
+            return true;
           });
-          if (!eventMap.length) {
-            // Done
+
+          // remove listener if no other unreceived events require it.
+          if (!unReceivedEvents.find((event) => event.type === receivedEvent.type)) {
+            console.debug(TAG, `Removing listener for ${receivedEvent.type} from player`);
+            player.removeEventListener(receivedEvent.type, onEvent);
+          }
+
+          if (!unReceivedEvents.length) {
+            // Finished
             resolve(receivedEvents);
           }
-        },
-      }));
+        };
+
+        player.addEventListener(eventType as PlayerEventType, onEvent);
+        console.debug(TAG, `Added listener for ${eventType} to the player`);
+      });
       player.addEventListener(PlayerEventType.ERROR, onError);
-      eventMap.forEach(({ event, onEvent }) => player.addEventListener(event.type, onEvent));
     }),
     options.timeout,
     expectedEvents,
