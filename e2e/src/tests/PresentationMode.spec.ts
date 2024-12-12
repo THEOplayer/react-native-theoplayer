@@ -33,7 +33,7 @@ export default function (spec: TestScope) {
           const inlinePromise = waitForPlayerEvent(player, {
             type: PlayerEventType.PRESENTATIONMODE_CHANGE,
             presentationMode: PresentationMode.inline,
-            previousPresentationMode: PresentationMode.inline,
+            previousPresentationMode: PresentationMode.fullscreen,
           } as PresentationModeChangeEvent);
           player.presentationMode = PresentationMode.inline;
 
