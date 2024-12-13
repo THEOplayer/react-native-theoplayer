@@ -7,11 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [8.11.0] - 24-12-13
 
+### Added
+
 - Added support for THEOlive on tvOS.
 
 ## [8.10.0] - 24-12-06
 
-## Added
+### Added
 
 - Added support for THEOlive on iOS.
 
