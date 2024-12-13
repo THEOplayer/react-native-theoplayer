@@ -37,8 +37,7 @@ Pod::Spec.new do |s|
   
   # THEOlive Dependency
   puts "Adding THEOplayer-Integration-THEOlive"
-  s.ios.dependency "THEOplayer-Integration-THEOlive/Base", "~> 8.6"
-  s.ios.dependency "THEOliveSDK", "~> 3.18.4"
+  s.dependency "THEOplayer-Integration-THEOlive", "~> 8.6", ">= 8.6.3"
 
   # Feature based dependencies
   if theofeatures.include?("GOOGLE_IMA")
