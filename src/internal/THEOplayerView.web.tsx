@@ -2,22 +2,12 @@ import React, { useEffect, useRef } from 'react';
 import type { THEOplayerViewProps } from 'react-native-theoplayer';
 import { Player, ChromelessPlayer, PlayerConfiguration } from 'theoplayer';
 import { THEOplayerWebAdapter } from './adapter/THEOplayerWebAdapter';
-import { registerServiceWorker, browserCanPlayHLSAndHasNoMSE } from './utils/ServiceWorkerUtils';
 
 export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProps>) {
   const { config, children } = props;
   const player = useRef<ChromelessPlayer | null>(null);
   const adapter = useRef<THEOplayerWebAdapter | null>(null);
   const container = useRef<null | HTMLDivElement>(null);
-
-  const preparePlayer = async (adapter: THEOplayerWebAdapter) => {
-    if (config?.enableTHEOlive == true && browserCanPlayHLSAndHasNoMSE()) {
-      await registerServiceWorker(props.config?.libraryLocation);
-    }
-
-    // Notify the player is ready
-    props.onPlayerReady?.(adapter);
-  };
 
   useEffect(() => {
     // Create player inside container.
@@ -59,8 +49,8 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
       // @ts-ignore
       window.nativePlayer = player;
 
-      // Prepare & notify
-      void preparePlayer(adapter.current);
+      // Notify the player is ready
+      props.onPlayerReady?.(adapter.current);
     }
 
     // Clean-up
