@@ -104,6 +104,7 @@ export interface PlayerConfiguration {
    * Sets whether support for THEOlive sources should be enabled.
    *
    * @defaultValue `false`.
+   * @deprecated: THEOlive support is always enabled, there is no need to explicitly enable it.
    */
   enableTHEOlive?: boolean;
 }
