@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed the picture-in-picture presentationMode for THEOlive sources.
+
 ### Changed
 
 - Deprecated the use of the `enableTHEOlive` flag in `PlayerConfiguration` as THEOlive support is always enabled.
