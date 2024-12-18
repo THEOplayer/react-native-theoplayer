@@ -12,8 +12,8 @@ public class THEOplayerRCTPresentationModeManager {
     private var presentationMode: THEOplayerSDK.PresentationMode = .inline
     private var rnInlineMode: THEOplayerSDK.PresentationMode = .inline // while native player is inline, RN player can be inline or fullsceen
   
-    private var containerView: UIView?                  // view containing the playerView and it's siblings (e.g. UI)
-    private var inlineParentView: UIView?               // target view for inline representation
+    private weak var containerView: UIView?                  // view containing the playerView and it's siblings (e.g. UI)
+    private weak var inlineParentView: UIView?               // target view for inline representation
         
     // MARK: Events
     var onNativePresentationModeChange: RCTDirectEventBlock?
