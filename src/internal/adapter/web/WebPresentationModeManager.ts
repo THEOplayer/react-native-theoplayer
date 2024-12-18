@@ -66,8 +66,12 @@ export class WebPresentationModeManager {
   private prepareForPresentationModeChanges() {
     const elements = this._player.element.children;
     for (const element of Array.from(elements)) {
-      if (element.tagName === 'VIDEO' && element.attributes.getNamedItem('src') !== null) {
-        this._element = element as HTMLVideoElement;
+      if (element.tagName === 'VIDEO') {
+        const videoElement = element as HTMLVideoElement;
+        if ((videoElement.src !== null && videoElement.src !== '') || videoElement.srcObject !== null) {
+          this._element = videoElement;
+          break;
+        }
       }
     }
     // listen for pip updates on element

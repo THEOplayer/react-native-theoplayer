@@ -50,7 +50,7 @@ export default function (spec: TestScope) {
           {},
           {
             customerKey: 'testCustomerKey',
-            gatewayUrl: 'testGgatewayUrl',
+            gatewayUrl: 'testGatewayUrl',
           },
         );
       },
