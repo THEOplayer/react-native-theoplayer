@@ -18,6 +18,7 @@ public class THEOplayerRCTView: UIView {
     var backgroundAudioManager: THEOplayerRCTBackgroundAudioManager
     var nowPlayingManager: THEOplayerRCTNowPlayingManager
     var remoteCommandsManager: THEOplayerRCTRemoteCommandsManager
+    var pipManager: THEOplayerRCTPipManager
     var pipControlsManager: THEOplayerRCTPipControlsManager
     
     var adsConfig = AdsConfig()
@@ -64,6 +65,7 @@ public class THEOplayerRCTView: UIView {
         self.backgroundAudioManager = THEOplayerRCTBackgroundAudioManager()
         self.nowPlayingManager = THEOplayerRCTNowPlayingManager()
         self.remoteCommandsManager = THEOplayerRCTRemoteCommandsManager()
+        self.pipManager = THEOplayerRCTPipManager()
         self.pipControlsManager = THEOplayerRCTPipControlsManager()
         
         super.init(frame: .zero)
@@ -81,6 +83,7 @@ public class THEOplayerRCTView: UIView {
         self.castEventHandler.destroy()
         self.nowPlayingManager.destroy()
         self.remoteCommandsManager.destroy()
+        self.pipManager.destroy()
         self.pipControlsManager.destroy()
         self.presentationModeManager.destroy()
         self.backgroundAudioManager.destroy()
@@ -109,13 +112,14 @@ public class THEOplayerRCTView: UIView {
             self.mainEventHandler.setPlayer(player)
             self.textTrackEventHandler.setPlayer(player)
             self.mediaTrackEventHandler.setPlayer(player)
-            self.presentationModeManager.setPlayer(player, view: self)
-            self.backgroundAudioManager.setPlayer(player, view: self)
             self.adEventHandler.setPlayer(player)
             self.castEventHandler.setPlayer(player)
             self.nowPlayingManager.setPlayer(player)
             self.remoteCommandsManager.setPlayer(player)
             self.pipControlsManager.setPlayer(player)
+            self.presentationModeManager.setPlayer(player, view: self)
+            self.backgroundAudioManager.setPlayer(player, view: self)
+            self.pipManager.setView(view: self)
             // Attach player to view
             player.addAsSubview(of: self)
         }
