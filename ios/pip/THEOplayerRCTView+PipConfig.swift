@@ -8,7 +8,7 @@ struct PipConfig {
     var canStartPictureInPictureAutomaticallyFromInline: Bool = false
 }
 
-extension THEOplayerRCTView: AVPictureInPictureControllerDelegate {
+extension THEOplayerRCTView {
     
     func playerPipConfiguration() -> PiPConfiguration {
         let builder = PiPConfigurationBuilder()
@@ -25,30 +25,9 @@ extension THEOplayerRCTView: AVPictureInPictureControllerDelegate {
         if let player = self.player,
            var pipController = player.pip {
             if #available(iOS 14.0, tvOS 14.0, *) {
-                pipController.nativePictureInPictureDelegate = CustomNativePictureInPictureDelegate(self)
+                pipController.nativePictureInPictureDelegate = self.pipManager
             }
         }
     }
 }
 
-class CustomNativePictureInPictureDelegate: NSObject, AVPictureInPictureControllerDelegate {
-    private weak var theoPlayerView: THEOplayerRCTView?
-    init(_ view:  THEOplayerRCTView?) {
-        theoPlayerView = view
-    }
-  
-  @available(tvOS 14.0, *)
-  public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-      if let view = self.theoPlayerView {
-          view.presentationModeManager.presentationModeContext.pipContext = .PIP_CLOSED
-          view.pipControlsManager.willStartPip()
-      }
-  }
-  
-  @available(tvOS 14.0, *)
-  public func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
-      if let view = self.theoPlayerView {
-           view.presentationModeManager.presentationModeContext.pipContext = .PIP_RESTORED
-      }
-  }
-}
