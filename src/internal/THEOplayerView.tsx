@@ -144,7 +144,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
     if (onPlayerDestroy) {
       onPlayerDestroy(this._facade);
     }
-    this._facade.destroy();
+
     this._facade.dispatchEvent(new BaseEvent(PlayerEventType.DESTROY));
     this._dimensionsHandler?.remove();
     this._facade.clearEventListeners();
