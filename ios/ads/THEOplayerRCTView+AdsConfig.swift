@@ -21,14 +21,16 @@ struct AdsImaConfig {
     var autoPlayAdBreaks: Bool?
     var sessionID: String?
     var bitrate: Int
+    var adLoadTimeout: Int?
     
-    init(maxRedirects: UInt, enableDebugMode: Bool, ppid: String? = nil, featureFlags: [String : String]? = nil, autoPlayAdBreaks: Bool? = nil, sessionID: String? = nil, bitrate: Int? = -1) {
+    init(maxRedirects: UInt, enableDebugMode: Bool, ppid: String? = nil, featureFlags: [String : String]? = nil, autoPlayAdBreaks: Bool? = nil, sessionID: String? = nil, bitrate: Int? = -1, adLoadTimeout: Int? = nil) {
         self.maxRedirects = maxRedirects
         self.enableDebugMode = enableDebugMode
         self.ppid = ppid
         self.featureFlags = featureFlags
         self.autoPlayAdBreaks = autoPlayAdBreaks
         self.sessionID = sessionID
+        self.adLoadTimeout = adLoadTimeout
 #if canImport(THEOplayerGoogleIMAIntegration)
         self.bitrate = bitrate ?? kIMAAutodetectBitrate
 #else
@@ -66,6 +68,9 @@ extension THEOplayerRCTView {
                 }
                 if let bitrate = adsImaConfig["bitrate"] as? Int {
                     self.adsConfig.adsImaConfig.bitrate = bitrate
+                }
+                if let adLoadTimeout = adsImaConfig["adLoadTimeout"] as? Int {
+                    self.adsConfig.adsImaConfig.adLoadTimeout = adLoadTimeout
                 }
             }
         }
