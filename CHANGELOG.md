@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed a memory leak on iOS, where the presentationModeManager was holding a strong reference to the fullscreen's target and return views
+- Fixed an issue on iOS where the destruction of the THEOplayerView was not always propagated correctly over the iOS Bridge, resulting in an occasional memory leak.
 
 ## [8.11.1] - 24-12-18
 
