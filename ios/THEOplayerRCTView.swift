@@ -82,6 +82,7 @@ public class THEOplayerRCTView: UIView {
         self.nowPlayingManager.destroy()
         self.remoteCommandsManager.destroy()
         self.pipControlsManager.destroy()
+        self.presentationModeManager.destroy()
         self.backgroundAudioManager.destroy()
       
         self.destroyBackgroundAudio()
