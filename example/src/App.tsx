@@ -83,7 +83,7 @@ export default function App() {
 
     player.source = SOURCES[0].source;
 
-    player.backgroundAudioConfiguration = { enabled: true };
+    player.backgroundAudioConfiguration = { enabled: true, shouldResumeAfterInterruption: true };
     player.pipConfiguration = { startsAutomatically: true };
 
     console.log('THEOplayer is ready');
