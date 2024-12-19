@@ -9,7 +9,6 @@ public class THEOplayerRCTView: UIView {
     public private(set) var player: THEOplayer?
     public private(set) var mainEventHandler: THEOplayerRCTMainEventHandler
     public private(set) var broadcastEventHandler: THEOplayerRCTBroadcastEventHandler
-    let theoPlayerViewController = UIViewController()
     var textTrackEventHandler: THEOplayerRCTTextTrackEventHandler
     var mediaTrackEventHandler: THEOplayerRCTMediaTrackEventHandler
     var metadataTrackEventHandler: THEOplayerRCTSideloadedMetadataTrackEventHandler
@@ -94,14 +93,6 @@ public class THEOplayerRCTView: UIView {
         if let player = self.player {
             player.frame = self.frame
             player.autoresizingMask = [.flexibleBottomMargin, .flexibleHeight, .flexibleLeftMargin, .flexibleRightMargin, .flexibleTopMargin, .flexibleWidth]
-          
-            // wrap theoPlayerViewController around the view
-            if theoPlayerViewController.parent == nil,
-               let parentViewController = self.findViewController() {
-                parentViewController.addChild(self.theoPlayerViewController)
-                self.theoPlayerViewController.didMove(toParent: parentViewController)
-                self.theoPlayerViewController.view = self
-            }
         }
     }
     
