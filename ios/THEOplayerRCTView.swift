@@ -71,6 +71,23 @@ public class THEOplayerRCTView: UIView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("[NATIVE] init(coder:) has not been implemented")
     }
+  
+    deinit {
+        self.mainEventHandler.destroy()
+        self.textTrackEventHandler.destroy()
+        self.mediaTrackEventHandler.destroy()
+        self.adEventHandler.destroy()
+        self.castEventHandler.destroy()
+        self.nowPlayingManager.destroy()
+        self.remoteCommandsManager.destroy()
+        self.pipControlsManager.destroy()
+      
+        self.destroyBackgroundAudio()
+        self.player?.removeAllIntegrations()
+        self.player?.destroy()
+        self.player = nil
+        if DEBUG_THEOPLAYER_INTERACTION { PrintUtils.printLog(logText: "[NATIVE] THEOplayer instance destroyed.") }
+    }
     
     override public func layoutSubviews() {
         super.layoutSubviews()
@@ -135,28 +152,6 @@ public class THEOplayerRCTView: UIView {
         self.initBackgroundAudio()
         self.initPip()
         return self.player
-    }
-    
-    // MARK: - Destroy Player
-    
-    public func destroyPlayer() {
-        self.mainEventHandler.destroy()
-        self.textTrackEventHandler.destroy()
-        self.mediaTrackEventHandler.destroy()
-        self.adEventHandler.destroy()
-        self.castEventHandler.destroy()
-        self.nowPlayingManager.destroy()
-        self.remoteCommandsManager.destroy()
-        self.pipControlsManager.destroy()
-        
-        self.destroyBackgroundAudio()
-        self.player?.removeAllIntegrations()
-        self.player?.destroy()
-        self.player = nil
-        if DEBUG_THEOPLAYER_INTERACTION { PrintUtils.printLog(logText: "[NATIVE] THEOplayer instance destroyed.") }
-      
-        self.theoPlayerViewController.view = nil
-        self.theoPlayerViewController.removeFromParent()
     }
     
     func processMetadataTracks(metadataTrackDescriptions: [TextTrackDescription]?) {
