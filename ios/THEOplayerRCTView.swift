@@ -15,6 +15,7 @@ public class THEOplayerRCTView: UIView {
     var adEventHandler: THEOplayerRCTAdsEventHandler
     var castEventHandler: THEOplayerRCTCastEventHandler
     var presentationModeManager: THEOplayerRCTPresentationModeManager
+    var backgroundAudioManager: THEOplayerRCTBackgroundAudioManager
     var nowPlayingManager: THEOplayerRCTNowPlayingManager
     var remoteCommandsManager: THEOplayerRCTRemoteCommandsManager
     var pipControlsManager: THEOplayerRCTPipControlsManager
@@ -35,8 +36,8 @@ public class THEOplayerRCTView: UIView {
     }
     var backgroundAudioConfig = BackgroundAudioConfig() {
           didSet {
-              self.updateInterruptionNotifications()
-              self.updateAVAudioSessionMode()
+              self.backgroundAudioManager.updateInterruptionNotifications()
+              self.backgroundAudioManager.updateAVAudioSessionMode()
           }
       }
 
@@ -60,6 +61,7 @@ public class THEOplayerRCTView: UIView {
         self.adEventHandler = THEOplayerRCTAdsEventHandler()
         self.castEventHandler = THEOplayerRCTCastEventHandler()
         self.presentationModeManager = THEOplayerRCTPresentationModeManager()
+        self.backgroundAudioManager = THEOplayerRCTBackgroundAudioManager()
         self.nowPlayingManager = THEOplayerRCTNowPlayingManager()
         self.remoteCommandsManager = THEOplayerRCTRemoteCommandsManager()
         self.pipControlsManager = THEOplayerRCTPipControlsManager()
@@ -80,6 +82,7 @@ public class THEOplayerRCTView: UIView {
         self.nowPlayingManager.destroy()
         self.remoteCommandsManager.destroy()
         self.pipControlsManager.destroy()
+        self.backgroundAudioManager.destroy()
       
         self.destroyBackgroundAudio()
         self.player?.removeAllIntegrations()
@@ -106,6 +109,7 @@ public class THEOplayerRCTView: UIView {
             self.textTrackEventHandler.setPlayer(player)
             self.mediaTrackEventHandler.setPlayer(player)
             self.presentationModeManager.setPlayer(player, view: self)
+            self.backgroundAudioManager.setPlayer(player, view: self)
             self.adEventHandler.setPlayer(player)
             self.castEventHandler.setPlayer(player)
             self.nowPlayingManager.setPlayer(player)
