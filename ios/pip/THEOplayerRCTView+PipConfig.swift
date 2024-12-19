@@ -25,20 +25,30 @@ extension THEOplayerRCTView: AVPictureInPictureControllerDelegate {
         if let player = self.player,
            var pipController = player.pip {
             if #available(iOS 14.0, tvOS 14.0, *) {
-                pipController.nativePictureInPictureDelegate = self
+                pipController.nativePictureInPictureDelegate = CustomNativePictureInPictureDelegate(self)
             }
         }
     }
-    
-    // MARK: - AVPictureInPictureControllerDelegate
-    @available(tvOS 14.0, *)
-    public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        self.presentationModeManager.presentationModeContext.pipContext = .PIP_CLOSED
-        self.pipControlsManager.willStartPip()
+}
+
+class CustomNativePictureInPictureDelegate: NSObject, AVPictureInPictureControllerDelegate {
+    private weak var theoPlayerView: THEOplayerRCTView?
+    init(_ view:  THEOplayerRCTView?) {
+        theoPlayerView = view
     }
-    
-    @available(tvOS 14.0, *)
-    public func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
-        self.presentationModeManager.presentationModeContext.pipContext = .PIP_RESTORED
-    }
+  
+  @available(tvOS 14.0, *)
+  public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+      if let view = self.theoPlayerView {
+          view.presentationModeManager.presentationModeContext.pipContext = .PIP_CLOSED
+          view.pipControlsManager.willStartPip()
+      }
+  }
+  
+  @available(tvOS 14.0, *)
+  public func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
+      if let view = self.theoPlayerView {
+           view.presentationModeManager.presentationModeContext.pipContext = .PIP_RESTORED
+      }
+  }
 }
