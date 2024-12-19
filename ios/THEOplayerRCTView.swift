@@ -9,7 +9,6 @@ public class THEOplayerRCTView: UIView {
     public private(set) var player: THEOplayer?
     public private(set) var mainEventHandler: THEOplayerRCTMainEventHandler
     public private(set) var broadcastEventHandler: THEOplayerRCTBroadcastEventHandler
-    let theoPlayerViewController = UIViewController()
     var textTrackEventHandler: THEOplayerRCTTextTrackEventHandler
     var mediaTrackEventHandler: THEOplayerRCTMediaTrackEventHandler
     var metadataTrackEventHandler: THEOplayerRCTSideloadedMetadataTrackEventHandler
@@ -71,20 +70,29 @@ public class THEOplayerRCTView: UIView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("[NATIVE] init(coder:) has not been implemented")
     }
+  
+    deinit {
+        self.mainEventHandler.destroy()
+        self.textTrackEventHandler.destroy()
+        self.mediaTrackEventHandler.destroy()
+        self.adEventHandler.destroy()
+        self.castEventHandler.destroy()
+        self.nowPlayingManager.destroy()
+        self.remoteCommandsManager.destroy()
+        self.pipControlsManager.destroy()
+      
+        self.destroyBackgroundAudio()
+        self.player?.removeAllIntegrations()
+        self.player?.destroy()
+        self.player = nil
+        if DEBUG_THEOPLAYER_INTERACTION { PrintUtils.printLog(logText: "[NATIVE] THEOplayer instance destroyed.") }
+    }
     
     override public func layoutSubviews() {
         super.layoutSubviews()
         if let player = self.player {
             player.frame = self.frame
             player.autoresizingMask = [.flexibleBottomMargin, .flexibleHeight, .flexibleLeftMargin, .flexibleRightMargin, .flexibleTopMargin, .flexibleWidth]
-          
-            // wrap theoPlayerViewController around the view
-            if theoPlayerViewController.parent == nil,
-               let parentViewController = self.findViewController() {
-                parentViewController.addChild(self.theoPlayerViewController)
-                self.theoPlayerViewController.didMove(toParent: parentViewController)
-                self.theoPlayerViewController.view = self
-            }
         }
     }
     
@@ -135,28 +143,6 @@ public class THEOplayerRCTView: UIView {
         self.initBackgroundAudio()
         self.initPip()
         return self.player
-    }
-    
-    // MARK: - Destroy Player
-    
-    public func destroyPlayer() {
-        self.mainEventHandler.destroy()
-        self.textTrackEventHandler.destroy()
-        self.mediaTrackEventHandler.destroy()
-        self.adEventHandler.destroy()
-        self.castEventHandler.destroy()
-        self.nowPlayingManager.destroy()
-        self.remoteCommandsManager.destroy()
-        self.pipControlsManager.destroy()
-        
-        self.destroyBackgroundAudio()
-        self.player?.removeAllIntegrations()
-        self.player?.destroy()
-        self.player = nil
-        if DEBUG_THEOPLAYER_INTERACTION { PrintUtils.printLog(logText: "[NATIVE] THEOplayer instance destroyed.") }
-      
-        self.theoPlayerViewController.view = nil
-        self.theoPlayerViewController.removeFromParent()
     }
     
     func processMetadataTracks(metadataTrackDescriptions: [TextTrackDescription]?) {

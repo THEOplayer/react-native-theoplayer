@@ -11,10 +11,10 @@ struct BackgroundAudioConfig {
     var audioSessionMode: AVAudioSession.Mode = .moviePlayback
 }
 
-extension THEOplayerRCTView: BackgroundPlaybackDelegate {
+extension THEOplayerRCTView {
 
     func initBackgroundAudio() {
-        self.player?.backgroundPlaybackDelegate = self
+        self.player?.backgroundPlaybackDelegate = CustomBackgroundPlaybackDelegate(self)
     }
     
     func destroyBackgroundAudio() {
@@ -25,13 +25,6 @@ extension THEOplayerRCTView: BackgroundPlaybackDelegate {
         NotificationCenter.default.removeObserver(self,
                                                   name: AVAudioSession.interruptionNotification,
                                                   object: AVAudioSession.sharedInstance())
-    }
-    
-    public func shouldContinueAudioPlaybackInBackground() -> Bool {
-        // Make sure to go to the background with updated NowPlayingInfo
-        self.nowPlayingManager.updateNowPlaying()
-        
-        return self.backgroundAudioConfig.enabled
     }
     
     func updateInterruptionNotifications() {
@@ -94,4 +87,16 @@ extension THEOplayerRCTView: BackgroundPlaybackDelegate {
 
 struct DefaultBackgroundPlaybackDelegate: BackgroundPlaybackDelegate {
     func shouldContinueAudioPlaybackInBackground() -> Bool { false }
+}
+
+struct CustomBackgroundPlaybackDelegate: BackgroundPlaybackDelegate {
+    private weak var theoPlayerView: THEOplayerRCTView?
+    init(_ view:  THEOplayerRCTView?) {
+        theoPlayerView = view
+    }
+  
+    func shouldContinueAudioPlaybackInBackground() -> Bool {
+        theoPlayerView?.nowPlayingManager.updateNowPlaying()
+        return theoPlayerView?.backgroundAudioConfig.enabled ?? false
+    }
 }
