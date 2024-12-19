@@ -57,6 +57,10 @@ extension THEOplayerRCTView {
             imaRenderSettings.mimeTypes = allowedMimeTypes
         }
         
+        if let adLoadTimeout = self.adsConfig.adsImaConfig.adLoadTimeout {
+            imaRenderSettings.loadVideoTimeout = adLoadTimeout
+        }
+        
         // setup integration
         let imaIntegration = GoogleIMAIntegrationFactory.createIntegration(on: player, with: imaSettings)
         imaIntegration.renderingSettings = imaRenderSettings

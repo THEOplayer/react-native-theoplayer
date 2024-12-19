@@ -28,6 +28,7 @@ private const val PROP_RETRY_MAX_BACKOFF = "maximumBackoff"
 private const val PROP_CAST_CONFIGURATION = "cast"
 private const val PROP_ADS_CONFIGURATION = "ads"
 private const val PROP_IMA_CONFIGURATION = "ima"
+private const val PROP_IMA_AD_LOAD_TIMEOUT = "adLoadTimeout"
 private const val PROP_MEDIA_CONTROL = "mediaControl"
 private const val PROP_PPID = "ppid"
 private const val PROP_MAX_REDIRECTS = "maxRedirects"
@@ -169,10 +170,16 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
           }
         }
       }
-      // bitrate is configured under the ima config
+      // bitrate and timeout are configured under the ima config
       configProps?.getMap(PROP_ADS_CONFIGURATION)?.getMap(PROP_IMA_CONFIGURATION)?.run {
         if (hasKey(PROP_BITRATE)) {
           bitrateKbps = getInt(PROP_BITRATE)
+        }
+
+        // The time needs to be in milliseconds on android but seconds on ios.
+        // we unify the prop from javascript by multiplying it by 1000 here
+        if (hasKey(PROP_IMA_AD_LOAD_TIMEOUT)) {
+          setLoadVideoTimeout(getInt(PROP_IMA_AD_LOAD_TIMEOUT) * 1000)
         }
       }
     }
