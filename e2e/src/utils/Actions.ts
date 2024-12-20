@@ -13,19 +13,19 @@ export const defaultTestOptions: TestOptions = {
 
 export async function preparePlayerWithSource(source: SourceDescription, autoplay: boolean = true): Promise<THEOplayer> {
   const player = await getTestPlayer();
-  const eventsPromise = waitForPlayerEventType(player, PlayerEventType.SOURCE_CHANGE);
-  const eventsPromiseAutoPlay = waitForPlayerEventTypes(player, [PlayerEventType.SOURCE_CHANGE, PlayerEventType.PLAY, PlayerEventType.PLAYING]);
+  let startUpPromise: Promise<Event<PlayerEventType>[]>;
+  if (autoplay) {
+    startUpPromise = waitForPlayerEventTypes(player, [PlayerEventType.SOURCE_CHANGE, PlayerEventType.PLAY, PlayerEventType.PLAYING]);
+  } else {
+    startUpPromise = waitForPlayerEventType(player, PlayerEventType.SOURCE_CHANGE);
+  }
 
   // Start autoplay
   player.autoplay = autoplay;
   player.source = source;
 
-  // Wait for `sourcechange`, `play` and `playing` events.
-  if (autoplay) {
-    await eventsPromiseAutoPlay;
-  } else {
-    await eventsPromise;
-  }
+  // Wait for either `sourcechange` only or the `sourcechange`, `play` and `playing` combination.
+  await startUpPromise;
   return player;
 }
 
