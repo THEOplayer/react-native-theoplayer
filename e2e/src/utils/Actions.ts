@@ -1,6 +1,16 @@
 // noinspection JSUnusedGlobalSymbols
 
-import { ErrorEvent, type Event, EventMap, PlayerEventType, SourceDescription, StringKeyOf, THEOplayer } from 'react-native-theoplayer';
+import {
+  AdEvent,
+  AdEventType,
+  ErrorEvent,
+  type Event,
+  EventMap,
+  PlayerEventType,
+  SourceDescription,
+  StringKeyOf,
+  THEOplayer,
+} from 'react-native-theoplayer';
 import { getTestPlayer } from '../components/TestableTHEOplayerView';
 import { logPlayerBuffer } from './PlayerUtils';
 
@@ -74,7 +84,14 @@ export const waitForPlayerEvents = async <EType extends Event<PlayerEventType>>(
       player.removeEventListener(PlayerEventType.ERROR, onError);
       reject(err);
     };
-
+    const onAdError = (e: AdEvent) => {
+      if (e.subType === AdEventType.AD_ERROR) {
+        const err = 'Ad error';
+        console.error('[waitForPlayerEvents]', err);
+        player.removeEventListener(PlayerEventType.AD_EVENT, onAdError);
+        reject(err);
+      }
+    };
     const TAG: string = `[waitForPlayerEvents] eventList ${eventListIndex}:`;
     eventListIndex += 1;
 
@@ -126,6 +143,7 @@ export const waitForPlayerEvents = async <EType extends Event<PlayerEventType>>(
       console.debug(TAG, `Added listener for ${eventType} to the player`);
     });
     player.addEventListener(PlayerEventType.ERROR, onError);
+    player.addEventListener(PlayerEventType.AD_EVENT, onAdError);
   });
 
   // Add rejection on time-out
@@ -163,7 +181,12 @@ const withPlayerStateLogOnError = async (player: THEOplayer, promise: Promise<an
   try {
     return await promise;
   } catch (e) {
-    throw e + ` buffer: ${logPlayerBuffer(player)};` + ` currenTime: ${player.currentTime};` + ` paused: ${player.paused};`;
+    throw (
+      (typeof e === 'string' ? e : JSON.stringify(e)) +
+      ` buffer: ${logPlayerBuffer(player)};` +
+      ` currentTime: ${player.currentTime};` +
+      ` paused: ${player.paused};`
+    );
   }
 };
 
