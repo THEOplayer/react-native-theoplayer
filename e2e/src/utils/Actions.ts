@@ -135,6 +135,7 @@ export const waitForPlayerEvents = async <EType extends Event<PlayerEventType>>(
 
         if (!unReceivedEvents.length) {
           // Finished
+          console.debug(TAG, `Resolving promise on received events.`);
           resolve(receivedEvents);
         }
       };
