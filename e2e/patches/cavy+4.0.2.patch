@@ -1,8 +1,8 @@
 diff --git a/node_modules/cavy/src/Reporter.js b/node_modules/cavy/src/Reporter.js
-index 1cdeb38..f7e9e35 100644
+index 1cdeb38..24ae1f7 100644
 --- a/node_modules/cavy/src/Reporter.js
 +++ b/node_modules/cavy/src/Reporter.js
-@@ -9,7 +9,15 @@ export default class Reporter {
+@@ -9,7 +9,31 @@ export default class Reporter {
    // Internal: Creates a websocket connection to the cavy-cli server.
    onStart() {
      const url = 'ws://127.0.0.1:8082/';
@@ -15,10 +15,40 @@ index 1cdeb38..f7e9e35 100644
 +    this.ws.onclose = () => {
 +      console.debug('Closing websocket');
 +    }
++
++    this.overrideConsole('log');
++    this.overrideConsole('debug');
++    this.overrideConsole('warn');
++  }
++
++  overrideConsole(fn) {
++    const original = console[fn];
++    console[fn] = (...args) => {
++      const timestamp = new Date().toISOString();
++      original(`[${timestamp}]`, ...args);
++      this.sendMessage({
++        "message": `${fn.toUpperCase()} ${new Date().toLocaleTimeString()} ${args.join(' ')}`,
++        "level": fn
++      });
++    }
    }
  
    // Internal: Send a single test result to cavy-cli over the websocket connection.
-@@ -34,7 +42,6 @@ export default class Reporter {
+@@ -20,6 +44,13 @@ export default class Reporter {
+     }
+   }
+ 
++  sendMessage(data) {
++    if (this.websocketReady()) {
++      testData = { event: 'message', data };
++      this.sendData(testData);
++    }
++  }
++
+   // Internal: Send report to cavy-cli over the websocket connection.
+   onFinish(report) {
+     if (this.websocketReady()) {
+@@ -34,7 +65,6 @@ export default class Reporter {
        console.log(message);
      }
    }
@@ -27,13 +57,13 @@ index 1cdeb38..f7e9e35 100644
    websocketReady() {
      // WebSocket.readyState 1 means the web socket connection is OPEN.
 diff --git a/node_modules/cavy/src/TestRunner.js b/node_modules/cavy/src/TestRunner.js
-index 40552bf..5b98f72 100644
+index 40552bf..0af9639 100644
 --- a/node_modules/cavy/src/TestRunner.js
 +++ b/node_modules/cavy/src/TestRunner.js
 @@ -148,7 +148,7 @@ export default class TestRunner {
        const stop = new Date();
        const time = (stop - start) / 1000;
- 
+       
 -      let fullErrorMessage = `${description}  ❌\n   ${e.message}`;
 +      let fullErrorMessage = `${description}  ❌\n   ${JSON.stringify(e)}`;
        console.warn(fullErrorMessage);
