@@ -100,9 +100,9 @@ export const waitForPlayerEvents = async <EType extends Event<PlayerEventType>>(
     uniqueEventTypes.forEach((eventType) => {
       const onEvent = (receivedEvent: Event<PlayerEventType>) => {
         receivedEvents.push(receivedEvent);
+        console.debug(TAG, `Handling received event ${JSON.stringify(receivedEvent)}`);
         if (inOrder && unReceivedEvents.length) {
           const expectedEvent = unReceivedEvents[0];
-          console.debug(TAG, `Handling received event ${JSON.stringify(receivedEvent)}`);
           console.debug(TAG, `Was waiting for ${JSON.stringify(expectedEvent)}`);
 
           // Received events must either not be in the expected, or be the first
