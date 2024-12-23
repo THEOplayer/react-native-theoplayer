@@ -3,6 +3,7 @@ import { THEOplayer, THEOplayerView, THEOplayerViewProps } from 'react-native-th
 import React, { useCallback } from 'react';
 
 let testPlayer: THEOplayer | undefined = undefined;
+let testPlayerId: number = 0;
 
 /**
  * Wait until the player is ready.
@@ -17,6 +18,7 @@ export const getTestPlayer = async (timeout = 5000, poll = 200): Promise<THEOpla
       setTimeout(() => {
         if (testPlayer) {
           // Player is ready.
+          console.debug(`[checkPlayer] ready id: ${testPlayerId}`);
           resolve(testPlayer);
         } else if (Date.now() - start > timeout) {
           // Too late.
@@ -34,11 +36,14 @@ export const getTestPlayer = async (timeout = 5000, poll = 200): Promise<THEOpla
 export const TestableTHEOplayerView = (props: THEOplayerViewProps) => {
   const generateTestHook = useCavy();
   const onPlayerReady = useCallback((player: THEOplayer) => {
+    testPlayerId++;
     testPlayer = player;
+    console.debug(`[onPlayerReady] id: ${testPlayerId}`);
     props.onPlayerReady?.(player);
   }, []);
 
   const onPlayerDestroy = useCallback(() => {
+    console.debug(`[onPlayerDestroy] id: ${testPlayerId}`);
     testPlayer = undefined;
   }, []);
 
