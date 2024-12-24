@@ -14,6 +14,7 @@ export default function (spec: TestScope) {
           const playEventsPromise = waitForPlayerEventTypes(player, [PlayerEventType.SOURCE_CHANGE, PlayerEventType.PLAY, PlayerEventType.PLAYING]);
 
           const adEventsPromise = waitForPlayerEvents(player, [
+            { type: PlayerEventType.AD_EVENT, subType: AdEventType.AD_LOADED } as AdEvent,
             { type: PlayerEventType.AD_EVENT, subType: AdEventType.AD_BREAK_BEGIN } as AdEvent,
             { type: PlayerEventType.AD_EVENT, subType: AdEventType.AD_BEGIN } as AdEvent,
           ]);
