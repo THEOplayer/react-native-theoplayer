@@ -18,13 +18,15 @@ export const getTestPlayer = async (timeout = 5000, poll = 200): Promise<THEOpla
       setTimeout(() => {
         if (testPlayer) {
           // Player is ready.
-          console.debug(`[checkPlayer] ready id: ${testPlayerId}`);
+          console.debug(`[checkPlayer] Success: player ${testPlayerId} ready.`);
           resolve(testPlayer);
         } else if (Date.now() - start > timeout) {
           // Too late.
+          console.debug(`[checkPlayer] Failed: timeout reached for ${testPlayerId}.`);
           reject('Player not ready');
         } else {
           // Wait & try again.
+          console.debug(`[checkPlayer] Player ${testPlayerId} not ready yet. Retrying...`);
           checkPlayer();
         }
       }, poll);
