@@ -21,9 +21,9 @@ struct AdsImaConfig {
     var autoPlayAdBreaks: Bool?
     var sessionID: String?
     var bitrate: Int
-    var adLoadTimeout: Int?
+    var adLoadTimeout: TimeInterval?
     
-    init(maxRedirects: UInt, enableDebugMode: Bool, ppid: String? = nil, featureFlags: [String : String]? = nil, autoPlayAdBreaks: Bool? = nil, sessionID: String? = nil, bitrate: Int? = -1, adLoadTimeout: Int? = nil) {
+    init(maxRedirects: UInt, enableDebugMode: Bool, ppid: String? = nil, featureFlags: [String : String]? = nil, autoPlayAdBreaks: Bool? = nil, sessionID: String? = nil, bitrate: Int? = -1, adLoadTimeout: TimeInterval? = nil) {
         self.maxRedirects = maxRedirects
         self.enableDebugMode = enableDebugMode
         self.ppid = ppid
@@ -69,7 +69,7 @@ extension THEOplayerRCTView {
                 if let bitrate = adsImaConfig["bitrate"] as? Int {
                     self.adsConfig.adsImaConfig.bitrate = bitrate
                 }
-                if let adLoadTimeout = adsImaConfig["adLoadTimeout"] as? Int {
+                if let adLoadTimeout = adsImaConfig["adLoadTimeout"] as? TimeInterval {
                     self.adsConfig.adsImaConfig.adLoadTimeout = adLoadTimeout
                 }
             }
