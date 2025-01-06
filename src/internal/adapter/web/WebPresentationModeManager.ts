@@ -15,6 +15,7 @@ export class WebPresentationModeManager {
   constructor(player: ChromelessPlayer, eventForwarder: DefaultEventDispatcher<PlayerEventMap>) {
     this._player = player;
     this._eventForwarder = eventForwarder;
+    this._player.presentation.addEventListener('presentationmodechange', this.updatePresentationMode);
   }
 
   get presentationMode(): PresentationMode {
@@ -39,7 +40,7 @@ export class WebPresentationModeManager {
           }
         }
       } else if (presentationMode === PresentationMode.pip) {
-        void this._element?.requestPictureInPicture?.();
+        this._player.presentation.requestMode('native-picture-in-picture');
       } else {
         if (this._presentationMode === PresentationMode.fullscreen) {
           const promise = document[fullscreenAPI.exitFullscreen_]();
@@ -56,7 +57,7 @@ export class WebPresentationModeManager {
       if (presentationMode === PresentationMode.fullscreen) {
         this._element?.webkitEnterFullscreen?.();
       } else if (presentationMode === PresentationMode.pip) {
-        this._element?.webkitSetPresentationMode?.(PresentationMode.pip);
+        this._player.presentation.requestMode('native-picture-in-picture');
       } else {
         this._element?.webkitSetPresentationMode?.(PresentationMode.inline);
       }
@@ -74,15 +75,6 @@ export class WebPresentationModeManager {
         }
       }
     }
-    // listen for pip updates on element
-    if (this._element !== undefined) {
-      this._element.onenterpictureinpicture = () => {
-        this.updatePresentationMode();
-      };
-      this._element.onleavepictureinpicture = () => {
-        this.updatePresentationMode();
-      };
-    }
     // listen for fullscreen updates on document
     if (fullscreenAPI !== undefined) {
       document.addEventListener(fullscreenAPI.fullscreenchange_, this.updatePresentationMode);
@@ -95,7 +87,7 @@ export class WebPresentationModeManager {
     let newPresentationMode: PresentationMode = PresentationMode.inline;
     if (fullscreenAPI !== undefined && document[fullscreenAPI.fullscreenElement_] !== null) {
       newPresentationMode = PresentationMode.fullscreen;
-    } else if (document.pictureInPictureElement !== null) {
+    } else if (this._player.presentation.currentMode === 'native-picture-in-picture') {
       newPresentationMode = PresentationMode.pip;
     }
 
