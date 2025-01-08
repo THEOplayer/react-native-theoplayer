@@ -217,9 +217,15 @@ class PresentationManager(
     val root: ReactRootView? = getClosestParentOfType(reactPlayerGroup)
 
     if (fullscreen) {
+      // Hide system bars for immersive mode.
+      // {@link https://developer.android.com/develop/ui/views/layout/immersive}
       WindowInsetsControllerCompat(window, window.decorView).apply {
+        // Reveal hidden system bars on any system gestures.
         systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-      }.hide(WindowInsetsCompat.Type.systemBars())
+        // Hide all system bars.
+        hide(WindowInsetsCompat.Type.systemBars())
+      }
+
       updatePresentationMode(PresentationMode.FULLSCREEN)
 
       if (!BuildConfig.REPARENT_ON_FULLSCREEN) {
