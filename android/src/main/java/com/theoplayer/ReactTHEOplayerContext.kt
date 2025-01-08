@@ -205,7 +205,7 @@ class ReactTHEOplayerContext private constructor(
   }
 
   private fun initializePlayerView() {
-    playerView = object : THEOplayerView(reactContext.currentActivity!!, configAdapter.playerConfig()) {
+    playerView = object : THEOplayerView(reactContext, configAdapter.playerConfig()) {
       private fun measureAndLayout() {
         measure(
           MeasureSpec.makeMeasureSpec(measuredWidth, MeasureSpec.EXACTLY),
