@@ -10,7 +10,9 @@
     "web": "webpack-dev-server --config ./web/webpack.config.js --mode development",
     "web-release": "webpack --config ./web/webpack.config.js --mode production",
     "start": "npx react-native start",
-    "lint": "eslint \"**/*.{ts,tsx}\""
+    "lint": "eslint \"**/*.{ts,tsx}\"",
+    "pod-install": "cd ios && RCT_NEW_ARCH_ENABLED=1 bundle exec pod install",
+    "pod-update": "cd ios && RCT_NEW_ARCH_ENABLED=1 bundle exec pod update"
   },
   "dependencies": {
     "@react-native-community/slider": "^4.5.4",
@@ -19,7 +21,7 @@
     "react-dom": "18.3.1",
     "react-native": "npm:react-native-tvos@^0.75.4-0",
     "react-native-status-bar-height": "^2.6.0",
-    "react-native-svg": "^13.14.1",
+    "react-native-svg": "^15.8.0",
     "react-native-web": "^0.19.13",
     "react-native-web-image-loader": "^0.1.1"
   },
