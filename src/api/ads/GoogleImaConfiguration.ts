@@ -52,4 +52,10 @@ export interface GoogleImaConfiguration {
    * @defaultValue `-1`
    */
   bitrate?: number;
+
+  /**
+   * The amount of time that the SDK will wait before moving onto the next ad for loading. 
+   * This value will be specified in seconds. 
+   */
+  adLoadTimeout?: number;
 }
