@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added support for New Architecture's through the Interop Layer. More info on the [React Native developer pages](https://reactnative.dev/architecture/landing-page).
 
+### Changed
+
+- Upgraded the example app to use react-native-tvos@0.76.5-0.
+
 ## [8.12.0] - 25-01-09
 
 ### Fixed
