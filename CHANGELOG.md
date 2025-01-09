@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Added support for New Architecture's through the Interop Layer. More info on the [React Native developer pages](https://reactnative.dev/architecture/landing-page).
+
 ## [8.12.0] - 25-01-09
 
 ### Fixed
