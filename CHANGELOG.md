@@ -5,15 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [8.12.0] - 25-01-09
 
 ### Fixed
 
 - Fixed a memory leak on iOS, where the presentationModeManager was holding a strong reference to the fullscreen's target and return views
 - Fixed an issue on iOS where the destruction of the THEOplayerView was not always propagated correctly over the iOS Bridge, resulting in an occasional memory leak.
 - Fixed an issue where, when requesting a text track's cues, the time properties would sometimes be in seconds instead of milliseconds.
-- Fixed a rare crash due to a `java.lang.NullPointerException` when creating the THEOplayerView.
+- Fixed a rare crash on Android due to a `java.lang.NullPointerException` when creating the THEOplayerView.
 - Fixed an issue on Android where R8 minification would obfuscate some API class names, which could lead to a crash.
+
+### Added
+
+- Added a `adLoadTimeout` property to `GoogleImaConfiguration` to control the amount of time that the SDK will wait before moving onto the next ad or main content.
 
 ## [8.11.1] - 24-12-18
 
