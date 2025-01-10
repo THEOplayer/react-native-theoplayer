@@ -56,6 +56,7 @@ export default function (spec: TestScope) {
           {
             customerKey: 'testCustomerKey',
             gatewayUrl: 'testGatewayUrl',
+            debug: true,
           },
         );
       },
