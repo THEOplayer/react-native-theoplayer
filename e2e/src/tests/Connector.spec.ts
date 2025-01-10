@@ -13,6 +13,7 @@ import {
   ComscoreMetadata,
   ComscoreUserConsent,
 } from '@theoplayer/react-native-analytics-comscore';
+import { Platform } from 'react-native';
 
 type PlayerFn = (player: THEOplayer) => Promise<void> | void;
 const NoOpPlayerFn: PlayerFn = (_player: THEOplayer) => {};
@@ -55,6 +56,7 @@ export default function (spec: TestScope) {
           {
             customerKey: 'testCustomerKey',
             gatewayUrl: 'testGatewayUrl',
+            debug: true,
           },
         );
       },
@@ -122,6 +124,7 @@ export default function (spec: TestScope) {
       publisherId: 'publisherId',
       applicationName: 'applicationName',
       userConsent: ComscoreUserConsent.granted,
+      debug: true,
     };
 
     testConnector(
