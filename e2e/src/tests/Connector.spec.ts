@@ -122,6 +122,7 @@ export default function (spec: TestScope) {
       publisherId: 'publisherId',
       applicationName: 'applicationName',
       userConsent: ComscoreUserConsent.granted,
+      debug: true,
     };
 
     testConnector(
