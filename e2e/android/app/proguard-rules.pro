@@ -8,3 +8,7 @@
 #   http://developer.android.com/guide/developing/tools/proguard.html
 
 # Add any project specific keep options here:
+
+# This needs to be part of the connector or Comscore's consumer-rules.
+-keep class com.comscore.** { *; }
+-dontwarn com.comscore.**
