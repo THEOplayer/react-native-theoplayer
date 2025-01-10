@@ -123,8 +123,7 @@ export default function (spec: TestScope) {
       publisherId: 'publisherId',
       applicationName: 'applicationName',
       userConsent: ComscoreUserConsent.granted,
-      // Pending fix in Comscore connector
-      debug: Platform.OS === 'android' ? undefined : true,
+      debug: true,
     };
 
     testConnector(
