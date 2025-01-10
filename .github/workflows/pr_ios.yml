@@ -59,9 +59,9 @@ jobs:
       - name: Run npm install
         run: |
           npm i -g corepack
-          npm run update-dependencies
           npm ci
           cd e2e
+          npm run update-dependencies
           npm ci
 
       - name: Install Ruby dependencies
