@@ -33,6 +33,7 @@
     "prepare": "npm run manifest && bob build && husky",
     "pods": "cd example && pod-install --quiet",
     "docs": "typedoc --treatWarningsAsErrors",
+    "postinstall": "patch-package",
     "codegen": "npx @react-native-community/cli codegen --platform all"
   },
   "lint-staged": {
@@ -68,8 +69,8 @@
     "pod-install": "^0.1.39",
     "prettier": "^3.3.3",
     "react": "^18.3.1",
-    "react-native": "^0.76.5",
-    "react-native-builder-bob": "^0.23.2",
+    "react-native": "^0.76.6",
+    "react-native-builder-bob": "^0.30.3",
     "theoplayer": "^8.9.0",
     "typedoc": "^0.25.13",
     "typedoc-plugin-external-resolver": "^1.0.3",
