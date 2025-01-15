@@ -1,31 +1,42 @@
 // noinspection JSUnusedGlobalSymbols
 
-import { ErrorEvent, type Event, PlayerEventType, SourceDescription, THEOplayer } from 'react-native-theoplayer';
+import {
+  AdEvent,
+  AdEventType,
+  ErrorEvent,
+  type Event,
+  EventMap,
+  PlayerEventType,
+  SourceDescription,
+  StringKeyOf,
+  THEOplayer,
+} from 'react-native-theoplayer';
 import { getTestPlayer } from '../components/TestableTHEOplayerView';
+import { logPlayerBuffer } from './PlayerUtils';
 
 export interface TestOptions {
   timeout: number;
 }
 
 export const defaultTestOptions: TestOptions = {
-  timeout: 10000,
+  timeout: 30000,
 };
 
 export async function preparePlayerWithSource(source: SourceDescription, autoplay: boolean = true): Promise<THEOplayer> {
   const player = await getTestPlayer();
-  const eventsPromise = waitForPlayerEventType(player, PlayerEventType.SOURCE_CHANGE);
-  const eventsPromiseAutoPlay = waitForPlayerEventTypes(player, [PlayerEventType.SOURCE_CHANGE, PlayerEventType.PLAY, PlayerEventType.PLAYING]);
+  let startUpPromise: Promise<Event<PlayerEventType>[]>;
+  if (autoplay) {
+    startUpPromise = waitForPlayerEventTypes(player, [PlayerEventType.SOURCE_CHANGE, PlayerEventType.PLAY, PlayerEventType.PLAYING]);
+  } else {
+    startUpPromise = waitForPlayerEventType(player, PlayerEventType.SOURCE_CHANGE);
+  }
 
   // Start autoplay
   player.autoplay = autoplay;
   player.source = source;
 
-  // Wait for `sourcechange`, `play` and `playing` events.
-  if (autoplay) {
-    await eventsPromiseAutoPlay;
-  } else {
-    await eventsPromise;
-  }
+  // Wait for either `sourcechange` only or the `sourcechange`, `play` and `playing` combination.
+  await startUpPromise;
   return player;
 }
 
@@ -67,73 +78,83 @@ export const waitForPlayerEvents = async <EType extends Event<PlayerEventType>>(
   options = defaultTestOptions,
 ): Promise<Event<PlayerEventType>[]> => {
   const receivedEvents: Event<PlayerEventType>[] = [];
-  return withEventTimeOut(
-    new Promise<Event<PlayerEventType>[]>((resolve, reject) => {
-      const onError = (err: ErrorEvent) => {
+  const eventsPromise = new Promise<Event<PlayerEventType>[]>((resolve, reject) => {
+    const onError = (err: ErrorEvent) => {
+      console.error('[waitForPlayerEvents]', err);
+      player.removeEventListener(PlayerEventType.ERROR, onError);
+      reject(err);
+    };
+    const onAdError = (e: AdEvent) => {
+      if (e.subType === AdEventType.AD_ERROR) {
+        const err = 'Ad error';
         console.error('[waitForPlayerEvents]', err);
-        player.removeEventListener(PlayerEventType.ERROR, onError);
+        player.removeEventListener(PlayerEventType.AD_EVENT, onAdError);
         reject(err);
+      }
+    };
+    const TAG: string = `[waitForPlayerEvents] eventList ${eventListIndex}:`;
+    eventListIndex += 1;
+
+    let unReceivedEvents = [...expectedEvents];
+    const uniqueEventTypes = [...new Set(unReceivedEvents.map((event) => event.type))];
+    uniqueEventTypes.forEach((eventType) => {
+      const onEvent = (receivedEvent: Event<PlayerEventType>) => {
+        receivedEvents.push(receivedEvent);
+        console.debug(TAG, `Handling received event ${JSON.stringify(receivedEvent)}`);
+        if (inOrder && unReceivedEvents.length) {
+          const expectedEvent = unReceivedEvents[0];
+          console.debug(TAG, `Was waiting for ${JSON.stringify(expectedEvent)}`);
+
+          // Received events must either not be in the expected, or be the first
+          const index = unReceivedEvents.findIndex((e) => propsMatch(e, receivedEvent));
+          if (index > 0) {
+            const err = `Expected '${expectedEvent.type}' event but received '${receivedEvent.type} event'`;
+            console.error(TAG, err);
+            reject(err);
+          } else {
+            console.debug(TAG, `Received ${receivedEvent.type} event is allowed.`);
+          }
+        }
+
+        unReceivedEvents = unReceivedEvents.filter((event) => {
+          // When found, remove the listener
+          if (propsMatch(event, receivedEvent)) {
+            console.debug(TAG, `   -> removing: ${JSON.stringify(event)}`);
+            return false;
+          }
+          // Only keep the unreceived events
+          console.debug(TAG, `   -> keeping: ${JSON.stringify(event)}`);
+          return true;
+        });
+
+        // remove listener if no other unreceived events require it.
+        if (!unReceivedEvents.find((event) => event.type === receivedEvent.type)) {
+          console.debug(TAG, `Removing listener for ${receivedEvent.type} from player`);
+          player.removeEventListener(receivedEvent.type, onEvent);
+        }
+
+        if (!unReceivedEvents.length) {
+          // Finished
+          console.debug(TAG, `Resolving promise on received events.`);
+          resolve(receivedEvents);
+        }
       };
 
-      const TAG: string = `[waitForPlayerEvents] eventList ${eventListIndex}:`;
-      eventListIndex += 1;
+      player.addEventListener(eventType as PlayerEventType, onEvent);
+      console.debug(TAG, `Added listener for ${eventType} to the player`);
+    });
+    player.addEventListener(PlayerEventType.ERROR, onError);
+    player.addEventListener(PlayerEventType.AD_EVENT, onAdError);
+  });
 
-      let unReceivedEvents = [...expectedEvents];
-      const uniqueEventTypes = [...new Set(unReceivedEvents.map((event) => event.type))];
-      uniqueEventTypes.forEach((eventType) => {
-        const onEvent = (receivedEvent: Event<PlayerEventType>) => {
-          receivedEvents.push(receivedEvent);
-          if (inOrder && unReceivedEvents.length) {
-            const expectedEvent = unReceivedEvents[0];
-            console.debug(TAG, `Handling received event ${JSON.stringify(receivedEvent)}`);
-            console.debug(TAG, `Was waiting for ${JSON.stringify(expectedEvent)}`);
+  // Add rejection on time-out
+  const timeOutPromise = withEventTimeOut(eventsPromise, options.timeout, expectedEvents, receivedEvents);
 
-            // Received events must either not be in the expected, or be the first
-            const index = unReceivedEvents.findIndex((e) => propsMatch(e, receivedEvent));
-            if (index > 0) {
-              const err = `Expected '${expectedEvent.type}' event but received '${receivedEvent.type} event'`;
-              console.error(TAG, err);
-              reject(err);
-            } else {
-              console.debug(TAG, `Received ${receivedEvent.type} event is allowed.`);
-            }
-          }
-
-          unReceivedEvents = unReceivedEvents.filter((event) => {
-            // When found, remove the listener
-            if (propsMatch(event, receivedEvent)) {
-              console.debug(TAG, `   -> removing: ${JSON.stringify(event)}`);
-              return false;
-            }
-            // Only keep the unreceived events
-            console.debug(TAG, `   -> keeping: ${JSON.stringify(event)}`);
-            return true;
-          });
-
-          // remove listener if no other unreceived events require it.
-          if (!unReceivedEvents.find((event) => event.type === receivedEvent.type)) {
-            console.debug(TAG, `Removing listener for ${receivedEvent.type} from player`);
-            player.removeEventListener(receivedEvent.type, onEvent);
-          }
-
-          if (!unReceivedEvents.length) {
-            // Finished
-            resolve(receivedEvents);
-          }
-        };
-
-        player.addEventListener(eventType as PlayerEventType, onEvent);
-        console.debug(TAG, `Added listener for ${eventType} to the player`);
-      });
-      player.addEventListener(PlayerEventType.ERROR, onError);
-    }),
-    options.timeout,
-    expectedEvents,
-    receivedEvents,
-  );
+  // Add extra logging on error
+  return withPlayerStateLogOnError(player, timeOutPromise);
 };
 
-const withEventTimeOut = <EType extends Event<PlayerEventType>>(
+const withEventTimeOut = <TType extends StringKeyOf<EventMap<string>>, EType extends Event<TType>>(
   promise: Promise<any>,
   timeout: number,
   expectedEvents: Partial<EType>[],
@@ -155,6 +176,19 @@ const withEventTimeOut = <EType extends Event<PlayerEventType>>(
         reject(reason);
       });
   });
+};
+
+const withPlayerStateLogOnError = async (player: THEOplayer, promise: Promise<any>) => {
+  try {
+    return await promise;
+  } catch (e) {
+    throw (
+      (typeof e === 'string' ? e : JSON.stringify(e)) +
+      ` buffer: ${logPlayerBuffer(player)};` +
+      ` currentTime: ${player.currentTime};` +
+      ` paused: ${player.paused};`
+    );
+  }
 };
 
 export function expect(actual: any, desc?: string) {

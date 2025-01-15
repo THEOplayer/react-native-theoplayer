@@ -34,3 +34,8 @@ gem "http_parser.rb", "~> 0.6.0", :platforms => [:jruby]
 
 # Needed for `jekyll serve`
 gem "webrick", "~> 1.8"
+
+# Cocoapods 1.15 introduced a bug which breaks the build.
+gem 'cocoapods', '>= 1.13', '< 1.15'
+gem 'activesupport', '>= 6.1.7.5', '< 7.1.0'
+gem 'xcodeproj', '< 1.26.0'
