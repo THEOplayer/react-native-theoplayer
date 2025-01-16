@@ -3,9 +3,17 @@
   <uses-feature
     android:name="android.software.leanback"
     android:required="false" />
+
   <uses-feature
     android:name="android.hardware.touchscreen"
     android:required="false" />
+
+  <!--
+    Allows a regular application to use Service.startForeground with the type "dataSync".
+    This is a requirement for the Cache API. We do not include the permission as part of the SDK
+    in case the Cache API is not a required feature.
+   -->
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
   <application
     android:name=".MainApplication"
