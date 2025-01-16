@@ -3,6 +3,8 @@ import { TestSourceDescription, TestSources } from '../utils/SourceUtils';
 import { CacheEventType, CachingTask, CachingTaskEventType, MediaCache } from 'react-native-theoplayer';
 import { expect } from '../utils/Actions';
 
+const DEFAULT_EVENT_TIMEOUT_MS = 10000;
+
 export default function (spec: TestScope) {
   TestSources()
     .withPlain()
@@ -33,7 +35,7 @@ export default function (spec: TestScope) {
     });
 }
 
-async function waitForCacheEvent(eventType: CacheEventType, timeout: number = 10000): Promise<void> {
+async function waitForCacheEvent(eventType: CacheEventType, timeout: number = DEFAULT_EVENT_TIMEOUT_MS): Promise<void> {
   return new Promise((resolve, reject) => {
     const handle = setTimeout(() => {
       reject();
@@ -45,7 +47,11 @@ async function waitForCacheEvent(eventType: CacheEventType, timeout: number = 10
   });
 }
 
-async function waitForCachingTaskEvent(task: CachingTask, eventType: CachingTaskEventType, timeout: number = 10000): Promise<void> {
+async function waitForCachingTaskEvent(
+  task: CachingTask,
+  eventType: CachingTaskEventType,
+  timeout: number = DEFAULT_EVENT_TIMEOUT_MS,
+): Promise<void> {
   return new Promise((resolve, reject) => {
     const handle = setTimeout(() => {
       reject();
