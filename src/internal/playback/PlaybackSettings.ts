@@ -11,16 +11,18 @@ export class NativePlaybackSettings implements PlaybackSettingsAPI {
     if (Platform.OS !== 'android') {
       console.warn(TAG, 'useFastStartup is only available on Android platforms.');
       return;
+    } else {
+      NativePlaybackSettingsModule.useFastStartup(useFastStartup);
     }
-    NativePlaybackSettingsModule.useFastStartup(useFastStartup);
   }
 
   setLipSyncCorrection(correctionMs: number): void {
     if (Platform.OS !== 'android') {
       console.warn(TAG, 'setLipSyncCorrect is only available on Android platforms.');
       return;
+    } else {
+      NativePlaybackSettingsModule.setLipSyncCorrection(correctionMs);
     }
-    NativePlaybackSettingsModule.setLipSyncCorrection(correctionMs);
   }
 }
 
