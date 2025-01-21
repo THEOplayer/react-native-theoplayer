@@ -1,0 +1,43 @@
+//
+//  THEOplayerRCTViewManager.m
+//
+
+#import <React/RCTViewManager.h>
+
+@interface RCT_EXTERN_MODULE(THEOplayerRCTViewManager, RCTViewManager)
+
+RCT_EXPORT_VIEW_PROPERTY(config, NSDictionary);
+RCT_EXPORT_VIEW_PROPERTY(onNativePause, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativePlay, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeSourceChange, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeLoadStart, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeReadyStateChange, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeDurationChange, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeProgress, RCTBubblingEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeTimeUpdate, RCTBubblingEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativePlaying, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeSeeking, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeSeeked, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeEnded, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeError, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeLoadedData, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeRateChange, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeVolumeChange, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeLoadedMetadata, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeFullscreenPlayerWillPresent, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeFullscreenPlayerDidPresent, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeFullscreenPlayerWillDismiss, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeFullscreenPlayerDidDismiss, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeWaiting, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeCanPlay, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeTextTrackListEvent, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeTextTrackEvent, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeMediaTrackListEvent, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeMediaTrackEvent, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativePlayerReady, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativePresentationModeChange, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeResize, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeAdEvent, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeCastEvent, RCTDirectEventBlock);
+
+@end

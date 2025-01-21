@@ -21,31 +21,16 @@ let ERROR_CODE_CREATE_CACHINGTASK_FAILED = "create_cachingtask_failure"
 let ERROR_MESSAGE_CREATE_CACHINGTASK_FAILURE = "Creating a new cachingTask failed."
 
 @objc(THEOplayerRCTCacheAPI)
-class THEOplayerRCTCacheAPI: RCTEventEmitter {
+class THEOplayerRCTCacheAPI: NSObject {
+    
+    var sendEvent: ((String, [String:Any]) -> Void) = { _, _ in }
+    
     // MARK: Cache Listeners
     private var cacheStatusListener: EventListener?
 
     // MARK: CacheTask listeners (attached dynamically to new tasks)
     private var taskStateChangeListeners: [String:EventListener] = [:] // key is CacheTask.id
     private var taskProgressListeners: [String:EventListener] = [:] // key is CacheTask.id
-
-    override static func moduleName() -> String! {
-        return "THEORCTCacheModule"
-    }
-
-    override static func requiresMainQueueSetup() -> Bool {
-        return false
-    }
-
-    override func supportedEvents() -> [String]! {
-        return [
-            "onCacheStatusChange",
-            "onAddCachingTaskEvent",
-            "onRemoveCachingTaskEvent",
-            "onCachingTaskProgressEvent",
-            "onCachingTaskStatusChangeEvent"
-        ]
-    }
 
     override init() {
         super.init()
@@ -57,19 +42,19 @@ class THEOplayerRCTCacheAPI: RCTEventEmitter {
     deinit {
         self.detachCacheListeners()
     }
-
+    
     // MARK: - attach/dettach cache Listeners
     private func attachCacheListeners() {
 #if os(iOS)
         // STATE_CHANGE
         self.cacheStatusListener = THEOplayer.cache.addEventListener(type: CacheEventTypes.STATE_CHANGE) { [weak self] event in
             if DEBUG_CACHE_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received STATE_CHANGE event from THEOplayer.cache") }
-            self?.sendEvent(withName: "onCacheStatusChange", body: [
+            self?.sendEvent("onCacheStatusChange", [
                 CACHE_EVENT_PROP_STATUS: THEOplayerRCTTypeUtils.cacheStatusToString(THEOplayer.cache.status)
             ])
         }
         if DEBUG_CACHE_EVENTS { PrintUtils.printLog(logText: "[NATIVE] StateChange listener attached to THEOplayer.cache") }
-
+        
         // Attach listeners to all task currently known to cache
         for cachingTask in THEOplayer.cache.tasks {
             self.attachTaskListenersToTask(cachingTask)
@@ -92,7 +77,7 @@ class THEOplayerRCTCacheAPI: RCTEventEmitter {
         // add STATE_CHANGE listeners to newly created task
         self.taskStateChangeListeners[newTask.id] = newTask.addEventListener(type: CachingTaskEventTypes.STATE_CHANGE) { [weak self] event in
             if DEBUG_CACHE_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received STATE_CHANGE event for task with id \(newTask.id): status is \(THEOplayerRCTTypeUtils.cachingTaskStatusToString(newTask.status))") }
-            self?.sendEvent(withName: "onCachingTaskStatusChangeEvent", body: [
+            self?.sendEvent("onCachingTaskStatusChangeEvent", [
                 CACHETASK_PROP_ID: newTask.id,
                 CACHE_EVENT_PROP_STATUS: THEOplayerRCTTypeUtils.cachingTaskStatusToString(newTask.status)
             ])
@@ -109,7 +94,7 @@ class THEOplayerRCTCacheAPI: RCTEventEmitter {
         // add PROGRESS listeners to newly created task
         self.taskProgressListeners[newTask.id] = newTask.addEventListener(type: CachingTaskEventTypes.PROGRESS) { [weak self] event in
             if DEBUG_CACHE_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received PROGRESS event from task with id \(newTask.id): progress is \(newTask.percentageCached * 100.0)% of \(newTask.duration) sec.") }
-            self?.sendEvent(withName: "onCachingTaskProgressEvent", body: [
+            self?.sendEvent("onCachingTaskProgressEvent", [
                 CACHETASK_PROP_ID: newTask.id,
                 CACHE_EVENT_PROP_PROGRESS: THEOplayerRCTCacheAggregator.aggregateCacheTaskProgress(task: newTask)
             ] as [String : Any])
@@ -134,16 +119,14 @@ class THEOplayerRCTCacheAPI: RCTEventEmitter {
     // MARK: API
 
 #if os(iOS)
-    @objc(getInitialState:rejecter:)
-    func getInitialState(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+    func getInitialState(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         resolve([
             CACHE_EVENT_PROP_STATUS: THEOplayerRCTTypeUtils.cacheStatusToString(THEOplayer.cache.status),
             CACHE_EVENT_PROP_TASKS: THEOplayerRCTCacheAggregator.aggregateCacheTasks(tasks: THEOplayer.cache.tasks)
         ] as [String : Any])
     }
 
-    @objc(createTask:params:resolver:rejecter:)
-    func createTask(_ src: NSDictionary, params: NSDictionary, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+    func createTask(src: NSDictionary, params: NSDictionary, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if DEBUG_CACHE_API { PrintUtils.printLog(logText: "[NATIVE] createTask triggered on Cache API.") }
 		let params = THEOplayerRCTCachingParametersBuilder.buildCachingParameters(params)
 		let (sourceDescription, _) = THEOplayerRCTSourceDescriptionBuilder.buildSourceDescription(src)
@@ -152,7 +135,7 @@ class THEOplayerRCTCacheAPI: RCTEventEmitter {
             if DEBUG_CACHE_API { PrintUtils.printLog(logText: "[NATIVE] New cache task created with id \(newTask.id)") }
             resolve(THEOplayerRCTCacheAggregator.aggregateCacheTask(task: newTask))
             // emit onAddCachingTaskEvent
-            self.sendEvent(withName: "onAddCachingTaskEvent", body: [
+            self.sendEvent("onAddCachingTaskEvent", [
                 CACHE_EVENT_PROP_TASK: THEOplayerRCTCacheAggregator.aggregateCacheTask(task: newTask)
             ])
 
@@ -163,24 +146,21 @@ class THEOplayerRCTCacheAPI: RCTEventEmitter {
         }
     }
 
-    @objc(startCachingTask:)
-    func startCachingTask(_ id: NSString) -> Void {
+    func startCachingTask(id: NSString) -> Void {
         if DEBUG_CACHE_API { PrintUtils.printLog(logText: "[NATIVE] Start task triggered on Cache API for task with id \(id).") }
         if let task = self.taskById(id as String) {
             task.start()
         }
     }
 
-    @objc(pauseCachingTask:)
-    func pauseCachingTask(_ id: NSString) -> Void {
+    func pauseCachingTask(id: NSString) -> Void {
         if DEBUG_CACHE_API { PrintUtils.printLog(logText: "[NATIVE] Pause task triggered on Cache API for task with id \(id).") }
         if let task = self.taskById(id as String) {
             task.pause()
         }
     }
 
-    @objc(removeCachingTask:)
-    func removeCachingTask(_ id: NSString) -> Void {
+    func removeCachingTask(id: NSString) -> Void {
         if DEBUG_CACHE_API { PrintUtils.printLog(logText: "[NATIVE] Remove task triggered on Cache API for task with id \(id).") }
         if let task = self.taskById(id as String) {
             // remove the task
@@ -190,8 +170,7 @@ class THEOplayerRCTCacheAPI: RCTEventEmitter {
         }
     }
 
-    @objc(renewLicense:drmConfig:)
-    func renewLicense(_ id: NSString, drmConfig: NSDictionary) -> Void {
+    func renewLicense(id: NSString, drmConfig: NSDictionary) -> Void {
         if DEBUG_CACHE_API { PrintUtils.printLog(logText: "[NATIVE] Renew license triggered on Cache API for task with id \(id).") }
         if let task = self.taskById(id as String) {
             guard let contentProtectionData = drmConfig as? [String:Any] else {
@@ -214,8 +193,7 @@ class THEOplayerRCTCacheAPI: RCTEventEmitter {
         }
     }
 #else
-    @objc(getInitialState:rejecter:)
-    func getInitialState(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+    func getInitialState(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if DEBUG_CACHE_API { print(ERROR_MESSAGE_CACHE_API_UNSUPPORTED_FEATURE) }
         resolve([
             CACHE_EVENT_PROP_STATUS: "uninitialised",
@@ -223,28 +201,24 @@ class THEOplayerRCTCacheAPI: RCTEventEmitter {
         ] as [String : Any])
     }
 
-    @objc(createTask:params:)
-    func createTask(_ src: NSDictionary, params: NSDictionary) -> Void {
+    func createTask(src: NSDictionary, params: NSDictionary, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+        if DEBUG_CACHE_API { print(ERROR_MESSAGE_CACHE_API_UNSUPPORTED_FEATURE) }
+        reject([:] as [String : Any])
+    }
+
+    func startCachingTask(id: NSString) -> Void {
         if DEBUG_CACHE_API { print(ERROR_MESSAGE_CACHE_API_UNSUPPORTED_FEATURE) }
     }
 
-    @objc(startCachingTask:)
-    func startCachingTask(_ id: NSString) -> Void {
+    func pauseCachingTask(id: NSString) -> Void {
         if DEBUG_CACHE_API { print(ERROR_MESSAGE_CACHE_API_UNSUPPORTED_FEATURE) }
     }
 
-    @objc(pauseCachingTask:)
-    func pauseCachingTask(_ id: NSString) -> Void {
+    func removeCachingTask(id: NSString) -> Void {
         if DEBUG_CACHE_API { print(ERROR_MESSAGE_CACHE_API_UNSUPPORTED_FEATURE) }
     }
 
-    @objc(removeCachingTask:)
-    func removeCachingTask(_ id: NSString) -> Void {
-        if DEBUG_CACHE_API { print(ERROR_MESSAGE_CACHE_API_UNSUPPORTED_FEATURE) }
-    }
-
-    @objc(renewLicense:drmConfig:)
-    func renewLicense(_ id: NSString, drmConfig: NSDictionary) -> Void {
+    func renewLicense(id: NSString, drmConfig: NSDictionary) -> Void {
         if DEBUG_CACHE_API { print(ERROR_MESSAGE_CACHE_API_UNSUPPORTED_FEATURE) }
     }
 #endif
