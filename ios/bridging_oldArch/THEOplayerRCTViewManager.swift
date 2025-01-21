@@ -1,6 +1,5 @@
 //
 //  THEOplayerRCTViewManager.swift
-//  Theoplayer
 //
 
 import Foundation
