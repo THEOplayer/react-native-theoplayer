@@ -14,6 +14,9 @@ theoconfigfiles.each do |configfile|
   break if theofeatures.length() > 0
 end
 
+new_arch_enabled = ENV['RCT_NEW_ARCH_ENABLED'] == '1'
+puts "New architecture is enabled: " + new_arch_enabled.to_s
+
 Pod::Spec.new do |s|
   s.name         = "react-native-theoplayer"
   s.version      = package["version"]
@@ -21,15 +24,44 @@ Pod::Spec.new do |s|
   s.homepage     = package["homepage"]
   s.license      = package["license"]
   s.authors      = package["author"]
-
+  
   s.platforms    = { :ios => "13.4", :tvos => "13.4" }
   s.source       = { :git => "https://www.theoplayer.com/.git", :tag => "#{s.version}" }
-
-  s.source_files = 'ios/*.{h,m,swift}', 'ios/bridging_oldArch/*.{m,swift}', 'ios/ads/*.swift', 'ios/casting/*.swift', 'ios/contentprotection/*.swift', 'ios/pip/*.swift', 'ios/backgroundAudio/*.swift', 'ios/cache/*.swift', 'ios/sideloadedMetadata/*.swift', 'ios/eventBroadcasting/*.swift' , 'ios/ui/*.swift', 'ios/presentationMode/*.swift', 'ios/viewController/*.swift', 'ios/theolive/*.swift', 'ios/theoAds/*.swift'
-
-  # ReactNative Dependencies
-  install_modules_dependencies(s)
-
+  
+  if new_arch_enabled
+    s.source_files = 'ios/bridge/**/*.swift', 'ios/bridging_newarch/*.{m,mm,swift}', 'ios/newarch/**/*.{m,mm,cpp,swift}'
+  else
+    s.source_files = 'ios/bridge/**/*.swift', 'ios/bridging_oldarch/*.{m,swift}', 'ios/Theoplayer-Bridging-Header.h'
+  end
+  
+  if respond_to?(:install_modules_dependencies, true)
+    # ReactNative Dependencies for RN >= 0.71 )
+    install_modules_dependencies(s)
+    s.pod_target_xcconfig = {
+      "DEFINES_MODULE" => "YES",
+      "HEADER_SEARCH_PATHS" => "\"${PODS_ROOT}/Headers/Private/Yoga\""
+    }
+  else
+    # ReactNative Dependencies for RN < 0.71 )
+    s.dependency "React-Core"
+    
+    # Don't install the dependencies when we run `pod install` in the old architecture.
+    if new_arch_enabled
+      s.compiler_flags = folly_compiler_flags + " -DRCT_NEW_ARCH_ENABLED=1"
+      s.pod_target_xcconfig = {
+        "HEADER_SEARCH_PATHS" => "\"$(PODS_ROOT)/boost\"",
+        "OTHER_CPLUSPLUSFLAGS" => "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
+        "CLANG_CXX_LANGUAGE_STANDARD" => "c++17"
+      }
+      s.dependency "React-RCTFabric"
+      s.dependency "React-Codegen"
+      s.dependency "RCT-Folly"
+      s.dependency "RCTRequired"
+      s.dependency "RCTTypeSafety"
+      s.dependency "ReactCommon/turbomodule/core"
+    end
+  end
+  
   # THEOplayer Dependency
   puts "Adding THEOplayerSDK-core"
   s.dependency "THEOplayerSDK-core", "~> 8.11"
@@ -43,7 +75,7 @@ Pod::Spec.new do |s|
 	puts "Adding THEOplayer-Integration-GoogleIMA"
     s.dependency "THEOplayer-Integration-GoogleIMA", "~> 8.11"
   end
-
+  
   if theofeatures.include?("CHROMECAST")
 	puts "Adding THEOplayer-Integration-GoogleCast"
     s.ios.dependency "THEOplayer-Integration-GoogleCast", "~> 8.11"
@@ -58,5 +90,5 @@ Pod::Spec.new do |s|
 	puts "Adding THEOplayer-Connector-SideloadedSubtitle"
     s.dependency "THEOplayer-Connector-SideloadedSubtitle", "~> 8.11"
   end
-
+  
 end
