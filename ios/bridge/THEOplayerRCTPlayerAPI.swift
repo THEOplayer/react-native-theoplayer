@@ -24,13 +24,16 @@ let TTS_PROP_COLOR_G = "g"
 let TTS_PROP_COLOR_B = "b"
 let TTS_PROP_COLOR_A = "a"
 
-class THEOplayerRCTPlayerAPI: NSObject {
+@objc
+public class THEOplayerRCTPlayerAPI: NSObject {
     
-    func version() -> String {
+    @objc
+    public func version() -> String {
         return THEOplayer.version
     }
     
-    func setPaused(_ view: THEOplayerRCTView? = nil, paused: Bool) -> Void {
+    @objc(setPaused:paused:)
+    public func setPaused(_ view: THEOplayerRCTView? = nil, paused: Bool) -> Void {
         if let theView = view,
            let player = theView.player {
             if paused && !player.paused {

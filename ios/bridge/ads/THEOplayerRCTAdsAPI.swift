@@ -22,7 +22,8 @@ let ERROR_MESSAGE_ADS_GET_CURRENT_ADS_UNDEFINED = "Undefined ads array"
 let ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE = "This functionality is not supported by the provided iOS SDK"
 let ERROR_MESSAGE_ADS_GET_SCHEDULED_ADBREAKS_UNDEFINED = "Undefined adbreaks array"
 
-class THEOplayerRCTAdsAPI: NSObject {
+@objc
+public class THEOplayerRCTAdsAPI: NSObject {
     
 #if canImport(THEOplayerGoogleIMAIntegration)
     func skip(_ view: THEOplayerRCTView? = nil) -> Void {

@@ -10,7 +10,8 @@ extension THEOplayerRCTCastAPI {
     
 #if os(iOS) && canImport(THEOplayerGoogleCastIntegration)
     
-    func chromecastCasting(_ view: THEOplayerRCTView? = nil, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+    @objc(chromecastCasting:resolve:reject:)
+    public func chromecastCasting(_ view: THEOplayerRCTView? = nil, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if let theView = view,
            let cast = theView.cast(),
            let chromecast = cast.chromecast {
@@ -21,7 +22,8 @@ extension THEOplayerRCTCastAPI {
         }
     }
     
-    func chromecastState(_ view: THEOplayerRCTView? = nil, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+    @objc(chromecastState:resolve:reject:)
+    public func chromecastState(_ view: THEOplayerRCTView? = nil, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if let theView = view,
            let cast = theView.cast(),
            let chromecast = cast.chromecast {
@@ -32,7 +34,8 @@ extension THEOplayerRCTCastAPI {
         }
     }
     
-    func chromecastStart(_ view: THEOplayerRCTView? = nil) -> Void {
+    @objc(chromecastStart:)
+    public func chromecastStart(_ view: THEOplayerRCTView? = nil) -> Void {
         if let theView = view,
            let cast = theView.cast(),
            let chromecast = cast.chromecast {
@@ -43,7 +46,8 @@ extension THEOplayerRCTCastAPI {
         }
     }
     
-    func chromecastStop(_ view: THEOplayerRCTView? = nil) -> Void {
+    @objc(chromecastStop:)
+    public func chromecastStop(_ view: THEOplayerRCTView? = nil) -> Void {
         if let theView = view,
            let cast = theView.cast(),
            let chromecast = cast.chromecast {
@@ -54,7 +58,8 @@ extension THEOplayerRCTCastAPI {
         }
     }
     
-    func chromecastJoin(_ view: THEOplayerRCTView? = nil) -> Void {
+    @objc(chromecastJoin:)
+    public func chromecastJoin(_ view: THEOplayerRCTView? = nil) -> Void {
         if let theView = view,
            let cast = theView.cast(),
            let chromecast = cast.chromecast {
@@ -65,7 +70,8 @@ extension THEOplayerRCTCastAPI {
         }
     }
     
-    func chromecastLeave(_ view: THEOplayerRCTView? = nil) -> Void {
+    @objc(chromecastLeave:)
+    public func chromecastLeave(_ view: THEOplayerRCTView? = nil) -> Void {
         if let theView = view,
            let cast = theView.cast(),
            let chromecast = cast.chromecast {
@@ -78,29 +84,35 @@ extension THEOplayerRCTCastAPI {
     
 #else
     
-    func chromecastCasting(_ view: THEOplayerRCTView? = nil, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+    @objc(chromecastCasting:resolve:reject:)
+    public func chromecastCasting(_ view: THEOplayerRCTView? = nil, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if DEBUG_CAST_API { print(ERROR_MESSAGE_CHROMECAST_UNSUPPORTED_FEATURE) }
         resolve(false)
     }
     
-    func chromecastState(_ view: THEOplayerRCTView? = nil, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+    @objc(chromecastState:resolve:reject:)
+    public func chromecastState(_ view: THEOplayerRCTView? = nil, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if DEBUG_CAST_API { print(ERROR_MESSAGE_CHROMECAST_UNSUPPORTED_FEATURE) }
         resolve("unavailable")
     }
     
-    func chromecastStart(_ view: THEOplayerRCTView? = nil) -> Void {
+    @objc(chromecastStart:)
+    public func chromecastStart(_ view: THEOplayerRCTView? = nil) -> Void {
         if DEBUG_CAST_API { print(ERROR_MESSAGE_CHROMECAST_UNSUPPORTED_FEATURE) }
     }
     
-    func chromecastStop(_ view: THEOplayerRCTView? = nil) -> Void {
+    @objc(chromecastStop:)
+    public func chromecastStop(_ view: THEOplayerRCTView? = nil) -> Void {
         if DEBUG_CAST_API { print(ERROR_MESSAGE_CHROMECAST_UNSUPPORTED_FEATURE) }
     }
     
-    func chromecastJoin(_ view: THEOplayerRCTView? = nil) -> Void {
+    @objc(chromecastJoin:)
+    public func chromecastJoin(_ view: THEOplayerRCTView? = nil) -> Void {
         if DEBUG_CAST_API { print(ERROR_MESSAGE_CHROMECAST_UNSUPPORTED_FEATURE) }
     }
     
-    func chromecastLeave(_ view: THEOplayerRCTView? = nil) -> Void {
+    @objc(chromecastLeave:)
+    public func chromecastLeave(_ view: THEOplayerRCTView? = nil) -> Void {
         if DEBUG_CAST_API { print(ERROR_MESSAGE_CHROMECAST_UNSUPPORTED_FEATURE) }
     }
     

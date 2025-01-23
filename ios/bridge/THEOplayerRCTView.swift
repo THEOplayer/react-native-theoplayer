@@ -15,6 +15,11 @@ import GoogleInteractiveMediaAds
 import THEOplayerGoogleCastIntegration
 #endif
 
+public typealias RCTDirectEventBlock = ([String: Any]) -> Void
+public typealias RCTPromiseRejectBlock = (String, String, Error?) -> Void
+public typealias RCTPromiseResolveBlock = (Any?) -> Void
+ 
+@objc
 public class THEOplayerRCTView: UIView {
     // MARK: Members
     public private(set) var player: THEOplayer?
@@ -74,7 +79,8 @@ public class THEOplayerRCTView: UIView {
     private var hlsDateRange: Bool = false
     
     // MARK: - Initialisation / view setup
-    init() {
+    @objc
+    public init() {
         // create event handlers to maintain event props
         self.mainEventHandler = THEOplayerRCTMainEventHandler()
         self.broadcastEventHandler = THEOplayerRCTBroadcastEventHandler()
@@ -146,6 +152,9 @@ public class THEOplayerRCTView: UIView {
             self.pipManager.setView(view: self)
             // Attach player to view
             player.addAsSubview(of: self)
+            
+            player.autoplay = true;
+            player.source = SourceDescription(source: TypedSource(src: "https://cdn.theoplayer.com/video/adultswim/clip.m3u8", type: "application/x-mpegurl"))
         }
     }
     
@@ -188,8 +197,7 @@ public class THEOplayerRCTView: UIView {
     
     // MARK: - Property bridging (config)
     
-    @objc(setConfig:)
-    func setConfig(configDict: NSDictionary) {
+    @objc public func setConfig(_ configDict: NSDictionary) {
         // store license info
         self.license = configDict["license"] as? String
         self.licenseUrl = configDict["licenseUrl"] as? String
@@ -211,7 +219,7 @@ public class THEOplayerRCTView: UIView {
     // MARK: - VIEW READY event bridging
     
     @objc(setOnNativePlayerReady:)
-    func setOnNativePlayerReady(nativePlayerReady: @escaping RCTDirectEventBlock) {
+    public func setOnNativePlayerReady(nativePlayerReady: @escaping RCTDirectEventBlock) {
         self.onNativePlayerReady = nativePlayerReady
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativePlayerReady prop set.") }
     }
@@ -261,13 +269,13 @@ public class THEOplayerRCTView: UIView {
     }
     
     @objc(setOnNativeProgress:)
-    func setOnNativeProgress(nativeProgress: @escaping RCTBubblingEventBlock) {
+    func setOnNativeProgress(nativeProgress: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeProgress = nativeProgress
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeProgress prop set.") }
     }
     
     @objc(setOnNativeTimeUpdate:)
-    func setOnNativeTimeUpdate(nativeTimeUpdate: @escaping RCTBubblingEventBlock) {
+    func setOnNativeTimeUpdate(nativeTimeUpdate: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeTimeUpdate = nativeTimeUpdate
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeTimeUpdate prop set.") }
     }

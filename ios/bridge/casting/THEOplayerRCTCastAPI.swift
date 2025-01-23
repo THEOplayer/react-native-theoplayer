@@ -9,13 +9,14 @@ let ERROR_CODE_CAST_ACCESS_FAILURE = "cast_access_failure"
 let ERROR_MESSAGE_CASTING_UNSUPPORTED_FEATURE = "Chromecast and Airplay are not supported by the provided SDK"
 let ERROR_MESSAGE_CAST_ACCESS_FAILURE = "Could not access THEOplayer Cast Module"
 
-class THEOplayerRCTCastAPI {
+@objc
+public class THEOplayerRCTCastAPI: NSObject {
 
     // MARK: CHROMECAST AND AIRPLAY
 #if os(iOS)
     
-    @objc(casting:resolver:rejecter:)
-    func casting(_ view: THEOplayerRCTView? = nil, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+    @objc(casting:resolve:reject:)
+    public func casting(_ view: THEOplayerRCTView? = nil, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if let theView = view,
            let cast = theView.cast() {
             resolve(cast.casting)
@@ -27,8 +28,8 @@ class THEOplayerRCTCastAPI {
     
 #else
 
-    @objc(casting:resolver:rejecter:)
-    func casting(_ view: THEOplayerRCTView? = nil, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+    @objc(casting:resolve:reject:)
+    public func casting(_ view: THEOplayerRCTView? = nil, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if DEBUG_CAST_API { print(ERROR_MESSAGE_CASTING_UNSUPPORTED_FEATURE) }
         resolve(false)
     }

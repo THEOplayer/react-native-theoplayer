@@ -3,6 +3,7 @@
 import Foundation
 import THEOplayerSDK
 
+
 public class THEOplayerRCTMainEventHandler {
     // MARK: Members
     private weak var player: THEOplayer?
@@ -17,8 +18,8 @@ public class THEOplayerRCTMainEventHandler {
     var onNativeReadyStateChange: RCTDirectEventBlock?
     var onNativeDurationChange: RCTDirectEventBlock?
     var onNativeVolumeChange: RCTDirectEventBlock?
-    var onNativeProgress: RCTBubblingEventBlock?
-    var onNativeTimeUpdate: RCTBubblingEventBlock?
+    var onNativeProgress: RCTDirectEventBlock?
+    var onNativeTimeUpdate: RCTDirectEventBlock?
     var onNativePlaying: RCTDirectEventBlock?
     var onNativeSeeking: RCTDirectEventBlock?
     var onNativeSeeked: RCTDirectEventBlock?
