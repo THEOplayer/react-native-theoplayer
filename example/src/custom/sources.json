@@ -383,13 +383,16 @@
   },
   {
     "name": "HLS - SSAI - Google DAI - LIVE",
-    "os": ["ios", "web"],
+    "os": [
+      "ios",
+      "web"
+    ],
     "source": {
       "sources": {
         "ssai": {
           "integration": "google-dai",
           "availabilityType": "live",
-          "assetKey": "c-rArva4ShKVIAkNfy6HUQ"
+          "assetKey": "sN_IYUG8STe1ZzhIIE_ksA"
         }
       }
     }
