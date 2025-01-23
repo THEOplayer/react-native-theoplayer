@@ -13,6 +13,8 @@ source 'https://cdn.cocoapods.org/'
 prepare_react_native_project!
 config = use_native_modules!
 
+ENV["RCT_NEW_ARCH_ENABLED"] = "1"
+
 linkage = ENV['USE_FRAMEWORKS']
 if linkage != nil
   Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
