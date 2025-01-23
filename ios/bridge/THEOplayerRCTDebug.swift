@@ -1,7 +1,7 @@
 // THEOplayerRCTDebug.swift
 
 // General debug flag, if set to false none of the debug prints will appear
-let DEBUG = false
+let DEBUG = true
 
 // Debug flag to monitor incoming Theoplayer events
 let DEBUG_THEOPLAYER_EVENTS = DEBUG && false
@@ -16,7 +16,7 @@ let DEBUG_THEOPLAYER_INTERACTION = DEBUG && false
 let DEBUG_CONTENT_PROTECTION_API = DEBUG && false
 
 // Debug flag to monitor all updates made  on bridged properties
-let DEBUG_VIEW = DEBUG && false
+let DEBUG_VIEW = DEBUG && true
 
 // Debug flag to monitor correct SourceDescription buildup
 let DEBUG_SOURCE_DESCRIPTION_BUIDER = DEBUG && false

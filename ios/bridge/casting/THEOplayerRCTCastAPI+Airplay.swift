@@ -10,7 +10,8 @@ extension THEOplayerRCTCastAPI {
     
 #if os(iOS)
     
-    func airplayCasting(_ view: THEOplayerRCTView? = nil, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+    @objc(airplayCasting:resolve:reject:)
+    public func airplayCasting(_ view: THEOplayerRCTView? = nil, resolve: RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if let theView = view,
            let cast = theView.cast(),
            let airplay = cast.airPlay {
@@ -21,7 +22,8 @@ extension THEOplayerRCTCastAPI {
         }
     }
     
-    func airplayState(_ view: THEOplayerRCTView? = nil, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+    @objc(airplayState:resolve:reject:)
+    public func airplayState(_ view: THEOplayerRCTView? = nil, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if let theView = view,
            let cast = theView.cast(),
            let airplay = cast.airPlay {
@@ -32,7 +34,8 @@ extension THEOplayerRCTCastAPI {
         }
     }
     
-    func airplayStart(_ view: THEOplayerRCTView? = nil) -> Void {
+    @objc(airplayStart:)
+    public func airplayStart(_ view: THEOplayerRCTView? = nil) -> Void {
         if let theView = view,
            let cast = theView.cast(),
            let airplay = cast.airPlay {
@@ -43,7 +46,8 @@ extension THEOplayerRCTCastAPI {
         }
     }
     
-    func airplayStop(_ view: THEOplayerRCTView? = nil) -> Void {
+    @objc(airplayStop:)
+    public func airplayStop(_ view: THEOplayerRCTView? = nil) -> Void {
         if let theView = view,
            let cast = theView.cast(),
            let airplay = cast.airPlay {
@@ -56,21 +60,25 @@ extension THEOplayerRCTCastAPI {
     
 #else
     
-    func airplayCasting(_ view: THEOplayerRCTView? = nil, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+    @objc(airplayCasting:resolve:reject:)
+    public func airplayCasting(_ view: THEOplayerRCTView? = nil, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if DEBUG_CAST_API { print(ERROR_MESSAGE_AIRPLAY_UNSUPPORTED_FEATURE) }
         resolve(false)
     }
     
-    func airplayState(_ view: THEOplayerRCTView? = nil, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+    @objc(airplayState:resolve:reject:)
+    public func airplayState(_ view: THEOplayerRCTView? = nil, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if DEBUG_CAST_API { print(ERROR_MESSAGE_AIRPLAY_UNSUPPORTED_FEATURE) }
         resolve("unavailable")
     }
     
-    func airplayStart(_ view: THEOplayerRCTView? = nil) -> Void {
+    @objc(airplayStart:)
+    public func airplayStart(_ view: THEOplayerRCTView? = nil) -> Void {
         if DEBUG_CAST_API { print(ERROR_MESSAGE_AIRPLAY_UNSUPPORTED_FEATURE) }
     }
     
-    func airplayStop(_ view: THEOplayerRCTView? = nil) -> Void {
+    @objc(airplayStop:)
+    public func airplayStop(_ view: THEOplayerRCTView? = nil) -> Void {
         if DEBUG_CAST_API { print(ERROR_MESSAGE_AIRPLAY_UNSUPPORTED_FEATURE) }
     }
     

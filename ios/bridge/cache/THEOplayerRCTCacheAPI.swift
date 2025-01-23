@@ -20,8 +20,8 @@ let ERROR_MESSAGE_CACHE_API_UNSUPPORTED_FEATURE = "Cache API is not supported fo
 let ERROR_CODE_CREATE_CACHINGTASK_FAILED = "create_cachingtask_failure"
 let ERROR_MESSAGE_CREATE_CACHINGTASK_FAILURE = "Creating a new cachingTask failed."
 
-@objc(THEOplayerRCTCacheAPI)
-class THEOplayerRCTCacheAPI: NSObject {
+@objc
+public class THEOplayerRCTCacheAPI: NSObject {
     
     var sendEvent: ((String, [String:Any]) -> Void) = { _, _ in }
     
@@ -32,7 +32,8 @@ class THEOplayerRCTCacheAPI: NSObject {
     private var taskStateChangeListeners: [String:EventListener] = [:] // key is CacheTask.id
     private var taskProgressListeners: [String:EventListener] = [:] // key is CacheTask.id
 
-    override init() {
+    @objc
+    public override init() {
         super.init()
 
         // attach listeners

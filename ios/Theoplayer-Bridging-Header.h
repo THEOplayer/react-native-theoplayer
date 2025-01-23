@@ -2,8 +2,8 @@
 //  Use this file to import your target's public headers that you would like to expose to Swift.
 //
 
-#import <React/RCTViewManager.h>
-#import <React/RCTUIManager.h>
-#import <React/RCTBridgeModule.h>
 #import <React/RCTEventEmitter.h>
-#import <React/RCTRootContentView.h>
+#import <React/RCTUIManager.h>
+#import <React/RCTViewManager.h>
+#import <React/RCTBridgeModule.h>
+//#import <React/RCTRootContentView.h>

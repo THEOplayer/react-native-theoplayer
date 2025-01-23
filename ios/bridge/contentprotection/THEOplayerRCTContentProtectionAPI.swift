@@ -16,8 +16,8 @@ let CPI_EVENT_PROP_FAIRPLAY_SKD_URL: String = "fairplaySkdUrl"
 let CPI_TAG: String = "[ContentProtectionIntegrationAPI]"
 let BRIDGE_REQUEST_TIMEOUT = 10.0
 
-@objc(THEOplayerRCTContentProtectionAPI)
-class THEOplayerRCTContentProtectionAPI: NSObject {
+@objc
+public class THEOplayerRCTContentProtectionAPI: NSObject {
     
     var sendEvent: ((String, [String:Any]) -> Void) = { _, _ in }
     
