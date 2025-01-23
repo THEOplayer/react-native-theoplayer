@@ -20,7 +20,7 @@ install! 'cocoapods', :deterministic_uuids => false
 
 target 'ReactNativeTHEOplayer' do
 
-  platform :ios, '13.4'
+  platform :ios, '15.1'
 
   use_react_native!(
     :path => config[:reactNativePath],
@@ -40,7 +40,7 @@ end
 
 target 'ReactNativeTHEOplayer-tvOS' do
 
-  platform :tvos, '13.4'
+  platform :tvos, '15.1'
 
   use_react_native!(
     :path => config[:reactNativePath],
