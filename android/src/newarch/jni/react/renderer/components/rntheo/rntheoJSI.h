@@ -264,17 +264,17 @@ protected:
   NativeCastModuleCxxSpecJSI(std::shared_ptr<CallInvoker> jsInvoker);
 
 public:
-  virtual jsi::Value casting(jsi::Runtime &rt, int tag) = 0;
-  virtual jsi::Value chromecastCasting(jsi::Runtime &rt, int tag) = 0;
-  virtual jsi::Value airplayCasting(jsi::Runtime &rt, int tag) = 0;
-  virtual jsi::Value chromecastState(jsi::Runtime &rt, int tag) = 0;
-  virtual jsi::Value airplayState(jsi::Runtime &rt, int tag) = 0;
-  virtual void chromecastStart(jsi::Runtime &rt, int tag) = 0;
-  virtual void chromecastStop(jsi::Runtime &rt, int tag) = 0;
-  virtual void chromecastJoin(jsi::Runtime &rt, int tag) = 0;
-  virtual void chromecastLeave(jsi::Runtime &rt, int tag) = 0;
-  virtual void airplayStart(jsi::Runtime &rt, int tag) = 0;
-  virtual void airplayStop(jsi::Runtime &rt, int tag) = 0;
+  virtual jsi::Value casting(jsi::Runtime &rt, double tag) = 0;
+  virtual jsi::Value chromecastCasting(jsi::Runtime &rt, double tag) = 0;
+  virtual jsi::Value airplayCasting(jsi::Runtime &rt, double tag) = 0;
+  virtual jsi::Value chromecastState(jsi::Runtime &rt, double tag) = 0;
+  virtual jsi::Value airplayState(jsi::Runtime &rt, double tag) = 0;
+  virtual void chromecastStart(jsi::Runtime &rt, double tag) = 0;
+  virtual void chromecastStop(jsi::Runtime &rt, double tag) = 0;
+  virtual void chromecastJoin(jsi::Runtime &rt, double tag) = 0;
+  virtual void chromecastLeave(jsi::Runtime &rt, double tag) = 0;
+  virtual void airplayStart(jsi::Runtime &rt, double tag) = 0;
+  virtual void airplayStop(jsi::Runtime &rt, double tag) = 0;
 
 };
 
@@ -301,7 +301,7 @@ private:
 
     }
 
-    jsi::Value casting(jsi::Runtime &rt, int tag) override {
+    jsi::Value casting(jsi::Runtime &rt, double tag) override {
       static_assert(
           bridging::getParameterCount(&T::casting) == 2,
           "Expected casting(...) to have 2 parameters");
@@ -309,7 +309,7 @@ private:
       return bridging::callFromJs<jsi::Value>(
           rt, &T::casting, jsInvoker_, instance_, std::move(tag));
     }
-    jsi::Value chromecastCasting(jsi::Runtime &rt, int tag) override {
+    jsi::Value chromecastCasting(jsi::Runtime &rt, double tag) override {
       static_assert(
           bridging::getParameterCount(&T::chromecastCasting) == 2,
           "Expected chromecastCasting(...) to have 2 parameters");
@@ -317,7 +317,7 @@ private:
       return bridging::callFromJs<jsi::Value>(
           rt, &T::chromecastCasting, jsInvoker_, instance_, std::move(tag));
     }
-    jsi::Value airplayCasting(jsi::Runtime &rt, int tag) override {
+    jsi::Value airplayCasting(jsi::Runtime &rt, double tag) override {
       static_assert(
           bridging::getParameterCount(&T::airplayCasting) == 2,
           "Expected airplayCasting(...) to have 2 parameters");
@@ -325,7 +325,7 @@ private:
       return bridging::callFromJs<jsi::Value>(
           rt, &T::airplayCasting, jsInvoker_, instance_, std::move(tag));
     }
-    jsi::Value chromecastState(jsi::Runtime &rt, int tag) override {
+    jsi::Value chromecastState(jsi::Runtime &rt, double tag) override {
       static_assert(
           bridging::getParameterCount(&T::chromecastState) == 2,
           "Expected chromecastState(...) to have 2 parameters");
@@ -333,7 +333,7 @@ private:
       return bridging::callFromJs<jsi::Value>(
           rt, &T::chromecastState, jsInvoker_, instance_, std::move(tag));
     }
-    jsi::Value airplayState(jsi::Runtime &rt, int tag) override {
+    jsi::Value airplayState(jsi::Runtime &rt, double tag) override {
       static_assert(
           bridging::getParameterCount(&T::airplayState) == 2,
           "Expected airplayState(...) to have 2 parameters");
@@ -341,7 +341,7 @@ private:
       return bridging::callFromJs<jsi::Value>(
           rt, &T::airplayState, jsInvoker_, instance_, std::move(tag));
     }
-    void chromecastStart(jsi::Runtime &rt, int tag) override {
+    void chromecastStart(jsi::Runtime &rt, double tag) override {
       static_assert(
           bridging::getParameterCount(&T::chromecastStart) == 2,
           "Expected chromecastStart(...) to have 2 parameters");
@@ -349,7 +349,7 @@ private:
       return bridging::callFromJs<void>(
           rt, &T::chromecastStart, jsInvoker_, instance_, std::move(tag));
     }
-    void chromecastStop(jsi::Runtime &rt, int tag) override {
+    void chromecastStop(jsi::Runtime &rt, double tag) override {
       static_assert(
           bridging::getParameterCount(&T::chromecastStop) == 2,
           "Expected chromecastStop(...) to have 2 parameters");
@@ -357,7 +357,7 @@ private:
       return bridging::callFromJs<void>(
           rt, &T::chromecastStop, jsInvoker_, instance_, std::move(tag));
     }
-    void chromecastJoin(jsi::Runtime &rt, int tag) override {
+    void chromecastJoin(jsi::Runtime &rt, double tag) override {
       static_assert(
           bridging::getParameterCount(&T::chromecastJoin) == 2,
           "Expected chromecastJoin(...) to have 2 parameters");
@@ -365,7 +365,7 @@ private:
       return bridging::callFromJs<void>(
           rt, &T::chromecastJoin, jsInvoker_, instance_, std::move(tag));
     }
-    void chromecastLeave(jsi::Runtime &rt, int tag) override {
+    void chromecastLeave(jsi::Runtime &rt, double tag) override {
       static_assert(
           bridging::getParameterCount(&T::chromecastLeave) == 2,
           "Expected chromecastLeave(...) to have 2 parameters");
@@ -373,7 +373,7 @@ private:
       return bridging::callFromJs<void>(
           rt, &T::chromecastLeave, jsInvoker_, instance_, std::move(tag));
     }
-    void airplayStart(jsi::Runtime &rt, int tag) override {
+    void airplayStart(jsi::Runtime &rt, double tag) override {
       static_assert(
           bridging::getParameterCount(&T::airplayStart) == 2,
           "Expected airplayStart(...) to have 2 parameters");
@@ -381,7 +381,7 @@ private:
       return bridging::callFromJs<void>(
           rt, &T::airplayStart, jsInvoker_, instance_, std::move(tag));
     }
-    void airplayStop(jsi::Runtime &rt, int tag) override {
+    void airplayStop(jsi::Runtime &rt, double tag) override {
       static_assert(
           bridging::getParameterCount(&T::airplayStop) == 2,
           "Expected airplayStop(...) to have 2 parameters");
@@ -661,7 +661,7 @@ public:
   virtual void setAspectRatio(jsi::Runtime &rt, int tag, jsi::String ratio) = 0;
   virtual void setRenderingTarget(jsi::Runtime &rt, int tag, jsi::String target) = 0;
   virtual void setKeepScreenOn(jsi::Runtime &rt, int tag, bool keepScreenOn) = 0;
-  virtual void setPaused(jsi::Runtime &rt, int tag, bool paused) = 0;
+  virtual void setPaused(jsi::Runtime &rt, double tag, bool paused) = 0;
   virtual void setTextTrackStyle(jsi::Runtime &rt, int tag, jsi::Object style) = 0;
   virtual void setABRConfig(jsi::Runtime &rt, int tag, jsi::Object config) = 0;
 
@@ -826,7 +826,7 @@ private:
       return bridging::callFromJs<void>(
           rt, &T::setKeepScreenOn, jsInvoker_, instance_, std::move(tag), std::move(keepScreenOn));
     }
-    void setPaused(jsi::Runtime &rt, int tag, bool paused) override {
+    void setPaused(jsi::Runtime &rt, double tag, bool paused) override {
       static_assert(
           bridging::getParameterCount(&T::setPaused) == 3,
           "Expected setPaused(...) to have 3 parameters");

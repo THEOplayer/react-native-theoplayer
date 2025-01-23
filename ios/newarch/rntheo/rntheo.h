@@ -115,6 +115,16 @@ namespace JS {
 - (void)removeAllFriendlyObstructions:(NSInteger)tag;
 
 @end
+
+@interface NativeAdsModuleSpecBase : NSObject {
+@protected
+facebook::react::EventEmitterCallback _eventEmitterCallback;
+}
+- (void)setEventEmitterCallback:(EventEmitterCallbackWrapper *)eventEmitterCallbackWrapper;
+
+
+@end
+
 namespace facebook::react {
   /**
    * ObjC++ class for module 'NativeAdsModule'
@@ -138,6 +148,16 @@ namespace facebook::react {
 - (void)startCachingTask:(NSString *)taskId;
 
 @end
+
+@interface NativeCacheModuleSpecBase : NSObject {
+@protected
+facebook::react::EventEmitterCallback _eventEmitterCallback;
+}
+- (void)setEventEmitterCallback:(EventEmitterCallbackWrapper *)eventEmitterCallbackWrapper;
+
+
+@end
+
 namespace facebook::react {
   /**
    * ObjC++ class for module 'NativeCacheModule'
@@ -150,29 +170,39 @@ namespace facebook::react {
 
 @protocol NativeCastModuleSpec <RCTBridgeModule, RCTTurboModule>
 
-- (void)casting:(NSInteger)tag
+- (void)casting:(double)tag
         resolve:(RCTPromiseResolveBlock)resolve
          reject:(RCTPromiseRejectBlock)reject;
-- (void)chromecastCasting:(NSInteger)tag
+- (void)chromecastCasting:(double)tag
                   resolve:(RCTPromiseResolveBlock)resolve
                    reject:(RCTPromiseRejectBlock)reject;
-- (void)airplayCasting:(NSInteger)tag
+- (void)airplayCasting:(double)tag
                resolve:(RCTPromiseResolveBlock)resolve
                 reject:(RCTPromiseRejectBlock)reject;
-- (void)chromecastState:(NSInteger)tag
+- (void)chromecastState:(double)tag
                 resolve:(RCTPromiseResolveBlock)resolve
                  reject:(RCTPromiseRejectBlock)reject;
-- (void)airplayState:(NSInteger)tag
+- (void)airplayState:(double)tag
              resolve:(RCTPromiseResolveBlock)resolve
               reject:(RCTPromiseRejectBlock)reject;
-- (void)chromecastStart:(NSInteger)tag;
-- (void)chromecastStop:(NSInteger)tag;
-- (void)chromecastJoin:(NSInteger)tag;
-- (void)chromecastLeave:(NSInteger)tag;
-- (void)airplayStart:(NSInteger)tag;
-- (void)airplayStop:(NSInteger)tag;
+- (void)chromecastStart:(double)tag;
+- (void)chromecastStop:(double)tag;
+- (void)chromecastJoin:(double)tag;
+- (void)chromecastLeave:(double)tag;
+- (void)airplayStart:(double)tag;
+- (void)airplayStop:(double)tag;
 
 @end
+
+@interface NativeCastModuleSpecBase : NSObject {
+@protected
+facebook::react::EventEmitterCallback _eventEmitterCallback;
+}
+- (void)setEventEmitterCallback:(EventEmitterCallbackWrapper *)eventEmitterCallbackWrapper;
+
+
+@end
+
 namespace facebook::react {
   /**
    * ObjC++ class for module 'NativeCastModule'
@@ -213,6 +243,16 @@ namespace JS {
 - (void)onExtractFairplayContentIdProcessed:(NSDictionary *)payload;
 
 @end
+
+@interface NativeContentProtectionModuleSpecBase : NSObject {
+@protected
+facebook::react::EventEmitterCallback _eventEmitterCallback;
+}
+- (void)setEventEmitterCallback:(EventEmitterCallbackWrapper *)eventEmitterCallbackWrapper;
+
+
+@end
+
 namespace facebook::react {
   /**
    * ObjC++ class for module 'NativeContentProtectionModule'
@@ -229,6 +269,16 @@ namespace facebook::react {
                  event:(NSDictionary *)event;
 
 @end
+
+@interface NativeEventBroadcastModuleSpecBase : NSObject {
+@protected
+facebook::react::EventEmitterCallback _eventEmitterCallback;
+}
+- (void)setEventEmitterCallback:(EventEmitterCallbackWrapper *)eventEmitterCallbackWrapper;
+
+
+@end
+
 namespace facebook::react {
   /**
    * ObjC++ class for module 'NativeEventBroadcastModule'
@@ -245,6 +295,16 @@ namespace facebook::react {
 - (void)setLipSyncCorrection:(double)correctionMs;
 
 @end
+
+@interface NativePlaybackSettingsModuleSpecBase : NSObject {
+@protected
+facebook::react::EventEmitterCallback _eventEmitterCallback;
+}
+- (void)setEventEmitterCallback:(EventEmitterCallbackWrapper *)eventEmitterCallbackWrapper;
+
+
+@end
+
 namespace facebook::react {
   /**
    * ObjC++ class for module 'NativePlaybackSettingsModule'
@@ -291,7 +351,7 @@ namespace facebook::react {
                     target:(NSString *)target;
 - (void)setKeepScreenOn:(NSInteger)tag
            keepScreenOn:(BOOL)keepScreenOn;
-- (void)setPaused:(NSInteger)tag
+- (void)setPaused:(double)tag
            paused:(BOOL)paused;
 - (void)setTextTrackStyle:(NSInteger)tag
                     style:(NSDictionary *)style;
@@ -299,6 +359,16 @@ namespace facebook::react {
               config:(NSDictionary *)config;
 
 @end
+
+@interface NativePlayerModuleSpecBase : NSObject {
+@protected
+facebook::react::EventEmitterCallback _eventEmitterCallback;
+}
+- (void)setEventEmitterCallback:(EventEmitterCallbackWrapper *)eventEmitterCallbackWrapper;
+
+
+@end
+
 namespace facebook::react {
   /**
    * ObjC++ class for module 'NativePlayerModule'
