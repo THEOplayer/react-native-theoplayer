@@ -160,6 +160,25 @@
     }
   },
   {
+    "name": "THEOlive test",
+    "os": [
+      "web", "ios", "android"
+    ],
+    "source": {
+      "sources": [
+        {
+          "integration": "theolive",
+          "src": "9lwkudxeyjwwm132pukwwhhtk"
+        }
+      ],
+      "metadata": {
+        "title": "THEOlive NFL demo - test",
+        "mediaUri": "https://theoplayer.com",
+        "artist": "THEOplayer"
+      }
+    }
+  },
+  {
     "name": "HLS - VOD - Clear - DateRange Metadata",
     "os": ["ios", "web", "android"],
     "source": {

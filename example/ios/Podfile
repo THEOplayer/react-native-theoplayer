@@ -29,7 +29,6 @@ target 'ReactNativeTHEOplayer' do
 
   pod 'react-native-theoplayer', :path => '../..'
   pod 'react-native-google-cast', :git => 'https://github.com/Danesz/react-native-google-cast.git', branch: 'feature/guestmode_apple_silicon'
-  pod 'react-native-slider', :path => '../node_modules/@react-native-community/slider'
 
   target 'ReactNativeTHEOplayerTests' do
     inherit! :complete
