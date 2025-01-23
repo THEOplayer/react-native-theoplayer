@@ -38,7 +38,7 @@ export interface Spec extends TurboModule {
 
   setKeepScreenOn(tag: Int32, keepScreenOn: boolean): void;
 
-  setPaused(tag: Int32, paused: boolean): void;
+  setPaused(tag: Double, paused: boolean): void;
 
   setTextTrackStyle(tag: Int32, style: Object): void;
 
