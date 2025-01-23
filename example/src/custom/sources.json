@@ -193,17 +193,17 @@
     }
   },
   {
-    "name": "HLS - LIVE - Clear - TOS",
+    "name": "HLS - LIVE - Clear",
     "os": ["ios", "android", "web"],
     "source": {
       "sources": {
-        "src": "https://cph-msl.akamaized.net/hls/live/2000341/test/master.m3u8",
+        "src": "https://ireplay.tv/test/blender.m3u8",
         "type": "application/x-mpegurl"
       },
       "poster": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-640x640.png",
       "metadata": {
-        "title": "Tears of Steel",
-        "subtitle": "Steel Tears",
+        "title": "Blender",
+        "subtitle": "Test stream",
         "album": "React-Native demos",
         "displayIconUri": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
         "artist": "THEOplayer",
