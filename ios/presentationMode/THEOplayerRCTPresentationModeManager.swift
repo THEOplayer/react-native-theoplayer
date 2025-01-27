@@ -11,7 +11,6 @@ public class THEOplayerRCTPresentationModeManager {
     var presentationModeContext = THEOplayerRCTPresentationModeContext()
     private var presentationMode: THEOplayerSDK.PresentationMode = .inline
     private var rnInlineMode: THEOplayerSDK.PresentationMode = .inline // while native player is inline, RN player can be inline or fullsceen
-    private var movingChildVCs: [UIViewController] = []  // list of playerView's child VCs that need to be reparented while moving the playerView
 
   
     private weak var containerView: UIView?                  // view containing the playerView and it's siblings (e.g. UI)
@@ -27,7 +26,6 @@ public class THEOplayerRCTPresentationModeManager {
     func destroy() {
         // dettach listeners
         self.dettachListeners()
-        self.clearMovingVCs()
     }
     
     // MARK: - player setup / breakdown
@@ -40,21 +38,22 @@ public class THEOplayerRCTPresentationModeManager {
     }
     
     // MARK: - logic
-    private func storeMovingVCs(for view: UIView) {
+    private func movingVCs(for view: UIView) -> [UIViewController] {
+        var viewControllers: [UIViewController] = []
         if let viewController = view.findViewController() {
             viewController.children.forEach { childVC in
-                self.movingChildVCs.append(childVC)
+                if childVC.view.isDescendant(of: view) {
+                    viewControllers.append(childVC)
+                }
             }
         }
-    }
-      
-    private func clearMovingVCs() {
-        self.movingChildVCs = []
+        return viewControllers
     }
 
     private func moveView(_ movingView: UIView, to targetView: UIView) {
         // detach the moving viewControllers from their parent
-        self.movingChildVCs.forEach { movedVC in
+        let movingViewControllers = self.movingVCs(for: movingView)
+        movingViewControllers.forEach { movedVC in
             movedVC.removeFromParent()
         }
         
@@ -65,7 +64,7 @@ public class THEOplayerRCTPresentationModeManager {
         
         // attach the moving viewControllers to their new parent
         if let targetViewController = targetView.findViewController() {
-            self.movingChildVCs.forEach { movedVC in
+            movingViewControllers.forEach { movedVC in
                 targetViewController.addChild(movedVC)
                 movedVC.didMove(toParent: targetViewController)
             }
@@ -73,13 +72,12 @@ public class THEOplayerRCTPresentationModeManager {
     }
     
     private func enterFullscreen() {
-        self.containerView = self.view?.findParentViewOfType(RCTView.self)
-        self.inlineParentView = self.containerView?.findParentViewOfType(RCTView.self)
+        self.containerView = self.view?.findParentViewOfType(["RCTView", "RCTViewComponentView"])
+        self.inlineParentView = self.containerView?.superview
         
         // move the player
         if let containerView = self.containerView,
-           let fullscreenParentView = self.view?.findParentViewOfType(RCTRootContentView.self) {
-            self.storeMovingVCs(for: containerView)
+           let fullscreenParentView = self.view?.findParentViewOfType(["RCTRootContentView", "RCTRootComponentView"])  {
             self.moveView(containerView, to: fullscreenParentView)
 
             // start hiding home indicator
@@ -96,14 +94,13 @@ public class THEOplayerRCTPresentationModeManager {
         if let containerView = self.containerView,
            let inlineParentView = self.inlineParentView {
             self.moveView(containerView, to: inlineParentView)
-            self.clearMovingVCs()
         }
         self.rnInlineMode = .inline
     }
 
     private func setHomeIndicatorHidden(_ hidden: Bool) {
 #if os(iOS)
-        if let fullscreenParentView = self.view?.findParentViewOfType(RCTRootContentView.self),
+        if let fullscreenParentView = self.view?.findParentViewOfType(["RCTRootContentView", "RCTRootComponentView"]),
            let customRootViewController = fullscreenParentView.findViewController() as? HomeIndicatorViewController {
               customRootViewController.prefersAutoHidden = hidden
               customRootViewController.setNeedsUpdateOfHomeIndicatorAutoHidden()
@@ -216,11 +213,14 @@ public class THEOplayerRCTPresentationModeManager {
 
 // UIView extension to look for parent views
 extension UIView {
-    func findParentViewOfType<T: UIView>(_ viewType: T.Type) -> T? {
+    func findParentViewOfType(_ viewTypeNames: [String]) -> UIView? {
         var currentView: UIView? = self
         while let view = currentView {
-            if let parentView = view.superview as? T {
-                return parentView
+            if let parentView = view.superview {
+                let instanceTypeName = String(describing: type(of: parentView))
+                if viewTypeNames.contains(instanceTypeName) {
+                    return parentView
+                }
             }
             currentView = view.superview
         }
