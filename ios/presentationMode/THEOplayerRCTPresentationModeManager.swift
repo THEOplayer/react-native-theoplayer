@@ -74,7 +74,7 @@ public class THEOplayerRCTPresentationModeManager {
     
     private func enterFullscreen() {
         self.containerView = self.view?.findParentViewOfType(RCTView.self)
-        self.inlineParentView = self.containerView?.findParentViewOfType(RCTView.self)
+        self.inlineParentView = self.containerView?.superview
         
         // move the player
         if let containerView = self.containerView,
