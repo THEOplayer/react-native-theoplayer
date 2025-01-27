@@ -43,7 +43,9 @@ public class THEOplayerRCTPresentationModeManager {
     private func storeMovingVCs(for view: UIView) {
         if let viewController = view.findViewController() {
             viewController.children.forEach { childVC in
-                self.movingChildVCs.append(childVC)
+                if childVC.view.isDescendant(of: view) {
+                    viewControllers.append(childVC)
+                }
             }
         }
     }
