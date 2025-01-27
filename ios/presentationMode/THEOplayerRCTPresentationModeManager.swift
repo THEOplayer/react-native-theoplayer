@@ -216,11 +216,14 @@ public class THEOplayerRCTPresentationModeManager {
 
 // UIView extension to look for parent views
 extension UIView {
-    func findParentViewOfType<T: UIView>(_ viewType: T.Type) -> T? {
+    func findParentViewOfType(_ viewTypeNames: [String]) -> UIView? {
         var currentView: UIView? = self
         while let view = currentView {
-            if let parentView = view.superview as? T {
-                return parentView
+            if let parentView = view.superview {
+                let instanceTypeName = String(describing: type(of: parentView))
+                if viewTypeNames.contains(instanceTypeName) {
+                    return parentView
+                }
             }
             currentView = view.superview
         }
