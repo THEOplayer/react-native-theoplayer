@@ -160,6 +160,25 @@
     }
   },
   {
+    "name": "THEOlive test",
+    "os": [
+      "web", "ios", "android"
+    ],
+    "source": {
+      "sources": [
+        {
+          "integration": "theolive",
+          "src": "9lwkudxeyjwwm132pukwwhhtk"
+        }
+      ],
+      "metadata": {
+        "title": "THEOlive NFL demo - test",
+        "mediaUri": "https://theoplayer.com",
+        "artist": "THEOplayer"
+      }
+    }
+  },
+  {
     "name": "HLS - VOD - Clear - DateRange Metadata",
     "os": ["ios", "web", "android"],
     "source": {
@@ -174,17 +193,17 @@
     }
   },
   {
-    "name": "HLS - LIVE - Clear - TOS",
+    "name": "HLS - LIVE - Clear",
     "os": ["ios", "android", "web"],
     "source": {
       "sources": {
-        "src": "https://cph-msl.akamaized.net/hls/live/2000341/test/master.m3u8",
+        "src": "https://ireplay.tv/test/blender.m3u8",
         "type": "application/x-mpegurl"
       },
       "poster": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-640x640.png",
       "metadata": {
-        "title": "Tears of Steel",
-        "subtitle": "Steel Tears",
+        "title": "Blender",
+        "subtitle": "Test stream",
         "album": "React-Native demos",
         "displayIconUri": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
         "artist": "THEOplayer",
@@ -364,13 +383,16 @@
   },
   {
     "name": "HLS - SSAI - Google DAI - LIVE",
-    "os": ["ios", "web"],
+    "os": [
+      "ios",
+      "web"
+    ],
     "source": {
       "sources": {
         "ssai": {
           "integration": "google-dai",
           "availabilityType": "live",
-          "assetKey": "c-rArva4ShKVIAkNfy6HUQ"
+          "assetKey": "sN_IYUG8STe1ZzhIIE_ksA"
         }
       }
     }
