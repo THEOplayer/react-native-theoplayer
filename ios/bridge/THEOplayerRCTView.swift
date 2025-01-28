@@ -153,8 +153,10 @@ public class THEOplayerRCTView: UIView {
             // Attach player to view
             player.addAsSubview(of: self)
             
-            player.autoplay = true;
-            player.source = SourceDescription(source: TypedSource(src: "https://cdn.theoplayer.com/video/adultswim/clip.m3u8", type: "application/x-mpegurl"))
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                player.autoplay = true;
+                player.source = SourceDescription(source: TypedSource(src: "https://cdn.theoplayer.com/video/adultswim/clip.m3u8", type: "application/x-mpegurl"))
+            }
         }
     }
     
@@ -227,19 +229,19 @@ public class THEOplayerRCTView: UIView {
     // MARK: - Listener based MAIN event bridging
     
     @objc(setOnNativePlay:)
-    func setOnNativePlay(nativePlay: @escaping RCTDirectEventBlock) {
+    public func setOnNativePlay(nativePlay: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativePlay = nativePlay
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativePlay prop set.") }
     }
     
     @objc(setOnNativePause:)
-    func setOnNativePause(nativePause: @escaping RCTDirectEventBlock) {
+    public func setOnNativePause(nativePause: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativePause = nativePause
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativePause prop set.") }
     }
     
     @objc(setOnNativeSourceChange:)
-    func setOnNativeSourceChange(nativeSourceChange: @escaping RCTDirectEventBlock) {
+    public func setOnNativeSourceChange(nativeSourceChange: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeSourceChange = nativeSourceChange
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeSourceChange prop set.") }
     }
