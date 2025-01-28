@@ -60,7 +60,7 @@ public class THEOplayerRCTPlayerAPI: NSObject {
     }
 
     @objc(setSource:src:)
-    func setSource(_ view: THEOplayerRCTView? = nil, src: NSDictionary) -> Void {
+    public func setSource(_ view: THEOplayerRCTView? = nil, src: NSDictionary) -> Void {
         if let theView = view {
             let (sourceDescription, metadataTrackDescriptions) = THEOplayerRCTSourceDescriptionBuilder.buildSourceDescription(src)
             if let player = theView.player {
