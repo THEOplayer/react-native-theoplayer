@@ -106,14 +106,6 @@ using namespace facebook::react;
     };
 }
 
-+ (THEOplayerRCTViewEventEmitter::OnNativeLoadedMetadata) nativeLoadedMetadataDataFrom:(NSDictionary*) eventData {
-    return THEOplayerRCTViewEventEmitter::OnNativeLoadedMetadata {
-        
-        // TODO
-        
-    };
-}
-
 + (THEOplayerRCTViewEventEmitter::OnNativeResize) nativeResizeDataFrom:(NSDictionary*) eventData {
     NSNumber *width = eventData[@"width"];
     NSNumber *height = eventData[@"height"];
@@ -123,5 +115,68 @@ using namespace facebook::react;
     };
 }
 
++ (THEOplayerRCTViewEventEmitter::OnNativeLoadedMetadata) nativeLoadedMetadataDataFrom:(NSDictionary*) eventData {
+    return THEOplayerRCTViewEventEmitter::OnNativeLoadedMetadata {
+        
+        // TODO
+        
+    };
+}
+
++ (THEOplayerRCTViewEventEmitter::OnNativePresentationModeChange) nativePresentationModeChangeDataFrom:(NSDictionary*) eventData {
+    return THEOplayerRCTViewEventEmitter::OnNativePresentationModeChange {
+        
+        // TODO
+        
+    };
+}
+
++ (THEOplayerRCTViewEventEmitter::OnNativeTextTrackListEvent) nativeTextTrackListEventDataFrom:(NSDictionary*) eventData {
+    return THEOplayerRCTViewEventEmitter::OnNativeTextTrackListEvent {
+        
+        // TODO
+        
+    };
+}
+
++ (THEOplayerRCTViewEventEmitter::OnNativeTextTrackEvent) nativeTextTrackEventDataFrom:(NSDictionary*) eventData {
+    return THEOplayerRCTViewEventEmitter::OnNativeTextTrackEvent {
+        
+        // TODO
+        
+    };
+}
+
++ (THEOplayerRCTViewEventEmitter::OnNativeMediaTrackListEvent) nativeMediaTrackListEventDataFrom:(NSDictionary*) eventData {
+    return THEOplayerRCTViewEventEmitter::OnNativeMediaTrackListEvent {
+        
+        // TODO
+        
+    };
+}
+
++ (THEOplayerRCTViewEventEmitter::OnNativeMediaTrackEvent) nativeMediaTrackEventDataFrom:(NSDictionary*) eventData {
+    return THEOplayerRCTViewEventEmitter::OnNativeMediaTrackEvent {
+        
+        // TODO
+        
+    };
+}
+
++ (THEOplayerRCTViewEventEmitter::OnNativeCastEvent) nativeCastEventDataFrom:(NSDictionary*) eventData {
+    return THEOplayerRCTViewEventEmitter::OnNativeCastEvent {
+        
+        // TODO
+        
+    };
+}
+
++ (THEOplayerRCTViewEventEmitter::OnNativeAdEvent) nativeAdEventDataFrom:(NSDictionary*) eventData {
+    return THEOplayerRCTViewEventEmitter::OnNativeAdEvent {
+        
+        // TODO
+        
+    };
+}
 
 @end

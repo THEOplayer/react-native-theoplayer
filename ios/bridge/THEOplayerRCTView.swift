@@ -351,7 +351,7 @@ public class THEOplayerRCTView: UIView {
     // MARK: - Listener based PRESENTATIONMODE event bridging
     
     @objc(setOnNativePresentationModeChange:)
-    func setOnNativePresentationModeChange(nativePresentationMode: @escaping RCTDirectEventBlock) {
+    public func setOnNativePresentationModeChange(nativePresentationMode: @escaping RCTDirectEventBlock) {
         self.presentationModeManager.onNativePresentationModeChange = nativePresentationMode
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativePresentationMode prop set.") }
     }
@@ -359,13 +359,13 @@ public class THEOplayerRCTView: UIView {
     // MARK: - Listener based TEXTTRACK event bridging
     
     @objc(setOnNativeTextTrackListEvent:)
-    func setOnNativeTextTrackListEvent(nativeTextTrackListEvent: @escaping RCTDirectEventBlock) {
+    public func setOnNativeTextTrackListEvent(nativeTextTrackListEvent: @escaping RCTDirectEventBlock) {
         self.textTrackEventHandler.onNativeTextTrackListEvent = nativeTextTrackListEvent
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeTextTrackListEvent prop set.") }
     }
     
     @objc(setOnNativeTextTrackEvent:)
-    func setOnNativeTextTrackEvent(nativeTextTrackEvent: @escaping RCTDirectEventBlock) {
+    public func setOnNativeTextTrackEvent(nativeTextTrackEvent: @escaping RCTDirectEventBlock) {
         self.textTrackEventHandler.onNativeTextTrackEvent = nativeTextTrackEvent
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeTextTrackEvent prop set.") }
     }
@@ -373,13 +373,13 @@ public class THEOplayerRCTView: UIView {
     // MARK: - Listener based MEDIATRACK event bridging
     
     @objc(setOnNativeMediaTrackListEvent:)
-    func setOnNativeMediaTrackListEvent(nativeMediaTrackListEvent: @escaping RCTDirectEventBlock) {
+    public func setOnNativeMediaTrackListEvent(nativeMediaTrackListEvent: @escaping RCTDirectEventBlock) {
         self.mediaTrackEventHandler.onNativeMediaTrackListEvent = nativeMediaTrackListEvent
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeMediaTrackListEvent prop set.") }
     }
     
     @objc(setOnNativeMediaTrackEvent:)
-    func setOnNativeMediaTrackEvent(nativeMediaTrackEvent: @escaping RCTDirectEventBlock) {
+    public func setOnNativeMediaTrackEvent(nativeMediaTrackEvent: @escaping RCTDirectEventBlock) {
         self.mediaTrackEventHandler.onNativeMediaTrackEvent = nativeMediaTrackEvent
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeMediaTrackEvent prop set.") }
     }
@@ -387,7 +387,7 @@ public class THEOplayerRCTView: UIView {
     // MARK: - Listener based CAST event bridging
     
     @objc(setOnNativeCastEvent:)
-    func setOnNativeCastEvent(nativeCastEvent: @escaping RCTDirectEventBlock) {
+    public func setOnNativeCastEvent(nativeCastEvent: @escaping RCTDirectEventBlock) {
         self.castEventHandler.onNativeCastEvent = nativeCastEvent
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeCastEvent prop set.") }
     }
@@ -395,7 +395,7 @@ public class THEOplayerRCTView: UIView {
     // MARK: - Listener based AD event bridging
     
     @objc(setOnNativeAdEvent:)
-    func setOnNativeAdEvent(nativeAdEvent: @escaping RCTDirectEventBlock) {
+    public func setOnNativeAdEvent(nativeAdEvent: @escaping RCTDirectEventBlock) {
         self.adEventHandler.onNativeAdEvent = nativeAdEvent
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeAdEvent prop set.") }
     }

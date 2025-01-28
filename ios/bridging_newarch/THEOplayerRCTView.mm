@@ -49,27 +49,62 @@ using namespace facebook::react;
 
 - (void)attachNativeCallbacks {
     __weak THEOplayerRCTView_objc *weakSelf = self;
-    [_view setOnNativePlay:^(NSDictionary *eventData) { weakSelf.eventEmitter.onNativePlay({}); }];
-    [_view setOnNativePause:^(NSDictionary *eventData) { weakSelf.eventEmitter.onNativePause({}); }];
-    [_view setOnNativeSourceChange:^(NSDictionary *eventData) { weakSelf.eventEmitter.onNativeSourceChange({}); }];
-    [_view setOnNativeLoadStart:^(NSDictionary *eventData) { weakSelf.eventEmitter.onNativeLoadStart({}); }];
-    [_view setOnNativePlaying:^(NSDictionary *eventData) { weakSelf.eventEmitter.onNativePlaying({}); }];
-    [_view setOnNativeSeeking:^(NSDictionary *eventData) { weakSelf.eventEmitter.onNativeSeeking({}); }];
-    [_view setOnNativeSeeked:^(NSDictionary *eventData) { weakSelf.eventEmitter.onNativeSeeked({}); }];
-    [_view setOnNativeEnded:^(NSDictionary *eventData) { weakSelf.eventEmitter.onNativeEnded({}); }];
-    [_view setOnNativeLoadedData:^(NSDictionary *eventData) { weakSelf.eventEmitter.onNativeLoadedData({}); }];
-    [_view setOnNativeWaiting:^(NSDictionary *eventData) { weakSelf.eventEmitter.onNativeWaiting({}); }];
-    [_view setOnNativeCanPlay:^(NSDictionary *eventData) { weakSelf.eventEmitter.onNativeCanPlay({}); }];
-    [_view setOnNativePlayerReady:^(NSDictionary *eventData) { weakSelf.eventEmitter.onNativePlayerReady([THEORCTTypeUtils nativePlayerReadyDataFrom:eventData]); }];
-    [_view setOnNativeReadyStateChange:^(NSDictionary *eventData) { weakSelf.eventEmitter.onNativeReadyStateChange([THEORCTTypeUtils nativeReadyStateChangeDataFrom:eventData]); }];
-    [_view setOnNativeDurationChange:^(NSDictionary *eventData) { weakSelf.eventEmitter.onNativeDurationChange([THEORCTTypeUtils nativeDurationChangeDataFrom:eventData]); }];
-    [_view setOnNativeVolumeChange:^(NSDictionary *eventData) { weakSelf.eventEmitter.onNativeVolumeChange([THEORCTTypeUtils nativeVolumeChangeDataFrom:eventData]); }];
-    [_view setOnNativeProgress:^(NSDictionary *eventData) { weakSelf.eventEmitter.onNativeProgress([THEORCTTypeUtils nativeProgressDataFrom:eventData]); }];
-    [_view setOnNativeTimeUpdate:^(NSDictionary *eventData) { weakSelf.eventEmitter.onNativeTimeUpdate([THEORCTTypeUtils nativeTimeUpdateDataFrom:eventData]); }];
-    [_view setOnNativeError:^(NSDictionary *eventData) { weakSelf.eventEmitter.onNativeError([THEORCTTypeUtils nativeErrorDataFrom:eventData]); }];
-    [_view setOnNativeRateChange:^(NSDictionary *eventData) { weakSelf.eventEmitter.onNativeRateChange([THEORCTTypeUtils nativeRateChangeDataFrom:eventData]); }];
-    [_view setOnNativeLoadedMetadata:^(NSDictionary *eventData) { weakSelf.eventEmitter.onNativeLoadedMetadata([THEORCTTypeUtils nativeLoadedMetadataDataFrom:eventData]); }];
-    [_view setOnNativeResize:^(NSDictionary *eventData) { weakSelf.eventEmitter.onNativeResize([THEORCTTypeUtils nativeResizeDataFrom:eventData]); }];
+    [_view setOnNativePlay:^(NSDictionary *eventData) {
+        weakSelf.eventEmitter.onNativePlay({}); }];
+    [_view setOnNativePause:^(NSDictionary *eventData) {
+        weakSelf.eventEmitter.onNativePause({}); }];
+    [_view setOnNativeSourceChange:^(NSDictionary *eventData) {
+        weakSelf.eventEmitter.onNativeSourceChange({}); }];
+    [_view setOnNativeLoadStart:^(NSDictionary *eventData) {
+        weakSelf.eventEmitter.onNativeLoadStart({}); }];
+    [_view setOnNativePlaying:^(NSDictionary *eventData) {
+        weakSelf.eventEmitter.onNativePlaying({}); }];
+    [_view setOnNativeSeeking:^(NSDictionary *eventData) {
+        weakSelf.eventEmitter.onNativeSeeking({}); }];
+    [_view setOnNativeSeeked:^(NSDictionary *eventData) {
+        weakSelf.eventEmitter.onNativeSeeked({}); }];
+    [_view setOnNativeEnded:^(NSDictionary *eventData) {
+        weakSelf.eventEmitter.onNativeEnded({}); }];
+    [_view setOnNativeLoadedData:^(NSDictionary *eventData) {
+        weakSelf.eventEmitter.onNativeLoadedData({}); }];
+    [_view setOnNativeWaiting:^(NSDictionary *eventData) {
+        weakSelf.eventEmitter.onNativeWaiting({}); }];
+    [_view setOnNativeCanPlay:^(NSDictionary *eventData) {
+        weakSelf.eventEmitter.onNativeCanPlay({}); }];
+    [_view setOnNativePlayerReady:^(NSDictionary *eventData) {
+        weakSelf.eventEmitter.onNativePlayerReady([THEORCTTypeUtils nativePlayerReadyDataFrom:eventData]); }];
+    [_view setOnNativeReadyStateChange:^(NSDictionary *eventData) {
+        weakSelf.eventEmitter.onNativeReadyStateChange([THEORCTTypeUtils nativeReadyStateChangeDataFrom:eventData]); }];
+    [_view setOnNativeDurationChange:^(NSDictionary *eventData) {
+        weakSelf.eventEmitter.onNativeDurationChange([THEORCTTypeUtils nativeDurationChangeDataFrom:eventData]); }];
+    [_view setOnNativeVolumeChange:^(NSDictionary *eventData) {
+        weakSelf.eventEmitter.onNativeVolumeChange([THEORCTTypeUtils nativeVolumeChangeDataFrom:eventData]); }];
+    [_view setOnNativeProgress:^(NSDictionary *eventData) {
+        weakSelf.eventEmitter.onNativeProgress([THEORCTTypeUtils nativeProgressDataFrom:eventData]); }];
+    [_view setOnNativeTimeUpdate:^(NSDictionary *eventData) {
+        weakSelf.eventEmitter.onNativeTimeUpdate([THEORCTTypeUtils nativeTimeUpdateDataFrom:eventData]); }];
+    [_view setOnNativeError:^(NSDictionary *eventData) {
+        weakSelf.eventEmitter.onNativeError([THEORCTTypeUtils nativeErrorDataFrom:eventData]); }];
+    [_view setOnNativeRateChange:^(NSDictionary *eventData) {
+        weakSelf.eventEmitter.onNativeRateChange([THEORCTTypeUtils nativeRateChangeDataFrom:eventData]); }];
+    [_view setOnNativeLoadedMetadata:^(NSDictionary *eventData) {
+        weakSelf.eventEmitter.onNativeLoadedMetadata([THEORCTTypeUtils nativeLoadedMetadataDataFrom:eventData]); }];
+    [_view setOnNativeResize:^(NSDictionary *eventData) {
+        weakSelf.eventEmitter.onNativeResize([THEORCTTypeUtils nativeResizeDataFrom:eventData]); }];
+    [_view setOnNativePresentationModeChange:^(NSDictionary *eventData) {
+        weakSelf.eventEmitter.onNativePresentationModeChange([THEORCTTypeUtils nativePresentationModeChangeDataFrom:eventData]); }];
+    [_view setOnNativeTextTrackListEvent:^(NSDictionary *eventData) {
+        weakSelf.eventEmitter.onNativeTextTrackListEvent([THEORCTTypeUtils nativeTextTrackListEventDataFrom:eventData]); }];
+    [_view setOnNativeTextTrackEvent:^(NSDictionary *eventData) {
+        weakSelf.eventEmitter.onNativeTextTrackEvent([THEORCTTypeUtils nativeTextTrackEventDataFrom:eventData]); }];
+    [_view setOnNativeMediaTrackListEvent:^(NSDictionary *eventData) {
+        weakSelf.eventEmitter.onNativeMediaTrackListEvent([THEORCTTypeUtils nativeMediaTrackListEventDataFrom:eventData]); }];
+    [_view setOnNativeMediaTrackEvent:^(NSDictionary *eventData) {
+        weakSelf.eventEmitter.onNativeMediaTrackEvent([THEORCTTypeUtils nativeMediaTrackEventDataFrom:eventData]); }];
+    [_view setOnNativeCastEvent:^(NSDictionary *eventData) {
+        weakSelf.eventEmitter.onNativeCastEvent([THEORCTTypeUtils nativeCastEventDataFrom:eventData]); }];
+    [_view setOnNativeAdEvent:^(NSDictionary *eventData) {
+        weakSelf.eventEmitter.onNativeAdEvent([THEORCTTypeUtils nativeAdEventDataFrom:eventData]); }];
 }
 
 // New arch specific
