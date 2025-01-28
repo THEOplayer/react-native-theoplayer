@@ -22,7 +22,7 @@ import {
   TimeLabel,
   UiContainer,
 } from '@theoplayer/react-native-ui';
-import { PlayerConfiguration, PlayerEventType, THEOplayer, THEOplayerView, sdkVersions } from 'react-native-theoplayer';
+import { PlayerConfiguration, PlayerEventType, THEOplayer, THEOplayerView, sdkVersions, Event } from 'react-native-theoplayer';
 
 import { Platform, SafeAreaView, StyleSheet, View, ViewStyle } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
@@ -64,19 +64,33 @@ const playerConfig: PlayerConfiguration = {
  */
 export default function App() {
   const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);
+
+  const logEvent = (e: Event<PlayerEventType>) => {
+    console.log(`[EVENT] ${e.type.toUpperCase()}: `, e);
+  };
+
   const onPlayerReady = (player: THEOplayer) => {
     setPlayer(player);
     // optional debug logs
-    player.addEventListener(PlayerEventType.SOURCE_CHANGE, console.log);
-    player.addEventListener(PlayerEventType.LOADED_DATA, console.log);
-    player.addEventListener(PlayerEventType.LOADED_METADATA, console.log);
-    player.addEventListener(PlayerEventType.READYSTATE_CHANGE, console.log);
-    player.addEventListener(PlayerEventType.PLAY, console.log);
-    player.addEventListener(PlayerEventType.PLAYING, console.log);
-    player.addEventListener(PlayerEventType.PAUSE, console.log);
-    player.addEventListener(PlayerEventType.SEEKING, console.log);
-    player.addEventListener(PlayerEventType.SEEKED, console.log);
-    player.addEventListener(PlayerEventType.ENDED, console.log);
+    player.addEventListener(PlayerEventType.SOURCE_CHANGE, logEvent);
+    player.addEventListener(PlayerEventType.LOADED_DATA, logEvent);
+    player.addEventListener(PlayerEventType.LOADED_METADATA, logEvent);
+    player.addEventListener(PlayerEventType.READYSTATE_CHANGE, logEvent);
+    player.addEventListener(PlayerEventType.WAITING, logEvent);
+    player.addEventListener(PlayerEventType.CANPLAY, logEvent);
+    player.addEventListener(PlayerEventType.PLAY, logEvent);
+    player.addEventListener(PlayerEventType.PLAYING, logEvent);
+    player.addEventListener(PlayerEventType.PAUSE, logEvent);
+    player.addEventListener(PlayerEventType.SEEKING, logEvent);
+    player.addEventListener(PlayerEventType.SEEKED, logEvent);
+    player.addEventListener(PlayerEventType.ENDED, logEvent);
+    player.addEventListener(PlayerEventType.VOLUME_CHANGE, logEvent);
+    player.addEventListener(PlayerEventType.DURATION_CHANGE, logEvent);
+    player.addEventListener(PlayerEventType.ERROR, logEvent);
+    player.addEventListener(PlayerEventType.RATE_CHANGE, logEvent);
+    player.addEventListener(PlayerEventType.RESIZE, logEvent);
+    //player.addEventListener(PlayerEventType.PROGRESS, logEvent);
+    //player.addEventListener(PlayerEventType.TIME_UPDATE, logEvent);
 
     sdkVersions().then((versions) => console.log(`[theoplayer] ${JSON.stringify(versions, null, 4)}`));
 
