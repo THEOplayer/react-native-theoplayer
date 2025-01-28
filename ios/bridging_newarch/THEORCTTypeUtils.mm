@@ -30,7 +30,7 @@ using namespace facebook::react;
 + (THEOplayerRCTViewEventEmitter::OnNativeReadyStateChange) nativeReadyStateChangeDataFrom:(NSDictionary*) eventData {
     NSNumber *readyState = eventData[@"readyState"];
     return THEOplayerRCTViewEventEmitter::OnNativeReadyStateChange {
-        [readyState intValue]
+        [readyState doubleValue]
     };
 }
 
