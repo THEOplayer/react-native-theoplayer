@@ -1,48 +1,48 @@
 /* eslint-disable @typescript-eslint/no-wrapper-object-types */
 import type { TurboModule } from 'react-native';
 import { TurboModuleRegistry } from 'react-native';
-import { Int32, Double } from 'react-native/Libraries/Types/CodegenTypes';
+import { Double } from 'react-native/Libraries/Types/CodegenTypes';
 
 export interface Spec extends TurboModule {
   version(): Promise<string>;
 
-  setPreload(tag: Int32, type: string): void;
+  setPreload(tag: Double, type: string): void;
 
-  setCurrentTime(tag: Int32, seekTime: Double): void;
+  setCurrentTime(tag: Double, seekTime: Double): void;
 
-  setPipConfig(tag: Int32, config: Object): void;
+  setPipConfig(tag: Double, config: Object): void;
 
-  setBackgroundAudioConfig(tag: Int32, config: Object): void;
+  setBackgroundAudioConfig(tag: Double, config: Object): void;
 
-  setPresentationMode(tag: Int32, mode: string): void;
+  setPresentationMode(tag: Double, mode: string): void;
 
-  setMuted(tag: Int32, muted: boolean): void;
+  setMuted(tag: Double, muted: boolean): void;
 
-  setPlaybackRate(tag: Int32, rate: Double): void;
+  setPlaybackRate(tag: Double, rate: Double): void;
 
-  setSelectedAudioTrack(tag: Int32, trackUid: Int32 | undefined): void;
+  setSelectedAudioTrack(tag: Double, trackUid: Double | undefined): void;
 
-  setSelectedVideoTrack(tag: Int32, trackUid: Int32 | undefined): void;
+  setSelectedVideoTrack(tag: Double, trackUid: Double | undefined): void;
 
-  setSelectedTextTrack(tag: Int32, trackUid: Int32 | undefined): void;
+  setSelectedTextTrack(tag: Double, trackUid: Double | undefined): void;
 
-  setSource(tag: Int32, source: Object): void;
+  setSource(tag: Double, source: Object): void;
 
-  setTargetVideoQuality(tag: Int32, qualities: Int32[]): void;
+  setTargetVideoQuality(tag: Double, qualities: Double[]): void;
 
-  setVolume(tag: Int32, volume: Double): void;
+  setVolume(tag: Double, volume: Double): void;
 
-  setAspectRatio(tag: Int32, ratio: string): void;
+  setAspectRatio(tag: Double, ratio: string): void;
 
-  setRenderingTarget(tag: Int32, target: string): void;
+  setRenderingTarget(tag: Double, target: string): void;
 
-  setKeepScreenOn(tag: Int32, keepScreenOn: boolean): void;
+  setKeepScreenOn(tag: Double, keepScreenOn: boolean): void;
 
   setPaused(tag: Double, paused: boolean): void;
 
-  setTextTrackStyle(tag: Int32, style: Object): void;
+  setTextTrackStyle(tag: Double, style: Object): void;
 
-  setABRConfig(tag: Int32, config: Object): void;
+  setABRConfig(tag: Double, config: Object): void;
 }
 
 // Note: codegen does not like `TurboModuleRegistry?.getEnforcing`

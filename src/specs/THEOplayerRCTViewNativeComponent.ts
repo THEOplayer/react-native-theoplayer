@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 import { ViewProps } from 'react-native';
 import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
-import type { DirectEventHandler, Double, Int32 } from 'react-native/Libraries/Types/CodegenTypes';
+import type { DirectEventHandler, Double } from 'react-native/Libraries/Types/CodegenTypes';
 
 /**
  * Notes:
@@ -14,13 +14,13 @@ import type { DirectEventHandler, Double, Int32 } from 'react-native/Libraries/T
 
 type NativeGoogleImaConfiguration = Readonly<{
   ppid?: string;
-  maxRedirects?: Int32;
+  maxRedirects?: Double;
   // TODO: object type not supported
   // featureFlags?: { [flag: string]: string }
   autoPlayAdBreaks?: boolean;
   sessionID?: string;
   enableDebugMode?: boolean;
-  bitrate?: Int32;
+  bitrate?: Double;
 }>;
 
 type NativeAdsConfiguration = Readonly<{
@@ -73,13 +73,13 @@ export type NativeLoadedMetadataEvent = Readonly<{
       label: string;
       language: string;
       id: string;
-      uid: Int32;
+      uid: Double;
       mode: string;
       type: string;
       cues: Readonly<
         | {
             id: string;
-            uid: Int32;
+            uid: Double;
             startTime: Double;
             endTime: Double;
             content: {};
@@ -93,7 +93,7 @@ export type NativeLoadedMetadataEvent = Readonly<{
   audioTracks: Readonly<
     {
       id: string;
-      uid: Int32;
+      uid: Double;
       kind: string;
       label: string;
       language: string;
@@ -103,7 +103,7 @@ export type NativeLoadedMetadataEvent = Readonly<{
             bandwidth: Double;
             codecs: string;
             id: string;
-            uid: Int32;
+            uid: Double;
             name: string;
             label: string;
             available: boolean;
@@ -116,7 +116,7 @@ export type NativeLoadedMetadataEvent = Readonly<{
           bandwidth: Double;
           codecs: string;
           id: string;
-          uid: Int32;
+          uid: Double;
           name: string;
           label: string;
           available: boolean;
@@ -128,7 +128,7 @@ export type NativeLoadedMetadataEvent = Readonly<{
   videoTracks: Readonly<
     {
       id: string;
-      uid: Int32;
+      uid: Double;
       kind: string;
       label: string;
       language: string;
@@ -138,7 +138,7 @@ export type NativeLoadedMetadataEvent = Readonly<{
             bandwidth: Double;
             codecs: string;
             id: string;
-            uid: Int32;
+            uid: Double;
             name: string;
             label: string;
             available: boolean;
@@ -151,7 +151,7 @@ export type NativeLoadedMetadataEvent = Readonly<{
           bandwidth: Double;
           codecs: string;
           id: string;
-          uid: Int32;
+          uid: Double;
           name: string;
           label: string;
           available: boolean;
@@ -161,13 +161,13 @@ export type NativeLoadedMetadataEvent = Readonly<{
     }[]
   >;
   duration: Double;
-  selectedTextTrack: Int32 | undefined;
-  selectedVideoTrack: Int32 | undefined;
-  selectedAudioTrack: Int32 | undefined;
+  selectedTextTrack: Double | undefined;
+  selectedVideoTrack: Double | undefined;
+  selectedAudioTrack: Double | undefined;
 }>;
 
 export type NativeReadyStateChangeEvent = Readonly<{
-  readyState: Int32;
+  readyState: Double;
 }>;
 
 export type NativeErrorEvent = Readonly<{
@@ -209,11 +209,11 @@ export type NativeRateChangeEvent = Readonly<{
 export type NativeSegmentNotFoundEvent = Readonly<{
   segmentStartTime: Double;
   error: string;
-  retryCount: Int32;
+  retryCount: Double;
 }>;
 
 export type NativeTrackListEvent = Readonly<{
-  type: Int32;
+  type: Double;
 }>;
 
 type EventWithTextTrack = Readonly<{
@@ -222,13 +222,13 @@ type EventWithTextTrack = Readonly<{
     label: string;
     language: string;
     id: string;
-    uid: Int32;
+    uid: Double;
     mode: string;
     type: string;
     cues: Readonly<
       | {
           id: string;
-          uid: Int32;
+          uid: Double;
           startTime: Double;
           endTime: Double;
           content: {};
@@ -243,11 +243,11 @@ type EventWithTextTrack = Readonly<{
 export interface NativeTextTrackListEvent extends NativeTrackListEvent, EventWithTextTrack {}
 
 export type NativeTextTrackEvent = Readonly<{
-  type: Int32;
-  trackUid: Int32;
+  type: Double;
+  trackUid: Double;
   cue: {
     id: string;
-    uid: Int32;
+    uid: Double;
     startTime: Double;
     endTime: Double;
     content: {};
@@ -257,7 +257,7 @@ export type NativeTextTrackEvent = Readonly<{
 type EventWithMediaTrack = Readonly<{
   track: Readonly<{
     id: string;
-    uid: Int32;
+    uid: Double;
     kind: string;
     label: string;
     language: string;
@@ -267,7 +267,7 @@ type EventWithMediaTrack = Readonly<{
           bandwidth: Double;
           codecs: string;
           id: string;
-          uid: Int32;
+          uid: Double;
           name: string;
           label: string;
           available: boolean;
@@ -280,7 +280,7 @@ type EventWithMediaTrack = Readonly<{
         bandwidth: Double;
         codecs: string;
         id: string;
-        uid: Int32;
+        uid: Double;
         name: string;
         label: string;
         available: boolean;
@@ -291,20 +291,20 @@ type EventWithMediaTrack = Readonly<{
 }>;
 
 export interface NativeMediaTrackListEvent extends NativeTrackListEvent, EventWithMediaTrack {
-  trackType: Int32;
+  trackType: Double;
 }
 
 export type NativeMediaTrackEvent = Readonly<{
-  type: Int32;
-  trackType: Int32;
-  trackUid: Int32;
+  type: Double;
+  trackType: Double;
+  trackUid: Double;
   qualities?: Readonly<
     {
       averageBandwidth?: Double;
       bandwidth: Double;
       codecs: string;
       id: string;
-      uid: Int32;
+      uid: Double;
       name: string;
       label: string;
       available: boolean;
