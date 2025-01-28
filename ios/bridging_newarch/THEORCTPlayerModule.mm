@@ -38,92 +38,96 @@ RCT_EXPORT_MODULE(THEORCTPlayerModule)
     resolve([self.playerAPI version]);
 }
 
-- (void)setABRConfig:(NSInteger)tag config:(NSDictionary *)config {
+- (void)setABRConfig:(double)tag config:(NSDictionary *)config {
     
 }
 
 
-- (void)setAspectRatio:(NSInteger)tag ratio:(NSString *)ratio {
+- (void)setAspectRatio:(double)tag ratio:(NSString *)ratio {
     
 }
 
 
-- (void)setBackgroundAudioConfig:(NSInteger)tag config:(NSDictionary *)config {
+- (void)setBackgroundAudioConfig:(double)tag config:(NSDictionary *)config {
     
 }
 
 
-- (void)setCurrentTime:(NSInteger)tag seekTime:(double)seekTime {
+- (void)setCurrentTime:(double)tag seekTime:(double)seekTime {
     
 }
 
 
-- (void)setKeepScreenOn:(NSInteger)tag keepScreenOn:(BOOL)keepScreenOn {
+- (void)setKeepScreenOn:(double)tag keepScreenOn:(BOOL)keepScreenOn {
     
 }
 
 
-- (void)setMuted:(NSInteger)tag muted:(BOOL)muted {
+- (void)setMuted:(double)tag muted:(BOOL)muted {
     
 }
 
 
-- (void)setPipConfig:(NSInteger)tag config:(NSDictionary *)config {
+- (void)setPipConfig:(double)tag config:(NSDictionary *)config {
     
 }
 
 
-- (void)setPlaybackRate:(NSInteger)tag rate:(double)rate {
+- (void)setPlaybackRate:(double)tag rate:(double)rate {
     
 }
 
 
-- (void)setPreload:(NSInteger)tag type:(NSString *)type {
+- (void)setPreload:(double)tag type:(NSString *)type {
     
 }
 
 
-- (void)setPresentationMode:(NSInteger)tag mode:(NSString *)mode {
+- (void)setPresentationMode:(double)tag mode:(NSString *)mode {
     
 }
 
 
-- (void)setRenderingTarget:(NSInteger)tag target:(NSString *)target {
+- (void)setRenderingTarget:(double)tag target:(NSString *)target {
     
 }
 
 
-- (void)setSelectedAudioTrack:(NSInteger)tag trackUid:(NSNumber *)trackUid {
+- (void)setSelectedAudioTrack:(double)tag trackUid:(NSNumber *)trackUid {
     
 }
 
 
-- (void)setSelectedTextTrack:(NSInteger)tag trackUid:(NSNumber *)trackUid {
+- (void)setSelectedTextTrack:(double)tag trackUid:(NSNumber *)trackUid {
     
 }
 
 
-- (void)setSelectedVideoTrack:(NSInteger)tag trackUid:(NSNumber *)trackUid {
+- (void)setSelectedVideoTrack:(double)tag trackUid:(NSNumber *)trackUid {
     
 }
 
 
-- (void)setSource:(NSInteger)tag source:(NSDictionary *)source {
+- (void)setSource:(double)tag source:(NSDictionary *)source {
+    __weak THEORCTPlayerModule_objc *weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        THEOplayerRCTView *theView = [weakSelf viewForTag:[NSNumber numberWithDouble:tag]];
+        [self.playerAPI setSource:theView src:source];
+    });
+}
+
+
+- (void)setTargetVideoQuality:(double)tag qualities:(NSArray *)qualities {
     
 }
 
 
-- (void)setTargetVideoQuality:(NSInteger)tag qualities:(NSArray *)qualities {
+- (void)setTextTrackStyle:(double)tag style:(NSDictionary *)style {
     
 }
 
 
-- (void)setTextTrackStyle:(NSInteger)tag style:(NSDictionary *)style {
-    
-}
-
-
-- (void)setVolume:(NSInteger)tag volume:(double)volume {
+- (void)setVolume:(double)tag volume:(double)volume {
     
 }
 
