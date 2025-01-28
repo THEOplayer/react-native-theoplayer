@@ -1,21 +1,21 @@
 import { TurboModule } from 'react-native';
 import { TurboModuleRegistry } from 'react-native';
 import { type Ad, AdBreak } from 'react-native-theoplayer';
-import { Int32, Double } from 'react-native/Libraries/Types/CodegenTypes';
+import { Double } from 'react-native/Libraries/Types/CodegenTypes';
 
 export interface Spec extends TurboModule {
-  playing(tag: Int32): Promise<boolean>;
+  playing(tag: Double): Promise<boolean>;
 
-  skip(tag: Int32): void;
+  skip(tag: Double): void;
 
-  currentAdBreak(tag: Int32): Promise<AdBreak>;
+  currentAdBreak(tag: Double): Promise<AdBreak>;
 
-  currentAds(tag: Int32): Promise<Ad[]>;
+  currentAds(tag: Double): Promise<Ad[]>;
 
-  scheduledAdBreaks(tag: Int32): Promise<AdBreak[]>;
+  scheduledAdBreaks(tag: Double): Promise<AdBreak[]>;
 
   schedule(
-    tag: Int32,
+    tag: Double,
     ad: {
       integration?: string;
       sources?: {
@@ -28,26 +28,26 @@ export interface Spec extends TurboModule {
 
   /* GoogleDAI API */
 
-  daiContentTimeForStreamTime(tag: Int32, time: Double): Promise<Double>;
+  daiContentTimeForStreamTime(tag: Double, time: Double): Promise<Double>;
 
-  daiStreamTimeForContentTime(tag: Int32, time: Double): Promise<Double>;
+  daiStreamTimeForContentTime(tag: Double, time: Double): Promise<Double>;
 
-  daiSnapback(tag: Int32): Promise<boolean>;
+  daiSnapback(tag: Double): Promise<boolean>;
 
-  daiSetSnapback(tag: Int32, enabled: boolean): void;
+  daiSetSnapback(tag: Double, enabled: boolean): void;
 
   /* Omid API */
 
   addFriendlyObstruction(
-    tag: Int32,
+    tag: Double,
     obstruction: {
-      view: Int32;
+      view: Double;
       purpose: string;
       reason?: string;
     },
   ): void;
 
-  removeAllFriendlyObstructions(tag: Int32): void;
+  removeAllFriendlyObstructions(tag: Double): void;
 }
 
 // Note: codegen does not like `TurboModuleRegistry?.getEnforcing`
