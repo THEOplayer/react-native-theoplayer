@@ -152,11 +152,6 @@ public class THEOplayerRCTView: UIView {
             self.pipManager.setView(view: self)
             // Attach player to view
             player.addAsSubview(of: self)
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                player.autoplay = true;
-                player.source = SourceDescription(source: TypedSource(src: "https://cdn.theoplayer.com/video/adultswim/clip.m3u8", type: "application/x-mpegurl"))
-            }
         }
     }
     
