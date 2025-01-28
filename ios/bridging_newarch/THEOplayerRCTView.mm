@@ -1,8 +1,6 @@
 #import "THEOplayerRCTView.h"
-
+#import "THEORCTTypeUtils.h"
 #import "../newarch/rntheo/ComponentDescriptors.h"
-#import "../newarch/rntheo/EventEmitters.h"
-#import "../newarch/rntheo/Props.h"
 #import "../newarch/rntheo/RCTComponentViewHelpers.h"
 
 #import "RCTFabricComponentsPlugins.h"
@@ -27,14 +25,18 @@ using namespace facebook::react;
         static const auto defaultProps = std::make_shared<const THEOplayerRCTViewProps>();
         _props = defaultProps;
         
+        // create theoplayer view
         _view = [[THEOplayerRCTView alloc] init];
+        self.contentView = _view;
         
+        // setup callbacks
         __weak THEOplayerRCTView_objc *weakSelf = self;
         [_view setOnNativePlayerReady:^(NSDictionary *eventData) {
-            [weakSelf onNativePlayerReady:eventData];
+            weakSelf.eventEmitter.onNativePlayerReady([THEORCTTypeUtils nativePlayerReadyDataFrom:eventData]);
         }];
-        
-        self.contentView = _view;
+        [_view setOnNativePlay:^(NSDictionary *eventData) { weakSelf.eventEmitter.onNativePlay({}); }];
+        [_view setOnNativePause:^(NSDictionary *eventData) { weakSelf.eventEmitter.onNativePause({}); }];
+        [_view setOnNativeSourceChange:^(NSDictionary *eventData) { weakSelf.eventEmitter.onNativeSourceChange({}); }];
     }
     
     return self;
@@ -45,13 +47,7 @@ using namespace facebook::react;
     const auto &newViewProps = *std::static_pointer_cast<THEOplayerRCTViewProps const>(props);
     
     if (oldViewProps.config.license != newViewProps.config.license) {
-        THEOplayerRCTViewConfigStruct newConfig = newViewProps.config;
-        [_view setConfig: @{
-            @"license": @(newConfig.license.c_str()),
-            @"licenseUrl": @(newConfig.licenseUrl.c_str()),
-            @"chromeless": @(newConfig.chromeless),
-            @"hlsDateRange": @(newConfig.hlsDateRange),
-        }];
+        [_view setConfig: [THEORCTTypeUtils configFrom: newViewProps.config]];
     }
     
     [super updateProps:props oldProps:oldProps];
@@ -64,21 +60,6 @@ Class<RCTComponentViewProtocol> THEOplayerRCTViewCls(void) {
 // Event emitter convenience method
 - (const THEOplayerRCTViewEventEmitter &)eventEmitter {
     return static_cast<const THEOplayerRCTViewEventEmitter &>(*_eventEmitter);
-}
-
-- (void)onNativePlayerReady:(NSDictionary*) eventData {
-    NSDictionary *versionDict = eventData[@"version"];
-    NSString *version = versionDict[@"version"];
-    NSString *playerSuiteVersion = versionDict[@"playerSuiteVersion"];
-    THEOplayerRCTViewEventEmitter::OnNativePlayerReady responseData = THEOplayerRCTViewEventEmitter::OnNativePlayerReady{
-        THEOplayerRCTViewEventEmitter::OnNativePlayerReadyVersion{
-            [version UTF8String],
-            [playerSuiteVersion UTF8String]
-        },
-        THEOplayerRCTViewEventEmitter::OnNativePlayerReadyState{ }
-    };
-    
-    self.eventEmitter.onNativePlayerReady(responseData);
 }
 
 @end
