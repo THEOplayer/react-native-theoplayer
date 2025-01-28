@@ -247,103 +247,103 @@ public class THEOplayerRCTView: UIView {
     }
     
     @objc(setOnNativeLoadStart:)
-    func setOnNativeLoadStart(nativeLoadStart: @escaping RCTDirectEventBlock) {
+    public func setOnNativeLoadStart(nativeLoadStart: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeLoadStart = nativeLoadStart
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeLoadStart prop set.") }
     }
     
     @objc(setOnNativeReadyStateChange:)
-    func setOnNativeReadyStateChange(nativeReadyStateChange: @escaping RCTDirectEventBlock) {
+    public func setOnNativeReadyStateChange(nativeReadyStateChange: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeReadyStateChange = nativeReadyStateChange
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeReadyStateChange prop set.") }
     }
     
     @objc(setOnNativeDurationChange:)
-    func setOnNativeDurationChange(nativeDurationChange: @escaping RCTDirectEventBlock) {
+    public func setOnNativeDurationChange(nativeDurationChange: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeDurationChange = nativeDurationChange
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeDurationChange prop set.") }
     }
     
     @objc(setOnNativeVolumeChange:)
-    func setOnNativeVolumeChange(nativeVolumeChange: @escaping RCTDirectEventBlock) {
+    public func setOnNativeVolumeChange(nativeVolumeChange: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeVolumeChange = nativeVolumeChange
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeVolumeChange prop set.") }
     }
     
     @objc(setOnNativeProgress:)
-    func setOnNativeProgress(nativeProgress: @escaping RCTDirectEventBlock) {
+    public func setOnNativeProgress(nativeProgress: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeProgress = nativeProgress
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeProgress prop set.") }
     }
     
     @objc(setOnNativeTimeUpdate:)
-    func setOnNativeTimeUpdate(nativeTimeUpdate: @escaping RCTDirectEventBlock) {
+    public func setOnNativeTimeUpdate(nativeTimeUpdate: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeTimeUpdate = nativeTimeUpdate
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeTimeUpdate prop set.") }
     }
     
     @objc(setOnNativePlaying:)
-    func setOnNativePlaying(nativePlaying: @escaping RCTDirectEventBlock) {
+    public func setOnNativePlaying(nativePlaying: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativePlaying = nativePlaying
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativePlaying prop set.") }
     }
     
     @objc(setOnNativeSeeking:)
-    func setOnNativeSeeking(nativeSeeking: @escaping RCTDirectEventBlock) {
+    public func setOnNativeSeeking(nativeSeeking: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeSeeking = nativeSeeking
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeSeeking prop set.") }
     }
     
     @objc(setOnNativeSeeked:)
-    func setOnNativeSeeked(nativeSeeked: @escaping RCTDirectEventBlock) {
+    public func setOnNativeSeeked(nativeSeeked: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeSeeked = nativeSeeked
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeSeeked prop set.") }
     }
     
     @objc(setOnNativeEnded:)
-    func setOnNativeEnded(nativeEnded: @escaping RCTDirectEventBlock) {
+    public func setOnNativeEnded(nativeEnded: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeEnded = nativeEnded
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeEnded prop set.") }
     }
     
     @objc(setOnNativeError:)
-    func setOnNativeError(nativeError: @escaping RCTDirectEventBlock) {
+    public func setOnNativeError(nativeError: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeError = nativeError
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeError prop set.") }
     }
     
     @objc(setOnNativeLoadedData:)
-    func setOnNativeLoadedData(nativeLoadedData: @escaping RCTDirectEventBlock) {
+    public func setOnNativeLoadedData(nativeLoadedData: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeLoadedData = nativeLoadedData
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeLoadedData prop set.") }
     }
     
     @objc(setOnNativeRateChange:)
-    func setOnNativeRateChange(nativeRateChange: @escaping RCTDirectEventBlock) {
+    public func setOnNativeRateChange(nativeRateChange: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeRateChange = nativeRateChange
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeRateChange prop set.") }
     }
     
     @objc(setOnNativeLoadedMetadata:)
-    func setOnNativeLoadedMetadata(nativeLoadedMetadata: @escaping RCTDirectEventBlock) {
+    public func setOnNativeLoadedMetadata(nativeLoadedMetadata: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeLoadedMetadata = nativeLoadedMetadata
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeLoadedMetadata prop set.") }
     }
     
     @objc(setOnNativeWaiting:)
-    func setOnNativeWaiting(nativeWaiting: @escaping RCTDirectEventBlock) {
+    public func setOnNativeWaiting(nativeWaiting: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeWaiting = nativeWaiting
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeWaiting prop set.") }
     }
     
     @objc(setOnNativeCanPlay:)
-    func setOnNativeCanPlay(nativeCanPlay: @escaping RCTDirectEventBlock) {
+    public func setOnNativeCanPlay(nativeCanPlay: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeCanPlay = nativeCanPlay
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeCanPlay prop set.") }
     }
     
     @objc(setOnNativeResize:)
-    func setOnNativeResize(nativeResize: @escaping RCTDirectEventBlock) {
+    public func setOnNativeResize(nativeResize: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeResize = nativeResize
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeResize prop set.") }
     }
