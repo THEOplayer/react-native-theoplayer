@@ -65,13 +65,29 @@ const playerConfig: PlayerConfiguration = {
 export default function App() {
   const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);
 
+  const onPlayerReady = (player: THEOplayer) => {
+    // set player
+    setPlayer(player);
+    attachListeners(player);
+
+    // print versions
+    sdkVersions().then((versions) => console.log(`[theoplayer] ${JSON.stringify(versions, null, 4)}`));
+
+    // set source
+    player.source = SOURCES[0].source;
+
+    // configure features
+    player.backgroundAudioConfiguration = { enabled: true, shouldResumeAfterInterruption: true };
+    player.pipConfiguration = { startsAutomatically: true };
+
+    console.log('THEOplayer is ready');
+  };
+
   const logEvent = (e: Event<PlayerEventType>) => {
     console.log(`[EVENT] ${e.type.toUpperCase()}: `, e);
   };
 
-  const onPlayerReady = (player: THEOplayer) => {
-    setPlayer(player);
-    // optional debug logs
+  const attachListeners = (player: THEOplayer) => {
     player.addEventListener(PlayerEventType.SOURCE_CHANGE, logEvent);
     player.addEventListener(PlayerEventType.LOADED_DATA, logEvent);
     player.addEventListener(PlayerEventType.LOADED_METADATA, logEvent);
@@ -89,17 +105,15 @@ export default function App() {
     player.addEventListener(PlayerEventType.ERROR, logEvent);
     player.addEventListener(PlayerEventType.RATE_CHANGE, logEvent);
     player.addEventListener(PlayerEventType.RESIZE, logEvent);
+    player.addEventListener(PlayerEventType.PRESENTATIONMODE_CHANGE, logEvent);
+    player.addEventListener(PlayerEventType.TEXT_TRACK_LIST, logEvent);
+    player.addEventListener(PlayerEventType.TEXT_TRACK, logEvent);
+    player.addEventListener(PlayerEventType.MEDIA_TRACK_LIST, logEvent);
+    player.addEventListener(PlayerEventType.MEDIA_TRACK, logEvent);
+    player.addEventListener(PlayerEventType.CAST_EVENT, logEvent);
+    player.addEventListener(PlayerEventType.AD_EVENT, logEvent);
     //player.addEventListener(PlayerEventType.PROGRESS, logEvent);
     //player.addEventListener(PlayerEventType.TIME_UPDATE, logEvent);
-
-    sdkVersions().then((versions) => console.log(`[theoplayer] ${JSON.stringify(versions, null, 4)}`));
-
-    player.source = SOURCES[0].source;
-
-    player.backgroundAudioConfiguration = { enabled: true, shouldResumeAfterInterruption: true };
-    player.pipConfiguration = { startsAutomatically: true };
-
-    console.log('THEOplayer is ready');
   };
 
   const needsBorder = Platform.OS === 'ios';
