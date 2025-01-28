@@ -20,18 +20,18 @@ protected:
   NativeAdsModuleCxxSpecJSI(std::shared_ptr<CallInvoker> jsInvoker);
 
 public:
-  virtual jsi::Value playing(jsi::Runtime &rt, int tag) = 0;
-  virtual void skip(jsi::Runtime &rt, int tag) = 0;
-  virtual jsi::Value currentAdBreak(jsi::Runtime &rt, int tag) = 0;
-  virtual jsi::Value currentAds(jsi::Runtime &rt, int tag) = 0;
-  virtual jsi::Value scheduledAdBreaks(jsi::Runtime &rt, int tag) = 0;
-  virtual void schedule(jsi::Runtime &rt, int tag, jsi::Object ad) = 0;
-  virtual jsi::Value daiContentTimeForStreamTime(jsi::Runtime &rt, int tag, double time) = 0;
-  virtual jsi::Value daiStreamTimeForContentTime(jsi::Runtime &rt, int tag, double time) = 0;
-  virtual jsi::Value daiSnapback(jsi::Runtime &rt, int tag) = 0;
-  virtual void daiSetSnapback(jsi::Runtime &rt, int tag, bool enabled) = 0;
-  virtual void addFriendlyObstruction(jsi::Runtime &rt, int tag, jsi::Object obstruction) = 0;
-  virtual void removeAllFriendlyObstructions(jsi::Runtime &rt, int tag) = 0;
+  virtual jsi::Value playing(jsi::Runtime &rt, double tag) = 0;
+  virtual void skip(jsi::Runtime &rt, double tag) = 0;
+  virtual jsi::Value currentAdBreak(jsi::Runtime &rt, double tag) = 0;
+  virtual jsi::Value currentAds(jsi::Runtime &rt, double tag) = 0;
+  virtual jsi::Value scheduledAdBreaks(jsi::Runtime &rt, double tag) = 0;
+  virtual void schedule(jsi::Runtime &rt, double tag, jsi::Object ad) = 0;
+  virtual jsi::Value daiContentTimeForStreamTime(jsi::Runtime &rt, double tag, double time) = 0;
+  virtual jsi::Value daiStreamTimeForContentTime(jsi::Runtime &rt, double tag, double time) = 0;
+  virtual jsi::Value daiSnapback(jsi::Runtime &rt, double tag) = 0;
+  virtual void daiSetSnapback(jsi::Runtime &rt, double tag, bool enabled) = 0;
+  virtual void addFriendlyObstruction(jsi::Runtime &rt, double tag, jsi::Object obstruction) = 0;
+  virtual void removeAllFriendlyObstructions(jsi::Runtime &rt, double tag) = 0;
 
 };
 
@@ -58,7 +58,7 @@ private:
 
     }
 
-    jsi::Value playing(jsi::Runtime &rt, int tag) override {
+    jsi::Value playing(jsi::Runtime &rt, double tag) override {
       static_assert(
           bridging::getParameterCount(&T::playing) == 2,
           "Expected playing(...) to have 2 parameters");
@@ -66,7 +66,7 @@ private:
       return bridging::callFromJs<jsi::Value>(
           rt, &T::playing, jsInvoker_, instance_, std::move(tag));
     }
-    void skip(jsi::Runtime &rt, int tag) override {
+    void skip(jsi::Runtime &rt, double tag) override {
       static_assert(
           bridging::getParameterCount(&T::skip) == 2,
           "Expected skip(...) to have 2 parameters");
@@ -74,7 +74,7 @@ private:
       return bridging::callFromJs<void>(
           rt, &T::skip, jsInvoker_, instance_, std::move(tag));
     }
-    jsi::Value currentAdBreak(jsi::Runtime &rt, int tag) override {
+    jsi::Value currentAdBreak(jsi::Runtime &rt, double tag) override {
       static_assert(
           bridging::getParameterCount(&T::currentAdBreak) == 2,
           "Expected currentAdBreak(...) to have 2 parameters");
@@ -82,7 +82,7 @@ private:
       return bridging::callFromJs<jsi::Value>(
           rt, &T::currentAdBreak, jsInvoker_, instance_, std::move(tag));
     }
-    jsi::Value currentAds(jsi::Runtime &rt, int tag) override {
+    jsi::Value currentAds(jsi::Runtime &rt, double tag) override {
       static_assert(
           bridging::getParameterCount(&T::currentAds) == 2,
           "Expected currentAds(...) to have 2 parameters");
@@ -90,7 +90,7 @@ private:
       return bridging::callFromJs<jsi::Value>(
           rt, &T::currentAds, jsInvoker_, instance_, std::move(tag));
     }
-    jsi::Value scheduledAdBreaks(jsi::Runtime &rt, int tag) override {
+    jsi::Value scheduledAdBreaks(jsi::Runtime &rt, double tag) override {
       static_assert(
           bridging::getParameterCount(&T::scheduledAdBreaks) == 2,
           "Expected scheduledAdBreaks(...) to have 2 parameters");
@@ -98,7 +98,7 @@ private:
       return bridging::callFromJs<jsi::Value>(
           rt, &T::scheduledAdBreaks, jsInvoker_, instance_, std::move(tag));
     }
-    void schedule(jsi::Runtime &rt, int tag, jsi::Object ad) override {
+    void schedule(jsi::Runtime &rt, double tag, jsi::Object ad) override {
       static_assert(
           bridging::getParameterCount(&T::schedule) == 3,
           "Expected schedule(...) to have 3 parameters");
@@ -106,7 +106,7 @@ private:
       return bridging::callFromJs<void>(
           rt, &T::schedule, jsInvoker_, instance_, std::move(tag), std::move(ad));
     }
-    jsi::Value daiContentTimeForStreamTime(jsi::Runtime &rt, int tag, double time) override {
+    jsi::Value daiContentTimeForStreamTime(jsi::Runtime &rt, double tag, double time) override {
       static_assert(
           bridging::getParameterCount(&T::daiContentTimeForStreamTime) == 3,
           "Expected daiContentTimeForStreamTime(...) to have 3 parameters");
@@ -114,7 +114,7 @@ private:
       return bridging::callFromJs<jsi::Value>(
           rt, &T::daiContentTimeForStreamTime, jsInvoker_, instance_, std::move(tag), std::move(time));
     }
-    jsi::Value daiStreamTimeForContentTime(jsi::Runtime &rt, int tag, double time) override {
+    jsi::Value daiStreamTimeForContentTime(jsi::Runtime &rt, double tag, double time) override {
       static_assert(
           bridging::getParameterCount(&T::daiStreamTimeForContentTime) == 3,
           "Expected daiStreamTimeForContentTime(...) to have 3 parameters");
@@ -122,7 +122,7 @@ private:
       return bridging::callFromJs<jsi::Value>(
           rt, &T::daiStreamTimeForContentTime, jsInvoker_, instance_, std::move(tag), std::move(time));
     }
-    jsi::Value daiSnapback(jsi::Runtime &rt, int tag) override {
+    jsi::Value daiSnapback(jsi::Runtime &rt, double tag) override {
       static_assert(
           bridging::getParameterCount(&T::daiSnapback) == 2,
           "Expected daiSnapback(...) to have 2 parameters");
@@ -130,7 +130,7 @@ private:
       return bridging::callFromJs<jsi::Value>(
           rt, &T::daiSnapback, jsInvoker_, instance_, std::move(tag));
     }
-    void daiSetSnapback(jsi::Runtime &rt, int tag, bool enabled) override {
+    void daiSetSnapback(jsi::Runtime &rt, double tag, bool enabled) override {
       static_assert(
           bridging::getParameterCount(&T::daiSetSnapback) == 3,
           "Expected daiSetSnapback(...) to have 3 parameters");
@@ -138,7 +138,7 @@ private:
       return bridging::callFromJs<void>(
           rt, &T::daiSetSnapback, jsInvoker_, instance_, std::move(tag), std::move(enabled));
     }
-    void addFriendlyObstruction(jsi::Runtime &rt, int tag, jsi::Object obstruction) override {
+    void addFriendlyObstruction(jsi::Runtime &rt, double tag, jsi::Object obstruction) override {
       static_assert(
           bridging::getParameterCount(&T::addFriendlyObstruction) == 3,
           "Expected addFriendlyObstruction(...) to have 3 parameters");
@@ -146,7 +146,7 @@ private:
       return bridging::callFromJs<void>(
           rt, &T::addFriendlyObstruction, jsInvoker_, instance_, std::move(tag), std::move(obstruction));
     }
-    void removeAllFriendlyObstructions(jsi::Runtime &rt, int tag) override {
+    void removeAllFriendlyObstructions(jsi::Runtime &rt, double tag) override {
       static_assert(
           bridging::getParameterCount(&T::removeAllFriendlyObstructions) == 2,
           "Expected removeAllFriendlyObstructions(...) to have 2 parameters");
@@ -535,7 +535,7 @@ protected:
   NativeEventBroadcastModuleCxxSpecJSI(std::shared_ptr<CallInvoker> jsInvoker);
 
 public:
-  virtual void broadcastEvent(jsi::Runtime &rt, int tag, jsi::Object event) = 0;
+  virtual void broadcastEvent(jsi::Runtime &rt, double tag, jsi::Object event) = 0;
 
 };
 
@@ -562,7 +562,7 @@ private:
 
     }
 
-    void broadcastEvent(jsi::Runtime &rt, int tag, jsi::Object event) override {
+    void broadcastEvent(jsi::Runtime &rt, double tag, jsi::Object event) override {
       static_assert(
           bridging::getParameterCount(&T::broadcastEvent) == 3,
           "Expected broadcastEvent(...) to have 3 parameters");
@@ -645,25 +645,25 @@ protected:
 
 public:
   virtual jsi::Value version(jsi::Runtime &rt) = 0;
-  virtual void setPreload(jsi::Runtime &rt, int tag, jsi::String type) = 0;
-  virtual void setCurrentTime(jsi::Runtime &rt, int tag, double seekTime) = 0;
-  virtual void setPipConfig(jsi::Runtime &rt, int tag, jsi::Object config) = 0;
-  virtual void setBackgroundAudioConfig(jsi::Runtime &rt, int tag, jsi::Object config) = 0;
-  virtual void setPresentationMode(jsi::Runtime &rt, int tag, jsi::String mode) = 0;
-  virtual void setMuted(jsi::Runtime &rt, int tag, bool muted) = 0;
-  virtual void setPlaybackRate(jsi::Runtime &rt, int tag, double rate) = 0;
-  virtual void setSelectedAudioTrack(jsi::Runtime &rt, int tag, std::optional<int> trackUid) = 0;
-  virtual void setSelectedVideoTrack(jsi::Runtime &rt, int tag, std::optional<int> trackUid) = 0;
-  virtual void setSelectedTextTrack(jsi::Runtime &rt, int tag, std::optional<int> trackUid) = 0;
-  virtual void setSource(jsi::Runtime &rt, int tag, jsi::Object source) = 0;
-  virtual void setTargetVideoQuality(jsi::Runtime &rt, int tag, jsi::Array qualities) = 0;
-  virtual void setVolume(jsi::Runtime &rt, int tag, double volume) = 0;
-  virtual void setAspectRatio(jsi::Runtime &rt, int tag, jsi::String ratio) = 0;
-  virtual void setRenderingTarget(jsi::Runtime &rt, int tag, jsi::String target) = 0;
-  virtual void setKeepScreenOn(jsi::Runtime &rt, int tag, bool keepScreenOn) = 0;
+  virtual void setPreload(jsi::Runtime &rt, double tag, jsi::String type) = 0;
+  virtual void setCurrentTime(jsi::Runtime &rt, double tag, double seekTime) = 0;
+  virtual void setPipConfig(jsi::Runtime &rt, double tag, jsi::Object config) = 0;
+  virtual void setBackgroundAudioConfig(jsi::Runtime &rt, double tag, jsi::Object config) = 0;
+  virtual void setPresentationMode(jsi::Runtime &rt, double tag, jsi::String mode) = 0;
+  virtual void setMuted(jsi::Runtime &rt, double tag, bool muted) = 0;
+  virtual void setPlaybackRate(jsi::Runtime &rt, double tag, double rate) = 0;
+  virtual void setSelectedAudioTrack(jsi::Runtime &rt, double tag, std::optional<double> trackUid) = 0;
+  virtual void setSelectedVideoTrack(jsi::Runtime &rt, double tag, std::optional<double> trackUid) = 0;
+  virtual void setSelectedTextTrack(jsi::Runtime &rt, double tag, std::optional<double> trackUid) = 0;
+  virtual void setSource(jsi::Runtime &rt, double tag, jsi::Object source) = 0;
+  virtual void setTargetVideoQuality(jsi::Runtime &rt, double tag, jsi::Array qualities) = 0;
+  virtual void setVolume(jsi::Runtime &rt, double tag, double volume) = 0;
+  virtual void setAspectRatio(jsi::Runtime &rt, double tag, jsi::String ratio) = 0;
+  virtual void setRenderingTarget(jsi::Runtime &rt, double tag, jsi::String target) = 0;
+  virtual void setKeepScreenOn(jsi::Runtime &rt, double tag, bool keepScreenOn) = 0;
   virtual void setPaused(jsi::Runtime &rt, double tag, bool paused) = 0;
-  virtual void setTextTrackStyle(jsi::Runtime &rt, int tag, jsi::Object style) = 0;
-  virtual void setABRConfig(jsi::Runtime &rt, int tag, jsi::Object config) = 0;
+  virtual void setTextTrackStyle(jsi::Runtime &rt, double tag, jsi::Object style) = 0;
+  virtual void setABRConfig(jsi::Runtime &rt, double tag, jsi::Object config) = 0;
 
 };
 
@@ -698,7 +698,7 @@ private:
       return bridging::callFromJs<jsi::Value>(
           rt, &T::version, jsInvoker_, instance_);
     }
-    void setPreload(jsi::Runtime &rt, int tag, jsi::String type) override {
+    void setPreload(jsi::Runtime &rt, double tag, jsi::String type) override {
       static_assert(
           bridging::getParameterCount(&T::setPreload) == 3,
           "Expected setPreload(...) to have 3 parameters");
@@ -706,7 +706,7 @@ private:
       return bridging::callFromJs<void>(
           rt, &T::setPreload, jsInvoker_, instance_, std::move(tag), std::move(type));
     }
-    void setCurrentTime(jsi::Runtime &rt, int tag, double seekTime) override {
+    void setCurrentTime(jsi::Runtime &rt, double tag, double seekTime) override {
       static_assert(
           bridging::getParameterCount(&T::setCurrentTime) == 3,
           "Expected setCurrentTime(...) to have 3 parameters");
@@ -714,7 +714,7 @@ private:
       return bridging::callFromJs<void>(
           rt, &T::setCurrentTime, jsInvoker_, instance_, std::move(tag), std::move(seekTime));
     }
-    void setPipConfig(jsi::Runtime &rt, int tag, jsi::Object config) override {
+    void setPipConfig(jsi::Runtime &rt, double tag, jsi::Object config) override {
       static_assert(
           bridging::getParameterCount(&T::setPipConfig) == 3,
           "Expected setPipConfig(...) to have 3 parameters");
@@ -722,7 +722,7 @@ private:
       return bridging::callFromJs<void>(
           rt, &T::setPipConfig, jsInvoker_, instance_, std::move(tag), std::move(config));
     }
-    void setBackgroundAudioConfig(jsi::Runtime &rt, int tag, jsi::Object config) override {
+    void setBackgroundAudioConfig(jsi::Runtime &rt, double tag, jsi::Object config) override {
       static_assert(
           bridging::getParameterCount(&T::setBackgroundAudioConfig) == 3,
           "Expected setBackgroundAudioConfig(...) to have 3 parameters");
@@ -730,7 +730,7 @@ private:
       return bridging::callFromJs<void>(
           rt, &T::setBackgroundAudioConfig, jsInvoker_, instance_, std::move(tag), std::move(config));
     }
-    void setPresentationMode(jsi::Runtime &rt, int tag, jsi::String mode) override {
+    void setPresentationMode(jsi::Runtime &rt, double tag, jsi::String mode) override {
       static_assert(
           bridging::getParameterCount(&T::setPresentationMode) == 3,
           "Expected setPresentationMode(...) to have 3 parameters");
@@ -738,7 +738,7 @@ private:
       return bridging::callFromJs<void>(
           rt, &T::setPresentationMode, jsInvoker_, instance_, std::move(tag), std::move(mode));
     }
-    void setMuted(jsi::Runtime &rt, int tag, bool muted) override {
+    void setMuted(jsi::Runtime &rt, double tag, bool muted) override {
       static_assert(
           bridging::getParameterCount(&T::setMuted) == 3,
           "Expected setMuted(...) to have 3 parameters");
@@ -746,7 +746,7 @@ private:
       return bridging::callFromJs<void>(
           rt, &T::setMuted, jsInvoker_, instance_, std::move(tag), std::move(muted));
     }
-    void setPlaybackRate(jsi::Runtime &rt, int tag, double rate) override {
+    void setPlaybackRate(jsi::Runtime &rt, double tag, double rate) override {
       static_assert(
           bridging::getParameterCount(&T::setPlaybackRate) == 3,
           "Expected setPlaybackRate(...) to have 3 parameters");
@@ -754,7 +754,7 @@ private:
       return bridging::callFromJs<void>(
           rt, &T::setPlaybackRate, jsInvoker_, instance_, std::move(tag), std::move(rate));
     }
-    void setSelectedAudioTrack(jsi::Runtime &rt, int tag, std::optional<int> trackUid) override {
+    void setSelectedAudioTrack(jsi::Runtime &rt, double tag, std::optional<double> trackUid) override {
       static_assert(
           bridging::getParameterCount(&T::setSelectedAudioTrack) == 3,
           "Expected setSelectedAudioTrack(...) to have 3 parameters");
@@ -762,7 +762,7 @@ private:
       return bridging::callFromJs<void>(
           rt, &T::setSelectedAudioTrack, jsInvoker_, instance_, std::move(tag), std::move(trackUid));
     }
-    void setSelectedVideoTrack(jsi::Runtime &rt, int tag, std::optional<int> trackUid) override {
+    void setSelectedVideoTrack(jsi::Runtime &rt, double tag, std::optional<double> trackUid) override {
       static_assert(
           bridging::getParameterCount(&T::setSelectedVideoTrack) == 3,
           "Expected setSelectedVideoTrack(...) to have 3 parameters");
@@ -770,7 +770,7 @@ private:
       return bridging::callFromJs<void>(
           rt, &T::setSelectedVideoTrack, jsInvoker_, instance_, std::move(tag), std::move(trackUid));
     }
-    void setSelectedTextTrack(jsi::Runtime &rt, int tag, std::optional<int> trackUid) override {
+    void setSelectedTextTrack(jsi::Runtime &rt, double tag, std::optional<double> trackUid) override {
       static_assert(
           bridging::getParameterCount(&T::setSelectedTextTrack) == 3,
           "Expected setSelectedTextTrack(...) to have 3 parameters");
@@ -778,7 +778,7 @@ private:
       return bridging::callFromJs<void>(
           rt, &T::setSelectedTextTrack, jsInvoker_, instance_, std::move(tag), std::move(trackUid));
     }
-    void setSource(jsi::Runtime &rt, int tag, jsi::Object source) override {
+    void setSource(jsi::Runtime &rt, double tag, jsi::Object source) override {
       static_assert(
           bridging::getParameterCount(&T::setSource) == 3,
           "Expected setSource(...) to have 3 parameters");
@@ -786,7 +786,7 @@ private:
       return bridging::callFromJs<void>(
           rt, &T::setSource, jsInvoker_, instance_, std::move(tag), std::move(source));
     }
-    void setTargetVideoQuality(jsi::Runtime &rt, int tag, jsi::Array qualities) override {
+    void setTargetVideoQuality(jsi::Runtime &rt, double tag, jsi::Array qualities) override {
       static_assert(
           bridging::getParameterCount(&T::setTargetVideoQuality) == 3,
           "Expected setTargetVideoQuality(...) to have 3 parameters");
@@ -794,7 +794,7 @@ private:
       return bridging::callFromJs<void>(
           rt, &T::setTargetVideoQuality, jsInvoker_, instance_, std::move(tag), std::move(qualities));
     }
-    void setVolume(jsi::Runtime &rt, int tag, double volume) override {
+    void setVolume(jsi::Runtime &rt, double tag, double volume) override {
       static_assert(
           bridging::getParameterCount(&T::setVolume) == 3,
           "Expected setVolume(...) to have 3 parameters");
@@ -802,7 +802,7 @@ private:
       return bridging::callFromJs<void>(
           rt, &T::setVolume, jsInvoker_, instance_, std::move(tag), std::move(volume));
     }
-    void setAspectRatio(jsi::Runtime &rt, int tag, jsi::String ratio) override {
+    void setAspectRatio(jsi::Runtime &rt, double tag, jsi::String ratio) override {
       static_assert(
           bridging::getParameterCount(&T::setAspectRatio) == 3,
           "Expected setAspectRatio(...) to have 3 parameters");
@@ -810,7 +810,7 @@ private:
       return bridging::callFromJs<void>(
           rt, &T::setAspectRatio, jsInvoker_, instance_, std::move(tag), std::move(ratio));
     }
-    void setRenderingTarget(jsi::Runtime &rt, int tag, jsi::String target) override {
+    void setRenderingTarget(jsi::Runtime &rt, double tag, jsi::String target) override {
       static_assert(
           bridging::getParameterCount(&T::setRenderingTarget) == 3,
           "Expected setRenderingTarget(...) to have 3 parameters");
@@ -818,7 +818,7 @@ private:
       return bridging::callFromJs<void>(
           rt, &T::setRenderingTarget, jsInvoker_, instance_, std::move(tag), std::move(target));
     }
-    void setKeepScreenOn(jsi::Runtime &rt, int tag, bool keepScreenOn) override {
+    void setKeepScreenOn(jsi::Runtime &rt, double tag, bool keepScreenOn) override {
       static_assert(
           bridging::getParameterCount(&T::setKeepScreenOn) == 3,
           "Expected setKeepScreenOn(...) to have 3 parameters");
@@ -834,7 +834,7 @@ private:
       return bridging::callFromJs<void>(
           rt, &T::setPaused, jsInvoker_, instance_, std::move(tag), std::move(paused));
     }
-    void setTextTrackStyle(jsi::Runtime &rt, int tag, jsi::Object style) override {
+    void setTextTrackStyle(jsi::Runtime &rt, double tag, jsi::Object style) override {
       static_assert(
           bridging::getParameterCount(&T::setTextTrackStyle) == 3,
           "Expected setTextTrackStyle(...) to have 3 parameters");
@@ -842,7 +842,7 @@ private:
       return bridging::callFromJs<void>(
           rt, &T::setTextTrackStyle, jsInvoker_, instance_, std::move(tag), std::move(style));
     }
-    void setABRConfig(jsi::Runtime &rt, int tag, jsi::Object config) override {
+    void setABRConfig(jsi::Runtime &rt, double tag, jsi::Object config) override {
       static_assert(
           bridging::getParameterCount(&T::setABRConfig) == 3,
           "Expected setABRConfig(...) to have 3 parameters");

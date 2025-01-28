@@ -18,11 +18,11 @@ namespace facebook::react {
 
 struct THEOplayerRCTViewConfigAdsImaStruct {
   std::string ppid{};
-  int maxRedirects{0};
+  double maxRedirects{0.0};
   bool autoPlayAdBreaks{false};
   std::string sessionID{};
   bool enableDebugMode{false};
-  int bitrate{0};
+  double bitrate{0.0};
 };
 
 static inline void fromRawValue(const PropsParserContext& context, const RawValue &value, THEOplayerRCTViewConfigAdsImaStruct &result) {

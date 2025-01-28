@@ -82,37 +82,37 @@ namespace JS {
 @end
 @protocol NativeAdsModuleSpec <RCTBridgeModule, RCTTurboModule>
 
-- (void)playing:(NSInteger)tag
+- (void)playing:(double)tag
         resolve:(RCTPromiseResolveBlock)resolve
          reject:(RCTPromiseRejectBlock)reject;
-- (void)skip:(NSInteger)tag;
-- (void)currentAdBreak:(NSInteger)tag
+- (void)skip:(double)tag;
+- (void)currentAdBreak:(double)tag
                resolve:(RCTPromiseResolveBlock)resolve
                 reject:(RCTPromiseRejectBlock)reject;
-- (void)currentAds:(NSInteger)tag
+- (void)currentAds:(double)tag
            resolve:(RCTPromiseResolveBlock)resolve
             reject:(RCTPromiseRejectBlock)reject;
-- (void)scheduledAdBreaks:(NSInteger)tag
+- (void)scheduledAdBreaks:(double)tag
                   resolve:(RCTPromiseResolveBlock)resolve
                    reject:(RCTPromiseRejectBlock)reject;
-- (void)schedule:(NSInteger)tag
+- (void)schedule:(double)tag
               ad:(JS::NativeAdsModule::SpecScheduleAd &)ad;
-- (void)daiContentTimeForStreamTime:(NSInteger)tag
+- (void)daiContentTimeForStreamTime:(double)tag
                                time:(double)time
                             resolve:(RCTPromiseResolveBlock)resolve
                              reject:(RCTPromiseRejectBlock)reject;
-- (void)daiStreamTimeForContentTime:(NSInteger)tag
+- (void)daiStreamTimeForContentTime:(double)tag
                                time:(double)time
                             resolve:(RCTPromiseResolveBlock)resolve
                              reject:(RCTPromiseRejectBlock)reject;
-- (void)daiSnapback:(NSInteger)tag
+- (void)daiSnapback:(double)tag
             resolve:(RCTPromiseResolveBlock)resolve
              reject:(RCTPromiseRejectBlock)reject;
-- (void)daiSetSnapback:(NSInteger)tag
+- (void)daiSetSnapback:(double)tag
                enabled:(BOOL)enabled;
-- (void)addFriendlyObstruction:(NSInteger)tag
+- (void)addFriendlyObstruction:(double)tag
                    obstruction:(JS::NativeAdsModule::SpecAddFriendlyObstructionObstruction &)obstruction;
-- (void)removeAllFriendlyObstructions:(NSInteger)tag;
+- (void)removeAllFriendlyObstructions:(double)tag;
 
 @end
 
@@ -265,7 +265,7 @@ namespace facebook::react {
 
 @protocol NativeEventBroadcastModuleSpec <RCTBridgeModule, RCTTurboModule>
 
-- (void)broadcastEvent:(NSInteger)tag
+- (void)broadcastEvent:(double)tag
                  event:(NSDictionary *)event;
 
 @end
@@ -319,43 +319,43 @@ namespace facebook::react {
 
 - (void)version:(RCTPromiseResolveBlock)resolve
          reject:(RCTPromiseRejectBlock)reject;
-- (void)setPreload:(NSInteger)tag
+- (void)setPreload:(double)tag
               type:(NSString *)type;
-- (void)setCurrentTime:(NSInteger)tag
+- (void)setCurrentTime:(double)tag
               seekTime:(double)seekTime;
-- (void)setPipConfig:(NSInteger)tag
+- (void)setPipConfig:(double)tag
               config:(NSDictionary *)config;
-- (void)setBackgroundAudioConfig:(NSInteger)tag
+- (void)setBackgroundAudioConfig:(double)tag
                           config:(NSDictionary *)config;
-- (void)setPresentationMode:(NSInteger)tag
+- (void)setPresentationMode:(double)tag
                        mode:(NSString *)mode;
-- (void)setMuted:(NSInteger)tag
+- (void)setMuted:(double)tag
            muted:(BOOL)muted;
-- (void)setPlaybackRate:(NSInteger)tag
+- (void)setPlaybackRate:(double)tag
                    rate:(double)rate;
-- (void)setSelectedAudioTrack:(NSInteger)tag
+- (void)setSelectedAudioTrack:(double)tag
                      trackUid:(NSNumber *)trackUid;
-- (void)setSelectedVideoTrack:(NSInteger)tag
+- (void)setSelectedVideoTrack:(double)tag
                      trackUid:(NSNumber *)trackUid;
-- (void)setSelectedTextTrack:(NSInteger)tag
+- (void)setSelectedTextTrack:(double)tag
                     trackUid:(NSNumber *)trackUid;
-- (void)setSource:(NSInteger)tag
+- (void)setSource:(double)tag
            source:(NSDictionary *)source;
-- (void)setTargetVideoQuality:(NSInteger)tag
+- (void)setTargetVideoQuality:(double)tag
                     qualities:(NSArray *)qualities;
-- (void)setVolume:(NSInteger)tag
+- (void)setVolume:(double)tag
            volume:(double)volume;
-- (void)setAspectRatio:(NSInteger)tag
+- (void)setAspectRatio:(double)tag
                  ratio:(NSString *)ratio;
-- (void)setRenderingTarget:(NSInteger)tag
+- (void)setRenderingTarget:(double)tag
                     target:(NSString *)target;
-- (void)setKeepScreenOn:(NSInteger)tag
+- (void)setKeepScreenOn:(double)tag
            keepScreenOn:(BOOL)keepScreenOn;
 - (void)setPaused:(double)tag
            paused:(BOOL)paused;
-- (void)setTextTrackStyle:(NSInteger)tag
+- (void)setTextTrackStyle:(double)tag
                     style:(NSDictionary *)style;
-- (void)setABRConfig:(NSInteger)tag
+- (void)setABRConfig:(double)tag
               config:(NSDictionary *)config;
 
 @end

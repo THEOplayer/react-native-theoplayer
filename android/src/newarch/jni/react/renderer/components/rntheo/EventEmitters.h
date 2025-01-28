@@ -49,7 +49,7 @@ class THEOplayerRCTViewEventEmitter : public ViewEventEmitter {
 
   struct OnNativeLoadedMetadataTextTracksCues {
       std::string id;
-    int uid;
+    double uid;
     double startTime;
     double endTime;
     OnNativeLoadedMetadataTextTracksCuesContent content;
@@ -60,7 +60,7 @@ class THEOplayerRCTViewEventEmitter : public ViewEventEmitter {
     std::string label;
     std::string language;
     std::string id;
-    int uid;
+    double uid;
     std::string mode;
     std::string type;
     std::vector<OnNativeLoadedMetadataTextTracksCues> cues;
@@ -73,7 +73,7 @@ class THEOplayerRCTViewEventEmitter : public ViewEventEmitter {
     double bandwidth;
     std::string codecs;
     std::string id;
-    int uid;
+    double uid;
     std::string name;
     std::string label;
     bool available;
@@ -84,7 +84,7 @@ class THEOplayerRCTViewEventEmitter : public ViewEventEmitter {
     double bandwidth;
     std::string codecs;
     std::string id;
-    int uid;
+    double uid;
     std::string name;
     std::string label;
     bool available;
@@ -92,7 +92,7 @@ class THEOplayerRCTViewEventEmitter : public ViewEventEmitter {
 
   struct OnNativeLoadedMetadataAudioTracks {
       std::string id;
-    int uid;
+    double uid;
     std::string kind;
     std::string label;
     std::string language;
@@ -106,7 +106,7 @@ class THEOplayerRCTViewEventEmitter : public ViewEventEmitter {
     double bandwidth;
     std::string codecs;
     std::string id;
-    int uid;
+    double uid;
     std::string name;
     std::string label;
     bool available;
@@ -117,7 +117,7 @@ class THEOplayerRCTViewEventEmitter : public ViewEventEmitter {
     double bandwidth;
     std::string codecs;
     std::string id;
-    int uid;
+    double uid;
     std::string name;
     std::string label;
     bool available;
@@ -125,7 +125,7 @@ class THEOplayerRCTViewEventEmitter : public ViewEventEmitter {
 
   struct OnNativeLoadedMetadataVideoTracks {
       std::string id;
-    int uid;
+    double uid;
     std::string kind;
     std::string label;
     std::string language;
@@ -139,13 +139,13 @@ class THEOplayerRCTViewEventEmitter : public ViewEventEmitter {
     std::vector<OnNativeLoadedMetadataAudioTracks> audioTracks;
     std::vector<OnNativeLoadedMetadataVideoTracks> videoTracks;
     double duration;
-    int selectedTextTrack;
-    int selectedVideoTrack;
-    int selectedAudioTrack;
+    double selectedTextTrack;
+    double selectedVideoTrack;
+    double selectedAudioTrack;
     };
 
   struct OnNativeReadyStateChange {
-      int readyState;
+      double readyState;
     };
 
   struct OnNativeErrorError {
@@ -225,7 +225,7 @@ class THEOplayerRCTViewEventEmitter : public ViewEventEmitter {
   struct OnNativeSegmentNotFound {
       double segmentStartTime;
     std::string error;
-    int retryCount;
+    double retryCount;
     };
 
   struct OnNativeTextTrackListEventTrackCuesContent {
@@ -234,7 +234,7 @@ class THEOplayerRCTViewEventEmitter : public ViewEventEmitter {
 
   struct OnNativeTextTrackListEventTrackCues {
       std::string id;
-    int uid;
+    double uid;
     double startTime;
     double endTime;
     OnNativeTextTrackListEventTrackCuesContent content;
@@ -245,7 +245,7 @@ class THEOplayerRCTViewEventEmitter : public ViewEventEmitter {
     std::string label;
     std::string language;
     std::string id;
-    int uid;
+    double uid;
     std::string mode;
     std::string type;
     std::vector<OnNativeTextTrackListEventTrackCues> cues;
@@ -254,7 +254,7 @@ class THEOplayerRCTViewEventEmitter : public ViewEventEmitter {
     };
 
   struct OnNativeTextTrackListEvent {
-      int type;
+      double type;
     OnNativeTextTrackListEventTrack track;
     };
 
@@ -264,15 +264,15 @@ class THEOplayerRCTViewEventEmitter : public ViewEventEmitter {
 
   struct OnNativeTextTrackEventCue {
       std::string id;
-    int uid;
+    double uid;
     double startTime;
     double endTime;
     OnNativeTextTrackEventCueContent content;
     };
 
   struct OnNativeTextTrackEvent {
-      int type;
-    int trackUid;
+      double type;
+    double trackUid;
     OnNativeTextTrackEventCue cue;
     };
 
@@ -281,7 +281,7 @@ class THEOplayerRCTViewEventEmitter : public ViewEventEmitter {
     double bandwidth;
     std::string codecs;
     std::string id;
-    int uid;
+    double uid;
     std::string name;
     std::string label;
     bool available;
@@ -292,7 +292,7 @@ class THEOplayerRCTViewEventEmitter : public ViewEventEmitter {
     double bandwidth;
     std::string codecs;
     std::string id;
-    int uid;
+    double uid;
     std::string name;
     std::string label;
     bool available;
@@ -300,7 +300,7 @@ class THEOplayerRCTViewEventEmitter : public ViewEventEmitter {
 
   struct OnNativeMediaTrackListEventTrack {
       std::string id;
-    int uid;
+    double uid;
     std::string kind;
     std::string label;
     std::string language;
@@ -310,9 +310,9 @@ class THEOplayerRCTViewEventEmitter : public ViewEventEmitter {
     };
 
   struct OnNativeMediaTrackListEvent {
-      int type;
+      double type;
     OnNativeMediaTrackListEventTrack track;
-    int trackType;
+    double trackType;
     };
 
   struct OnNativeMediaTrackEventQualities {
@@ -320,16 +320,16 @@ class THEOplayerRCTViewEventEmitter : public ViewEventEmitter {
     double bandwidth;
     std::string codecs;
     std::string id;
-    int uid;
+    double uid;
     std::string name;
     std::string label;
     bool available;
     };
 
   struct OnNativeMediaTrackEvent {
-      int type;
-    int trackType;
-    int trackUid;
+      double type;
+    double trackType;
+    double trackUid;
     std::vector<OnNativeMediaTrackEventQualities> qualities;
     };
 
