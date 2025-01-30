@@ -12,7 +12,8 @@ let ERROR_MESSAGE_DAI_GET_SNAPBACK_UNDEFINED = "Undefined dai snapback"
 extension THEOplayerRCTAdsAPI {
     
 #if canImport(THEOplayerGoogleIMAIntegration)
-    func daiSnapback(_ view: THEOplayerRCTView? = nil, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+    @objc(daiSnapback:resolve:reject:)
+    public func daiSnapback(_ view: THEOplayerRCTView? = nil, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if let theView = view,
            let ads = theView.ads(),
            let dai = ads.dai {
@@ -23,7 +24,8 @@ extension THEOplayerRCTAdsAPI {
         }
     }
     
-    func daiSetSnapback(_ view: THEOplayerRCTView? = nil, enabled: Bool) -> Void {
+    @objc(daiSetSnapback:enabled:)
+    public func daiSetSnapback(_ view: THEOplayerRCTView? = nil, enabled: Bool) -> Void {
         if let theView = view,
            let ads = theView.ads(),
            var dai = ads.dai {
@@ -33,7 +35,8 @@ extension THEOplayerRCTAdsAPI {
         }
     }
     
-    func daiContentTimeForStreamTime(_ view: THEOplayerRCTView? = nil, timeValue: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+    @objc(daiContentTimeForStreamTime:timeValue:resolve:reject:)
+    public func daiContentTimeForStreamTime(_ view: THEOplayerRCTView? = nil, timeValue: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if let theView = view,
            let ads = theView.ads(),
            let dai = ads.dai {
@@ -46,7 +49,8 @@ extension THEOplayerRCTAdsAPI {
         }
     }
     
-    func daiStreamTimeForContentTime(_ view: THEOplayerRCTView? = nil, timeValue: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+    @objc(daiStreamTimeForContentTime:timeValue:resolve:reject:)
+    public func daiStreamTimeForContentTime(_ view: THEOplayerRCTView? = nil, timeValue: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if let theView = view,
            let ads = theView.ads(),
            let dai = ads.dai {
@@ -60,22 +64,26 @@ extension THEOplayerRCTAdsAPI {
     }
     
 #else
-    
-    func daiSnapback(_ view: THEOplayerRCTView? = nil, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+
+    @objc(daiSnapback:resolve:reject:)
+    public func daiSnapback(_ view: THEOplayerRCTView? = nil, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE) }
         resolve(false)
     }
     
-    func daiSetSnapback(_ view: THEOplayerRCTView? = nil, enabled: Bool) -> Void {
+    @objc(daiSetSnapback:enabled:)
+    public func daiSetSnapback(_ view: THEOplayerRCTView? = nil, enabled: Bool) -> Void {
         if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE) }
     }
     
-    func daiContentTimeForStreamTime(_ view: THEOplayerRCTView? = nil, timeValue: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+    @objc(daiContentTimeForStreamTime:timeValue:resolve:reject:)
+    public func daiContentTimeForStreamTime(_ view: THEOplayerRCTView? = nil, timeValue: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE) }
         resolve(timeValue.doubleValue)
     }
     
-    func daiStreamTimeForContentTime(_ view: THEOplayerRCTView? = nil, timeValue: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+    @objc(daiStreamTimeForContentTime:timeValue:resolve:reject:)
+    public func daiStreamTimeForContentTime(_ view: THEOplayerRCTView? = nil, timeValue: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE) }
         resolve(timeValue.doubleValue)
     }

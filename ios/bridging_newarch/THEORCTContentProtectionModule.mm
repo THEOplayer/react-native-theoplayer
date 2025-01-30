@@ -7,7 +7,6 @@
 @implementation THEORCTContentProtectionModule_objc
 
 RCT_EXPORT_MODULE(THEORCTContentProtectionModule)
-@synthesize bridge = _bridge;
 
 - (instancetype)init {
     if (self = [super init]) {
@@ -21,44 +20,42 @@ RCT_EXPORT_MODULE(THEORCTContentProtectionModule)
     return std::make_shared<facebook::react::NativeContentProtectionModuleSpecJSI>(params);
 }
 
-- (void)onBuildProcessed:(JS::NativeContentProtectionModule::SpecOnBuildProcessedPayload &)payload { 
-    
-}
-
-- (void)onCertificateRequest:(NSDictionary *)payload { 
-    
+- (void)onBuildProcessed:(NSDictionary *)payload {
+    [self.contentProtectionAPI onBuildProcessed:payload];
 }
 
 - (void)onCertificateRequestProcessedAsCertificate:(NSDictionary *)payload { 
-    
+    [self.contentProtectionAPI onCertificateRequestProcessedAsCertificate:payload];
 }
 
 - (void)onCertificateRequestProcessedAsRequest:(NSDictionary *)payload { 
-    
+    [self.contentProtectionAPI onCertificateRequestProcessedAsRequest:payload];
 }
 
 - (void)onCertificateResponseProcessed:(NSDictionary *)payload { 
-    
+    [self.contentProtectionAPI onCertificateResponseProcessed:payload];
 }
 
 - (void)onExtractFairplayContentIdProcessed:(NSDictionary *)payload { 
-    
+    [self.contentProtectionAPI onExtractFairplayContentIdProcessed:payload];
 }
 
 - (void)onLicenseRequestProcessedAsLicense:(NSDictionary *)payload { 
-    
+    [self.contentProtectionAPI onLicenseRequestProcessedAsLicense:payload];
 }
 
 - (void)onLicenseRequestProcessedAsRequest:(NSDictionary *)payload { 
-    
+    [self.contentProtectionAPI onLicenseRequestProcessedAsRequest:payload];
 }
 
 - (void)onLicenseResponseProcessed:(NSDictionary *)payload { 
-    
+    [self.contentProtectionAPI onLicenseResponseProcessed:payload];
 }
 
 - (void)registerContentProtectionIntegration:(NSString *)integrationId keySystemId:(NSString *)keySystemId { 
-    
+    [self.contentProtectionAPI registerContentProtectionIntegration:integrationId
+                                                        keySystemId:keySystemId];
 }
+
 
 @end

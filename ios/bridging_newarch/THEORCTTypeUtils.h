@@ -3,13 +3,21 @@
 
 #import "../newarch/rntheo/EventEmitters.h"
 #import "../newarch/rntheo/Props.h"
+#import "../newarch/rntheo/rntheo.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 using namespace facebook::react;
+using namespace JS::NativeAdsModule;
 
 @interface THEORCTTypeUtils: NSObject
+
+// C++ => OBJC
 + (NSDictionary *) configFrom:(THEOplayerRCTViewConfigStruct) structData;
++ (NSDictionary *) scheduledAd:(ScheduledAd) scheduledAdData;
++ (NSDictionary *) obstruction:(SpecAddFriendlyObstructionObstruction) obstructionData;
+
+// OBJC => C++
 + (THEOplayerRCTViewEventEmitter::OnNativePlayerReady) nativePlayerReadyDataFrom:(NSDictionary*) eventData;
 + (THEOplayerRCTViewEventEmitter::OnNativeReadyStateChange) nativeReadyStateChangeDataFrom:(NSDictionary*) eventData;
 + (THEOplayerRCTViewEventEmitter::OnNativeDurationChange) nativeDurationChangeDataFrom:(NSDictionary*) eventData;

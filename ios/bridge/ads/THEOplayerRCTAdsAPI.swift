@@ -26,7 +26,8 @@ let ERROR_MESSAGE_ADS_GET_SCHEDULED_ADBREAKS_UNDEFINED = "Undefined adbreaks arr
 public class THEOplayerRCTAdsAPI: NSObject {
     
 #if canImport(THEOplayerGoogleIMAIntegration)
-    func skip(_ view: THEOplayerRCTView? = nil) -> Void {
+    @objc(skip:)
+    public func skip(_ view: THEOplayerRCTView? = nil) -> Void {
         if let theView = view,
            let ads = theView.ads() {
             ads.skip()
@@ -35,8 +36,8 @@ public class THEOplayerRCTAdsAPI: NSObject {
         }
     }
     
-    @objc(playing:resolver:rejecter:)
-    func playing(_ view: THEOplayerRCTView? = nil, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+    @objc(playing:resolve:reject:)
+    public func playing(_ view: THEOplayerRCTView? = nil, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if let theView = view,
            let ads = theView.ads() {
             resolve(ads.playing)
@@ -46,8 +47,8 @@ public class THEOplayerRCTAdsAPI: NSObject {
         }
     }
     
-    @objc(currentAdBreak:resolver:rejecter:)
-    func currentAdBreak(_ view: THEOplayerRCTView? = nil, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+    @objc(currentAdBreak:resolve:reject:)
+    public func currentAdBreak(_ view: THEOplayerRCTView? = nil, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if let theView = view,
            let ads = theView.ads(),
            let currentAdBreak = ads.currentAdBreak {
@@ -59,8 +60,8 @@ public class THEOplayerRCTAdsAPI: NSObject {
         
     }
     
-    @objc(currentAds:resolver:rejecter:)
-    func currentAds(_ view: THEOplayerRCTView? = nil, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+    @objc(currentAds:resolve:reject:)
+    public func currentAds(_ view: THEOplayerRCTView? = nil, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if let theView = view,
            let ads = theView.ads() {
             let currentAdsArray = ads.currentAds
@@ -75,8 +76,8 @@ public class THEOplayerRCTAdsAPI: NSObject {
         }
     }
     
-    @objc(scheduledAdBreaks:resolver:rejecter:)
-    func scheduledAdBreaks(_ view: THEOplayerRCTView? = nil, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+    @objc(scheduledAdBreaks:resolve:reject:)
+    public func scheduledAdBreaks(_ view: THEOplayerRCTView? = nil, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if let theView = view,
            let ads = theView.ads() {
             let currentAdBreaksArray = ads.scheduledAdBreaks
@@ -92,7 +93,7 @@ public class THEOplayerRCTAdsAPI: NSObject {
     }
     
     @objc(schedule:ad:)
-    func schedule(_ view: THEOplayerRCTView? = nil, adDict: NSDictionary) -> Void {
+    public func schedule(_ view: THEOplayerRCTView? = nil, adDict: NSDictionary) -> Void {
         if let theView = view,
            let adData = adDict as? [String:Any],
            let ads = theView.ads(),

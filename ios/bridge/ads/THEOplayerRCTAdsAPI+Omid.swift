@@ -11,7 +11,8 @@ let PROP_OMID_REASON: String = "reason"
 extension THEOplayerRCTAdsAPI {
     
 #if canImport(THEOplayerGoogleIMAIntegration)
-    func addFriendlyObstruction(_ view: THEOplayerRCTView? = nil, obstructionView: UIView, obstruction: NSDictionary) {
+    @objc(addFriendlyObstruction:obstructionView:obstruction:)
+    public func addFriendlyObstruction(_ view: THEOplayerRCTView? = nil, obstructionView: UIView, obstruction: NSDictionary) {
         if let theView = view,
            let purposeString = obstruction[PROP_OMID_PURPOSE] as? String,
            let ads = theView.ads() {
@@ -22,7 +23,8 @@ extension THEOplayerRCTAdsAPI {
         }
     }
     
-    func removeAllFriendlyObstructions(_ view: THEOplayerRCTView? = nil) {
+    @objc(removeAllFriendlyObstructions:)
+    public func removeAllFriendlyObstructions(_ view: THEOplayerRCTView? = nil) {
         if let theView = view,
            let ads = theView.ads() {
             ads.omid.removeFriendlyObstructions()
@@ -31,11 +33,13 @@ extension THEOplayerRCTAdsAPI {
     
 #else
     
-    func addFriendlyObstruction(_ view: THEOplayerRCTView? = nil, obstruction: NSDictionary) {
+    @objc(addFriendlyObstruction:obstructionView:obstruction:)
+    public func addFriendlyObstruction(_ view: THEOplayerRCTView? = nil, obstruction: NSDictionary) {
         if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE) }
     }
     
-    func removeAllFriendlyObstructions(_ view: THEOplayerRCTView? = nil) {
+    @objc(removeAllFriendlyObstructions:)
+    public func removeAllFriendlyObstructions(_ view: THEOplayerRCTView? = nil) {
         if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE) }
     }
     

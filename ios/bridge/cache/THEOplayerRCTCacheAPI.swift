@@ -120,14 +120,16 @@ public class THEOplayerRCTCacheAPI: NSObject {
     // MARK: API
 
 #if os(iOS)
-    func getInitialState(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+    @objc(getInitialState:reject:)
+    public func getInitialState(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         resolve([
             CACHE_EVENT_PROP_STATUS: THEOplayerRCTTypeUtils.cacheStatusToString(THEOplayer.cache.status),
             CACHE_EVENT_PROP_TASKS: THEOplayerRCTCacheAggregator.aggregateCacheTasks(tasks: THEOplayer.cache.tasks)
         ] as [String : Any])
     }
 
-    func createTask(src: NSDictionary, params: NSDictionary, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+    @objc(createTaskForSrc:params:resolve:reject:)
+    public func createTask(src: NSDictionary, params: NSDictionary, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if DEBUG_CACHE_API { PrintUtils.printLog(logText: "[NATIVE] createTask triggered on Cache API.") }
 		let params = THEOplayerRCTCachingParametersBuilder.buildCachingParameters(params)
 		let (sourceDescription, _) = THEOplayerRCTSourceDescriptionBuilder.buildSourceDescription(src)
@@ -147,21 +149,24 @@ public class THEOplayerRCTCacheAPI: NSObject {
         }
     }
 
-    func startCachingTask(id: NSString) -> Void {
+    @objc(startCachingTaskWithId:)
+    public func startCachingTask(id: NSString) -> Void {
         if DEBUG_CACHE_API { PrintUtils.printLog(logText: "[NATIVE] Start task triggered on Cache API for task with id \(id).") }
         if let task = self.taskById(id as String) {
             task.start()
         }
     }
 
-    func pauseCachingTask(id: NSString) -> Void {
+    @objc(pauseCachingTaskWithId:)
+    public func pauseCachingTask(id: NSString) -> Void {
         if DEBUG_CACHE_API { PrintUtils.printLog(logText: "[NATIVE] Pause task triggered on Cache API for task with id \(id).") }
         if let task = self.taskById(id as String) {
             task.pause()
         }
     }
 
-    func removeCachingTask(id: NSString) -> Void {
+    @objc(removeCachingTaskWithId:)
+    public func removeCachingTask(id: NSString) -> Void {
         if DEBUG_CACHE_API { PrintUtils.printLog(logText: "[NATIVE] Remove task triggered on Cache API for task with id \(id).") }
         if let task = self.taskById(id as String) {
             // remove the task
@@ -171,7 +176,8 @@ public class THEOplayerRCTCacheAPI: NSObject {
         }
     }
 
-    func renewLicense(id: NSString, drmConfig: NSDictionary) -> Void {
+    @objc(renewLicenseForTaskId:drmConfig:)
+    public func renewLicense(id: NSString, drmConfig: NSDictionary) -> Void {
         if DEBUG_CACHE_API { PrintUtils.printLog(logText: "[NATIVE] Renew license triggered on Cache API for task with id \(id).") }
         if let task = self.taskById(id as String) {
             guard let contentProtectionData = drmConfig as? [String:Any] else {
@@ -194,7 +200,8 @@ public class THEOplayerRCTCacheAPI: NSObject {
         }
     }
 #else
-    func getInitialState(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+    @objc(getInitialState:reject:)
+    public func getInitialState(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if DEBUG_CACHE_API { print(ERROR_MESSAGE_CACHE_API_UNSUPPORTED_FEATURE) }
         resolve([
             CACHE_EVENT_PROP_STATUS: "uninitialised",
@@ -202,24 +209,29 @@ public class THEOplayerRCTCacheAPI: NSObject {
         ] as [String : Any])
     }
 
-    func createTask(src: NSDictionary, params: NSDictionary, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+    @objc(createTaskForSrc:params:resolve:reject:)
+    public func createTask(src: NSDictionary, params: NSDictionary, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if DEBUG_CACHE_API { print(ERROR_MESSAGE_CACHE_API_UNSUPPORTED_FEATURE) }
         reject([:] as [String : Any])
     }
 
-    func startCachingTask(id: NSString) -> Void {
+    @objc(startCachingTaskWithId:)
+    public func startCachingTask(id: NSString) -> Void {
         if DEBUG_CACHE_API { print(ERROR_MESSAGE_CACHE_API_UNSUPPORTED_FEATURE) }
     }
 
-    func pauseCachingTask(id: NSString) -> Void {
+    @objc(pauseCachingTaskWithId:)
+    public func pauseCachingTask(id: NSString) -> Void {
         if DEBUG_CACHE_API { print(ERROR_MESSAGE_CACHE_API_UNSUPPORTED_FEATURE) }
     }
 
-    func removeCachingTask(id: NSString) -> Void {
+    @objc(removeCachingTaskWithId:)
+    public func removeCachingTask(id: NSString) -> Void {
         if DEBUG_CACHE_API { print(ERROR_MESSAGE_CACHE_API_UNSUPPORTED_FEATURE) }
     }
 
-    func renewLicense(id: NSString, drmConfig: NSDictionary) -> Void {
+    @objc(renewLicenseForTaskId:drmConfig:)
+    public func renewLicense(id: NSString, drmConfig: NSDictionary) -> Void {
         if DEBUG_CACHE_API { print(ERROR_MESSAGE_CACHE_API_UNSUPPORTED_FEATURE) }
     }
 #endif

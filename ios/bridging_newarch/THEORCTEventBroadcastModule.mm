@@ -21,18 +21,26 @@ RCT_EXPORT_MODULE(THEORCTEventBroadcastModule)
     return std::make_shared<facebook::react::NativeEventBroadcastModuleSpecJSI>(params);
 }
 
-- (THEOplayerRCTView *) viewForTag:(NSNumber *)tag {
-    THEOplayerRCTView_objc *theComponentView = (THEOplayerRCTView_objc *)[self.bridge.uiManager viewForReactTag:tag];
+- (THEOplayerRCTView *) viewForTag:(double)tag {
+    THEOplayerRCTView_objc *theComponentView = (THEOplayerRCTView_objc *)[_bridge.uiManager viewForReactTag:@(tag)];
     return (THEOplayerRCTView *)theComponentView.contentView;
 }
 
-- (void)broadcastEvent:(NSInteger)tag event:(NSDictionary *)event {
+- (void)runForTag:(double)tag block:(void (^)(THEOplayerRCTView *view))actionBlock {
     __weak THEORCTEventBroadcastModule_objc *weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
-        THEOplayerRCTView *theView = [weakSelf viewForTag:[NSNumber numberWithDouble:tag]];
-        [self.eventBroadcastAPI broadcastEvent:theView event:event];
+        THEOplayerRCTView *view = [weakSelf viewForTag:tag];
+        if (view && actionBlock) {
+            actionBlock(view);
+        }
     });
-    
+}
+
+- (void)broadcastEvent:(double)tag event:(NSDictionary *)event {
+    [self runForTag:tag block:^(THEOplayerRCTView *view) {
+        [self.eventBroadcastAPI broadcastEvent:view
+                                         event:event];
+    }];
 }
 
 @end
