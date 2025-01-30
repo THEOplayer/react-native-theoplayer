@@ -89,7 +89,7 @@ NativeAdsModuleSpecJSI::NativeAdsModuleSpecJSI(const JavaTurboModule::InitParams
 }
 static facebook::jsi::Value __hostFunction_NativeCacheModuleSpecJSI_createTask(facebook::jsi::Runtime& rt, TurboModule &turboModule, const facebook::jsi::Value* args, size_t count) {
   static jmethodID cachedMethodId = nullptr;
-  return static_cast<JavaTurboModule &>(turboModule).invokeJavaMethod(rt, VoidKind, "createTask", "(Lcom/facebook/react/bridge/ReadableMap;Lcom/facebook/react/bridge/ReadableMap;)V", args, count, cachedMethodId);
+  return static_cast<JavaTurboModule &>(turboModule).invokeJavaMethod(rt, PromiseKind, "createTask", "(Lcom/facebook/react/bridge/ReadableMap;Lcom/facebook/react/bridge/ReadableMap;Lcom/facebook/react/bridge/Promise;)V", args, count, cachedMethodId);
 }
 
 static facebook::jsi::Value __hostFunction_NativeCacheModuleSpecJSI_getInitialState(facebook::jsi::Runtime& rt, TurboModule &turboModule, const facebook::jsi::Value* args, size_t count) {
@@ -205,11 +205,6 @@ static facebook::jsi::Value __hostFunction_NativeContentProtectionModuleSpecJSI_
   return static_cast<JavaTurboModule &>(turboModule).invokeJavaMethod(rt, VoidKind, "onBuildProcessed", "(Lcom/facebook/react/bridge/ReadableMap;)V", args, count, cachedMethodId);
 }
 
-static facebook::jsi::Value __hostFunction_NativeContentProtectionModuleSpecJSI_onCertificateRequest(facebook::jsi::Runtime& rt, TurboModule &turboModule, const facebook::jsi::Value* args, size_t count) {
-  static jmethodID cachedMethodId = nullptr;
-  return static_cast<JavaTurboModule &>(turboModule).invokeJavaMethod(rt, VoidKind, "onCertificateRequest", "(Lcom/facebook/react/bridge/ReadableMap;)V", args, count, cachedMethodId);
-}
-
 static facebook::jsi::Value __hostFunction_NativeContentProtectionModuleSpecJSI_onCertificateRequestProcessedAsCertificate(facebook::jsi::Runtime& rt, TurboModule &turboModule, const facebook::jsi::Value* args, size_t count) {
   static jmethodID cachedMethodId = nullptr;
   return static_cast<JavaTurboModule &>(turboModule).invokeJavaMethod(rt, VoidKind, "onCertificateRequestProcessedAsCertificate", "(Lcom/facebook/react/bridge/ReadableMap;)V", args, count, cachedMethodId);
@@ -249,7 +244,6 @@ NativeContentProtectionModuleSpecJSI::NativeContentProtectionModuleSpecJSI(const
   : JavaTurboModule(params) {
   methodMap_["registerContentProtectionIntegration"] = MethodMetadata {2, __hostFunction_NativeContentProtectionModuleSpecJSI_registerContentProtectionIntegration};
   methodMap_["onBuildProcessed"] = MethodMetadata {1, __hostFunction_NativeContentProtectionModuleSpecJSI_onBuildProcessed};
-  methodMap_["onCertificateRequest"] = MethodMetadata {1, __hostFunction_NativeContentProtectionModuleSpecJSI_onCertificateRequest};
   methodMap_["onCertificateRequestProcessedAsCertificate"] = MethodMetadata {1, __hostFunction_NativeContentProtectionModuleSpecJSI_onCertificateRequestProcessedAsCertificate};
   methodMap_["onCertificateRequestProcessedAsRequest"] = MethodMetadata {1, __hostFunction_NativeContentProtectionModuleSpecJSI_onCertificateRequestProcessedAsRequest};
   methodMap_["onCertificateResponseProcessed"] = MethodMetadata {1, __hostFunction_NativeContentProtectionModuleSpecJSI_onCertificateResponseProcessed};

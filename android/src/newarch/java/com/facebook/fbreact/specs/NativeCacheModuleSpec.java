@@ -35,7 +35,7 @@ public abstract class NativeCacheModuleSpec extends ReactContextBaseJavaModule i
 
   @ReactMethod
   @DoNotStrip
-  public abstract void createTask(ReadableMap source, ReadableMap parameters);
+  public abstract void createTask(ReadableMap source, ReadableMap parameters, Promise promise);
 
   @ReactMethod
   @DoNotStrip

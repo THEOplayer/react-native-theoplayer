@@ -23,16 +23,16 @@
 }
 @end
 
-@implementation RCTCxxConvert (NativeAdsModule_SpecScheduleAdSources)
-+ (RCTManagedPointer *)JS_NativeAdsModule_SpecScheduleAdSources:(id)json
+@implementation RCTCxxConvert (NativeAdsModule_ScheduledAdSources)
++ (RCTManagedPointer *)JS_NativeAdsModule_ScheduledAdSources:(id)json
 {
-  return facebook::react::managedPointer<JS::NativeAdsModule::SpecScheduleAdSources>(json);
+  return facebook::react::managedPointer<JS::NativeAdsModule::ScheduledAdSources>(json);
 }
 @end
-@implementation RCTCxxConvert (NativeAdsModule_SpecScheduleAd)
-+ (RCTManagedPointer *)JS_NativeAdsModule_SpecScheduleAd:(id)json
+@implementation RCTCxxConvert (NativeAdsModule_ScheduledAd)
++ (RCTManagedPointer *)JS_NativeAdsModule_ScheduledAd:(id)json
 {
-  return facebook::react::managedPointer<JS::NativeAdsModule::SpecScheduleAd>(json);
+  return facebook::react::managedPointer<JS::NativeAdsModule::ScheduledAd>(json);
 }
 @end
 @implementation RCTCxxConvert (NativeAdsModule_SpecAddFriendlyObstructionObstruction)
@@ -110,7 +110,7 @@ namespace facebook::react {
         
         
         methodMap_["schedule"] = MethodMetadata {2, __hostFunction_NativeAdsModuleSpecJSI_schedule};
-        setMethodArgConversionSelector(@"schedule", 1, @"JS_NativeAdsModule_SpecScheduleAd:");
+        setMethodArgConversionSelector(@"schedule", 1, @"JS_NativeAdsModule_ScheduledAd:");
         
         methodMap_["daiContentTimeForStreamTime"] = MethodMetadata {2, __hostFunction_NativeAdsModuleSpecJSI_daiContentTimeForStreamTime};
         
@@ -145,7 +145,7 @@ namespace facebook::react {
 namespace facebook::react {
   
     static facebook::jsi::Value __hostFunction_NativeCacheModuleSpecJSI_createTask(facebook::jsi::Runtime& rt, TurboModule &turboModule, const facebook::jsi::Value* args, size_t count) {
-      return static_cast<ObjCTurboModule&>(turboModule).invokeObjCMethod(rt, VoidKind, "createTask", @selector(createTask:parameters:), args, count);
+      return static_cast<ObjCTurboModule&>(turboModule).invokeObjCMethod(rt, PromiseKind, "createTask", @selector(createTask:parameters:resolve:reject:), args, count);
     }
 
     static facebook::jsi::Value __hostFunction_NativeCacheModuleSpecJSI_getInitialState(facebook::jsi::Runtime& rt, TurboModule &turboModule, const facebook::jsi::Value* args, size_t count) {
@@ -294,12 +294,7 @@ namespace facebook::react {
 }
 @end
 
-@implementation RCTCxxConvert (NativeContentProtectionModule_SpecOnBuildProcessedPayload)
-+ (RCTManagedPointer *)JS_NativeContentProtectionModule_SpecOnBuildProcessedPayload:(id)json
-{
-  return facebook::react::managedPointer<JS::NativeContentProtectionModule::SpecOnBuildProcessedPayload>(json);
-}
-@end
+
 namespace facebook::react {
   
     static facebook::jsi::Value __hostFunction_NativeContentProtectionModuleSpecJSI_registerContentProtectionIntegration(facebook::jsi::Runtime& rt, TurboModule &turboModule, const facebook::jsi::Value* args, size_t count) {
@@ -308,10 +303,6 @@ namespace facebook::react {
 
     static facebook::jsi::Value __hostFunction_NativeContentProtectionModuleSpecJSI_onBuildProcessed(facebook::jsi::Runtime& rt, TurboModule &turboModule, const facebook::jsi::Value* args, size_t count) {
       return static_cast<ObjCTurboModule&>(turboModule).invokeObjCMethod(rt, VoidKind, "onBuildProcessed", @selector(onBuildProcessed:), args, count);
-    }
-
-    static facebook::jsi::Value __hostFunction_NativeContentProtectionModuleSpecJSI_onCertificateRequest(facebook::jsi::Runtime& rt, TurboModule &turboModule, const facebook::jsi::Value* args, size_t count) {
-      return static_cast<ObjCTurboModule&>(turboModule).invokeObjCMethod(rt, VoidKind, "onCertificateRequest", @selector(onCertificateRequest:), args, count);
     }
 
     static facebook::jsi::Value __hostFunction_NativeContentProtectionModuleSpecJSI_onCertificateRequestProcessedAsCertificate(facebook::jsi::Runtime& rt, TurboModule &turboModule, const facebook::jsi::Value* args, size_t count) {
@@ -349,9 +340,6 @@ namespace facebook::react {
         
         
         methodMap_["onBuildProcessed"] = MethodMetadata {1, __hostFunction_NativeContentProtectionModuleSpecJSI_onBuildProcessed};
-        setMethodArgConversionSelector(@"onBuildProcessed", 0, @"JS_NativeContentProtectionModule_SpecOnBuildProcessedPayload:");
-        
-        methodMap_["onCertificateRequest"] = MethodMetadata {1, __hostFunction_NativeContentProtectionModuleSpecJSI_onCertificateRequest};
         
         
         methodMap_["onCertificateRequestProcessedAsCertificate"] = MethodMetadata {1, __hostFunction_NativeContentProtectionModuleSpecJSI_onCertificateRequestProcessedAsCertificate};

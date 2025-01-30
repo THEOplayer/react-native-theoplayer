@@ -110,12 +110,11 @@ NativeAdsModuleCxxSpecJSI::NativeAdsModuleCxxSpecJSI(std::shared_ptr<CallInvoker
   methodMap_["removeAllFriendlyObstructions"] = MethodMetadata {1, __hostFunction_NativeAdsModuleCxxSpecJSI_removeAllFriendlyObstructions};
 }
 static jsi::Value __hostFunction_NativeCacheModuleCxxSpecJSI_createTask(jsi::Runtime &rt, TurboModule &turboModule, const jsi::Value* args, size_t count) {
-  static_cast<NativeCacheModuleCxxSpecJSI *>(&turboModule)->createTask(
+  return static_cast<NativeCacheModuleCxxSpecJSI *>(&turboModule)->createTask(
     rt,
     count <= 0 ? throw jsi::JSError(rt, "Expected argument in position 0 to be passed") : args[0].asObject(rt),
     count <= 1 ? throw jsi::JSError(rt, "Expected argument in position 1 to be passed") : args[1].asObject(rt)
   );
-  return jsi::Value::undefined();
 }
 static jsi::Value __hostFunction_NativeCacheModuleCxxSpecJSI_getInitialState(jsi::Runtime &rt, TurboModule &turboModule, const jsi::Value* args, size_t count) {
   return static_cast<NativeCacheModuleCxxSpecJSI *>(&turboModule)->getInitialState(
@@ -263,13 +262,6 @@ static jsi::Value __hostFunction_NativeContentProtectionModuleCxxSpecJSI_onBuild
   );
   return jsi::Value::undefined();
 }
-static jsi::Value __hostFunction_NativeContentProtectionModuleCxxSpecJSI_onCertificateRequest(jsi::Runtime &rt, TurboModule &turboModule, const jsi::Value* args, size_t count) {
-  static_cast<NativeContentProtectionModuleCxxSpecJSI *>(&turboModule)->onCertificateRequest(
-    rt,
-    count <= 0 ? throw jsi::JSError(rt, "Expected argument in position 0 to be passed") : args[0].asObject(rt)
-  );
-  return jsi::Value::undefined();
-}
 static jsi::Value __hostFunction_NativeContentProtectionModuleCxxSpecJSI_onCertificateRequestProcessedAsCertificate(jsi::Runtime &rt, TurboModule &turboModule, const jsi::Value* args, size_t count) {
   static_cast<NativeContentProtectionModuleCxxSpecJSI *>(&turboModule)->onCertificateRequestProcessedAsCertificate(
     rt,
@@ -324,7 +316,6 @@ NativeContentProtectionModuleCxxSpecJSI::NativeContentProtectionModuleCxxSpecJSI
   : TurboModule("THEORCTContentProtectionModule", jsInvoker) {
   methodMap_["registerContentProtectionIntegration"] = MethodMetadata {2, __hostFunction_NativeContentProtectionModuleCxxSpecJSI_registerContentProtectionIntegration};
   methodMap_["onBuildProcessed"] = MethodMetadata {1, __hostFunction_NativeContentProtectionModuleCxxSpecJSI_onBuildProcessed};
-  methodMap_["onCertificateRequest"] = MethodMetadata {1, __hostFunction_NativeContentProtectionModuleCxxSpecJSI_onCertificateRequest};
   methodMap_["onCertificateRequestProcessedAsCertificate"] = MethodMetadata {1, __hostFunction_NativeContentProtectionModuleCxxSpecJSI_onCertificateRequestProcessedAsCertificate};
   methodMap_["onCertificateRequestProcessedAsRequest"] = MethodMetadata {1, __hostFunction_NativeContentProtectionModuleCxxSpecJSI_onCertificateRequestProcessedAsRequest};
   methodMap_["onCertificateResponseProcessed"] = MethodMetadata {1, __hostFunction_NativeContentProtectionModuleCxxSpecJSI_onCertificateResponseProcessed};

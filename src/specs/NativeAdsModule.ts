@@ -3,6 +3,21 @@ import { TurboModuleRegistry } from 'react-native';
 import { type Ad, AdBreak } from 'react-native-theoplayer';
 import { Double } from 'react-native/Libraries/Types/CodegenTypes';
 
+type ScheduledAd = Readonly<{
+  integration?: string;
+  sources?: {
+    src: string;
+    type?: string;
+  };
+  timeOffset?: Double;
+}>;
+
+type FriendlyObstruction = Readonly<{
+  view: Double;
+  purpose: string;
+  reason?: string;
+}>;
+
 export interface Spec extends TurboModule {
   playing(tag: Double): Promise<boolean>;
 
@@ -14,17 +29,7 @@ export interface Spec extends TurboModule {
 
   scheduledAdBreaks(tag: Double): Promise<AdBreak[]>;
 
-  schedule(
-    tag: Double,
-    ad: {
-      integration?: string;
-      sources?: {
-        src: string;
-        type?: string;
-      };
-      timeOffset?: Double;
-    },
-  ): void;
+  schedule(tag: Double, ad: ScheduledAd): void;
 
   /* GoogleDAI API */
 
@@ -38,14 +43,7 @@ export interface Spec extends TurboModule {
 
   /* Omid API */
 
-  addFriendlyObstruction(
-    tag: Double,
-    obstruction: {
-      view: Double;
-      purpose: string;
-      reason?: string;
-    },
-  ): void;
+  addFriendlyObstruction(tag: Double, obstruction: FriendlyObstruction): void;
 
   removeAllFriendlyObstructions(tag: Double): void;
 }

@@ -15,7 +15,67 @@
 namespace facebook::react {
 
 
-  class JSI_EXPORT NativeAdsModuleCxxSpecJSI : public TurboModule {
+  
+#pragma mark - NativeAdsModuleScheduledAd
+
+template <typename P0, typename P1, typename P2>
+struct NativeAdsModuleScheduledAd {
+  P0 integration;
+  P1 sources;
+  P2 timeOffset;
+  bool operator==(const NativeAdsModuleScheduledAd &other) const {
+    return integration == other.integration && sources == other.sources && timeOffset == other.timeOffset;
+  }
+};
+
+template <typename T>
+struct NativeAdsModuleScheduledAdBridging {
+  static T types;
+
+  static T fromJs(
+      jsi::Runtime &rt,
+      const jsi::Object &value,
+      const std::shared_ptr<CallInvoker> &jsInvoker) {
+    T result{
+      bridging::fromJs<decltype(types.integration)>(rt, value.getProperty(rt, "integration"), jsInvoker),
+      bridging::fromJs<decltype(types.sources)>(rt, value.getProperty(rt, "sources"), jsInvoker),
+      bridging::fromJs<decltype(types.timeOffset)>(rt, value.getProperty(rt, "timeOffset"), jsInvoker)};
+    return result;
+  }
+
+#ifdef DEBUG
+  static jsi::String integrationToJs(jsi::Runtime &rt, decltype(types.integration) value) {
+    return bridging::toJs(rt, value);
+  }
+
+  static jsi::Object sourcesToJs(jsi::Runtime &rt, decltype(types.sources) value) {
+    return bridging::toJs(rt, value);
+  }
+
+  static double timeOffsetToJs(jsi::Runtime &rt, decltype(types.timeOffset) value) {
+    return bridging::toJs(rt, value);
+  }
+#endif
+
+  static jsi::Object toJs(
+      jsi::Runtime &rt,
+      const T &value,
+      const std::shared_ptr<CallInvoker> &jsInvoker) {
+    auto result = facebook::jsi::Object(rt);
+    if (value.integration) {
+      result.setProperty(rt, "integration", bridging::toJs(rt, value.integration.value(), jsInvoker));
+    }
+    if (value.sources) {
+      result.setProperty(rt, "sources", bridging::toJs(rt, value.sources.value(), jsInvoker));
+    }
+    if (value.timeOffset) {
+      result.setProperty(rt, "timeOffset", bridging::toJs(rt, value.timeOffset.value(), jsInvoker));
+    }
+    return result;
+  }
+};
+
+class JSI_EXPORT NativeAdsModuleCxxSpecJSI : public TurboModule {
 protected:
   NativeAdsModuleCxxSpecJSI(std::shared_ptr<CallInvoker> jsInvoker);
 
@@ -169,7 +229,7 @@ protected:
   NativeCacheModuleCxxSpecJSI(std::shared_ptr<CallInvoker> jsInvoker);
 
 public:
-  virtual void createTask(jsi::Runtime &rt, jsi::Object source, jsi::Object parameters) = 0;
+  virtual jsi::Value createTask(jsi::Runtime &rt, jsi::Object source, jsi::Object parameters) = 0;
   virtual jsi::Value getInitialState(jsi::Runtime &rt) = 0;
   virtual void renewLicense(jsi::Runtime &rt, jsi::String taskId, jsi::Object drmConfig) = 0;
   virtual void pauseCachingTask(jsi::Runtime &rt, jsi::String taskId) = 0;
@@ -201,12 +261,12 @@ private:
 
     }
 
-    void createTask(jsi::Runtime &rt, jsi::Object source, jsi::Object parameters) override {
+    jsi::Value createTask(jsi::Runtime &rt, jsi::Object source, jsi::Object parameters) override {
       static_assert(
           bridging::getParameterCount(&T::createTask) == 3,
           "Expected createTask(...) to have 3 parameters");
 
-      return bridging::callFromJs<void>(
+      return bridging::callFromJs<jsi::Value>(
           rt, &T::createTask, jsInvoker_, instance_, std::move(source), std::move(parameters));
     }
     jsi::Value getInitialState(jsi::Runtime &rt) override {
@@ -406,7 +466,6 @@ protected:
 public:
   virtual void registerContentProtectionIntegration(jsi::Runtime &rt, jsi::String integrationId, jsi::String keySystemId) = 0;
   virtual void onBuildProcessed(jsi::Runtime &rt, jsi::Object payload) = 0;
-  virtual void onCertificateRequest(jsi::Runtime &rt, jsi::Object payload) = 0;
   virtual void onCertificateRequestProcessedAsCertificate(jsi::Runtime &rt, jsi::Object payload) = 0;
   virtual void onCertificateRequestProcessedAsRequest(jsi::Runtime &rt, jsi::Object payload) = 0;
   virtual void onCertificateResponseProcessed(jsi::Runtime &rt, jsi::Object payload) = 0;
@@ -455,14 +514,6 @@ private:
 
       return bridging::callFromJs<void>(
           rt, &T::onBuildProcessed, jsInvoker_, instance_, std::move(payload));
-    }
-    void onCertificateRequest(jsi::Runtime &rt, jsi::Object payload) override {
-      static_assert(
-          bridging::getParameterCount(&T::onCertificateRequest) == 2,
-          "Expected onCertificateRequest(...) to have 2 parameters");
-
-      return bridging::callFromJs<void>(
-          rt, &T::onCertificateRequest, jsInvoker_, instance_, std::move(payload));
     }
     void onCertificateRequestProcessedAsCertificate(jsi::Runtime &rt, jsi::Object payload) override {
       static_assert(

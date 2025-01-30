@@ -42,10 +42,6 @@ public abstract class NativeContentProtectionModuleSpec extends ReactContextBase
 
   @ReactMethod
   @DoNotStrip
-  public abstract void onCertificateRequest(ReadableMap payload);
-
-  @ReactMethod
-  @DoNotStrip
   public abstract void onCertificateRequestProcessedAsCertificate(ReadableMap payload);
 
   @ReactMethod
