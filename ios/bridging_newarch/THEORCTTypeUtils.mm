@@ -1,17 +1,55 @@
 #import "THEORCTTypeUtils.h"
 #import <Foundation/Foundation.h>
+#import "RCTConvert.h"
 
 using namespace facebook::react;
+using namespace JS::NativeAdsModule;
 
 @implementation THEORCTTypeUtils
 
 + (NSDictionary *) configFrom:(THEOplayerRCTViewConfigStruct) structData {
+    NSMutableDictionary *scheduledAdDict = [[NSMutableDictionary alloc] init];
     return @{
         @"license": @(structData.license.c_str()),
         @"licenseUrl": @(structData.licenseUrl.c_str()),
         @"chromeless": @(structData.chromeless),
         @"hlsDateRange": @(structData.hlsDateRange),
     };
+}
+
++ (NSDictionary *) scheduledAd:(ScheduledAd) scheduledAdData {
+    NSMutableDictionary *scheduledAdDict = [[NSMutableDictionary alloc] init];
+    NSString *integration = scheduledAdData.integration();
+    if (integration) {
+        scheduledAdDict[@"integration"] = integration;
+    }
+    if (scheduledAdData.sources().has_value()) {
+        ScheduledAdSources sources = scheduledAdData.sources().value();
+        NSMutableDictionary *sourcesDict = [[NSMutableDictionary alloc] init];
+        NSString *src = sources.src();
+        if (src) {
+            sourcesDict[@"src"] = src;
+        }
+        NSString *type = sources.type();
+        if (type) {
+            sourcesDict[@"type"] = type;
+        }
+        scheduledAdDict[@"sources"] = sourcesDict;
+        
+    }
+    if (scheduledAdData.timeOffset().has_value()) {
+        double timeOffset = scheduledAdData.timeOffset().value();
+        scheduledAdDict[@"timeOffset"] = @(timeOffset);
+    }
+    return scheduledAdDict;
+}
+
++ (NSDictionary *) obstruction:(SpecAddFriendlyObstructionObstruction) obstructionData {
+    NSMutableDictionary *obstructionDict = [[NSMutableDictionary alloc] init];
+    obstructionDict[@"view"] = @(obstructionData.view());
+    obstructionDict[@"purpose"] = obstructionData.purpose();
+    obstructionDict[@"reason"] = obstructionData.reason();
+    return obstructionDict;
 }
 
 + (THEOplayerRCTViewEventEmitter::OnNativePlayerReady) nativePlayerReadyDataFrom:(NSDictionary*) eventData {

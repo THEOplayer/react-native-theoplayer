@@ -87,6 +87,7 @@ public class THEOplayerRCTMainEventHandler {
             if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received PLAY event from THEOplayer") }
             if let forwardedPlayEvent = self?.onNativePlay {
                 forwardedPlayEvent([:])
+                
             }
         }
         if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] Play listener attached to THEOplayer") }

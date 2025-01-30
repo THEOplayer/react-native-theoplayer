@@ -1,6 +1,7 @@
 #import "THEORCTAdsModule.h"
 #import <React/RCTUIManager.h>
 #import "THEOplayerRCTView.h"
+#import "THEORCTTypeUtils.h"
 
 #import <react_native_theoplayer-Swift.h>
 
@@ -16,57 +17,128 @@ RCT_EXPORT_MODULE(THEORCTAdsModule)
     return self;
 }
 
+- (dispatch_queue_t)methodQueue {
+    return dispatch_get_main_queue();
+}
+
 - (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
 (const facebook::react::ObjCTurboModule::InitParams &)params {
     return std::make_shared<facebook::react::NativeAdsModuleSpecJSI>(params);
 }
 
-- (void)addFriendlyObstruction:(NSInteger)tag obstruction:(JS::NativeAdsModule::SpecAddFriendlyObstructionObstruction &)obstruction { 
-    
+- (THEOplayerRCTView *) viewForTag:(double)tag {
+    THEOplayerRCTView_objc *theComponentView = (THEOplayerRCTView_objc *)[_bridge.uiManager viewForReactTag:@(tag)];
+    return (THEOplayerRCTView *)theComponentView.contentView;
 }
 
-- (void)currentAdBreak:(NSInteger)tag resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject { 
-    
+- (void)runForTag:(double)tag block:(void (^)(THEOplayerRCTView *view))actionBlock {
+    __weak THEORCTAdsModule_objc *weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        THEOplayerRCTView *view = [weakSelf viewForTag:tag];
+        if (view && actionBlock) {
+            actionBlock(view);
+        }
+    });
 }
 
-- (void)currentAds:(NSInteger)tag resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject { 
-    
+- (void)currentAdBreak:(double)tag resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+    [self runForTag:tag block:^(THEOplayerRCTView *view) {
+        [self.adsAPI currentAdBreak:view
+                            resolve:resolve
+                             reject:reject];
+    }];
 }
 
-- (void)daiContentTimeForStreamTime:(NSInteger)tag time:(double)time resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject { 
-    
+- (void)currentAds:(double)tag resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+    [self runForTag:tag block:^(THEOplayerRCTView *view) {
+        [self.adsAPI currentAds:view
+                        resolve:resolve
+                         reject:reject];
+    }];
 }
 
-- (void)daiSetSnapback:(NSInteger)tag enabled:(BOOL)enabled { 
-    
+- (void)playing:(double)tag resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+    [self runForTag:tag block:^(THEOplayerRCTView *view) {
+        [self.adsAPI playing:view
+                     resolve:resolve
+                      reject:reject];
+    }];
 }
 
-- (void)daiSnapback:(NSInteger)tag resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject { 
-    
+- (void)scheduledAdBreaks:(double)tag resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+    [self runForTag:tag block:^(THEOplayerRCTView *view) {
+        [self.adsAPI scheduledAdBreaks:view
+                               resolve:resolve
+                                reject:reject];
+    }];
 }
 
-- (void)daiStreamTimeForContentTime:(NSInteger)tag time:(double)time resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject { 
-    
+- (void)skip:(double)tag {
+    [self runForTag:tag block:^(THEOplayerRCTView *view) {
+        [self.adsAPI skip:view];
+    }];
 }
 
-- (void)playing:(NSInteger)tag resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject { 
-    
+- (void)schedule:(double)tag ad:(JS::NativeAdsModule::ScheduledAd &)ad {
+    [self runForTag:tag block:^(THEOplayerRCTView *view) {
+        [self.adsAPI schedule:view
+                           ad: [THEORCTTypeUtils scheduledAd:ad]];
+    }];
 }
 
-- (void)removeAllFriendlyObstructions:(NSInteger)tag { 
-    
+// DAI
+
+- (void)daiContentTimeForStreamTime:(double)tag time:(double)time resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+    [self runForTag:tag block:^(THEOplayerRCTView *view) {
+        [self.adsAPI daiContentTimeForStreamTime:view
+                                       timeValue:@(time)
+                                         resolve:resolve
+                                          reject:reject];
+    }];
 }
 
-- (void)schedule:(NSInteger)tag ad:(JS::NativeAdsModule::SpecScheduleAd &)ad { 
-    
+- (void)daiSetSnapback:(double)tag enabled:(BOOL)enabled {
+    [self runForTag:tag block:^(THEOplayerRCTView *view) {
+        [self.adsAPI daiSetSnapback:view
+                            enabled:enabled];
+    }];
 }
 
-- (void)scheduledAdBreaks:(NSInteger)tag resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject { 
-    
+- (void)daiSnapback:(double)tag resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+    [self runForTag:tag block:^(THEOplayerRCTView *view) {
+        [self.adsAPI daiSnapback:view
+                         resolve:resolve
+                          reject:reject];
+    }];
 }
 
-- (void)skip:(NSInteger)tag { 
-    
+- (void)daiStreamTimeForContentTime:(double)tag time:(double)time resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+    [self runForTag:tag block:^(THEOplayerRCTView *view) {
+        [self.adsAPI daiStreamTimeForContentTime:view
+                                       timeValue:@(time)
+                                         resolve:resolve
+                                          reject:reject];
+    }];
 }
+
+// OMID
+
+- (void)addFriendlyObstruction:(double)tag obstruction:(JS::NativeAdsModule::SpecAddFriendlyObstructionObstruction &)obstruction {
+    [self runForTag:tag block:^(THEOplayerRCTView *view) {
+        [self.adsAPI addFriendlyObstruction:view
+                            obstructionView:[self viewForTag:obstruction.view()]
+                                obstruction:[THEORCTTypeUtils obstruction:obstruction]];
+    }];
+}
+
+- (void)removeAllFriendlyObstructions:(double)tag {
+    [self runForTag:tag block:^(THEOplayerRCTView *view) {
+        [self.adsAPI removeAllFriendlyObstructions:view];
+    }];
+}
+
+
+
+
 
 @end

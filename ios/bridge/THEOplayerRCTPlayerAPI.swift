@@ -91,7 +91,8 @@ public class THEOplayerRCTPlayerAPI: NSObject {
 #endif
     }
     
-    func setABRConfig(_ view: THEOplayerRCTView? = nil, abrConfig: NSDictionary) -> Void {
+    @objc(setABRConfig:abrConfig:)
+    public func setABRConfig(_ view: THEOplayerRCTView? = nil, abrConfig: NSDictionary) -> Void {
         if let theView = view,
            let player = theView.player {
             if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Setting abrConfig on TheoPlayer") }
@@ -119,7 +120,8 @@ public class THEOplayerRCTPlayerAPI: NSObject {
         }
     }
     
-    func setCurrentTime(_ view: THEOplayerRCTView? = nil, time: NSNumber) -> Void {
+    @objc(setCurrentTime:time:)
+    public func setCurrentTime(_ view: THEOplayerRCTView? = nil, time: NSNumber) -> Void {
         if let theView = view,
            let player = theView.player {
             let timeValue = time.doubleValue * 0.001
@@ -128,7 +130,8 @@ public class THEOplayerRCTPlayerAPI: NSObject {
         }
     }
     
-    func setMuted(_ view: THEOplayerRCTView? = nil, muted: Bool) -> Void {
+    @objc(setMuted:muted:)
+    public func setMuted(_ view: THEOplayerRCTView? = nil, muted: Bool) -> Void {
         if let theView = view,
            let player = theView.player {
             if player.muted != muted {
@@ -138,7 +141,8 @@ public class THEOplayerRCTPlayerAPI: NSObject {
         }
     }
     
-    func setVolume(_ view: THEOplayerRCTView? = nil, volume: NSNumber) -> Void {
+    @objc(setVolume:volume:)
+    public func setVolume(_ view: THEOplayerRCTView? = nil, volume: NSNumber) -> Void {
         if let theView = view,
            let player = theView.player {
             let newVolume = Float(truncating: volume)
@@ -149,7 +153,8 @@ public class THEOplayerRCTPlayerAPI: NSObject {
         }
     }
     
-    func setPlaybackRate(_ view: THEOplayerRCTView? = nil, playbackRate: NSNumber) -> Void {
+    @objc(setPlaybackRate:playbackRate:)
+    public func setPlaybackRate(_ view: THEOplayerRCTView? = nil, playbackRate: NSNumber) -> Void {
         if let theView = view,
            let player = theView.player {
             let playbackRateValue = playbackRate.doubleValue
@@ -160,14 +165,16 @@ public class THEOplayerRCTPlayerAPI: NSObject {
         }
     }
     
-    func setPresentationMode(_ view: THEOplayerRCTView? = nil, presentationMode: String) -> Void {
+    @objc(setPresentationMode:presentationMode:)
+    public func setPresentationMode(_ view: THEOplayerRCTView? = nil, presentationMode: String) -> Void {
         if let theView = view {
             let newPresentationMode: PresentationMode = THEOplayerRCTTypeUtils.presentationModeFromString(presentationMode)
             theView.setPresentationMode(newPresentationMode: newPresentationMode)
         }
     }
     
-    func setAspectRatio(_ view: THEOplayerRCTView? = nil, ratio: String) -> Void {
+    @objc(setAspectRatio:ratio:)
+    public func setAspectRatio(_ view: THEOplayerRCTView? = nil, ratio: String) -> Void {
         DispatchQueue.main.async {
             if let theView = view ,
                let player = theView.player {
@@ -180,7 +187,8 @@ public class THEOplayerRCTPlayerAPI: NSObject {
         }
     }
     
-    func setPipConfig(_ view: THEOplayerRCTView? = nil, pipConfig: NSDictionary) -> Void {
+    @objc(setPipConfig:pipConfig:)
+    public func setPipConfig(_ view: THEOplayerRCTView? = nil, pipConfig: NSDictionary) -> Void {
         if let theView = view {
             let pipConfig = self.parsePipConfig(configDict: pipConfig)
             theView.pipConfig = pipConfig
@@ -193,7 +201,8 @@ public class THEOplayerRCTPlayerAPI: NSObject {
         return pipConfig
     }
     
-    func setBackgroundAudioConfig(_ view: THEOplayerRCTView? = nil, backgroundAudioConfig: NSDictionary) -> Void {
+    @objc(setBackgroundAudioConfig:backgroundAudioConfig:)
+    public func setBackgroundAudioConfig(_ view: THEOplayerRCTView? = nil, backgroundAudioConfig: NSDictionary) -> Void {
         if let theView = view {
             let newBackgroundAudioConfig: BackgroundAudioConfig = self.parseBackgroundAudioConfig(configDict: backgroundAudioConfig)
             theView.backgroundAudioConfig = newBackgroundAudioConfig
@@ -210,7 +219,8 @@ public class THEOplayerRCTPlayerAPI: NSObject {
         return backgroundAudio
     }
     
-    func setSelectedTextTrack(_ view: THEOplayerRCTView? = nil, uid: NSNumber) -> Void {
+    @objc(setSelectedTextTrack:uid:)
+    public func setSelectedTextTrack(_ view: THEOplayerRCTView? = nil, uid: NSNumber) -> Void {
         if let theView = view,
            let player = theView.player {
             let uidValue = uid.intValue
@@ -230,7 +240,8 @@ public class THEOplayerRCTPlayerAPI: NSObject {
         }
     }
     
-    func setSelectedAudioTrack(_ view: THEOplayerRCTView? = nil, uid: NSNumber) -> Void {
+    @objc(setSelectedAudioTrack:uid:)
+    public func setSelectedAudioTrack(_ view: THEOplayerRCTView? = nil, uid: NSNumber) -> Void {
         if let theView = view,
            let player = theView.player {
             let uidValue = uid.intValue
@@ -246,7 +257,8 @@ public class THEOplayerRCTPlayerAPI: NSObject {
         }
     }
     
-    func setSelectedVideoTrack(_ view: THEOplayerRCTView? = nil, uid: NSNumber) -> Void {
+    @objc(setSelectedVideoTrack:uid:)
+    public func setSelectedVideoTrack(_ view: THEOplayerRCTView? = nil, uid: NSNumber) -> Void {
         if let theView = view,
            let player = theView.player {
             let uidValue = uid.intValue
@@ -262,12 +274,14 @@ public class THEOplayerRCTPlayerAPI: NSObject {
         }
     }
     
-    func setTargetVideoQuality(_ view: THEOplayerRCTView? = nil, uid: [NSNumber]) -> Void {
+    @objc(setTargetVideoQuality:uid:)
+    public func setTargetVideoQuality(_ view: THEOplayerRCTView? = nil, uid: [NSNumber]) -> Void {
         if DEBUG_PLAYER_API { print(ERROR_MESSAGE_PLAYER_QUALITY_UNSUPPORTED_FEATURE) }
         return
     }
     
-    func setPreload(_ view: THEOplayerRCTView? = nil, type: String) -> Void {
+    @objc(setPreload:type:)
+    public func setPreload(_ view: THEOplayerRCTView? = nil, type: String) -> Void {
         if let theView = view,
            let player = theView.player {
             let preloadType = THEOplayerRCTTypeUtils.preloadTypeFromString(type)
@@ -278,7 +292,8 @@ public class THEOplayerRCTPlayerAPI: NSObject {
         }
     }
     
-    func setTextTrackStyle(_ view: THEOplayerRCTView? = nil, textTrackStyle: NSDictionary) -> Void {
+    @objc(setTextTrackStyle:textTrackStyle:)
+    public func setTextTrackStyle(_ view: THEOplayerRCTView? = nil, textTrackStyle: NSDictionary) -> Void {
         if let theView = view,
            let player = theView.player {
             if let bgColorMap = textTrackStyle[TTS_PROP_BACKGROUND_COLOR] as? [String:Any],

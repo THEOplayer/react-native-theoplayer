@@ -145,7 +145,8 @@ public class THEOplayerRCTContentProtectionAPI: NSObject {
     }
     
     // MARK: Incoming JS Notifications
-    func registerContentProtectionIntegration(integrationId: String, keySystemId: String) -> Void {
+    @objc(registerContentProtectionIntegration:keySystemId:)
+    public func registerContentProtectionIntegration(integrationId: String, keySystemId: String) -> Void {
         if keySystemId == "fairplay" {
             if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "Registering ContentProtectionIntegration for \(integrationId) - \(keySystemId)") }
             // Create a proxy factory
@@ -162,7 +163,8 @@ public class THEOplayerRCTContentProtectionAPI: NSObject {
         }
     }
     
-    func onBuildProcessed(result: NSDictionary) -> Void {
+    @objc(onBuildProcessed:)
+    public func onBuildProcessed(result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onBuildProcessed.") }
         if let requestId = result["requestId"] as? String,
            let resultString = result["resultString"] as? String,
@@ -174,7 +176,8 @@ public class THEOplayerRCTContentProtectionAPI: NSObject {
         }
     }
     
-    func onCertificateRequestProcessedAsRequest(result: NSDictionary) -> Void {
+    @objc(onCertificateRequestProcessedAsRequest:)
+    public func onCertificateRequestProcessedAsRequest(result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onCertificateRequestProcessedAsRequest.") }
         if let requestId = result["requestId"] as? String,
            let completion = self.certificateRequestCompletions.removeValue(forKey: requestId),
@@ -210,7 +213,8 @@ public class THEOplayerRCTContentProtectionAPI: NSObject {
         }
     }
     
-    func onCertificateRequestProcessedAsCertificate(result: NSDictionary) -> Void {
+    @objc(onCertificateRequestProcessedAsCertificate:)
+    public func onCertificateRequestProcessedAsCertificate(result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onCertificateRequestProcessedAsCertificate.") }
         if let requestId = result["requestId"] as? String,
            let completion = self.certificateRequestCompletions.removeValue(forKey: requestId) {
@@ -225,7 +229,8 @@ public class THEOplayerRCTContentProtectionAPI: NSObject {
         }
     }
     
-    func onCertificateResponseProcessed(result: NSDictionary) -> Void {
+    @objc(onCertificateResponseProcessed:)
+    public func onCertificateResponseProcessed(result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onCertificateResponseProcessed.") }
         if let requestId = result["requestId"] as? String,
            let completion = self.certificateResponseCompletions.removeValue(forKey: requestId) {
@@ -240,7 +245,8 @@ public class THEOplayerRCTContentProtectionAPI: NSObject {
         }
     }
     
-    func onLicenseRequestProcessedAsRequest(result: NSDictionary) -> Void {
+    @objc(onLicenseRequestProcessedAsRequest:)
+    public func onLicenseRequestProcessedAsRequest(result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onLicenseRequestProcessedAsRequest.") }
         if let requestId = result["requestId"] as? String,
            let completion = self.licenseRequestCompletions.removeValue(forKey: requestId),
@@ -276,7 +282,8 @@ public class THEOplayerRCTContentProtectionAPI: NSObject {
         }
     }
     
-    func onLicenseRequestProcessedAsLicense(result: NSDictionary) -> Void {
+    @objc(onLicenseRequestProcessedAsLicense:)
+    public func onLicenseRequestProcessedAsLicense(result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onLicenseRequestProcessedAsLicense.") }
         if let requestId = result["requestId"] as? String,
            let completion = self.licenseRequestCompletions.removeValue(forKey: requestId) {
@@ -291,7 +298,8 @@ public class THEOplayerRCTContentProtectionAPI: NSObject {
         }
     }
     
-    func onLicenseResponseProcessed(result: NSDictionary) -> Void {
+    @objc(onLicenseResponseProcessed:)
+    public func onLicenseResponseProcessed(result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onLicenseResponseProcessed.") }
         if let requestId = result["requestId"] as? String,
            let completion = self.licenseResponseCompletions.removeValue(forKey: requestId) {
@@ -306,7 +314,8 @@ public class THEOplayerRCTContentProtectionAPI: NSObject {
         }
     }
     
-    func onExtractFairplayContentIdProcessed(result: NSDictionary) -> Void {
+    @objc(onExtractFairplayContentIdProcessed:)
+    public func onExtractFairplayContentIdProcessed(result: NSDictionary) -> Void {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onExtractFairplayContentIdProcessed.") }
         if let requestId = result["requestId"] as? String,
            let contentId = result["contentId"] as? String,
