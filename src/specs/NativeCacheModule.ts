@@ -3,7 +3,7 @@ import type { TurboModule } from 'react-native';
 import { TurboModuleRegistry } from 'react-native';
 
 export interface Spec extends TurboModule {
-  createTask(source: Object, parameters: Object): void;
+  createTask(source: Object, parameters: Object): Promise<Object>;
 
   getInitialState(): Promise<Object>;
 

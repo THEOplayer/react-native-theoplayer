@@ -32,36 +32,36 @@
 
 namespace JS {
   namespace NativeAdsModule {
-    struct SpecScheduleAdSources {
+    struct ScheduledAdSources {
       NSString *src() const;
       NSString *type() const;
 
-      SpecScheduleAdSources(NSDictionary *const v) : _v(v) {}
+      ScheduledAdSources(NSDictionary *const v) : _v(v) {}
     private:
       NSDictionary *_v;
     };
   }
 }
 
-@interface RCTCxxConvert (NativeAdsModule_SpecScheduleAdSources)
-+ (RCTManagedPointer *)JS_NativeAdsModule_SpecScheduleAdSources:(id)json;
+@interface RCTCxxConvert (NativeAdsModule_ScheduledAdSources)
++ (RCTManagedPointer *)JS_NativeAdsModule_ScheduledAdSources:(id)json;
 @end
 namespace JS {
   namespace NativeAdsModule {
-    struct SpecScheduleAd {
+    struct ScheduledAd {
       NSString *integration() const;
-      std::optional<JS::NativeAdsModule::SpecScheduleAdSources> sources() const;
+      std::optional<JS::NativeAdsModule::ScheduledAdSources> sources() const;
       std::optional<double> timeOffset() const;
 
-      SpecScheduleAd(NSDictionary *const v) : _v(v) {}
+      ScheduledAd(NSDictionary *const v) : _v(v) {}
     private:
       NSDictionary *_v;
     };
   }
 }
 
-@interface RCTCxxConvert (NativeAdsModule_SpecScheduleAd)
-+ (RCTManagedPointer *)JS_NativeAdsModule_SpecScheduleAd:(id)json;
+@interface RCTCxxConvert (NativeAdsModule_ScheduledAd)
++ (RCTManagedPointer *)JS_NativeAdsModule_ScheduledAd:(id)json;
 @end
 namespace JS {
   namespace NativeAdsModule {
@@ -96,7 +96,7 @@ namespace JS {
                   resolve:(RCTPromiseResolveBlock)resolve
                    reject:(RCTPromiseRejectBlock)reject;
 - (void)schedule:(double)tag
-              ad:(JS::NativeAdsModule::SpecScheduleAd &)ad;
+              ad:(JS::NativeAdsModule::ScheduledAd &)ad;
 - (void)daiContentTimeForStreamTime:(double)tag
                                time:(double)time
                             resolve:(RCTPromiseResolveBlock)resolve
@@ -138,7 +138,9 @@ namespace facebook::react {
 @protocol NativeCacheModuleSpec <RCTBridgeModule, RCTTurboModule>
 
 - (void)createTask:(NSDictionary *)source
-        parameters:(NSDictionary *)parameters;
+        parameters:(NSDictionary *)parameters
+           resolve:(RCTPromiseResolveBlock)resolve
+            reject:(RCTPromiseRejectBlock)reject;
 - (void)getInitialState:(RCTPromiseResolveBlock)resolve
                  reject:(RCTPromiseRejectBlock)reject;
 - (void)renewLicense:(NSString *)taskId
@@ -212,28 +214,12 @@ namespace facebook::react {
     NativeCastModuleSpecJSI(const ObjCTurboModule::InitParams &params);
   };
 } // namespace facebook::react
-namespace JS {
-  namespace NativeContentProtectionModule {
-    struct SpecOnBuildProcessedPayload {
-      NSString *requestId() const;
-      NSString *resultString() const;
 
-      SpecOnBuildProcessedPayload(NSDictionary *const v) : _v(v) {}
-    private:
-      NSDictionary *_v;
-    };
-  }
-}
-
-@interface RCTCxxConvert (NativeContentProtectionModule_SpecOnBuildProcessedPayload)
-+ (RCTManagedPointer *)JS_NativeContentProtectionModule_SpecOnBuildProcessedPayload:(id)json;
-@end
 @protocol NativeContentProtectionModuleSpec <RCTBridgeModule, RCTTurboModule>
 
 - (void)registerContentProtectionIntegration:(NSString *)integrationId
                                  keySystemId:(NSString *)keySystemId;
-- (void)onBuildProcessed:(JS::NativeContentProtectionModule::SpecOnBuildProcessedPayload &)payload;
-- (void)onCertificateRequest:(NSDictionary *)payload;
+- (void)onBuildProcessed:(NSDictionary *)payload;
 - (void)onCertificateRequestProcessedAsCertificate:(NSDictionary *)payload;
 - (void)onCertificateRequestProcessedAsRequest:(NSDictionary *)payload;
 - (void)onCertificateResponseProcessed:(NSDictionary *)payload;
@@ -378,27 +364,27 @@ namespace facebook::react {
     NativePlayerModuleSpecJSI(const ObjCTurboModule::InitParams &params);
   };
 } // namespace facebook::react
-inline NSString *JS::NativeAdsModule::SpecScheduleAdSources::src() const
+inline NSString *JS::NativeAdsModule::ScheduledAdSources::src() const
 {
   id const p = _v[@"src"];
   return RCTBridgingToString(p);
 }
-inline NSString *JS::NativeAdsModule::SpecScheduleAdSources::type() const
+inline NSString *JS::NativeAdsModule::ScheduledAdSources::type() const
 {
   id const p = _v[@"type"];
   return RCTBridgingToOptionalString(p);
 }
-inline NSString *JS::NativeAdsModule::SpecScheduleAd::integration() const
+inline NSString *JS::NativeAdsModule::ScheduledAd::integration() const
 {
   id const p = _v[@"integration"];
   return RCTBridgingToOptionalString(p);
 }
-inline std::optional<JS::NativeAdsModule::SpecScheduleAdSources> JS::NativeAdsModule::SpecScheduleAd::sources() const
+inline std::optional<JS::NativeAdsModule::ScheduledAdSources> JS::NativeAdsModule::ScheduledAd::sources() const
 {
   id const p = _v[@"sources"];
-  return (p == nil ? std::nullopt : std::make_optional(JS::NativeAdsModule::SpecScheduleAdSources(p)));
+  return (p == nil ? std::nullopt : std::make_optional(JS::NativeAdsModule::ScheduledAdSources(p)));
 }
-inline std::optional<double> JS::NativeAdsModule::SpecScheduleAd::timeOffset() const
+inline std::optional<double> JS::NativeAdsModule::ScheduledAd::timeOffset() const
 {
   id const p = _v[@"timeOffset"];
   return RCTBridgingToOptionalDouble(p);
@@ -420,16 +406,7 @@ inline NSString *JS::NativeAdsModule::SpecAddFriendlyObstructionObstruction::rea
 }
 
 
-inline NSString *JS::NativeContentProtectionModule::SpecOnBuildProcessedPayload::requestId() const
-{
-  id const p = _v[@"requestId"];
-  return RCTBridgingToString(p);
-}
-inline NSString *JS::NativeContentProtectionModule::SpecOnBuildProcessedPayload::resultString() const
-{
-  id const p = _v[@"resultString"];
-  return RCTBridgingToString(p);
-}
+
 
 
 

@@ -5,9 +5,7 @@ import { TurboModuleRegistry } from 'react-native';
 export interface Spec extends TurboModule {
   registerContentProtectionIntegration(integrationId: string, keySystemId: string): void;
 
-  onBuildProcessed(payload: { requestId: string; resultString: string }): void;
-
-  onCertificateRequest(payload: Object): void;
+  onBuildProcessed(payload: Object): void;
 
   onCertificateRequestProcessedAsCertificate(payload: Object): void;
 
