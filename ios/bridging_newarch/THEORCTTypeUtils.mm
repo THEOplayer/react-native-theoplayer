@@ -53,104 +53,117 @@ using namespace JS::NativeAdsModule;
 }
 
 + (THEOplayerRCTViewEventEmitter::OnNativePlayerReady) nativePlayerReadyDataFrom:(NSDictionary*) eventData {
+    THEOplayerRCTViewEventEmitter::OnNativePlayerReady event = THEOplayerRCTViewEventEmitter::OnNativePlayerReady();
     NSDictionary *versionDict = eventData[@"version"];
-    NSString *version = versionDict[@"version"];
-    NSString *playerSuiteVersion = versionDict[@"playerSuiteVersion"];
-    return THEOplayerRCTViewEventEmitter::OnNativePlayerReady{
-        THEOplayerRCTViewEventEmitter::OnNativePlayerReadyVersion {
-            [version UTF8String],
-            [playerSuiteVersion UTF8String]
-        },
-        THEOplayerRCTViewEventEmitter::OnNativePlayerReadyState{ }
-    };
+    if (versionDict) {
+        THEOplayerRCTViewEventEmitter::OnNativePlayerReadyVersion eventVersion = THEOplayerRCTViewEventEmitter::OnNativePlayerReadyVersion();
+        NSString *version = versionDict[@"version"];
+        eventVersion.version = [version UTF8String];
+        NSString *playerSuiteVersion = versionDict[@"playerSuiteVersion"];
+        eventVersion.playerSuiteVersion = [playerSuiteVersion UTF8String];
+        event.version = eventVersion;
+    }
+    
+    THEOplayerRCTViewEventEmitter::OnNativePlayerReadyState eventState = THEOplayerRCTViewEventEmitter::OnNativePlayerReadyState();
+    event.state = eventState;
+    return event;
 }
 
 + (THEOplayerRCTViewEventEmitter::OnNativeReadyStateChange) nativeReadyStateChangeDataFrom:(NSDictionary*) eventData {
+    THEOplayerRCTViewEventEmitter::OnNativeReadyStateChange event = THEOplayerRCTViewEventEmitter::OnNativeReadyStateChange();
     NSNumber *readyState = eventData[@"readyState"];
-    return THEOplayerRCTViewEventEmitter::OnNativeReadyStateChange {
-        [readyState doubleValue]
-    };
+    event.readyState = [readyState doubleValue];
+    return event;
 }
 
 + (THEOplayerRCTViewEventEmitter::OnNativeDurationChange) nativeDurationChangeDataFrom:(NSDictionary*) eventData {
+    THEOplayerRCTViewEventEmitter::OnNativeDurationChange event = THEOplayerRCTViewEventEmitter::OnNativeDurationChange();
     NSNumber *duration = eventData[@"duration"];
-    return THEOplayerRCTViewEventEmitter::OnNativeDurationChange {
-        [duration doubleValue]
-    };
+    event.duration = [duration doubleValue];
+    return event;
 }
 
 + (THEOplayerRCTViewEventEmitter::OnNativeVolumeChange) nativeVolumeChangeDataFrom:(NSDictionary*) eventData {
+    THEOplayerRCTViewEventEmitter::OnNativeVolumeChange event = THEOplayerRCTViewEventEmitter::OnNativeVolumeChange();
     NSNumber *volume = eventData[@"volume"];
+    event.volume = [volume doubleValue];
     NSNumber *muted = eventData[@"muted"];
-    return THEOplayerRCTViewEventEmitter::OnNativeVolumeChange {
-        [volume doubleValue],
-        [muted boolValue]
-    };
+    event.muted = [muted boolValue];
+    return event;
 }
 
 + (THEOplayerRCTViewEventEmitter::OnNativeProgress) nativeProgressDataFrom:(NSDictionary*) eventData {
+    THEOplayerRCTViewEventEmitter::OnNativeProgress event = THEOplayerRCTViewEventEmitter::OnNativeProgress();
     NSArray *seekableTimeRanges = eventData[@"seekable"];
     NSArray *bufferedTimeRanges = eventData[@"buffered"];
     std::vector<THEOplayerRCTViewEventEmitter::OnNativeProgressSeekable> seekable;
     std::vector<THEOplayerRCTViewEventEmitter::OnNativeProgressBuffered> buffered;
+    
     NSDictionary *item;
-    for (item in seekableTimeRanges) {
-        NSNumber *start = item[@"start"];
-        NSNumber *end = item[@"end"];
-        seekable.push_back(THEOplayerRCTViewEventEmitter::OnNativeProgressSeekable{
-            [start doubleValue],
-            [end doubleValue]
-        });
+    if (seekableTimeRanges) {
+        for (item in seekableTimeRanges) {
+            NSNumber *start = item[@"start"];
+            NSNumber *end = item[@"end"];
+            seekable.push_back(THEOplayerRCTViewEventEmitter::OnNativeProgressSeekable{
+                [start doubleValue],
+                [end doubleValue]
+            });
+        }
     }
-    for (item in bufferedTimeRanges) {
-        NSNumber *start = item[@"start"];
-        NSNumber *end = item[@"end"];
-        buffered.push_back(THEOplayerRCTViewEventEmitter::OnNativeProgressBuffered{
-            [start doubleValue],
-            [end doubleValue]
-        });
+    if (bufferedTimeRanges) {
+        for (item in bufferedTimeRanges) {
+            NSNumber *start = item[@"start"];
+            NSNumber *end = item[@"end"];
+            buffered.push_back(THEOplayerRCTViewEventEmitter::OnNativeProgressBuffered{
+                [start doubleValue],
+                [end doubleValue]
+            });
+        }
     }
-    return THEOplayerRCTViewEventEmitter::OnNativeProgress {
-        seekable,
-        buffered
-    };
+    
+    event.seekable = seekable;
+    event.buffered = buffered;
+
+    return event;
 }
 
 + (THEOplayerRCTViewEventEmitter::OnNativeTimeUpdate) nativeTimeUpdateDataFrom:(NSDictionary*) eventData {
+    THEOplayerRCTViewEventEmitter::OnNativeTimeUpdate event = THEOplayerRCTViewEventEmitter::OnNativeTimeUpdate();
     NSNumber *currentTime = eventData[@"currentTime"];
+    event.currentTime = [currentTime doubleValue];
     NSNumber *currentProgramDateTime = eventData[@"currentProgramDateTime"];
-    return THEOplayerRCTViewEventEmitter::OnNativeTimeUpdate {
-        [currentTime doubleValue],
-        [currentProgramDateTime doubleValue]
-    };
+    event.currentProgramDateTime = [currentProgramDateTime doubleValue];
+    return event;
 }
 
 + (THEOplayerRCTViewEventEmitter::OnNativeError) nativeErrorDataFrom:(NSDictionary*) eventData {
+    THEOplayerRCTViewEventEmitter::OnNativeError event = THEOplayerRCTViewEventEmitter::OnNativeError();
     NSDictionary *errorDict = eventData[@"error"];
-    NSString *errorCode = errorDict[@"errorCode"];
-    NSString *errorMessage = errorDict[@"errorMessage"];
-    return THEOplayerRCTViewEventEmitter::OnNativeError {
-        THEOplayerRCTViewEventEmitter::OnNativeErrorError {
-            [errorCode UTF8String],
-            [errorMessage UTF8String]
-        }
-    };
+    if (errorDict) {
+        THEOplayerRCTViewEventEmitter::OnNativeErrorError eventError = THEOplayerRCTViewEventEmitter::OnNativeErrorError();
+        NSString *errorCode = errorDict[@"errorCode"];
+        eventError.errorCode = [errorCode UTF8String];
+        NSString *errorMessage = errorDict[@"errorMessage"];
+        eventError.errorCode = [errorMessage UTF8String];
+        event.error = eventError;
+    }
+    return event;
 }
 
 + (THEOplayerRCTViewEventEmitter::OnNativeRateChange) nativeRateChangeDataFrom:(NSDictionary*) eventData {
+    THEOplayerRCTViewEventEmitter::OnNativeRateChange event = THEOplayerRCTViewEventEmitter::OnNativeRateChange();
     NSNumber *playbackRate = eventData[@"playbackRate"];
-    return THEOplayerRCTViewEventEmitter::OnNativeRateChange {
-        [playbackRate doubleValue],
-    };
+    event.playbackRate = [playbackRate doubleValue];
+    return event;
 }
 
 + (THEOplayerRCTViewEventEmitter::OnNativeResize) nativeResizeDataFrom:(NSDictionary*) eventData {
+    THEOplayerRCTViewEventEmitter::OnNativeResize event = THEOplayerRCTViewEventEmitter::OnNativeResize();
     NSNumber *width = eventData[@"width"];
     NSNumber *height = eventData[@"height"];
-    return THEOplayerRCTViewEventEmitter::OnNativeResize {
-        [width doubleValue],
-        [height doubleValue]
-    };
+    event.width = [width doubleValue];
+    event.height = [height doubleValue];
+    return event;
 }
 
 + (THEOplayerRCTViewEventEmitter::OnNativeLoadedMetadata) nativeLoadedMetadataDataFrom:(NSDictionary*) eventData {
@@ -162,11 +175,19 @@ using namespace JS::NativeAdsModule;
 }
 
 + (THEOplayerRCTViewEventEmitter::OnNativePresentationModeChange) nativePresentationModeChangeDataFrom:(NSDictionary*) eventData {
-    return THEOplayerRCTViewEventEmitter::OnNativePresentationModeChange {
-        
-        // TODO
-        
-    };
+    THEOplayerRCTViewEventEmitter::OnNativePresentationModeChange event = THEOplayerRCTViewEventEmitter::OnNativePresentationModeChange();
+    NSString *presentationMode = eventData[@"presentationMode"];
+    event.presentationMode = [presentationMode UTF8String];
+    NSString *previousPresentationMode = eventData[@"previousPresentationMode"];
+    event.previousPresentationMode = [previousPresentationMode UTF8String];
+    NSDictionary *contextDict = eventData[@"context"];
+    if (contextDict) {
+        THEOplayerRCTViewEventEmitter::OnNativePresentationModeChangeContext eventContext = THEOplayerRCTViewEventEmitter::OnNativePresentationModeChangeContext();
+        NSString *pipContext = contextDict[@"pip"];
+        eventContext.pip = [pipContext UTF8String];
+        event.context = eventContext;
+    }
+    return event;
 }
 
 + (THEOplayerRCTViewEventEmitter::OnNativeTextTrackListEvent) nativeTextTrackListEventDataFrom:(NSDictionary*) eventData {
