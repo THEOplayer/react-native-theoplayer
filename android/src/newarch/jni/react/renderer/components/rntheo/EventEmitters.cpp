@@ -88,6 +88,17 @@ cuesObject.setProperty(runtime, "endTime", cuesValue.endTime);
   
   cuesObject.setProperty(runtime, "content", content);
 }
+cuesObject.setProperty(runtime, "startDate", cuesValue.startDate);
+cuesObject.setProperty(runtime, "endDate", cuesValue.endDate);
+cuesObject.setProperty(runtime, "classString", cuesValue.classString);
+cuesObject.setProperty(runtime, "duration", cuesValue.duration);
+cuesObject.setProperty(runtime, "plannedDuration", cuesValue.plannedDuration);
+cuesObject.setProperty(runtime, "endOnNext", cuesValue.endOnNext);
+{
+  auto customAttributes = jsi::Object(runtime);
+  
+  cuesObject.setProperty(runtime, "customAttributes", customAttributes);
+}
       cues.setValueAtIndex(runtime, cuesIndex++, cuesObject);
     }
     textTracksObject.setProperty(runtime, "cues", cues);
@@ -118,6 +129,8 @@ audioTracksObject.setProperty(runtime, "language", audioTracksValue.language);
   activeQuality.setProperty(runtime, "name", audioTracksValue.activeQuality.name);
   activeQuality.setProperty(runtime, "label", audioTracksValue.activeQuality.label);
   activeQuality.setProperty(runtime, "available", audioTracksValue.activeQuality.available);
+  activeQuality.setProperty(runtime, "width", audioTracksValue.activeQuality.width);
+  activeQuality.setProperty(runtime, "height", audioTracksValue.activeQuality.height);
   audioTracksObject.setProperty(runtime, "activeQuality", activeQuality);
 }
 
@@ -133,6 +146,8 @@ qualitiesObject.setProperty(runtime, "uid", qualitiesValue.uid);
 qualitiesObject.setProperty(runtime, "name", qualitiesValue.name);
 qualitiesObject.setProperty(runtime, "label", qualitiesValue.label);
 qualitiesObject.setProperty(runtime, "available", qualitiesValue.available);
+qualitiesObject.setProperty(runtime, "width", qualitiesValue.width);
+qualitiesObject.setProperty(runtime, "height", qualitiesValue.height);
       qualities.setValueAtIndex(runtime, qualitiesIndex++, qualitiesObject);
     }
     audioTracksObject.setProperty(runtime, "qualities", qualities);
@@ -162,6 +177,8 @@ videoTracksObject.setProperty(runtime, "language", videoTracksValue.language);
   activeQuality.setProperty(runtime, "name", videoTracksValue.activeQuality.name);
   activeQuality.setProperty(runtime, "label", videoTracksValue.activeQuality.label);
   activeQuality.setProperty(runtime, "available", videoTracksValue.activeQuality.available);
+  activeQuality.setProperty(runtime, "width", videoTracksValue.activeQuality.width);
+  activeQuality.setProperty(runtime, "height", videoTracksValue.activeQuality.height);
   videoTracksObject.setProperty(runtime, "activeQuality", activeQuality);
 }
 
@@ -177,6 +194,8 @@ qualitiesObject.setProperty(runtime, "uid", qualitiesValue.uid);
 qualitiesObject.setProperty(runtime, "name", qualitiesValue.name);
 qualitiesObject.setProperty(runtime, "label", qualitiesValue.label);
 qualitiesObject.setProperty(runtime, "available", qualitiesValue.available);
+qualitiesObject.setProperty(runtime, "width", qualitiesValue.width);
+qualitiesObject.setProperty(runtime, "height", qualitiesValue.height);
       qualities.setValueAtIndex(runtime, qualitiesIndex++, qualitiesObject);
     }
     videoTracksObject.setProperty(runtime, "qualities", qualities);
@@ -396,6 +415,17 @@ void THEOplayerRCTViewEventEmitter::onNativeTextTrackListEvent(OnNativeTextTrack
     
     cuesObject.setProperty(runtime, "content", content);
   }
+  cuesObject.setProperty(runtime, "startDate", cuesValue.startDate);
+  cuesObject.setProperty(runtime, "endDate", cuesValue.endDate);
+  cuesObject.setProperty(runtime, "classString", cuesValue.classString);
+  cuesObject.setProperty(runtime, "duration", cuesValue.duration);
+  cuesObject.setProperty(runtime, "plannedDuration", cuesValue.plannedDuration);
+  cuesObject.setProperty(runtime, "endOnNext", cuesValue.endOnNext);
+  {
+    auto customAttributes = jsi::Object(runtime);
+    
+    cuesObject.setProperty(runtime, "customAttributes", customAttributes);
+  }
         cues.setValueAtIndex(runtime, cuesIndex++, cuesObject);
       }
       track.setProperty(runtime, "cues", cues);
@@ -425,6 +455,17 @@ $payload.setProperty(runtime, "trackUid", $event.trackUid);
     
     cue.setProperty(runtime, "content", content);
   }
+  cue.setProperty(runtime, "startDate", $event.cue.startDate);
+  cue.setProperty(runtime, "endDate", $event.cue.endDate);
+  cue.setProperty(runtime, "classString", $event.cue.classString);
+  cue.setProperty(runtime, "duration", $event.cue.duration);
+  cue.setProperty(runtime, "plannedDuration", $event.cue.plannedDuration);
+  cue.setProperty(runtime, "endOnNext", $event.cue.endOnNext);
+  {
+    auto customAttributes = jsi::Object(runtime);
+    
+    cue.setProperty(runtime, "customAttributes", customAttributes);
+  }
   $payload.setProperty(runtime, "cue", cue);
 }
     return $payload;
@@ -453,6 +494,8 @@ void THEOplayerRCTViewEventEmitter::onNativeMediaTrackListEvent(OnNativeMediaTra
     activeQuality.setProperty(runtime, "name", $event.track.activeQuality.name);
     activeQuality.setProperty(runtime, "label", $event.track.activeQuality.label);
     activeQuality.setProperty(runtime, "available", $event.track.activeQuality.available);
+    activeQuality.setProperty(runtime, "width", $event.track.activeQuality.width);
+    activeQuality.setProperty(runtime, "height", $event.track.activeQuality.height);
     track.setProperty(runtime, "activeQuality", activeQuality);
   }
 
@@ -468,6 +511,8 @@ void THEOplayerRCTViewEventEmitter::onNativeMediaTrackListEvent(OnNativeMediaTra
   qualitiesObject.setProperty(runtime, "name", qualitiesValue.name);
   qualitiesObject.setProperty(runtime, "label", qualitiesValue.label);
   qualitiesObject.setProperty(runtime, "available", qualitiesValue.available);
+  qualitiesObject.setProperty(runtime, "width", qualitiesValue.width);
+  qualitiesObject.setProperty(runtime, "height", qualitiesValue.height);
         qualities.setValueAtIndex(runtime, qualitiesIndex++, qualitiesObject);
       }
       track.setProperty(runtime, "qualities", qualities);
@@ -500,6 +545,8 @@ qualitiesObject.setProperty(runtime, "uid", qualitiesValue.uid);
 qualitiesObject.setProperty(runtime, "name", qualitiesValue.name);
 qualitiesObject.setProperty(runtime, "label", qualitiesValue.label);
 qualitiesObject.setProperty(runtime, "available", qualitiesValue.available);
+qualitiesObject.setProperty(runtime, "width", qualitiesValue.width);
+qualitiesObject.setProperty(runtime, "height", qualitiesValue.height);
       qualities.setValueAtIndex(runtime, qualitiesIndex++, qualitiesObject);
     }
     $payload.setProperty(runtime, "qualities", qualities);

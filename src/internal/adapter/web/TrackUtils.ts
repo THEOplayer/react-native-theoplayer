@@ -22,7 +22,7 @@ export function fromNativeCue(cue: NativeTextTrackCue): TextTrackCue {
     endTime: decodeNanInf(1e3 * cue.endTime),
     content: cue.content,
     ...(isDateRangeCue(cue) && {
-      class: cue.class,
+      class: cue.classString,
       startDate: cue.startDate,
       endDate: cue.endDate,
       duration: cue.duration ? decodeNanInf(1e3 * cue.duration) : cue.duration,

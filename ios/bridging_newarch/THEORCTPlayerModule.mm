@@ -45,6 +45,7 @@ RCT_EXPORT_MODULE(THEORCTPlayerModule)
     resolve([self.playerAPI version]);
 }
 
+
 - (void)setPaused:(double)tag paused:(BOOL)paused {
     [self runForTag:tag block:^(THEOplayerRCTView *view) {
         [self.playerAPI setPaused:view

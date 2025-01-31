@@ -242,18 +242,19 @@ class THEOplayerRCTMediaTrackEventHandler {
                 "type" : MediaTrackEventType.ACTIVE_QUALITY_CHANGED.rawValue,
                 "trackType": MediaTrackType.VIDEO.rawValue,
                 "qualities": [
-                    "bandwidth": track.activeQualityBandwidth,
-                    "codecs": "",
-                    "id": identifier,
-                    "uid": identifier,
-                    "name": label,
-                    "label": label,
-                    "available": true,
-                    "width": player.videoWidth,
-                    "height": player.videoHeight,
-                    //"frameRate": 0, // not available on iOS SDK
-                    //"firstFrame": 0 // not available on iOS SDK
-                        
+                    [
+                        "bandwidth": track.activeQualityBandwidth,
+                        "codecs": "",
+                        "id": identifier,
+                        "uid": identifier,
+                        "name": label,
+                        "label": label,
+                        "available": true,
+                        "width": player.videoWidth,
+                        "height": player.videoHeight,
+                        //"frameRate": 0, // not available on iOS SDK
+                        //"firstFrame": 0 // not available on iOS SDK
+                    ]
                 ]
             ])
         }
@@ -272,14 +273,16 @@ class THEOplayerRCTMediaTrackEventHandler {
                 "type" : MediaTrackEventType.ACTIVE_QUALITY_CHANGED.rawValue,
                 "trackType": MediaTrackType.AUDIO.rawValue,
                 "qualities": [
-                    "bandwidth": track.activeQualityBandwidth,
-                    "codecs": "",
-                    "id": identifier,
-                    "uid": identifier,
-                    "name": label,
-                    "label": label,
-                    "available": true,
-                    //"audioSamplingRate": 0 // not available on iOS SDK
+                    [
+                        "bandwidth": track.activeQualityBandwidth,
+                        "codecs": "",
+                        "id": identifier,
+                        "uid": identifier,
+                        "name": label,
+                        "label": label,
+                        "available": true,
+                        //"audioSamplingRate": 0 // not available on iOS SDK
+                    ]
                 ]
             ])
         }

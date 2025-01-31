@@ -10,10 +10,12 @@
 using namespace facebook::react;
 
 @interface THEOplayerRCTView_objc () <RCTTHEOplayerRCTViewViewProtocol>
+
 @end
 
 @implementation THEOplayerRCTView_objc {
     THEOplayerRCTView * _view;
+    NSTimer *timer;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -49,9 +51,8 @@ using namespace facebook::react;
 
 - (void)attachNativeCallbacks {
     __weak THEOplayerRCTView_objc *weakSelf = self;
+    
     [_view setOnNativePlay:^(NSDictionary *eventData) {
-        
-        
         weakSelf.eventEmitter.onNativePlay({}); }];
     [_view setOnNativePause:^(NSDictionary *eventData) {
         weakSelf.eventEmitter.onNativePause({}); }];

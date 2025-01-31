@@ -123,7 +123,7 @@ RCT_EXPORT_MODULE(THEORCTAdsModule)
 
 // OMID
 
-- (void)addFriendlyObstruction:(double)tag obstruction:(JS::NativeAdsModule::SpecAddFriendlyObstructionObstruction &)obstruction {
+- (void)addFriendlyObstruction:(double)tag obstruction:(JS::NativeAdsModule::FriendlyObstruction &)obstruction {
     [self runForTag:tag block:^(THEOplayerRCTView *view) {
         [self.adsAPI addFriendlyObstruction:view
                             obstructionView:[self viewForTag:obstruction.view()]
@@ -136,6 +136,7 @@ RCT_EXPORT_MODULE(THEORCTAdsModule)
         [self.adsAPI removeAllFriendlyObstructions:view];
     }];
 }
+
 
 
 

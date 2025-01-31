@@ -35,10 +35,10 @@
   return facebook::react::managedPointer<JS::NativeAdsModule::ScheduledAd>(json);
 }
 @end
-@implementation RCTCxxConvert (NativeAdsModule_SpecAddFriendlyObstructionObstruction)
-+ (RCTManagedPointer *)JS_NativeAdsModule_SpecAddFriendlyObstructionObstruction:(id)json
+@implementation RCTCxxConvert (NativeAdsModule_FriendlyObstruction)
++ (RCTManagedPointer *)JS_NativeAdsModule_FriendlyObstruction:(id)json
 {
-  return facebook::react::managedPointer<JS::NativeAdsModule::SpecAddFriendlyObstructionObstruction>(json);
+  return facebook::react::managedPointer<JS::NativeAdsModule::FriendlyObstruction>(json);
 }
 @end
 namespace facebook::react {
@@ -125,7 +125,7 @@ namespace facebook::react {
         
         
         methodMap_["addFriendlyObstruction"] = MethodMetadata {2, __hostFunction_NativeAdsModuleSpecJSI_addFriendlyObstruction};
-        setMethodArgConversionSelector(@"addFriendlyObstruction", 1, @"JS_NativeAdsModule_SpecAddFriendlyObstructionObstruction:");
+        setMethodArgConversionSelector(@"addFriendlyObstruction", 1, @"JS_NativeAdsModule_FriendlyObstruction:");
         
         methodMap_["removeAllFriendlyObstructions"] = MethodMetadata {1, __hostFunction_NativeAdsModuleSpecJSI_removeAllFriendlyObstructions};
         
