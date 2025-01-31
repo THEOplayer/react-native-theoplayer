@@ -15,7 +15,7 @@ using namespace JS::NativeAdsModule;
 // C++ => OBJC
 + (NSDictionary *) configFrom:(THEOplayerRCTViewConfigStruct) structData;
 + (NSDictionary *) scheduledAd:(ScheduledAd) scheduledAdData;
-+ (NSDictionary *) obstruction:(SpecAddFriendlyObstructionObstruction) obstructionData;
++ (NSDictionary *) obstruction:(FriendlyObstruction) obstructionData;
 
 // OBJC => C++
 + (THEOplayerRCTViewEventEmitter::OnNativePlayerReady) nativePlayerReadyDataFrom:(NSDictionary*) eventData;

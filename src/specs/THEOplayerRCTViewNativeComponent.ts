@@ -83,6 +83,13 @@ export type NativeLoadedMetadataEvent = Readonly<{
             startTime: Double;
             endTime: Double;
             content: {};
+            startDate?: Double;
+            endDate?: Double;
+            classString?: string;
+            duration?: Double;
+            plannedDuration?: Double;
+            endOnNext?: boolean;
+            customAttributes?: {};
           }[]
         | null
       >;
@@ -107,6 +114,8 @@ export type NativeLoadedMetadataEvent = Readonly<{
             name: string;
             label: string;
             available: boolean;
+            width?: Double; // specific for video
+            height?: Double; // specific for video
           }
         | undefined
       >;
@@ -120,6 +129,8 @@ export type NativeLoadedMetadataEvent = Readonly<{
           name: string;
           label: string;
           available: boolean;
+          width?: Double; // specific for video
+          height?: Double; // specific for video
         }[]
       >;
       enabled: boolean;
@@ -142,6 +153,8 @@ export type NativeLoadedMetadataEvent = Readonly<{
             name: string;
             label: string;
             available: boolean;
+            width?: Double; // specific for video
+            height?: Double; // specific for video
           }
         | undefined
       >;
@@ -155,6 +168,8 @@ export type NativeLoadedMetadataEvent = Readonly<{
           name: string;
           label: string;
           available: boolean;
+          width?: Double; // specific for video
+          height?: Double; // specific for video
         }[]
       >;
       enabled: boolean;
@@ -232,6 +247,13 @@ type EventWithTextTrack = Readonly<{
           startTime: Double;
           endTime: Double;
           content: {};
+          startDate?: Double;
+          endDate?: Double;
+          classString?: string;
+          duration?: Double;
+          plannedDuration?: Double;
+          endOnNext?: boolean;
+          customAttributes?: {};
         }[]
       | null
     >;
@@ -251,6 +273,13 @@ export type NativeTextTrackEvent = Readonly<{
     startTime: Double;
     endTime: Double;
     content: {};
+    startDate?: Double;
+    endDate?: Double;
+    classString?: string;
+    duration?: Double;
+    plannedDuration?: Double;
+    endOnNext: boolean;
+    customAttributes?: {};
   };
 }>;
 
@@ -271,6 +300,8 @@ type EventWithMediaTrack = Readonly<{
           name: string;
           label: string;
           available: boolean;
+          width?: Double; // specific for video
+          height?: Double; // specific for video
         }
       | undefined
     >;
@@ -284,6 +315,8 @@ type EventWithMediaTrack = Readonly<{
         name: string;
         label: string;
         available: boolean;
+        width?: Double; // specific for video
+        height?: Double; // specific for video
       }[]
     >;
     enabled: boolean;
@@ -308,6 +341,8 @@ export type NativeMediaTrackEvent = Readonly<{
       name: string;
       label: string;
       available: boolean;
+      width?: Double; // specific for video
+      height?: Double; // specific for video
     }[]
   >; // Note: unable to use union type '{} | {}[]'
 }>;

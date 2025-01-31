@@ -12,7 +12,7 @@ export interface DateRangeCue extends TextTrackCue {
    * @remarks
    * <br/> - The class is a client-defined string specifying a set of attributes with associated value semantics.
    */
-  class: string | undefined;
+  classString: string | undefined;
 
   /**
    * The playback position at which the date range cue becomes active, as a Date.

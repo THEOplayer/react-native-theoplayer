@@ -1,4 +1,5 @@
 #import <React/RCTViewComponentView.h>
+#import <React/RCTComponent.h>
 #import <UIKit/UIKit.h>
 
 #ifndef THEOplayerRCTViewNativeComponent_h

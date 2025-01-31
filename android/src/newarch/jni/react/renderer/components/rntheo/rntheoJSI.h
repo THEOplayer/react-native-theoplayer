@@ -16,6 +16,63 @@ namespace facebook::react {
 
 
   
+#pragma mark - NativeAdsModuleFriendlyObstruction
+
+template <typename P0, typename P1, typename P2>
+struct NativeAdsModuleFriendlyObstruction {
+  P0 view;
+  P1 purpose;
+  P2 reason;
+  bool operator==(const NativeAdsModuleFriendlyObstruction &other) const {
+    return view == other.view && purpose == other.purpose && reason == other.reason;
+  }
+};
+
+template <typename T>
+struct NativeAdsModuleFriendlyObstructionBridging {
+  static T types;
+
+  static T fromJs(
+      jsi::Runtime &rt,
+      const jsi::Object &value,
+      const std::shared_ptr<CallInvoker> &jsInvoker) {
+    T result{
+      bridging::fromJs<decltype(types.view)>(rt, value.getProperty(rt, "view"), jsInvoker),
+      bridging::fromJs<decltype(types.purpose)>(rt, value.getProperty(rt, "purpose"), jsInvoker),
+      bridging::fromJs<decltype(types.reason)>(rt, value.getProperty(rt, "reason"), jsInvoker)};
+    return result;
+  }
+
+#ifdef DEBUG
+  static double viewToJs(jsi::Runtime &rt, decltype(types.view) value) {
+    return bridging::toJs(rt, value);
+  }
+
+  static jsi::String purposeToJs(jsi::Runtime &rt, decltype(types.purpose) value) {
+    return bridging::toJs(rt, value);
+  }
+
+  static jsi::String reasonToJs(jsi::Runtime &rt, decltype(types.reason) value) {
+    return bridging::toJs(rt, value);
+  }
+#endif
+
+  static jsi::Object toJs(
+      jsi::Runtime &rt,
+      const T &value,
+      const std::shared_ptr<CallInvoker> &jsInvoker) {
+    auto result = facebook::jsi::Object(rt);
+    result.setProperty(rt, "view", bridging::toJs(rt, value.view, jsInvoker));
+    result.setProperty(rt, "purpose", bridging::toJs(rt, value.purpose, jsInvoker));
+    if (value.reason) {
+      result.setProperty(rt, "reason", bridging::toJs(rt, value.reason.value(), jsInvoker));
+    }
+    return result;
+  }
+};
+
+
+
 #pragma mark - NativeAdsModuleScheduledAd
 
 template <typename P0, typename P1, typename P2>

@@ -65,20 +65,20 @@ namespace JS {
 @end
 namespace JS {
   namespace NativeAdsModule {
-    struct SpecAddFriendlyObstructionObstruction {
+    struct FriendlyObstruction {
       double view() const;
       NSString *purpose() const;
       NSString *reason() const;
 
-      SpecAddFriendlyObstructionObstruction(NSDictionary *const v) : _v(v) {}
+      FriendlyObstruction(NSDictionary *const v) : _v(v) {}
     private:
       NSDictionary *_v;
     };
   }
 }
 
-@interface RCTCxxConvert (NativeAdsModule_SpecAddFriendlyObstructionObstruction)
-+ (RCTManagedPointer *)JS_NativeAdsModule_SpecAddFriendlyObstructionObstruction:(id)json;
+@interface RCTCxxConvert (NativeAdsModule_FriendlyObstruction)
++ (RCTManagedPointer *)JS_NativeAdsModule_FriendlyObstruction:(id)json;
 @end
 @protocol NativeAdsModuleSpec <RCTBridgeModule, RCTTurboModule>
 
@@ -111,7 +111,7 @@ namespace JS {
 - (void)daiSetSnapback:(double)tag
                enabled:(BOOL)enabled;
 - (void)addFriendlyObstruction:(double)tag
-                   obstruction:(JS::NativeAdsModule::SpecAddFriendlyObstructionObstruction &)obstruction;
+                   obstruction:(JS::NativeAdsModule::FriendlyObstruction &)obstruction;
 - (void)removeAllFriendlyObstructions:(double)tag;
 
 @end
@@ -389,17 +389,17 @@ inline std::optional<double> JS::NativeAdsModule::ScheduledAd::timeOffset() cons
   id const p = _v[@"timeOffset"];
   return RCTBridgingToOptionalDouble(p);
 }
-inline double JS::NativeAdsModule::SpecAddFriendlyObstructionObstruction::view() const
+inline double JS::NativeAdsModule::FriendlyObstruction::view() const
 {
   id const p = _v[@"view"];
   return RCTBridgingToDouble(p);
 }
-inline NSString *JS::NativeAdsModule::SpecAddFriendlyObstructionObstruction::purpose() const
+inline NSString *JS::NativeAdsModule::FriendlyObstruction::purpose() const
 {
   id const p = _v[@"purpose"];
   return RCTBridgingToString(p);
 }
-inline NSString *JS::NativeAdsModule::SpecAddFriendlyObstructionObstruction::reason() const
+inline NSString *JS::NativeAdsModule::FriendlyObstruction::reason() const
 {
   id const p = _v[@"reason"];
   return RCTBridgingToOptionalString(p);

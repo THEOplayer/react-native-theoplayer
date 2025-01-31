@@ -47,12 +47,23 @@ class THEOplayerRCTViewEventEmitter : public ViewEventEmitter {
       
     };
 
+  struct OnNativeLoadedMetadataTextTracksCuesCustomAttributes {
+      
+    };
+
   struct OnNativeLoadedMetadataTextTracksCues {
       std::string id;
     double uid;
     double startTime;
     double endTime;
     OnNativeLoadedMetadataTextTracksCuesContent content;
+    double startDate;
+    double endDate;
+    std::string classString;
+    double duration;
+    double plannedDuration;
+    bool endOnNext;
+    OnNativeLoadedMetadataTextTracksCuesCustomAttributes customAttributes;
     };
 
   struct OnNativeLoadedMetadataTextTracks {
@@ -77,6 +88,8 @@ class THEOplayerRCTViewEventEmitter : public ViewEventEmitter {
     std::string name;
     std::string label;
     bool available;
+    double width;
+    double height;
     };
 
   struct OnNativeLoadedMetadataAudioTracksQualities {
@@ -88,6 +101,8 @@ class THEOplayerRCTViewEventEmitter : public ViewEventEmitter {
     std::string name;
     std::string label;
     bool available;
+    double width;
+    double height;
     };
 
   struct OnNativeLoadedMetadataAudioTracks {
@@ -110,6 +125,8 @@ class THEOplayerRCTViewEventEmitter : public ViewEventEmitter {
     std::string name;
     std::string label;
     bool available;
+    double width;
+    double height;
     };
 
   struct OnNativeLoadedMetadataVideoTracksQualities {
@@ -121,6 +138,8 @@ class THEOplayerRCTViewEventEmitter : public ViewEventEmitter {
     std::string name;
     std::string label;
     bool available;
+    double width;
+    double height;
     };
 
   struct OnNativeLoadedMetadataVideoTracks {
@@ -232,12 +251,23 @@ class THEOplayerRCTViewEventEmitter : public ViewEventEmitter {
       
     };
 
+  struct OnNativeTextTrackListEventTrackCuesCustomAttributes {
+      
+    };
+
   struct OnNativeTextTrackListEventTrackCues {
       std::string id;
     double uid;
     double startTime;
     double endTime;
     OnNativeTextTrackListEventTrackCuesContent content;
+    double startDate;
+    double endDate;
+    std::string classString;
+    double duration;
+    double plannedDuration;
+    bool endOnNext;
+    OnNativeTextTrackListEventTrackCuesCustomAttributes customAttributes;
     };
 
   struct OnNativeTextTrackListEventTrack {
@@ -262,12 +292,23 @@ class THEOplayerRCTViewEventEmitter : public ViewEventEmitter {
       
     };
 
+  struct OnNativeTextTrackEventCueCustomAttributes {
+      
+    };
+
   struct OnNativeTextTrackEventCue {
       std::string id;
     double uid;
     double startTime;
     double endTime;
     OnNativeTextTrackEventCueContent content;
+    double startDate;
+    double endDate;
+    std::string classString;
+    double duration;
+    double plannedDuration;
+    bool endOnNext;
+    OnNativeTextTrackEventCueCustomAttributes customAttributes;
     };
 
   struct OnNativeTextTrackEvent {
@@ -285,6 +326,8 @@ class THEOplayerRCTViewEventEmitter : public ViewEventEmitter {
     std::string name;
     std::string label;
     bool available;
+    double width;
+    double height;
     };
 
   struct OnNativeMediaTrackListEventTrackQualities {
@@ -296,6 +339,8 @@ class THEOplayerRCTViewEventEmitter : public ViewEventEmitter {
     std::string name;
     std::string label;
     bool available;
+    double width;
+    double height;
     };
 
   struct OnNativeMediaTrackListEventTrack {
@@ -324,6 +369,8 @@ class THEOplayerRCTViewEventEmitter : public ViewEventEmitter {
     std::string name;
     std::string label;
     bool available;
+    double width;
+    double height;
     };
 
   struct OnNativeMediaTrackEvent {

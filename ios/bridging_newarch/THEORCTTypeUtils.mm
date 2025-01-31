@@ -44,7 +44,7 @@ using namespace JS::NativeAdsModule;
     return scheduledAdDict;
 }
 
-+ (NSDictionary *) obstruction:(SpecAddFriendlyObstructionObstruction) obstructionData {
++ (NSDictionary *) obstruction:(FriendlyObstruction) obstructionData {
     NSMutableDictionary *obstructionDict = [[NSMutableDictionary alloc] init];
     obstructionDict[@"view"] = @(obstructionData.view());
     obstructionDict[@"purpose"] = obstructionData.purpose();
@@ -191,35 +191,221 @@ using namespace JS::NativeAdsModule;
 }
 
 + (THEOplayerRCTViewEventEmitter::OnNativeTextTrackListEvent) nativeTextTrackListEventDataFrom:(NSDictionary*) eventData {
-    return THEOplayerRCTViewEventEmitter::OnNativeTextTrackListEvent {
-        
-        // TODO
-        
-    };
+    THEOplayerRCTViewEventEmitter::OnNativeTextTrackListEvent event = THEOplayerRCTViewEventEmitter::OnNativeTextTrackListEvent();
+    NSNumber *type = eventData[@"type"];
+    event.type = [type doubleValue];
+    NSDictionary *trackDict = eventData[@"track"];
+    if (trackDict) {
+        THEOplayerRCTViewEventEmitter::OnNativeTextTrackListEventTrack eventTrack = THEOplayerRCTViewEventEmitter::OnNativeTextTrackListEventTrack();
+        NSString *kind = trackDict[@"kind"];
+        eventTrack.kind = [kind UTF8String];
+        NSString *label = trackDict[@"label"];
+        eventTrack.label = [label UTF8String];
+        NSString *language = trackDict[@"language"];
+        eventTrack.language = [language UTF8String];
+        NSString *idStr = trackDict[@"id"];
+        eventTrack.id = [idStr UTF8String];
+        NSString *uid = trackDict[@"uid"];
+        eventTrack.uid = [uid doubleValue];
+        NSString *mode = trackDict[@"mode"];
+        eventTrack.mode = [mode UTF8String];
+        NSString *type = trackDict[@"type"];
+        eventTrack.type = [type UTF8String];
+        NSString *src = trackDict[@"src"];
+        eventTrack.src = [src UTF8String];
+        NSNumber *forced = trackDict[@"forced"];
+        eventTrack.forced = [forced boolValue];
+        NSArray *cuesList = trackDict[@"cues"];
+        std::vector<THEOplayerRCTViewEventEmitter::OnNativeTextTrackListEventTrackCues> cues;
+        NSDictionary *cueDict;
+        if (cuesList) {
+            for (cueDict in cuesList) {
+                THEOplayerRCTViewEventEmitter::OnNativeTextTrackListEventTrackCues cue = THEOplayerRCTViewEventEmitter::OnNativeTextTrackListEventTrackCues();
+                NSString *cueId = cueDict[@"id"];
+                cue.id = [cueId UTF8String];
+                NSNumber *uid = cueDict[@"uid"];
+                cue.uid = [uid doubleValue];
+                NSNumber *startTime = cueDict[@"startTime"];
+                cue.startTime = [startTime doubleValue];
+                NSNumber *endTime = cueDict[@"endTime"];
+                cue.endTime = [endTime doubleValue];
+                THEOplayerRCTViewEventEmitter::OnNativeTextTrackListEventTrackCuesContent cueContent = THEOplayerRCTViewEventEmitter::OnNativeTextTrackListEventTrackCuesContent();
+                
+                // TODO
+                
+                cue.content = cueContent;
+                NSNumber *startDate = cueDict[@"startDate"];
+                if (startDate) {
+                    cue.startDate = [startDate doubleValue];
+                }
+                NSNumber *endDate = cueDict[@"endDate"];
+                if (endDate) {
+                    cue.endDate = [endDate doubleValue];
+                }
+                NSString *cueClass = cueDict[@"class"];
+                if (cueClass) {
+                    cue.classString = [cueClass UTF8String];
+                }
+                NSNumber *duration = cueDict[@"duration"];
+                if (duration) {
+                    cue.duration = [duration doubleValue];
+                }
+                NSNumber *plannedDuration = cueDict[@"plannedDuration"];
+                if (plannedDuration) {
+                    cue.plannedDuration = [plannedDuration doubleValue];
+                }
+                NSNumber *endOnNext = cueDict[@"endOnNext"];
+                if (endOnNext) {
+                    cue.endOnNext = [endOnNext boolValue];
+                }
+                THEOplayerRCTViewEventEmitter::OnNativeTextTrackListEventTrackCuesCustomAttributes cueCustomAttributes = THEOplayerRCTViewEventEmitter::OnNativeTextTrackListEventTrackCuesCustomAttributes();
+                
+                // TODO
+                
+                
+                cue.customAttributes = cueCustomAttributes;
+                cues.push_back(cue);
+            }
+        }
+        eventTrack.cues = cues;
+        event.track = eventTrack;
+    }
+    
+    return event;
 }
 
 + (THEOplayerRCTViewEventEmitter::OnNativeTextTrackEvent) nativeTextTrackEventDataFrom:(NSDictionary*) eventData {
-    return THEOplayerRCTViewEventEmitter::OnNativeTextTrackEvent {
-        
-        // TODO
-        
-    };
+    THEOplayerRCTViewEventEmitter::OnNativeTextTrackEvent event = THEOplayerRCTViewEventEmitter::OnNativeTextTrackEvent();
+    NSNumber *type = eventData[@"type"];
+    event.type = [type doubleValue];
+    NSNumber *trackUid = eventData[@"trackUid"];
+    event.trackUid = [trackUid doubleValue];
+    
+    NSDictionary *cueDict = eventData[@"cue"];
+    THEOplayerRCTViewEventEmitter::OnNativeTextTrackEventCue cue = THEOplayerRCTViewEventEmitter::OnNativeTextTrackEventCue();
+    NSString *cueId = cueDict[@"id"];
+    cue.id = [cueId UTF8String];
+    NSNumber *uid = cueDict[@"uid"];
+    cue.uid = [uid doubleValue];
+    NSNumber *startTime = cueDict[@"startTime"];
+    cue.startTime = [startTime doubleValue];
+    NSNumber *endTime = cueDict[@"endTime"];
+    cue.endTime = [endTime doubleValue];
+    THEOplayerRCTViewEventEmitter::OnNativeTextTrackEventCueContent cueContent = THEOplayerRCTViewEventEmitter::OnNativeTextTrackEventCueContent();
+    
+    // TODO
+    
+    cue.content = cueContent;
+    NSNumber *startDate = cueDict[@"startDate"];
+    if (startDate) {
+        cue.startDate = [startDate doubleValue];
+    }
+    NSNumber *endDate = cueDict[@"endDate"];
+    if (endDate) {
+        cue.endDate = [endDate doubleValue];
+    }
+    NSString *cueClass = cueDict[@"class"];
+    if (cueClass) {
+        cue.classString = [cueClass UTF8String];
+    }
+    NSNumber *duration = cueDict[@"duration"];
+    if (duration) {
+        cue.duration = [duration doubleValue];
+    }
+    NSNumber *plannedDuration = cueDict[@"plannedDuration"];
+    if (plannedDuration) {
+        cue.plannedDuration = [plannedDuration doubleValue];
+    }
+    NSNumber *endOnNext = cueDict[@"endOnNext"];
+    if (endOnNext) {
+        cue.endOnNext = [endOnNext boolValue];
+    }
+    THEOplayerRCTViewEventEmitter::OnNativeTextTrackEventCueCustomAttributes cueCustomAttributes = THEOplayerRCTViewEventEmitter::OnNativeTextTrackEventCueCustomAttributes();
+    
+    // TODO
+    
+    cue.customAttributes = cueCustomAttributes;
+    event.cue = cue;
+    return event;
 }
 
 + (THEOplayerRCTViewEventEmitter::OnNativeMediaTrackListEvent) nativeMediaTrackListEventDataFrom:(NSDictionary*) eventData {
-    return THEOplayerRCTViewEventEmitter::OnNativeMediaTrackListEvent {
+    THEOplayerRCTViewEventEmitter::OnNativeMediaTrackListEvent event = THEOplayerRCTViewEventEmitter::OnNativeMediaTrackListEvent();
+    NSNumber *type = eventData[@"type"];
+    event.type = [type doubleValue];
+    NSNumber *trackType = eventData[@"trackType"];
+    event.trackType = [trackType doubleValue];
+    
+    NSDictionary *trackDict = eventData[@"track"];
+    if (trackDict) {
+        THEOplayerRCTViewEventEmitter::OnNativeMediaTrackListEventTrack eventTrack = THEOplayerRCTViewEventEmitter::OnNativeMediaTrackListEventTrack();
+        NSString *kind = trackDict[@"kind"];
+        eventTrack.kind = [kind UTF8String];
+        NSString *label = trackDict[@"label"];
+        eventTrack.label = [label UTF8String];
+        NSString *language = trackDict[@"language"];
+        eventTrack.language = [language UTF8String];
+        NSString *idStr = trackDict[@"id"];
+        eventTrack.id = [idStr UTF8String];
+        NSString *uid = trackDict[@"uid"];
+        eventTrack.uid = [uid doubleValue];
+        NSNumber *enabled = trackDict[@"enabled"];
+        eventTrack.enabled = [enabled boolValue];
         
-        // TODO
+        // activeQuality and qualities are not available on iOS / tvOS SDK's
+        THEOplayerRCTViewEventEmitter::OnNativeMediaTrackListEventTrackActiveQuality trackActiveQuality =  THEOplayerRCTViewEventEmitter::OnNativeMediaTrackListEventTrackActiveQuality();
+        std::vector<THEOplayerRCTViewEventEmitter::OnNativeMediaTrackListEventTrackQualities> trackQualities;
+        eventTrack.activeQuality = trackActiveQuality;
+        eventTrack.qualities = trackQualities;
         
-    };
+        event.track = eventTrack;
+    }
+    return event;
 }
 
 + (THEOplayerRCTViewEventEmitter::OnNativeMediaTrackEvent) nativeMediaTrackEventDataFrom:(NSDictionary*) eventData {
-    return THEOplayerRCTViewEventEmitter::OnNativeMediaTrackEvent {
-        
-        // TODO
-        
-    };
+    THEOplayerRCTViewEventEmitter::OnNativeMediaTrackEvent event = THEOplayerRCTViewEventEmitter::OnNativeMediaTrackEvent();
+    NSNumber *type = eventData[@"type"];
+    event.type = [type doubleValue];
+    NSNumber *trackType = eventData[@"trackType"];
+    event.trackType = [trackType doubleValue];
+    NSNumber *trackUid = eventData[@"trackUid"];
+    event.trackUid = [trackUid doubleValue];
+    
+    // on iOS / tvOS the SDK provides only the current active quality for this event.
+    NSArray *qualityList = eventData[@"qualities"];
+    std::vector<THEOplayerRCTViewEventEmitter::OnNativeMediaTrackEventQualities> trackQualities;
+    NSDictionary *qualityDict;
+    if (qualityList) {
+        for (qualityDict in qualityList) {
+            THEOplayerRCTViewEventEmitter::OnNativeMediaTrackEventQualities trackActiveQuality =  THEOplayerRCTViewEventEmitter::OnNativeMediaTrackEventQualities();
+            NSNumber *bandwidth = qualityDict[@"bandwidth"];
+            trackActiveQuality.bandwidth = [bandwidth doubleValue];
+            NSString *codecs = qualityDict[@"codecs"];
+            trackActiveQuality.codecs = [codecs UTF8String];
+            NSString *qualityId = qualityDict[@"id"];
+            trackActiveQuality.id = [qualityId UTF8String];
+            NSNumber *uid = qualityDict[@"uid"];
+            trackActiveQuality.uid = [uid doubleValue];
+            NSString *name = qualityDict[@"name"];
+            trackActiveQuality.name = [name UTF8String];
+            NSString *label = qualityDict[@"label"];
+            trackActiveQuality.label = [label UTF8String];
+            NSNumber *available = qualityDict[@"available"];
+            trackActiveQuality.available = [available boolValue];
+            NSNumber *width = qualityDict[@"width"];
+            if (width) {
+                trackActiveQuality.width = [width doubleValue];
+            }
+            NSNumber *height = qualityDict[@"height"];
+            if (height) {
+                trackActiveQuality.height = [height doubleValue];
+            }
+            trackQualities.push_back(trackActiveQuality);
+        }
+    }
+    event.qualities = trackQualities;
+    return event;
 }
 
 + (THEOplayerRCTViewEventEmitter::OnNativeCastEvent) nativeCastEventDataFrom:(NSDictionary*) eventData {

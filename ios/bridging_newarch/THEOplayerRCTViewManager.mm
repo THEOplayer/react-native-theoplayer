@@ -1,5 +1,6 @@
 #import <React/RCTViewManager.h>
 #import <React/RCTUIManager.h>
+#import <React/RCTComponent.h>
 #import "RCTBridge.h"
 
 @interface THEOplayerRCTViewManager : RCTViewManager
@@ -14,6 +15,6 @@ RCT_EXPORT_MODULE(THEOplayerRCTView)
     return [[UIView alloc] init];
 }
 
-RCT_EXPORT_VIEW_PROPERTY(config, NSDictionary);
+//RCT_EXPORT_VIEW_PROPERTY(config, NSDictionary);
 
 @end
