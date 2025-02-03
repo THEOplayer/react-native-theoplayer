@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Added a `theoLive` property to `PlayerConfiguration` to enable THEOlive configuration.
+
 ### Fixed
 
 - Fixed an issue on iOS where the `currentTime` on `NowPlayingInfoCenter` would go out of sync or reset when changing playback rate.
