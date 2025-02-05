@@ -10,6 +10,7 @@ import com.theoplayer.android.api.cast.CastStrategy
 import com.theoplayer.android.api.cast.CastConfiguration
 import com.theoplayer.android.api.pip.PipConfiguration
 import com.theoplayer.android.api.player.NetworkConfiguration
+import com.theoplayer.android.api.theolive.THEOLiveConfig
 import com.theoplayer.media.MediaSessionConfig
 import com.theoplayer.media.MediaSessionConfigAdapter
 
@@ -38,6 +39,9 @@ private const val PROP_SESSION_ID = "sessionID"
 private const val PROP_ENABLE_DEBUG_MODE = "enableDebugMode"
 private const val PROP_BITRATE = "bitrate"
 private const val PROP_ALLOWED_MIMETYPES = "allowedMimeTypes"
+private const val PROP_THEOLIVE_CONFIG = "theoLive"
+private const val PROP_THEOLIVE_EXTERNAL_SESSION_ID = "externalSessionId"
+private const val PROP_THEOLIVE_ANALYTICS_DISABLED = "analyticsDisabled"
 
 class PlayerConfigAdapter(private val configProps: ReadableMap?) {
 
@@ -73,6 +77,9 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
         }
         if (hasKey(PROP_USE_MEDIA3)) {
           useMedia3 = getBoolean(PROP_USE_MEDIA3)
+        }
+        if (hasKey(PROP_THEOLIVE_CONFIG)) {
+          theoLiveConfiguration(theoLiveConfig())
         }
         pipConfiguration(PipConfiguration.Builder().build())
       }
@@ -216,5 +223,15 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
    */
   fun mediaSessionConfig(): MediaSessionConfig {
     return MediaSessionConfigAdapter.fromProps(configProps?.getMap(PROP_MEDIA_CONTROL))
+  }
+
+  private fun theoLiveConfig (): THEOLiveConfig {
+    val config = configProps?.getMap(PROP_THEOLIVE_CONFIG)
+    return THEOLiveConfig.Builder(
+      externalSessionId = config?.getString(PROP_THEOLIVE_EXTERNAL_SESSION_ID),
+      analyticsDisabled = if (config?.hasKey(PROP_THEOLIVE_ANALYTICS_DISABLED) == true)
+        config.getBoolean(PROP_THEOLIVE_ANALYTICS_DISABLED)
+      else false
+    ).build()
   }
 }
