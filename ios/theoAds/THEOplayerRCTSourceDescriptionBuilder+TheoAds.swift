@@ -27,11 +27,31 @@ extension THEOplayerRCTSourceDescriptionBuilder {
         if let backdropLShapeString = adsData[SD_PROP_BACKDROP_L_SHAPE] as? String {
             backdropLShape = URL(string: backdropLShapeString)
         }
+        var overrideLayout: TheoAdDescription.LayoutOverride?
+        if let overrideLayoutString = adsData[SD_PROP_OVERRIDE_LAYOUT] as? String {
+            switch overrideLayoutString {
+                case "single":
+                    overrideLayout = .single
+                case "l-shape":
+                    overrideLayout = .lShape
+                case "double":
+                    overrideLayout = .double
+            }
+        }
+        var overrideAdSrc: URL?
+        if let overrideAdSrcString = adsData[SD_PROP_OVERRIDE_AD_SRC] as? String {
+            overrideAdSrc = URL(string: overrideAdSrcString)
+        }
+        let adTagParameters = adsData[SD_PROP_AD_TAG_PARAMETERS] as? [String:String]
+        let useId3 = adsData[SD_PROP_USE_ID3] as? Bool
         return TheoAdDescription(networkCode: networkCode,
                                  customAssetKey: customAssetKey,
                                  backdropDoubleBox: backdropDoubleBox,
                                  backdropLShape: backdropLShape,
-                                 overrideLayout: nil)
+                                 overrideLayout: overrideLayout,
+                                 overrideAdSrc: overrideAdSrc,
+                                 adTagParameters: adTagParameters,
+                                 useId3: useId3)
 #else
         return nil
 #endif
