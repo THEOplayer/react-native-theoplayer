@@ -58,7 +58,7 @@ extension THEOplayerRCTSourceDescriptionBuilder {
             switch integration {
             case "google-ima":
                 return THEOplayerRCTSourceDescriptionBuilder.buildSingleGoogleIMAAdsDescription(adsData)
-            case "sgai":
+            case "theoads":
                 return THEOplayerRCTSourceDescriptionBuilder.buildSingleTheoAdsDescription(adsData)
             default:
                 if DEBUG_SOURCE_DESCRIPTION_BUIDER  { PrintUtils.printLog(logText: "[NATIVE] We currently require and only support the 'google-ima' or 'sgai' integration in the 'ads' description.") }
