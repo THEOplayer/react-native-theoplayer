@@ -55,6 +55,8 @@ let SD_PROP_CUSTOM_ASSET_KEY: String = "customAssetKey"
 let SD_PROP_BACKDROP_DOUBLE_BOX: String = "backdropDoubleBox"
 let SD_PROP_BACKDROP_L_SHAPE: String = "backdropLShape"
 let SD_PROP_OVERRIDE_LAYOUT: String = "overrideLayout"
+let SD_PROP_OVERRIDE_AD_SRC: String = "overrideAdSrc"
+let SD_PROP_USE_ID3: String = "useId3"
 
 let EXTENSION_HLS: String = ".m3u8"
 let EXTENSION_MP4: String = ".mp4"
