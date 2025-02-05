@@ -15,7 +15,7 @@ extension THEOplayerRCTView {
         
 #if canImport(THEOplayerTheoAdsIntegration)
         // setup integration
-        self.theoAdsIntegration = TheoAdsIntegration(player: player)
+      self.theoAdsIntegration = THEOadsIntegrationFactory.createIntegration(on: player)
 #endif
         
     }
