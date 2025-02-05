@@ -17,6 +17,12 @@ class ViewResolver(private val reactContext: ReactApplicationContext) {
     }
     reactContext.runOnUiQueueThread {
       try {
+        /**
+         * UIManager replaces the UIManagerModule. UIManager is retrieved through the static methods
+         * in UIManagerHelper. Most legacy operations remain intact for backwards compatibility.
+         *
+         * https://github.com/reactwg/react-native-new-architecture/discussions/201
+         */
         UIManagerHelper.getUIManagerForReactTag(reactContext, tag)?.let {
           onResolved(it.resolveView(tag) as? T?)
         }
