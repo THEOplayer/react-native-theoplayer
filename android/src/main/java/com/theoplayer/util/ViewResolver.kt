@@ -22,7 +22,7 @@ class ViewResolver(private val reactContext: ReactApplicationContext) {
         }
       } catch (e: Exception) {
         // The ReactTHEOplayerView instance could not be resolved: log but do not forward exception.
-        Log.e(TAG, "Failed to resolve ReactTHEOplayerView tag $tag: $e")
+        Log.w(TAG, "Failed to resolve ReactTHEOplayerView tag $tag: $e")
         onResolved(null)
       }
     }
