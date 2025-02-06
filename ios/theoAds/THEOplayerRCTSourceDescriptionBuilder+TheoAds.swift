@@ -36,6 +36,8 @@ extension THEOplayerRCTSourceDescriptionBuilder {
                     overrideLayout = .lShape
                 case "double":
                     overrideLayout = .double
+                default:
+                    overrideLayout = nil
             }
         }
         var overrideAdSrc: URL?
