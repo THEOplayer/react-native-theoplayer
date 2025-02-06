@@ -10,6 +10,7 @@ export class WebPresentationModeManager {
   private readonly _player: ChromelessPlayer;
   private _presentationMode: PresentationMode = PresentationMode.inline;
   private _eventForwarder: DefaultEventDispatcher<PlayerEventMap>;
+  private _didPrepare: boolean = false;
 
   constructor(player: ChromelessPlayer, eventForwarder: DefaultEventDispatcher<PlayerEventMap>) {
     this._player = player;
@@ -27,7 +28,7 @@ export class WebPresentationModeManager {
       return;
     }
 
-    this.prepareForPresentationModeChanges();
+    this.maybePrepareForPresentationModeChanges();
 
     if (fullscreenAPI !== undefined) {
       // If the browser supports the fullscreenAPI, put the element that encloses the player & UI in fullscreen.
@@ -58,7 +59,12 @@ export class WebPresentationModeManager {
     }
   }
 
-  private prepareForPresentationModeChanges() {
+  private maybePrepareForPresentationModeChanges() {
+    if (this._didPrepare) {
+      return;
+    }
+    this._didPrepare = true;
+
     // listen for fullscreen updates on document
     if (fullscreenAPI !== undefined) {
       document.addEventListener(fullscreenAPI.fullscreenchange_, this.updatePresentationMode);
