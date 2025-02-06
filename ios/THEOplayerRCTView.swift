@@ -37,9 +37,15 @@ public class THEOplayerRCTView: UIView {
     var uiConfig = UIConfig()
     
     // integrations
+    #if canImport(THEOplayerTheoAdsIntegration)
     var theoAdsIntegration: THEOplayerTheoAdsIntegration.TheoAdsIntegration?
+    #endif
+    #if canImport(THEOplayerGoogleIMAIntegration)
     var imaIntegration: THEOplayerGoogleIMAIntegration.GoogleImaIntegration?
+    #endif
+    #if canImport(THEOplayerGoogleCastIntegration)
     var castIntegration: THEOplayerGoogleCastIntegration.CastIntegration?
+    #endif
     
     var mediaControlConfig = MediaControlConfig() {
         didSet {
