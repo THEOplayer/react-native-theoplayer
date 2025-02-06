@@ -9,7 +9,6 @@ import { noOp } from '../../utils/CommonUtils';
 export class WebPresentationModeManager {
   private readonly _player: ChromelessPlayer;
   private _presentationMode: PresentationMode = PresentationMode.inline;
-  private _element: HTMLVideoElement | undefined = undefined;
   private _eventForwarder: DefaultEventDispatcher<PlayerEventMap>;
 
   constructor(player: ChromelessPlayer, eventForwarder: DefaultEventDispatcher<PlayerEventMap>) {
@@ -53,28 +52,18 @@ export class WebPresentationModeManager {
         }
       }
     } else {
-      // iOS Safari doesn't properly support fullscreen, use native fullscreen instead
+      // Some browsers, like iOS Safari, can only put a videoElement in fullscreen; let the player decide which one.
       if (presentationMode === PresentationMode.fullscreen) {
-        this._element?.webkitEnterFullscreen?.();
+        this._player.presentation.requestMode(PresentationMode.fullscreen);
       } else if (presentationMode === PresentationMode.pip) {
         this._player.presentation.requestMode('native-picture-in-picture');
       } else {
-        this._element?.webkitSetPresentationMode?.(PresentationMode.inline);
+        this._player.presentation.requestMode(PresentationMode.inline);
       }
     }
   }
 
   private prepareForPresentationModeChanges() {
-    const elements = this._player.element.children;
-    for (const element of Array.from(elements)) {
-      if (element.tagName === 'VIDEO') {
-        const videoElement = element as HTMLVideoElement;
-        if ((videoElement.src !== null && videoElement.src !== '') || videoElement.srcObject !== null) {
-          this._element = videoElement;
-          break;
-        }
-      }
-    }
     // listen for fullscreen updates on document
     if (fullscreenAPI !== undefined) {
       document.addEventListener(fullscreenAPI.fullscreenchange_, this.updatePresentationMode);
