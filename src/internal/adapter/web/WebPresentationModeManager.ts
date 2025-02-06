@@ -44,7 +44,7 @@ export class WebPresentationModeManager {
           document[fullscreenAPI.exitFullscreen_]()?.then?.(noOp, noOp);
         }
         if (this._presentationMode === PresentationMode.pip) {
-          document.exitPictureInPicture().then(noOp, noOp);
+          this._player.presentation.requestMode(PresentationMode.inline);
         }
       }
     } else {
