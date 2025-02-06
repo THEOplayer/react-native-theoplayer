@@ -23,32 +23,27 @@ export class WebPresentationModeManager {
 
   set presentationMode(presentationMode: PresentationMode) {
     if (presentationMode === this._presentationMode) {
+      // Ignore if presentationMode did not change.
       return;
     }
 
     this.prepareForPresentationModeChanges();
 
     if (fullscreenAPI !== undefined) {
-      // All other browsers
+      // If the browser supports the fullscreenAPI, put the element that encloses the player & UI in fullscreen.
       if (presentationMode === PresentationMode.fullscreen) {
-        const appElement = document.getElementById('app') ?? document.getElementById('root');
+        const appElement = document.getElementById('theoplayer-root-container');
         if (appElement !== null) {
-          const promise = appElement[fullscreenAPI.requestFullscreen_]();
-          if (promise && promise.then) {
-            promise.then(noOp, noOp);
-          }
+          appElement[fullscreenAPI.requestFullscreen_]()?.then?.(noOp, noOp);
         }
       } else if (presentationMode === PresentationMode.pip) {
         this._player.presentation.requestMode('native-picture-in-picture');
       } else {
         if (this._presentationMode === PresentationMode.fullscreen) {
-          const promise = document[fullscreenAPI.exitFullscreen_]();
-          if (promise && promise.then) {
-            promise.then(noOp, noOp);
-          }
+          document[fullscreenAPI.exitFullscreen_]()?.then?.(noOp, noOp);
         }
         if (this._presentationMode === PresentationMode.pip) {
-          void document.exitPictureInPicture();
+          document.exitPictureInPicture().then(noOp, noOp);
         }
       }
     } else {
