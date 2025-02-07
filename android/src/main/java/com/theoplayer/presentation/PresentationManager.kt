@@ -37,6 +37,7 @@ class PresentationManager(
   private var onUserLeaveHintReceiver: BroadcastReceiver? = null
   private var onPictureInPictureModeChanged: BroadcastReceiver? = null
   private val pipUtils: PipUtils = PipUtils(viewCtx, reactContext)
+  private val fullScreenLayoutObserver = FullScreenLayoutObserver()
   private val playerGroupRestoreOptions by lazy {
     PlayerGroupRestoreOptions()
   }
@@ -261,6 +262,9 @@ class PresentationManager(
       // Re-parent the playerViewGroup to the root node
       parent.removeView(reactPlayerGroup)
       rootView?.addView(reactPlayerGroup)
+
+      // Attach an observer that overrides the react-native lay-out and forces fullscreen.
+      fullScreenLayoutObserver.attach(reactPlayerGroup)
     }
   }
 
@@ -270,6 +274,9 @@ class PresentationManager(
       removeView(reactPlayerGroup)
       playerGroupRestoreOptions.parentNode?.addView(reactPlayerGroup, playerGroupRestoreOptions.childIndex ?: 0)
       playerGroupRestoreOptions.reset()
+
+      // Remove forced layout observer
+      fullScreenLayoutObserver.remove(reactPlayerGroup)
     }
   }
 // endregion
