@@ -3,8 +3,8 @@
 import Foundation
 import THEOplayerSDK
 
-#if canImport(THEOplayerTheoAdsIntegration)
-import THEOplayerTheoAdsIntegration
+#if canImport(THEOplayerTHEOadsIntegration)
+import THEOplayerTHEOadsIntegration
 #endif
 
 extension THEOplayerRCTView {
@@ -13,7 +13,7 @@ extension THEOplayerRCTView {
             return
         }
         
-#if canImport(THEOplayerTheoAdsIntegration)
+#if canImport(THEOplayerTHEOadsIntegration)
         // setup integration
       self.theoAdsIntegration = THEOadsIntegrationFactory.createIntegration(on: player)
       player.addIntegration(self.theoAdsIntegration!)

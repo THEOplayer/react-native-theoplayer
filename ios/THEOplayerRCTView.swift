@@ -4,8 +4,8 @@ import Foundation
 import UIKit
 import THEOplayerSDK
 
-#if canImport(THEOplayerTheoAdsIntegration)
-import THEOplayerTheoAdsIntegration
+#if canImport(THEOplayerTHEOadsIntegration)
+import THEOplayerTHEOadsIntegration
 #endif
 #if canImport(THEOplayerGoogleIMAIntegration)
 import THEOplayerGoogleIMAIntegration
@@ -37,8 +37,8 @@ public class THEOplayerRCTView: UIView {
     var uiConfig = UIConfig()
     
     // integrations
-    #if canImport(THEOplayerTheoAdsIntegration)
-    var theoAdsIntegration: THEOplayerTheoAdsIntegration.TheoAdsIntegration?
+    #if canImport(THEOplayerTHEOadsIntegration)
+    var theoAdsIntegration: THEOplayerTHEOadsIntegration.THEOadsIntegration?
     #endif
     #if canImport(THEOplayerGoogleIMAIntegration)
     var imaIntegration: THEOplayerGoogleIMAIntegration.GoogleImaIntegration?

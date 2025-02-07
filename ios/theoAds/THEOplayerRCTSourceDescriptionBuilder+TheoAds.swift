@@ -4,8 +4,8 @@ import Foundation
 import THEOplayerSDK
 import UIKit
 
-#if canImport(THEOplayerTheoAdsIntegration)
-import THEOplayerTheoAdsIntegration
+#if canImport(THEOplayerTHEOadsIntegration)
+import THEOplayerTHEOadsIntegration
 #endif
 
 extension THEOplayerRCTSourceDescriptionBuilder {
@@ -15,7 +15,7 @@ extension THEOplayerRCTSourceDescriptionBuilder {
      - returns: a THEOplayer GoogleImaAdDescription
      */
     static func buildSingleTheoAdsDescription(_ adsData: [String:Any]) -> AdDescription? {
-#if canImport(THEOplayerTheoAdsIntegration)
+#if canImport(THEOplayerTHEOadsIntegration)
         //...
         let networkCode = adsData[SD_PROP_NETWORK_CODE] as? String
         let customAssetKey = adsData[SD_PROP_CUSTOM_ASSET_KEY] as? String
@@ -27,7 +27,7 @@ extension THEOplayerRCTSourceDescriptionBuilder {
         if let backdropLShapeString = adsData[SD_PROP_BACKDROP_L_SHAPE] as? String {
             backdropLShape = URL(string: backdropLShapeString)
         }
-        var overrideLayout: TheoAdDescription.LayoutOverride?
+        var overrideLayout: THEOAdDescription.LayoutOverride?
         if let overrideLayoutString = adsData[SD_PROP_OVERRIDE_LAYOUT] as? String {
             switch overrideLayoutString {
                 case "single":
@@ -46,7 +46,7 @@ extension THEOplayerRCTSourceDescriptionBuilder {
         }
         let adTagParameters = adsData[SD_PROP_AD_TAG_PARAMETERS] as? [String:String]
         let useId3 = adsData[SD_PROP_USE_ID3] as? Bool
-        return TheoAdDescription(networkCode: networkCode,
+        return THEOAdDescription(networkCode: networkCode,
                                  customAssetKey: customAssetKey,
                                  backdropDoubleBox: backdropDoubleBox,
                                  backdropLShape: backdropLShape,
