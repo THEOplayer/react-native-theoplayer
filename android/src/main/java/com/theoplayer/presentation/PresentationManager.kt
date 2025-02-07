@@ -38,6 +38,7 @@ class PresentationManager(
   private var playerGroupParentNode: ViewGroup? = null
   private var playerGroupChildIndex: Int? = null
   private val pipUtils: PipUtils = PipUtils(viewCtx, reactContext)
+  private val fullScreenLayoutObserver = FullScreenLayoutObserver()
 
   var currentPresentationMode: PresentationMode = PresentationMode.INLINE
     private set
@@ -233,6 +234,9 @@ class PresentationManager(
         // Re-parent the playerViewGroup to the root node
         parent.removeView(reactPlayerGroup)
         root?.addView(reactPlayerGroup)
+
+        // Attach an observer that overrides the react-native lay-out and forces fullscreen.
+        fullScreenLayoutObserver.attach(reactPlayerGroup)
       }
     } else {
       WindowInsetsControllerCompat(window, window.decorView).show(
@@ -243,6 +247,10 @@ class PresentationManager(
       if (!BuildConfig.REPARENT_ON_FULLSCREEN) {
         return
       }
+
+      // Remove forced layout observer
+      fullScreenLayoutObserver.remove(reactPlayerGroup)
+
       root?.run {
         // Re-parent the playerViewGroup from the root node to its original parent
         removeView(reactPlayerGroup)
