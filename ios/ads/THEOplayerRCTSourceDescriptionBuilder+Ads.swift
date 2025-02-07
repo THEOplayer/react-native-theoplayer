@@ -15,7 +15,6 @@ extension THEOplayerRCTSourceDescriptionBuilder {
     static func buildAdDescriptions(_ sourceData: NSDictionary) -> [AdDescription]? {
         var adsDescriptions: [AdDescription]?
 
-#if canImport(THEOplayerGoogleIMAIntegration)
         if let ads = sourceData[SD_PROP_ADS] {
             adsDescriptions = []
             // case: array of ads objects
@@ -43,7 +42,6 @@ extension THEOplayerRCTSourceDescriptionBuilder {
                 }
             }
         }
-#endif
 
         return adsDescriptions
     }
@@ -53,7 +51,6 @@ extension THEOplayerRCTSourceDescriptionBuilder {
      - returns: a THEOplayerAdDescription
      */
     static func buildSingleAdDescription(_ adsData: [String:Any]) -> AdDescription? {
-#if canImport(THEOplayerGoogleIMAIntegration)
         if let integration = adsData[SD_PROP_INTEGRATION] as? String {
             switch integration {
             case "google-ima":
@@ -64,7 +61,6 @@ extension THEOplayerRCTSourceDescriptionBuilder {
                 if DEBUG_SOURCE_DESCRIPTION_BUIDER  { PrintUtils.printLog(logText: "[NATIVE] We currently require and only support the 'google-ima' or 'sgai' integration in the 'ads' description.") }
             }
         }
-#endif
         return nil
     }
     
