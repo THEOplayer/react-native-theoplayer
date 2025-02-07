@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed an issue on iOS where the `currentTime` on `NowPlayingInfoCenter` would go out of sync or reset when changing playback rate.
+- Fixed an issue on Android where the player would crash in case resolving the `THEOplayerView` instance fails.
 
 ## [8.13.1] - 25-01-27
 
