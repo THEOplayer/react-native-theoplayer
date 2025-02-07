@@ -51,8 +51,8 @@ Pod::Spec.new do |s|
   end
 
   if theofeatures.include?("THEO_ADS")
-	puts "Adding THEOplayer-Integration-TheoAds"
-    s.dependency "THEOplayer-Integration-TheoAds", "~> 8.6"
+	puts "Adding THEOplayer-Integration-THEOads"
+    s.dependency "THEOplayer-Integration-THEOads", "~> 8.6"
   end
 
   if theofeatures.include?("SIDELOADED_TEXTTRACKS")
