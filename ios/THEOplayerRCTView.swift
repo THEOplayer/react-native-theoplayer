@@ -3,7 +3,18 @@
 import Foundation
 import UIKit
 import THEOplayerSDK
- 
+
+#if canImport(THEOplayerTHEOadsIntegration)
+import THEOplayerTHEOadsIntegration
+#endif
+#if canImport(THEOplayerGoogleIMAIntegration)
+import THEOplayerGoogleIMAIntegration
+import GoogleInteractiveMediaAds
+#endif
+#if canImport(THEOplayerGoogleCastIntegration)
+import THEOplayerGoogleCastIntegration
+#endif
+
 public class THEOplayerRCTView: UIView {
     // MARK: Members
     public private(set) var player: THEOplayer?
@@ -24,6 +35,17 @@ public class THEOplayerRCTView: UIView {
     var adsConfig = AdsConfig()
     var castConfig = CastConfig()
     var uiConfig = UIConfig()
+    
+    // integrations
+    #if canImport(THEOplayerTHEOadsIntegration)
+    var theoAdsIntegration: THEOplayerTHEOadsIntegration.THEOadsIntegration?
+    #endif
+    #if canImport(THEOplayerGoogleIMAIntegration)
+    var imaIntegration: THEOplayerGoogleIMAIntegration.GoogleImaIntegration?
+    #endif
+    #if canImport(THEOplayerGoogleCastIntegration)
+    var castIntegration: THEOplayerGoogleCastIntegration.CastIntegration?
+    #endif
     
     var mediaControlConfig = MediaControlConfig() {
         didSet {
@@ -149,6 +171,7 @@ public class THEOplayerRCTView: UIView {
         
         self.initAdsIntegration()
         self.initCastIntegration()
+        self.initTheoAdsIntegration()
         self.initBackgroundAudio()
         self.initPip()
         return self.player

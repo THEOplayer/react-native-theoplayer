@@ -62,9 +62,11 @@ extension THEOplayerRCTView {
         }
         
         // setup integration
-        let imaIntegration = GoogleIMAIntegrationFactory.createIntegration(on: player, with: imaSettings)
-        imaIntegration.renderingSettings = imaRenderSettings
-        player.addIntegration(imaIntegration)
+        self.imaIntegration = GoogleIMAIntegrationFactory.createIntegration(on: player, with: imaSettings)
+        if let newImaIntegration = self.imaIntegration {
+            newImaIntegration.renderingSettings = imaRenderSettings
+            player.addIntegration(newImaIntegration)
+        }
 #endif
     }
 }
