@@ -25,7 +25,7 @@ Pod::Spec.new do |s|
   s.platforms    = { :ios => "13.4", :tvos => "13.4" }
   s.source       = { :git => "https://www.theoplayer.com/.git", :tag => "#{s.version}" }
 
-  s.source_files = 'ios/*.{h,m,swift}', 'ios/ads/*.swift', 'ios/casting/*.swift', 'ios/contentprotection/*.swift', 'ios/pip/*.swift', 'ios/backgroundAudio/*.swift', 'ios/cache/*.swift', 'ios/sideloadedMetadata/*.swift', 'ios/eventBroadcasting/*.swift' , 'ios/ui/*.swift', 'ios/presentationMode/*.swift', 'ios/viewController/*.swift', 'ios/theolive/*.swift'
+  s.source_files = 'ios/*.{h,m,swift}', 'ios/ads/*.swift', 'ios/casting/*.swift', 'ios/contentprotection/*.swift', 'ios/pip/*.swift', 'ios/backgroundAudio/*.swift', 'ios/cache/*.swift', 'ios/sideloadedMetadata/*.swift', 'ios/eventBroadcasting/*.swift' , 'ios/ui/*.swift', 'ios/presentationMode/*.swift', 'ios/viewController/*.swift', 'ios/theolive/*.swift', 'ios/theoAds/*.swift'
   s.resources = ['ios/*.css']
 
   # ReactNative Dependency
@@ -48,6 +48,11 @@ Pod::Spec.new do |s|
   if theofeatures.include?("CHROMECAST")
 	puts "Adding THEOplayer-Integration-GoogleCast"
     s.ios.dependency "THEOplayer-Integration-GoogleCast", "~> 8.6"
+  end
+
+  if theofeatures.include?("THEO_ADS")
+	puts "Adding THEOplayer-Integration-THEOads"
+    s.dependency "THEOplayer-Integration-THEOads", "~> 8.6"
   end
 
   if theofeatures.include?("SIDELOADED_TEXTTRACKS")

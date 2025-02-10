@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [8.14.0] - 25-02-10
+
+### Added
+
+- Added a `theoLive` property to `PlayerConfiguration` to enable THEOlive configuration.
+
+### Fixed
+
+- Fixed an issue on iOS where the `currentTime` on `NowPlayingInfoCenter` would go out of sync or reset when changing playback rate.
+- Fixed an issue on Android where the player would crash in case resolving the `THEOplayerView` instance fails.
+
 ## [8.13.1] - 25-01-27
 
 ### Fixed

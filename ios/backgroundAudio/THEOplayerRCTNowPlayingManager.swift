@@ -241,7 +241,8 @@ class THEOplayerRCTNowPlayingManager {
         self.rateChangeListener = player.addEventListener(type: PlayerEventTypes.RATE_CHANGE) { [weak self, weak player] event in
             if let welf = self,
                let wplayer = player {
-                welf.nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = NSNumber(value: wplayer.playbackRate)
+                welf.updatePlaybackRate(wplayer.playbackRate)
+                welf.updateCurrentTime(wplayer.currentTime)
                 if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE] RATE_CHANGE: Updating playbackRate on NowPlayingInfoCenter...") }
                 welf.processNowPlayingToInfoCenter()
             }

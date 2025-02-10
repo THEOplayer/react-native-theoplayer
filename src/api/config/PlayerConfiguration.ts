@@ -3,6 +3,7 @@ import type { CastConfiguration } from '../cast/CastConfiguration';
 import type { MediaControlConfiguration } from '../media/MediaControlConfiguration';
 import type { RetryConfiguration } from '../utils/RetryConfiguration';
 import type { UIConfiguration } from '../ui/UIConfiguration';
+import { TheoLiveConfiguration } from '../theolive/TheoLiveConfiguration';
 
 export interface PlayerConfiguration {
   /**
@@ -107,6 +108,11 @@ export interface PlayerConfiguration {
    * @deprecated: THEOlive support is always enabled, there is no need to explicitly enable it.
    */
   enableTHEOlive?: boolean;
+
+  /**
+   * The THEOlive configuration for the player.
+   */
+  theoLive?: TheoLiveConfiguration;
 }
 
 /**
