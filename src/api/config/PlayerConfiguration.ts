@@ -63,6 +63,8 @@ export interface PlayerConfiguration {
    *
    * @remarks
    * <br/> - This parameter only applies to Web platforms.
+   *
+   * @deprecated: Use the OpenVideoUI package {@link https://github.com/THEOplayer/react-native-theoplayer-ui}.
    */
   readonly chromeless?: boolean;
 
