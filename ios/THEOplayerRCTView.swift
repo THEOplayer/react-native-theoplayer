@@ -122,6 +122,8 @@ public class THEOplayerRCTView: UIView {
         if let player = self.player {
             player.frame = self.frame
             player.autoresizingMask = [.flexibleBottomMargin, .flexibleHeight, .flexibleLeftMargin, .flexibleRightMargin, .flexibleTopMargin, .flexibleWidth]
+            
+            self.presentationModeManager.validateLayout()
         }
     }
     
