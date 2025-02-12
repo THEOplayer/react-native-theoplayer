@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [8.15.0] - 25-02-12
+
+### Changed
+
+- Transitioning to `fullscreen` presentation mode on Web platforms now puts only the `THEOplayerView` element and its child elements, such as the UI, in fullscreen. Previously, the whole page would transition to fullscreen.
+- Changed `presentationmodechange` event dispatching on iOS to take into account if the change actually happened on the native player.
+
+### Fixed
+
+- Fixed an issue on iOS Safari where transitioning to `fullscreen` presentation mode would not work.
+- Fixed an issue on Web where `presentationmodechange` events would sometimes be dispatched more than once.
+
 ## [8.14.0] - 25-02-10
 
 ### Added

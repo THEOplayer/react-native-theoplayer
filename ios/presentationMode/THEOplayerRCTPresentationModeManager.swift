@@ -110,24 +110,22 @@ public class THEOplayerRCTPresentationModeManager {
   
     func setPresentationModeFromRN(newPresentationMode: THEOplayerSDK.PresentationMode) {
         guard newPresentationMode != self.presentationMode else { return }
-    
-        // store old presentationMode
-        let oldPresentationMode = self.presentationMode
-        
-        // set new presentationMode
-        self.presentationMode = newPresentationMode
         
         // change prensentationMode
-        switch oldPresentationMode {
+        switch self.presentationMode {
         case .fullscreen:
             if newPresentationMode == .inline {
-                self.exitFullscreen();                              // stay inline on Native player, go to inline layout on RN
+                self.exitFullscreen()                               // stay inline on Native player, go to inline layout on RN
+                self.notifyPresentationModeChange(oldPresentationMode: self.presentationMode, newPresentationMode: newPresentationMode)
+                self.presentationMode = newPresentationMode
             } else if newPresentationMode == .pictureInPicture {
                 self.setNativePresentationMode(.pictureInPicture)   // go pip on Native player, keep fullscreen layout on RN
             }
         case .inline:
             if newPresentationMode == .fullscreen {
-                self.enterFullscreen();                             // stay inline on Native player, go to fullscreen layout on RN
+                self.enterFullscreen()                              // stay inline on Native player, go to fullscreen layout on RN
+                self.notifyPresentationModeChange(oldPresentationMode: self.presentationMode, newPresentationMode: newPresentationMode)
+                self.presentationMode = newPresentationMode
             } else if newPresentationMode == .pictureInPicture {
                 self.setNativePresentationMode(.pictureInPicture)   // go pip on Native player, keep inline layout on RN
             }
@@ -138,27 +136,20 @@ public class THEOplayerRCTPresentationModeManager {
                     self.exitFullscreen()                           // and if required, switch to inline layout on RN,
                 }
             } else if newPresentationMode == .fullscreen {
-            if self.rnInlineMode == .inline {
-                self.enterFullscreen()                              // and if required, switch to fullscreen layout on RN,
+                if self.rnInlineMode == .inline {
+                    self.enterFullscreen()                          // and if required, switch to fullscreen layout on RN,
+                }
             }
-        }
         default:
             break;
         }
-        
-        // notify the presentationMode change
-        self.notifyPresentationModeChange(oldPresentationMode: oldPresentationMode, newPresentationMode: self.presentationMode)
     }
   
     func setPresentationModeFromNative(newPresentationMode: THEOplayerSDK.PresentationMode) {
-        guard newPresentationMode != self.presentationMode else { return }
-    
         // store old presentationMode
         let oldPresentationMode = self.presentationMode
-    
         // set new presentationMode
         self.presentationMode = newPresentationMode
-    
         // adjust presentationMode to RN layout
         if newPresentationMode == .inline {
              self.presentationMode = self.rnInlineMode
