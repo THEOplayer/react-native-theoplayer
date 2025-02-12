@@ -1,6 +1,7 @@
 #ifndef THEORCTTypeUtils_h
 #define THEORCTTypeUtils_h
 
+#import "THEORCTBridgingTypeUtils.h"
 #import "../newarch/rntheo/EventEmitters.h"
 #import "../newarch/rntheo/Props.h"
 #import "../newarch/rntheo/rntheo.h"
@@ -35,6 +36,10 @@ using namespace JS::NativeAdsModule;
 + (THEOplayerRCTViewEventEmitter::OnNativeMediaTrackEvent) nativeMediaTrackEventDataFrom:(NSDictionary*) eventData;
 + (THEOplayerRCTViewEventEmitter::OnNativeCastEvent) nativeCastEventDataFrom:(NSDictionary*) eventData;
 + (THEOplayerRCTViewEventEmitter::OnNativeAdEvent) nativeAdEventDataFrom:(NSDictionary*) eventData;
+
+// INTERMEDIATE BRIDGING TYPES
++ (THEORCTBridgingTypeUtils::BridgedCue) bridgedCueFrom:(NSDictionary*) eventData;
+
 @end
 
 NS_ASSUME_NONNULL_END
