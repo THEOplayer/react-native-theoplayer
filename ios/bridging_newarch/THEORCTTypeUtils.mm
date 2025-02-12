@@ -1,4 +1,5 @@
 #import "THEORCTTypeUtils.h"
+#import "THEORCTBridgingTypeUtils.h"
 #import <Foundation/Foundation.h>
 #import "RCTConvert.h"
 
@@ -8,13 +9,65 @@ using namespace JS::NativeAdsModule;
 @implementation THEORCTTypeUtils
 
 + (NSDictionary *) configFrom:(THEOplayerRCTViewConfigStruct) structData {
-    NSMutableDictionary *scheduledAdDict = [[NSMutableDictionary alloc] init];
+    // ads
+    THEOplayerRCTViewConfigAdsStruct adsData = structData.ads;
+    std::vector<std::string> allowedMimeTypes = adsData.allowedMimeTypes;
+    // cast
+    THEOplayerRCTViewConfigCastStruct castData = structData.cast;
+    THEOplayerRCTViewConfigCastChromecastStruct chromecastData = castData.chromecast;
+    // ui
+    THEOplayerRCTViewConfigUiStruct uiData = structData.ui;
+    // mediacontrol
+    THEOplayerRCTViewConfigMediaControlStruct mediaControlData = structData.mediaControl;
+    
+    std::vector<std::string> allowedMimeTypes = adsData.allowedMimeTypes;
     return @{
         @"license": @(structData.license.c_str()),
         @"licenseUrl": @(structData.licenseUrl.c_str()),
         @"chromeless": @(structData.chromeless),
         @"hlsDateRange": @(structData.hlsDateRange),
+        @"liveOffset": @(structData.liveOffset),
+        @"mutedAutoplay": @(structData.mutedAutoplay.c_str()),
+        @"libraryLocation": @(structData.libraryLocation.c_str()),
+        @"ads": @{
+            @"uiEnabled": @(adsData.uiEnabled),
+            @"preload": @(adsData.preload.c_str()),
+            @"vpaidMode": @(adsData.vpaidMode.c_str()),
+            @"theoads": @(adsData.theoads),
+            @"allowedMimeTypes": @[]
+        },
+        @"cast": @{
+            @"strategy": @(castData.strategy.c_str()),
+            @"chromecast": @{
+                @"appID": @(chromecastData.appID.c_str())
+            }
+        },
+        @"ui": @{
+            @"language": @(uiData.language.c_str())
+        },
+        @"mediaControl": @{
+            @"mediaSessionEnabled": @(mediaControlData.mediaSessionEnabled),
+            @"skipForwardInterval": @(mediaControlData.skipBackwardInterval),
+            @"skipBackwardInterval": @(mediaControlData.skipBackwardInterval),
+            @"convertSkipToSeek": @(mediaControlData.convertSkipToSeek)
+        }
     };
+    
+    
+    
+    
+    
+    /*
+     
+     struct THEOplayerRCTViewConfigAdsStruct {
+       std::vector<std::string> allowedMimeTypes{};
+       bool uiEnabled{false};
+       std::string preload{};
+       std::string vpaidMode{};
+       THEOplayerRCTViewConfigAdsImaStruct ima{};
+       bool theoads{false};
+     };
+     */
 }
 
 + (NSDictionary *) scheduledAd:(ScheduledAd) scheduledAdData {
@@ -169,7 +222,7 @@ using namespace JS::NativeAdsModule;
 + (THEOplayerRCTViewEventEmitter::OnNativeLoadedMetadata) nativeLoadedMetadataDataFrom:(NSDictionary*) eventData {
     return THEOplayerRCTViewEventEmitter::OnNativeLoadedMetadata {
         
-        // TODO
+        // TODO: IN PROGRESS
         
     };
 }
@@ -188,6 +241,53 @@ using namespace JS::NativeAdsModule;
         event.context = eventContext;
     }
     return event;
+}
+
++ (THEORCTBridgingTypeUtils::BridgedCue) bridgedCueFrom:(NSDictionary*) eventData {
+    THEORCTBridgingTypeUtils::BridgedCue cue = THEORCTBridgingTypeUtils::BridgedCue();
+    NSString *cueId = eventData[@"id"];
+    cue.id = [cueId UTF8String];
+    NSNumber *uid = eventData[@"uid"];
+    cue.uid = [uid doubleValue];
+    NSNumber *startTime = eventData[@"startTime"];
+    cue.startTime = [startTime doubleValue];
+    NSNumber *endTime = eventData[@"endTime"];
+    cue.endTime = [endTime doubleValue];
+    THEORCTBridgingTypeUtils::BridgedCueContent cueContent = THEORCTBridgingTypeUtils::BridgedCueContent();
+    
+    // TODO: IN PROGRESS
+    
+    cue.content = cueContent;
+    NSNumber *startDate = eventData[@"startDate"];
+    if (startDate) {
+        cue.startDate = [startDate doubleValue];
+    }
+    NSNumber *endDate = eventData[@"endDate"];
+    if (endDate) {
+        cue.endDate = [endDate doubleValue];
+    }
+    NSString *cueClass = eventData[@"class"];
+    if (cueClass) {
+        cue.classString = [cueClass UTF8String];
+    }
+    NSNumber *duration = eventData[@"duration"];
+    if (duration) {
+        cue.duration = [duration doubleValue];
+    }
+    NSNumber *plannedDuration = eventData[@"plannedDuration"];
+    if (plannedDuration) {
+        cue.plannedDuration = [plannedDuration doubleValue];
+    }
+    NSNumber *endOnNext = eventData[@"endOnNext"];
+    if (endOnNext) {
+        cue.endOnNext = [endOnNext boolValue];
+    }
+    THEORCTBridgingTypeUtils::BridgedCueCustomAttributes cueCustomAttributes = THEORCTBridgingTypeUtils::BridgedCueCustomAttributes();
+    
+    // TODO: IN PROGRESS
+    
+    cue.customAttributes = cueCustomAttributes;
+    return cue;
 }
 
 + (THEOplayerRCTViewEventEmitter::OnNativeTextTrackListEvent) nativeTextTrackListEventDataFrom:(NSDictionary*) eventData {
@@ -220,51 +320,9 @@ using namespace JS::NativeAdsModule;
         NSDictionary *cueDict;
         if (cuesList) {
             for (cueDict in cuesList) {
-                THEOplayerRCTViewEventEmitter::OnNativeTextTrackListEventTrackCues cue = THEOplayerRCTViewEventEmitter::OnNativeTextTrackListEventTrackCues();
-                NSString *cueId = cueDict[@"id"];
-                cue.id = [cueId UTF8String];
-                NSNumber *uid = cueDict[@"uid"];
-                cue.uid = [uid doubleValue];
-                NSNumber *startTime = cueDict[@"startTime"];
-                cue.startTime = [startTime doubleValue];
-                NSNumber *endTime = cueDict[@"endTime"];
-                cue.endTime = [endTime doubleValue];
-                THEOplayerRCTViewEventEmitter::OnNativeTextTrackListEventTrackCuesContent cueContent = THEOplayerRCTViewEventEmitter::OnNativeTextTrackListEventTrackCuesContent();
-                
-                // TODO
-                
-                cue.content = cueContent;
-                NSNumber *startDate = cueDict[@"startDate"];
-                if (startDate) {
-                    cue.startDate = [startDate doubleValue];
-                }
-                NSNumber *endDate = cueDict[@"endDate"];
-                if (endDate) {
-                    cue.endDate = [endDate doubleValue];
-                }
-                NSString *cueClass = cueDict[@"class"];
-                if (cueClass) {
-                    cue.classString = [cueClass UTF8String];
-                }
-                NSNumber *duration = cueDict[@"duration"];
-                if (duration) {
-                    cue.duration = [duration doubleValue];
-                }
-                NSNumber *plannedDuration = cueDict[@"plannedDuration"];
-                if (plannedDuration) {
-                    cue.plannedDuration = [plannedDuration doubleValue];
-                }
-                NSNumber *endOnNext = cueDict[@"endOnNext"];
-                if (endOnNext) {
-                    cue.endOnNext = [endOnNext boolValue];
-                }
-                THEOplayerRCTViewEventEmitter::OnNativeTextTrackListEventTrackCuesCustomAttributes cueCustomAttributes = THEOplayerRCTViewEventEmitter::OnNativeTextTrackListEventTrackCuesCustomAttributes();
-                
-                // TODO
-                
-                
-                cue.customAttributes = cueCustomAttributes;
-                cues.push_back(cue);
+                THEORCTBridgingTypeUtils::BridgedCue bridgedCue = [THEORCTTypeUtils bridgedCueFrom:cueDict];
+                THEOplayerRCTViewEventEmitter::OnNativeTextTrackListEventTrackCues newCue = THEORCTBridgingTypeUtils::BridgedCue_2_OnNativeTextTrackListEventTrackCues(bridgedCue);
+                cues.push_back(newCue);
             }
         }
         eventTrack.cues = cues;
@@ -282,50 +340,9 @@ using namespace JS::NativeAdsModule;
     event.trackUid = [trackUid doubleValue];
     
     NSDictionary *cueDict = eventData[@"cue"];
-    THEOplayerRCTViewEventEmitter::OnNativeTextTrackEventCue cue = THEOplayerRCTViewEventEmitter::OnNativeTextTrackEventCue();
-    NSString *cueId = cueDict[@"id"];
-    cue.id = [cueId UTF8String];
-    NSNumber *uid = cueDict[@"uid"];
-    cue.uid = [uid doubleValue];
-    NSNumber *startTime = cueDict[@"startTime"];
-    cue.startTime = [startTime doubleValue];
-    NSNumber *endTime = cueDict[@"endTime"];
-    cue.endTime = [endTime doubleValue];
-    THEOplayerRCTViewEventEmitter::OnNativeTextTrackEventCueContent cueContent = THEOplayerRCTViewEventEmitter::OnNativeTextTrackEventCueContent();
-    
-    // TODO
-    
-    cue.content = cueContent;
-    NSNumber *startDate = cueDict[@"startDate"];
-    if (startDate) {
-        cue.startDate = [startDate doubleValue];
-    }
-    NSNumber *endDate = cueDict[@"endDate"];
-    if (endDate) {
-        cue.endDate = [endDate doubleValue];
-    }
-    NSString *cueClass = cueDict[@"class"];
-    if (cueClass) {
-        cue.classString = [cueClass UTF8String];
-    }
-    NSNumber *duration = cueDict[@"duration"];
-    if (duration) {
-        cue.duration = [duration doubleValue];
-    }
-    NSNumber *plannedDuration = cueDict[@"plannedDuration"];
-    if (plannedDuration) {
-        cue.plannedDuration = [plannedDuration doubleValue];
-    }
-    NSNumber *endOnNext = cueDict[@"endOnNext"];
-    if (endOnNext) {
-        cue.endOnNext = [endOnNext boolValue];
-    }
-    THEOplayerRCTViewEventEmitter::OnNativeTextTrackEventCueCustomAttributes cueCustomAttributes = THEOplayerRCTViewEventEmitter::OnNativeTextTrackEventCueCustomAttributes();
-    
-    // TODO
-    
-    cue.customAttributes = cueCustomAttributes;
-    event.cue = cue;
+    THEORCTBridgingTypeUtils::BridgedCue bridgedCue = [THEORCTTypeUtils bridgedCueFrom:cueDict];
+    THEOplayerRCTViewEventEmitter::OnNativeTextTrackEventCue newCue = THEORCTBridgingTypeUtils::BridgedCue_2_OnNativeTextTrackEventCue(bridgedCue);
+    event.cue = newCue;
     return event;
 }
 
