@@ -512,37 +512,17 @@ NSDictionary *convertToNSDictionary(const THEOplayerRCTViewConfigStruct &config)
         // Extract activeQuality
         NSDictionary *activeQualityData = trackData[@"activeQuality"];
         if (activeQualityData) {
-            THEOplayerRCTViewEventEmitter::OnNativeMediaTrackListEventTrackActiveQuality activeQuality;
-            activeQuality.averageBandwidth = [activeQualityData[@"averageBandwidth"] doubleValue];
-            activeQuality.bandwidth = [activeQualityData[@"bandwidth"] doubleValue];
-            activeQuality.codecs = [activeQualityData[@"codecs"] UTF8String];
-            activeQuality.id = [activeQualityData[@"id"] UTF8String];
-            activeQuality.uid = [activeQualityData[@"uid"] doubleValue];
-            activeQuality.name = [activeQualityData[@"name"] UTF8String];
-            activeQuality.label = [activeQualityData[@"label"] UTF8String];
-            activeQuality.available = [activeQualityData[@"available"] boolValue];
-            activeQuality.width = [activeQualityData[@"width"] doubleValue];
-            activeQuality.height = [activeQualityData[@"height"] doubleValue];
-            
-            track.activeQuality = activeQuality;
+            THEORCTBridgingTypeUtils::BridgedQuality bridgedQuality = [self BridgedQualityFrom:activeQualityData];
+            THEOplayerRCTViewEventEmitter::OnNativeMediaTrackListEventTrackActiveQuality quality = THEORCTBridgingTypeUtils::BridgedQuality_2_OnNativeMediaTrackListEventTrackActiveQuality(bridgedQuality);
+            track.activeQuality = quality;
         }
         
         // Extract qualities
         NSArray *qualitiesData = trackData[@"qualities"];
         if (qualitiesData) {
             for (NSDictionary *qualityData in qualitiesData) {
-                THEOplayerRCTViewEventEmitter::OnNativeMediaTrackListEventTrackQualities quality;
-                quality.averageBandwidth = [qualityData[@"averageBandwidth"] doubleValue];
-                quality.bandwidth = [qualityData[@"bandwidth"] doubleValue];
-                quality.codecs = [qualityData[@"codecs"] UTF8String];
-                quality.id = [qualityData[@"id"] UTF8String];
-                quality.uid = [qualityData[@"uid"] doubleValue];
-                quality.name = [qualityData[@"name"] UTF8String];
-                quality.label = [qualityData[@"label"] UTF8String];
-                quality.available = [qualityData[@"available"] boolValue];
-                quality.width = [qualityData[@"width"] doubleValue];
-                quality.height = [qualityData[@"height"] doubleValue];
-                
+                THEORCTBridgingTypeUtils::BridgedQuality bridgedQuality = [self BridgedQualityFrom:qualityData];
+                THEOplayerRCTViewEventEmitter::OnNativeMediaTrackListEventTrackQualities quality = THEORCTBridgingTypeUtils::BridgedQuality_2_OnNativeMediaTrackListEventTrackQualities(bridgedQuality);
                 track.qualities.push_back(quality);
             }
         }
