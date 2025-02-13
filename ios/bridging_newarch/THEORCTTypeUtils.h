@@ -13,12 +13,12 @@ using namespace JS::NativeAdsModule;
 
 @interface THEORCTTypeUtils: NSObject
 
-// C++ => OBJC
+// C++ struct => NSDictionary
 + (NSDictionary *) configFrom:(THEOplayerRCTViewConfigStruct) structData;
 + (NSDictionary *) scheduledAd:(ScheduledAd) scheduledAdData;
 + (NSDictionary *) obstruction:(FriendlyObstruction) obstructionData;
 
-// OBJC => C++
+// NSDictionary => C++ struct
 + (THEOplayerRCTViewEventEmitter::OnNativePlayerReady) nativePlayerReadyDataFrom:(NSDictionary*) eventData;
 + (THEOplayerRCTViewEventEmitter::OnNativeReadyStateChange) nativeReadyStateChangeDataFrom:(NSDictionary*) eventData;
 + (THEOplayerRCTViewEventEmitter::OnNativeDurationChange) nativeDurationChangeDataFrom:(NSDictionary*) eventData;
@@ -38,7 +38,7 @@ using namespace JS::NativeAdsModule;
 + (THEOplayerRCTViewEventEmitter::OnNativeAdEvent) nativeAdEventDataFrom:(NSDictionary*) eventData;
 
 // INTERMEDIATE BRIDGING TYPES
-+ (THEORCTBridgingTypeUtils::BridgedCue) bridgedCueFrom:(NSDictionary*) eventData;
+//+ (THEORCTBridgingTypeUtils::BridgedCue) bridgedCueFrom:(NSDictionary*) eventData;
 
 @end
 

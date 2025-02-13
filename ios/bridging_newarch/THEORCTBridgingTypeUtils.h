@@ -100,4 +100,116 @@ class THEORCTBridgingTypeUtils {
                                                                                    bridged.endOnNext,
                                                                                    BridgedCueCustomAttributes_2_OnNativeLoadedMetadataTextTracksCuesCustomAttributes(bridged.customAttributes));
     }
+    
+    // BRIDGED_QUALITY
+    struct BridgedQuality {
+        double averageBandwidth;
+        double bandwidth;
+        std::string codecs;
+        std::string id;
+        double uid;
+        std::string name;
+        std::string label;
+        bool available;
+        double width;
+        double height;
+    };
+    
+    static THEOplayerRCTViewEventEmitter::OnNativeLoadedMetadataAudioTracksActiveQuality BridgedQuality_2_OnNativeLoadedMetadataAudioTracksActiveQuality(const BridgedQuality& bridged) {
+        return THEOplayerRCTViewEventEmitter::OnNativeLoadedMetadataAudioTracksActiveQuality (
+                                                                                              bridged.averageBandwidth,
+                                                                                              bridged.bandwidth,
+                                                                                              bridged.codecs,
+                                                                                              bridged.id,
+                                                                                              bridged.uid,
+                                                                                              bridged.name,
+                                                                                              bridged.label,
+                                                                                              bridged.available,
+                                                                                              bridged.width,
+                                                                                              bridged.height);
+    }
+    
+    static THEOplayerRCTViewEventEmitter::OnNativeLoadedMetadataAudioTracksQualities BridgedQuality_2_OnNativeLoadedMetadataAudioTracksQualities(const BridgedQuality& bridged) {
+        return THEOplayerRCTViewEventEmitter::OnNativeLoadedMetadataAudioTracksQualities (
+                                                                                          bridged.averageBandwidth,
+                                                                                          bridged.bandwidth,
+                                                                                          bridged.codecs,
+                                                                                          bridged.id,
+                                                                                          bridged.uid,
+                                                                                          bridged.name,
+                                                                                          bridged.label,
+                                                                                          bridged.available,
+                                                                                          bridged.width,
+                                                                                          bridged.height);
+    }
+    
+    static THEOplayerRCTViewEventEmitter::OnNativeLoadedMetadataVideoTracksActiveQuality BridgedQuality_2_OnNativeLoadedMetadataVideoTracksActiveQuality(const BridgedQuality& bridged) {
+        return THEOplayerRCTViewEventEmitter::OnNativeLoadedMetadataVideoTracksActiveQuality (
+                                                                                              bridged.averageBandwidth,
+                                                                                              bridged.bandwidth,
+                                                                                              bridged.codecs,
+                                                                                              bridged.id,
+                                                                                              bridged.uid,
+                                                                                              bridged.name,
+                                                                                              bridged.label,
+                                                                                              bridged.available,
+                                                                                              bridged.width,
+                                                                                              bridged.height);
+    }
+    
+    static THEOplayerRCTViewEventEmitter::OnNativeLoadedMetadataVideoTracksQualities BridgedQuality_2_OnNativeLoadedMetadataVideoTracksQualities(const BridgedQuality& bridged) {
+        return THEOplayerRCTViewEventEmitter::OnNativeLoadedMetadataVideoTracksQualities (
+                                                                                          bridged.averageBandwidth,
+                                                                                          bridged.bandwidth,
+                                                                                          bridged.codecs,
+                                                                                          bridged.id,
+                                                                                          bridged.uid,
+                                                                                          bridged.name,
+                                                                                          bridged.label,
+                                                                                          bridged.available,
+                                                                                          bridged.width,
+                                                                                          bridged.height);
+    }
+    
+    static THEOplayerRCTViewEventEmitter::OnNativeMediaTrackListEventTrackActiveQuality BridgedQuality_2_OnNativeMediaTrackListEventTrackActiveQuality(const BridgedQuality& bridged) {
+        return THEOplayerRCTViewEventEmitter::OnNativeMediaTrackListEventTrackActiveQuality (
+                                                                                          bridged.averageBandwidth,
+                                                                                          bridged.bandwidth,
+                                                                                          bridged.codecs,
+                                                                                          bridged.id,
+                                                                                          bridged.uid,
+                                                                                          bridged.name,
+                                                                                          bridged.label,
+                                                                                          bridged.available,
+                                                                                          bridged.width,
+                                                                                          bridged.height);
+    }
+    
+    static THEOplayerRCTViewEventEmitter::OnNativeMediaTrackListEventTrackQualities BridgedQuality_2_OnNativeMediaTrackListEventTrackQualities(const BridgedQuality& bridged) {
+        return THEOplayerRCTViewEventEmitter::OnNativeMediaTrackListEventTrackQualities (
+                                                                                          bridged.averageBandwidth,
+                                                                                          bridged.bandwidth,
+                                                                                          bridged.codecs,
+                                                                                          bridged.id,
+                                                                                          bridged.uid,
+                                                                                          bridged.name,
+                                                                                          bridged.label,
+                                                                                          bridged.available,
+                                                                                          bridged.width,
+                                                                                          bridged.height);
+    }
+    
+    static THEOplayerRCTViewEventEmitter::OnNativeMediaTrackEventQualities BridgedQuality_2_OnNativeMediaTrackEventQualities(const BridgedQuality& bridged) {
+        return THEOplayerRCTViewEventEmitter::OnNativeMediaTrackEventQualities (
+                                                                                          bridged.averageBandwidth,
+                                                                                          bridged.bandwidth,
+                                                                                          bridged.codecs,
+                                                                                          bridged.id,
+                                                                                          bridged.uid,
+                                                                                          bridged.name,
+                                                                                          bridged.label,
+                                                                                          bridged.available,
+                                                                                          bridged.width,
+                                                                                          bridged.height);
+    }
 };
