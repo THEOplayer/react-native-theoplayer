@@ -131,106 +131,106 @@ NSDictionary *convertToNSDictionary(const THEOplayerRCTViewConfigStruct &config)
 // NSDictionary => C++ struct
 // ==========================
 
-+ (std::string)stringFromDict:(NSDictionary *)dict key:(NSString *)key {
++ (std::string)stringFrom:(NSDictionary *)dict at:(NSString *)key {
     NSString *value = dict[key];
     return value ? [value UTF8String] : "";
 }
 
-+ (double)doubleFromDict:(NSDictionary *)dict key:(NSString *)key {
++ (double)doubleFrom:(NSDictionary *)dict at:(NSString *)key {
     NSNumber *value = dict[key];
     return value ? [value doubleValue] : 0.0;
 }
 
-+ (bool)boolFromDict:(NSDictionary *)dict key:(NSString *)key {
++ (bool)boolFrom:(NSDictionary *)dict at:(NSString *)key {
     NSNumber *value = dict[key];
     return value ? [value boolValue] : false;
 }
 
-+ (THEOplayerRCTViewEventEmitter::OnNativePlayerReady) nativePlayerReadyDataFrom:(NSDictionary*)eventData {
++ (THEOplayerRCTViewEventEmitter::OnNativePlayerReady) nativePlayerReadyDataFrom:(NSDictionary*)dict {
     THEOplayerRCTViewEventEmitter::OnNativePlayerReady playerReadyData;
-    NSDictionary *versionData = eventData[@"version"];
+    NSDictionary *versionData = dict[@"version"];
     THEOplayerRCTViewEventEmitter::OnNativePlayerReadyVersion version;
-    version.version = [self stringFromDict:versionData key:@"version"];
-    version.playerSuiteVersion = [self stringFromDict:versionData key:@"playerSuiteVersion"];
+    version.version = [self stringFrom:versionData at:@"version"];
+    version.playerSuiteVersion = [self stringFrom:versionData at:@"playerSuiteVersion"];
     playerReadyData.version = version;
     THEOplayerRCTViewEventEmitter::OnNativePlayerReadyState state;
     playerReadyData.state = state;
     return playerReadyData;
 }
 
-+ (THEOplayerRCTViewEventEmitter::OnNativeReadyStateChange) nativeReadyStateChangeDataFrom:(NSDictionary*)eventData {
++ (THEOplayerRCTViewEventEmitter::OnNativeReadyStateChange) nativeReadyStateChangeDataFrom:(NSDictionary*)dict {
     THEOplayerRCTViewEventEmitter::OnNativeReadyStateChange readyStateChangeData;
-    readyStateChangeData.readyState = [self doubleFromDict:eventData key:@"readyState"];
+    readyStateChangeData.readyState = [self doubleFrom:dict at:@"readyState"];
     return readyStateChangeData;
 }
 
-+ (THEOplayerRCTViewEventEmitter::OnNativeDurationChange)nativeDurationChangeDataFrom:(NSDictionary *)eventData {
++ (THEOplayerRCTViewEventEmitter::OnNativeDurationChange)nativeDurationChangeDataFrom:(NSDictionary *)dict {
     THEOplayerRCTViewEventEmitter::OnNativeDurationChange durationChangeData;
-    durationChangeData.duration = [self doubleFromDict:eventData key:@"duration"];
+    durationChangeData.duration = [self doubleFrom:dict at:@"duration"];
     return durationChangeData;
 }
 
-+ (THEOplayerRCTViewEventEmitter::OnNativeVolumeChange)nativeVolumeChangeDataFrom:(NSDictionary*)eventData {
++ (THEOplayerRCTViewEventEmitter::OnNativeVolumeChange)nativeVolumeChangeDataFrom:(NSDictionary*)dict {
     THEOplayerRCTViewEventEmitter::OnNativeVolumeChange volumeChangeData;
-    volumeChangeData.volume = [self doubleFromDict:eventData key:@"volume"];
-    volumeChangeData.muted = [self boolFromDict:eventData key:@"muted"];
+    volumeChangeData.volume = [self doubleFrom:dict at:@"volume"];
+    volumeChangeData.muted = [self boolFrom:dict at:@"muted"];
     return volumeChangeData;
 }
 
-+ (THEOplayerRCTViewEventEmitter::OnNativeProgress) nativeProgressDataFrom:(NSDictionary*) eventData {
++ (THEOplayerRCTViewEventEmitter::OnNativeProgress) nativeProgressDataFrom:(NSDictionary*) dict {
     THEOplayerRCTViewEventEmitter::OnNativeProgress progressData;
-    NSArray *seekableArray = eventData[@"seekable"];
+    NSArray *seekableArray = dict[@"seekable"];
     for (NSDictionary *seekableDict in seekableArray) {
         THEOplayerRCTViewEventEmitter::OnNativeProgressSeekable seekableItem;
-        seekableItem.start = [self doubleFromDict:seekableDict key:@"start"];
-        seekableItem.end = [self doubleFromDict:seekableDict key:@"end"];
+        seekableItem.start = [self doubleFrom:seekableDict at:@"start"];
+        seekableItem.end = [self doubleFrom:seekableDict at:@"end"];
         progressData.seekable.push_back(seekableItem);
     }
-    NSArray *bufferedArray = eventData[@"buffered"];
+    NSArray *bufferedArray = dict[@"buffered"];
     for (NSDictionary *bufferedDict in bufferedArray) {
         THEOplayerRCTViewEventEmitter::OnNativeProgressBuffered bufferedItem;
-        bufferedItem.start = [self doubleFromDict:bufferedDict key:@"start"];
-        bufferedItem.end = [self doubleFromDict:bufferedDict key:@"end"];
+        bufferedItem.start = [self doubleFrom:bufferedDict at:@"start"];
+        bufferedItem.end = [self doubleFrom:bufferedDict at:@"end"];
         progressData.buffered.push_back(bufferedItem);
     }
     return progressData;
 }
 
-+ (THEOplayerRCTViewEventEmitter::OnNativeTimeUpdate) nativeTimeUpdateDataFrom:(NSDictionary*) eventData {
++ (THEOplayerRCTViewEventEmitter::OnNativeTimeUpdate) nativeTimeUpdateDataFrom:(NSDictionary*) dict {
     THEOplayerRCTViewEventEmitter::OnNativeTimeUpdate timeUpdateData;
-    timeUpdateData.currentTime = [self doubleFromDict:eventData key:@"currentTime"];
-    timeUpdateData.currentProgramDateTime = [self doubleFromDict:eventData key:@"currentProgramDateTime"];
+    timeUpdateData.currentTime = [self doubleFrom:dict at:@"currentTime"];
+    timeUpdateData.currentProgramDateTime = [self doubleFrom:dict at:@"currentProgramDateTime"];
     return timeUpdateData;
 }
 
-+ (THEOplayerRCTViewEventEmitter::OnNativeError)nativeErrorDataFrom:(NSDictionary*)eventData {
++ (THEOplayerRCTViewEventEmitter::OnNativeError)nativeErrorDataFrom:(NSDictionary*)dict {
     THEOplayerRCTViewEventEmitter::OnNativeError errorData;
-    NSDictionary *errorErrorData = eventData[@"error"];
+    NSDictionary *errorErrorData = dict[@"error"];
     THEOplayerRCTViewEventEmitter::OnNativeErrorError error;
-    error.errorCode = [self stringFromDict:errorErrorData key:@"errorCode"];
-    error.errorMessage = [self stringFromDict:errorErrorData key:@"errorMessage"];
+    error.errorCode = [self stringFrom:errorErrorData at:@"errorCode"];
+    error.errorMessage = [self stringFrom:errorErrorData at:@"errorMessage"];
     errorData.error = error;
     return errorData;
 }
 
-+ (THEOplayerRCTViewEventEmitter::OnNativeRateChange) nativeRateChangeDataFrom:(NSDictionary*) eventData {
++ (THEOplayerRCTViewEventEmitter::OnNativeRateChange) nativeRateChangeDataFrom:(NSDictionary*) dict {
     THEOplayerRCTViewEventEmitter::OnNativeRateChange rateChangeData;
-    rateChangeData.playbackRate = [self doubleFromDict:eventData key:@"playbackRate"];
+    rateChangeData.playbackRate = [self doubleFrom:dict at:@"playbackRate"];
     return rateChangeData;
 }
 
 + (THEORCTBridgingTypeUtils::BridgedCue)BridgedCueFrom:(NSDictionary *)dict {
     THEORCTBridgingTypeUtils::BridgedCue cue;
-    cue.id = [self stringFromDict:dict key:@"id"];
-    cue.uid = [self doubleFromDict:dict key:@"uid"];
-    cue.startTime = [self doubleFromDict:dict key:@"startTime"];
-    cue.endTime = [self doubleFromDict:dict key:@"endTime"];
-    cue.startDate = [self doubleFromDict:dict key:@"startDate"];
-    cue.endDate = [self doubleFromDict:dict key:@"endDate"];
-    cue.classString = [self stringFromDict:dict key:@"classString"];
-    cue.duration = [self doubleFromDict:dict key:@"duration"];
-    cue.plannedDuration = [self doubleFromDict:dict key:@"plannedDuration"];
-    cue.endOnNext = [self boolFromDict:dict key:@"endOnNext"];
+    cue.id = [self stringFrom:dict at:@"id"];
+    cue.uid = [self doubleFrom:dict at:@"uid"];
+    cue.startTime = [self doubleFrom:dict at:@"startTime"];
+    cue.endTime = [self doubleFrom:dict at:@"endTime"];
+    cue.startDate = [self doubleFrom:dict at:@"startDate"];
+    cue.endDate = [self doubleFrom:dict at:@"endDate"];
+    cue.classString = [self stringFrom:dict at:@"classString"];
+    cue.duration = [self doubleFrom:dict at:@"duration"];
+    cue.plannedDuration = [self doubleFrom:dict at:@"plannedDuration"];
+    cue.endOnNext = [self boolFrom:dict at:@"endOnNext"];
     THEORCTBridgingTypeUtils::BridgedCueContent content;
     // TODO: EXTRACT CONTENT
     cue.content = content;
@@ -242,16 +242,16 @@ NSDictionary *convertToNSDictionary(const THEOplayerRCTViewConfigStruct &config)
 
 + (THEORCTBridgingTypeUtils::BridgedQuality)BridgedQualityFrom:(NSDictionary *)dict {
     THEORCTBridgingTypeUtils::BridgedQuality quality;
-    quality.averageBandwidth = [self doubleFromDict:dict key:@"averageBandwidth"];
-    quality.bandwidth = [self doubleFromDict:dict key:@"bandwidth"];
-    quality.codecs = [self stringFromDict:dict key:@"codecs"];
-    quality.id = [self stringFromDict:dict key:@"id"];
-    quality.uid = [self doubleFromDict:dict key:@"uid"];
-    quality.name = [self stringFromDict:dict key:@"name"];
-    quality.label = [self stringFromDict:dict key:@"label"];
-    quality.available = [self boolFromDict:dict key:@"available"];
-    quality.width = [self doubleFromDict:dict key:@"width"];
-    quality.height = [self doubleFromDict:dict key:@"height"];
+    quality.averageBandwidth = [self doubleFrom:dict at:@"averageBandwidth"];
+    quality.bandwidth = [self doubleFrom:dict at:@"bandwidth"];
+    quality.codecs = [self stringFrom:dict at:@"codecs"];
+    quality.id = [self stringFrom:dict at:@"id"];
+    quality.uid = [self doubleFrom:dict at:@"uid"];
+    quality.name = [self stringFrom:dict at:@"name"];
+    quality.label = [self stringFrom:dict at:@"label"];
+    quality.available = [self boolFrom:dict at:@"available"];
+    quality.width = [self doubleFrom:dict at:@"width"];
+    quality.height = [self doubleFrom:dict at:@"height"];
     return quality;
 }
 
@@ -314,42 +314,42 @@ NSDictionary *convertToNSDictionary(const THEOplayerRCTViewConfigStruct &config)
 
 + (THEOplayerRCTViewEventEmitter::OnNativeLoadedMetadataTextTracks)nativeLoadedMetadataTextTracksFrom:(NSDictionary *)dict {
     THEOplayerRCTViewEventEmitter::OnNativeLoadedMetadataTextTracks textTrack;
-    textTrack.kind = [self stringFromDict:dict key:@"kind"];
-    textTrack.label = [self stringFromDict:dict key:@"label"];
-    textTrack.language = [self stringFromDict:dict key:@"language"];
-    textTrack.id = [self stringFromDict:dict key:@"id"];
-    textTrack.uid = [self doubleFromDict:dict key:@"uid"];
-    textTrack.mode = [self stringFromDict:dict key:@"mode"];
-    textTrack.type = [self stringFromDict:dict key:@"type"];
+    textTrack.kind = [self stringFrom:dict at:@"kind"];
+    textTrack.label = [self stringFrom:dict at:@"label"];
+    textTrack.language = [self stringFrom:dict at:@"language"];
+    textTrack.id = [self stringFrom:dict at:@"id"];
+    textTrack.uid = [self doubleFrom:dict at:@"uid"];
+    textTrack.mode = [self stringFrom:dict at:@"mode"];
+    textTrack.type = [self stringFrom:dict at:@"type"];
     textTrack.cues = [self nativeLoadedMetadataTextTracksCuesArrayFrom:dict[@"cues"]];
-    textTrack.src = [self stringFromDict:dict key:@"src"];
-    textTrack.forced = [self boolFromDict:dict key:@"forced"];
+    textTrack.src = [self stringFrom:dict at:@"src"];
+    textTrack.forced = [self boolFrom:dict at:@"forced"];
     return textTrack;
 }
 
 + (THEOplayerRCTViewEventEmitter::OnNativeLoadedMetadataAudioTracks)nativeLoadedMetadataAudioTracksFrom:(NSDictionary *)dict {
     THEOplayerRCTViewEventEmitter::OnNativeLoadedMetadataAudioTracks audioTrack;
-    audioTrack.id = [self stringFromDict:dict key:@"id"];
-    audioTrack.uid = [self doubleFromDict:dict key:@"uid"];
-    audioTrack.kind = [self stringFromDict:dict key:@"kind"];
-    audioTrack.label = [self stringFromDict:dict key:@"label"];
-    audioTrack.language = [self stringFromDict:dict key:@"language"];
+    audioTrack.id = [self stringFrom:dict at:@"id"];
+    audioTrack.uid = [self doubleFrom:dict at:@"uid"];
+    audioTrack.kind = [self stringFrom:dict at:@"kind"];
+    audioTrack.label = [self stringFrom:dict at:@"label"];
+    audioTrack.language = [self stringFrom:dict at:@"language"];
     audioTrack.activeQuality = [self nativeLoadedMetadataAudioTracksActiveQualityFrom:dict[@"activeQuality"]];
     audioTrack.qualities = [self nativeLoadedMetadataAudioTracksQualitiesArrayFrom:dict[@"qualities"]];
-    audioTrack.enabled = [self boolFromDict:dict key:@"enabled"];
+    audioTrack.enabled = [self boolFrom:dict at:@"enabled"];
     return audioTrack;
 }
 
 + (THEOplayerRCTViewEventEmitter::OnNativeLoadedMetadataVideoTracks)nativeLoadedMetadataVideoTracksFrom:(NSDictionary *)dict {
     THEOplayerRCTViewEventEmitter::OnNativeLoadedMetadataVideoTracks videoTrack;
-    videoTrack.id = [self stringFromDict:dict key:@"id"];
-    videoTrack.uid = [self doubleFromDict:dict key:@"uid"];
-    videoTrack.kind = [self stringFromDict:dict key:@"kind"];
-    videoTrack.label = [self stringFromDict:dict key:@"label"];
-    videoTrack.language = [self stringFromDict:dict key:@"language"];
+    videoTrack.id = [self stringFrom:dict at:@"id"];
+    videoTrack.uid = [self doubleFrom:dict at:@"uid"];
+    videoTrack.kind = [self stringFrom:dict at:@"kind"];
+    videoTrack.label = [self stringFrom:dict at:@"label"];
+    videoTrack.language = [self stringFrom:dict at:@"language"];
     videoTrack.activeQuality = [self nativeLoadedMetadataVideoTracksActiveQualityFrom:dict[@"activeQuality"]];
     videoTrack.qualities = [self nativeLoadedMetadataVideoTracksQualitiesArrayFrom:dict[@"qualities"]];
-    videoTrack.enabled = [self boolFromDict:dict key:@"enabled"];
+    videoTrack.enabled = [self boolFrom:dict at:@"enabled"];
     return videoTrack;
 }
 
@@ -380,84 +380,53 @@ NSDictionary *convertToNSDictionary(const THEOplayerRCTViewConfigStruct &config)
     return videoTracks;
 }
 
-+ (THEOplayerRCTViewEventEmitter::OnNativeLoadedMetadata)nativeLoadedMetadataDataFrom:(NSDictionary *)eventData {
++ (THEOplayerRCTViewEventEmitter::OnNativeLoadedMetadata)nativeLoadedMetadataDataFrom:(NSDictionary *)dict {
     THEOplayerRCTViewEventEmitter::OnNativeLoadedMetadata metadata;
-    metadata.textTracks = [self nativeLoadedMetadataTextTracksArrayFrom:eventData[@"textTracks"]];
-    metadata.audioTracks = [self nativeLoadedMetadataAudioTracksArrayFrom:eventData[@"audioTracks"]];
-    metadata.videoTracks = [self nativeLoadedMetadataVideoTracksArrayFrom:eventData[@"videoTracks"]];
-    metadata.duration = [self doubleFromDict:eventData key:@"duration"];
-    metadata.selectedTextTrack = [self doubleFromDict:eventData key:@"selectedTextTrack"];
-    metadata.selectedVideoTrack = [self doubleFromDict:eventData key:@"selectedVideoTrack"];
-    metadata.selectedAudioTrack = [self doubleFromDict:eventData key:@"selectedAudioTrack"];
+    metadata.textTracks = [self nativeLoadedMetadataTextTracksArrayFrom:dict[@"textTracks"]];
+    metadata.audioTracks = [self nativeLoadedMetadataAudioTracksArrayFrom:dict[@"audioTracks"]];
+    metadata.videoTracks = [self nativeLoadedMetadataVideoTracksArrayFrom:dict[@"videoTracks"]];
+    metadata.duration = [self doubleFrom:dict at:@"duration"];
+    metadata.selectedTextTrack = [self doubleFrom:dict at:@"selectedTextTrack"];
+    metadata.selectedVideoTrack = [self doubleFrom:dict at:@"selectedVideoTrack"];
+    metadata.selectedAudioTrack = [self doubleFrom:dict at:@"selectedAudioTrack"];
     return metadata;
 }
 
-+ (THEOplayerRCTViewEventEmitter::OnNativeResize) nativeResizeDataFrom:(NSDictionary*) eventData {
++ (THEOplayerRCTViewEventEmitter::OnNativeResize) nativeResizeDataFrom:(NSDictionary*) dict {
     THEOplayerRCTViewEventEmitter::OnNativeResize resizeData;
-    
-    // Extract width and height from NSDictionary
-    NSNumber *width = eventData[@"width"];
-    NSNumber *height = eventData[@"height"];
-    
-    if (width && [width isKindOfClass:[NSNumber class]]) {
-        resizeData.width = [width doubleValue];
-    } else {
-        resizeData.width = 0.0; // Default value or handle error
-    }
-    
-    if (height && [height isKindOfClass:[NSNumber class]]) {
-        resizeData.height = [height doubleValue];
-    } else {
-        resizeData.height = 0.0; // Default value or handle error
-    }
-    
+    resizeData.width = [self doubleFrom:dict at:@"width"];
+    resizeData.height = [self doubleFrom:dict at:@"height"];
     return resizeData;
 }
 
-+ (THEOplayerRCTViewEventEmitter::OnNativePresentationModeChange) nativePresentationModeChangeDataFrom:(NSDictionary*) eventData {
-    THEOplayerRCTViewEventEmitter::OnNativePresentationModeChange result;
-    
-    // Extracting simple strings
-    if ([eventData objectForKey:@"presentationMode"]) {
-        result.presentationMode = [eventData[@"presentationMode"] UTF8String];
-    }
-    if ([eventData objectForKey:@"previousPresentationMode"]) {
-        result.previousPresentationMode = [eventData[@"previousPresentationMode"] UTF8String];
-    }
-    
-    // Extracting nested struct for context
-    if ([eventData objectForKey:@"context"]) {
-        NSDictionary *contextData = eventData[@"context"];
++ (THEOplayerRCTViewEventEmitter::OnNativePresentationModeChange) nativePresentationModeChangeDataFrom:(NSDictionary*) dict {
+    THEOplayerRCTViewEventEmitter::OnNativePresentationModeChange presentationModeChangeData;
+    presentationModeChangeData.presentationMode = [self stringFrom:dict at:@"presentationMode"];
+    presentationModeChangeData.previousPresentationMode = [self stringFrom:dict at:@"previousPresentationMode"];
+    if ([dict objectForKey:@"context"]) {
+        NSDictionary *contextData = dict[@"context"];
         if ([contextData objectForKey:@"pip"]) {
-            result.context.pip = [contextData[@"pip"] UTF8String];
+            presentationModeChangeData.context.pip = [self stringFrom:contextData at:@"pip"];
         }
     }
-    
-    return result;
+    return presentationModeChangeData;
 }
 
-
-+ (THEOplayerRCTViewEventEmitter::OnNativeTextTrackListEvent)nativeTextTrackListEventDataFrom:(NSDictionary*) eventData {
-    THEOplayerRCTViewEventEmitter::OnNativeTextTrackListEvent event;
-    
-    // Extract type
-    event.type = [eventData[@"type"] doubleValue];
-    
-    // Extract track
-    NSDictionary *trackData = eventData[@"track"];
++ (THEOplayerRCTViewEventEmitter::OnNativeTextTrackListEvent)nativeTextTrackListEventDataFrom:(NSDictionary*) dict {
+    THEOplayerRCTViewEventEmitter::OnNativeTextTrackListEvent textTrackListEventData;
+    textTrackListEventData.type = [self doubleFrom:dict at:@"type"];
+    NSDictionary *trackData = dict[@"track"];
     if (trackData) {
         THEOplayerRCTViewEventEmitter::OnNativeTextTrackListEventTrack track;
-        track.kind = [trackData[@"kind"] UTF8String];
-        track.label = [trackData[@"label"] UTF8String];
-        track.language = [trackData[@"language"] UTF8String];
-        track.id = [trackData[@"id"] UTF8String];
-        track.uid = [trackData[@"uid"] doubleValue];
-        track.mode = [trackData[@"mode"] UTF8String];
-        track.type = [trackData[@"type"] UTF8String];
-        track.src = [trackData[@"src"] UTF8String];
-        track.forced = [trackData[@"forced"] boolValue];
-        
-        // Extract cues
+        track.kind = [self stringFrom:trackData at:@"kind"];
+        track.label = [self stringFrom:trackData at:@"label"];
+        track.language = [self stringFrom:trackData at:@"language"];
+        track.id = [self stringFrom:trackData at:@"id"];
+        track.uid = [self doubleFrom:trackData at:@"uid"];
+        track.mode = [self stringFrom:trackData at:@"mode"];
+        track.type = [self stringFrom:trackData at:@"type"];
+        track.src = [self stringFrom:trackData at:@"src"];
+        track.forced = [self boolFrom:trackData at:@"forced"];
         NSArray *cuesData = trackData[@"cues"];
         if (cuesData) {
             for (NSDictionary *cueData in cuesData) {
@@ -466,58 +435,43 @@ NSDictionary *convertToNSDictionary(const THEOplayerRCTViewConfigStruct &config)
                 track.cues.push_back(cue);
             }
         }
-        
-        event.track = track;
+        textTrackListEventData.track = track;
     }
-    
-    return event;
+    return textTrackListEventData;
 }
 
-+ (THEOplayerRCTViewEventEmitter::OnNativeTextTrackEvent)nativeTextTrackEventDataFrom:(NSDictionary*) eventData {
-    THEOplayerRCTViewEventEmitter::OnNativeTextTrackEvent event;
-    
-    // Extract type and trackUid
-    event.type = [eventData[@"type"] doubleValue];
-    event.trackUid = [eventData[@"trackUid"] doubleValue];
-    
-    // Extract cue
-    NSDictionary *cueData = eventData[@"cue"];
++ (THEOplayerRCTViewEventEmitter::OnNativeTextTrackEvent)nativeTextTrackEventDataFrom:(NSDictionary*) dict {
+    THEOplayerRCTViewEventEmitter::OnNativeTextTrackEvent textTrackEventData;
+    textTrackEventData.type = [self doubleFrom:dict at:@"type"];
+    textTrackEventData.trackUid = [self doubleFrom:dict at:@"trackUid"];
+    NSDictionary *cueData = dict[@"cue"];
     if (cueData) {
         THEORCTBridgingTypeUtils::BridgedCue bridgedCue = [self BridgedCueFrom:cueData];
         THEOplayerRCTViewEventEmitter::OnNativeTextTrackEventCue cue = THEORCTBridgingTypeUtils::BridgedCue_2_OnNativeTextTrackEventCue(bridgedCue);
-        event.cue = cue;
+        textTrackEventData.cue = cue;
     }
-    
-    return event;
+    return textTrackEventData;
 }
 
-+ (THEOplayerRCTViewEventEmitter::OnNativeMediaTrackListEvent)nativeMediaTrackListEventDataFrom:(NSDictionary*) eventData {
-    THEOplayerRCTViewEventEmitter::OnNativeMediaTrackListEvent event;
-    
-    // Extract type and trackType
-    event.type = [eventData[@"type"] doubleValue];
-    event.trackType = [eventData[@"trackType"] doubleValue];
-    
-    // Extract track
-    NSDictionary *trackData = eventData[@"track"];
++ (THEOplayerRCTViewEventEmitter::OnNativeMediaTrackListEvent)nativeMediaTrackListEventDataFrom:(NSDictionary*) dict {
+    THEOplayerRCTViewEventEmitter::OnNativeMediaTrackListEvent mediaTrackListEventData;
+    mediaTrackListEventData.type = [self doubleFrom:dict at:@"type"];
+    mediaTrackListEventData.trackType = [self doubleFrom:dict at:@"trackType"];
+    NSDictionary *trackData = dict[@"track"];
     if (trackData) {
         THEOplayerRCTViewEventEmitter::OnNativeMediaTrackListEventTrack track;
-        track.id = [trackData[@"id"] UTF8String];
-        track.uid = [trackData[@"uid"] doubleValue];
-        track.kind = [trackData[@"kind"] UTF8String];
-        track.label = [trackData[@"label"] UTF8String];
-        track.language = [trackData[@"language"] UTF8String];
-        track.enabled = [trackData[@"enabled"] boolValue];
-        
-        // Extract activeQuality
+        track.id = [self stringFrom:trackData at:@"id"];
+        track.uid = [self doubleFrom:trackData at:@"uid"];
+        track.kind = [self stringFrom:trackData at:@"kind"];
+        track.label = [self stringFrom:trackData at:@"label"];
+        track.language = [self stringFrom:trackData at:@"language"];
+        track.enabled = [self boolFrom:trackData at:@"enabled"];
         NSDictionary *activeQualityData = trackData[@"activeQuality"];
         if (activeQualityData) {
             THEORCTBridgingTypeUtils::BridgedQuality bridgedQuality = [self BridgedQualityFrom:activeQualityData];
             THEOplayerRCTViewEventEmitter::OnNativeMediaTrackListEventTrackActiveQuality quality = THEORCTBridgingTypeUtils::BridgedQuality_2_OnNativeMediaTrackListEventTrackActiveQuality(bridgedQuality);
             track.activeQuality = quality;
         }
-        
-        // Extract qualities
         NSArray *qualitiesData = trackData[@"qualities"];
         if (qualitiesData) {
             for (NSDictionary *qualityData in qualitiesData) {
@@ -526,183 +480,135 @@ NSDictionary *convertToNSDictionary(const THEOplayerRCTViewConfigStruct &config)
                 track.qualities.push_back(quality);
             }
         }
-        
-        event.track = track;
+        mediaTrackListEventData.track = track;
     }
-    
-    return event;
+    return mediaTrackListEventData;
 }
 
-+ (THEOplayerRCTViewEventEmitter::OnNativeMediaTrackEvent)nativeMediaTrackEventDataFrom:(NSDictionary*) eventData {
-    THEOplayerRCTViewEventEmitter::OnNativeMediaTrackEvent event;
-    
-    // Extract type, trackType, and trackUid
-    event.type = [eventData[@"type"] doubleValue];
-    event.trackType = [eventData[@"trackType"] doubleValue];
-    event.trackUid = [eventData[@"trackUid"] doubleValue];
-    
-    // Extract qualities
-    NSArray *qualitiesData = eventData[@"qualities"];
++ (THEOplayerRCTViewEventEmitter::OnNativeMediaTrackEvent)nativeMediaTrackEventDataFrom:(NSDictionary*) dict {
+    THEOplayerRCTViewEventEmitter::OnNativeMediaTrackEvent mediaTrackEventData;
+    mediaTrackEventData.type = [self doubleFrom:dict at:@"type"];
+    mediaTrackEventData.trackType = [self doubleFrom:dict at:@"trackType"];
+    mediaTrackEventData.trackUid = [self doubleFrom:dict at:@"trackUid"];
+    NSArray *qualitiesData = dict[@"qualities"];
     if (qualitiesData) {
         for (NSDictionary *qualityData in qualitiesData) {
-            THEOplayerRCTViewEventEmitter::OnNativeMediaTrackEventQualities quality;
-            quality.averageBandwidth = [qualityData[@"averageBandwidth"] doubleValue];
-            quality.bandwidth = [qualityData[@"bandwidth"] doubleValue];
-            quality.codecs = [qualityData[@"codecs"] UTF8String];
-            quality.id = [qualityData[@"id"] UTF8String];
-            quality.uid = [qualityData[@"uid"] doubleValue];
-            quality.name = [qualityData[@"name"] UTF8String];
-            quality.label = [qualityData[@"label"] UTF8String];
-            quality.available = [qualityData[@"available"] boolValue];
-            quality.width = [qualityData[@"width"] doubleValue];
-            quality.height = [qualityData[@"height"] doubleValue];
-            
-            event.qualities.push_back(quality);
+            THEORCTBridgingTypeUtils::BridgedQuality bridgedQuality = [self BridgedQualityFrom:qualityData];
+            THEOplayerRCTViewEventEmitter::OnNativeMediaTrackEventQualities quality = THEORCTBridgingTypeUtils::BridgedQuality_2_OnNativeMediaTrackEventQualities(bridgedQuality);
+            mediaTrackEventData.qualities.push_back(quality);
         }
     }
-    
-    return event;
+    return mediaTrackEventData;
 }
 
-
-+ (THEOplayerRCTViewEventEmitter::OnNativeCastEvent)nativeCastEventDataFrom:(NSDictionary*) eventData {
-    THEOplayerRCTViewEventEmitter::OnNativeCastEvent event;
-    
-    // Extract type and state
-    event.type = [eventData[@"type"] UTF8String];
-    event.state = [eventData[@"state"] UTF8String];
-    
-    // Extract error
-    NSDictionary *errorData = eventData[@"error"];
++ (THEOplayerRCTViewEventEmitter::OnNativeCastEvent)nativeCastEventDataFrom:(NSDictionary*) dict {
+    THEOplayerRCTViewEventEmitter::OnNativeCastEvent castEventData;
+    castEventData.type = [self stringFrom:dict at:@"type"];
+    castEventData.state = [self stringFrom:dict at:@"state"];
+    NSDictionary *errorData = dict[@"error"];
     if (errorData) {
         THEOplayerRCTViewEventEmitter::OnNativeCastEventError error;
-        error.errorCode = [errorData[@"errorCode"] UTF8String];
-        error.description = [errorData[@"description"] UTF8String];
-        
-        event.error = error;
+        error.errorCode = [self stringFrom:errorData at:@"errorCode"];
+        error.description = [self stringFrom:errorData at:@"description"];
+        castEventData.error = error;
     }
-    
-    return event;
+    return castEventData;
 }
 
-+ (THEOplayerRCTViewEventEmitter::OnNativeAdEvent)nativeAdEventDataFrom:(NSDictionary*) eventData {
-    THEOplayerRCTViewEventEmitter::OnNativeAdEvent event;
-    
-    // Extract type
-    event.type = [eventData[@"type"] UTF8String];
-    
-    // Extract ad
-    NSDictionary *adData = eventData[@"ad"];
++ (THEOplayerRCTViewEventEmitter::OnNativeAdEvent)nativeAdEventDataFrom:(NSDictionary*) dict {
+    THEOplayerRCTViewEventEmitter::OnNativeAdEvent adEventData;
+    adEventData.type = [self stringFrom:dict at:@"type"];
+    NSDictionary *adData = dict[@"ad"];
     if (adData) {
         THEOplayerRCTViewEventEmitter::OnNativeAdEventAd ad;
-        ad.adSystem = [adData[@"adSystem"] UTF8String];
-        ad.integration = [adData[@"integration"] UTF8String];
-        ad.type = [adData[@"type"] UTF8String];
-        ad.id = [adData[@"id"] UTF8String];
-        ad.readyState = [adData[@"readyState"] UTF8String];
-        ad.duration = [adData[@"duration"] doubleValue];
-        ad.width = [adData[@"width"] doubleValue];
-        ad.height = [adData[@"height"] doubleValue];
-        ad.resourceURI = [adData[@"resourceURI"] UTF8String];
-        ad.clickThrough = [adData[@"clickThrough"] UTF8String];
-        ad.skipOffset = [adData[@"skipOffset"] doubleValue];
-        ad.creativeId = [adData[@"creativeId"] UTF8String];
-        ad.timeOffset = [adData[@"timeOffset"] doubleValue];
-        ad.maxDuration = [adData[@"maxDuration"] doubleValue];
-        ad.maxRemainingDuration = [adData[@"maxRemainingDuration"] doubleValue];
-        
-        // Extract adBreak
+        ad.adSystem = [self stringFrom:adData at:@"adSystem"];
+        ad.integration = [self stringFrom:adData at:@"integration"];
+        ad.type = [self stringFrom:adData at:@"type"];
+        ad.id = [self stringFrom:adData at:@"id"];
+        ad.readyState = [self stringFrom:adData at:@"readyState"];
+        ad.duration = [self doubleFrom:adData at:@"duration"];
+        ad.width = [self doubleFrom:adData at:@"width"];
+        ad.height = [self doubleFrom:adData at:@"height"];
+        ad.resourceURI = [self stringFrom:adData at:@"resourceURI"];
+        ad.clickThrough = [self stringFrom:adData at:@"clickThrough"];
+        ad.skipOffset = [self doubleFrom:adData at:@"skipOffset"];
+        ad.creativeId = [self stringFrom:adData at:@"creativeId"];
+        ad.timeOffset = [self doubleFrom:adData at:@"timeOffset"];
+        ad.maxDuration = [self doubleFrom:adData at:@"maxDuration"];
+        ad.maxRemainingDuration = [self doubleFrom:adData at:@"maxRemainingDuration"];
         NSDictionary *adBreakData = adData[@"adBreak"];
         if (adBreakData) {
             THEOplayerRCTViewEventEmitter::OnNativeAdEventAdAdBreak adBreak;
-            adBreak.integration = [adBreakData[@"integration"] UTF8String];
-            adBreak.timeOffset = [adBreakData[@"timeOffset"] doubleValue];
-            adBreak.maxDuration = [adBreakData[@"maxDuration"] doubleValue];
-            adBreak.maxRemainingDuration = [adBreakData[@"maxRemainingDuration"] doubleValue];
-            
+            adBreak.integration = [self stringFrom:adBreakData at:@"integration"];
+            adBreak.timeOffset = [self doubleFrom:adBreakData at:@"timeOffset"];
+            adBreak.maxDuration = [self doubleFrom:adBreakData at:@"maxDuration"];
+            adBreak.maxRemainingDuration = [self doubleFrom:adBreakData at:@"maxRemainingDuration"];
             ad.adBreak = adBreak;
         }
-        
-        // Extract companions
         NSDictionary *companionsData = adData[@"companions"];
         if (companionsData) {
             THEOplayerRCTViewEventEmitter::OnNativeAdEventAdCompanions companions;
-            companions.adSlotId = [companionsData[@"adSlotId"] UTF8String];
-            companions.altText = [companionsData[@"altText"] UTF8String];
-            companions.contentHTML = [companionsData[@"contentHTML"] UTF8String];
-            companions.clickThrough = [companionsData[@"clickThrough"] UTF8String];
-            companions.width = [companionsData[@"width"] doubleValue];
-            companions.height = [companionsData[@"height"] doubleValue];
-            companions.resourceURI = [companionsData[@"resourceURI"] UTF8String];
-            
+            companions.adSlotId = [self stringFrom:companionsData at:@"adSlotId"];
+            companions.altText = [self stringFrom:companionsData at:@"altText"];
+            companions.contentHTML =[self stringFrom:companionsData at:@"contentHTML"];
+            companions.clickThrough = [self stringFrom:companionsData at:@"clickThrough"];
+            companions.width = [self doubleFrom:companionsData at:@"width"];
+            companions.height = [self doubleFrom:companionsData at:@"height"];
+            companions.resourceURI = [self stringFrom:companionsData at:@"resourceURI"];
             ad.companions = companions;
         }
-        
-        // Extract universalAdIds
         NSArray *universalAdIdsData = adData[@"universalAdIds"];
         if (universalAdIdsData) {
             for (NSDictionary *universalAdIdData in universalAdIdsData) {
                 THEOplayerRCTViewEventEmitter::OnNativeAdEventAdUniversalAdIds universalAdId;
-                universalAdId.adIdRegistry = [universalAdIdData[@"adIdRegistry"] UTF8String];
-                universalAdId.adIdValue = [universalAdIdData[@"adIdValue"] UTF8String];
-                
+                universalAdId.adIdRegistry = [self stringFrom:universalAdIdData at:@"adIdRegistry"];
+                universalAdId.adIdValue = [self stringFrom:universalAdIdData at:@"adIdValue"];
                 ad.universalAdIds.push_back(universalAdId);
             }
         }
-        
-        // Extract ads
         NSArray *adsData = adData[@"ads"];
         if (adsData) {
             for (NSDictionary *adItemData in adsData) {
                 THEOplayerRCTViewEventEmitter::OnNativeAdEventAdAds adItem;
-                adItem.adSystem = [adItemData[@"adSystem"] UTF8String];
-                adItem.integration = [adItemData[@"integration"] UTF8String];
-                adItem.type = [adItemData[@"type"] UTF8String];
-                adItem.id = [adItemData[@"id"] UTF8String];
-                adItem.readyState = [adItemData[@"readyState"] UTF8String];
-                adItem.duration = [adItemData[@"duration"] doubleValue];
-                adItem.width = [adItemData[@"width"] doubleValue];
-                adItem.height = [adItemData[@"height"] doubleValue];
-                adItem.resourceURI = [adItemData[@"resourceURI"] UTF8String];
-                adItem.clickThrough = [adItemData[@"clickThrough"] UTF8String];
-                adItem.skipOffset = [adItemData[@"skipOffset"] doubleValue];
-                adItem.creativeId = [adItemData[@"creativeId"] UTF8String];
-                
-                // Extract companions for ads
-                NSDictionary *companionsData = adItemData[@"companions"];
-                if (companionsData) {
-                    THEOplayerRCTViewEventEmitter::OnNativeAdEventAdAdsCompanions companions;
-                    companions.adSlotId = [companionsData[@"adSlotId"] UTF8String];
-                    companions.altText = [companionsData[@"altText"] UTF8String];
-                    companions.contentHTML = [companionsData[@"contentHTML"] UTF8String];
-                    companions.clickThrough = [companionsData[@"clickThrough"] UTF8String];
-                    companions.width = [companionsData[@"width"] doubleValue];
-                    companions.height = [companionsData[@"height"] doubleValue];
-                    companions.resourceURI = [companionsData[@"resourceURI"] UTF8String];
-                    
-                    adItem.companions = companions;
+                adItem.adSystem = [self stringFrom:adItemData at:@"adSystem"];
+                adItem.integration = [self stringFrom:adItemData at:@"integration"];
+                adItem.type = [self stringFrom:adItemData at:@"type"];
+                adItem.id = [self stringFrom:adItemData at:@"id"];
+                adItem.readyState = [self stringFrom:adItemData at:@"readyState"];
+                adItem.duration = [self doubleFrom:adItemData at:@"duration"];
+                adItem.width = [self doubleFrom:adItemData at:@"width"];
+                adItem.height = [self doubleFrom:adItemData at:@"height"];
+                adItem.resourceURI = [self stringFrom:adItemData at:@"resourceURI"];
+                adItem.clickThrough = [self stringFrom:adItemData at:@"clickThrough"];
+                adItem.skipOffset = [self doubleFrom:adItemData at:@"skipOffset"];
+                adItem.creativeId = [self stringFrom:adItemData at:@"creativeId"];
+                NSDictionary *adsCompanionsData = adItemData[@"companions"];
+                if (adsCompanionsData) {
+                    THEOplayerRCTViewEventEmitter::OnNativeAdEventAdAdsCompanions adsCompanions;
+                    adsCompanions.adSlotId = [self stringFrom:adsCompanionsData at:@"adSlotId"];
+                    adsCompanions.altText = [self stringFrom:adsCompanionsData at:@"altText"];
+                    adsCompanions.contentHTML =[self stringFrom:adsCompanionsData at:@"contentHTML"];
+                    adsCompanions.clickThrough = [self stringFrom:adsCompanionsData at:@"clickThrough"];
+                    adsCompanions.width = [self doubleFrom:adsCompanionsData at:@"width"];
+                    adsCompanions.height = [self doubleFrom:adsCompanionsData at:@"height"];
+                    adsCompanions.resourceURI = [self stringFrom:adsCompanionsData at:@"resourceURI"];
+                    adItem.companions = adsCompanions;
                 }
-                
-                // Extract universalAdIds for ads
-                NSArray *universalAdIdsData = adItemData[@"universalAdIds"];
-                if (universalAdIdsData) {
-                    for (NSDictionary *universalAdIdData in universalAdIdsData) {
-                        THEOplayerRCTViewEventEmitter::OnNativeAdEventAdAdsUniversalAdIds universalAdId;
-                        universalAdId.adIdRegistry = [universalAdIdData[@"adIdRegistry"] UTF8String];
-                        universalAdId.adIdValue = [universalAdIdData[@"adIdValue"] UTF8String];
-                        
-                        adItem.universalAdIds.push_back(universalAdId);
+                NSArray *adsUniversalAdIdsData = adItemData[@"universalAdIds"];
+                if (adsUniversalAdIdsData) {
+                    for (NSDictionary *adsUniversalAdIdData in universalAdIdsData) {
+                        THEOplayerRCTViewEventEmitter::OnNativeAdEventAdAdsUniversalAdIds adsUniversalAdId;
+                        adsUniversalAdId.adIdRegistry = [self stringFrom:adsUniversalAdIdData at:@"adIdRegistry"];
+                        adsUniversalAdId.adIdValue = [self stringFrom:adsUniversalAdIdData at:@"adIdValue"];
+                        adItem.universalAdIds.push_back(adsUniversalAdId);
                     }
                 }
-                
                 ad.ads.push_back(adItem);
             }
         }
-        
-        event.ad = ad;
+        adEventData.ad = ad;
     }
-    
-    return event;
+    return adEventData;
 }
 
 @end
