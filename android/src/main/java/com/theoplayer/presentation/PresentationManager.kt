@@ -14,6 +14,7 @@ import android.view.ViewParent
 import androidx.activity.ComponentActivity
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.children
 import androidx.lifecycle.Lifecycle
 import com.facebook.react.ReactRootView
 import com.facebook.react.runtime.ReactSurfaceView
@@ -35,9 +36,10 @@ class PresentationManager(
   private var supportsPip = false
   private var onUserLeaveHintReceiver: BroadcastReceiver? = null
   private var onPictureInPictureModeChanged: BroadcastReceiver? = null
-  private var playerGroupParentNode: ViewGroup? = null
-  private var playerGroupChildIndex: Int? = null
   private val pipUtils: PipUtils = PipUtils(viewCtx, reactContext)
+  private val playerGroupRestoreOptions by lazy {
+    PlayerGroupRestoreOptions()
+  }
 
   var currentPresentationMode: PresentationMode = PresentationMode.INLINE
     private set
@@ -146,6 +148,9 @@ class PresentationManager(
     try {
       pipUtils.enable()
       reactContext.currentActivity?.enterPictureInPictureMode(pipUtils.getPipParams())
+      if (BuildConfig.REPARENT_ON_PIP) {
+        reparentPlayerToRoot()
+      }
     } catch (_: Exception) {
       onPipError()
     }
@@ -169,6 +174,9 @@ class PresentationManager(
       } else {
         PresentationModeChangePipContext.RESTORED
       }
+    if (BuildConfig.REPARENT_ON_PIP) {
+      reparentPlayerToOriginal()
+    }
     updatePresentationMode(PresentationMode.INLINE, PresentationModeChangeContext(pipCtx))
     pipUtils.disable()
   }
@@ -209,30 +217,14 @@ class PresentationManager(
     val activity = reactContext.currentActivity ?: return
     val window = activity.window
 
-    // Get the player's ReactViewGroup parent, which contains THEOplayerView and its children (typically the UI).
-    val reactPlayerGroup: ReactViewGroup? = getClosestParentOfType(this.viewCtx.playerView)
-
-    // Get ReactNative's root node or the render hierarchy
-    val root: ReactRootView? = getClosestParentOfType(reactPlayerGroup)
-
     if (fullscreen) {
       WindowInsetsControllerCompat(window, window.decorView).apply {
         systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
       }.hide(WindowInsetsCompat.Type.systemBars())
       updatePresentationMode(PresentationMode.FULLSCREEN)
 
-      if (!BuildConfig.REPARENT_ON_FULLSCREEN) {
-        return
-      }
-      playerGroupParentNode = if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
-        reactPlayerGroup?.parent as? ReactSurfaceView?
-      } else {
-        reactPlayerGroup?.parent as? ReactViewGroup?
-      }?.also { parent ->
-        playerGroupChildIndex = parent.indexOfChild(reactPlayerGroup)
-        // Re-parent the playerViewGroup to the root node
-        parent.removeView(reactPlayerGroup)
-        root?.addView(reactPlayerGroup)
+      if (BuildConfig.REPARENT_ON_FULLSCREEN) {
+        reparentPlayerToRoot()
       }
     } else {
       WindowInsetsControllerCompat(window, window.decorView).show(
@@ -240,18 +232,47 @@ class PresentationManager(
       )
       updatePresentationMode(PresentationMode.INLINE)
 
-      if (!BuildConfig.REPARENT_ON_FULLSCREEN) {
-        return
-      }
-      root?.run {
-        // Re-parent the playerViewGroup from the root node to its original parent
-        removeView(reactPlayerGroup)
-        playerGroupParentNode?.addView(reactPlayerGroup, playerGroupChildIndex ?: 0)
-        playerGroupParentNode = null
-        playerGroupChildIndex = null
+      if (BuildConfig.REPARENT_ON_FULLSCREEN) {
+        reparentPlayerToOriginal()
       }
     }
   }
+
+  // region Re-parent playerViewGroup logic
+  private val reactPlayerGroup: ReactViewGroup?
+    get() = viewCtx.playerView.getClosestParentOfType()
+  private val rootView: ReactRootView?
+    get() {
+      val activity = reactContext.currentActivity ?: return null
+      // Try to search in parents and as a fallback option from root to bottom using depth-first order
+      return reactPlayerGroup?.getClosestParentOfType()
+        ?: (activity.window.decorView.rootView as? ViewGroup)
+          ?.getClosestParentOfType(false)
+    }
+
+  private fun reparentPlayerToRoot() {
+    playerGroupRestoreOptions.parentNode = if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
+      reactPlayerGroup?.parent as? ReactSurfaceView?
+    } else {
+      reactPlayerGroup?.parent as? ReactViewGroup?
+    }?.also { parent ->
+      playerGroupRestoreOptions.childIndex = parent.indexOfChild(reactPlayerGroup)
+
+      // Re-parent the playerViewGroup to the root node
+      parent.removeView(reactPlayerGroup)
+      rootView?.addView(reactPlayerGroup)
+    }
+  }
+
+  private fun reparentPlayerToOriginal() {
+    rootView?.run {
+      // Re-parent the playerViewGroup from the root node to its original parent
+      removeView(reactPlayerGroup)
+      playerGroupRestoreOptions.parentNode?.addView(reactPlayerGroup, playerGroupRestoreOptions.childIndex ?: 0)
+      playerGroupRestoreOptions.reset()
+    }
+  }
+// endregion
 
   private fun updatePresentationMode(
     presentationMode: PresentationMode,
@@ -279,10 +300,41 @@ class PresentationManager(
   }
 }
 
-inline fun <reified T : View> getClosestParentOfType(view: View?): T? {
-  var parent: ViewParent? = view?.parent
-  while (parent != null && parent !is T) {
-    parent = parent.parent
+inline fun <reified T : View> ViewGroup.getClosestParentOfType(upward: Boolean = true): T? {
+  if (upward) {
+    // Search in the parent views of `this` view up to the root
+    var parent: ViewParent? = parent
+    while (parent != null && parent !is T) {
+      parent = parent.parent
+    }
+    return parent as? T
+  } else {
+    // Search in the children collection.
+    val viewStack = ArrayDeque(children.toList())
+    // Use Stack/LIFO instead of recursion
+    while (viewStack.isNotEmpty()) {
+      when (val view = viewStack.removeAt(0)) {
+        is T -> {
+          return view
+        }
+
+        is ViewGroup -> {
+          // Filling LIFO with all children of the ViewGroup: depth-first order
+          viewStack.addAll(0, view.children.toList())
+        }
+      }
+    }
+    // Found nothing
+    return null
   }
-  return parent as? T
+}
+
+private class PlayerGroupRestoreOptions {
+  var childIndex: Int? = null
+  var parentNode: ViewGroup? = null
+
+  fun reset() {
+    parentNode = null
+    childIndex = null
+  }
 }
