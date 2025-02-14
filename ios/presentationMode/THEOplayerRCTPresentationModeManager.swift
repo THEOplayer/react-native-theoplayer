@@ -37,6 +37,14 @@ public class THEOplayerRCTPresentationModeManager {
         self.attachListeners()
     }
     
+    func validateLayout() {
+        if self.presentationMode == .fullscreen,
+           let containerView = self.containerView {
+            // When in fullscreen, assure the moved view has a (0, 0) origin.
+            containerView.frame = CGRect(x: 0, y: 0, width: containerView.frame.width, height: containerView.frame.height)
+        }
+    }
+    
     // MARK: - logic
     private func movingVCs(for view: UIView) -> [UIViewController] {
         var viewControllers: [UIViewController] = []
