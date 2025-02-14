@@ -1,0 +1,7 @@
+*/lib/
+
+# TypeDoc
+api/
+
+tsconfig.json
+*.md

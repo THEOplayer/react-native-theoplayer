@@ -44,7 +44,6 @@ class THEOplayerRCTNowPlayingManager {
     func updateNowPlaying() {
         // Reset any existing playing info
         self.nowPlayingInfo = [:]
-        self.clearNowPlayingOnInfoCenter()
         
         // Gather new playing info
         if let player = self.player,
@@ -66,13 +65,19 @@ class THEOplayerRCTNowPlayingManager {
             self.updateArtWork(artWorkUrlString) { [weak self] in
                 self?.processNowPlayingToInfoCenter()
             }
+        } else {
+          self.clearNowPlayingOnInfoCenter()
         }
     }
     
     private func processNowPlayingToInfoCenter() {
         let nowPlayingInfo = self.nowPlayingInfo
         DispatchQueue.main.async {
-            MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+            if !nowPlayingInfo.isEmpty {
+                MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+            } else {
+                MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
+            }
         }
     }
 
@@ -236,7 +241,8 @@ class THEOplayerRCTNowPlayingManager {
         self.rateChangeListener = player.addEventListener(type: PlayerEventTypes.RATE_CHANGE) { [weak self, weak player] event in
             if let welf = self,
                let wplayer = player {
-                welf.nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = NSNumber(value: wplayer.playbackRate)
+                welf.updatePlaybackRate(wplayer.playbackRate)
+                welf.updateCurrentTime(wplayer.currentTime)
                 if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE] RATE_CHANGE: Updating playbackRate on NowPlayingInfoCenter...") }
                 welf.processNowPlayingToInfoCenter()
             }

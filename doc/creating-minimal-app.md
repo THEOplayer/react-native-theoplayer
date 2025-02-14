@@ -147,6 +147,7 @@ Example:
 		"features": [
 			"GOOGLE_IMA",
 			"CHROMECAST",
+			"THEO_ADS",
 			"SIDELOADED_TEXTTRACKS"
 		]
 	}
@@ -154,6 +155,7 @@ Example:
 ```
 - **GOOGLE_IMA**: adds an additional dependency to the THEOplayer-Integration-GoogleIMA cocoapod that delivers the IMA functionality
 - **CHROMECAST**: adds an additional dependency to the THEOplayer-Integration-GoogleCast cocoapod that delivers the chromecast functionality
+- **THEO_ADS**: adds an additional dependency to the THEOplayer-Integration-TheoAds cocoapod that delivers Server Guided Ad Insertion (SGAI) functionality
 - **SIDELOADED_TEXTTRACKS**: adds an additional dependency to the THEOplayer-Connector-SideloadedSubtitle cocoapod that delivers the sideloaded texttracks functionality
 
 Once the project has been setup correctly, set the source to a valid HLS stream, eg.

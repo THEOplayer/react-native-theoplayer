@@ -19,7 +19,7 @@ data class BridgeRequest(
   val onTimeout: Runnable
 )
 
-private const val TAG = "THEORCTContentProtectionModule"
+private const val TAG = "ContentProtectionModule"
 
 private const val EVENT_CERTIFICATE_REQUEST = "onCertificateRequest"
 private const val EVENT_CERTIFICATE_REQUEST_PROCESSED_AS_REQUEST = "onCertificateRequestProcessedAsRequest"
@@ -34,6 +34,7 @@ private const val EVENT_LICENSE_REQUEST_PROCESSED_AS_LICENSE = "onLicenseRequest
 private const val EVENT_LICENSE_RESPONSE = "onLicenseResponse"
 private const val EVENT_LICENSE_RESPONSE_PROCESSED = "onLicenseResponseProcessed"
 
+@Suppress("unused")
 class ContentProtectionModule(private val context: ReactApplicationContext) :
   ReactContextBaseJavaModule(context) {
 
@@ -48,7 +49,7 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
   private val requestQueue: HashMap<String, BridgeRequest> = HashMap()
 
   override fun getName(): String {
-    return TAG
+    return "THEORCTContentProtectionModule"
   }
 
   @ReactMethod

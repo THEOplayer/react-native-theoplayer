@@ -44,16 +44,16 @@ export interface CustomSubMenuProps<T> {
  */
 export function CustomSubMenu<T>(props: CustomSubMenuProps<T>) {
   const { options, label } = props;
-  const currentLabel = options.find(v => v.value == props.currentOption())?.label ?? "";
+  const currentLabel = options.find((v) => v.value == props.currentOption())?.label ?? '';
   const createMenu = () => {
-    return <CustomSelectionView {...props}/>;
+    return <CustomSelectionView {...props} />;
   };
   return <SubMenuWithButton menuConstructor={createMenu} label={label} preview={currentLabel} />;
 }
 
 function CustomSelectionView<T>(props: CustomSubMenuProps<T>) {
   const { menuStyle, options } = props;
-  const currentOption = options.find(v => v.value == props.currentOption());
+  const currentOption = options.find((v) => v.value == props.currentOption());
   const [selectedOption, setSelectedOption] = useState<Option<T> | undefined>(currentOption);
 
   const onSelectOption = (id: number | undefined): void => {

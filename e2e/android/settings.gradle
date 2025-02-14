@@ -1,0 +1,10 @@
+pluginManagement { includeBuild("../node_modules/@react-native/gradle-plugin") }
+plugins { id("com.facebook.react.settings") }
+extensions.configure(com.facebook.react.ReactSettingsExtension){ ex -> ex.autolinkLibrariesFromCommand() }
+rootProject.name = 'ReactNativeTHEOplayerE2E'
+
+include ':app'
+includeBuild('../node_modules/@react-native/gradle-plugin')
+
+include ':react-native-theoplayer'
+project(':react-native-theoplayer').projectDir = new File(rootProject.projectDir, '../../android')

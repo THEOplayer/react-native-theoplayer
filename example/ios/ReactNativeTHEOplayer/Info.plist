@@ -8,6 +8,8 @@
 	<string>ReactNativeTHEOplayer</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIconName</key>
+	<string>AppIcon</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -37,6 +39,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Bluetooth Always Usage Permission</string>
 	<key>NSBonjourServices</key>
 	<array>
 		<string>_googlecast._tcp</string>
@@ -44,8 +48,6 @@
 	</array>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>Local Network Usage Permission</string>
-	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Bluetooth Always Usage Permission</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
@@ -58,11 +60,16 @@
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Required for Chromecast</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Required for submission</string>
 </dict>
 </plist>

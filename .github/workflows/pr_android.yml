@@ -1,0 +1,102 @@
+name: Build Android on PRs
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    paths:
+      - .github/workflows/pr_android.yml
+      - example/**
+      - e2e/**
+      - package.json
+      - src/**
+      - android/**
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        api-level: [ 34 ]
+        newArchEnabled: [ false, true ]
+    name: Build for API Level ${{ matrix.api-level }} using ${{matrix.newArchEnabled  == true && 'New' || 'Old' }} Architecture
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: adopt
+          cache: gradle
+
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Run npm install
+        run: |
+          npm i -g corepack
+          npm ci
+          cd e2e
+          npm ci
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: AVD cache
+        uses: actions/cache@v4
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-${{ matrix.api-level }}
+
+      - name: create AVD and generate snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true' #check previous step output
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          target: google_apis
+          arch: x86_64
+          cores: 2
+          ram-size: 3072M
+          force-avd-creation: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: echo "Generated AVD snapshot for caching."
+
+      - name: Modify gradle.properties for newArchEnabled
+        working-directory: e2e/android
+        run: |
+          # Modify or add the newArchEnabled property in gradle.properties
+          echo "newArchEnabled=${{ matrix.newArchEnabled }}" >> ./gradle.properties
+          cat ./gradle.properties
+
+      - name: Run e2e tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          target: google_apis
+          arch: x86_64
+          cores: 2
+          ram-size: 3072M
+          force-avd-creation: true
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: |
+            npm run test:e2e:android
+            cat cavy_results.md >> $GITHUB_STEP_SUMMARY
+          working-directory: e2e

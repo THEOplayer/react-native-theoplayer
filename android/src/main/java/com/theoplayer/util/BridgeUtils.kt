@@ -8,6 +8,14 @@ import org.json.JSONException
 import org.json.JSONObject
 
 object BridgeUtils {
+  fun fromJSONObjectToMap(json: JSONObject): Map<String, String> {
+    return mutableMapOf<String, String>().apply {
+      json.keys().forEach { key ->
+        put(key, json.getString(key))
+      }
+    }
+  }
+
   /**
    * Convert a JSONObject to bridge data.
    */
@@ -37,7 +45,7 @@ object BridgeUtils {
   /**
    * Convert a JSONArray to bridge data.
    */
-  fun fromJSONArrayToBridge(jsonArray: JSONArray): WritableArray {
+  private fun fromJSONArrayToBridge(jsonArray: JSONArray): WritableArray {
     return Arguments.createArray().apply {
       try {
         for (i in 0 until jsonArray.length()) {

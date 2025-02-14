@@ -1,6 +1,7 @@
 import type { Ad, AdBreak, AdDescription, AdsAPI, GoogleDAI } from 'react-native-theoplayer';
 import { THEOplayerWebGoogleDAI } from './THEOplayerWebGoogleDAI';
 import type { ChromelessPlayer } from 'theoplayer';
+import { Omid } from '../../../api/ads/Omid';
 
 export class THEOplayerWebAdsAdapter implements AdsAPI {
   private readonly _player: ChromelessPlayer;
@@ -47,5 +48,11 @@ export class THEOplayerWebAdsAdapter implements AdsAPI {
       this._dai = new THEOplayerWebGoogleDAI(nativeDai);
     }
     return this._dai;
+  }
+
+  get omid(): Omid | undefined {
+    // NYI
+    console.warn('The Omid API is not yet implemented for Web platforms.');
+    return undefined;
   }
 }

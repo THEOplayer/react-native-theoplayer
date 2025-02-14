@@ -1,0 +1,70 @@
+require Pod::Executable.execute_command('node', ['-p',
+  'require.resolve(
+    "react-native/scripts/react_native_pods.rb",
+    {paths: [process.argv[1]]},
+  )', __dir__]).strip
+require_relative '../node_modules/react-native/scripts/react_native_pods'
+require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+require_relative './PodConfig'
+
+source 'https://github.com/react-native-tvos/react-native-tvos-podspecs.git'
+source 'https://cdn.cocoapods.org/'
+nielsen_source
+
+prepare_react_native_project!
+config = use_native_modules!
+
+linkage = ENV['USE_FRAMEWORKS']
+if linkage != nil
+  Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
+  use_frameworks! :linkage => linkage.to_sym
+end
+
+install! 'cocoapods', :deterministic_uuids => false
+
+target 'ReactNativeTHEOplayer' do
+
+  platform :ios, '13.4'
+
+  use_react_native!(
+    :path => config[:reactNativePath],
+    :app_path => "#{Pod::Config.instance.installation_root}/.."
+  )
+
+  pod 'react-native-theoplayer', :path => '../..'
+  google_cast_redirect
+  include_slider
+
+  target 'ReactNativeTHEOplayerTests' do
+    inherit! :complete
+    # Pods for testing
+  end
+
+end
+
+target 'ReactNativeTHEOplayer-tvOS' do
+
+  platform :tvos, '13.4'
+
+  use_react_native!(
+    :path => config[:reactNativePath],
+    :app_path => "#{Pod::Config.instance.installation_root}/.."
+  )
+
+  pod 'react-native-theoplayer', :path => '../..'
+
+  target 'ReactNativeTHEOplayer-tvOSTests' do
+    inherit! :complete
+    # Pods for testing
+  end
+
+end
+
+post_install do |installer|
+  react_native_post_install(
+        installer,
+        config[:reactNativePath],
+        :mac_catalyst_enabled => false
+      )
+  nielsen_post_install(installer, "Pods-ReactNativeTHEOplayer-tvOS")
+end

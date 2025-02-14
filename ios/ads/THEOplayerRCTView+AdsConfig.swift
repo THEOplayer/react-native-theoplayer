@@ -3,10 +3,14 @@
 import Foundation
 import THEOplayerSDK
 
+#if canImport(THEOplayerGoogleIMAIntegration)
+import GoogleInteractiveMediaAds
+#endif
+
 struct AdsConfig {
     var adSUIEnabled: Bool = true
-    var adPreloadTypeString: String = "none"
-    var adsImaConfig = AdsImaConfig()
+    var adsImaConfig = AdsImaConfig(maxRedirects: 4, enableDebugMode: false)
+    var allowedMimeTypes: [String]?
 }
 
 struct AdsImaConfig {
@@ -16,6 +20,23 @@ struct AdsImaConfig {
     var featureFlags: [String:String]?
     var autoPlayAdBreaks: Bool?
     var sessionID: String?
+    var bitrate: Int
+    var adLoadTimeout: TimeInterval?
+    
+    init(maxRedirects: UInt, enableDebugMode: Bool, ppid: String? = nil, featureFlags: [String : String]? = nil, autoPlayAdBreaks: Bool? = nil, sessionID: String? = nil, bitrate: Int? = -1, adLoadTimeout: TimeInterval? = nil) {
+        self.maxRedirects = maxRedirects
+        self.enableDebugMode = enableDebugMode
+        self.ppid = ppid
+        self.featureFlags = featureFlags
+        self.autoPlayAdBreaks = autoPlayAdBreaks
+        self.sessionID = sessionID
+        self.adLoadTimeout = adLoadTimeout
+#if canImport(THEOplayerGoogleIMAIntegration)
+        self.bitrate = bitrate ?? kIMAAutodetectBitrate
+#else
+        self.bitrate = bitrate ?? -1
+#endif
+    }
 }
 
 #if os(iOS)
@@ -25,9 +46,7 @@ extension THEOplayerRCTView {
     func parseAdsConfig(configDict: NSDictionary) {
         if let adsConfig = configDict["ads"] as? NSDictionary {
             self.adsConfig.adSUIEnabled = adsConfig["uiEnabled"] as? Bool ?? true
-            if let adPreloadType = adsConfig["preload"] as? String {
-                self.adsConfig.adPreloadTypeString = adPreloadType
-            }
+            self.adsConfig.allowedMimeTypes = adsConfig["allowedMimeTypes"] as? [String]
             if let adsImaConfig = adsConfig["ima"] as? NSDictionary {
                 if let ppid = adsImaConfig["ppid"] as? String {
                     self.adsConfig.adsImaConfig.ppid = ppid
@@ -47,29 +66,15 @@ extension THEOplayerRCTView {
                 if let enableDebugMode = adsImaConfig["enableDebugMode"] as? Bool {
                     self.adsConfig.adsImaConfig.enableDebugMode = enableDebugMode
                 }
+                if let bitrate = adsImaConfig["bitrate"] as? Int {
+                    self.adsConfig.adsImaConfig.bitrate = bitrate
+                }
+                if let adLoadTimeout = adsImaConfig["adLoadTimeout"] as? TimeInterval {
+                    self.adsConfig.adsImaConfig.adLoadTimeout = adLoadTimeout
+                }
             }
         }
     }
-
-#if canImport(THEOplayerGoogleIMAIntegration)
-    func playerAdsConfiguration() -> AdsConfiguration? {
-        return AdsConfiguration(showCountdown: self.adsConfig.adSUIEnabled, preload: self.adPreloadType())
-    }
-    
-    private func adPreloadType() -> THEOplayerSDK.AdPreloadType {
-        switch self.adsConfig.adPreloadTypeString {
-        case "midroll-and-postroll":
-            return THEOplayerSDK.AdPreloadType.MIDROLL_AND_POSTROLL
-        case "none":
-            return THEOplayerSDK.AdPreloadType.NONE
-        default :
-            return THEOplayerSDK.AdPreloadType.NONE
-        }
-    }
-#else
-    func playerAdsConfiguration() -> AdsConfiguration? { return nil }
-#endif
-    
 }
 
 #elseif os(tvOS)
@@ -77,12 +82,6 @@ extension THEOplayerRCTView {
 extension THEOplayerRCTView {
     
     func parseAdsConfig(configDict: NSDictionary) {}
-    
-#if canImport(THEOplayerGoogleIMAIntegration)
-    func playerAdsConfiguration() -> AdsConfiguration? { return AdsConfiguration() }
-#else
-    func playerAdsConfiguration() -> AdsConfiguration? { return nil }
-#endif
     
 }
 

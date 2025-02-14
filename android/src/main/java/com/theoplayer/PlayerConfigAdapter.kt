@@ -1,6 +1,5 @@
 package com.theoplayer
 
-import android.text.TextUtils
 import com.facebook.react.bridge.ReadableMap
 import com.google.ads.interactivemedia.v3.api.AdsRenderingSettings
 import com.google.ads.interactivemedia.v3.api.ImaSdkFactory
@@ -11,26 +10,26 @@ import com.theoplayer.android.api.cast.CastStrategy
 import com.theoplayer.android.api.cast.CastConfiguration
 import com.theoplayer.android.api.pip.PipConfiguration
 import com.theoplayer.android.api.player.NetworkConfiguration
-import com.theoplayer.android.api.ui.UIConfiguration
+import com.theoplayer.android.api.theolive.THEOLiveConfig
 import com.theoplayer.media.MediaSessionConfig
 import com.theoplayer.media.MediaSessionConfigAdapter
 
 private const val PROP_LICENSE = "license"
 private const val PROP_LICENSE_URL = "licenseUrl"
 private const val PROP_PRELOAD = "preload"
-private const val PROP_LANGUAGE = "language"
 private const val PROP_LIVE_OFFSET = "liveOffset"
 private const val PROP_UI_ENABLED = "uiEnabled"
 private const val PROP_CAST_STRATEGY = "strategy"
 private const val PROP_RETRY_CONFIG = "retryConfiguration"
 private const val PROP_HLS_DATE_RANGE = "hlsDateRange"
+private const val PROP_USE_MEDIA3 = "useMedia3"
 private const val PROP_RETRY_MAX_RETRIES = "maxRetries"
 private const val PROP_RETRY_MIN_BACKOFF = "minimumBackoff"
 private const val PROP_RETRY_MAX_BACKOFF = "maximumBackoff"
 private const val PROP_CAST_CONFIGURATION = "cast"
 private const val PROP_ADS_CONFIGURATION = "ads"
 private const val PROP_IMA_CONFIGURATION = "ima"
-private const val PROP_UI_CONFIGURATION = "ui"
+private const val PROP_IMA_AD_LOAD_TIMEOUT = "adLoadTimeout"
 private const val PROP_MEDIA_CONTROL = "mediaControl"
 private const val PROP_PPID = "ppid"
 private const val PROP_MAX_REDIRECTS = "maxRedirects"
@@ -38,8 +37,19 @@ private const val PROP_FEATURE_FLAGS = "featureFlags"
 private const val PROP_AUTOPLAY_AD_BREAKS = "autoPlayAdBreaks"
 private const val PROP_SESSION_ID = "sessionID"
 private const val PROP_ENABLE_DEBUG_MODE = "enableDebugMode"
+private const val PROP_BITRATE = "bitrate"
+private const val PROP_ALLOWED_MIMETYPES = "allowedMimeTypes"
+private const val PROP_THEOLIVE_CONFIG = "theoLive"
+private const val PROP_THEOLIVE_EXTERNAL_SESSION_ID = "externalSessionId"
+private const val PROP_THEOLIVE_ANALYTICS_DISABLED = "analyticsDisabled"
 
 class PlayerConfigAdapter(private val configProps: ReadableMap?) {
+
+  /**
+   * Whether the Media3 extension is used for play-out.
+   */
+  var useMedia3: Boolean = false
+    private set
 
   /**
    * Get general THEOplayerConfig object; these properties apply:
@@ -62,11 +72,14 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
         if (hasKey(PROP_LIVE_OFFSET)) {
           liveOffset(getDouble(PROP_LIVE_OFFSET))
         }
-        if (hasKey(PROP_UI_CONFIGURATION)) {
-          ui(uiConfig())
-        }
         if (hasKey(PROP_HLS_DATE_RANGE)) {
           hlsDateRange(getBoolean(PROP_HLS_DATE_RANGE))
+        }
+        if (hasKey(PROP_USE_MEDIA3)) {
+          useMedia3 = getBoolean(PROP_USE_MEDIA3)
+        }
+        if (hasKey(PROP_THEOLIVE_CONFIG)) {
+          theoLiveConfiguration(theoLiveConfig())
         }
         pipConfiguration(PipConfiguration.Builder().build())
       }
@@ -100,7 +113,7 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
    *
    * @see <a href="https://developers.google.com/interactive-media-ads/docs/sdks/android/client-side/api/reference/com/google/ads/interactivemedia/v3/api/ImaSdkSettings">IMA SDK for Android</a>.
    */
-  fun imaSdkSettings(): ImaSdkSettings{
+  fun imaSdkSettings(): ImaSdkSettings {
     return ImaSdkFactory.getInstance().createImaSdkSettings().apply {
       configProps?.getMap(PROP_ADS_CONFIGURATION)?.getMap(PROP_IMA_CONFIGURATION)?.run {
         // Specifies whether VMAP and ad rules ad breaks are automatically played.
@@ -114,10 +127,6 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
             convertedMap[key] = value as String
           }
           featureFlags = convertedMap
-        }
-        // The current ISO 639-1 language code, get it from the UI config.
-        uiConfig().language?.let {
-          language = it
         }
         // The maximum number of VAST redirects.
         if (hasKey(PROP_MAX_REDIRECTS)) {
@@ -160,23 +169,27 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
           val preloadTypeString = getString(PROP_PRELOAD)
           enablePreloading = preloadTypeString !== "none"
         }
-      }
-    }
-  }
-
-  /**
-   * Get UIConfiguration object; these properties apply:
-   * - language: The language used to localize the ui elements.
-   */
-  private fun uiConfig(): UIConfiguration {
-    return UIConfiguration.Builder().apply {
-      configProps?.getMap(PROP_UI_CONFIGURATION)?.run {
-        val languageString = getString(PROP_LANGUAGE)
-        if (languageString != null && !TextUtils.isEmpty(languageString)) {
-          language(languageString)
+        if (hasKey(PROP_ALLOWED_MIMETYPES)) {
+          mimeTypes = ArrayList<String>().apply {
+            getArray(PROP_ALLOWED_MIMETYPES)?.toArrayList()?.forEach {
+              add(it as String)
+            }
+          }
         }
       }
-    }.build()
+      // bitrate and timeout are configured under the ima config
+      configProps?.getMap(PROP_ADS_CONFIGURATION)?.getMap(PROP_IMA_CONFIGURATION)?.run {
+        if (hasKey(PROP_BITRATE)) {
+          bitrateKbps = getInt(PROP_BITRATE)
+        }
+
+        // The time needs to be in milliseconds on android but seconds on ios.
+        // we unify the prop from javascript by multiplying it by 1000 here
+        if (hasKey(PROP_IMA_AD_LOAD_TIMEOUT)) {
+          setLoadVideoTimeout(getInt(PROP_IMA_AD_LOAD_TIMEOUT) * 1000)
+        }
+      }
+    }
   }
 
   /**
@@ -210,5 +223,15 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
    */
   fun mediaSessionConfig(): MediaSessionConfig {
     return MediaSessionConfigAdapter.fromProps(configProps?.getMap(PROP_MEDIA_CONTROL))
+  }
+
+  private fun theoLiveConfig (): THEOLiveConfig {
+    val config = configProps?.getMap(PROP_THEOLIVE_CONFIG)
+    return THEOLiveConfig.Builder(
+      externalSessionId = config?.getString(PROP_THEOLIVE_EXTERNAL_SESSION_ID),
+      analyticsDisabled = if (config?.hasKey(PROP_THEOLIVE_ANALYTICS_DISABLED) == true)
+        config.getBoolean(PROP_THEOLIVE_ANALYTICS_DISABLED)
+      else false
+    ).build()
   }
 }

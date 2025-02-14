@@ -8,7 +8,7 @@ struct PipConfig {
     var canStartPictureInPictureAutomaticallyFromInline: Bool = false
 }
 
-extension THEOplayerRCTView: AVPictureInPictureControllerDelegate {
+extension THEOplayerRCTView {
     
     func playerPipConfiguration() -> PiPConfiguration {
         let builder = PiPConfigurationBuilder()
@@ -25,20 +25,9 @@ extension THEOplayerRCTView: AVPictureInPictureControllerDelegate {
         if let player = self.player,
            var pipController = player.pip {
             if #available(iOS 14.0, tvOS 14.0, *) {
-                pipController.nativePictureInPictureDelegate = self
+                pipController.nativePictureInPictureDelegate = self.pipManager
             }
         }
     }
-    
-    // MARK: - AVPictureInPictureControllerDelegate
-    @available(tvOS 14.0, *)
-    public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        self.presentationModeManager.presentationModeContext.pipContext = .PIP_CLOSED
-        self.pipControlsManager.willStartPip()
-    }
-    
-    @available(tvOS 14.0, *)
-    public func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
-        self.presentationModeManager.presentationModeContext.pipContext = .PIP_RESTORED
-    }
 }
+

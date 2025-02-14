@@ -1,10 +1,7 @@
 [
   {
     "name": "DASH - Thumbnails in manifest",
-    "os": [
-      "android",
-      "web"
-    ],
+    "os": ["android", "web"],
     "source": {
       "sources": [
         {
@@ -25,10 +22,7 @@
   },
   {
     "name": "DASH - Thumbnails Side-loaded",
-    "os": [
-      "android",
-      "web"
-    ],
+    "os": ["android", "web"],
     "source": {
       "sources": [
         {
@@ -48,10 +42,7 @@
   },
   {
     "name": "DASH - VOD - Clear",
-    "os": [
-      "android",
-      "web"
-    ],
+    "os": ["android", "web"],
     "source": {
       "sources": [
         {
@@ -63,10 +54,7 @@
   },
   {
     "name": "DASH - VOD - Widevine",
-    "os": [
-      "android",
-      "web"
-    ],
+    "os": ["android", "web"],
     "source": {
       "sources": {
         "src": "https://cdn.theoplayer.com/video/dash/tos-dash-widevine/tos_h264_main.mpd",
@@ -82,10 +70,7 @@
   },
   {
     "name": "DASH - Live - Clear",
-    "os": [
-      "android",
-      "web"
-    ],
+    "os": ["android", "web"],
     "source": {
       "sources": {
         "src": "https://livesim.dashif.org/livesim/chunkdur_1/ato_7/testpic4_8s/Manifest.mpd"
@@ -94,10 +79,7 @@
   },
   {
     "name": "DASH - CSAI - Google IMA pre-roll",
-    "os": [
-      "android",
-      "web"
-    ],
+    "os": ["android", "web"],
     "source": {
       "sources": [
         {
@@ -117,10 +99,7 @@
   },
   {
     "name": "DASH - CSAI - Google IMA mid-roll VAST",
-    "os": [
-      "android",
-      "web"
-    ],
+    "os": ["android", "web"],
     "source": {
       "sources": [
         {
@@ -141,10 +120,7 @@
   },
   {
     "name": "DASH - CSAI - Google IMA mid-roll VMAP",
-    "os": [
-      "android",
-      "web"
-    ],
+    "os": ["android", "web"],
     "source": {
       "sources": [
         {
@@ -164,22 +140,18 @@
   },
   {
     "name": "HLS - VOD - Clear - The Venture Bros",
-    "os": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "os": ["ios", "android", "web"],
     "source": {
       "sources": {
         "src": "https://cdn.theoplayer.com/video/adultswim/clip.m3u8",
         "type": "application/x-mpegurl"
       },
-      "poster": "https://cdn.theoplayer.com/video/adultswim/poster.jpg",
+      "poster": "https://cdn.theoplayer.com/video/adultswim/poster.png",
       "metadata": {
         "title": "The Venture Bros",
         "subtitle": "Adult Swim",
         "album": "React-Native THEOplayer demos",
-        "displayIconUri": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
+        "displayIconUri": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
         "artist": "THEOplayer",
         "type": "tv-show",
         "releaseDate": "november 29th",
@@ -188,12 +160,27 @@
     }
   },
   {
-    "name": "HLS - VOD - Clear - DateRange Metadata",
+    "name": "THEOlive test",
     "os": [
-      "ios",
-      "web",
-      "android"
+      "web", "ios", "android"
     ],
+    "source": {
+      "sources": [
+        {
+          "integration": "theolive",
+          "src": "9lwkudxeyjwwm132pukwwhhtk"
+        }
+      ],
+      "metadata": {
+        "title": "THEOlive NFL demo - test",
+        "mediaUri": "https://theoplayer.com",
+        "artist": "THEOplayer"
+      }
+    }
+  },
+  {
+    "name": "HLS - VOD - Clear - DateRange Metadata",
+    "os": ["ios", "web", "android"],
     "source": {
       "sources": {
         "src": "https://cdn.theoplayer.com/video/star_wars_episode_vii-the_force_awakens_official_comic-con_2015_reel_(2015)/index-daterange.m3u8",
@@ -201,28 +188,24 @@
       },
       "metadata": {
         "title": "Star Wars Episode VII - The Force Awakens Official Comic-Con 2015 Reel",
-        "displayIconUri": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-200x200.png"
+        "displayIconUri": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-200x200.png"
       }
     }
   },
   {
-    "name": "HLS - LIVE - Clear - TOS",
-    "os": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "name": "HLS - LIVE - Clear",
+    "os": ["ios", "android", "web"],
     "source": {
       "sources": {
-        "src": "https://cph-msl.akamaized.net/hls/live/2000341/test/master.m3u8",
+        "src": "https://ireplay.tv/test/blender.m3u8",
         "type": "application/x-mpegurl"
       },
-      "poster": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-640x640.png",
+      "poster": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-640x640.png",
       "metadata": {
-        "title": "Tears of Steel",
-        "subtitle": "Steel Tears",
+        "title": "Blender",
+        "subtitle": "Test stream",
         "album": "React-Native demos",
-        "displayIconUri": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
+        "displayIconUri": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
         "artist": "THEOplayer",
         "type": "tv-show",
         "releaseDate": "november 30th",
@@ -232,52 +215,43 @@
   },
   {
     "name": "HLS - VOD - Clear - bipbop (id3 meta)",
-    "os": [
-      "ios",
-      "web"
-    ],
+    "os": ["ios", "web"],
     "source": {
       "sources": {
         "src": "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8",
         "type": "application/x-mpegurl"
       },
-      "poster": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-1200x675.png",
+      "poster": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-1200x675.png",
       "metadata": {
         "title": "Bipbop",
         "subtitle": "Bipbop Subtitle",
         "album": "Bipbop Album",
-        "displayIconUri": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
+        "displayIconUri": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
         "artist": "Apple"
       }
     }
   },
   {
     "name": "HLS - VOD - Clear - elephants-dream (id3 meta)",
-    "os": [
-      "ios",
-      "web"
-    ],
+    "os": ["ios", "web"],
     "source": {
       "sources": {
         "src": "https://cdn.theoplayer.com/video/elephants-dream/playlist-single-audio.m3u8",
         "type": "application/x-mpegurl"
       },
-      "poster": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-1200x675.png",
+      "poster": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-1200x675.png",
       "metadata": {
         "title": "Elephants Dream",
         "subtitle": "Elephants Dream Subtitle",
         "album": "Elephants Dream Album",
-        "displayIconUri": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
+        "displayIconUri": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
         "artist": "The elephant"
       }
     }
   },
   {
     "name": "HLS - CSAI - Google IMA pre-roll",
-    "os": [
-      "ios",
-      "web"
-    ],
+    "os": ["ios", "web"],
     "source": {
       "sources": [
         {
@@ -291,22 +265,39 @@
           "sources": "https://cdn.theoplayer.com/demos/ads/vast/dfp-preroll-no-skip.xml"
         }
       ],
-      "poster": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-1200x675.png",
+      "poster": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-1200x675.png",
       "metadata": {
         "title": "Elephants Dream with Preroll",
         "subtitle": "Elephants Dream with Preroll Subtitle",
         "album": "Elephants Album",
-        "displayIconUri": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
+        "displayIconUri": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
         "artist": "The Dream"
       }
     }
   },
   {
+    "name": "HLS - SGAI (THEOads)",
+    "os": ["web"],
+    "source": {
+      "sources": {
+        "src": "https://cluster.dev.theostream.live/nfl-unified-channel/hls/k8s/live/scte35.isml/.m3u8",
+        "type": "application/x-mpegurl",
+        "hlsDateRange": true
+      },
+      "ads": [
+        {
+          "integration": "theoads",
+          "networkCode": "51636543",
+          "customAssetKey": "nfl-sgai-demo",
+          "backdropDoubleBox": "https://demo.theoads.live/img/THEOads_double_box.svg",
+          "backdropLShape": "https://demo.theoads.live/img/THEOads_L_Shape.svg"
+        }
+      ]
+    }
+  },
+  {
     "name": "HLS - CSAI - Google IMA mid-roll VAST",
-    "os": [
-      "ios",
-      "web"
-    ],
+    "os": ["ios", "web"],
     "source": {
       "sources": [
         {
@@ -323,22 +314,19 @@
           "timeOffset": 10
         }
       ],
-      "poster": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-1200x675.png",
+      "poster": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-1200x675.png",
       "metadata": {
         "title": "Elephants Dream with Midroll",
         "subtitle": "Elephants Dream with Midroll Subtitle",
         "album": "Ellies Album",
-        "displayIconUri": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
+        "displayIconUri": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
         "artist": "Ellie"
       }
     }
   },
   {
     "name": "HLS - CSAI - Google IMA VMAP",
-    "os": [
-      "ios",
-      "web"
-    ],
+    "os": ["ios", "web"],
     "source": {
       "sources": [
         {
@@ -354,22 +342,19 @@
           }
         }
       ],
-      "poster": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-1200x675.png",
+      "poster": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-1200x675.png",
       "metadata": {
         "title": "Elephants Dream with VMAP",
         "subtitle": "Elephants Dream with VMAP Subtitle",
         "album": "Ellies Album",
-        "displayIconUri": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
+        "displayIconUri": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
         "artist": "Ellie"
       }
     }
   },
   {
     "name": "DASH - SSAI - Google DAI",
-    "os": [
-      "android",
-      "web"
-    ],
+    "os": ["android", "web"],
     "source": {
       "sources": {
         "type": "application/dash+xml",
@@ -384,16 +369,13 @@
   },
   {
     "name": "HLS - SSAI - Google DAI - VOD",
-    "os": [
-      "ios",
-      "web"
-    ],
+    "os": ["ios", "web"],
     "source": {
       "sources": {
         "ssai": {
           "integration": "google-dai",
           "availabilityType": "vod",
-          "contentSourceID": "2528370",
+          "contentSourceID": "2548831",
           "videoID": "tears-of-steel"
         }
       }
@@ -417,10 +399,7 @@
   },
   {
     "name": "HLS - VOD/Thumbnails - Clear - Big Buck Bunny",
-    "os": [
-      "ios",
-      "web"
-    ],
+    "os": ["ios", "web"],
     "source": {
       "sources": {
         "src": "https://cdn.theoplayer.com/video/big_buck_bunny/big_buck_bunny.m3u8",
@@ -448,10 +427,7 @@
   },
   {
     "name": "HLS - VOD - ezDRM - Drop",
-    "os": [
-      "ios",
-      "web"
-    ],
+    "os": ["ios", "web"],
     "source": {
       "sources": {
         "src": "https://fps.ezdrm.com/demo/video/ezdrm.m3u8",
@@ -467,11 +443,7 @@
   },
   {
     "name": "MP4 - Elephants Dream",
-    "os": [
-      "ios",
-      "web",
-      "android"
-    ],
+    "os": ["ios", "web", "android"],
     "source": {
       "sources": {
         "src": "https://cdn.theoplayer.com/video/elephants-dream.mp4"
@@ -480,14 +452,31 @@
   },
   {
     "name": "MP3 - SoundHelix Song1",
-    "os": [
-      "ios",
-      "web"
-    ],
+    "os": ["ios", "web"],
     "source": {
       "sources": {
         "src": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
       }
+    }
+  },
+  {
+    "name": "HLS - THEOads",
+    "os": ["ios", "web", "android"],
+    "source": {
+      "sources": {
+        "src": "https://cluster.dev.theostream.live/nfl-unified-channel/hls/k8s/live/scte35.isml/.m3u8",
+        "type": "application/x-mpegurl",
+        "hlsDateRange": true
+      },
+      "ads": [
+        {
+          "integration": "theoads",
+          "networkCode": "51636543",
+          "customAssetKey": "nfl-sgai-demo",
+          "backdropDoubleBox": "https://demo.theoads.live/img/THEOads_double_box.svg",
+          "backdropLShape": "https://demo.theoads.live/img/THEOads_L_Shape.svg"
+        }
+      ]
     }
   }
 ]

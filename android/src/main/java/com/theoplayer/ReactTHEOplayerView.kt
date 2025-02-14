@@ -1,7 +1,6 @@
 package com.theoplayer
 
 import android.annotation.SuppressLint
-import android.content.*
 import android.util.Log
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -27,6 +26,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
   var presentationManager: PresentationManager? = null
   var playerContext: ReactTHEOplayerContext? = null
   private var isInitialized: Boolean = false
+  private var config: PlayerConfigAdapter? = null
 
   val adsApi: AdsApiWrapper
 
@@ -41,7 +41,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
     adsApi = AdsApiWrapper()
   }
 
-  fun initialize(configProps: ReadableMap?) {
+  fun initialize(config: PlayerConfigAdapter) {
     if (BuildConfig.LOG_VIEW_EVENTS) {
       Log.d(TAG, "Initialize view")
     }
@@ -49,24 +49,35 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
       Log.w(TAG, "Already initialized view")
       return
     }
+    this.config = config
+    if (!isAttachedToWindow) {
+      // The view is not attached to the window yet, postpone the initialization.
+      return
+    }
     isInitialized = true
     playerContext = ReactTHEOplayerContext.create(
       reactContext,
-      PlayerConfigAdapter(configProps)
-    ).apply {
+      config
+    )
+    playerContext?.apply {
       adsApi.initialize(player, imaIntegration, daiIntegration)
       val layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
       playerView.layoutParams = layoutParams
       (playerView.parent as? ViewGroup)?.removeView(playerView)
       addView(playerView, 0, layoutParams)
-
       presentationManager = PresentationManager(
         this,
         reactContext,
         eventEmitter
       )
-
       eventEmitter.preparePlayer(player)
+    }
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    if (!isInitialized) {
+      config?.let { initialize(it) }
     }
   }
 

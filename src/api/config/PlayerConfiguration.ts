@@ -3,6 +3,7 @@ import type { CastConfiguration } from '../cast/CastConfiguration';
 import type { MediaControlConfiguration } from '../media/MediaControlConfiguration';
 import type { RetryConfiguration } from '../utils/RetryConfiguration';
 import type { UIConfiguration } from '../ui/UIConfiguration';
+import { TheoLiveConfiguration } from '../theolive/TheoLiveConfiguration';
 
 export interface PlayerConfiguration {
   /**
@@ -62,6 +63,8 @@ export interface PlayerConfiguration {
    *
    * @remarks
    * <br/> - This parameter only applies to Web platforms.
+   *
+   * @deprecated: Use the OpenVideoUI package {@link https://github.com/THEOplayer/react-native-theoplayer-ui}.
    */
   readonly chromeless?: boolean;
 
@@ -88,6 +91,30 @@ export interface PlayerConfiguration {
    * <br/> - This parameter only applies to Web and Android platforms.
    */
   liveOffset?: number;
+
+  /**
+   * Sets whether the Media3 extension is used for play-out on Android.
+   *
+   * @experimental
+   * @remarks
+   * <br/> - This parameter only applies to Android platforms.
+   *
+   * @defaultValue `false`.
+   */
+  useMedia3?: boolean;
+
+  /**
+   * Sets whether support for THEOlive sources should be enabled.
+   *
+   * @defaultValue `false`.
+   * @deprecated: THEOlive support is always enabled, there is no need to explicitly enable it.
+   */
+  enableTHEOlive?: boolean;
+
+  /**
+   * The THEOlive configuration for the player.
+   */
+  theoLive?: TheoLiveConfiguration;
 }
 
 /**

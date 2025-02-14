@@ -14,13 +14,19 @@ export interface PipSubMenuProps {
 export function PiPSubMenu(props?: PipSubMenuProps) {
   const ctx = useContext(PlayerContext);
 
-  return <CustomSubMenu
-    title={'Automatically Start Picture-in-Picture'}
-    menuStyle={props?.menuStyle}
-    label={'Auto PiP'}
-    options={[{ label: 'Disabled', value: false }, { label: 'Enabled', value: true }]}
-    onOptionSelected={(option: Option<boolean>) => {
-      ctx.player.pipConfiguration = { startsAutomatically: option.value };
-    }}
-    currentOption={() => ctx.player.pipConfiguration.startsAutomatically ?? false} />;
+  return (
+    <CustomSubMenu
+      title={'Automatically Start Picture-in-Picture'}
+      menuStyle={props?.menuStyle}
+      label={'Auto PiP'}
+      options={[
+        { label: 'Disabled', value: false },
+        { label: 'Enabled', value: true },
+      ]}
+      onOptionSelected={(option: Option<boolean>) => {
+        ctx.player.pipConfiguration = { startsAutomatically: option.value };
+      }}
+      currentOption={() => ctx.player.pipConfiguration.startsAutomatically ?? false}
+    />
+  );
 }

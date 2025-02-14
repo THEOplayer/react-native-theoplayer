@@ -7,8 +7,8 @@ plugins:
   - jekyll-remote-theme
 github:
   source:
-    branch: "develop"
-    path: "/"
+    branch: 'develop'
+    path: '/'
 include:
   - api/
 exclude:

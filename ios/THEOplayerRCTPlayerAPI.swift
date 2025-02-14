@@ -35,6 +35,12 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
     static func requiresMainQueueSetup() -> Bool {
         return false
     }
+  
+    @objc(version:rejecter:)
+    func version(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+        let versionString = THEOplayer.version
+        resolve(versionString)
+    }
 
     @objc(setPaused:paused:)
     func setPaused(_ node: NSNumber, paused: Bool) -> Void {
@@ -224,6 +230,9 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
         var backgroundAudio = BackgroundAudioConfig()
         backgroundAudio.enabled = configDict["enabled"] as? Bool ?? false
         backgroundAudio.shouldResumeAfterInterruption = configDict["shouldResumeAfterInterruption"] as? Bool ?? false
+        if let audioSessionModeString = configDict["audioSessionMode"] as? String {
+            backgroundAudio.audioSessionMode = THEOplayerRCTTypeUtils.audioSessionModeFromString(audioSessionModeString)
+        }
         return backgroundAudio
     }
 
@@ -347,5 +356,4 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
             }
         }
     }
-
 }

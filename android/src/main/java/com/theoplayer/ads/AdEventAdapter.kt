@@ -21,36 +21,35 @@ private const val EVENT_PROP_TYPE = "type"
 private const val EVENT_PROP_SUBTYPE = "subType"
 
 class AdEventAdapter(private val adsApi: AdsApiWrapper, eventEmitter: AdEventEmitter) {
-  private val eventListener: AdEventListener
+  private val eventListener: AdEventListener = object : AdEventListener {
+    override fun <E : AdEvent<*>?> onAdEvent(type: EventType<E>?, ad: Ad?, adData: Map<String, String>?, adError: AdError?) {
+      val payload = Arguments.createMap()
+      if (type != null) {
+        payload.putString(EVENT_PROP_TYPE, mapAdType(type))
+      }
+      if (ad != null) {
+        payload.putMap(EVENT_PROP_AD, AdAdapter.fromAd(ad))
+      }
+      eventEmitter.emit(payload)
+    }
+
+    override fun <E : AdEvent<*>?> onAdBreakEvent(type: EventType<E>?, adBreak: AdBreak?, adData: Map<String, String>?, adError: AdError?) {
+      val payload = Arguments.createMap()
+      if (type != null) {
+        payload.putString(EVENT_PROP_TYPE, mapAdType(type))
+      }
+      if (adBreak != null) {
+        payload.putMap(EVENT_PROP_AD, AdAdapter.fromAdBreak(adBreak))
+      }
+      eventEmitter.emit(payload)
+    }
+  }
 
   interface AdEventEmitter {
     fun emit(payload: WritableMap?)
   }
 
   init {
-    eventListener = object : AdEventListener {
-      override fun <E : AdEvent<*>?> onAdEvent(type: EventType<E>?, ad: Ad?, adData: Map<String, String>?, adError: AdError?) {
-        val payload = Arguments.createMap()
-        if (type != null) {
-          payload.putString(EVENT_PROP_TYPE, mapAdType(type))
-        }
-        if (ad != null) {
-          payload.putMap(EVENT_PROP_AD, AdAdapter.fromAd(ad))
-        }
-        eventEmitter.emit(payload)
-      }
-
-      override fun <E : AdEvent<*>?> onAdBreakEvent(type: EventType<E>?, adBreak: AdBreak?, adData: Map<String, String>?, adError: AdError?) {
-        val payload = Arguments.createMap()
-        if (type != null) {
-          payload.putString(EVENT_PROP_TYPE, mapAdType(type))
-        }
-        if (adBreak != null) {
-          payload.putMap(EVENT_PROP_AD, AdAdapter.fromAdBreak(adBreak))
-        }
-        eventEmitter.emit(payload)
-      }
-    }
     adsApi.addAllEventsListener(eventListener)
   }
 
@@ -116,8 +115,8 @@ class AdEventAdapter(private val adsApi: AdsApiWrapper, eventEmitter: AdEventEmi
         GoogleImaAdEventType.AD_BREAK_STARTED, AdsEventTypes.AD_BREAK_BEGIN -> "adbreakbegin"
         GoogleImaAdEventType.AD_BREAK_ENDED, AdsEventTypes.AD_BREAK_END -> "adbreakend"
         GoogleImaAdEventType.AD_BREAK_FETCH_ERROR -> "aderror"
-        GoogleImaAdEventType.CLICKED -> "adclicked"
-        GoogleImaAdEventType.TAPPED -> "adtapped"
+        GoogleImaAdEventType.CLICKED, AdsEventTypes.AD_CLICKED -> "adclicked"
+        GoogleImaAdEventType.TAPPED, AdsEventTypes.AD_TAPPED -> "adtapped"
         GoogleImaAdEventType.ICON_TAPPED -> "adicontapped"
         GoogleImaAdEventType.ICON_FALLBACK_IMAGE_CLOSED -> "adiconfallbackimageclosed"
         AdsEventTypes.ADD_AD -> "addad"

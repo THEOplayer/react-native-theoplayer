@@ -212,7 +212,11 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
 
       // Apply native selection
       this._player.textTracks.forEach((textTrack: NativeTextTrack) => {
-        textTrack.mode = textTrack.uid === trackUid ? 'showing' : 'disabled';
+        if (textTrack.uid === trackUid) {
+          textTrack.mode = 'showing';
+        } else if (textTrack.mode === 'showing') {
+          textTrack.mode = 'disabled';
+        }
       });
     }
   }

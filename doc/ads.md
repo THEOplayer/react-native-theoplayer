@@ -5,12 +5,13 @@
 A good starting point to get acquainted with THEOplayer's advertising features
 is THEOplayer's [Knowledge Base](https://www.theoplayer.com/docs/theoplayer/knowledge-base/advertisement/user-guide/).
 
-While THEOplayer supports a wide range of
-different [ad types](https://www.theoplayer.com/docs/theoplayer/knowledge-base/advertisement/user-guide/#an-overview-of-theoplayers-different-ad-types),
-`THEOplayerView` currently supports:
+While THEOplayer supports a wide range of different
+[ad types](https://www.theoplayer.com/docs/theoplayer/knowledge-base/advertisement/user-guide/#an-overview-of-theoplayers-different-ad-types),
+`react-native-theoplayer` currently supports:
 
 - client-side ad insertion (CSAI) through [Google IMA](#getting-started-with-google-ima)
 - server-side ad insertion (SSAI) through [Google DAI](#getting-started-with-google-dai).
+- server-guided ad insertion (SGAI) through [THEOads](#getting-started-with-theoads).
 
 In the next section we discuss how to integrate them on each platform.
 
@@ -150,6 +151,12 @@ const daiSource = {
 
 A full description of the available source properties can be found in the
 [API](../src/api/source/ads/ssai/GoogleDAIConfiguration.ts) definition.
+
+## Getting started with THEOads
+
+THEOads is an ad-insertion service for both VOD and LIVE content, created by THEO Technologies,
+utilizing Server-Guided Ad-Insertion (SGAI). For more information we refer to the
+[THEOads](https://www.theoplayer.com/docs/theoads/) documentation.
 
 ## Using the Ads API
 

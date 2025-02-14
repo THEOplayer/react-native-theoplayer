@@ -8,7 +8,10 @@ export class THEOplayerNativeCastAdapter implements CastAPI {
   private readonly _chromecast: THEOplayerNativeChromecast;
   private readonly _airplay: THEOplayerNativeAirplay | undefined;
 
-  constructor(private readonly _player: THEOplayer, private readonly _view: THEOplayerView) {
+  constructor(
+    private readonly _player: THEOplayer,
+    private readonly _view: THEOplayerView,
+  ) {
     this._chromecast = new THEOplayerNativeChromecast(this._player, this._view);
     if (Platform.OS !== 'android') {
       this._airplay = new THEOplayerNativeAirplay(this._player);

@@ -1,0 +1,10 @@
+[
+  {
+    "sources": [
+      {
+        "src": "https://cdn.theoplayer.com/video/dash/webvtt-embedded-in-isobmff/Manifest.mpd",
+        "type": "application/dash+xml"
+      }
+    ]
+  }
+]

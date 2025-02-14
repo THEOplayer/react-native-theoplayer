@@ -43,4 +43,19 @@ export interface GoogleImaConfiguration {
    * @defaultValue `false`
    */
   enableDebugMode?: boolean;
+
+  /**
+   * Maximum recommended bitrate. The value is in kbit/s. SDK will pick media with bitrate below the specified max,
+   * or the closest bitrate if there is no media with smaller bitrate found. Default value -1, means the bitrate will
+   * be selected by the SDK.
+   *
+   * @defaultValue `-1`
+   */
+  bitrate?: number;
+
+  /**
+   * The amount of time that the SDK will wait before moving onto the next ad for loading. 
+   * This value will be specified in seconds. 
+   */
+  adLoadTimeout?: number;
 }

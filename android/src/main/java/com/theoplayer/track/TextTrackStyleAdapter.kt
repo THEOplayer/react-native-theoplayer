@@ -4,18 +4,18 @@ import android.graphics.Color
 import com.facebook.react.bridge.ReadableMap
 import com.theoplayer.android.api.player.track.texttrack.TextTrackStyle
 
-private val PROP_BACKGROUND_COLOR = "backgroundColor"
-private val PROP_EDGE_STYLE = "edgeStyle"
-private val PROP_FONT_COLOR = "fontColor"
-private val PROP_FONT_FAMILY = "fontFamily"
-private val PROP_FONT_SIZE = "fontSize"
-private val PROP_WINDOW_COLOR = "windowColor"
-private val PROP_MARGIN_LEFT = "marginLeft"
-private val PROP_MARGIN_TOP = "marginTop"
-private val PROP_COLOR_R = "r"
-private val PROP_COLOR_G = "g"
-private val PROP_COLOR_B = "b"
-private val PROP_COLOR_A = "a"
+private const val PROP_BACKGROUND_COLOR = "backgroundColor"
+private const val PROP_EDGE_STYLE = "edgeStyle"
+private const val PROP_FONT_COLOR = "fontColor"
+private const val PROP_FONT_FAMILY = "fontFamily"
+private const val PROP_FONT_SIZE = "fontSize"
+private const val PROP_WINDOW_COLOR = "windowColor"
+private const val PROP_MARGIN_LEFT = "marginLeft"
+private const val PROP_MARGIN_TOP = "marginTop"
+private const val PROP_COLOR_R = "r"
+private const val PROP_COLOR_G = "g"
+private const val PROP_COLOR_B = "b"
+private const val PROP_COLOR_A = "a"
 
 object TextTrackStyleAdapter {
 

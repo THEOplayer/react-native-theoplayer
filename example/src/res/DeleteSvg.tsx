@@ -16,4 +16,3 @@ export const DeleteSvg = (props: SvgProps) => {
     </SvgContext.Consumer>
   );
 };
-

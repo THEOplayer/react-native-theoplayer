@@ -235,6 +235,8 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
 
   /**
    * The player version.
+   *
+   * @deprecated use {@link sdkVersions} instead.
    */
   readonly version: PlayerVersion;
 

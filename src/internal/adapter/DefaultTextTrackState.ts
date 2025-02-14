@@ -1,7 +1,8 @@
 import {
   addTextTrackCue,
   addTrack,
-  findTextTrackByUid, type LoadedMetadataEvent,
+  findTextTrackByUid,
+  type LoadedMetadataEvent,
   PlayerEventType,
   removeTextTrackCue,
   removeTrack,
@@ -16,7 +17,6 @@ import {
 import { TextTrackState } from './NativePlayerState';
 
 export class DefaultTextTrackState implements TextTrackState {
-
   private _textTracks: TextTrack[] = [];
   private _selectedTextTrack: number | undefined;
 
@@ -70,6 +70,9 @@ export class DefaultTextTrackState implements TextTrackState {
       case TrackListEventType.CHANGE_TRACK:
         this._textTracks = removeTrack(this._textTracks, track);
         this._textTracks = addTrack(this._textTracks, track);
+        if (event.track.mode === TextTrackMode.showing) {
+          this._selectedTextTrack = event.track.uid;
+        }
         break;
     }
   };

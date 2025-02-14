@@ -12,10 +12,23 @@ export interface BackgroundAudioConfiguration {
   readonly enabled?: boolean;
 
   /**
-   * Whether background audio should be resumed after an interruption (e.g. incoming call ended).
+   * Whether background audio should be resumed after an interruption on iOS (e.g. incoming call).
    *
    * @defaultValue `false`
-   * @remark Applies to iOS only, impacting behaviour for handling interruptions while on the lockscreen.
+   * @remark Applies to iOS only, impacting behaviour for handling interruptions.
    */
   readonly shouldResumeAfterInterruption?: boolean;
+
+  /**
+   * Specify the mode for the native iOS AVAudioSession.
+   *
+   * @defaultValue `AudioSessionMode.MOVIE_PLAYBACK`
+   * @remark Applies to iOS only, impacting behaviour for handling interruptions.
+   */
+  readonly audioSessionMode?: AudioSessionMode;
+}
+
+export enum AudioSessionMode {
+  MOVIE_PLAYBACK = 'moviePlayback',
+  SPOKEN_AUDIO = 'spokenAudio'
 }

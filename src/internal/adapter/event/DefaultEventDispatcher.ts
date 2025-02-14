@@ -1,17 +1,25 @@
-import type { EventDispatcher, EventMap, StringKeyOf } from '../../../api/event/EventDispatcher';
-import type { EventListener } from '../../../api/event/EventListener';
+import type { EventDispatcher, EventMap, StringKeyOf } from 'react-native-theoplayer';
+import type { EventListener } from 'react-native-theoplayer';
 import { arrayRemoveElement } from '../../utils/arrayUtil';
 
 export class DefaultEventDispatcher<TMap extends EventMap<StringKeyOf<TMap>>> implements EventDispatcher<TMap> {
   readonly _eventListeners: Map<StringKeyOf<TMap>, EventListener<TMap[StringKeyOf<TMap>]>[]> = new Map();
 
-  addEventListener<K extends StringKeyOf<TMap>>(type: K, listener: EventListener<TMap[K]>): void {
-    if (!this._eventListeners.has(type)) {
-      // @ts-ignore
-      this._eventListeners.set(type, [listener]);
+  addEventListener<K extends StringKeyOf<TMap>>(type: K | readonly K[], listener: EventListener<TMap[K]>): void {
+    if (typeof listener !== 'function') {
+      return;
+    } else if (Array.isArray(type)) {
+      type.forEach((t) => this.addSingleEventListener(t, listener));
     } else {
-      // @ts-ignore
-      this._eventListeners.get(type)?.push(listener);
+      this.addSingleEventListener(type as K, listener);
+    }
+  }
+
+  private addSingleEventListener<K extends StringKeyOf<TMap>>(type: K, listener: EventListener<TMap[K]>): void {
+    if (!this._eventListeners.has(type)) {
+      this._eventListeners.set(type, [listener as EventListener<TMap[StringKeyOf<TMap>]>]);
+    } else {
+      this._eventListeners.get(type)?.push(listener as EventListener<TMap[StringKeyOf<TMap>]>);
     }
   }
 
@@ -26,7 +34,17 @@ export class DefaultEventDispatcher<TMap extends EventMap<StringKeyOf<TMap>>> im
     }
   };
 
-  removeEventListener<K extends StringKeyOf<TMap>>(type: K, listener: EventListener<TMap[K]>): void {
+  removeEventListener<K extends StringKeyOf<TMap>>(type: K | readonly K[], listener: EventListener<TMap[K]>): void {
+    if (typeof listener !== 'function') {
+      return;
+    } else if (Array.isArray(type)) {
+      type.forEach((t) => this.removeSingleEventListener(t, listener));
+    } else {
+      this.removeSingleEventListener(type as K, listener);
+    }
+  }
+
+  private removeSingleEventListener<K extends StringKeyOf<TMap>>(type: K, listener: EventListener<TMap[K]>): void {
     const listeners = this._eventListeners.get(type);
     if (listeners) {
       arrayRemoveElement(listeners, listener);

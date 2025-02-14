@@ -5,6 +5,7 @@ import type { AdDescription } from "../source/ads/Ads";
 import type { AdBreak } from "./AdBreak";
 import type { Ad } from "./Ad";
 import type { GoogleDAI } from "./GoogleDai";
+import { Omid } from './Omid';
 
 export interface AdsAPI {
   /**
@@ -50,4 +51,11 @@ export interface AdsAPI {
    * <br/> - Only available when the feature or extension `'google-dai'` is enabled.
    */
   readonly dai?: GoogleDAI;
+
+  /**
+   * The Omid API, which can be used to add as well as remove friendly video controls overlay obstructions.
+   *
+   * @since React Native THEOplayer SDK v8.7.0.
+   */
+  readonly omid?: Omid;
 }

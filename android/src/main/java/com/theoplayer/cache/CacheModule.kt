@@ -46,14 +46,14 @@ class CacheModule(private val context: ReactApplicationContext) :
   private val onTaskError = mutableMapOf<String, EventListener<CachingTaskErrorEvent>>()
   private val onTaskStateChange = mutableMapOf<String, EventListener<CachingTaskStateChangeEvent>>()
   private val sourceAdapter = SourceAdapter()
-  private val cache: Cache?
+  private val cache: Cache
     get() = THEOplayerGlobal.getSharedInstance(context.applicationContext).cache
   private val handler = Handler(Looper.getMainLooper())
 
   init {
     // Add cache event listeners
     handler.post {
-      cache?.apply {
+      cache.apply {
         // Listen for cache state changes
         addEventListener(CacheEventTypes.CACHE_STATE_CHANGE) { event ->
           emit("onCacheStatusChange", Arguments.createMap().apply {
@@ -155,7 +155,7 @@ class CacheModule(private val context: ReactApplicationContext) :
   @ReactMethod
   fun getInitialState(promise: Promise) {
     handler.post {
-      cache?.apply {
+      cache.apply {
 
         // Add listeners to existing tasks
         tasks.forEach { task ->
@@ -175,7 +175,7 @@ class CacheModule(private val context: ReactApplicationContext) :
     val sourceDescription = sourceAdapter.parseSourceFromJS(source)
     if (sourceDescription != null) {
       handler.post {
-        cache?.createTask(
+        cache.createTask(
           sourceDescription,
           CacheAdapter.parseCachingParameters(parameters)
         )
@@ -186,21 +186,21 @@ class CacheModule(private val context: ReactApplicationContext) :
   @ReactMethod
   fun pauseCachingTask(id: String) {
     handler.post {
-      cache?.tasks?.getTaskById(id)?.pause()
+      cache.tasks.getTaskById(id)?.pause()
     }
   }
 
   @ReactMethod
   fun removeCachingTask(id: String) {
     handler.post {
-      cache?.tasks?.getTaskById(id)?.remove()
+      cache.tasks.getTaskById(id)?.remove()
     }
   }
 
   @ReactMethod
   fun startCachingTask(id: String) {
     handler.post {
-      cache?.tasks?.getTaskById(id)?.start()
+      cache.tasks.getTaskById(id)?.start()
     }
   }
 
@@ -232,7 +232,7 @@ class CacheModule(private val context: ReactApplicationContext) :
   }
 
   private fun taskById(id: String): CachingTask? {
-    return cache?.tasks?.getTaskById(id) ?: run {
+    return cache.tasks.getTaskById(id) ?: run {
       Log.w(TAG, "CachingTask with id $id not found")
       return null
     }

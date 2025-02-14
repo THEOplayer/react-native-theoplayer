@@ -61,9 +61,8 @@ class THEOplayerRCTAdAdapter {
         if let skipOffset = ad.skipOffset {
             adData[PROP_AD_SKIP_OFFSET] = (skipOffset == -1) ? skipOffset : skipOffset
         }
-        if processAdBreak,
-           let adBreak = ad.adBreak {
-            adData[PROP_AD_BREAK] = THEOplayerRCTAdAdapter.fromAdBreak(adBreak: adBreak)
+        if processAdBreak {
+           adData[PROP_AD_BREAK] = THEOplayerRCTAdAdapter.fromAdBreak(adBreak: ad.adBreak)
         }
         
 #if os(iOS)
@@ -190,9 +189,9 @@ class THEOplayerRCTAdAdapter {
         return adBreakData
     }
     
-    class func toAdBreak(adBreakData: [String:Any]?) -> NativeAdBreak? {
+    class func toAdBreak(adBreakData: [String:Any]?) -> NativeAdBreak {
         guard let adBreakData = adBreakData else {
-            return nil
+            return THEOplayerRCTAdAdapter.defaultAdBreak()
         }
         
         var ads: [NativeAd] = []
@@ -212,24 +211,26 @@ class THEOplayerRCTAdAdapter {
                              customIntegration: adBreakData[PROP_ADBREAK_CUSTOM_INTEGRATION] as? String)
     }
     
-    class private func fromCompanionAds(companionAds: [CompanionAd?]) -> [[String:Any]] {
+    class func defaultAdBreak() -> NativeAdBreak {
+        return NativeAdBreak(ads: [], maxDuration: 0, maxRemainingDuration: 0, timeOffset: 0, integration: .custom)
+    }
+    
+    class private func fromCompanionAds(companionAds: [CompanionAd]) -> [[String:Any]] {
         var companionAdsData: [[String:Any]] = []
-        for cAd in companionAds {
-            if let companionAd = cAd {
-                var companionAdData: [String:Any] = [:]
-                companionAdData[PROP_COMPANION_AD_SLOT_ID] = companionAd.adSlotId ?? ""
-                companionAdData[PROP_COMPANION_ALT_TEXT] = companionAd.altText ?? ""
-                companionAdData[PROP_COMPANION_CLICK_THROUGH] = companionAd.clickThrough ?? ""
-                companionAdData[PROP_COMPANION_WIDTH] = companionAd.width ?? 0
-                companionAdData[PROP_COMPANION_HEIGHT] = companionAd.height ?? 0
-                companionAdData[PROP_COMPANION_RESOURCE_URI] = companionAd.resourceURI ?? ""
-                companionAdsData.append(companionAdData)
-            }
+        for companionAd in companionAds {
+            var companionAdData: [String:Any] = [:]
+            companionAdData[PROP_COMPANION_AD_SLOT_ID] = companionAd.adSlotId ?? ""
+            companionAdData[PROP_COMPANION_ALT_TEXT] = companionAd.altText ?? ""
+            companionAdData[PROP_COMPANION_CLICK_THROUGH] = companionAd.clickThrough ?? ""
+            companionAdData[PROP_COMPANION_WIDTH] = companionAd.width
+            companionAdData[PROP_COMPANION_HEIGHT] = companionAd.height
+            companionAdData[PROP_COMPANION_RESOURCE_URI] = companionAd.resourceURI ?? ""
+            companionAdsData.append(companionAdData)
         }
         return companionAdsData
     }
     
-    class func toCompanionAds(companiondAdsData: [[String:Any]]?) -> [CompanionAd?] {
+    class func toCompanionAds(companiondAdsData: [[String:Any]]?) -> [CompanionAd] {
         return []
     }
     

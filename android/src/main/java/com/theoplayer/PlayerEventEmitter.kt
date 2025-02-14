@@ -8,7 +8,7 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.bridge.WritableNativeMap
 import com.facebook.react.uimanager.UIManagerHelper
-import com.facebook.react.uimanager.common.ViewUtil
+import com.facebook.react.uimanager.common.UIManagerType
 import com.theoplayer.ads.AdEventAdapter
 import com.theoplayer.ads.AdEventAdapter.AdEventEmitter
 import com.theoplayer.android.api.THEOplayerGlobal
@@ -46,7 +46,6 @@ import com.theoplayer.presentation.PresentationModeChangeContext
 import com.theoplayer.track.*
 import com.theoplayer.util.PayloadBuilder
 import kotlin.math.floor
-
 
 private val TAG = PlayerEventEmitter::class.java.name
 
@@ -88,7 +87,7 @@ private const val EVENT_PROP_SUITE_VERSION = "playerSuiteVersion"
 @Suppress("UNCHECKED_CAST")
 class PlayerEventEmitter internal constructor(
   private val reactContext: ReactApplicationContext,
-  playerView: ReactTHEOplayerView
+  private val playerView: ReactTHEOplayerView
 ) {
   @Retention(AnnotationRetention.SOURCE)
   @StringDef(
@@ -163,7 +162,6 @@ class PlayerEventEmitter internal constructor(
   private val textTrackListeners = HashMap<EventType<*>, EventListener<*>>()
   private val audioTrackListeners = HashMap<EventType<*>, EventListener<*>>()
   private val videoTrackListeners = HashMap<EventType<*>, EventListener<*>>()
-  private val playerView: ReactTHEOplayerView
   private var adEventAdapter: AdEventAdapter? = null
   private var castEventAdapter: CastEventAdapter? = null
   private var lastTimeUpdate: Long = 0
@@ -175,7 +173,6 @@ class PlayerEventEmitter internal constructor(
   }
 
   init {
-    this.playerView = playerView
 
     // Create listeners
     playerListeners[PlayerEventTypes.SOURCECHANGE] = EventListener<PlayerEvent<*>> {
@@ -615,8 +612,13 @@ class PlayerEventEmitter internal constructor(
       } catch (ignore: RuntimeException) {
       }
     }
-    val uiManager = UIManagerHelper.getUIManager(reactContext, ViewUtil.getUIManagerType(viewId))
-    uiManager?.receiveEvent(UIManagerHelper.getSurfaceId(reactContext), viewId, type, event)
+    UIManagerHelper.getUIManager(
+      reactContext,
+      if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
+        UIManagerType.FABRIC
+      } else {
+        UIManagerType.DEFAULT
+      })?.receiveEvent(UIManagerHelper.getSurfaceId(playerView), viewId, type, event)
   }
 
   private fun attachListeners(player: Player) {
