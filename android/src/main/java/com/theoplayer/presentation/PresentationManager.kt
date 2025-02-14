@@ -38,6 +38,7 @@ class PresentationManager(
   private var playerGroupParentNode: ViewGroup? = null
   private var playerGroupChildIndex: Int? = null
   private val pipUtils: PipUtils = PipUtils(viewCtx, reactContext)
+  private val fullScreenLayoutObserver = FullScreenLayoutObserver()
 
   var currentPresentationMode: PresentationMode = PresentationMode.INLINE
     private set
@@ -216,10 +217,19 @@ class PresentationManager(
     val root: ReactRootView? = getClosestParentOfType(reactPlayerGroup)
 
     if (fullscreen) {
+      // Hide system bars for immersive mode.
+      // {@link https://developer.android.com/develop/ui/views/layout/immersive}
       WindowInsetsControllerCompat(window, window.decorView).apply {
+        // Reveal hidden system bars on any system gestures.
         systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-      }.hide(WindowInsetsCompat.Type.systemBars())
+        // Hide all system bars.
+        hide(WindowInsetsCompat.Type.systemBars())
+      }
+
       updatePresentationMode(PresentationMode.FULLSCREEN)
+
+      // Attach an observer that overrides the react-native lay-out and forces fullscreen.
+      fullScreenLayoutObserver.attach(reactPlayerGroup)
 
       if (!BuildConfig.REPARENT_ON_FULLSCREEN) {
         return
@@ -240,9 +250,13 @@ class PresentationManager(
       )
       updatePresentationMode(PresentationMode.INLINE)
 
+      // Remove forced layout observer
+      fullScreenLayoutObserver.remove(reactPlayerGroup)
+
       if (!BuildConfig.REPARENT_ON_FULLSCREEN) {
         return
       }
+
       root?.run {
         // Re-parent the playerViewGroup from the root node to its original parent
         removeView(reactPlayerGroup)
