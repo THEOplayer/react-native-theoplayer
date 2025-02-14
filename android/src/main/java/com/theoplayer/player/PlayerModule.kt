@@ -263,4 +263,17 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
       )
     }
   }
+
+  @ReactMethod(isBlockingSynchronousMethod = true)
+  fun getUsableScreenDimensions(): WritableMap {
+    // Pass the dimensions of the top-most View in the view hierarchy.
+    val topView = reactApplicationContext.currentActivity?.window?.decorView?.rootView
+    reactApplicationContext.resources.displayMetrics.also {
+      val density = it.density
+      return Arguments.createMap().apply {
+        putDouble("width", (topView?.width ?: 0) / density.toDouble())
+        putDouble("height", (topView?.height ?: 0) / density.toDouble())
+      }
+    }
+  }
 }
