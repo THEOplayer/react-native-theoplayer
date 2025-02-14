@@ -61,7 +61,7 @@ android {
 
     // Optionally re-parent player view on fullscreen or PiP event
     buildConfigField "boolean", "REPARENT_ON_FULLSCREEN", "${safeExtGet('THEOplayer_reparent_on_fullscreen', 'true')}"
-    buildConfigField "boolean", "REPARENT_ON_PIP", "${safeExtGet('THEOplayer_reparent_on_PiP', 'true')}"
+    buildConfigField "boolean", "REPARENT_ON_PIP", "${safeExtGet('THEOplayer_reparent_on_PiP', 'false')}"
 
     // Optionally log events to logcat
     buildConfigField "boolean", "LOG_PLAYER_EVENTS", "${safeExtGet('THEOplayer_logPlayerEvents', 'false')}"
