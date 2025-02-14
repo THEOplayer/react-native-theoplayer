@@ -463,10 +463,8 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   }
 
   set keepScreenOn(value: boolean) {
-    if (Platform.OS === 'android') {
-      this._state.keepScreenOn = value;
-      NativePlayerModule.setKeepScreenOn(this._view.nativeHandle, value);
-    }
+    this._state.keepScreenOn = value;
+    NativePlayerModule.setKeepScreenOn(this._view.nativeHandle, value);
   }
 
   pause(): void {

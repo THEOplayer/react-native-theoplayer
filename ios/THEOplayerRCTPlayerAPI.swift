@@ -356,4 +356,17 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
             }
         }
     }
+    
+    @objc(setKeepScreenOn:keepScreenOn:)
+    func setKeepScreenOn(_ node: NSNumber, keepScreenOn: Bool) -> Void {
+        DispatchQueue.main.async {
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let player = theView.player {
+                if player.preventsDisplaySleepDuringVideoPlayback != keepScreenOn {
+                    if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Changing TheoPlayer preventsDisplaySleepDuringVideoPlayback to \(keepScreenOn)") }
+                    player.preventsDisplaySleepDuringVideoPlayback = keepScreenOn
+                }
+            }
+        }
+    }
 }
