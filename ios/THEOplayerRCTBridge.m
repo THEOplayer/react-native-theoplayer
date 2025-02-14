@@ -112,6 +112,9 @@ RCT_EXTERN_METHOD(setPreload:(nonnull NSNumber *)node
 RCT_EXTERN_METHOD(setTextTrackStyle:(nonnull NSNumber *)node
                   textTrackStyle:(NSDictionary)textTrackStyle)
 
+RCT_EXTERN_METHOD(setKeepScreenOn:(nonnull NSNumber *)node
+                  keepScreenOn:(BOOL)keepScreenOn)
+
 @end
 
 // ----------------------------------------------------------------------------
