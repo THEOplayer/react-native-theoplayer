@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed an issue on iOS Safari where transitioning to `fullscreen` presentation mode would not work.
 - Fixed an issue on Web where `presentationmodechange` events would sometimes be dispatched more than once.
+- Fixed an issue on iOS where the view origin in fullscreen presentationMode was wrong when running under the RN new architecture / interop layer
 
 ## [8.14.0] - 25-02-10
 
