@@ -57,6 +57,19 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
             }
         }
     }
+    
+    @objc(setAutoplay:autoplay:)
+    func setAutoplay(_ node: NSNumber, autoplay: Bool) -> Void {
+        DispatchQueue.main.async {
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let player = theView.player {
+                if autoplay != player.autoplay {
+                    if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Changing TheoPlayer to \(autoplay ? "autoplay" : "not autoplay")") }
+                    player.autoplay = autoplay
+                }
+            }
+        }
+    }
 
     @objc(setSource:src:)
     func setSource(_ node: NSNumber, src: NSDictionary) -> Void {

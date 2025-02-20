@@ -68,7 +68,6 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._abrAdapter = new AbrAdapter(this._view);
     this._textTrackStyleAdapter = new TextTrackStyleAdapter(this._view);
 
-    this.addEventListener(PlayerEventType.SOURCE_CHANGE, this.onSourceChange);
     this.addEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
     this.addEventListener(PlayerEventType.PAUSE, this.onPause);
     this.addEventListener(PlayerEventType.PLAYING, this.onPlaying);
@@ -83,10 +82,6 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this.addEventListener(PlayerEventType.PRESENTATIONMODE_CHANGE, this.onPresentationModeChange);
     this.addEventListener(PlayerEventType.RESIZE, this.onResize);
   }
-
-  private onSourceChange = () => {
-    this.applyAutoplay();
-  };
 
   private hasValidSource(): boolean {
     return this._state.source !== undefined;
@@ -206,21 +201,9 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     return this._adsAdapter;
   }
 
-  private applyAutoplay() {
-    if (!this.hasValidSource()) {
-      return;
-    }
-    if (this._state.autoplay) {
-      this.play();
-    }
-  }
-
   set autoplay(autoplay: boolean) {
     this._state.autoplay = autoplay;
-
-    // Apply autoplay in case a source was already set.
-    // If autoplay is changed before setting a source, `onSourceChange` applies autoplay.
-    this.applyAutoplay();
+    NativePlayerModule.setAutoplay(this._view.nativeHandle, autoplay);
   }
 
   get autoplay(): boolean {

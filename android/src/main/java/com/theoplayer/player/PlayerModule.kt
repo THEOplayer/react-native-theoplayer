@@ -66,6 +66,13 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
   }
 
   @ReactMethod
+  fun setAutoplay(tag: Int, autoplay: Boolean) {
+    viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
+      view?.player?.autoplay = autoplay
+    }
+  }
+
+  @ReactMethod
   fun setMuted(tag: Int, muted: Boolean) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.player?.isMuted = muted

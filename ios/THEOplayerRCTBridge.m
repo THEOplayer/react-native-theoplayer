@@ -64,6 +64,9 @@ RCT_EXTERN_METHOD(version:(RCTPromiseResolveBlock)resolve
 RCT_EXTERN_METHOD(setPaused:(nonnull NSNumber *)node
                   paused:(BOOL)paused)
 
+RCT_EXTERN_METHOD(setAutoplay:(nonnull NSNumber *)node
+                  autoplay:(BOOL)autoplay)
+
 RCT_EXTERN_METHOD(setSource:(nonnull NSNumber *)node
                   src:(NSDictionary)src)
 
