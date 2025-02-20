@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - On Android, sources with THEOads will always use the media3 player pipeline.
 
+### Fixed
+
+- Fixed an issue on iOS where `hlsDateRange` was not passed from RN towards iOS native
+
 ## [8.15.0] - 25-02-12
 
 ### Changed
