@@ -68,7 +68,7 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
   @ReactMethod
   fun setAutoplay(tag: Int, autoplay: Boolean) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      view?.player?.autoplay = autoplay
+      view?.player?.isAutoplay = autoplay
     }
   }
 
