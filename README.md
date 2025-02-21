@@ -9,5 +9,5 @@ The `current` branch should depend on the latest version of THEOplayer and have 
 ## Setup
 
 1. Clone the `current` branch.
-2. Copy the .env.sample file to .env.
-3. Copy the `THEOPLAYER_KEY` from `wondery/wonderyplus`'s `.env.dev` into this repository's `.env`.
+2. Copy the `example/.env.sample` file to `example/.env`.
+3. Copy the `THEOPLAYER_KEY` from `wondery/wonderyplus`'s `.env.dev` into this repository's `example/.env`.
