@@ -184,7 +184,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
         // extract the type
             let type = typedSourceData[SD_PROP_TYPE] as? String ?? THEOplayerRCTSourceDescriptionBuilder.extractMimeType(src)
             let headers = typedSourceData[SD_PROP_HEADERS] as? [String:String]
-            let hlsDateRange = typedSourceData[SD_PROPS_HLS_DATE_RANGE] as? Bool
+            let hlsDateRange = typedSourceData[SD_PROP_HLS_DATE_RANGE] as? Bool
 
             return TypedSource(src: src,
                                type: type,
