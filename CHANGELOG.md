@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed an issue on iOS where `hlsDateRange` was not passed from RN towards iOS native
+- Fixed an issue on Android, where the player would sometimes not initialise correctly in case New Architecture was not being used, resulting in a black screen.
 
 ## [8.15.0] - 25-02-12
 

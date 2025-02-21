@@ -50,7 +50,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
       return
     }
     this.config = config
-    if (!isAttachedToWindow) {
+    if (!isAttachedToWindow && BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
       // The view is not attached to the window yet, postpone the initialization.
       return
     }
@@ -76,7 +76,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
 
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
-    if (!isInitialized) {
+    if (!isInitialized && BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
       config?.let { initialize(it) }
     }
   }
