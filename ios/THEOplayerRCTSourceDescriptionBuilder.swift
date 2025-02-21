@@ -57,6 +57,7 @@ let SD_PROP_BACKDROP_L_SHAPE: String = "backdropLShape"
 let SD_PROP_OVERRIDE_LAYOUT: String = "overrideLayout"
 let SD_PROP_OVERRIDE_AD_SRC: String = "overrideAdSrc"
 let SD_PROP_USE_ID3: String = "useId3"
+let SD_PROP_HLS_DATE_RANGE: String = "hlsDateRange"
 
 let EXTENSION_HLS: String = ".m3u8"
 let EXTENSION_MP4: String = ".mp4"
@@ -183,10 +184,12 @@ class THEOplayerRCTSourceDescriptionBuilder {
         // extract the type
             let type = typedSourceData[SD_PROP_TYPE] as? String ?? THEOplayerRCTSourceDescriptionBuilder.extractMimeType(src)
             let headers = typedSourceData[SD_PROP_HEADERS] as? [String:String]
-        
+            let hlsDateRange = typedSourceData[SD_PROPS_HLS_DATE_RANGE] as? Bool
+
             return TypedSource(src: src,
                                type: type,
                                drm: contentProtection,
+                               hlsDateRange: hlsDateRange,
                                headers: headers)
         }
 

@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Delegating the autoplay functionality to the underlying native Android and iOS SDKs, making that logic independent from player events.
 - On Android, sources with THEOads will always use the media3 player pipeline.
 
+### Fixed
+
+- Fixed an issue on iOS where `hlsDateRange` was not passed from RN towards iOS native
+
 ## [8.15.0] - 25-02-12
 
 ### Changed
