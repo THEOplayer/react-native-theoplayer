@@ -1,6 +1,7 @@
 import type { StyleProp, ViewStyle } from 'react-native';
 import type { PlayerConfiguration } from './config/PlayerConfiguration';
 import type { THEOplayer } from './player/THEOplayer';
+import { ImageStyle } from 'react-native/Libraries/StyleSheet/StyleSheetTypes';
 
 export interface THEOplayerViewProps {
   /**
@@ -12,6 +13,16 @@ export interface THEOplayerViewProps {
    * The style applied to the player view.
    */
   style?: StyleProp<ViewStyle>;
+
+  /**
+   * The style applied to the optional Poster component.
+   *
+   * @defaultValue A style that enforces aspectRatio 16:9.
+   *
+   * @remarks
+   * <br/> - This property only applies to iOS & Android platforms.
+   */
+  posterStyle?: StyleProp<ImageStyle> | undefined;
 
   /**
    * Callback for when the internal THEOplayer is ready.

@@ -22,7 +22,7 @@ import {
   TimeLabel,
   UiContainer,
 } from '@theoplayer/react-native-ui';
-import { PlayerConfiguration, PlayerEventType, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
+import { PlayerConfiguration, PlayerEventType, THEOplayer, THEOplayerView, sdkVersions } from 'react-native-theoplayer';
 
 import { Platform, SafeAreaView, StyleSheet, View, ViewStyle } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
@@ -33,12 +33,12 @@ import { MediaCacheDownloadButton } from './custom/MediaCacheDownloadButton';
 import { MediaCacheMenuButton } from './custom/MediaCacheMenuButton';
 import { MediaCachingTaskListSubMenu } from './custom/MediaCachingTaskListSubMenu';
 import { RenderingTargetSubMenu } from './custom/RenderingTargetSubMenu';
+import { AutoPlaySubMenu } from './custom/AutoPlaySubMenu';
 
 const playerConfig: PlayerConfiguration = {
   // Get your THEOplayer license from https://portal.theoplayer.com/
   // Without a license, only demo sources hosted on '*.theoplayer.com' domains can be played.
   license: undefined,
-  chromeless: true,
   hlsDateRange: true,
   libraryLocation: 'theoplayer',
   cast: {
@@ -64,7 +64,6 @@ const playerConfig: PlayerConfiguration = {
  */
 export default function App() {
   const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);
-  const chromeless = playerConfig?.chromeless ?? false;
   const onPlayerReady = (player: THEOplayer) => {
     setPlayer(player);
     // optional debug logs
@@ -78,11 +77,15 @@ export default function App() {
     player.addEventListener(PlayerEventType.SEEKING, console.log);
     player.addEventListener(PlayerEventType.SEEKED, console.log);
     player.addEventListener(PlayerEventType.ENDED, console.log);
+
+    sdkVersions().then((versions) => console.log(`[theoplayer] ${JSON.stringify(versions, null, 4)}`));
+
     player.source = SOURCES[0].source;
 
-    player.backgroundAudioConfiguration = { enabled: true };
+    player.backgroundAudioConfiguration = { enabled: true, shouldResumeAfterInterruption: true };
     player.pipConfiguration = { startsAutomatically: true };
-    console.log('THEOplayer is ready:', player.version);
+
+    console.log('THEOplayer is ready');
   };
 
   const needsBorder = Platform.OS === 'ios';
@@ -101,7 +104,7 @@ export default function App() {
     <SafeAreaView style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}>
       <View style={PLAYER_CONTAINER_STYLE}>
         <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady}>
-          {player !== undefined && chromeless && (
+          {player !== undefined && (
             <UiContainer
               theme={{ ...DEFAULT_THEOPLAYER_THEME }}
               player={player}
@@ -127,6 +130,7 @@ export default function App() {
                     <PlaybackRateSubMenu />
                     <BackgroundAudioSubMenu />
                     <PiPSubMenu />
+                    <AutoPlaySubMenu />
                     {Platform.OS === 'android' && <RenderingTargetSubMenu />}
                   </SettingsMenuButton>
                 </ControlBar>

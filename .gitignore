@@ -43,6 +43,7 @@ android.iml
 # Cocoapods
 #
 example/ios/Pods
+e2e/ios/Pods
 
 # node.js
 #
@@ -76,5 +77,14 @@ ios/custom/Frameworks/tvos/*.xcframework
 
 # Jekyll / GitHub Pages
 _site/
+
 Gemfile.lock
 vendor
+.bundle
+src/manifest.json
+
+# E2E app
+e2e/cavy_results.md
+
+# Example app
+example/dist

@@ -10,6 +10,7 @@ import com.theoplayer.android.api.cast.CastStrategy
 import com.theoplayer.android.api.cast.CastConfiguration
 import com.theoplayer.android.api.pip.PipConfiguration
 import com.theoplayer.android.api.player.NetworkConfiguration
+import com.theoplayer.android.api.theolive.THEOLiveConfig
 import com.theoplayer.media.MediaSessionConfig
 import com.theoplayer.media.MediaSessionConfigAdapter
 
@@ -21,12 +22,14 @@ private const val PROP_UI_ENABLED = "uiEnabled"
 private const val PROP_CAST_STRATEGY = "strategy"
 private const val PROP_RETRY_CONFIG = "retryConfiguration"
 private const val PROP_HLS_DATE_RANGE = "hlsDateRange"
+private const val PROP_USE_MEDIA3 = "useMedia3"
 private const val PROP_RETRY_MAX_RETRIES = "maxRetries"
 private const val PROP_RETRY_MIN_BACKOFF = "minimumBackoff"
 private const val PROP_RETRY_MAX_BACKOFF = "maximumBackoff"
 private const val PROP_CAST_CONFIGURATION = "cast"
 private const val PROP_ADS_CONFIGURATION = "ads"
 private const val PROP_IMA_CONFIGURATION = "ima"
+private const val PROP_IMA_AD_LOAD_TIMEOUT = "adLoadTimeout"
 private const val PROP_MEDIA_CONTROL = "mediaControl"
 private const val PROP_PPID = "ppid"
 private const val PROP_MAX_REDIRECTS = "maxRedirects"
@@ -36,8 +39,17 @@ private const val PROP_SESSION_ID = "sessionID"
 private const val PROP_ENABLE_DEBUG_MODE = "enableDebugMode"
 private const val PROP_BITRATE = "bitrate"
 private const val PROP_ALLOWED_MIMETYPES = "allowedMimeTypes"
+private const val PROP_THEOLIVE_CONFIG = "theoLive"
+private const val PROP_THEOLIVE_EXTERNAL_SESSION_ID = "externalSessionId"
+private const val PROP_THEOLIVE_ANALYTICS_DISABLED = "analyticsDisabled"
 
 class PlayerConfigAdapter(private val configProps: ReadableMap?) {
+
+  /**
+   * Whether the Media3 extension is used for play-out.
+   */
+  var useMedia3: Boolean = false
+    private set
 
   /**
    * Get general THEOplayerConfig object; these properties apply:
@@ -62,6 +74,12 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
         }
         if (hasKey(PROP_HLS_DATE_RANGE)) {
           hlsDateRange(getBoolean(PROP_HLS_DATE_RANGE))
+        }
+        if (hasKey(PROP_USE_MEDIA3)) {
+          useMedia3 = getBoolean(PROP_USE_MEDIA3)
+        }
+        if (hasKey(PROP_THEOLIVE_CONFIG)) {
+          theoLiveConfiguration(theoLiveConfig())
         }
         pipConfiguration(PipConfiguration.Builder().build())
       }
@@ -159,10 +177,16 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
           }
         }
       }
-      // bitrate is configured under the ima config
+      // bitrate and timeout are configured under the ima config
       configProps?.getMap(PROP_ADS_CONFIGURATION)?.getMap(PROP_IMA_CONFIGURATION)?.run {
         if (hasKey(PROP_BITRATE)) {
           bitrateKbps = getInt(PROP_BITRATE)
+        }
+
+        // The time needs to be in milliseconds on android but seconds on ios.
+        // we unify the prop from javascript by multiplying it by 1000 here
+        if (hasKey(PROP_IMA_AD_LOAD_TIMEOUT)) {
+          setLoadVideoTimeout(getInt(PROP_IMA_AD_LOAD_TIMEOUT) * 1000)
         }
       }
     }
@@ -199,5 +223,15 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
    */
   fun mediaSessionConfig(): MediaSessionConfig {
     return MediaSessionConfigAdapter.fromProps(configProps?.getMap(PROP_MEDIA_CONTROL))
+  }
+
+  private fun theoLiveConfig (): THEOLiveConfig {
+    val config = configProps?.getMap(PROP_THEOLIVE_CONFIG)
+    return THEOLiveConfig.Builder(
+      externalSessionId = config?.getString(PROP_THEOLIVE_EXTERNAL_SESSION_ID),
+      analyticsDisabled = if (config?.hasKey(PROP_THEOLIVE_ANALYTICS_DISABLED) == true)
+        config.getBoolean(PROP_THEOLIVE_ANALYTICS_DISABLED)
+      else false
+    ).build()
   }
 }

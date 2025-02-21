@@ -35,6 +35,12 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
     static func requiresMainQueueSetup() -> Bool {
         return false
     }
+  
+    @objc(version:rejecter:)
+    func version(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+        let versionString = THEOplayer.version
+        resolve(versionString)
+    }
 
     @objc(setPaused:paused:)
     func setPaused(_ node: NSNumber, paused: Bool) -> Void {
@@ -47,6 +53,19 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                 } else if !paused && player.paused {
                     if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Triggering play on TheoPlayer") }
                     player.play()
+                }
+            }
+        }
+    }
+    
+    @objc(setAutoplay:autoplay:)
+    func setAutoplay(_ node: NSNumber, autoplay: Bool) -> Void {
+        DispatchQueue.main.async {
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let player = theView.player {
+                if autoplay != player.autoplay {
+                    if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Changing TheoPlayer to \(autoplay ? "autoplay" : "not autoplay")") }
+                    player.autoplay = autoplay
                 }
             }
         }
@@ -224,6 +243,9 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
         var backgroundAudio = BackgroundAudioConfig()
         backgroundAudio.enabled = configDict["enabled"] as? Bool ?? false
         backgroundAudio.shouldResumeAfterInterruption = configDict["shouldResumeAfterInterruption"] as? Bool ?? false
+        if let audioSessionModeString = configDict["audioSessionMode"] as? String {
+            backgroundAudio.audioSessionMode = THEOplayerRCTTypeUtils.audioSessionModeFromString(audioSessionModeString)
+        }
         return backgroundAudio
     }
 
@@ -347,5 +369,17 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
             }
         }
     }
-
+    
+    @objc(setKeepScreenOn:keepScreenOn:)
+    func setKeepScreenOn(_ node: NSNumber, keepScreenOn: Bool) -> Void {
+        DispatchQueue.main.async {
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let player = theView.player {
+                if player.preventsDisplaySleepDuringVideoPlayback != keepScreenOn {
+                    if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Changing TheoPlayer preventsDisplaySleepDuringVideoPlayback to \(keepScreenOn)") }
+                    player.preventsDisplaySleepDuringVideoPlayback = keepScreenOn
+                }
+            }
+        }
+    }
 }

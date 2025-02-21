@@ -51,8 +51,6 @@ RCT_EXPORT_VIEW_PROPERTY(onNativeAdEvent, RCTDirectEventBlock);
 
 RCT_EXPORT_VIEW_PROPERTY(onNativeCastEvent, RCTDirectEventBlock);
 
-RCT_EXTERN_METHOD(destroy:(nonnull NSNumber *)node);
-
 @end
 
 // ----------------------------------------------------------------------------
@@ -60,8 +58,14 @@ RCT_EXTERN_METHOD(destroy:(nonnull NSNumber *)node);
 // ----------------------------------------------------------------------------
 @interface RCT_EXTERN_REMAP_MODULE(THEORCTPlayerModule, THEOplayerRCTPlayerAPI, NSObject)
 
+RCT_EXTERN_METHOD(version:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN_METHOD(setPaused:(nonnull NSNumber *)node
                   paused:(BOOL)paused)
+
+RCT_EXTERN_METHOD(setAutoplay:(nonnull NSNumber *)node
+                  autoplay:(BOOL)autoplay)
 
 RCT_EXTERN_METHOD(setSource:(nonnull NSNumber *)node
                   src:(NSDictionary)src)
@@ -111,6 +115,9 @@ RCT_EXTERN_METHOD(setPreload:(nonnull NSNumber *)node
 RCT_EXTERN_METHOD(setTextTrackStyle:(nonnull NSNumber *)node
                   textTrackStyle:(NSDictionary)textTrackStyle)
 
+RCT_EXTERN_METHOD(setKeepScreenOn:(nonnull NSNumber *)node
+                  keepScreenOn:(BOOL)keepScreenOn)
+
 @end
 
 // ----------------------------------------------------------------------------
@@ -156,6 +163,11 @@ RCT_EXTERN_METHOD(daiStreamTimeForContentTime:(nonnull NSNumber *)node
                   time:(nonnull NSNumber *)timeValue
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(addFriendlyObstruction:(nonnull NSNumber *)node
+                  obstruction:(NSDictionary)obstruction)
+
+RCT_EXTERN_METHOD(removeAllFriendlyObstructions:(nonnull NSNumber *)node)
 
 @end
 

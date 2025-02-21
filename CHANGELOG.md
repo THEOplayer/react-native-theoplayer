@@ -7,10 +7,232 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Delegating the autoplay functionality to the underlying native Android and iOS SDKs, making that logic independent from player events.
+- On Android, sources with THEOads will always use the media3 player pipeline.
+
+### Fixed
+
+- Fixed an issue on iOS where `hlsDateRange` was not passed from RN towards iOS native
+- Fixed an issue on Android, where the player would sometimes not initialise correctly in case New Architecture was not being used, resulting in a black screen.
+
+## [8.15.0] - 25-02-12
+
+### Changed
+
+- Transitioning to `fullscreen` presentation mode on Web platforms now puts only the `THEOplayerView` element and its child elements, such as the UI, in fullscreen. Previously, the whole page would transition to fullscreen.
+- Changed `presentationmodechange` event dispatching on iOS to take into account if the change actually happened on the native player.
+
+### Fixed
+
+- Fixed an issue on iOS Safari where transitioning to `fullscreen` presentation mode would not work.
+- Fixed an issue on Web where `presentationmodechange` events would sometimes be dispatched more than once.
+- Fixed an issue on iOS where the view origin in fullscreen presentationMode was wrong when running under the RN new architecture / interop layer
+
+## [8.14.0] - 25-02-10
+
+### Added
+
+- Added a `theoLive` property to `PlayerConfiguration` to enable THEOlive configuration.
+
+### Fixed
+
+- Fixed an issue on iOS where the `currentTime` on `NowPlayingInfoCenter` would go out of sync or reset when changing playback rate.
+- Fixed an issue on Android where the player would crash in case resolving the `THEOplayerView` instance fails.
+
+## [8.13.1] - 25-01-27
+
+### Fixed
+
+- Fixed an issue on iOS where fullscreen-inline transitions would cause a UIViewControllerHierarchyInconsistency when the current view's viewcController has sibling viewControllers that manage views that don't descend of the moving view.
+
+## [8.13.0] - 25-01-15
+
+### Added
+
+- Added support for New Architecture's through the Interop Layer. More info on the [React Native developer pages](https://reactnative.dev/architecture/landing-page).
+
+### Fixed
+
+- Fixed an issue on Web where picture-in-picture presentation mode would sometimes fail.
+
+### Changed
+
+- Upgraded the example app to use react-native-tvos@0.76.5-0.
+
+## [8.12.0] - 25-01-09
+
+### Fixed
+
+- Fixed a memory leak on iOS, where the presentationModeManager was holding a strong reference to the fullscreen's target and return views
+- Fixed an issue on iOS where the destruction of the THEOplayerView was not always propagated correctly over the iOS Bridge, resulting in an occasional memory leak.
+- Fixed an issue where, when requesting a text track's cues, the time properties would sometimes be in seconds instead of milliseconds.
+- Fixed a rare crash on Android due to a `java.lang.NullPointerException` when creating the THEOplayerView.
+- Fixed an issue on Android where R8 minification would obfuscate some API class names, which could lead to a crash.
+
+### Added
+
+- Added a `adLoadTimeout` property to `GoogleImaConfiguration` to control the amount of time that the SDK will wait before moving onto the next ad or main content.
+
+## [8.11.1] - 24-12-18
+
+### Fixed
+
+- Fixed the picture-in-picture presentationMode for THEOlive sources on Web.
+
+### Changed
+
+- Deprecated the use of the `enableTHEOlive` flag in `PlayerConfiguration` as THEOlive support is always enabled.
+
+## [8.11.0] - 24-12-13
+
+### Added
+
+- Added support for THEOlive on tvOS.
+
+## [8.10.0] - 24-12-06
+
+### Added
+
+- Added support for THEOlive on iOS.
+
+## [8.9.1] - 24-12-04
+
+### Added
+
+- Added a `enableTHEOlive` flag to `PlayerConfiguration` to enable play-out of THEOlive sources.
+
+## [8.9.0] - 24-11-29
+
+### Added
+
+- Added support for the `SURFACE_CONTROL` rendering target on Android, which improves switching from/to fullscreen presentation mode. Rendering target `SURFACE_CONTROL` will be selected instead of `SURFACE_VIEW` on API level 29+.
+
+### Fixed
+
+- Fixed a memory leak on iOS, caused by the wrapping ViewController that was keeping a strong reference to the THEOplayerRCTView.
+
+### Added
+
+- Added support for the experimental media3 player pipeline on Android.
+
+### Changed
+
+- **BREAKING**: Changed the `view` parameter in the `Omid` API from a ref container to a native node handle when registering "friendly" obstructions.
+
+## [8.8.1] - 24-11-20
+
+### Fixed
+
+- Fixed build issue on tvOS caused by HomeIndicatorViewController
+
+## [8.8.0] - 24-11-19
+
+### Added
+
+- Added `HomeIndicatorViewController` to iOS, which can be used as an alternative `rootViewController` for the native App. It will automatically show/hide the home indicator when transitioning from/to fullscreen presentationMode.
+
+### Changed
+
+- Simplified the `viewController` reparenting mechanism on iOS that is applied when changing the presentationMode to/from fullscreen.
+- The `MediaPlaybackService` on Android is never restarted if a MediaButton event is received after the app was closed.
+- Added a consumer R8 config file on Android, telling R8 not to throw errors or warnings because of classes that are expected to be missing.
+
+## [8.7.0] - 24-11-05
+
+### Fixed
+
+- Fixed an issue on iOS where the dynamic island (iphone 14 plus and higher) briefly disappeared when updating the nowPlayingInfo on for example backgrounding the app.
+- Fixed an issue on Android when using Expo, where the Expo plugin would not add THEOplayer's Maven repo to the project's repositories list.
+
+### Added
+
+- Added the `Omid` API for ads, which can be used to manage friendly video controls overlay obstructions.
+
+## [8.6.0] - 24-10-25
+
+### Added
+
+- Added `AdEvent.AD_CLICKED` and `AdEvent.AD_TAPPED` ad events for iOS and Android. The events are dispatched when a user taps or clicks on an ad that has a `clickThrough` link.
+
+### Changed
+
+- Upgrade example app to support React Native v0.75.
+
+## [8.5.0] - 24-10-21
+
+### Added
+
+- Added `SdkVersion` interface to be used by the sdk and its connectors to report version info.
+- Added the `THEOads` SGAI ad integration for Android. See [THEOads](https://www.theoplayer.com/product/theoads) for more details.
+
+### Fixed
+
+- Fixed an issue on Web where all text tracks other than the selected would be set to `disabled` when enabling a text track.
+- Fixed an issue on iOS where the player would crash when changing the presentationMode from fullscreen to picture-in-picture during ad playout.
+
+### Changed
+
+- On iOS, after closing picture-in-picture the player returns back to the previous presentationMode instead of always returning to inline.
+
+## [8.4.0] - 24-10-10
+
+### Added
+
+- Added a `posterStyle` property on `THEOplayerView` to allow overriding the default 16:9 poster style.
+- Added a `theoads` property on `PlayerConfiguration.ads` to allow play-out of THEOads sources on Web platforms.
+- Added a `hlsDateRange` property on `SourceDescription` to enable parsing and exposing date ranges from HLS playlists. This flag was already available on `PlayerConfiguration`, which applies for all HLS sources.
+
+### Fixed
+
+- Added support for a breaking change to `ContentProtectionIntegrationFactory`'s signature in THEOplayer Android 8.2.0.
+
+## [8.3.1] - 24-10-07
+
+### Fixed
+
+- Fixed an issue on Android where on some Android SDK versions controlling playback with the notification buttons would not work.
+- Fixed an issue on Web and Android where a text track with attribute `DEFAULT` was not set as the player's `selectedTextTrack` property.
+
+### Added
+
+- Added `sdkVersions` to react-native-theoplayer, which contains the current RN SDK version and the version of the underlying native THEOplayer SDK.
+
+## [8.3.0] - 24-09-30
+
+### Added
+
+- Added the option to specify the AVAudioSession mode for iOS (moviePlayback versus spokenAudio).
+
+## [8.2.2] - 24-09-28
+
+- Fixed a build issue on iOS for applications that run without the GOOGLE_IMA feature flag
+
+## [8.2.1] - 24-09-27
+
+### Fixed
+
+- Fixed a build issue on Android when pinning a specific Android player SDK version, while also disabling the Google IMA extension.
+
+## [8.2.0] - 24-09-26
+
+### Added
+
+- Added the `PlaybackSettings` API for Android, allowing control of playback behaviour across all THEOplayer instances.
+
+## [8.1.0] - 24-09-23
+
 ### Added
 
 - Added support for `bitrate` config on the GoogleIMAConfiguration, to be passed to the IMA SDK rendering settings.
 - Added support on iOS and Android for `allowedMimeTypes` config on the AdsConfiguration, to be passed to the IMA SDK rendering settings.
+
+### Fixed
+
+- Fixed an issue where cast events were not forwarded from the native Android SDK.
+- Fixed an issue where presentationMode changes on iOS would cause a UIViewControllerHierarchyInconsistency when an ad is playing.
+- Fixed an issue where some ad event types could not be resolved at runtime when excluding the IMA integration on Android.
 
 ## [8.0.3] - 24-09-14
 

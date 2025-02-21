@@ -144,15 +144,9 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
     if (onPlayerDestroy) {
       onPlayerDestroy(this._facade);
     }
+
     this._facade.dispatchEvent(new BaseEvent(PlayerEventType.DESTROY));
     this._dimensionsHandler?.remove();
-
-    if (Platform.OS === 'ios') {
-      // TODO: move to native module
-      // on iOS, we trigger an explicit 'destroy' to clean up the underlying THEOplayer
-      const command = (UIManager as { [index: string]: any })['THEOplayerRCTView'].Commands.destroy;
-      UIManager.dispatchViewManagerCommand(findNodeHandle(this._root.current), command, []);
-    }
     this._facade.clearEventListeners();
   }
 
@@ -374,7 +368,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
   };
 
   public render(): JSX.Element {
-    const { config, style, children } = this.props;
+    const { config, style, posterStyle, children } = this.props;
     const { presentationMode, screenSize: fullscreenSize, posterActive, poster } = this.state;
 
     return (
@@ -413,7 +407,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
           onNativePresentationModeChange={this._onPresentationModeChange}
           onNativeResize={this._onResize}
         />
-        {posterActive && <Poster uri={poster} />}
+        {posterActive && <Poster uri={poster} style={posterStyle} />}
         {children}
       </View>
     );

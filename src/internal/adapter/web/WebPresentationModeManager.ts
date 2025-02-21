@@ -9,12 +9,13 @@ import { noOp } from '../../utils/CommonUtils';
 export class WebPresentationModeManager {
   private readonly _player: ChromelessPlayer;
   private _presentationMode: PresentationMode = PresentationMode.inline;
-  private _element: HTMLVideoElement | undefined = undefined;
   private _eventForwarder: DefaultEventDispatcher<PlayerEventMap>;
 
   constructor(player: ChromelessPlayer, eventForwarder: DefaultEventDispatcher<PlayerEventMap>) {
     this._player = player;
     this._eventForwarder = eventForwarder;
+    this._player.presentation.addEventListener('presentationmodechange', this.updatePresentationMode);
+    this.maybePrepareForPresentationModeChanges();
   }
 
   get presentationMode(): PresentationMode {
@@ -23,62 +24,40 @@ export class WebPresentationModeManager {
 
   set presentationMode(presentationMode: PresentationMode) {
     if (presentationMode === this._presentationMode) {
+      // Ignore if presentationMode did not change.
       return;
     }
 
-    this.prepareForPresentationModeChanges();
-
     if (fullscreenAPI !== undefined) {
-      // All other browsers
+      // If the browser supports the fullscreenAPI, put the element that encloses the player & UI in fullscreen.
       if (presentationMode === PresentationMode.fullscreen) {
-        const appElement = document.getElementById('app') ?? document.getElementById('root');
+        const appElement = document.getElementById('theoplayer-root-container');
         if (appElement !== null) {
-          const promise = appElement[fullscreenAPI.requestFullscreen_]();
-          if (promise && promise.then) {
-            promise.then(noOp, noOp);
-          }
+          appElement[fullscreenAPI.requestFullscreen_]()?.then?.(noOp, noOp);
         }
       } else if (presentationMode === PresentationMode.pip) {
-        void this._element?.requestPictureInPicture?.();
+        this._player.presentation.requestMode('native-picture-in-picture');
       } else {
         if (this._presentationMode === PresentationMode.fullscreen) {
-          const promise = document[fullscreenAPI.exitFullscreen_]();
-          if (promise && promise.then) {
-            promise.then(noOp, noOp);
-          }
+          document[fullscreenAPI.exitFullscreen_]()?.then?.(noOp, noOp);
         }
         if (this._presentationMode === PresentationMode.pip) {
-          void document.exitPictureInPicture();
+          this._player.presentation.requestMode(PresentationMode.inline);
         }
       }
     } else {
-      // iOS Safari doesn't properly support fullscreen, use native fullscreen instead
+      // Some browsers, like iOS Safari, can only put a videoElement in fullscreen; let the player decide which one.
       if (presentationMode === PresentationMode.fullscreen) {
-        this._element?.webkitEnterFullscreen?.();
+        this._player.presentation.requestMode(PresentationMode.fullscreen);
       } else if (presentationMode === PresentationMode.pip) {
-        this._element?.webkitSetPresentationMode?.(PresentationMode.pip);
+        this._player.presentation.requestMode('native-picture-in-picture');
       } else {
-        this._element?.webkitSetPresentationMode?.(PresentationMode.inline);
+        this._player.presentation.requestMode(PresentationMode.inline);
       }
     }
   }
 
-  private prepareForPresentationModeChanges() {
-    const elements = this._player.element.children;
-    for (const element of Array.from(elements)) {
-      if (element.tagName === 'VIDEO' && element.attributes.getNamedItem('src') !== null) {
-        this._element = element as HTMLVideoElement;
-      }
-    }
-    // listen for pip updates on element
-    if (this._element !== undefined) {
-      this._element.onenterpictureinpicture = () => {
-        this.updatePresentationMode();
-      };
-      this._element.onleavepictureinpicture = () => {
-        this.updatePresentationMode();
-      };
-    }
+  private maybePrepareForPresentationModeChanges() {
     // listen for fullscreen updates on document
     if (fullscreenAPI !== undefined) {
       document.addEventListener(fullscreenAPI.fullscreenchange_, this.updatePresentationMode);
@@ -91,7 +70,7 @@ export class WebPresentationModeManager {
     let newPresentationMode: PresentationMode = PresentationMode.inline;
     if (fullscreenAPI !== undefined && document[fullscreenAPI.fullscreenElement_] !== null) {
       newPresentationMode = PresentationMode.fullscreen;
-    } else if (document.pictureInPictureElement !== null) {
+    } else if (this._player.presentation.currentMode === 'native-picture-in-picture') {
       newPresentationMode = PresentationMode.pip;
     }
 

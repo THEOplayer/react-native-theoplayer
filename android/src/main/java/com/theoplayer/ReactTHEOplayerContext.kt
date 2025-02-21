@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
@@ -18,11 +19,17 @@ import com.theoplayer.android.api.ads.dai.GoogleDaiIntegration
 import com.theoplayer.android.api.ads.dai.GoogleDaiIntegrationFactory
 import com.theoplayer.android.api.ads.ima.GoogleImaIntegration
 import com.theoplayer.android.api.ads.ima.GoogleImaIntegrationFactory
+import com.theoplayer.android.api.ads.theoads.TheoAdDescription
+import com.theoplayer.android.api.ads.theoads.TheoAdsIntegration
+import com.theoplayer.android.api.ads.theoads.TheoAdsIntegrationFactory
 import com.theoplayer.android.api.cast.CastIntegration
 import com.theoplayer.android.api.cast.CastIntegrationFactory
 import com.theoplayer.android.api.event.EventListener
 import com.theoplayer.android.api.event.player.*
+import com.theoplayer.android.api.media3.Media3PlayerIntegration
+import com.theoplayer.android.api.media3.Media3PlayerIntegrationFactory
 import com.theoplayer.android.api.player.Player
+import com.theoplayer.android.api.player.RenderingTarget
 import com.theoplayer.android.connector.mediasession.MediaSessionConnector
 import com.theoplayer.audio.AudioBecomingNoisyManager
 import com.theoplayer.audio.AudioFocusManager
@@ -80,7 +87,10 @@ class ReactTHEOplayerContext private constructor(
 
   var daiIntegration: GoogleDaiIntegration? = null
   var imaIntegration: GoogleImaIntegration? = null
+  private var theoAdsIntegration: TheoAdsIntegration? = null
   var castIntegration: CastIntegration? = null
+  @Suppress("UnstableApiUsage")
+  private var media3Integration: Media3PlayerIntegration? = null
   var wasPlayingOnHostPause: Boolean = false
   private var isHostPaused: Boolean = false
 
@@ -196,7 +206,7 @@ class ReactTHEOplayerContext private constructor(
   }
 
   private fun initializePlayerView() {
-    playerView = object : THEOplayerView(reactContext.currentActivity!!, configAdapter.playerConfig()) {
+    playerView = object : THEOplayerView(reactContext, configAdapter.playerConfig()) {
       private fun measureAndLayout() {
         measure(
           MeasureSpec.makeMeasureSpec(measuredWidth, MeasureSpec.EXACTLY),
@@ -211,6 +221,13 @@ class ReactTHEOplayerContext private constructor(
         // schedule a forced layout
         mainHandler.post { measureAndLayout() }
       }
+    }
+
+    // By default, choose SURFACE_CONTROL/SURFACE_VIEW rendering target, based on API level.
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      player.setRenderingTarget(RenderingTarget.SURFACE_CONTROL)
+    } else {
+      player.setRenderingTarget(RenderingTarget.SURFACE_VIEW)
     }
 
     // By default, the screen should remain on.
@@ -236,7 +253,8 @@ class ReactTHEOplayerContext private constructor(
     // Create and initialize the media session
     val mediaSession = MediaSessionCompat(reactContext, TAG)
 
-    // Do not let MediaButtons restart the player when the app is not visible
+    // Do not let MediaButtons restart the player when media session is not active.
+    // https://developer.android.com/media/legacy/media-buttons#restarting-inactive-mediasessions
     mediaSession.setMediaButtonReceiver(null)
 
     // Create a MediaSessionConnector and attach the THEOplayer instance.
@@ -296,6 +314,17 @@ class ReactTHEOplayerContext private constructor(
       Log.w(TAG, "Failed to configure Google DAI integration ${e.message}")
     }
     try {
+      if (BuildConfig.EXTENSION_THEOADS) {
+        theoAdsIntegration = TheoAdsIntegrationFactory.createTheoAdsIntegration(
+          playerView
+        ).also {
+          playerView.player.addIntegration(it)
+        }
+      }
+    } catch (e: Exception) {
+      Log.w(TAG, "Failed to configure THEOAds integration ${e.message}")
+    }
+    try {
       if (BuildConfig.EXTENSION_CAST) {
         castIntegration = CastIntegrationFactory.createCastIntegration(
           playerView, configAdapter.castConfig()
@@ -306,6 +335,25 @@ class ReactTHEOplayerContext private constructor(
     } catch (e: Exception) {
       Log.w(TAG, "Failed to configure Cast integration ${e.message}")
     }
+    try {
+      if (BuildConfig.EXTENSION_MEDIA3) {
+        @Suppress("UnstableApiUsage")
+        media3Integration =
+          Media3PlayerIntegrationFactory.createMedia3PlayerIntegration { _, source ->
+            // selectedSource -> represents the TypedSource the player picked to play.
+            // source -> represents the SourceDescription passed to the player.
+            // return true -> the Media3 integration pipeline will be used to play the selected source.
+            // return false -> the default pipeline will be used to play the selected source.
+            //
+            // @remark If the source contains THEOads, media3 is always enabled.
+            configAdapter.useMedia3 || source.ads.any { it is TheoAdDescription }
+          }
+        playerView.player.addIntegration(media3Integration)
+      }
+    } catch (e: Exception) {
+      Log.w(TAG, "Failed to configure Cast integration ${e.message}")
+    }
+
     // Add other future integrations here.
   }
 

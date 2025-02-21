@@ -18,7 +18,7 @@ import type {
   VolumeChangeEvent as NativeVolumeChangeEvent,
   DimensionChangeEvent as NativeDimensionChangeEvent,
 } from 'theoplayer';
-import type { AdEvent, MediaTrack, TextTrack, TimeRange } from 'react-native-theoplayer';
+import type { AdEvent, MediaTrack, TimeRange } from 'react-native-theoplayer';
 import {
   AdEventType,
   CastState,
@@ -88,7 +88,6 @@ export class WebEventForwarder {
     this._player.addEventListener('segmentnotfound', this.onSegmentNotFound);
     this._player.addEventListener('volumechange', this.onVolumeChangeEvent);
     this._player.addEventListener('dimensionchange', this.onDimensionChange);
-    this._player.presentation.addEventListener('presentationmodechange', this.onPresentationModeChange);
 
     this._player.textTracks.addEventListener('addtrack', this.onAddTextTrack);
     this._player.textTracks.addEventListener('removetrack', this.onRemoveTextTrack);
@@ -267,7 +266,7 @@ export class WebEventForwarder {
     track.addEventListener('removecue', this.onRemoveTextTrackCue(track));
     track.addEventListener('entercue', this.onEnterTextTrackCue(track));
     track.addEventListener('exitcue', this.onExitTextTrackCue(track));
-    this._facade.dispatchEvent(new DefaultTextTrackListEvent(TrackListEventType.ADD_TRACK, track as TextTrack));
+    this._facade.dispatchEvent(new DefaultTextTrackListEvent(TrackListEventType.ADD_TRACK, fromNativeTextTrack(track)));
   };
 
   private readonly onRemoveTextTrack = (event: RemoveTrackEvent) => {
@@ -276,11 +275,11 @@ export class WebEventForwarder {
     track.removeEventListener('removecue', this.onRemoveTextTrackCue(track));
     track.removeEventListener('entercue', this.onEnterTextTrackCue(track));
     track.removeEventListener('exitcue', this.onExitTextTrackCue(track));
-    this._facade.dispatchEvent(new DefaultTextTrackListEvent(TrackListEventType.REMOVE_TRACK, track as NativeTextTrack as TextTrack));
+    this._facade.dispatchEvent(new DefaultTextTrackListEvent(TrackListEventType.REMOVE_TRACK, fromNativeTextTrack(track)));
   };
 
   private readonly onChangeTextTrack = (event: TrackChangeEvent) => {
-    this._facade.dispatchEvent(new DefaultTextTrackListEvent(TrackListEventType.CHANGE_TRACK, event.track as NativeTextTrack as TextTrack));
+    this._facade.dispatchEvent(new DefaultTextTrackListEvent(TrackListEventType.CHANGE_TRACK, fromNativeTextTrack(event.track as NativeTextTrack)));
   };
 
   private readonly onAddAudioTrack = (event: AddTrackEvent) => {

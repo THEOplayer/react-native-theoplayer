@@ -2,17 +2,19 @@
 
 import Foundation
 import THEOplayerSDK
+import UIKit
 
 public class THEOplayerRCTPresentationModeManager {
     // MARK: Members
     private weak var player: THEOplayer?
     private weak var view: UIView?
     var presentationModeContext = THEOplayerRCTPresentationModeContext()
-    var presentationMode: THEOplayerSDK.PresentationMode = .inline
-    
-    private var containerView: UIView?              // view containing the playerView and it's siblings (e.g. UI)
-    private var fullscreenParentView: UIView?       // target view for fulllscreen representation
-    private var inlineParentView: UIView?           // target view for inline representation
+    private var presentationMode: THEOplayerSDK.PresentationMode = .inline
+    private var rnInlineMode: THEOplayerSDK.PresentationMode = .inline // while native player is inline, RN player can be inline or fullsceen
+
+  
+    private weak var containerView: UIView?                  // view containing the playerView and it's siblings (e.g. UI)
+    private weak var inlineParentView: UIView?               // target view for inline representation
         
     // MARK: Events
     var onNativePresentationModeChange: RCTDirectEventBlock?
@@ -35,77 +37,141 @@ public class THEOplayerRCTPresentationModeManager {
         self.attachListeners()
     }
     
+    func validateLayout() {
+        if self.presentationMode == .fullscreen,
+           let containerView = self.containerView {
+            // When in fullscreen, assure the moved view has a (0, 0) origin.
+            containerView.frame = CGRect(x: 0, y: 0, width: containerView.frame.width, height: containerView.frame.height)
+        }
+    }
+    
     // MARK: - logic
+    private func movingVCs(for view: UIView) -> [UIViewController] {
+        var viewControllers: [UIViewController] = []
+        if let viewController = view.findViewController() {
+            viewController.children.forEach { childVC in
+                if childVC.view.isDescendant(of: view) {
+                    viewControllers.append(childVC)
+                }
+            }
+        }
+        return viewControllers
+    }
+
+    private func moveView(_ movingView: UIView, to targetView: UIView) {
+        // detach the moving viewControllers from their parent
+        let movingViewControllers = self.movingVCs(for: movingView)
+        movingViewControllers.forEach { movedVC in
+            movedVC.removeFromParent()
+        }
+        
+        // move the actual view
+        movingView.removeFromSuperview()
+        targetView.addSubview(movingView)
+        targetView.bringSubviewToFront(movingView)
+        
+        // attach the moving viewControllers to their new parent
+        if let targetViewController = targetView.findViewController() {
+            movingViewControllers.forEach { movedVC in
+                targetViewController.addChild(movedVC)
+                movedVC.didMove(toParent: targetViewController)
+            }
+        }
+    }
     
     private func enterFullscreen() {
-        self.containerView = self.view?.findParentViewOfType(RCTView.self)
-        self.fullscreenParentView = self.view?.findParentViewOfType(RCTRootContentView.self)
-        self.inlineParentView = self.containerView?.findParentViewOfType(RCTView.self)
+        self.containerView = self.view?.findParentViewOfType(["RCTView", "RCTViewComponentView"])
+        self.inlineParentView = self.containerView?.superview
         
+        // move the player
         if let containerView = self.containerView,
-           let fullscreenParentView = self.fullscreenParentView {
-            containerView.removeFromSuperview()
-            fullscreenParentView.addSubview(containerView)
-            fullscreenParentView.bringSubviewToFront(containerView)
+           let fullscreenParentView = self.view?.findParentViewOfType(["RCTRootContentView", "RCTRootComponentView"])  {
+            self.moveView(containerView, to: fullscreenParentView)
+
+            // start hiding home indicator
+            setHomeIndicatorHidden(true)
         }
+        self.rnInlineMode = .fullscreen
     }
     
     private func exitFullscreen() {
+        // stop hiding home indicator
+        setHomeIndicatorHidden(false)
+      
+        // move the player
         if let containerView = self.containerView,
            let inlineParentView = self.inlineParentView {
-            containerView.removeFromSuperview()
-            inlineParentView.addSubview(containerView)
-            inlineParentView.bringSubviewToFront(containerView)
+            self.moveView(containerView, to: inlineParentView)
         }
+        self.rnInlineMode = .inline
     }
-    
-    func setPresentationMode(newPresentationMode: THEOplayerSDK.PresentationMode) {
-        guard newPresentationMode != self.presentationMode, let player = self.player else { return }
-        
-        // store old presentationMode
-        let oldPresentationMode = self.presentationMode
-        
-        // set new presentationMode
-        self.presentationMode = newPresentationMode
+
+    private func setHomeIndicatorHidden(_ hidden: Bool) {
+#if os(iOS)
+        if let fullscreenParentView = self.view?.findParentViewOfType(["RCTRootContentView", "RCTRootComponentView"]),
+           let customRootViewController = fullscreenParentView.findViewController() as? HomeIndicatorViewController {
+              customRootViewController.prefersAutoHidden = hidden
+              customRootViewController.setNeedsUpdateOfHomeIndicatorAutoHidden()
+        }
+#endif
+    }
+  
+    func setPresentationModeFromRN(newPresentationMode: THEOplayerSDK.PresentationMode) {
+        guard newPresentationMode != self.presentationMode else { return }
         
         // change prensentationMode
-        switch oldPresentationMode {
+        switch self.presentationMode {
         case .fullscreen:
             if newPresentationMode == .inline {
-                // get out of fullscreen via view reparenting
-                self.exitFullscreen();
+                self.exitFullscreen()                               // stay inline on Native player, go to inline layout on RN
+                self.notifyPresentationModeChange(oldPresentationMode: self.presentationMode, newPresentationMode: newPresentationMode)
+                self.presentationMode = newPresentationMode
             } else if newPresentationMode == .pictureInPicture {
-                // get out of fullscreen via view reparenting
-                self.exitFullscreen();
-                // get into pip
-                player.presentationMode = .pictureInPicture
+                self.setNativePresentationMode(.pictureInPicture)   // go pip on Native player, keep fullscreen layout on RN
             }
         case .inline:
             if newPresentationMode == .fullscreen {
-                // get into fullscreen via view reparenting
-                self.enterFullscreen();
+                self.enterFullscreen()                              // stay inline on Native player, go to fullscreen layout on RN
+                self.notifyPresentationModeChange(oldPresentationMode: self.presentationMode, newPresentationMode: newPresentationMode)
+                self.presentationMode = newPresentationMode
             } else if newPresentationMode == .pictureInPicture {
-                // get into pip
-                player.presentationMode = .pictureInPicture
+                self.setNativePresentationMode(.pictureInPicture)   // go pip on Native player, keep inline layout on RN
             }
         case .pictureInPicture:
-            if newPresentationMode == .fullscreen {
-                // get out of pip
-                player.presentationMode = .inline
-                // get into fullscreen via view reparenting
-                self.enterFullscreen();
-            } else if newPresentationMode == .inline {
-                // get into pip
-                player.presentationMode = .inline
+            self.setNativePresentationMode(.inline)                 // always go inline on Native player,
+            if newPresentationMode == .inline {
+                if self.rnInlineMode == .fullscreen {
+                    self.exitFullscreen()                           // and if required, switch to inline layout on RN,
+                }
+            } else if newPresentationMode == .fullscreen {
+                if self.rnInlineMode == .inline {
+                    self.enterFullscreen()                          // and if required, switch to fullscreen layout on RN,
+                }
             }
         default:
             break;
         }
-        
-        // notify the presentationMode change
-        self.notifyPresentationModeChange(oldPresentationMode: oldPresentationMode, newPresentationMode: newPresentationMode)
     }
+  
+    func setPresentationModeFromNative(newPresentationMode: THEOplayerSDK.PresentationMode) {
+        // store old presentationMode
+        let oldPresentationMode = self.presentationMode
+        // set new presentationMode
+        self.presentationMode = newPresentationMode
+        // adjust presentationMode to RN layout
+        if newPresentationMode == .inline {
+             self.presentationMode = self.rnInlineMode
+        }
     
+        // notify the presentationMode change
+        self.notifyPresentationModeChange(oldPresentationMode: oldPresentationMode, newPresentationMode: self.presentationMode)
+    }
+  
+    private func setNativePresentationMode(_ presentationMode: THEOplayerSDK.PresentationMode) {
+        guard let player = self.player else { return }
+        player.presentationMode = presentationMode
+    }
+  
     private func notifyPresentationModeChange(oldPresentationMode: THEOplayerSDK.PresentationMode, newPresentationMode: THEOplayerSDK.PresentationMode) {
         // update the current presentationMode
         self.presentationMode = newPresentationMode
@@ -125,7 +191,7 @@ public class THEOplayerRCTPresentationModeManager {
         self.presentationModeChangeListener = player.addEventListener(type: PlayerEventTypes.PRESENTATION_MODE_CHANGE) { [weak self] event in
             if let welf = self {
                 if DEBUG_THEOPLAYER_EVENTS || true { PrintUtils.printLog(logText: "[NATIVE] Received PRESENTATION_MODE_CHANGE event from THEOplayer (to \(event.presentationMode._rawValue))") }
-                welf.setPresentationMode(newPresentationMode: event.presentationMode)
+                welf.setPresentationModeFromNative(newPresentationMode: event.presentationMode)
             }
         }
         if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] PresentationModeChange listener attached to THEOplayer") }
@@ -146,14 +212,27 @@ public class THEOplayerRCTPresentationModeManager {
 
 // UIView extension to look for parent views
 extension UIView {
-    func findParentViewOfType<T: UIView>(_ viewType: T.Type) -> T? {
+    func findParentViewOfType(_ viewTypeNames: [String]) -> UIView? {
         var currentView: UIView? = self
         while let view = currentView {
-            if let parentView = view.superview as? T {
-                return parentView
+            if let parentView = view.superview {
+                let instanceTypeName = String(describing: type(of: parentView))
+                if viewTypeNames.contains(instanceTypeName) {
+                    return parentView
+                }
             }
             currentView = view.superview
         }
         return nil
+    }
+    
+    func findViewController() -> UIViewController? {
+        if let nextResponder = self.next as? UIViewController {
+            return nextResponder
+        } else if let nextResponder = self.next as? UIView {
+            return nextResponder.findViewController()
+        } else {
+            return nil
+        }
     }
 }

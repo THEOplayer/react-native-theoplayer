@@ -25,12 +25,22 @@ static def versionString(version) {
   return "${version == '+' ? 'latest' : version}"
 }
 
+def isNewArchitectureEnabled() {
+  // To opt-in for the New Architecture, you can either:
+  // - Set `newArchEnabled` to true inside the `gradle.properties` file
+  // - Invoke gradle with `-newArchEnabled=true`
+  // - Set an environment variable `ORG_GRADLE_PROJECT_newArchEnabled=true`
+  return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
+}
+
 // Extensions
 def enabledGoogleIMA = safeExtGet("THEOplayer_extensionGoogleIMA", 'false').toBoolean()
 def enabledGoogleDAI = safeExtGet("THEOplayer_extensionGoogleDAI", 'false').toBoolean()
-def enabledAds = enabledGoogleIMA || enabledGoogleDAI
+def enabledTHEOads = safeExtGet("THEOplayer_extensionTHEOads", 'false').toBoolean()
+def enabledAds = enabledGoogleIMA || enabledGoogleDAI || enabledTHEOads
 def enabledCast = safeExtGet("THEOplayer_extensionCast", 'false').toBoolean()
 def enabledMediaSession = safeExtGet("THEOplayer_extensionMediaSession", 'true').toBoolean()
+def enabledMedia3 = safeExtGet("THEOplayer_extensionMedia3", 'false').toBoolean()
 
 android {
   compileSdk safeExtGet('THEOplayer_compileSdkVersion', 34)
@@ -61,9 +71,15 @@ android {
     // Extension buildConfig fields
     buildConfigField "boolean", "EXTENSION_GOOGLE_IMA", "${enabledGoogleIMA}"
     buildConfigField "boolean", "EXTENSION_GOOGLE_DAI", "${enabledGoogleDAI}"
+    buildConfigField "boolean", "EXTENSION_THEOADS", "${enabledTHEOads}"
     buildConfigField "boolean", "EXTENSION_ADS", "${enabledAds}"
     buildConfigField "boolean", "EXTENSION_CAST", "${enabledCast}"
     buildConfigField "boolean", "EXTENSION_MEDIASESSION", "${enabledMediaSession}"
+    buildConfigField "boolean", "EXTENSION_MEDIA3", "${enabledMedia3}"
+
+    buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
+
+    consumerProguardFiles 'proguard-rules.pro'
   }
 
   buildTypes {
@@ -89,7 +105,9 @@ android {
 
 rootProject.allprojects {
   repositories {
+    mavenLocal()
     maven { url "https://maven.theoplayer.com/releases" }
+    maven { url "https://maven.theoplayer.com/snapshots" }
     maven { url("$rootDir/../node_modules/react-native-theoplayer/android/local") }
   }
 }
@@ -106,6 +124,10 @@ repositories {
   maven { url "https://maven.theoplayer.com/releases" }
 }
 
+// The minimum supported THEOplayer version is 8.5.1
+def theoplayer_sdk_version = safeExtGet('THEOplayer_sdk', '[8.5.1, 9.0.0)')
+def theoplayer_mediasession_version = safeExtGet('THEOplayer_mediasession', '[8.0.0, 9.0.0)')
+
 dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"  // From node_modules
@@ -114,10 +136,6 @@ dependencies {
   implementation "androidx.core:core-ktx:${safeExtGet('corektxVersion', '1.10.1')}"
   implementation "com.google.code.gson:gson:2.11.0"
 
-  // The minimum supported THEOplayer version is 7.12.0
-  def theoplayer_sdk_version = safeExtGet('THEOplayer_sdk', '[7.12.0, 9.0.0)')
-  def theoplayer_mediasession_version = safeExtGet('THEOplayer_mediasession', '[7.12.0, 9.0.0)')
-
   println("Using THEOplayer (${versionString(theoplayer_sdk_version)})")
   implementation "com.theoplayer.theoplayer-sdk-android:core:${theoplayer_sdk_version}"
   implementation "com.theoplayer.theoplayer-sdk-android:ads-wrapper:8.0.0"
@@ -125,22 +143,26 @@ dependencies {
 
   if (enabledGoogleIMA) {
     println('Enable THEOplayer IMA extension.')
-    implementation "com.theoplayer.theoplayer-sdk-android:integration-ads:${theoplayer_sdk_version}"
     implementation "com.theoplayer.theoplayer-sdk-android:integration-ads-ima:${theoplayer_sdk_version}"
   } else {
     println('Disable THEOplayer IMA extension.')
-    compileOnly "com.theoplayer.theoplayer-sdk-android:integration-ads:${theoplayer_sdk_version}"
     compileOnly "com.theoplayer.theoplayer-sdk-android:integration-ads-ima:${theoplayer_sdk_version}"
   }
 
   if (enabledGoogleDAI) {
     println('Enable THEOplayer DAI extension.')
-    implementation "com.theoplayer.theoplayer-sdk-android:integration-ads:${theoplayer_sdk_version}"
     implementation "com.theoplayer.theoplayer-sdk-android:integration-ads-dai:${theoplayer_sdk_version}"
   } else {
     println('Disable THEOplayer DAI extension.')
-    compileOnly "com.theoplayer.theoplayer-sdk-android:integration-ads:${theoplayer_sdk_version}"
     compileOnly "com.theoplayer.theoplayer-sdk-android:integration-ads-dai:${theoplayer_sdk_version}"
+  }
+
+  if (enabledTHEOads) {
+    println('Enable THEOplayer THEOads extension.')
+    implementation "com.theoplayer.theoplayer-sdk-android:integration-ads-theoads:${theoplayer_sdk_version}"
+  } else {
+    println('Disable THEOplayer THEOads extension.')
+    compileOnly "com.theoplayer.theoplayer-sdk-android:integration-ads-theoads:${theoplayer_sdk_version}"
   }
 
   if (enabledCast) {
@@ -150,4 +172,22 @@ dependencies {
     println('Disable THEOplayer cast extension.')
     compileOnly "com.theoplayer.theoplayer-sdk-android:integration-cast:${theoplayer_sdk_version}"
   }
+
+  if (enabledMedia3) {
+    println('Enable THEOplayer media3 extension.')
+    implementation "com.theoplayer.theoplayer-sdk-android:integration-media3:${theoplayer_sdk_version}"
+  } else {
+    println('Disable THEOplayer media3 extension.')
+    compileOnly "com.theoplayer.theoplayer-sdk-android:integration-media3:${theoplayer_sdk_version}"
+  }
 }
+
+// Make sure to align all ads extension versions
+configurations.configureEach {
+  resolutionStrategy {
+    force "com.theoplayer.theoplayer-sdk-android:integration-ads-ima:${theoplayer_sdk_version}"
+    force "com.theoplayer.theoplayer-sdk-android:integration-ads-dai:${theoplayer_sdk_version}"
+    force "com.theoplayer.theoplayer-sdk-android:integration-ads-theoads:${theoplayer_sdk_version}"
+  }
+}
+

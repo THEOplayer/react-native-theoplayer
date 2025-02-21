@@ -64,16 +64,19 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
     };
   }, [container]);
 
-  const chromeless = config?.chromeless === undefined || config?.chromeless === true;
+  const chromeless = config?.chromeless === undefined || config?.chromeless;
   return (
-    <>
+    // Note: display: contents causes an element's children to appear as if they were direct children of the element's parent,
+    // ignoring the element itself.
+    // It's necessary to make sure we do not interfere with the IMA container
+    <div id={'theoplayer-root-container'} style={{ display: 'contents' }}>
       <div
         ref={container}
         style={styles.container}
         className={chromeless ? 'theoplayer-container' : 'theoplayer-container video-js theoplayer-skin'}
       />
       {children}
-    </>
+    </div>
   );
 }
 

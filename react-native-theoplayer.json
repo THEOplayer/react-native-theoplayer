@@ -1,5 +1,5 @@
 {
   "ios": {
-    "features": ["GOOGLE_IMA", "CHROMECAST", "SIDELOADED_TEXTTRACKS"]
+    "features": ["GOOGLE_IMA", "CHROMECAST", "SIDELOADED_TEXTTRACKS", "THEO_ADS"]
   }
 }

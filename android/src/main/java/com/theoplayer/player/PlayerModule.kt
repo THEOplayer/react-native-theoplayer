@@ -1,5 +1,6 @@
 package com.theoplayer.player
 
+import android.os.Build
 import com.facebook.react.bridge.*
 import com.theoplayer.*
 import com.theoplayer.abr.ABRConfigurationAdapter
@@ -10,6 +11,7 @@ import com.theoplayer.android.api.player.RenderingTarget
 import com.theoplayer.android.api.player.track.mediatrack.MediaTrack
 import com.theoplayer.android.api.player.track.mediatrack.quality.VideoQuality
 import com.theoplayer.android.api.player.track.texttrack.TextTrackMode
+import com.theoplayer.android.api.THEOplayerGlobal
 import com.theoplayer.audio.BackgroundAudioConfigAdapter
 import com.theoplayer.presentation.PipConfigAdapter
 import com.theoplayer.track.TextTrackStyleAdapter
@@ -23,6 +25,12 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
 
   override fun getName(): String {
     return TAG
+  }
+
+  // The native version string of the Android THEOplayer SDK.
+  @ReactMethod
+  fun version(promise: Promise) {
+    promise.resolve(THEOplayerGlobal.getVersion())
   }
 
   @ReactMethod
@@ -54,6 +62,13 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
       } else {
         view?.player?.play()
       }
+    }
+  }
+
+  @ReactMethod
+  fun setAutoplay(tag: Int, autoplay: Boolean) {
+    viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
+      view?.player?.isAutoplay = autoplay
     }
   }
 
@@ -177,11 +192,13 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
   @ReactMethod
   fun setPresentationMode(tag: Int, type: String?) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      view?.presentationManager?.setPresentation(when (type) {
-        "picture-in-picture" -> PresentationMode.PICTURE_IN_PICTURE
-        "fullscreen" -> PresentationMode.FULLSCREEN
-        else -> PresentationMode.INLINE
-      })
+      view?.presentationManager?.setPresentation(
+        when (type) {
+          "picture-in-picture" -> PresentationMode.PICTURE_IN_PICTURE
+          "fullscreen" -> PresentationMode.FULLSCREEN
+          else -> PresentationMode.INLINE
+        }
+      )
     }
   }
 
@@ -202,11 +219,13 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
   @ReactMethod
   fun setAspectRatio(tag: Int, ratio: String) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      view?.player?.setAspectRatio(when (ratio) {
-        "fill" -> AspectRatio.FILL
-        "aspectFill" -> AspectRatio.ASPECT_FILL
-        else -> AspectRatio.FIT
-      })
+      view?.player?.setAspectRatio(
+        when (ratio) {
+          "fill" -> AspectRatio.FILL
+          "aspectFill" -> AspectRatio.ASPECT_FILL
+          else -> AspectRatio.FIT
+        }
+      )
     }
   }
 
@@ -229,10 +248,19 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
   @ReactMethod
   fun setRenderingTarget(tag: Int, target: String) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      view?.player?.setRenderingTarget(when (target) {
-        "textureView" -> RenderingTarget.TEXTURE_VIEW
-        else -> RenderingTarget.SURFACE_VIEW
-      })
+      view?.player?.setRenderingTarget(
+        when (target) {
+          "textureView" -> RenderingTarget.TEXTURE_VIEW
+          else -> {
+            // Prefer SURFACE_CONTROL
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+              RenderingTarget.SURFACE_CONTROL
+            } else {
+              RenderingTarget.SURFACE_VIEW
+            }
+          }
+        }
+      )
     }
   }
 }

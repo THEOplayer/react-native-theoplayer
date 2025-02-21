@@ -146,16 +146,35 @@
         "src": "https://cdn.theoplayer.com/video/adultswim/clip.m3u8",
         "type": "application/x-mpegurl"
       },
-      "poster": "https://cdn.theoplayer.com/video/adultswim/poster.jpg",
+      "poster": "https://cdn.theoplayer.com/video/adultswim/poster.png",
       "metadata": {
         "title": "The Venture Bros",
         "subtitle": "Adult Swim",
         "album": "React-Native THEOplayer demos",
-        "displayIconUri": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
+        "displayIconUri": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
         "artist": "THEOplayer",
         "type": "tv-show",
         "releaseDate": "november 29th",
         "releaseYear": 1997
+      }
+    }
+  },
+  {
+    "name": "THEOlive test",
+    "os": [
+      "web", "ios", "android"
+    ],
+    "source": {
+      "sources": [
+        {
+          "integration": "theolive",
+          "src": "9lwkudxeyjwwm132pukwwhhtk"
+        }
+      ],
+      "metadata": {
+        "title": "THEOlive NFL demo - test",
+        "mediaUri": "https://theoplayer.com",
+        "artist": "THEOplayer"
       }
     }
   },
@@ -169,24 +188,24 @@
       },
       "metadata": {
         "title": "Star Wars Episode VII - The Force Awakens Official Comic-Con 2015 Reel",
-        "displayIconUri": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-200x200.png"
+        "displayIconUri": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-200x200.png"
       }
     }
   },
   {
-    "name": "HLS - LIVE - Clear - TOS",
+    "name": "HLS - LIVE - Clear",
     "os": ["ios", "android", "web"],
     "source": {
       "sources": {
-        "src": "https://cph-msl.akamaized.net/hls/live/2000341/test/master.m3u8",
+        "src": "https://ireplay.tv/test/blender.m3u8",
         "type": "application/x-mpegurl"
       },
-      "poster": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-640x640.png",
+      "poster": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-640x640.png",
       "metadata": {
-        "title": "Tears of Steel",
-        "subtitle": "Steel Tears",
+        "title": "Blender",
+        "subtitle": "Test stream",
         "album": "React-Native demos",
-        "displayIconUri": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
+        "displayIconUri": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
         "artist": "THEOplayer",
         "type": "tv-show",
         "releaseDate": "november 30th",
@@ -202,12 +221,12 @@
         "src": "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8",
         "type": "application/x-mpegurl"
       },
-      "poster": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-1200x675.png",
+      "poster": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-1200x675.png",
       "metadata": {
         "title": "Bipbop",
         "subtitle": "Bipbop Subtitle",
         "album": "Bipbop Album",
-        "displayIconUri": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
+        "displayIconUri": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
         "artist": "Apple"
       }
     }
@@ -220,12 +239,12 @@
         "src": "https://cdn.theoplayer.com/video/elephants-dream/playlist-single-audio.m3u8",
         "type": "application/x-mpegurl"
       },
-      "poster": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-1200x675.png",
+      "poster": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-1200x675.png",
       "metadata": {
         "title": "Elephants Dream",
         "subtitle": "Elephants Dream Subtitle",
         "album": "Elephants Dream Album",
-        "displayIconUri": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
+        "displayIconUri": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
         "artist": "The elephant"
       }
     }
@@ -246,12 +265,12 @@
           "sources": "https://cdn.theoplayer.com/demos/ads/vast/dfp-preroll-no-skip.xml"
         }
       ],
-      "poster": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-1200x675.png",
+      "poster": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-1200x675.png",
       "metadata": {
         "title": "Elephants Dream with Preroll",
         "subtitle": "Elephants Dream with Preroll Subtitle",
         "album": "Elephants Album",
-        "displayIconUri": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
+        "displayIconUri": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
         "artist": "The Dream"
       }
     }
@@ -295,12 +314,12 @@
           "timeOffset": 10
         }
       ],
-      "poster": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-1200x675.png",
+      "poster": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-1200x675.png",
       "metadata": {
         "title": "Elephants Dream with Midroll",
         "subtitle": "Elephants Dream with Midroll Subtitle",
         "album": "Ellies Album",
-        "displayIconUri": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
+        "displayIconUri": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
         "artist": "Ellie"
       }
     }
@@ -323,12 +342,12 @@
           }
         }
       ],
-      "poster": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-1200x675.png",
+      "poster": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-1200x675.png",
       "metadata": {
         "title": "Elephants Dream with VMAP",
         "subtitle": "Elephants Dream with VMAP Subtitle",
         "album": "Ellies Album",
-        "displayIconUri": "https://theoplayer-cdn.s3.eu-west-1.amazonaws.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
+        "displayIconUri": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
         "artist": "Ellie"
       }
     }
@@ -364,13 +383,16 @@
   },
   {
     "name": "HLS - SSAI - Google DAI - LIVE",
-    "os": ["ios", "web"],
+    "os": [
+      "ios",
+      "web"
+    ],
     "source": {
       "sources": {
         "ssai": {
           "integration": "google-dai",
           "availabilityType": "live",
-          "assetKey": "c-rArva4ShKVIAkNfy6HUQ"
+          "assetKey": "sN_IYUG8STe1ZzhIIE_ksA"
         }
       }
     }
@@ -435,6 +457,26 @@
       "sources": {
         "src": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
       }
+    }
+  },
+  {
+    "name": "HLS - THEOads",
+    "os": ["ios", "web", "android"],
+    "source": {
+      "sources": {
+        "src": "https://cluster.dev.theostream.live/nfl-unified-channel/hls/k8s/live/scte35.isml/.m3u8",
+        "type": "application/x-mpegurl",
+        "hlsDateRange": true
+      },
+      "ads": [
+        {
+          "integration": "theoads",
+          "networkCode": "51636543",
+          "customAssetKey": "nfl-sgai-demo",
+          "backdropDoubleBox": "https://demo.theoads.live/img/THEOads_double_box.svg",
+          "backdropLShape": "https://demo.theoads.live/img/THEOads_L_Shape.svg"
+        }
+      ]
     }
   }
 ]

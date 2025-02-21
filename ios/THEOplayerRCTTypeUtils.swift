@@ -1,6 +1,7 @@
 // THEOplayerRCTTypeUtils.swift
 
 import Foundation
+import AVKit
 import THEOplayerSDK
 
 let NAN_VALUE: Double = -1.0
@@ -105,11 +106,38 @@ class THEOplayerRCTTypeUtils {
             return AdIntegrationKind.google_ima
         case "google-dai":
             return AdIntegrationKind.google_dai
-        case "":
-            return AdIntegrationKind.custom
+        case "theoads":
+            return AdIntegrationKind.theoads
         default:
             return AdIntegrationKind.custom
         }
+    }
+    
+    class func audioSessionModeFromString(_ audioSessionModeString: String) -> AVAudioSession.Mode {
+        switch audioSessionModeString {
+        case "moviePlayback":
+            return .moviePlayback
+        case "spokenAudio":
+            return .spokenAudio
+        default:
+            return .moviePlayback
+        }
+    }
+  
+    class func omidFriendlyObstructionPurposeFromString(_ purposeString: String) -> OmidFriendlyObstructionPurpose {
+      switch purposeString {
+      case "videoControls":
+        return OmidFriendlyObstructionPurpose.mediaControls
+      case "closeAd":
+        return OmidFriendlyObstructionPurpose.closeAd
+      case "notVisible":
+        return OmidFriendlyObstructionPurpose.notVisible
+      case "other":
+        return OmidFriendlyObstructionPurpose.other
+      default:
+        return OmidFriendlyObstructionPurpose.other
+      }
+      
     }
 
 #if os(iOS)

@@ -1,0 +1,37 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+  ext {
+    buildToolsVersion = "34.0.0"
+    // React Native 0.74+ needs minSdkVersion 23+
+    // supportsPictureInPicture and networkSecurityConfig need minSdkVersion 24+
+    minSdkVersion = 24
+    compileSdkVersion = 35
+    targetSdkVersion = 35
+    ndkVersion = "26.1.10909125"
+    castFrameworkVersion = "21.4.0"
+    kotlinVersion = "1.9.24"
+  }
+  repositories {
+    google()
+    mavenCentral()
+  }
+  dependencies {
+    classpath("com.android.tools.build:gradle")
+    classpath("com.facebook.react:react-native-gradle-plugin")
+    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
+  }
+}
+
+apply plugin: "com.facebook.react.rootproject"
+
+allprojects {
+  repositories {
+    maven {
+      url("$rootDir/../../android/local")
+    }
+    maven { url "https://maven.theoplayer.com/releases" }
+    google()
+    mavenCentral()
+  }
+}

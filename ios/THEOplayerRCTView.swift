@@ -3,7 +3,18 @@
 import Foundation
 import UIKit
 import THEOplayerSDK
- 
+
+#if canImport(THEOplayerTHEOadsIntegration)
+import THEOplayerTHEOadsIntegration
+#endif
+#if canImport(THEOplayerGoogleIMAIntegration)
+import THEOplayerGoogleIMAIntegration
+import GoogleInteractiveMediaAds
+#endif
+#if canImport(THEOplayerGoogleCastIntegration)
+import THEOplayerGoogleCastIntegration
+#endif
+
 public class THEOplayerRCTView: UIView {
     // MARK: Members
     public private(set) var player: THEOplayer?
@@ -15,13 +26,26 @@ public class THEOplayerRCTView: UIView {
     var adEventHandler: THEOplayerRCTAdsEventHandler
     var castEventHandler: THEOplayerRCTCastEventHandler
     var presentationModeManager: THEOplayerRCTPresentationModeManager
+    var backgroundAudioManager: THEOplayerRCTBackgroundAudioManager
     var nowPlayingManager: THEOplayerRCTNowPlayingManager
     var remoteCommandsManager: THEOplayerRCTRemoteCommandsManager
+    var pipManager: THEOplayerRCTPipManager
     var pipControlsManager: THEOplayerRCTPipControlsManager
     
     var adsConfig = AdsConfig()
     var castConfig = CastConfig()
     var uiConfig = UIConfig()
+    
+    // integrations
+    #if canImport(THEOplayerTHEOadsIntegration)
+    var theoAdsIntegration: THEOplayerTHEOadsIntegration.THEOadsIntegration?
+    #endif
+    #if canImport(THEOplayerGoogleIMAIntegration)
+    var imaIntegration: THEOplayerGoogleIMAIntegration.GoogleImaIntegration?
+    #endif
+    #if canImport(THEOplayerGoogleCastIntegration)
+    var castIntegration: THEOplayerGoogleCastIntegration.CastIntegration?
+    #endif
     
     var mediaControlConfig = MediaControlConfig() {
         didSet {
@@ -35,7 +59,8 @@ public class THEOplayerRCTView: UIView {
     }
     var backgroundAudioConfig = BackgroundAudioConfig() {
           didSet {
-              self.updateInterruptionNotifications()
+              self.backgroundAudioManager.updateInterruptionNotifications()
+              self.backgroundAudioManager.updateAVAudioSessionMode()
           }
       }
 
@@ -59,8 +84,10 @@ public class THEOplayerRCTView: UIView {
         self.adEventHandler = THEOplayerRCTAdsEventHandler()
         self.castEventHandler = THEOplayerRCTCastEventHandler()
         self.presentationModeManager = THEOplayerRCTPresentationModeManager()
+        self.backgroundAudioManager = THEOplayerRCTBackgroundAudioManager()
         self.nowPlayingManager = THEOplayerRCTNowPlayingManager()
         self.remoteCommandsManager = THEOplayerRCTRemoteCommandsManager()
+        self.pipManager = THEOplayerRCTPipManager()
         self.pipControlsManager = THEOplayerRCTPipControlsManager()
         
         super.init(frame: .zero)
@@ -69,12 +96,34 @@ public class THEOplayerRCTView: UIView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("[NATIVE] init(coder:) has not been implemented")
     }
+  
+    deinit {
+        self.mainEventHandler.destroy()
+        self.textTrackEventHandler.destroy()
+        self.mediaTrackEventHandler.destroy()
+        self.adEventHandler.destroy()
+        self.castEventHandler.destroy()
+        self.nowPlayingManager.destroy()
+        self.remoteCommandsManager.destroy()
+        self.pipManager.destroy()
+        self.pipControlsManager.destroy()
+        self.presentationModeManager.destroy()
+        self.backgroundAudioManager.destroy()
+      
+        self.destroyBackgroundAudio()
+        self.player?.removeAllIntegrations()
+        self.player?.destroy()
+        self.player = nil
+        if DEBUG_THEOPLAYER_INTERACTION { PrintUtils.printLog(logText: "[NATIVE] THEOplayer instance destroyed.") }
+    }
     
     override public func layoutSubviews() {
         super.layoutSubviews()
         if let player = self.player {
             player.frame = self.frame
             player.autoresizingMask = [.flexibleBottomMargin, .flexibleHeight, .flexibleLeftMargin, .flexibleRightMargin, .flexibleTopMargin, .flexibleWidth]
+            
+            self.presentationModeManager.validateLayout()
         }
     }
     
@@ -87,12 +136,14 @@ public class THEOplayerRCTView: UIView {
             self.mainEventHandler.setPlayer(player)
             self.textTrackEventHandler.setPlayer(player)
             self.mediaTrackEventHandler.setPlayer(player)
-            self.presentationModeManager.setPlayer(player, view: self)
             self.adEventHandler.setPlayer(player)
             self.castEventHandler.setPlayer(player)
             self.nowPlayingManager.setPlayer(player)
             self.remoteCommandsManager.setPlayer(player)
             self.pipControlsManager.setPlayer(player)
+            self.presentationModeManager.setPlayer(player, view: self)
+            self.backgroundAudioManager.setPlayer(player, view: self)
+            self.pipManager.setView(view: self)
             // Attach player to view
             player.addAsSubview(of: self)
         }
@@ -122,28 +173,10 @@ public class THEOplayerRCTView: UIView {
         
         self.initAdsIntegration()
         self.initCastIntegration()
+        self.initTheoAdsIntegration()
         self.initBackgroundAudio()
         self.initPip()
         return self.player
-    }
-    
-    // MARK: - Destroy Player
-    
-    func destroyPlayer() {
-        self.mainEventHandler.destroy()
-        self.textTrackEventHandler.destroy()
-        self.mediaTrackEventHandler.destroy()
-        self.adEventHandler.destroy()
-        self.castEventHandler.destroy()
-        self.nowPlayingManager.destroy()
-        self.remoteCommandsManager.destroy()
-        self.pipControlsManager.destroy()
-        
-        self.destroyBackgroundAudio()
-        self.player?.removeAllIntegrations()
-        self.player?.destroy()
-        self.player = nil
-        if DEBUG_THEOPLAYER_INTERACTION { PrintUtils.printLog(logText: "[NATIVE] THEOplayer instance destroyed.") }
     }
     
     func processMetadataTracks(metadataTrackDescriptions: [TextTrackDescription]?) {
