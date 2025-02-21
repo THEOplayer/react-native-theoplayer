@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Delegating the autoplay functionality to the underlying native Android and iOS SDKs, making that logic independent from player events.
 - On Android, sources with THEOads will always use the media3 player pipeline.
 
+### Fixed
+
+- Fixed an issue on Android, where the player would sometimes not initialise correctly in case New Architecture was not being used, resulting in a black screen.
+
 ## [8.15.0] - 25-02-12
 
 ### Changed
