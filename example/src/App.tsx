@@ -1,5 +1,3 @@
-import * as React from 'react';
-import { useState } from 'react';
 import {
   AirplayButton,
   CastMessage,
@@ -22,23 +20,38 @@ import {
   TimeLabel,
   UiContainer,
 } from '@theoplayer/react-native-ui';
-import { PlayerConfiguration, PlayerEventType, THEOplayer, THEOplayerView, sdkVersions } from 'react-native-theoplayer';
+import * as React from 'react';
+import { useState } from 'react';
+import env from 'react-native-config';
+import {
+  MediaTrackType,
+  PlayerConfiguration,
+  PlayerEventType,
+  sdkVersions,
+  THEOplayer,
+  THEOplayerView,
+  TrackListEventType,
+} from 'react-native-theoplayer';
 
-import { Platform, SafeAreaView, StyleSheet, View, ViewStyle } from 'react-native';
+import { Platform, Pressable, SafeAreaView, StyleSheet, Text, View, ViewStyle } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
-import { SourceMenuButton, SOURCES } from './custom/SourceMenuButton';
+import { AutoPlaySubMenu } from './custom/AutoPlaySubMenu';
 import { BackgroundAudioSubMenu } from './custom/BackgroundAudioSubMenu';
-import { PiPSubMenu } from './custom/PipSubMenu';
 import { MediaCacheDownloadButton } from './custom/MediaCacheDownloadButton';
 import { MediaCacheMenuButton } from './custom/MediaCacheMenuButton';
 import { MediaCachingTaskListSubMenu } from './custom/MediaCachingTaskListSubMenu';
+import { PiPSubMenu } from './custom/PipSubMenu';
 import { RenderingTargetSubMenu } from './custom/RenderingTargetSubMenu';
+import { SourceMenuButton, SOURCES } from './custom/SourceMenuButton';
+
+const { THEOPLAYER_KEY } = env;
+
+console.debug({ THEOPLAYER_KEY, env });
 
 const playerConfig: PlayerConfiguration = {
   // Get your THEOplayer license from https://portal.theoplayer.com/
   // Without a license, only demo sources hosted on '*.theoplayer.com' domains can be played.
-  license: undefined,
-  chromeless: true,
+  license: THEOPLAYER_KEY,
   hlsDateRange: true,
   libraryLocation: 'theoplayer',
   cast: {
@@ -58,13 +71,53 @@ const playerConfig: PlayerConfiguration = {
   },
 };
 
+type Quality = {
+  bandwidth: number;
+  codecs: string;
+  frameRate: number;
+  height: number;
+  id: string;
+  name: string;
+  uid: number;
+  width: number;
+};
+
 /**
  * The example app demonstrates the use of the THEOplayerView with a custom UI using the provided UI components.
  * If you don't want to create a custom UI, you can just use the THEOplayerDefaultUi component instead.
  */
 export default function App() {
   const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);
-  const chromeless = playerConfig?.chromeless ?? false;
+  const [useLowBitrate, setUseLowBitrate] = useState(true);
+  const [lowestQuality, setLowestQuality] = useState<Quality | null>(null);
+
+  const onMediaTrackList = React.useCallback((e: any) => {
+    if (e?.subType === TrackListEventType.ADD_TRACK && e?.trackType === MediaTrackType.VIDEO) {
+      setLowestQuality(
+        e?.track.qualities.reduce((lowest: Quality, next: Quality) => {
+          if (lowest.bandwidth < next.bandwidth) {
+            return lowest;
+          }
+          return next;
+        }),
+      );
+    }
+  }, []);
+
+  React.useEffect(() => {
+    if (player?.abr && lowestQuality) {
+      if (useLowBitrate) {
+        // set low bitrate
+        console.debug('Setting quality to', { lowestQuality });
+        player.targetVideoQuality = lowestQuality.uid;
+      } else {
+        // set high bitrate
+        console.debug('Setting quality to max');
+        player.targetVideoQuality = undefined;
+      }
+    }
+  }, [useLowBitrate]);
+
   const onPlayerReady = (player: THEOplayer) => {
     setPlayer(player);
     // optional debug logs
@@ -78,6 +131,7 @@ export default function App() {
     player.addEventListener(PlayerEventType.SEEKING, console.log);
     player.addEventListener(PlayerEventType.SEEKED, console.log);
     player.addEventListener(PlayerEventType.ENDED, console.log);
+    player.addEventListener(PlayerEventType.MEDIA_TRACK_LIST, onMediaTrackList);
 
     sdkVersions().then((versions) => console.log(`[theoplayer] ${JSON.stringify(versions, null, 4)}`));
 
@@ -89,12 +143,12 @@ export default function App() {
     console.log('THEOplayer is ready');
   };
 
-  const needsBorder = Platform.OS === 'ios';
+  const needsBorder = true;
   const PLAYER_CONTAINER_STYLE: ViewStyle = {
     position: 'absolute',
-    top: needsBorder ? getStatusBarHeight() : 0,
+    top: 100 + (needsBorder ? getStatusBarHeight() : 0),
     left: needsBorder ? 2 : 0,
-    bottom: 0,
+    bottom: 100,
     right: needsBorder ? 2 : 0,
     alignItems: 'center',
     justifyContent: 'center',
@@ -103,9 +157,14 @@ export default function App() {
 
   return (
     <SafeAreaView style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}>
+      <Pressable
+        style={{ position: 'absolute', top: 50, borderStyle: 'solid', borderColor: 'white', borderWidth: 1 }}
+        onPress={() => setUseLowBitrate((x) => !x)}>
+        <Text style={{ color: 'white' }}>{useLowBitrate ? 'Set high quality' : 'Set low quality'}</Text>
+      </Pressable>
       <View style={PLAYER_CONTAINER_STYLE}>
         <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady}>
-          {player !== undefined && chromeless && (
+          {player !== undefined && (
             <UiContainer
               theme={{ ...DEFAULT_THEOPLAYER_THEME }}
               player={player}
@@ -131,6 +190,7 @@ export default function App() {
                     <PlaybackRateSubMenu />
                     <BackgroundAudioSubMenu />
                     <PiPSubMenu />
+                    <AutoPlaySubMenu />
                     {Platform.OS === 'android' && <RenderingTargetSubMenu />}
                   </SettingsMenuButton>
                 </ControlBar>
