@@ -35,7 +35,6 @@ import {
 
 import { Platform, Pressable, SafeAreaView, StyleSheet, Text, View, ViewStyle } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
-import { AutoPlaySubMenu } from './custom/AutoPlaySubMenu';
 import { BackgroundAudioSubMenu } from './custom/BackgroundAudioSubMenu';
 import { MediaCacheDownloadButton } from './custom/MediaCacheDownloadButton';
 import { MediaCacheMenuButton } from './custom/MediaCacheMenuButton';
@@ -190,7 +189,6 @@ export default function App() {
                     <PlaybackRateSubMenu />
                     <BackgroundAudioSubMenu />
                     <PiPSubMenu />
-                    <AutoPlaySubMenu />
                     {Platform.OS === 'android' && <RenderingTargetSubMenu />}
                   </SettingsMenuButton>
                 </ControlBar>

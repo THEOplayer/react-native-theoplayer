@@ -10,18 +10,17 @@
     "web": "webpack-dev-server --config ./web/webpack.config.js --mode development",
     "web-release": "webpack --config ./web/webpack.config.js --mode production",
     "start": "npx react-native start",
-    "lint": "eslint \"**/*.{ts,tsx}\"",
-    "pod-install": "cd ios && RCT_NEW_ARCH_ENABLED=1 bundle exec pod install",
-    "pod-update": "cd ios && RCT_NEW_ARCH_ENABLED=1 bundle exec pod update"
+    "lint": "eslint \"**/*.{ts,tsx}\""
   },
   "dependencies": {
-    "@theoplayer/react-native-ui": "^0.10.0",
+    "@react-native-community/slider": "^4.5.4",
+    "@theoplayer/react-native-ui": "^0.8.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "react-native": "npm:react-native-tvos@^0.76.5-0",
+    "react-native": "npm:react-native-tvos@^0.75.4-0",
     "react-native-config": "^1.5.5",
     "react-native-status-bar-height": "^2.6.0",
-    "react-native-svg": "^15.8.0",
+    "react-native-svg": "^13.14.1",
     "react-native-web": "^0.19.13",
     "react-native-web-image-loader": "^0.1.1"
   },
@@ -29,13 +28,10 @@
     "@babel/core": "^7.25.9",
     "@babel/preset-env": "^7.25.9",
     "@babel/runtime": "^7.25.9",
-    "@react-native-community/cli": "15.0.1",
-    "@react-native-community/cli-platform-android": "15.0.1",
-    "@react-native-community/cli-platform-ios": "15.0.1",
-    "@react-native/babel-preset": "0.76.5",
-    "@react-native/eslint-config": "0.76.5",
-    "@react-native/metro-config": "0.76.5",
-    "@react-native/typescript-config": "0.76.5",
+    "@react-native/babel-preset": "0.75.4",
+    "@react-native/eslint-config": "0.75.4",
+    "@react-native/metro-config": "0.75.4",
+    "@react-native/typescript-config": "0.75.4",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "babel-loader": "^8.4.1",
@@ -52,10 +48,7 @@
   },
   "overrides": {
     "react-native-google-cast": {
-      "react-native": "npm:react-native-tvos@^0.76.5-0"
-    },
-    "@miblanchard/react-native-slider": {
-      "react-native": "npm:react-native-tvos@^0.76.5-0"
+      "react-native": "npm:react-native-tvos@^0.75.4-0"
     }
   },
   "engines": {
