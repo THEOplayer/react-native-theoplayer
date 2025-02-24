@@ -68,6 +68,7 @@ const playerConfig: PlayerConfiguration = {
     skipBackwardInterval: 10,
     convertSkipToSeek: true,
   },
+  useMedia3: true,
 };
 
 /**
