@@ -115,6 +115,16 @@ export interface PlayerConfiguration {
    * The THEOlive configuration for the player.
    */
   theoLive?: TheoLiveConfiguration;
+
+  /**
+   * Whether the native video element's fullscreen should be used whenever THEOplayer's fullscreen is unsupported.
+   *
+   * @defaultValue `true`.
+   *
+   * @remarks
+   * <br/> - This parameter only applies to Web platforms.
+   */
+  allowNativeFullscreen?: boolean;
 }
 
 /**
