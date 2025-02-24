@@ -23,7 +23,7 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
       };
       const updatedConfig = {
         ...config,
-        allowNativeFullscreen: true,
+        allowNativeFullscreen: config?.allowNativeFullscreen ?? true,
         ads,
       };
       if (chromeless) {
