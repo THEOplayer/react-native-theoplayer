@@ -87,35 +87,6 @@ type Quality = {
  */
 export default function App() {
   const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);
-  const [useLowBitrate, setUseLowBitrate] = useState(true);
-  const [lowestQuality, setLowestQuality] = useState<Quality | null>(null);
-
-  const onMediaTrackList = React.useCallback((e: any) => {
-    if (e?.subType === TrackListEventType.ADD_TRACK && e?.trackType === MediaTrackType.VIDEO) {
-      setLowestQuality(
-        e?.track.qualities.reduce((lowest: Quality, next: Quality) => {
-          if (lowest.bandwidth < next.bandwidth) {
-            return lowest;
-          }
-          return next;
-        }),
-      );
-    }
-  }, []);
-
-  React.useEffect(() => {
-    if (player?.abr && lowestQuality) {
-      if (useLowBitrate) {
-        // set low bitrate
-        console.debug('Setting quality to', { lowestQuality });
-        player.targetVideoQuality = lowestQuality.uid;
-      } else {
-        // set high bitrate
-        console.debug('Setting quality to max');
-        player.targetVideoQuality = undefined;
-      }
-    }
-  }, [useLowBitrate]);
 
   const onPlayerReady = (player: THEOplayer) => {
     setPlayer(player);
@@ -130,7 +101,6 @@ export default function App() {
     player.addEventListener(PlayerEventType.SEEKING, console.log);
     player.addEventListener(PlayerEventType.SEEKED, console.log);
     player.addEventListener(PlayerEventType.ENDED, console.log);
-    player.addEventListener(PlayerEventType.MEDIA_TRACK_LIST, onMediaTrackList);
 
     sdkVersions().then((versions) => console.log(`[theoplayer] ${JSON.stringify(versions, null, 4)}`));
 
@@ -156,11 +126,6 @@ export default function App() {
 
   return (
     <SafeAreaView style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}>
-      <Pressable
-        style={{ position: 'absolute', top: 50, borderStyle: 'solid', borderColor: 'white', borderWidth: 1 }}
-        onPress={() => setUseLowBitrate((x) => !x)}>
-        <Text style={{ color: 'white' }}>{useLowBitrate ? 'Set high quality' : 'Set low quality'}</Text>
-      </Pressable>
       <View style={PLAYER_CONTAINER_STYLE}>
         <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady}>
           {player !== undefined && (
