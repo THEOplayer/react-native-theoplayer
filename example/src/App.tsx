@@ -70,17 +70,6 @@ const playerConfig: PlayerConfiguration = {
   },
 };
 
-type Quality = {
-  bandwidth: number;
-  codecs: string;
-  frameRate: number;
-  height: number;
-  id: string;
-  name: string;
-  uid: number;
-  width: number;
-};
-
 /**
  * The example app demonstrates the use of the THEOplayerView with a custom UI using the provided UI components.
  * If you don't want to create a custom UI, you can just use the THEOplayerDefaultUi component instead.
