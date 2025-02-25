@@ -170,9 +170,17 @@ RCT_EXPORT_MODULE(THEORCTPlayerModule)
 }
 
 - (void)setKeepScreenOn:(double)tag keepScreenOn:(BOOL)keepScreenOn {
-    NSLog(@"THEORCTPlayerModule.setKeepScreenOn() has no implementation for native iOS.");
-    
-    // TODO: TO BRIDGE (Was added in 8.11.0)
+    [self runForTag:tag block:^(THEOplayerRCTView *view) {
+        [self.playerAPI setKeepScreenOn:view
+                           keepScreenOn:keepScreenOn];
+    }];
+}
+
+- (void)setAutoplay:(double)tag autoplay:(BOOL)autoplay { 
+    [self runForTag:tag block:^(THEOplayerRCTView *view) {
+        [self.playerAPI setAutoplay:view
+                           autoplay:autoplay];
+    }];
 }
 
 @end

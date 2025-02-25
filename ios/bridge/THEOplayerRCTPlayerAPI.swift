@@ -47,14 +47,12 @@ public class THEOplayerRCTPlayerAPI: NSObject {
     }
     
     @objc(setAutoplay:autoplay:)
-    func setAutoplay(_ node: NSNumber, autoplay: Bool) -> Void {
-        DispatchQueue.main.async {
-            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
-               let player = theView.player {
-                if autoplay != player.autoplay {
-                    if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Changing TheoPlayer to \(autoplay ? "autoplay" : "not autoplay")") }
-                    player.autoplay = autoplay
-                }
+    public func setAutoplay(_ view: THEOplayerRCTView? = nil, autoplay: Bool) -> Void {
+        if let theView = view,
+           let player = theView.player {
+            if autoplay != player.autoplay {
+                if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Changing TheoPlayer to \(autoplay ? "autoplay" : "not autoplay")") }
+                player.autoplay = autoplay
             }
         }
     }
@@ -331,14 +329,12 @@ public class THEOplayerRCTPlayerAPI: NSObject {
     }
     
     @objc(setKeepScreenOn:keepScreenOn:)
-    func setKeepScreenOn(_ node: NSNumber, keepScreenOn: Bool) -> Void {
-        DispatchQueue.main.async {
-            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
-               let player = theView.player {
-                if player.preventsDisplaySleepDuringVideoPlayback != keepScreenOn {
-                    if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Changing TheoPlayer preventsDisplaySleepDuringVideoPlayback to \(keepScreenOn)") }
-                    player.preventsDisplaySleepDuringVideoPlayback = keepScreenOn
-                }
+    public func setKeepScreenOn(_ view: THEOplayerRCTView? = nil, keepScreenOn: Bool) -> Void {
+        if let theView = view,
+           let player = theView.player {
+            if player.preventsDisplaySleepDuringVideoPlayback != keepScreenOn {
+                if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Changing TheoPlayer preventsDisplaySleepDuringVideoPlayback to \(keepScreenOn)") }
+                player.preventsDisplaySleepDuringVideoPlayback = keepScreenOn
             }
         }
     }
