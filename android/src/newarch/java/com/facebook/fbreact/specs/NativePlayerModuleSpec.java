@@ -41,6 +41,10 @@ public abstract class NativePlayerModuleSpec extends ReactContextBaseJavaModule 
 
   @ReactMethod
   @DoNotStrip
+  public abstract void setAutoplay(double tag, boolean autoplay);
+
+  @ReactMethod
+  @DoNotStrip
   public abstract void setPreload(double tag, String type);
 
   @ReactMethod

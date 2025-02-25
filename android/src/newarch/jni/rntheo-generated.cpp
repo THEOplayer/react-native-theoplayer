@@ -281,6 +281,11 @@ static facebook::jsi::Value __hostFunction_NativePlayerModuleSpecJSI_version(fac
   return static_cast<JavaTurboModule &>(turboModule).invokeJavaMethod(rt, PromiseKind, "version", "(Lcom/facebook/react/bridge/Promise;)V", args, count, cachedMethodId);
 }
 
+static facebook::jsi::Value __hostFunction_NativePlayerModuleSpecJSI_setAutoplay(facebook::jsi::Runtime& rt, TurboModule &turboModule, const facebook::jsi::Value* args, size_t count) {
+  static jmethodID cachedMethodId = nullptr;
+  return static_cast<JavaTurboModule &>(turboModule).invokeJavaMethod(rt, VoidKind, "setAutoplay", "(DZ)V", args, count, cachedMethodId);
+}
+
 static facebook::jsi::Value __hostFunction_NativePlayerModuleSpecJSI_setPreload(facebook::jsi::Runtime& rt, TurboModule &turboModule, const facebook::jsi::Value* args, size_t count) {
   static jmethodID cachedMethodId = nullptr;
   return static_cast<JavaTurboModule &>(turboModule).invokeJavaMethod(rt, VoidKind, "setPreload", "(DLjava/lang/String;)V", args, count, cachedMethodId);
@@ -379,6 +384,7 @@ static facebook::jsi::Value __hostFunction_NativePlayerModuleSpecJSI_setABRConfi
 NativePlayerModuleSpecJSI::NativePlayerModuleSpecJSI(const JavaTurboModule::InitParams &params)
   : JavaTurboModule(params) {
   methodMap_["version"] = MethodMetadata {0, __hostFunction_NativePlayerModuleSpecJSI_version};
+  methodMap_["setAutoplay"] = MethodMetadata {2, __hostFunction_NativePlayerModuleSpecJSI_setAutoplay};
   methodMap_["setPreload"] = MethodMetadata {2, __hostFunction_NativePlayerModuleSpecJSI_setPreload};
   methodMap_["setCurrentTime"] = MethodMetadata {2, __hostFunction_NativePlayerModuleSpecJSI_setCurrentTime};
   methodMap_["setPipConfig"] = MethodMetadata {2, __hostFunction_NativePlayerModuleSpecJSI_setPipConfig};

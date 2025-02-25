@@ -753,6 +753,7 @@ protected:
 
 public:
   virtual jsi::Value version(jsi::Runtime &rt) = 0;
+  virtual void setAutoplay(jsi::Runtime &rt, double tag, bool autoplay) = 0;
   virtual void setPreload(jsi::Runtime &rt, double tag, jsi::String type) = 0;
   virtual void setCurrentTime(jsi::Runtime &rt, double tag, double seekTime) = 0;
   virtual void setPipConfig(jsi::Runtime &rt, double tag, jsi::Object config) = 0;
@@ -805,6 +806,14 @@ private:
 
       return bridging::callFromJs<jsi::Value>(
           rt, &T::version, jsInvoker_, instance_);
+    }
+    void setAutoplay(jsi::Runtime &rt, double tag, bool autoplay) override {
+      static_assert(
+          bridging::getParameterCount(&T::setAutoplay) == 3,
+          "Expected setAutoplay(...) to have 3 parameters");
+
+      return bridging::callFromJs<void>(
+          rt, &T::setAutoplay, jsInvoker_, instance_, std::move(tag), std::move(autoplay));
     }
     void setPreload(jsi::Runtime &rt, double tag, jsi::String type) override {
       static_assert(

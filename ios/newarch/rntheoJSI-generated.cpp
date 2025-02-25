@@ -362,6 +362,14 @@ static jsi::Value __hostFunction_NativePlayerModuleCxxSpecJSI_version(jsi::Runti
     rt
   );
 }
+static jsi::Value __hostFunction_NativePlayerModuleCxxSpecJSI_setAutoplay(jsi::Runtime &rt, TurboModule &turboModule, const jsi::Value* args, size_t count) {
+  static_cast<NativePlayerModuleCxxSpecJSI *>(&turboModule)->setAutoplay(
+    rt,
+    count <= 0 ? throw jsi::JSError(rt, "Expected argument in position 0 to be passed") : args[0].asNumber(),
+    count <= 1 ? throw jsi::JSError(rt, "Expected argument in position 1 to be passed") : args[1].asBool()
+  );
+  return jsi::Value::undefined();
+}
 static jsi::Value __hostFunction_NativePlayerModuleCxxSpecJSI_setPreload(jsi::Runtime &rt, TurboModule &turboModule, const jsi::Value* args, size_t count) {
   static_cast<NativePlayerModuleCxxSpecJSI *>(&turboModule)->setPreload(
     rt,
@@ -518,6 +526,7 @@ static jsi::Value __hostFunction_NativePlayerModuleCxxSpecJSI_setABRConfig(jsi::
 NativePlayerModuleCxxSpecJSI::NativePlayerModuleCxxSpecJSI(std::shared_ptr<CallInvoker> jsInvoker)
   : TurboModule("THEORCTPlayerModule", jsInvoker) {
   methodMap_["version"] = MethodMetadata {0, __hostFunction_NativePlayerModuleCxxSpecJSI_version};
+  methodMap_["setAutoplay"] = MethodMetadata {2, __hostFunction_NativePlayerModuleCxxSpecJSI_setAutoplay};
   methodMap_["setPreload"] = MethodMetadata {2, __hostFunction_NativePlayerModuleCxxSpecJSI_setPreload};
   methodMap_["setCurrentTime"] = MethodMetadata {2, __hostFunction_NativePlayerModuleCxxSpecJSI_setCurrentTime};
   methodMap_["setPipConfig"] = MethodMetadata {2, __hostFunction_NativePlayerModuleCxxSpecJSI_setPipConfig};

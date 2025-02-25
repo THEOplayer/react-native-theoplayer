@@ -436,6 +436,10 @@ namespace facebook::react {
       return static_cast<ObjCTurboModule&>(turboModule).invokeObjCMethod(rt, PromiseKind, "version", @selector(version:reject:), args, count);
     }
 
+    static facebook::jsi::Value __hostFunction_NativePlayerModuleSpecJSI_setAutoplay(facebook::jsi::Runtime& rt, TurboModule &turboModule, const facebook::jsi::Value* args, size_t count) {
+      return static_cast<ObjCTurboModule&>(turboModule).invokeObjCMethod(rt, VoidKind, "setAutoplay", @selector(setAutoplay:autoplay:), args, count);
+    }
+
     static facebook::jsi::Value __hostFunction_NativePlayerModuleSpecJSI_setPreload(facebook::jsi::Runtime& rt, TurboModule &turboModule, const facebook::jsi::Value* args, size_t count) {
       return static_cast<ObjCTurboModule&>(turboModule).invokeObjCMethod(rt, VoidKind, "setPreload", @selector(setPreload:type:), args, count);
     }
@@ -516,6 +520,9 @@ namespace facebook::react {
     : ObjCTurboModule(params) {
       
         methodMap_["version"] = MethodMetadata {0, __hostFunction_NativePlayerModuleSpecJSI_version};
+        
+        
+        methodMap_["setAutoplay"] = MethodMetadata {2, __hostFunction_NativePlayerModuleSpecJSI_setAutoplay};
         
         
         methodMap_["setPreload"] = MethodMetadata {2, __hostFunction_NativePlayerModuleSpecJSI_setPreload};

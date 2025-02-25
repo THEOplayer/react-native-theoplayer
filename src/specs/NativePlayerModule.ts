@@ -6,6 +6,8 @@ import { Double } from 'react-native/Libraries/Types/CodegenTypes';
 export interface Spec extends TurboModule {
   version(): Promise<string>;
 
+  setAutoplay(tag: Double, autoplay: boolean): void;
+
   setPreload(tag: Double, type: string): void;
 
   setCurrentTime(tag: Double, seekTime: Double): void;

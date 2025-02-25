@@ -305,6 +305,8 @@ namespace facebook::react {
 
 - (void)version:(RCTPromiseResolveBlock)resolve
          reject:(RCTPromiseRejectBlock)reject;
+- (void)setAutoplay:(double)tag
+           autoplay:(BOOL)autoplay;
 - (void)setPreload:(double)tag
               type:(NSString *)type;
 - (void)setCurrentTime:(double)tag
