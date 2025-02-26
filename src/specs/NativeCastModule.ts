@@ -1,30 +1,29 @@
 /* eslint-disable @typescript-eslint/no-wrapper-object-types */
 import type { TurboModule } from 'react-native';
 import { TurboModuleRegistry } from 'react-native';
-import { Double } from 'react-native/Libraries/Types/CodegenTypes';
 
 export interface Spec extends TurboModule {
-  casting(tag: Double): Promise<boolean>;
+  casting(tag: number): Promise<boolean>;
 
-  chromecastCasting(tag: Double): Promise<boolean>;
+  chromecastCasting(tag: number): Promise<boolean>;
 
-  airplayCasting(tag: Double): Promise<boolean>;
+  airplayCasting(tag: number): Promise<boolean>;
 
-  chromecastState(tag: Double): Promise<Object>;
+  chromecastState(tag: number): Promise<Object>;
 
-  airplayState(tag: Double): Promise<Object>;
+  airplayState(tag: number): Promise<Object>;
 
-  chromecastStart(tag: Double): void;
+  chromecastStart(tag: number): void;
 
-  chromecastStop(tag: Double): void;
+  chromecastStop(tag: number): void;
 
-  chromecastJoin(tag: Double): void;
+  chromecastJoin(tag: number): void;
 
-  chromecastLeave(tag: Double): void;
+  chromecastLeave(tag: number): void;
 
-  airplayStart(tag: Double): void;
+  airplayStart(tag: number): void;
 
-  airplayStop(tag: Double): void;
+  airplayStop(tag: number): void;
 }
 
 // Note: codegen does not like `TurboModuleRegistry?.getEnforcing`

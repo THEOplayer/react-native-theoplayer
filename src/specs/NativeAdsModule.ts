@@ -13,39 +13,39 @@ type ScheduledAd = Readonly<{
 }>;
 
 type FriendlyObstruction = Readonly<{
-  view: Double;
+  view: number;
   purpose: string;
   reason?: string;
 }>;
 
 export interface Spec extends TurboModule {
-  playing(tag: Double): Promise<boolean>;
+  playing(tag: number): Promise<boolean>;
 
-  skip(tag: Double): void;
+  skip(tag: number): void;
 
-  currentAdBreak(tag: Double): Promise<AdBreak>;
+  currentAdBreak(tag: number): Promise<AdBreak>;
 
-  currentAds(tag: Double): Promise<Ad[]>;
+  currentAds(tag: number): Promise<Ad[]>;
 
-  scheduledAdBreaks(tag: Double): Promise<AdBreak[]>;
+  scheduledAdBreaks(tag: number): Promise<AdBreak[]>;
 
-  schedule(tag: Double, ad: ScheduledAd): void;
+  schedule(tag: number, ad: ScheduledAd): void;
 
   /* GoogleDAI API */
 
-  daiContentTimeForStreamTime(tag: Double, time: Double): Promise<Double>;
+  daiContentTimeForStreamTime(tag: number, time: Double): Promise<Double>;
 
-  daiStreamTimeForContentTime(tag: Double, time: Double): Promise<Double>;
+  daiStreamTimeForContentTime(tag: number, time: Double): Promise<Double>;
 
-  daiSnapback(tag: Double): Promise<boolean>;
+  daiSnapback(tag: number): Promise<boolean>;
 
-  daiSetSnapback(tag: Double, enabled: boolean): void;
+  daiSetSnapback(tag: number, enabled: boolean): void;
 
   /* Omid API */
 
-  addFriendlyObstruction(tag: Double, obstruction: FriendlyObstruction): void;
+  addFriendlyObstruction(tag: number, obstruction: FriendlyObstruction): void;
 
-  removeAllFriendlyObstructions(tag: Double): void;
+  removeAllFriendlyObstructions(tag: number): void;
 }
 
 // Note: codegen does not like `TurboModuleRegistry?.getEnforcing`

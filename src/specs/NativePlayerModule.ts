@@ -6,45 +6,45 @@ import { Double } from 'react-native/Libraries/Types/CodegenTypes';
 export interface Spec extends TurboModule {
   version(): Promise<string>;
 
-  setAutoplay(tag: Double, autoplay: boolean): void;
+  setAutoplay(tag: number, autoplay: boolean): void;
 
-  setPreload(tag: Double, type: string): void;
+  setPreload(tag: number, type: string): void;
 
-  setCurrentTime(tag: Double, seekTime: Double): void;
+  setCurrentTime(tag: number, seekTime: Double): void;
 
-  setPipConfig(tag: Double, config: Object): void;
+  setPipConfig(tag: number, config: Object): void;
 
-  setBackgroundAudioConfig(tag: Double, config: Object): void;
+  setBackgroundAudioConfig(tag: number, config: Object): void;
 
-  setPresentationMode(tag: Double, mode: string): void;
+  setPresentationMode(tag: number, mode: string): void;
 
-  setMuted(tag: Double, muted: boolean): void;
+  setMuted(tag: number, muted: boolean): void;
 
-  setPlaybackRate(tag: Double, rate: Double): void;
+  setPlaybackRate(tag: number, rate: Double): void;
 
-  setSelectedAudioTrack(tag: Double, trackUid: Double | undefined): void;
+  setSelectedAudioTrack(tag: number, trackUid: Double | undefined): void;
 
-  setSelectedVideoTrack(tag: Double, trackUid: Double | undefined): void;
+  setSelectedVideoTrack(tag: number, trackUid: Double | undefined): void;
 
-  setSelectedTextTrack(tag: Double, trackUid: Double | undefined): void;
+  setSelectedTextTrack(tag: number, trackUid: Double | undefined): void;
 
-  setSource(tag: Double, source: Object): void;
+  setSource(tag: number, source: Object): void;
 
-  setTargetVideoQuality(tag: Double, qualities: Double[]): void;
+  setTargetVideoQuality(tag: number, qualities: Double[]): void;
 
-  setVolume(tag: Double, volume: Double): void;
+  setVolume(tag: number, volume: Double): void;
 
-  setAspectRatio(tag: Double, ratio: string): void;
+  setAspectRatio(tag: number, ratio: string): void;
 
-  setRenderingTarget(tag: Double, target: string): void;
+  setRenderingTarget(tag: number, target: string): void;
 
-  setKeepScreenOn(tag: Double, keepScreenOn: boolean): void;
+  setKeepScreenOn(tag: number, keepScreenOn: boolean): void;
 
-  setPaused(tag: Double, paused: boolean): void;
+  setPaused(tag: number, paused: boolean): void;
 
-  setTextTrackStyle(tag: Double, style: Object): void;
+  setTextTrackStyle(tag: number, style: Object): void;
 
-  setABRConfig(tag: Double, config: Object): void;
+  setABRConfig(tag: number, config: Object): void;
 }
 
 // Note: codegen does not like `TurboModuleRegistry?.getEnforcing`
