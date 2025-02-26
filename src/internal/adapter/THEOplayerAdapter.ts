@@ -49,6 +49,7 @@ import { DefaultNativePlayerState } from './DefaultNativePlayerState';
 import { getNativeModule } from '../utils/ModuleUtils';
 
 const NativePlayerModule = getNativeModule('Player');
+const NativeTestModule = getNativeModule('Test');
 
 export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayer {
   private readonly _view: THEOplayerView;
@@ -454,7 +455,13 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   pause(): void {
     if (this.hasValidSource()) {
       this._state.paused = true;
+      console.log(`[JS] tag: ${this._view.nativeHandle}`);
       NativePlayerModule.setPaused(this._view.nativeHandle, true);
+
+
+      const myValue = 5;
+      console.log(`My Int32 (JS): ${myValue}`);
+      NativeTestModule.setMyInt32(myValue);
     }
   }
 

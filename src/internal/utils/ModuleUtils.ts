@@ -17,6 +17,7 @@ import { default as NativeContentProtectionModule } from '../../specs/NativeCont
 import { default as NativeEventBroadcastModule } from '../../specs/NativeEventBroadcastModule';
 import { default as NativePlaybackSettingsModule } from '../../specs/NativePlaybackSettingsModule';
 import { default as NativePlayerModule } from '../../specs/NativePlayerModule';
+import { default as NativeTestModule } from '../../specs/NativeTestModule';
 
 export function getNativeModule(name: string): any {
   let turboModule;
@@ -41,6 +42,9 @@ export function getNativeModule(name: string): any {
       break;
     case 'Player':
       turboModule = NativePlayerModule;
+      break;
+    case 'Test':
+      turboModule = NativeTestModule;
       break;
     default:
       throw new Error(`Unknown module '${name}'`);

@@ -583,3 +583,27 @@ namespace facebook::react {
         
   }
 } // namespace facebook::react
+
+@implementation NativeTestModuleSpecBase
+
+
+- (void)setEventEmitterCallback:(EventEmitterCallbackWrapper *)eventEmitterCallbackWrapper
+{
+  _eventEmitterCallback = std::move(eventEmitterCallbackWrapper->_eventEmitterCallback);
+}
+@end
+
+
+namespace facebook::react {
+  
+    static facebook::jsi::Value __hostFunction_NativeTestModuleSpecJSI_setMyInt32(facebook::jsi::Runtime& rt, TurboModule &turboModule, const facebook::jsi::Value* args, size_t count) {
+      return static_cast<ObjCTurboModule&>(turboModule).invokeObjCMethod(rt, VoidKind, "setMyInt32", @selector(setMyInt32:), args, count);
+    }
+
+  NativeTestModuleSpecJSI::NativeTestModuleSpecJSI(const ObjCTurboModule::InitParams &params)
+    : ObjCTurboModule(params) {
+      
+        methodMap_["setMyInt32"] = MethodMetadata {1, __hostFunction_NativeTestModuleSpecJSI_setMyInt32};
+        
+  }
+} // namespace facebook::react

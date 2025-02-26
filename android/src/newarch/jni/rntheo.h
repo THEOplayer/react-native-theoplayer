@@ -72,6 +72,14 @@ public:
   NativePlayerModuleSpecJSI(const JavaTurboModule::InitParams &params);
 };
 
+/**
+ * JNI C++ class for module 'NativeTestModule'
+ */
+class JSI_EXPORT NativeTestModuleSpecJSI : public JavaTurboModule {
+public:
+  NativeTestModuleSpecJSI(const JavaTurboModule::InitParams &params);
+};
+
 
 JSI_EXPORT
 std::shared_ptr<TurboModule> rntheo_ModuleProvider(const std::string &moduleName, const JavaTurboModule::InitParams &params);

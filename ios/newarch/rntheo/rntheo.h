@@ -366,6 +366,31 @@ namespace facebook::react {
     NativePlayerModuleSpecJSI(const ObjCTurboModule::InitParams &params);
   };
 } // namespace facebook::react
+
+@protocol NativeTestModuleSpec <RCTBridgeModule, RCTTurboModule>
+
+- (void)setMyInt32:(NSInteger)value;
+
+@end
+
+@interface NativeTestModuleSpecBase : NSObject {
+@protected
+facebook::react::EventEmitterCallback _eventEmitterCallback;
+}
+- (void)setEventEmitterCallback:(EventEmitterCallbackWrapper *)eventEmitterCallbackWrapper;
+
+
+@end
+
+namespace facebook::react {
+  /**
+   * ObjC++ class for module 'NativeTestModule'
+   */
+  class JSI_EXPORT NativeTestModuleSpecJSI : public ObjCTurboModule {
+  public:
+    NativeTestModuleSpecJSI(const ObjCTurboModule::InitParams &params);
+  };
+} // namespace facebook::react
 inline NSString *JS::NativeAdsModule::ScheduledAdSources::src() const
 {
   id const p = _v[@"src"];
@@ -406,6 +431,7 @@ inline NSString *JS::NativeAdsModule::FriendlyObstruction::reason() const
   id const p = _v[@"reason"];
   return RCTBridgingToOptionalString(p);
 }
+
 
 
 

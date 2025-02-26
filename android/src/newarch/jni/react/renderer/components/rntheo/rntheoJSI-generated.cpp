@@ -547,6 +547,18 @@ NativePlayerModuleCxxSpecJSI::NativePlayerModuleCxxSpecJSI(std::shared_ptr<CallI
   methodMap_["setTextTrackStyle"] = MethodMetadata {2, __hostFunction_NativePlayerModuleCxxSpecJSI_setTextTrackStyle};
   methodMap_["setABRConfig"] = MethodMetadata {2, __hostFunction_NativePlayerModuleCxxSpecJSI_setABRConfig};
 }
+static jsi::Value __hostFunction_NativeTestModuleCxxSpecJSI_setMyInt32(jsi::Runtime &rt, TurboModule &turboModule, const jsi::Value* args, size_t count) {
+  static_cast<NativeTestModuleCxxSpecJSI *>(&turboModule)->setMyInt32(
+    rt,
+    count <= 0 ? throw jsi::JSError(rt, "Expected argument in position 0 to be passed") : args[0].asNumber()
+  );
+  return jsi::Value::undefined();
+}
+
+NativeTestModuleCxxSpecJSI::NativeTestModuleCxxSpecJSI(std::shared_ptr<CallInvoker> jsInvoker)
+  : TurboModule("THEORCTTestModule", jsInvoker) {
+  methodMap_["setMyInt32"] = MethodMetadata {1, __hostFunction_NativeTestModuleCxxSpecJSI_setMyInt32};
+}
 
 
 } // namespace facebook::react

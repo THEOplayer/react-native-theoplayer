@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 import { ViewProps } from 'react-native';
 import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
-import type { DirectEventHandler, Double } from 'react-native/Libraries/Types/CodegenTypes';
+import type { DirectEventHandler, Double, Int32 } from 'react-native/Libraries/Types/CodegenTypes';
 
 /**
  * Notes:
@@ -47,8 +47,8 @@ type NativePlayerConfiguration = Readonly<{
   }>;
   mediaControl?: Readonly<{
     mediaSessionEnabled?: boolean;
-    skipForwardInterval?: Double;
-    skipBackwardInterval?: Double;
+    skipForwardInterval?: Int32;
+    skipBackwardInterval?: Int32;
     convertSkipToSeek?: boolean;
   }>;
   license?: string;

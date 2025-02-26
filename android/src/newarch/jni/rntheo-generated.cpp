@@ -405,6 +405,15 @@ NativePlayerModuleSpecJSI::NativePlayerModuleSpecJSI(const JavaTurboModule::Init
   methodMap_["setTextTrackStyle"] = MethodMetadata {2, __hostFunction_NativePlayerModuleSpecJSI_setTextTrackStyle};
   methodMap_["setABRConfig"] = MethodMetadata {2, __hostFunction_NativePlayerModuleSpecJSI_setABRConfig};
 }
+static facebook::jsi::Value __hostFunction_NativeTestModuleSpecJSI_setMyInt32(facebook::jsi::Runtime& rt, TurboModule &turboModule, const facebook::jsi::Value* args, size_t count) {
+  static jmethodID cachedMethodId = nullptr;
+  return static_cast<JavaTurboModule &>(turboModule).invokeJavaMethod(rt, VoidKind, "setMyInt32", "(D)V", args, count, cachedMethodId);
+}
+
+NativeTestModuleSpecJSI::NativeTestModuleSpecJSI(const JavaTurboModule::InitParams &params)
+  : JavaTurboModule(params) {
+  methodMap_["setMyInt32"] = MethodMetadata {1, __hostFunction_NativeTestModuleSpecJSI_setMyInt32};
+}
 
 std::shared_ptr<TurboModule> rntheo_ModuleProvider(const std::string &moduleName, const JavaTurboModule::InitParams &params) {
   if (moduleName == "THEORCTAdsModule") {
@@ -427,6 +436,9 @@ std::shared_ptr<TurboModule> rntheo_ModuleProvider(const std::string &moduleName
   }
   if (moduleName == "THEORCTPlayerModule") {
     return std::make_shared<NativePlayerModuleSpecJSI>(params);
+  }
+  if (moduleName == "THEORCTTestModule") {
+    return std::make_shared<NativeTestModuleSpecJSI>(params);
   }
   return nullptr;
 }

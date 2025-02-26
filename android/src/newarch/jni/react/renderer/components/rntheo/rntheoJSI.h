@@ -976,4 +976,54 @@ private:
   Delegate delegate_;
 };
 
+
+  class JSI_EXPORT NativeTestModuleCxxSpecJSI : public TurboModule {
+protected:
+  NativeTestModuleCxxSpecJSI(std::shared_ptr<CallInvoker> jsInvoker);
+
+public:
+  virtual void setMyInt32(jsi::Runtime &rt, int value) = 0;
+
+};
+
+template <typename T>
+class JSI_EXPORT NativeTestModuleCxxSpec : public TurboModule {
+public:
+  jsi::Value get(jsi::Runtime &rt, const jsi::PropNameID &propName) override {
+    return delegate_.get(rt, propName);
+  }
+
+  static constexpr std::string_view kModuleName = "THEORCTTestModule";
+
+protected:
+  NativeTestModuleCxxSpec(std::shared_ptr<CallInvoker> jsInvoker)
+    : TurboModule(std::string{NativeTestModuleCxxSpec::kModuleName}, jsInvoker),
+      delegate_(reinterpret_cast<T*>(this), jsInvoker) {}
+
+
+private:
+  class Delegate : public NativeTestModuleCxxSpecJSI {
+  public:
+    Delegate(T *instance, std::shared_ptr<CallInvoker> jsInvoker) :
+      NativeTestModuleCxxSpecJSI(std::move(jsInvoker)), instance_(instance) {
+
+    }
+
+    void setMyInt32(jsi::Runtime &rt, int value) override {
+      static_assert(
+          bridging::getParameterCount(&T::setMyInt32) == 2,
+          "Expected setMyInt32(...) to have 2 parameters");
+
+      return bridging::callFromJs<void>(
+          rt, &T::setMyInt32, jsInvoker_, instance_, std::move(value));
+    }
+
+  private:
+    friend class NativeTestModuleCxxSpec;
+    T *instance_;
+  };
+
+  Delegate delegate_;
+};
+
 } // namespace facebook::react

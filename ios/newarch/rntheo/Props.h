@@ -158,8 +158,8 @@ static inline std::string toString(const THEOplayerRCTViewConfigUiStruct &value)
 
 struct THEOplayerRCTViewConfigMediaControlStruct {
   bool mediaSessionEnabled{false};
-  double skipForwardInterval{0.0};
-  double skipBackwardInterval{0.0};
+  int skipForwardInterval{0};
+  int skipBackwardInterval{0};
   bool convertSkipToSeek{false};
 };
 
