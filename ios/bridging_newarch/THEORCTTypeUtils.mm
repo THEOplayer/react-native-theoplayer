@@ -13,14 +13,29 @@ using namespace JS::NativeAdsModule;
 // ==========================
 
 NSDictionary *convertToNSDictionary(const THEOplayerRCTViewConfigAdsImaStruct &ima) {
-    return @{
-        @"ppid": [NSString stringWithUTF8String:ima.ppid.c_str()],
-        @"maxRedirects": @(ima.maxRedirects),
-        @"autoPlayAdBreaks": @(ima.autoPlayAdBreaks),
-        @"sessionID": [NSString stringWithUTF8String:ima.sessionID.c_str()],
-        @"enableDebugMode": @(ima.enableDebugMode),
-        @"bitrate": @(ima.bitrate)
-    };
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    
+    NSString *ppid = [NSString stringWithUTF8String:ima.ppid.c_str()];
+    if (![ppid isEqual: @""]) {
+        dict[@"ppid"] = ppid;
+    }
+    NSString *sessionID = [NSString stringWithUTF8String:ima.sessionID.c_str()];
+    if (![sessionID isEqual: @""]) {
+        dict[@"sessionID"] = sessionID;
+    }
+    NSNumber *maxRedirects = [NSNumber numberWithInt:ima.maxRedirects];
+    if (maxRedirects.intValue >= 0) {
+        dict[@"maxRedirects"] = maxRedirects;
+    }
+    NSNumber *bitrate = [NSNumber numberWithInt:ima.bitrate];
+    if (bitrate.intValue >= 0) {
+        dict[@"bitrate"] = bitrate;
+    }
+    
+    dict[@"autoPlayAdBreaks"] = @(ima.autoPlayAdBreaks);
+    dict[@"enableDebugMode"] = @(ima.enableDebugMode);
+    
+    return dict;
 }
 
 NSArray<NSString *> *convertVectorToNSArray(const std::vector<std::string> &vec) {
@@ -32,58 +47,111 @@ NSArray<NSString *> *convertVectorToNSArray(const std::vector<std::string> &vec)
 }
 
 NSDictionary *convertToNSDictionary(const THEOplayerRCTViewConfigAdsStruct &ads) {
-    return @{
-        @"allowedMimeTypes": convertVectorToNSArray(ads.allowedMimeTypes),
-        @"uiEnabled": @(ads.uiEnabled),
-        @"preload": [NSString stringWithUTF8String:ads.preload.c_str()],
-        @"vpaidMode": [NSString stringWithUTF8String:ads.vpaidMode.c_str()],
-        @"ima": convertToNSDictionary(ads.ima),
-        @"theoads": @(ads.theoads)
-    };
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    
+    NSString *preload = [NSString stringWithUTF8String:ads.preload.c_str()];
+    if (![preload isEqual: @""]) {
+        dict[@"preload"] = preload;
+    }
+    NSString *vpaidMode = [NSString stringWithUTF8String:ads.vpaidMode.c_str()];
+    if (![vpaidMode isEqual: @""]) {
+        dict[@"vpaidMode"] = vpaidMode;
+    }
+    
+    dict[@"allowedMimeTypes"] = convertVectorToNSArray(ads.allowedMimeTypes);
+    dict[@"ima"] = convertToNSDictionary(ads.ima);
+    
+    dict[@"uiEnabled"] = @(ads.uiEnabled);
+    dict[@"theoads"] = @(ads.theoads);
+    
+    return dict;
 }
 
 NSDictionary *convertToNSDictionary(const THEOplayerRCTViewConfigCastChromecastStruct &chromecast) {
-    return @{
-        @"appID": [NSString stringWithUTF8String:chromecast.appID.c_str()]
-    };
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    
+    NSString *appID = [NSString stringWithUTF8String:chromecast.appID.c_str()];
+    if (![appID isEqual: @""]) {
+        dict[@"appID"] = appID;
+    }
+    
+    return dict;
 }
 
 NSDictionary *convertToNSDictionary(const THEOplayerRCTViewConfigCastStruct &cast) {
-    return @{
-        @"chromecast": convertToNSDictionary(cast.chromecast),
-        @"strategy": [NSString stringWithUTF8String:cast.strategy.c_str()]
-    };
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    
+    NSString *strategy = [NSString stringWithUTF8String:cast.strategy.c_str()];
+    if (![strategy isEqual: @""]) {
+        dict[@"strategy"] = strategy;
+    }
+    dict[@"chromecast"] =  convertToNSDictionary(cast.chromecast);
+    
+    return dict;
 }
 
 NSDictionary *convertToNSDictionary(const THEOplayerRCTViewConfigUiStruct &ui) {
-    return @{
-        @"language": [NSString stringWithUTF8String:ui.language.c_str()]
-    };
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    
+    NSString *language = [NSString stringWithUTF8String:ui.language.c_str()];
+    if (![language isEqual: @""]) {
+        dict[@"language"] = language;
+    }
+    
+    return dict;
 }
 
 NSDictionary *convertToNSDictionary(const THEOplayerRCTViewConfigMediaControlStruct &mediaControl) {
-    return @{
-        @"mediaSessionEnabled": @(mediaControl.mediaSessionEnabled),
-        @"skipForwardInterval": @(mediaControl.skipForwardInterval),
-        @"skipBackwardInterval": @(mediaControl.skipBackwardInterval),
-        @"convertSkipToSeek": @(mediaControl.convertSkipToSeek)
-    };
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    
+    NSNumber *skipForwardInterval = [NSNumber numberWithInt:mediaControl.skipForwardInterval];
+    if (skipForwardInterval.intValue >= 0) {
+        dict[@"skipForwardInterval"] = skipForwardInterval;
+    }
+    NSNumber *skipBackwardInterval = [NSNumber numberWithInt:mediaControl.skipBackwardInterval];
+    if (skipBackwardInterval.intValue >= 0) {
+        dict[@"skipBackwardInterval"] = skipBackwardInterval;
+    }
+    
+    dict[@"mediaSessionEnabled"] = @(mediaControl.mediaSessionEnabled);
+    dict[@"convertSkipToSeek"] = @(mediaControl.convertSkipToSeek);
+    
+    return dict;
 }
 
 NSDictionary *convertToNSDictionary(const THEOplayerRCTViewConfigStruct &config) {
-    return @{
-        @"libraryLocation": [NSString stringWithUTF8String:config.libraryLocation.c_str()],
-        @"mutedAutoplay": [NSString stringWithUTF8String:config.mutedAutoplay.c_str()],
-        @"ads": convertToNSDictionary(config.ads),
-        @"cast": convertToNSDictionary(config.cast),
-        @"ui": convertToNSDictionary(config.ui),
-        @"mediaControl": convertToNSDictionary(config.mediaControl),
-        @"license": [NSString stringWithUTF8String:config.license.c_str()],
-        @"licenseUrl": [NSString stringWithUTF8String:config.licenseUrl.c_str()],
-        @"chromeless": @(config.chromeless),
-        @"hlsDateRange": @(config.hlsDateRange),
-        @"liveOffset": @(config.liveOffset)
-    };
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    
+    NSString *libraryLocation = [NSString stringWithUTF8String:config.libraryLocation.c_str()];
+    if (![libraryLocation isEqual: @""]) {
+        dict[@"libraryLocation"] = libraryLocation;
+    }
+    NSString *mutedAutoplay = [NSString stringWithUTF8String:config.mutedAutoplay.c_str()];
+    if (![mutedAutoplay isEqual: @""]) {
+        dict[@"mutedAutoplay"] = mutedAutoplay;
+    }
+    NSString *license = [NSString stringWithUTF8String:config.license.c_str()];
+    if (![license isEqual: @""]) {
+        dict[@"license"] = license;
+    }
+    NSString *licenseUrl = [NSString stringWithUTF8String:config.licenseUrl.c_str()];
+    if (![licenseUrl isEqual: @""]) {
+        dict[@"licenseUrl"] = licenseUrl;
+    }
+    NSNumber *liveOffset = [NSNumber numberWithDouble:config.liveOffset];
+    if (liveOffset.doubleValue >= 0.0) {
+        dict[@"liveOffset"] = liveOffset;
+    }
+    
+    dict[@"ads"] =  convertToNSDictionary(config.ads);
+    dict[@"cast"] = convertToNSDictionary(config.cast);
+    dict[@"ui"] = convertToNSDictionary(config.ui);
+    dict[@"mediaControl"] = convertToNSDictionary(config.mediaControl);
+    
+    dict[@"chromeless"] = @(config.chromeless);
+    dict[@"hlsDateRange"] = @(config.hlsDateRange);
+    
+    return dict;
 }
 
 + (NSDictionary *) configFrom:(THEOplayerRCTViewConfigStruct) structData {

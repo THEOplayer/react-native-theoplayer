@@ -17,12 +17,12 @@
 namespace facebook::react {
 
 struct THEOplayerRCTViewConfigAdsImaStruct {
-  std::string ppid{};
-  double maxRedirects{0.0};
-  bool autoPlayAdBreaks{false};
-  std::string sessionID{};
+  std::string ppid{""};
+  int maxRedirects{-1};
+  bool autoPlayAdBreaks{true};
+  std::string sessionID{""};
   bool enableDebugMode{false};
-  double bitrate{0.0};
+  int bitrate{-1};
 };
 
 static inline void fromRawValue(const PropsParserContext& context, const RawValue &value, THEOplayerRCTViewConfigAdsImaStruct &result) {
@@ -60,9 +60,9 @@ static inline std::string toString(const THEOplayerRCTViewConfigAdsImaStruct &va
 
 struct THEOplayerRCTViewConfigAdsStruct {
   std::vector<std::string> allowedMimeTypes{};
-  bool uiEnabled{false};
-  std::string preload{};
-  std::string vpaidMode{};
+  bool uiEnabled{true};
+  std::string preload{""};
+  std::string vpaidMode{""};
   THEOplayerRCTViewConfigAdsImaStruct ima{};
   bool theoads{false};
 };
@@ -101,7 +101,7 @@ static inline std::string toString(const THEOplayerRCTViewConfigAdsStruct &value
 }
 
 struct THEOplayerRCTViewConfigCastChromecastStruct {
-  std::string appID{};
+  std::string appID{""};
 };
 
 static inline void fromRawValue(const PropsParserContext& context, const RawValue &value, THEOplayerRCTViewConfigCastChromecastStruct &result) {
@@ -119,7 +119,7 @@ static inline std::string toString(const THEOplayerRCTViewConfigCastChromecastSt
 
 struct THEOplayerRCTViewConfigCastStruct {
   THEOplayerRCTViewConfigCastChromecastStruct chromecast{};
-  std::string strategy{};
+  std::string strategy{""};
 };
 
 static inline void fromRawValue(const PropsParserContext& context, const RawValue &value, THEOplayerRCTViewConfigCastStruct &result) {
@@ -140,7 +140,7 @@ static inline std::string toString(const THEOplayerRCTViewConfigCastStruct &valu
 }
 
 struct THEOplayerRCTViewConfigUiStruct {
-  std::string language{};
+  std::string language{""};
 };
 
 static inline void fromRawValue(const PropsParserContext& context, const RawValue &value, THEOplayerRCTViewConfigUiStruct &result) {
@@ -157,9 +157,9 @@ static inline std::string toString(const THEOplayerRCTViewConfigUiStruct &value)
 }
 
 struct THEOplayerRCTViewConfigMediaControlStruct {
-  bool mediaSessionEnabled{false};
-  double skipForwardInterval{0.0};
-  double skipBackwardInterval{0.0};
+  bool mediaSessionEnabled{true};
+  int skipForwardInterval{-1};
+  int skipBackwardInterval{-1};
   bool convertSkipToSeek{false};
 };
 
@@ -189,17 +189,17 @@ static inline std::string toString(const THEOplayerRCTViewConfigMediaControlStru
 }
 
 struct THEOplayerRCTViewConfigStruct {
-  std::string libraryLocation{};
-  std::string mutedAutoplay{};
+  std::string libraryLocation{""};
+  std::string mutedAutoplay{""};
   THEOplayerRCTViewConfigAdsStruct ads{};
   THEOplayerRCTViewConfigCastStruct cast{};
   THEOplayerRCTViewConfigUiStruct ui{};
   THEOplayerRCTViewConfigMediaControlStruct mediaControl{};
-  std::string license{};
-  std::string licenseUrl{};
-  bool chromeless{false};
+  std::string license{""};
+  std::string licenseUrl{""};
+  bool chromeless{true};
   bool hlsDateRange{false};
-  double liveOffset{0.0};
+  double liveOffset{-1.0};
 };
 
 static inline void fromRawValue(const PropsParserContext& context, const RawValue &value, THEOplayerRCTViewConfigStruct &result) {
