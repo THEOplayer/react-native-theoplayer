@@ -15,18 +15,33 @@ export function PiPSubMenu(props?: PipSubMenuProps) {
   const ctx = useContext(PlayerContext);
 
   return (
-    <CustomSubMenu
-      title={'Automatically Start Picture-in-Picture'}
-      menuStyle={props?.menuStyle}
-      label={'Auto PiP'}
-      options={[
-        { label: 'Disabled', value: false },
-        { label: 'Enabled', value: true },
-      ]}
-      onOptionSelected={(option: Option<boolean>) => {
-        ctx.player.pipConfiguration = { startsAutomatically: option.value };
-      }}
-      currentOption={() => ctx.player.pipConfiguration.startsAutomatically ?? false}
-    />
+    <>
+      <CustomSubMenu
+        title={'Automatically Start Picture-in-Picture'}
+        menuStyle={props?.menuStyle}
+        label={'Auto PiP'}
+        options={[
+          { label: 'Disabled', value: false },
+          { label: 'Enabled', value: true },
+        ]}
+        onOptionSelected={(option: Option<boolean>) => {
+          ctx.player.pipConfiguration = { ...ctx.player.pipConfiguration, startsAutomatically: option.value };
+        }}
+        currentOption={() => ctx.player.pipConfiguration.startsAutomatically ?? false}
+      />
+      <CustomSubMenu
+        title={'Retain Picture-in-Picture on new source'}
+        menuStyle={props?.menuStyle}
+        label={'Retain PiP'}
+        options={[
+          { label: 'Disabled', value: false },
+          { label: 'Enabled', value: true },
+        ]}
+        onOptionSelected={(option: Option<boolean>) => {
+          ctx.player.pipConfiguration = { ...ctx.player.pipConfiguration, retainPipOnSourceChange: option.value };
+        }}
+        currentOption={() => ctx.player.pipConfiguration.retainPipOnSourceChange ?? false}
+      />
+    </>
   );
 }
