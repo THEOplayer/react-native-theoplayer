@@ -226,6 +226,7 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
     private func parsePipConfig(configDict: NSDictionary) -> PipConfig {
         var pipConfig = PipConfig()
         pipConfig.canStartPictureInPictureAutomaticallyFromInline = configDict["startsAutomatically"] as? Bool ?? false
+        pipConfig.retainPresentationModeOnSourceChange = configDict["retainPipOnSourceChange"] as? Bool ?? false
         return pipConfig
     }
 
