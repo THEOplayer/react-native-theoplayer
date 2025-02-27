@@ -1248,6 +1248,8 @@ PODS:
   - react-native-google-cast/RNGoogleCast (4.6.2):
     - PromisesObjC
     - React
+  - react-native-safe-area-context (5.2.0):
+    - React-Core
   - react-native-slider (4.5.4):
     - DoubleConversion
     - glog
@@ -1533,6 +1535,28 @@ PODS:
     - React-logger (= 0.75.4-0)
     - React-perflogger (= 0.75.4-0)
     - React-utils (= 0.75.4-0)
+  - RNScreens (4.9.1):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-RCTImage
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNSVG (13.14.1):
     - React-Core
   - SocketRocket (0.7.0)
@@ -1585,6 +1609,7 @@ DEPENDENCIES:
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
   - react-native-google-cast (from `https://github.com/Danesz/react-native-google-cast.git`, branch `feature/guestmode_apple_silicon`)
+  - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
   - react-native-theoplayer (from `../..`)
   - React-nativeconfig (from `../node_modules/react-native/ReactCommon`)
@@ -1613,6 +1638,7 @@ DEPENDENCIES:
   - React-utils (from `../node_modules/react-native/ReactCommon/react/utils`)
   - ReactCodegen (from `build/generated/ios`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -1700,6 +1726,8 @@ EXTERNAL SOURCES:
   react-native-google-cast:
     :branch: feature/guestmode_apple_silicon
     :git: https://github.com/Danesz/react-native-google-cast.git
+  react-native-safe-area-context:
+    :path: "../node_modules/react-native-safe-area-context"
   react-native-slider:
     :path: "../node_modules/@react-native-community/slider"
   react-native-theoplayer:
@@ -1756,6 +1784,8 @@ EXTERNAL SOURCES:
     :path: build/generated/ios
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNScreens:
+    :path: "../node_modules/react-native-screens"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   Yoga:
@@ -1805,6 +1835,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: d9594fa247e7866b44249d5e04a68ace76af2841
   React-microtasksnativemodule: a3489ca37b515f6f685ec1a86c8df364343ac578
   react-native-google-cast: d7bdfd1a0eeba84afde03b9722351ec29543e74c
+  react-native-safe-area-context: 849d7df29ecb2a7155c769c0b76849ba952c2aa3
   react-native-slider: caf709802c97955d1dc369fc2ca6250f18bd58fb
   react-native-theoplayer: 7b52e402c8e7d751c52e78d0ed5da36b960cc1f1
   React-nativeconfig: ea22f0ab525feb865d2e0ed5d7aad156c36abe6b
@@ -1833,6 +1864,7 @@ SPEC CHECKSUMS:
   React-utils: 8289642e20d751967cb4e685956e5197cae2188c
   ReactCodegen: 873a3cfea4daf5b7f86d49361cc049831a45d840
   ReactCommon: a1cd388360d4e9545ab8e571ff293606c9ea6687
+  RNScreens: d25db6fa46bf5edb5e3241b089346e56af331091
   RNSVG: af3907ac5d4fa26a862b75a16d8f15bc74f2ceda
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   THEOliveSDK: 1b71cc9ed8fa517fd75185fdb778867a421a81b5

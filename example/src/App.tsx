@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { useState } from 'react';
+import { createStaticNavigation, useNavigation } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
   AirplayButton,
   CastMessage,
@@ -22,17 +22,20 @@ import {
   TimeLabel,
   UiContainer,
 } from '@theoplayer/react-native-ui';
-import { PlayerConfiguration, PlayerEventType, THEOplayer, THEOplayerView, sdkVersions } from 'react-native-theoplayer';
+import * as React from 'react';
+import { useState } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
+import { PlayerConfiguration, PlayerEventType, PresentationMode, sdkVersions, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
 
-import { Platform, SafeAreaView, StyleSheet, View, ViewStyle } from 'react-native';
+import { Platform, SafeAreaView, StyleSheet, ViewStyle } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
-import { SourceMenuButton, SOURCES } from './custom/SourceMenuButton';
 import { BackgroundAudioSubMenu } from './custom/BackgroundAudioSubMenu';
-import { PiPSubMenu } from './custom/PipSubMenu';
 import { MediaCacheDownloadButton } from './custom/MediaCacheDownloadButton';
 import { MediaCacheMenuButton } from './custom/MediaCacheMenuButton';
 import { MediaCachingTaskListSubMenu } from './custom/MediaCachingTaskListSubMenu';
+import { PiPSubMenu } from './custom/PipSubMenu';
 import { RenderingTargetSubMenu } from './custom/RenderingTargetSubMenu';
+import { SourceMenuButton, SOURCES } from './custom/SourceMenuButton';
 
 const playerConfig: PlayerConfiguration = {
   // Get your THEOplayer license from https://portal.theoplayer.com/
@@ -62,7 +65,8 @@ const playerConfig: PlayerConfiguration = {
  * The example app demonstrates the use of the THEOplayerView with a custom UI using the provided UI components.
  * If you don't want to create a custom UI, you can just use the THEOplayerDefaultUi component instead.
  */
-export default function App() {
+const HomeScreen = () => {
+  const navigation = useNavigation();
   const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);
   const chromeless = playerConfig?.chromeless ?? false;
   const onPlayerReady = (player: THEOplayer) => {
@@ -78,6 +82,11 @@ export default function App() {
     player.addEventListener(PlayerEventType.SEEKING, console.log);
     player.addEventListener(PlayerEventType.SEEKED, console.log);
     player.addEventListener(PlayerEventType.ENDED, console.log);
+    player.addEventListener(PlayerEventType.PRESENTATIONMODE_CHANGE, (event) => {
+      if (event.previousPresentationMode === PresentationMode.pip && event.presentationMode === PresentationMode.inline && navigation.canGoBack()) {
+        navigation.goBack();
+      }
+    });
 
     sdkVersions().then((versions) => console.log(`[theoplayer] ${JSON.stringify(versions, null, 4)}`));
 
@@ -92,7 +101,7 @@ export default function App() {
   const needsBorder = Platform.OS === 'ios';
   const PLAYER_CONTAINER_STYLE: ViewStyle = {
     position: 'absolute',
-    top: needsBorder ? getStatusBarHeight() : 0,
+    top: 100 + (needsBorder ? getStatusBarHeight() : 0),
     left: needsBorder ? 2 : 0,
     bottom: 0,
     right: needsBorder ? 2 : 0,
@@ -103,6 +112,9 @@ export default function App() {
 
   return (
     <SafeAreaView style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}>
+      <TouchableOpacity style={{ backgroundColor: 'white', margin: 10, padding: 10 }} onPress={() => navigation.navigate('Second' as never)}>
+        <Text>Go to second screen</Text>
+      </TouchableOpacity>
       <View style={PLAYER_CONTAINER_STYLE}>
         <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady}>
           {player !== undefined && chromeless && (
@@ -164,4 +176,24 @@ export default function App() {
       </View>
     </SafeAreaView>
   );
+};
+
+const SecondScreen = () => (
+  <View>
+    <Text>Second screen</Text>
+  </View>
+);
+
+const RootStack = createNativeStackNavigator({
+  initialRouteName: 'Home',
+  screens: {
+    Home: HomeScreen,
+    Second: SecondScreen,
+  },
+});
+
+const Navigation = createStaticNavigation(RootStack);
+
+export default function App() {
+  return <Navigation />;
 }
