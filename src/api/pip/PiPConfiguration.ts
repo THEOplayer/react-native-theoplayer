@@ -5,7 +5,7 @@
  */
 export interface PiPConfiguration {
   /**
-   * Whether Picture in Picture should be allowed to start automatically when transitioning to background.
+   * Whether Picture in Picture should be allowed to start automatically from inline, when transitioning to background.
    *
    * @defaultValue `false`
    */
