@@ -36,12 +36,12 @@ import { MediaCachingTaskListSubMenu } from './custom/MediaCachingTaskListSubMen
 import { PiPSubMenu } from './custom/PipSubMenu';
 import { RenderingTargetSubMenu } from './custom/RenderingTargetSubMenu';
 import { SourceMenuButton, SOURCES } from './custom/SourceMenuButton';
+import { AutoPlaySubMenu } from './custom/AutoPlaySubMenu';
 
 const playerConfig: PlayerConfiguration = {
   // Get your THEOplayer license from https://portal.theoplayer.com/
   // Without a license, only demo sources hosted on '*.theoplayer.com' domains can be played.
   license: undefined,
-  chromeless: true,
   hlsDateRange: true,
   libraryLocation: 'theoplayer',
   cast: {
@@ -68,7 +68,6 @@ const playerConfig: PlayerConfiguration = {
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);
-  const chromeless = playerConfig?.chromeless ?? false;
   const onPlayerReady = (player: THEOplayer) => {
     setPlayer(player);
     // optional debug logs
@@ -117,7 +116,7 @@ const HomeScreen = () => {
       </TouchableOpacity>
       <View style={PLAYER_CONTAINER_STYLE}>
         <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady}>
-          {player !== undefined && chromeless && (
+          {player !== undefined && (
             <UiContainer
               theme={{ ...DEFAULT_THEOPLAYER_THEME }}
               player={player}
@@ -143,6 +142,7 @@ const HomeScreen = () => {
                     <PlaybackRateSubMenu />
                     <BackgroundAudioSubMenu />
                     <PiPSubMenu />
+                    <AutoPlaySubMenu />
                     {Platform.OS === 'android' && <RenderingTargetSubMenu />}
                   </SettingsMenuButton>
                 </ControlBar>

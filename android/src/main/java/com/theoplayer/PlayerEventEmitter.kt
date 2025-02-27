@@ -8,7 +8,7 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.bridge.WritableNativeMap
 import com.facebook.react.uimanager.UIManagerHelper
-import com.facebook.react.uimanager.common.ViewUtil
+import com.facebook.react.uimanager.common.UIManagerType
 import com.theoplayer.ads.AdEventAdapter
 import com.theoplayer.ads.AdEventAdapter.AdEventEmitter
 import com.theoplayer.android.api.THEOplayerGlobal
@@ -46,7 +46,6 @@ import com.theoplayer.presentation.PresentationModeChangeContext
 import com.theoplayer.track.*
 import com.theoplayer.util.PayloadBuilder
 import kotlin.math.floor
-
 
 private val TAG = PlayerEventEmitter::class.java.name
 
@@ -613,8 +612,13 @@ class PlayerEventEmitter internal constructor(
       } catch (ignore: RuntimeException) {
       }
     }
-    val uiManager = UIManagerHelper.getUIManager(reactContext, ViewUtil.getUIManagerType(viewId))
-    uiManager?.receiveEvent(UIManagerHelper.getSurfaceId(reactContext), viewId, type, event)
+    UIManagerHelper.getUIManager(
+      reactContext,
+      if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
+        UIManagerType.FABRIC
+      } else {
+        UIManagerType.DEFAULT
+      })?.receiveEvent(UIManagerHelper.getSurfaceId(playerView), viewId, type, event)
   }
 
   private fun attachListeners(player: Player) {

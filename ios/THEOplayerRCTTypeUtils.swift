@@ -106,8 +106,8 @@ class THEOplayerRCTTypeUtils {
             return AdIntegrationKind.google_ima
         case "google-dai":
             return AdIntegrationKind.google_dai
-        case "":
-            return AdIntegrationKind.custom
+        case "theoads":
+            return AdIntegrationKind.theoads
         default:
             return AdIntegrationKind.custom
         }

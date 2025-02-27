@@ -79,6 +79,11 @@ extension THEOplayerRCTAdsAPI {
         resolve(false)
     }
     
+    @objc(daiSetSnapback:enabled:)
+    func daiSetSnapback(_ node: NSNumber, enabled: Bool) -> Void {
+        if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE) }
+    }
+    
     @objc(daiContentTimeForStreamTime:time:resolver:rejecter:)
     func daiContentTimeForStreamTime(_ node: NSNumber, timeValue: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if DEBUG_ADS_API { print(ERROR_MESSAGE_ADS_UNSUPPORTED_FEATURE) }

@@ -5,6 +5,62 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- Delegating the autoplay functionality to the underlying native Android and iOS SDKs, making that logic independent from player events.
+- On Android, sources with THEOads will always use the media3 player pipeline.
+
+### Fixed
+
+- Fixed an issue on iOS where `hlsDateRange` was not passed from RN towards iOS native
+- Fixed an issue on Android, where the player would sometimes not initialise correctly in case New Architecture was not being used, resulting in a black screen.
+
+## [8.15.0] - 25-02-12
+
+### Changed
+
+- Transitioning to `fullscreen` presentation mode on Web platforms now puts only the `THEOplayerView` element and its child elements, such as the UI, in fullscreen. Previously, the whole page would transition to fullscreen.
+- Changed `presentationmodechange` event dispatching on iOS to take into account if the change actually happened on the native player.
+
+### Fixed
+
+- Fixed an issue on iOS Safari where transitioning to `fullscreen` presentation mode would not work.
+- Fixed an issue on Web where `presentationmodechange` events would sometimes be dispatched more than once.
+- Fixed an issue on iOS where the view origin in fullscreen presentationMode was wrong when running under the RN new architecture / interop layer
+
+## [8.14.0] - 25-02-10
+
+### Added
+
+- Added a `theoLive` property to `PlayerConfiguration` to enable THEOlive configuration.
+
+### Fixed
+
+- Fixed an issue on iOS where the `currentTime` on `NowPlayingInfoCenter` would go out of sync or reset when changing playback rate.
+- Fixed an issue on Android where the player would crash in case resolving the `THEOplayerView` instance fails.
+
+## [8.13.1] - 25-01-27
+
+### Fixed
+
+- Fixed an issue on iOS where fullscreen-inline transitions would cause a UIViewControllerHierarchyInconsistency when the current view's viewcController has sibling viewControllers that manage views that don't descend of the moving view.
+
+## [8.13.0] - 25-01-15
+
+### Added
+
+- Added support for New Architecture's through the Interop Layer. More info on the [React Native developer pages](https://reactnative.dev/architecture/landing-page).
+
+### Fixed
+
+- Fixed an issue on Web where picture-in-picture presentation mode would sometimes fail.
+
+### Changed
+
+- Upgraded the example app to use react-native-tvos@0.76.5-0.
+
 ## [8.12.0] - 25-01-09
 
 ### Fixed

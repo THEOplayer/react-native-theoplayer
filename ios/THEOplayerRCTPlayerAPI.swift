@@ -57,6 +57,19 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
             }
         }
     }
+    
+    @objc(setAutoplay:autoplay:)
+    func setAutoplay(_ node: NSNumber, autoplay: Bool) -> Void {
+        DispatchQueue.main.async {
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let player = theView.player {
+                if autoplay != player.autoplay {
+                    if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Changing TheoPlayer to \(autoplay ? "autoplay" : "not autoplay")") }
+                    player.autoplay = autoplay
+                }
+            }
+        }
+    }
 
     @objc(setSource:src:)
     func setSource(_ node: NSNumber, src: NSDictionary) -> Void {
@@ -352,6 +365,19 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                 }
                 if let marginLeft = textTrackStyle[TTS_PROP_MARGIN_LEFT] as? Int {
                     player.textTrackStyle?.marginLeft = [TextTrackStyleRuleNumber(marginLeft)]
+                }
+            }
+        }
+    }
+    
+    @objc(setKeepScreenOn:keepScreenOn:)
+    func setKeepScreenOn(_ node: NSNumber, keepScreenOn: Bool) -> Void {
+        DispatchQueue.main.async {
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let player = theView.player {
+                if player.preventsDisplaySleepDuringVideoPlayback != keepScreenOn {
+                    if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Changing TheoPlayer preventsDisplaySleepDuringVideoPlayback to \(keepScreenOn)") }
+                    player.preventsDisplaySleepDuringVideoPlayback = keepScreenOn
                 }
             }
         }
