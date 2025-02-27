@@ -10,4 +10,12 @@ export interface PiPConfiguration {
    * @defaultValue `false`
    */
   readonly startsAutomatically?: boolean;
+
+  /**
+   * Whether Picture in Picture should remain active when setting a new (non-undefined) source.
+   *
+   * @defaultValue `false`
+   * @remark: Only configurable for iOS.
+   */
+  readonly retainPipOnSourceChange?: boolean;
 }
