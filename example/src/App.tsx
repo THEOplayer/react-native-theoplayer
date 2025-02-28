@@ -56,6 +56,9 @@ const playerConfig: PlayerConfiguration = {
     skipBackwardInterval: 10,
     convertSkipToSeek: true,
   },
+  ads: {
+    theoads: true,
+  },
 };
 
 /**
