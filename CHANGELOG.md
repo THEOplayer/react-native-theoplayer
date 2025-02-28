@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [8.16.0] - 25-02-28
+
+### Changed
+
+- Delegating the autoplay functionality to the underlying native Android and iOS SDKs, making that logic independent from player events.
+- On Android, sources with THEOads will always use the media3 player pipeline.
+
+### Fixed
+
+- Fixed an issue on iOS where `hlsDateRange` was not passed from RN towards iOS native
+- Fixed an issue on Android, where the player would sometimes not initialise correctly in case New Architecture was not being used, resulting in a black screen.
+- Fixed an issue on iOS Safari browsers, where the `presentationmodechange` event would not be dispatched when entering or exiting fullscreen.
+
 ## [8.15.0] - 25-02-12
 
 ### Changed
@@ -16,6 +29,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed an issue on iOS Safari where transitioning to `fullscreen` presentation mode would not work.
 - Fixed an issue on Web where `presentationmodechange` events would sometimes be dispatched more than once.
+- Fixed an issue on iOS where the view origin in fullscreen presentationMode was wrong when running under the RN new architecture / interop layer
 
 ## [8.14.0] - 25-02-10
 
