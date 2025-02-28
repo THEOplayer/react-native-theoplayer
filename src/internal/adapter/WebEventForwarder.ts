@@ -7,7 +7,6 @@ import type {
   ErrorEvent as NativeErrorEvent,
   Event as NativeEvent,
   MediaTrack as NativeMediaTrack,
-  PresentationModeChangeEvent,
   RateChangeEvent as NativeRateChangeEvent,
   ReadyStateChangeEvent as NativeReadyStateChangeEvent,
   RemoveTrackEvent,
@@ -25,7 +24,6 @@ import {
   MediaTrackEventType,
   MediaTrackType,
   PlayerEventType,
-  PresentationMode,
   TextTrackEventType,
   TextTrackKind,
   TextTrackMode,
@@ -43,7 +41,6 @@ import {
   DefaultLoadedMetadataEvent,
   DefaultMediaTrackEvent,
   DefaultMediaTrackListEvent,
-  DefaultPresentationModeChangeEvent,
   DefaultProgressEvent,
   DefaultRateChangeEvent,
   DefaultReadyStateChangeEvent,
@@ -133,7 +130,6 @@ export class WebEventForwarder {
     this._player.removeEventListener('ratechange', this.onPlaybackRateChange);
     this._player.removeEventListener('segmentnotfound', this.onSegmentNotFound);
     this._player.removeEventListener('volumechange', this.onVolumeChangeEvent);
-    this._player.presentation.removeEventListener('presentationmodechange', this.onPresentationModeChange);
 
     this._player.textTracks.removeEventListener('addtrack', this.onAddTextTrack);
     this._player.textTracks.removeEventListener('removetrack', this.onRemoveTextTrack);
@@ -247,10 +243,6 @@ export class WebEventForwarder {
 
   private readonly onVolumeChangeEvent = (event: NativeVolumeChangeEvent) => {
     this._facade.dispatchEvent(new DefaultVolumeChangeEvent(event.volume, this._player.muted));
-  };
-
-  private readonly onPresentationModeChange = (event: PresentationModeChangeEvent) => {
-    this._facade.dispatchEvent(new DefaultPresentationModeChangeEvent(event.presentationMode as PresentationMode, PresentationMode.inline)); // TODO: move to extended event
   };
 
   private readonly onDimensionChange = (event: NativeDimensionChangeEvent) => {

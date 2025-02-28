@@ -68,7 +68,12 @@ export class WebPresentationModeManager {
   private updatePresentationMode = () => {
     // detect new presentation mode
     let newPresentationMode: PresentationMode = PresentationMode.inline;
-    if (fullscreenAPI !== undefined && document[fullscreenAPI.fullscreenElement_] !== null) {
+    if (
+      // Check if we went into fullscreen using the fullscreen API.
+      (fullscreenAPI !== undefined && document[fullscreenAPI.fullscreenElement_] !== null) ||
+      // or otherwise using player APi
+      this._player.presentation.currentMode === PresentationMode.fullscreen
+    ) {
       newPresentationMode = PresentationMode.fullscreen;
     } else if (this._player.presentation.currentMode === 'native-picture-in-picture') {
       newPresentationMode = PresentationMode.pip;
