@@ -214,7 +214,7 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
   pipConfiguration: PiPConfiguration;
 
   /**
-   * The active configuration for PiP.
+   * The active configuration for background audio playback.
    */
   backgroundAudioConfiguration: BackgroundAudioConfiguration;
 
