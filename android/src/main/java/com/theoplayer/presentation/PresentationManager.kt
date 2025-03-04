@@ -102,6 +102,7 @@ class PresentationManager(
     try {
       reactContext.currentActivity?.unregisterReceiver(onUserLeaveHintReceiver)
       reactContext.currentActivity?.unregisterReceiver(onPictureInPictureModeChanged)
+      fullScreenLayoutObserver.remove()
       pipUtils.destroy()
     } catch (ignore: Exception) {
     }
@@ -282,7 +283,7 @@ class PresentationManager(
       playerGroupRestoreOptions.reset()
 
       // Remove forced layout observer
-      fullScreenLayoutObserver.remove(reactPlayerGroup)
+      fullScreenLayoutObserver.remove()
     }
   }
 // endregion
