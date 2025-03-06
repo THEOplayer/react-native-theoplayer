@@ -24,7 +24,7 @@ type NativeGoogleImaConfiguration = Readonly<{
 }>;
 
 type NativeAdsConfiguration = Readonly<{
-  allowedMimeTypes: string[];
+  allowedMimeTypes?: string[];
   uiEnabled?: WithDefault<boolean, true>;
   preload?: WithDefault<string, ''>;
   vpaidMode?: WithDefault<string, ''>;
@@ -45,7 +45,7 @@ type NativePlayerConfiguration = Readonly<{
   ui?: Readonly<{
     language?: WithDefault<string, ''>;
   }>;
-  mediaControl: Readonly<{
+  mediaControl?: Readonly<{
     mediaSessionEnabled?: WithDefault<boolean, true>;
     skipForwardInterval?: WithDefault<Int32, -1>;
     skipBackwardInterval?: WithDefault<Int32, -1>;
