@@ -1,16 +1,36 @@
 # A Fullscreen Video Player Component
 
-Presenting a fullscreen video player poses challenges due to the need to seamlessly
+## Fullscreen Video on Web platforms
+
+Transitioning to fullscreen on Web platforms varies depending on the browser.
+
+Browsers that support the
+[Fullscreen API](https://fullscreen.spec.whatwg.org/) (Chrome, Firefox, Edge, etc.), allow any element to enter fullscreen
+mode. However, some - like Safari on iOS - restrict fullscreen access to `<video>` elements only.
+
+While this mechanism is hidden from users of the `react-native-theoplayer` SDK,
+it does affect the resulting user interface.
+
+On browsers that support the Fullscreen API, the player view together with its UI (a child component) will enter
+fullscreen mode. On the others, a UI with limited **native controls** will be displayed instead.
+
+| ![](./fullscreen_chrome.png)                      | ![](./fullscreen_ios_safari.png)                                 |
+|---------------------------------------------------|------------------------------------------------------------------|
+| Fullscreen presentation mode in a Chrome browser. | Fullscreen presentation mode with native controls in iOS Safari. |
+
+## Fullscreen Video on iOS and Android
+
+Presenting a fullscreen video player on iOS and Android through React Native poses challenges due to the need to seamlessly
 transition between the regular view and fullscreen mode, while maintaining playback continuity.
 This involves managing UI layers, native view hierarchies, and minimizing
 disruptions during the transition process.
 
-On this page we will present two ways of presenting a fullscreen player component. One that opens a
-new screen to present the player, and a second that transitions to fullscreen from an inline player.
+In this section we will present two ways of presenting a fullscreen player component. One that **opens a
+new screen to present the player**, and a second that **transitions to fullscreen from an inline player**.
 We will also discuss the related concept of "React Portals", which, when paired with a video player component,
 offer versatile applications beyond fullscreen display.
 
-## Presenting a fullscreen video player
+### Presenting a fullscreen video player
 
 A native iOS or Android video player that transitions into fullscreen typically creates another activity
 or view that _overlays the existing view stack_, while activating an immersive mode to maximize
@@ -46,8 +66,9 @@ view hierarchy and will need to cover the whole screen without remounting the pl
 |---------------------------------------------------------------|-----------------------------------------------------------|
 | Transitioning from an inline player to fullscreen on Android. | Transitioning from an inline player to fullscreen on iOS. |
 
-The `react-native-theoplayer` SDK supports this option on iOS and Android by re-parenting the native view to the
-top-most node of the view hierarchy when the player's presentation mode is set to `fullscreen`.
+The `react-native-theoplayer` SDK supports this option on iOS and Android by **re-parenting** the native view to the
+top-most node of the view hierarchy when the player's presentation mode is set to `fullscreen`, creating a
+seamless experience.
 
 ```ts
 import { PresentationMode } from './PresentationMode';
@@ -56,6 +77,15 @@ player.presentationMode = PresentationMode.fullscreen;
 ```
 
 When the player transitions back to inline mode, the view hierarchy will be restored.
+
+Any child of the`THEOplayerView` component, typically the user interface, will move as well through the view hierarchy.
+
+### Disable re-parenting on Android
+
+On Android, it is possible to disable the re-parenting mechanism by setting build flag
+`THEOplayer_reparent_on_fullscreen=false` in the app's gradle properties. This could be useful if your
+app wants to implement its own logic, or re-parent to a different node than the top-most one.
+[Immersive mode](https://developer.android.com/develop/ui/views/layout/immersive) will still be enabled in this case.
 
 ### iOS home indicator
 
@@ -78,11 +108,11 @@ or otherwise:
 HomeIndicatorViewController *rootViewController = [HomeIndicatorViewController new];
 ...
 self.window.rootViewController = rootViewController;
-``` 
+```
 
 Our iOS presentationMode changing code checks if the rootViewController is of type HomeIndicatorViewController and will, in that case, automatically take care of showing/hiding the home indicator.
 
-## Portals
+## Portals for iOS and Android
 
 A [Portal](https://react.dev/reference/react-dom/createPortal#usage) is a well-known concept in React that
 enables rendering a component in a different location in the DOM view hierarchy. Normally, when a component is
@@ -95,7 +125,7 @@ A typical use case is when the child component needs to "break out" of its conta
 tooltips, and floating or fullscreen video components. In the next section we will outline the creation of an
 in-app mini player.
 
-## Using Portals to transition to an in-app mini player
+### Using Portals to transition to an in-app mini player
 
 This section introduces a basic example illustrating how Portals facilitate the creation of an inline video component
 capable of transitioning to a mini player at the bottom of the screen, overlaying the other components.
@@ -144,8 +174,6 @@ will also be re-parented to the miniPlayer container at the bottom of the screen
 | ![](./miniplayer_android.gif)          | ![](./miniplayer_ios.gif)
 |----------------------------------------|------------------------------------|
 | A mini-player using Portals on Android | A mini-player using Portals on iOS |
-
-## Closing remarks
 
 Variants of the approach discussed above put the `PortalDestination` on a dedicated route in a
 [`NavigationContainer`](https://reactnavigation.org/docs/navigation-container/). This is

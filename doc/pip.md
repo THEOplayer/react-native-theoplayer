@@ -123,8 +123,8 @@ The PiP window will show the default controls to configure, maximize and close t
 In addition, the active media session enables a play/pause toggle button and (disabled) play-list
 navigator buttons.
 
-| ![pip1](./pip_android_1.png)    |       ![pip2](./pip_android_2.png)      | ![pip3](./pip_android_3.png)  |
-|---------------------------------------------------|:----------------------------------------------------------:|:-----------------------------:|
+| ![pip1](./pip_android_1.png) | ![pip2](./pip_android_2.png) | ![pip3](./pip_android_3.png) |
+|------------------------------|:----------------------------:|:----------------------------:|
 
 ### User interface
 
@@ -141,5 +141,10 @@ No additional configuration is required to support picture-in-picture on iOS.
 
 ## Web
 
-On web the behavior is similar to iOS, where PiP can be started manually from
-the UI. It will open up a floating PiP window displaying the video element.
+On web platforms, only the "out-of-app" PiP presentation mode is supported, allowing the PiP window to float
+independently from the browser window on the desktop.
+The THEOplayer Web SDK refers to this as
+[native-picture-in-picture](https://www.theoplayer.com/docs/theoplayer/v8/api-reference/web/types/PresentationMode.html)
+, distinguishing it from the "in-app" floating player window used in picture-in-picture mode.
+Note that except for the native PiP controls,
+any user interface defined in React Native will not be shown in the PiP window.
