@@ -19,7 +19,7 @@ extension THEOplayerRCTView {
     }
 }
 
-struct DefaultBackgroundPlaybackDelegate: BackgroundPlaybackDelegate {
+class DefaultBackgroundPlaybackDelegate: BackgroundPlaybackDelegate {
     func shouldContinueAudioPlaybackInBackground() -> Bool {
         return false
     }
