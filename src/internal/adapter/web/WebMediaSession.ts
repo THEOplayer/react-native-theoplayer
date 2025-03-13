@@ -54,9 +54,17 @@ export class WebMediaSession {
         this._player.currentTime = Math.min(this._player.currentTime + skipTime, this._player.duration);
         this.updatePositionState();
       });
+      mediaSession.setActionHandler('seekto', (event) => {
+        const seekTime = event.seekTime;
+        if (seekTime !== undefined) {
+          this._player.currentTime = seekTime;
+        }
+        this.updatePositionState();
+      });
     } else {
       mediaSession.setActionHandler('seekbackward', NoOp);
       mediaSession.setActionHandler('seekforward', NoOp);
+      mediaSession.setActionHandler('seekto', NoOp);
     }
 
     // update play/pause capabilities
@@ -87,6 +95,7 @@ export class WebMediaSession {
     mediaSession.setActionHandler('pause', NoOp);
     mediaSession.setActionHandler('seekbackward', NoOp);
     mediaSession.setActionHandler('seekforward', NoOp);
+    mediaSession.setActionHandler('seekto', NoOp);
   }
 
   private update = () => {
