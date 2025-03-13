@@ -73,6 +73,15 @@ export interface TheoAdDescription extends AdDescription {
   adTagParameters?: Record<string, string>;
 
   /**
+   * The streamActivityMonitorId added to the GAM Pod stream request.
+   *
+   * @remarks
+   * <br/> - Available since v8.17.0.
+   * <br/> - Available on Web only.
+   */
+  streamActivityMonitorId?: string;
+
+  /**
    * Whether to use the Id3 based operating mode.
    *
    * @defaultValue `false`
