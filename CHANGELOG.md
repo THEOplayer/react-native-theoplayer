@@ -7,8 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed an issue on Web where the metadata on the lockscreen was not showing correctly or missing occasionally.
+
 ### Added
 
+- Added SeekTo functionality to the web lockscreen controls, allowing to drag the lockscreen slider and seek to a specific time value.
 - Added the IMA DAI `streamActivityMonitorId` property as a configuration on the SGAI `TheoAdDescription` for web.
 
 ## [8.16.0] - 25-02-28
