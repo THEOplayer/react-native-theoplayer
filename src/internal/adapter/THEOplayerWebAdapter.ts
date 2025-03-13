@@ -155,7 +155,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     this._backgroundAudioConfiguration = config;
 
     // Notify media session
-    this._mediaSession?.updateActionHandlers();
+    this._mediaSession?.updateMediaSession();
   }
 
   get volume(): number {
@@ -345,7 +345,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
       }
     }
     // Apply media session controls
-    this._mediaSession?.updateActionHandlers();
+    this._mediaSession?.updateMediaSession();
   };
 
   get nativeHandle(): NativeHandleType {
