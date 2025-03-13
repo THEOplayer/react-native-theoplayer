@@ -290,6 +290,17 @@ export interface BaseSource {
   crossOrigin?: CrossOriginSetting;
 
   /**
+   * The offset in seconds used to determine the live point.
+   * This live point is the end of the manifest minus the provided offset.
+   *
+   * @remarks
+   * <br/> - Available on Web and Android.
+   *
+   * @defaultValue Three times the segment's target duration.
+   */
+  liveOffset?: number;
+
+  /**
    * The URL of a time server used by the player to synchronise the time in DASH sources.
    *
    * @remarks
