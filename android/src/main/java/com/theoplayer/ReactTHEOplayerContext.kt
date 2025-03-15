@@ -346,7 +346,8 @@ class ReactTHEOplayerContext private constructor(
             // return false -> the default pipeline will be used to play the selected source.
             //
             // @remark If the source contains THEOads, media3 is always enabled.
-            configAdapter.useMedia3 || source.ads.any { it is TheoAdDescription }
+            configAdapter.useMedia3 ||
+              BuildConfig.EXTENSION_THEOADS && source.ads.any { it is TheoAdDescription }
           }
         playerView.player.addIntegration(media3Integration)
       }
