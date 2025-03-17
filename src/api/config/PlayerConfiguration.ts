@@ -94,14 +94,6 @@ export interface PlayerConfiguration {
   useMedia3?: boolean;
 
   /**
-   * Sets whether support for THEOlive sources should be enabled.
-   *
-   * @defaultValue `false`.
-   * @deprecated: THEOlive support is always enabled, there is no need to explicitly enable it.
-   */
-  enableTHEOlive?: boolean;
-
-  /**
    * The THEOlive configuration for the player.
    */
   theoLive?: TheoLiveConfiguration;
