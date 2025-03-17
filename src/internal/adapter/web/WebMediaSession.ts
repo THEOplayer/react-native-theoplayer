@@ -38,30 +38,36 @@ export class WebMediaSession {
     this._player = player;
     this._webAdapter = adapter;
     this._config = config;
-
     this._player.addEventListener('sourcechange', this.onSourceChange);
-    this._player.addEventListener('loadedmetadata', this.onLoadedMetadata);
-    this._player.addEventListener('durationchange', this.onDurationChange);
-    this._player.ads?.addEventListener('adbreakbegin', this.onAdbreakBegin);
-    this._player.ads?.addEventListener('adbreakend', this.onAdbreakEnd);
-    this.updateActionHandlers();
   }
 
-  updateActionHandlers() {
-    if (this.isTrickplayEnabled()) {
+  updateMediaSession() {
+    // update trickplay capabilities
+    if (this.isTrickPlayEnabled()) {
       mediaSession.setActionHandler('seekbackward', (event) => {
         const skipTime = event.seekOffset || this._config.skipBackwardInterval || DEFAULT_SKIP_BACKWARD_INTERVAL;
         this._player.currentTime = Math.max(this._player.currentTime - skipTime, 0);
+        this.updatePositionState();
       });
       mediaSession.setActionHandler('seekforward', (event) => {
         const skipTime = event.seekOffset || this._config.skipForwardInterval || DEFAULT_SKIP_FORWARD_INTERVAL;
         this._player.currentTime = Math.min(this._player.currentTime + skipTime, this._player.duration);
+        this.updatePositionState();
+      });
+      mediaSession.setActionHandler('seekto', (event) => {
+        const seekTime = event.seekTime;
+        if (seekTime !== undefined) {
+          this._player.currentTime = seekTime;
+        }
+        this.updatePositionState();
       });
     } else {
       mediaSession.setActionHandler('seekbackward', NoOp);
       mediaSession.setActionHandler('seekforward', NoOp);
+      mediaSession.setActionHandler('seekto', NoOp);
     }
 
+    // update play/pause capabilities
     if (this.isPlayPauseEnabled()) {
       mediaSession.setActionHandler('play', () => {
         this._player?.play();
@@ -73,32 +79,43 @@ export class WebMediaSession {
       mediaSession.setActionHandler('play', NoOp);
       mediaSession.setActionHandler('pause', NoOp);
     }
+
+    // update playbackState
+    mediaSession.playbackState = this._player.paused ? 'paused' : 'playing';
+
+    // update position
+    this.updatePositionState();
   }
 
   destroy() {
-    this._player.removeEventListener('sourcechange', this.onSourceChange);
-    this._player.removeEventListener('loadedmetadata', this.onLoadedMetadata);
-    this._player.removeEventListener('durationchange', this.onDurationChange);
-    this._player.ads?.removeEventListener('adbreakbegin', this.onAdbreakBegin);
-    this._player.ads?.removeEventListener('adbreakend', this.onAdbreakEnd);
+    this._player.removeEventListener(['play', 'playing'], this.onFirstPlaying);
+    this._player.removeEventListener(['play', 'pause', 'loadedmetadata', 'durationchange', 'ratechange'], this.update);
+    this._player.ads?.removeEventListener(['adbreakbegin', 'adbreakend'], this.update);
     mediaSession.setActionHandler('play', NoOp);
     mediaSession.setActionHandler('pause', NoOp);
     mediaSession.setActionHandler('seekbackward', NoOp);
     mediaSession.setActionHandler('seekforward', NoOp);
+    mediaSession.setActionHandler('seekto', NoOp);
   }
 
-  private onSourceChange = () => {
+  private update = () => {
+    this.updateMediaSession();
+  };
+
+  private onFirstPlaying = () => {
+    this._player.removeEventListener(['play', 'playing'], this.onFirstPlaying);
     this.updateMetadata();
-    this.updatePositionState();
-    this.updateActionHandlers();
+    this._player.addEventListener(['play', 'pause', 'loadedmetadata', 'durationchange', 'ratechange'], this.update);
+    this._player.ads?.addEventListener(['adbreakbegin', 'adbreakend'], this.update);
   };
 
-  private onLoadedMetadata = () => {
-    this.updateActionHandlers();
-  };
-
-  private onDurationChange = () => {
-    this.updateActionHandlers();
+  private onSourceChange = () => {
+    this._player.removeEventListener(['play', 'playing'], this.onFirstPlaying);
+    this._player.removeEventListener(['play', 'pause', 'loadedmetadata', 'durationchange', 'ratechange'], this.update);
+    this._player.ads?.removeEventListener(['adbreakbegin', 'adbreakend'], this.update);
+    mediaSession.metadata = null;
+    mediaSession.playbackState = 'none';
+    this._player.addEventListener(['play', 'playing'], this.onFirstPlaying);
   };
 
   private updateMetadata = () => {
@@ -140,14 +157,6 @@ export class WebMediaSession {
     }
   };
 
-  private onAdbreakBegin = () => {
-    this.updateActionHandlers();
-  };
-
-  private onAdbreakEnd = () => {
-    this.updateActionHandlers();
-  };
-
   private isLive(): boolean {
     return !isFinite(this._player.duration);
   }
@@ -163,7 +172,7 @@ export class WebMediaSession {
   // By default, only show trick-play buttons if:
   // - backgroundAudio is enabled, or the player is in foreground;
   // - and, the current asset is neither a live stream, nor an ad.
-  private isTrickplayEnabled(): boolean {
+  private isTrickPlayEnabled(): boolean {
     return (this.isBackgroundAudioEnabled() || !this.isInBackground()) && !this.isLive() && !this.isInAd();
   }
 
