@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added `liveOffset` property to `SourceDescription` for Web and Android platforms.
 - Added `decription` property for Google IMA ads on Web and Android platforms.
+- Added `networkCode` property for Google DAI configuration on Web platforms.
 
 ## [Unreleased]
 
