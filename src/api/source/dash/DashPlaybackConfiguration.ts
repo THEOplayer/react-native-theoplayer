@@ -98,4 +98,14 @@ export interface DashPlaybackConfiguration {
    * <br/> - This only applies to streams that use `<SegmentTimeline>`.
    */
   ignoreAvailabilityWindow?: boolean;
+
+  /**
+   * A flag to indicate whether timestamps of segmented WebVTT subtitles are relative to the segment start time.
+   *
+   * @remarks
+   * <br/> - Available on Web only.
+   *
+   *  @defaultValue `true`
+   */
+  segmentRelativeVttTiming?: boolean;
 }
