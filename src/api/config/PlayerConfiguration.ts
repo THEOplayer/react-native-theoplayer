@@ -59,16 +59,6 @@ export interface PlayerConfiguration {
   readonly licenseUrl?: string;
 
   /**
-   * Sets whether the native player is chromeless (without UI).
-   *
-   * @remarks
-   * <br/> - This parameter only applies to Web platforms.
-   *
-   * @deprecated: Use the OpenVideoUI package {@link https://github.com/THEOplayer/react-native-theoplayer-ui}.
-   */
-  readonly chromeless?: boolean;
-
-  /**
    * Sets whether DateRange tags from the playlists should be imported as a textTrack.
    */
   readonly hlsDateRange?: boolean;
