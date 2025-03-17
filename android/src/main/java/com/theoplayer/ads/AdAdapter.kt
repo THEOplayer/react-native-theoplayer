@@ -23,6 +23,7 @@ private const val PROP_AD_BREAK = "adBreak"
 private const val PROP_AD_COMPANIONS = "companions"
 private const val PROP_AD_SKIPOFFSET = "skipOffset"
 private const val PROP_AD_CREATIVE_ID = "creativeId"
+private const val PROP_AD_DESCRIPTION = "description"
 private const val PROP_AD_TRAFFICKING_PARAMETERS = "traffickingParametersString"
 private const val PROP_AD_BITRATE = "bitrate"
 private const val PROP_AD_UNIVERSAL_AD_IDS = "universalAdIds"
@@ -95,6 +96,7 @@ object AdAdapter {
         adPayload.putDouble(PROP_AD_WIDTH, ad.imaAd.vastMediaWidth.toDouble())
         adPayload.putDouble(PROP_AD_HEIGHT, ad.imaAd.vastMediaHeight.toDouble())
         adPayload.putString(PROP_AD_CONTENT_TYPE, ad.imaAd.contentType)
+        adPayload.putString(PROP_AD_DESCRIPTION, ad.imaAd.description)
       } catch (ignore: Exception) {
         // googleImaAd.getImaAd() is not known yet
       }
@@ -399,7 +401,7 @@ object AdAdapter {
       }
 
       override fun getDescription(): String {
-        return ""
+        return ad?.getString(PROP_AD_DESCRIPTION) ?: ""
       }
 
       override fun getSurveyUrl(): String {
