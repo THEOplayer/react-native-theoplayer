@@ -347,7 +347,7 @@ class ReactTHEOplayerContext private constructor(
             //
             // @remark If the source contains THEOads, media3 is always enabled.
             configAdapter.useMedia3 ||
-              BuildConfig.EXTENSION_THEOADS && source.ads.any { it is TheoAdDescription }
+              (BuildConfig.EXTENSION_THEOADS && source.ads.any { it is TheoAdDescription })
           }
         playerView.player.addIntegration(media3Integration)
       }
