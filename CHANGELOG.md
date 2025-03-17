@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Removed ad integration kind `theo`.
 - Removed `enableTHEOlive` property from `PlayerConfiguration` as THEOlive is always enabled.
 
+### Added
+
+- Added `liveOffset` property to `SourceDescription` for Web and Android platforms.
+
 ## [Unreleased]
 
 ### Fixed
