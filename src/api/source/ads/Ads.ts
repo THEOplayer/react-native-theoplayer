@@ -89,7 +89,6 @@ export interface AdDescription {
 /**
  * The integration of an ad break, represented by a value from the following list:
  * <br/> - `'csai'`: Default CSAI ad playback.
- * <br/> - `'theo'`: Old naming for `'csai'` - Default ad playback. (Deprecated)
  * <br/> - `'google-ima'`: {@link https://developers.google.com/interactive-media-ads/docs/sdks/html5|Google IMA}.
  * <br/> - `'google-dai'`: {@link https://developers.google.com/ad-manager/dynamic-ad-insertion/sdk/html5 | Google DAI}.
  * <br/> - `'spotx'`: {@link https://developer.spotxchange.com/|SpotX} pre-integrated ad playback.
@@ -107,6 +106,5 @@ export enum AdIntegrationKind {
   google_dai = 'google-dai',
   spotx = 'spotx',
   csai = 'csai',
-  theo = 'theo',
   theoads = 'theoads',
 }
