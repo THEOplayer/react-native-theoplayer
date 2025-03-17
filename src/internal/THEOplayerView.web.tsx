@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import type { THEOplayerViewProps } from 'react-native-theoplayer';
-import { Player, ChromelessPlayer, PlayerConfiguration } from 'theoplayer';
+import { ChromelessPlayer } from 'theoplayer';
 import { THEOplayerWebAdapter } from './adapter/THEOplayerWebAdapter';
 
 export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProps>) {
@@ -12,7 +12,6 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
   useEffect(() => {
     // Create player inside container.
     if (container.current) {
-      const chromeless = config?.chromeless === true || config?.chromeless === undefined;
       const ads = {
         ...config?.ads,
         googleIma: {
@@ -26,18 +25,7 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
         allowNativeFullscreen: true,
         ads,
       };
-      if (chromeless) {
-        player.current = new ChromelessPlayer(container.current, updatedConfig);
-      } else {
-        player.current = new Player(container.current, {
-          ...updatedConfig,
-          ads,
-          ui: {
-            ...config?.ui,
-            fluid: true,
-          },
-        } as PlayerConfiguration);
-      }
+      player.current = new ChromelessPlayer(container.current, updatedConfig);
 
       // Adapt native player to react-native player.
       adapter.current = new THEOplayerWebAdapter(player.current, config);
@@ -64,17 +52,12 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
     };
   }, [container]);
 
-  const chromeless = config?.chromeless === undefined || config?.chromeless;
   return (
     // Note: display: contents causes an element's children to appear as if they were direct children of the element's parent,
     // ignoring the element itself.
     // It's necessary to make sure we do not interfere with the IMA container
     <div id={'theoplayer-root-container'} style={{ display: 'contents' }}>
-      <div
-        ref={container}
-        style={styles.container}
-        className={chromeless ? 'theoplayer-container' : 'theoplayer-container video-js theoplayer-skin'}
-      />
+      <div ref={container} style={styles.container} className={'theoplayer-container'} />
       {children}
     </div>
   );
