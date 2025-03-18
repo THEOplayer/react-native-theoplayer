@@ -1,17 +1,15 @@
-import { EventDispatcher } from 'react-native-theoplayer';
-import { TheoAdsEventsMap } from './events/TheoAdsEventsMap';
 import { Interstitial } from './interstitial/Interstitial';
 
 /**
  * The THEOads API.
  *
  * @remarks
- * <br/> - Available since v8.12.0.
+ * <br/> - Available since v8.17.0.
  *
  * @category THEOads
  * @public
  */
-export interface TheoAds extends EventDispatcher<TheoAdsEventsMap> {
+export interface TheoAdsAPI {
   /**
    * The currently playing interstitials.
    */

@@ -1,4 +1,4 @@
-export * from './TheoAds';
+export * from './TheoAdsAPI';
 export * from './events/TheoAdsEventsMap';
 export * from './interstitial/Interstitial';
 export * from './interstitial/AdBreakInterstitial';
