@@ -15,7 +15,7 @@ import type {
 import type { MediaTrackEvent, MediaTrackListEvent, TextTrackEvent, TextTrackListEvent } from '../event/TrackEvent';
 import type { AdEvent } from '../event/AdEvent';
 import type { CastEvent } from '../event/CastEvent';
-import { TheoAdsEvent } from '../event/TheoAdsEvent';
+import type { TheoAdsEvent } from '../event/TheoAdsEvent';
 
 export enum PlayerEventType {
   PLAY = 'play',
