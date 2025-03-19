@@ -20,7 +20,6 @@ import com.theoplayer.android.api.source.metadata.ChromecastMetadataImage
 import com.theoplayer.BuildConfig
 import com.theoplayer.android.api.ads.theoads.TheoAdsLayoutOverride
 import com.theoplayer.android.api.error.ErrorCode
-import com.theoplayer.android.api.millicast.MillicastSource
 import com.theoplayer.android.api.source.AdIntegration
 import com.theoplayer.android.api.source.dash.DashPlaybackConfiguration
 import com.theoplayer.android.api.theolive.TheoLiveSource
@@ -66,8 +65,6 @@ private const val PROP_NETWORK_CODE = "networkCode"
 private const val PROP_USE_ID3 = "useId3"
 private const val PROP_RETRIEVE_POD_ID_URI = "retrievePodIdURI"
 private const val PROP_LATENCY_CONFIGURATION = "latencyConfiguration"
-private const val PROP_STREAMACCOUNTID = "streamAccountId"
-private const val PROP_APIURL = "apiUrl"
 
 private const val ERROR_IMA_NOT_ENABLED = "Google IMA support not enabled."
 private const val ERROR_THEOADS_NOT_ENABLED = "THEOads support not enabled."
@@ -167,14 +164,6 @@ class SourceAdapter {
       latencyConfiguration=jsonTypedSource.optJSONObject(PROP_LATENCY_CONFIGURATION)?.let {
         parseLatencyConfiguration(it)
       }
-    )
-  }
-
-  private fun parseMillicastSource(jsonTypedSource: JSONObject): MillicastSource {
-    return MillicastSource(
-      src=jsonTypedSource.optString(PROP_SRC),
-      streamAccountId=jsonTypedSource.optString(PROP_STREAMACCOUNTID),
-      apiUrl=jsonTypedSource.optString(PROP_APIURL)
     )
   }
 
