@@ -249,6 +249,7 @@ class PresentationManager(
   // region Re-parent playerViewGroup logic
   private val reactPlayerGroup: ReactViewGroup?
     get() = viewCtx.playerView.getClosestParentOfType()
+
   private val rootView: ReactRootView?
     get() {
       val activity = reactContext.currentActivity ?: return null
@@ -259,31 +260,31 @@ class PresentationManager(
     }
 
   private fun reparentPlayerToRoot() {
-    playerGroupRestoreOptions.parentNode = if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
-      reactPlayerGroup?.parent as? ReactSurfaceView?
-    } else {
-      reactPlayerGroup?.parent as? ReactViewGroup?
-    }?.also { parent ->
-      playerGroupRestoreOptions.childIndex = parent.indexOfChild(reactPlayerGroup)
+    reactPlayerGroup?.let { playerGroup ->
+      playerGroupRestoreOptions.parentNode = (playerGroup.parent as? ViewGroup)?.also { parent ->
+        playerGroupRestoreOptions.childIndex = parent.indexOfChild(playerGroup)
 
-      // Re-parent the playerViewGroup to the root node
-      parent.removeView(reactPlayerGroup)
-      rootView?.addView(reactPlayerGroup)
+        // Re-parent the playerViewGroup to the root node
+        parent.removeView(playerGroup)
+        rootView?.addView(playerGroup)
 
-      // Attach an observer that overrides the react-native lay-out and forces fullscreen.
-      fullScreenLayoutObserver.attach(reactPlayerGroup)
+        // Attach an observer that overrides the react-native lay-out and forces fullscreen.
+        fullScreenLayoutObserver.attach(playerGroup)
+      }
     }
   }
 
   private fun reparentPlayerToOriginal() {
     rootView?.run {
-      // Re-parent the playerViewGroup from the root node to its original parent
-      removeView(reactPlayerGroup)
-      playerGroupRestoreOptions.parentNode?.addView(reactPlayerGroup, playerGroupRestoreOptions.childIndex ?: 0)
-      playerGroupRestoreOptions.reset()
+      reactPlayerGroup?.let { playerGroup ->
+        // Remove forced layout observer
+        fullScreenLayoutObserver.remove()
 
-      // Remove forced layout observer
-      fullScreenLayoutObserver.remove()
+        // Re-parent the playerViewGroup from the root node to its original parent
+        removeView(playerGroup)
+        playerGroupRestoreOptions.parentNode?.addView(playerGroup, playerGroupRestoreOptions.childIndex ?: 0)
+        playerGroupRestoreOptions.reset()
+      }
     }
   }
 // endregion
