@@ -33,7 +33,6 @@ import { MediaCachingTaskListSubMenu } from './custom/MediaCachingTaskListSubMen
 import { RenderingTargetSubMenu } from './custom/RenderingTargetSubMenu';
 import { AutoPlaySubMenu } from './custom/AutoPlaySubMenu';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { getStatusBarHeight } from 'react-native-status-bar-height';
 
 const playerConfig: PlayerConfiguration = {
   // Get your THEOplayer license from https://portal.theoplayer.com/
@@ -177,7 +176,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    top: Platform.OS === 'ios' ? getStatusBarHeight() : 0,
     marginHorizontal: 2,
     alignItems: 'center',
     justifyContent: 'center',
