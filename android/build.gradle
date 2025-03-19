@@ -41,6 +41,7 @@ def enabledAds = enabledGoogleIMA || enabledGoogleDAI || enabledTHEOads
 def enabledCast = safeExtGet("THEOplayer_extensionCast", 'false').toBoolean()
 def enabledMediaSession = safeExtGet("THEOplayer_extensionMediaSession", 'true').toBoolean()
 def enabledMedia3 = safeExtGet("THEOplayer_extensionMedia3", 'false').toBoolean()
+def enabledMillicast = safeExtGet("THEOplayer_extensionMillicast", 'false').toBoolean()
 
 android {
   compileSdk safeExtGet('THEOplayer_compileSdkVersion', 34)
@@ -76,6 +77,7 @@ android {
     buildConfigField "boolean", "EXTENSION_CAST", "${enabledCast}"
     buildConfigField "boolean", "EXTENSION_MEDIASESSION", "${enabledMediaSession}"
     buildConfigField "boolean", "EXTENSION_MEDIA3", "${enabledMedia3}"
+    buildConfigField "boolean", "EXTENSION_MILLICAST", "${enabledMillicast}"
 
     buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
 
@@ -179,6 +181,16 @@ dependencies {
   } else {
     println('Disable THEOplayer media3 extension.')
     compileOnly "com.theoplayer.theoplayer-sdk-android:integration-media3:${theoplayer_sdk_version}"
+  }
+
+  if (enabledMillicast) {
+    println('Enable THEOplayer millicast extension.')
+    implementation "com.theoplayer.theoplayer-sdk-android:integration-millicast:${theoplayer_sdk_version}"
+    implementation "com.millicast:millicast-sdk-android:2.0.0"
+  } else {
+    println('Disable THEOplayer millicast extension.')
+    compileOnly "com.theoplayer.theoplayer-sdk-android:integration-millicast:${theoplayer_sdk_version}"
+    compileOnly "com.millicast:millicast-sdk-android:2.0.0"
   }
 }
 
