@@ -202,47 +202,83 @@ export function expect(actual: any, desc?: string) {
   return {
     toBe(expected: any) {
       if (actual === expected) logPass(`${actual} == ${expected}`);
-      else throwErr(`Expected ${actual} to be ${expected}`);
+      else {
+        const errorMessage = `Expected ${actual} to be ${expected}`;
+        console.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
+        throwErr(errorMessage);
+      }
     },
 
     toNotBe(expected: any) {
       if (actual !== expected) logPass(`${actual} != ${expected}`);
-      else throwErr(`Expected ${actual} not to be ${expected}`);
+      else {
+        const errorMessage = `Expected ${actual} not to be ${expected}`;
+        console.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
+        throwErr(errorMessage);
+      }
     },
 
     toEqual(expected: any) {
       if (JSON.stringify(actual) === JSON.stringify(expected)) logPass(`Expected ${actual} to equal ${expected}`);
-      else throwErr(`Expected ${actual} to equal ${expected}`);
+      else {
+        const errorMessage = `Expected ${actual} to equal ${expected}`;
+        console.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
+        throwErr(errorMessage);
+      }
     },
 
     toBeGreaterThan(expected: number) {
       if (actual > expected) logPass(`${actual} > ${expected}`);
-      else throwErr(`Expected ${actual} to be greater than ${expected}`);
+      else {
+        const errorMessage = `Expected ${actual} to be greater than ${expected}`;
+        console.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
+        throwErr(errorMessage);
+      }
     },
 
     toBeGreaterThanOrEqual(expected: number) {
       if (actual >= expected) logPass(`${actual} >= ${expected}`);
-      else throwErr(`Expected ${actual} to be greater than or equal to ${expected}`);
+      else {
+        const errorMessage = `Expected ${actual} to be greater than or equal to ${expected}`;
+        console.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
+        throwErr(errorMessage);
+      }
     },
 
     toBeSmallerThan(expected: number) {
       if (actual < expected) logPass(`${actual} < ${expected}`);
-      else throwErr(`Expected ${actual} to be smaller than ${expected}`);
+      else {
+        const errorMessage = `Expected ${actual} to be smaller than ${expected}`;
+        console.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
+        throwErr(errorMessage);
+      }
     },
 
     toBeSmallerThanOrEqual(expected: number) {
       if (actual <= expected) logPass(`${actual} <= ${expected}`);
-      else throwErr(`Expected ${actual} to be smaller than or equal to ${expected}`);
+      else {
+        const errorMessage = `Expected ${actual} to be smaller than or equal to ${expected}`;
+        console.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
+        throwErr(errorMessage);
+      }
     },
 
     toBeTruthy() {
       if (actual) logPass(`${actual} is truthy`);
-      else throwErr(`Expected ${actual} to be truthy`);
+      else {
+        const errorMessage = `Expected ${actual} to be truthy`;
+        console.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
+        throwErr(errorMessage);
+      }
     },
 
     toBeFalsy() {
       if (!actual) logPass(`${actual} is falsy`);
-      else throwErr(`Expected ${actual} to be falsy`);
+      else {
+        const errorMessage = `Expected ${actual} to be falsy`;
+        console.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
+        throwErr(errorMessage);
+      }
     },
   };
 }
