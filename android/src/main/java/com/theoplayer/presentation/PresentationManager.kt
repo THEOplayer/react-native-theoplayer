@@ -8,6 +8,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewParent
@@ -17,7 +19,6 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.children
 import androidx.lifecycle.Lifecycle
 import com.facebook.react.ReactRootView
-import com.facebook.react.runtime.ReactSurfaceView
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.views.view.ReactViewGroup
 import com.theoplayer.BuildConfig
@@ -26,6 +27,8 @@ import com.theoplayer.ReactTHEOplayerContext
 import com.theoplayer.android.api.error.ErrorCode
 import com.theoplayer.android.api.error.THEOplayerException
 import com.theoplayer.android.api.player.PresentationMode
+
+private const val FULLSCREEN_EVENT_DELAY: Long = 150
 
 @SuppressLint("UnspecifiedRegisterReceiverFlag")
 class PresentationManager(
@@ -229,7 +232,10 @@ class PresentationManager(
         hide(WindowInsetsCompat.Type.systemBars())
       }
 
-      updatePresentationMode(PresentationMode.FULLSCREEN)
+      // Delay the event making sure it does not arrive before animations ended.
+      Handler(Looper.getMainLooper()).postDelayed({
+        updatePresentationMode(PresentationMode.FULLSCREEN)
+      }, FULLSCREEN_EVENT_DELAY)
 
       if (BuildConfig.REPARENT_ON_FULLSCREEN) {
         reparentPlayerToRoot()
