@@ -91,6 +91,16 @@ export interface TheoAdDescription extends AdDescription {
    * <br/> - Contact THEO Technologies for more information.
    */
   useId3?: boolean;
+
+  /**
+   * The URI from where to retrieve the PodID's as returned from the EABN service from Google.
+   */
+  retrievePodIdURI?: string;
+
+  /**
+   * The endpoint from where to retrieve the server-sent events.
+   */
+  sseEndpoint?: string;
 }
 
 /**

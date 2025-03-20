@@ -28,6 +28,8 @@ import { BaseEvent } from './event/BaseEvent';
 import { EventBroadcastAdapter } from './broadcast/EventBroadcastAdapter';
 import { TextTrackState } from './NativePlayerState';
 import { DefaultTextTrackState } from './DefaultTextTrackState';
+import { TheoAdsAPI } from '../../api/theoads/TheoAdsAPI';
+import { THEOAdsWebAdapter } from './theoads/THEOAdsWebAdapter';
 
 const defaultBackgroundAudioConfiguration: BackgroundAudioConfiguration = {
   enabled: false,
@@ -40,6 +42,7 @@ const defaultPipConfiguration: PiPConfiguration = {
 export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap> implements THEOplayer {
   private readonly _adsAdapter: THEOplayerWebAdsAdapter;
   private readonly _castAdapter: THEOplayerWebCastAdapter;
+  private readonly _theoAdsAdapter: THEOAdsWebAdapter;
   private readonly _textTrackState: TextTrackState;
   private readonly _presentationModeManager: WebPresentationModeManager;
   private _player: NativeChromelessPlayer | undefined;
@@ -55,6 +58,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     this._player = player;
     this._adsAdapter = new THEOplayerWebAdsAdapter(this._player);
     this._castAdapter = new THEOplayerWebCastAdapter(this._player);
+    this._theoAdsAdapter = new THEOAdsWebAdapter(this._player);
     this._textTrackState = new DefaultTextTrackState(this);
     this._eventForwarder = new WebEventForwarder(this._player, this);
     this._presentationModeManager = new WebPresentationModeManager(this._player, this);
@@ -310,6 +314,10 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
 
   public get ads(): AdsAPI {
     return this._adsAdapter;
+  }
+
+  public get theoads(): TheoAdsAPI {
+    return this._theoAdsAdapter;
   }
 
   public get cast(): CastAPI {
