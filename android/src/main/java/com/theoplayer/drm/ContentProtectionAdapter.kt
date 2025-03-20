@@ -12,7 +12,9 @@ import com.theoplayer.android.api.contentprotection.Response
 import com.theoplayer.android.api.source.drm.DRMConfiguration
 import com.theoplayer.android.api.source.drm.DRMIntegrationId
 import com.theoplayer.android.api.source.drm.KeySystemConfiguration
+import com.theoplayer.android.api.source.drm.LicenseType
 import com.theoplayer.android.api.source.drm.preintegration.*
+import com.theoplayer.util.BridgeUtils.fromJSONObjectToMap
 import org.json.JSONObject
 
 private const val TAG = "ContentProtection"
@@ -23,6 +25,7 @@ const val PROP_INTEGRATION_PARAMETERS: String = "integrationParameters"
 const val PROP_REQUEST: String = "request"
 const val PROP_KEYSYSTEM_ID: String = "keySystemId"
 const val PROP_DRM_CONFIG: String = "drmConfig"
+const val PROP_PLAYREADY: String = "playready"
 const val PROP_WIDEVINE: String = "widevine"
 const val PROP_REQUEST_ID: String = "requestId"
 const val PROP_URL: String = "url"
@@ -33,6 +36,12 @@ const val PROP_HEADERS: String = "headers"
 const val PROP_BASE64_BODY: String = "base64body"
 const val PROP_LA_URL: String = "licenseAcquisitionURL"
 const val PROP_USE_CREDENTIALS: String = "useCredentials"
+const val PROP_LICENSE_ACQUISITION_URL: String = "licenseAcquisitionURL"
+const val PROP_LICENSE_TYPE: String = "licenseType"
+const val PROP_LICENSE_TYPE_TEMPORARY: String = "temporary"
+const val PROP_LICENSE_TYPE_PERSISTENT: String = "persistent"
+const val PROP_QUERY_PARAMETERS: String = "queryParameters"
+const val PROP_CERTIFICATE: String = "certificate"
 
 object ContentProtectionAdapter {
 
@@ -76,19 +85,40 @@ object ContentProtectionAdapter {
     // Custom integration through connector
     return DRMConfiguration.Builder().apply {
       if (!TextUtils.isEmpty(integration)) {
-        this.customIntegrationId(integration)
+        customIntegrationId(integration)
       }
-      this.widevine(gson.fromJson(jsonConfig.optString("widevine"), KeySystemConfiguration::class.java))
-      this.playready(gson.fromJson(jsonConfig.optString("playready"), KeySystemConfiguration::class.java))
+      if (jsonConfig.has(PROP_WIDEVINE)) {
+        widevine(keySystemConfigurationFromJson(jsonConfig.getJSONObject(PROP_WIDEVINE)))
+      }
+      if (jsonConfig.has(PROP_PLAYREADY)) {
+        playready(keySystemConfigurationFromJson(jsonConfig.getJSONObject(PROP_PLAYREADY)))
+      }
       if (jsonConfig.has(PROP_INTEGRATION_PARAMETERS)) {
-        this.integrationParameters(
-          gson.fromJson<Map<String, Any>>(
-            jsonConfig.getJSONObject(PROP_INTEGRATION_PARAMETERS).toString(),
-            MutableMap::class.java
-          )
-        )
+        integrationParameters(fromJSONObjectToMap(jsonConfig.getJSONObject(PROP_INTEGRATION_PARAMETERS)))
       }
     }.build()
+  }
+
+  private fun keySystemConfigurationFromJson(config: JSONObject): KeySystemConfiguration {
+    return KeySystemConfiguration.Builder(config.optString(PROP_LICENSE_ACQUISITION_URL)).apply {
+      useCredentials(config.optBoolean(PROP_USE_CREDENTIALS))
+      licenseTypeFromString(config.optString(PROP_LICENSE_TYPE))?.let {
+        licenseType(it)
+      }
+      headers(fromJSONObjectToMap(config.optJSONObject(PROP_HEADERS)))
+      queryParameters(fromJSONObjectToMap(config.optJSONObject(PROP_QUERY_PARAMETERS)))
+      if (config.has(PROP_CERTIFICATE)) {
+        certificate(config.getString(PROP_CERTIFICATE).toByteArray())
+      }
+    }.build()
+  }
+
+  private fun licenseTypeFromString(str: String?): LicenseType? {
+    return when (str) {
+      PROP_LICENSE_TYPE_PERSISTENT -> LicenseType.PERSISTENT
+      PROP_LICENSE_TYPE_TEMPORARY -> LicenseType.TEMPORARY
+      else -> null
+    }
   }
 
   fun fromDRMConfiguration(config: DRMConfiguration): WritableMap {
