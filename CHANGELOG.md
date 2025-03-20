@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed an issue on Web where the metadata on the lockscreen was not showing correctly or missing occasionally.
 - Fixed a crash on Android when setting a source with THEOads without the Media3 extension being enabled.
+- Fixed an issue on iOS where the AdTapped and AdClicked events were not correctly cleaned up.
 - Fixed an issue on Android where the player would sometimes crash when passing a DRM protected source without an `integration` property.
 
 ### Added

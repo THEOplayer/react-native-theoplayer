@@ -265,13 +265,13 @@ class THEOplayerRCTAdsEventHandler {
         }
 
         // AD_TAPPED
-        if let adTappedListener = self.adLoadedListener {
+        if let adTappedListener = self.adTappedListener {
             player.ads.removeEventListener(type: AdsEventTypes.AD_TAPPED, listener: adTappedListener)
             if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] adTapped listener detached from THEOplayer.ads") }
         }
 
         // AD_CLICKED
-        if let adClickedListener = self.adLoadedListener {
+        if let adClickedListener = self.adClickedListener {
             player.ads.removeEventListener(type: AdsEventTypes.AD_CLICKED, listener: adClickedListener)
             if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] adClicked listener detached from THEOplayer.ads") }
         }
