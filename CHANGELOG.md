@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added SeekTo functionality to the web lockscreen controls, allowing to drag the lockscreen slider and seek to a specific time value.
 - Added the IMA DAI `streamActivityMonitorId` property as a configuration on the SGAI `TheoAdDescription` for web.
 - Added the THEOads API for Web.
+- Added `retrievePodIdURI` property to `TheoAdsDescription` for Android and iOS.
 
 ## [8.16.0] - 25-02-28
 
