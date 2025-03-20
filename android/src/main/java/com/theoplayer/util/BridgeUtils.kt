@@ -8,9 +8,9 @@ import org.json.JSONException
 import org.json.JSONObject
 
 object BridgeUtils {
-  fun fromJSONObjectToMap(json: JSONObject): Map<String, String> {
+  fun fromJSONObjectToMap(json: JSONObject?): Map<String, String> {
     return mutableMapOf<String, String>().apply {
-      json.keys().forEach { key ->
+      json?.keys()?.forEach { key ->
         put(key, json.getString(key))
       }
     }

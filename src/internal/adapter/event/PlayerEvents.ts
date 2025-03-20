@@ -39,6 +39,8 @@ import {
   TrackListEventType,
   VolumeChangeEvent,
 } from 'react-native-theoplayer';
+import { TheoAdsEvent, TheoAdsEventType } from '../../../api/event/TheoAdsEvent';
+import { Interstitial } from '../../../api/theoads/interstitial/Interstitial';
 
 export class DefaultLoadedMetadataEvent extends BaseEvent<PlayerEventType.LOADED_METADATA> implements LoadedMetadataEvent {
   constructor(
@@ -180,6 +182,15 @@ export class DefaultAdEvent extends BaseEvent<PlayerEventType.AD_EVENT> implemen
     public ad: Ad | AdBreak,
   ) {
     super(PlayerEventType.AD_EVENT);
+  }
+}
+
+export class DefaultTheoAdsEvent extends BaseEvent<PlayerEventType.THEOADS_EVENT> implements TheoAdsEvent {
+  constructor(
+    public subType: TheoAdsEventType,
+    public interstitial: Interstitial,
+  ) {
+    super(PlayerEventType.THEOADS_EVENT);
   }
 }
 
