@@ -73,6 +73,15 @@ export interface TheoAdDescription extends AdDescription {
   adTagParameters?: Record<string, string>;
 
   /**
+   * The streamActivityMonitorId added to the GAM Pod stream request.
+   *
+   * @remarks
+   * <br/> - Available since v8.17.0.
+   * <br/> - Available on Web only.
+   */
+  streamActivityMonitorId?: string;
+
+  /**
    * Whether to use the Id3 based operating mode.
    *
    * @defaultValue `false`
@@ -82,6 +91,16 @@ export interface TheoAdDescription extends AdDescription {
    * <br/> - Contact THEO Technologies for more information.
    */
   useId3?: boolean;
+
+  /**
+   * The URI from where to retrieve the PodID's as returned from the EABN service from Google.
+   */
+  retrievePodIdURI?: string;
+
+  /**
+   * The endpoint from where to retrieve the server-sent events.
+   */
+  sseEndpoint?: string;
 }
 
 /**

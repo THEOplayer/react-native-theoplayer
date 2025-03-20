@@ -56,6 +56,9 @@ const playerConfig: PlayerConfiguration = {
     skipBackwardInterval: 10,
     convertSkipToSeek: true,
   },
+  ads: {
+    theoads: true,
+  },
 };
 
 /**
@@ -80,10 +83,17 @@ export default function App() {
 
     sdkVersions().then((versions) => console.log(`[theoplayer] ${JSON.stringify(versions, null, 4)}`));
 
+    player.autoplay = true;
     player.source = SOURCES[0].source;
 
-    player.backgroundAudioConfiguration = { enabled: true, shouldResumeAfterInterruption: true };
-    player.pipConfiguration = { startsAutomatically: true };
+    player.backgroundAudioConfiguration = {
+      enabled: true,
+      shouldResumeAfterInterruption: true,
+    };
+    player.pipConfiguration = {
+      startsAutomatically: true,
+      retainPipOnSourceChange: true,
+    };
 
     console.log('THEOplayer is ready');
   };

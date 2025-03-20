@@ -44,6 +44,7 @@ jobs:
           npm i -g corepack
           npm ci
           cd e2e
+          npm run update-dependencies
           npm ci
 
       - name: Enable KVM

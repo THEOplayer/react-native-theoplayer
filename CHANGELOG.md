@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [8.17.0] - 25-03-20
+
+### Fixed
+
+- Fixed an issue on Web where the metadata on the lockscreen was not showing correctly or missing occasionally.
+- Fixed a crash on Android when setting a source with THEOads without the Media3 extension being enabled.
+- Fixed an issue on iOS where the AdTapped and AdClicked events were not correctly cleaned up.
+- Fixed an issue on Android where the player would sometimes crash when passing a DRM protected source without an `integration` property.
+
+### Added
+
+- Added SeekTo functionality to the web lockscreen controls, allowing to drag the lockscreen slider and seek to a specific time value.
+- Added the IMA DAI `streamActivityMonitorId` property as a configuration on the SGAI `TheoAdDescription` for web.
+- Added the THEOads API for Web.
+- Added `retrievePodIdURI` property to `TheoAdsDescription` for Android and iOS.
+
 ## [8.16.0] - 25-02-28
 
 ### Changed

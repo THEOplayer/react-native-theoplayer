@@ -6,13 +6,14 @@ import THEOplayerSDK
 
 struct PipConfig {
     var canStartPictureInPictureAutomaticallyFromInline: Bool = false
+    var retainPresentationModeOnSourceChange: Bool = false
 }
 
 extension THEOplayerRCTView {
     
     func playerPipConfiguration() -> PiPConfiguration {
         let builder = PiPConfigurationBuilder()
-        builder.retainPresentationModeOnSourceChange = false
+        builder.retainPresentationModeOnSourceChange = self.pipConfig.retainPresentationModeOnSourceChange
         builder.requiresLinearPlayback = false
 #if os(iOS)
         builder.nativePictureInPicture = true

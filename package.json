@@ -1,6 +1,6 @@
 {
   "name": "react-native-theoplayer",
-  "version": "8.16.0",
+  "version": "8.17.0",
   "description": "A THEOplayer video component for react-native.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -68,7 +68,7 @@
     "react": "^18.3.1",
     "react-native": "^0.76.5",
     "react-native-builder-bob": "^0.23.2",
-    "theoplayer": "^8.9.0",
+    "theoplayer": "^8.13.1",
     "typedoc": "^0.25.13",
     "typedoc-plugin-external-resolver": "^1.0.3",
     "typedoc-plugin-mdn-links": "^3.3.4",

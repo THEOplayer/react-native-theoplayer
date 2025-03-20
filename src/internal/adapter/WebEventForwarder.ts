@@ -16,6 +16,8 @@ import type {
   TrackChangeEvent,
   VolumeChangeEvent as NativeVolumeChangeEvent,
   DimensionChangeEvent as NativeDimensionChangeEvent,
+  TheoAdsEventsMap as NativeTheoAdsEventMap,
+  InterstitialEvent,
 } from 'theoplayer';
 import type { AdEvent, MediaTrack, TimeRange } from 'react-native-theoplayer';
 import {
@@ -28,6 +30,7 @@ import {
   TextTrackKind,
   TextTrackMode,
   TrackListEventType,
+  TheoAdsEventType,
 } from 'react-native-theoplayer';
 import type { THEOplayerWebAdapter } from './THEOplayerWebAdapter';
 import { BaseEvent } from './event/BaseEvent';
@@ -48,6 +51,7 @@ import {
   DefaultSegmentNotFoundEvent,
   DefaultTextTrackEvent,
   DefaultTextTrackListEvent,
+  DefaultTheoAdsEvent,
   DefaultTimeupdateEvent,
   DefaultVolumeChangeEvent,
 } from './event/PlayerEvents';
@@ -103,6 +107,7 @@ export class WebEventForwarder {
     this._player.cast?.airplay?.addEventListener('statechange', this.onAirplayStateChange);
 
     this._player.ads?.addEventListener(FORWARDED_AD_EVENTS, this.onAdEvent);
+    this._player.theoads?.addEventListener(FORWARDED_THEOADS_EVENTS, this.onTheoAdsEvent);
   }
 
   unload(): void {
@@ -148,6 +153,7 @@ export class WebEventForwarder {
     this._player.cast?.airplay?.removeEventListener('statechange', this.onAirplayStateChange);
 
     this._player.ads?.removeEventListener(FORWARDED_AD_EVENTS, this.onAdEvent);
+    this._player.theoads?.removeEventListener(FORWARDED_THEOADS_EVENTS, this.onTheoAdsEvent);
   }
 
   private readonly onSourceChange = () => {
@@ -332,6 +338,10 @@ export class WebEventForwarder {
     this._facade.dispatchEvent(new DefaultAdEvent(event.type as AdEventType, castedEvent.ad));
   };
 
+  private readonly onTheoAdsEvent = (event: InterstitialEvent<any>) => {
+    this._facade.dispatchEvent(new DefaultTheoAdsEvent(event.type as TheoAdsEventType, event.interstitial));
+  };
+
   private readonly onAddTextTrackCue = (track: NativeTextTrack) => (event: NativeEvent<'addcue'>) => {
     const { cue } = event as unknown as { cue: NativeTextTrackCue };
     if (cue) {
@@ -389,6 +399,14 @@ const FORWARDED_AD_EVENTS = [
   AdEventType.AD_METADATA,
   AdEventType.AD_BUFFERING,
 ] as (keyof NativeAdsEventMap)[];
+
+const FORWARDED_THEOADS_EVENTS = [
+  TheoAdsEventType.ADD_INTERSTITIAL,
+  TheoAdsEventType.INTERSTITIAL_BEGIN,
+  TheoAdsEventType.INTERSTITIAL_END,
+  TheoAdsEventType.INTERSTITIAL_UPDATE,
+  TheoAdsEventType.INTERSTITIAL_ERROR,
+] as (keyof NativeTheoAdsEventMap)[];
 
 function fromTimeRanges(timeRanges: TimeRanges): TimeRange[] {
   const result: TimeRange[] = [];

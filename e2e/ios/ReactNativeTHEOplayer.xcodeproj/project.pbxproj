@@ -11,17 +11,17 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		1D9FB4F5244ADB9A9476E40F /* libPods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 23E00601FCEB429652C6408F /* libPods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests.a */; };
+		15D26A69BEFCC6C31ED78816 /* libPods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DB77055FF0924F1361007730 /* libPods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests.a */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* ReactNativeTHEOplayerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* ReactNativeTHEOplayerTests.m */; };
+		3270E91B3CA6F788C885579D /* libPods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 71058CD436BE29855C207BF0 /* libPods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests.a */; };
 		442BFC3895EC4E39B762450A /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E13BF0204B80026411EC76D2 /* PrivacyInfo.xcprivacy */; };
-		7D9BA408F65A91301883B2AE /* libPods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A1A616D4268BA584D7B7DD45 /* libPods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		D7D6759FBE424E107C798C00 /* libPods-ReactNativeTHEOplayer-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B1F82D8697B6422C62C08B4 /* libPods-ReactNativeTHEOplayer-tvOS.a */; };
+		A2FB0E3BC591C71C15736B8E /* libPods-ReactNativeTHEOplayer-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D2C2F32808B516333275E3B /* libPods-ReactNativeTHEOplayer-tvOS.a */; };
+		B212B53954D1F45A42548C2D /* libPods-ReactNativeTHEOplayer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FD2865CB6E9A43327F0ECA6D /* libPods-ReactNativeTHEOplayer.a */; };
 		DC6595BC1C39D39B157BFA59 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 7740B1311B6C85C9C1C70CE2 /* PrivacyInfo.xcprivacy */; };
-		EA3FB8B3CECC8EC0D507A5E6 /* libPods-ReactNativeTHEOplayer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E6461124ED8CD324BEC84C8F /* libPods-ReactNativeTHEOplayer.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,27 +52,27 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = ReactNativeTHEOplayer/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ReactNativeTHEOplayer/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = ReactNativeTHEOplayer/main.m; sourceTree = "<group>"; };
-		212158D9C4053BB12B721822 /* Pods-ReactNativeTHEOplayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeTHEOplayer.release.xcconfig"; path = "Target Support Files/Pods-ReactNativeTHEOplayer/Pods-ReactNativeTHEOplayer.release.xcconfig"; sourceTree = "<group>"; };
-		23E00601FCEB429652C6408F /* libPods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		26849ED127A3FF7900FFFB02 /* ReactNativeTHEOplayer-tvOS-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ReactNativeTHEOplayer-tvOS-Bridging-Header.h"; sourceTree = "<group>"; };
 		26849ED227A3FF8800FFFB02 /* ReactNativeTHEOplayer-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ReactNativeTHEOplayer-Bridging-Header.h"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* ReactNativeTHEOplayer-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ReactNativeTHEOplayer-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* ReactNativeTHEOplayer-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ReactNativeTHEOplayer-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		37F2476D4FFC19937969BA39 /* Pods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests.release.xcconfig"; path = "Target Support Files/Pods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests/Pods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests.release.xcconfig"; sourceTree = "<group>"; };
-		53B450B3183AC1FCE970C242 /* Pods-ReactNativeTHEOplayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeTHEOplayer.debug.xcconfig"; path = "Target Support Files/Pods-ReactNativeTHEOplayer/Pods-ReactNativeTHEOplayer.debug.xcconfig"; sourceTree = "<group>"; };
-		586FDDD06EFF4AC6D6026609 /* Pods-ReactNativeTHEOplayer-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeTHEOplayer-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-ReactNativeTHEOplayer-tvOS/Pods-ReactNativeTHEOplayer-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		3AFA87F43FFC18AD17AD4ABD /* Pods-ReactNativeTHEOplayer-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeTHEOplayer-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-ReactNativeTHEOplayer-tvOS/Pods-ReactNativeTHEOplayer-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		3D2C2F32808B516333275E3B /* libPods-ReactNativeTHEOplayer-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReactNativeTHEOplayer-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		494E609A023667BCC25FC96D /* Pods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests.release.xcconfig"; path = "Target Support Files/Pods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests/Pods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests.release.xcconfig"; sourceTree = "<group>"; };
+		4C6A5E3ABFB54922C403FE70 /* Pods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests.debug.xcconfig"; path = "Target Support Files/Pods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests/Pods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests.debug.xcconfig"; sourceTree = "<group>"; };
+		5382028B4A5CA084769B806C /* Pods-ReactNativeTHEOplayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeTHEOplayer.debug.xcconfig"; path = "Target Support Files/Pods-ReactNativeTHEOplayer/Pods-ReactNativeTHEOplayer.debug.xcconfig"; sourceTree = "<group>"; };
+		68B332A60D4A06D67C4CFE86 /* Pods-ReactNativeTHEOplayer-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeTHEOplayer-tvOS.release.xcconfig"; path = "Target Support Files/Pods-ReactNativeTHEOplayer-tvOS/Pods-ReactNativeTHEOplayer-tvOS.release.xcconfig"; sourceTree = "<group>"; };
+		71058CD436BE29855C207BF0 /* libPods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7740B1311B6C85C9C1C70CE2 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = ReactNativeTHEOplayer/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ReactNativeTHEOplayer/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		90DCD6370FFDC116ADAF7756 /* Pods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests/Pods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
-		9B1F82D8697B6422C62C08B4 /* libPods-ReactNativeTHEOplayer-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReactNativeTHEOplayer-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		A1A616D4268BA584D7B7DD45 /* libPods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D726618BE2FF02B74D4B3B33 /* Pods-ReactNativeTHEOplayer-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeTHEOplayer-tvOS.release.xcconfig"; path = "Target Support Files/Pods-ReactNativeTHEOplayer-tvOS/Pods-ReactNativeTHEOplayer-tvOS.release.xcconfig"; sourceTree = "<group>"; };
+		BA226E625E1229CFF56A2057 /* Pods-ReactNativeTHEOplayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeTHEOplayer.release.xcconfig"; path = "Target Support Files/Pods-ReactNativeTHEOplayer/Pods-ReactNativeTHEOplayer.release.xcconfig"; sourceTree = "<group>"; };
+		CFFDDAF8D4FB096A0BF967AE /* Pods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests/Pods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
+		DB77055FF0924F1361007730 /* libPods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DF665C4C4EA4D2812A2E2B62 /* Pods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests/Pods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		E13BF0204B80026411EC76D2 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = ReactNativeTHEOplayer/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		E6461124ED8CD324BEC84C8F /* libPods-ReactNativeTHEOplayer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReactNativeTHEOplayer.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E94FE6E5DE0E478F2A505A3B /* Pods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests.debug.xcconfig"; path = "Target Support Files/Pods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests/Pods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
-		FC92E903EC76001BC932F05F /* Pods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests/Pods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
+		FD2865CB6E9A43327F0ECA6D /* libPods-ReactNativeTHEOplayer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReactNativeTHEOplayer.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,7 +80,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7D9BA408F65A91301883B2AE /* libPods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests.a in Frameworks */,
+				3270E91B3CA6F788C885579D /* libPods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,7 +88,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EA3FB8B3CECC8EC0D507A5E6 /* libPods-ReactNativeTHEOplayer.a in Frameworks */,
+				B212B53954D1F45A42548C2D /* libPods-ReactNativeTHEOplayer.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -96,7 +96,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D7D6759FBE424E107C798C00 /* libPods-ReactNativeTHEOplayer-tvOS.a in Frameworks */,
+				A2FB0E3BC591C71C15736B8E /* libPods-ReactNativeTHEOplayer-tvOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -104,7 +104,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1D9FB4F5244ADB9A9476E40F /* libPods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests.a in Frameworks */,
+				15D26A69BEFCC6C31ED78816 /* libPods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -150,10 +150,10 @@
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
-				E6461124ED8CD324BEC84C8F /* libPods-ReactNativeTHEOplayer.a */,
-				A1A616D4268BA584D7B7DD45 /* libPods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests.a */,
-				9B1F82D8697B6422C62C08B4 /* libPods-ReactNativeTHEOplayer-tvOS.a */,
-				23E00601FCEB429652C6408F /* libPods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests.a */,
+				FD2865CB6E9A43327F0ECA6D /* libPods-ReactNativeTHEOplayer.a */,
+				71058CD436BE29855C207BF0 /* libPods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests.a */,
+				3D2C2F32808B516333275E3B /* libPods-ReactNativeTHEOplayer-tvOS.a */,
+				DB77055FF0924F1361007730 /* libPods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -195,14 +195,14 @@
 		9B1644CBAE2FABCCC6E29A69 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				53B450B3183AC1FCE970C242 /* Pods-ReactNativeTHEOplayer.debug.xcconfig */,
-				212158D9C4053BB12B721822 /* Pods-ReactNativeTHEOplayer.release.xcconfig */,
-				E94FE6E5DE0E478F2A505A3B /* Pods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests.debug.xcconfig */,
-				37F2476D4FFC19937969BA39 /* Pods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests.release.xcconfig */,
-				586FDDD06EFF4AC6D6026609 /* Pods-ReactNativeTHEOplayer-tvOS.debug.xcconfig */,
-				D726618BE2FF02B74D4B3B33 /* Pods-ReactNativeTHEOplayer-tvOS.release.xcconfig */,
-				90DCD6370FFDC116ADAF7756 /* Pods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests.debug.xcconfig */,
-				FC92E903EC76001BC932F05F /* Pods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests.release.xcconfig */,
+				5382028B4A5CA084769B806C /* Pods-ReactNativeTHEOplayer.debug.xcconfig */,
+				BA226E625E1229CFF56A2057 /* Pods-ReactNativeTHEOplayer.release.xcconfig */,
+				4C6A5E3ABFB54922C403FE70 /* Pods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests.debug.xcconfig */,
+				494E609A023667BCC25FC96D /* Pods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests.release.xcconfig */,
+				3AFA87F43FFC18AD17AD4ABD /* Pods-ReactNativeTHEOplayer-tvOS.debug.xcconfig */,
+				68B332A60D4A06D67C4CFE86 /* Pods-ReactNativeTHEOplayer-tvOS.release.xcconfig */,
+				DF665C4C4EA4D2812A2E2B62 /* Pods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests.debug.xcconfig */,
+				CFFDDAF8D4FB096A0BF967AE /* Pods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -214,12 +214,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "ReactNativeTHEOplayerTests" */;
 			buildPhases = (
-				BF7D9DA46C8DD41F30E94E14 /* [CP] Check Pods Manifest.lock */,
+				DBB7B2C0D60EB169B1EE19DC /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				5BA2B0560E7D7CE9AF0D0818 /* [CP] Embed Pods Frameworks */,
-				0B8CC744116E1B5E5B20EA04 /* [CP] Copy Pods Resources */,
+				7AE975C8F9F08D14972C04F7 /* [CP] Embed Pods Frameworks */,
+				2E69EE6949F757C9BD8DF9C5 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -235,14 +235,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "ReactNativeTHEOplayer" */;
 			buildPhases = (
-				B9E191269F06C2C6DE0B7BEE /* [CP] Check Pods Manifest.lock */,
+				5DF716C5B9E3D6C89EFDD28C /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				FFBBB750AB49D2A12D4B9411 /* [CP] Embed Pods Frameworks */,
-				748F9736B5DB84741462615C /* [CP] Copy Pods Resources */,
+				1AF2D08FB2764B712DDFAD70 /* [CP] Embed Pods Frameworks */,
+				FEDAE03E88A63E5B86AB0A72 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -257,14 +257,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "ReactNativeTHEOplayer-tvOS" */;
 			buildPhases = (
-				46AD3B3302DE9D5FAFA699CC /* [CP] Check Pods Manifest.lock */,
+				1F16C1B9A47D3E012D2B0946 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F122414F3F0027D42C /* Start Packager */,
 				2D02E4771E0B4A5D006451C7 /* Sources */,
 				2D02E4781E0B4A5D006451C7 /* Frameworks */,
 				2D02E4791E0B4A5D006451C7 /* Resources */,
 				2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */,
-				3EAE09C2B98A8448EAB946E9 /* [CP] Embed Pods Frameworks */,
-				19B54E206FAAF7D707797670 /* [CP] Copy Pods Resources */,
+				08E0CFBAB340EF529D181DBC /* [CP] Embed Pods Frameworks */,
+				47128E24A9CFDA3C1456D37C /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -279,12 +279,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "ReactNativeTHEOplayer-tvOSTests" */;
 			buildPhases = (
-				AB3A88D1CB03C39A24F1F209 /* [CP] Check Pods Manifest.lock */,
+				A391657D4224622247B638B6 /* [CP] Check Pods Manifest.lock */,
 				2D02E48C1E0B4A5D006451C7 /* Sources */,
 				2D02E48D1E0B4A5D006451C7 /* Frameworks */,
 				2D02E48E1E0B4A5D006451C7 /* Resources */,
-				683118538B5068DC1C841822 /* [CP] Embed Pods Frameworks */,
-				28E824AD327E0F20519619D8 /* [CP] Copy Pods Resources */,
+				885355E0965E3438653AA2E1 /* [CP] Embed Pods Frameworks */,
+				75C1B70287B3B56B04FFD16E /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -395,7 +395,93 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
-		0B8CC744116E1B5E5B20EA04 /* [CP] Copy Pods Resources */ = {
+		08E0CFBAB340EF529D181DBC /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ReactNativeTHEOplayer-tvOS/Pods-ReactNativeTHEOplayer-tvOS-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/THEOliveSDK/THEOliveSDK.framework/THEOliveSDK",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/THEOplayer-Integration-THEOlive/Base/THEOplayerTHEOliveIntegration.framework/THEOplayerTHEOliveIntegration",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/THEOplayerSDK-core/THEOplayerSDK.framework/THEOplayerSDK",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/THEOliveSDK.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/THEOplayerTHEOliveIntegration.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/THEOplayerSDK.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ReactNativeTHEOplayer-tvOS/Pods-ReactNativeTHEOplayer-tvOS-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		1AF2D08FB2764B712DDFAD70 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ReactNativeTHEOplayer/Pods-ReactNativeTHEOplayer-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/THEOliveSDK/THEOliveSDK.framework/THEOliveSDK",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/THEOplayer-Integration-THEOlive/Base/THEOplayerTHEOliveIntegration.framework/THEOplayerTHEOliveIntegration",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/THEOplayerSDK-core/THEOplayerSDK.framework/THEOplayerSDK",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/google-cast-sdk-dynamic-xcframework/GoogleCast.framework/GoogleCast",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/THEOliveSDK.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/THEOplayerTHEOliveIntegration.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/THEOplayerSDK.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleCast.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ReactNativeTHEOplayer/Pods-ReactNativeTHEOplayer-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		1F16C1B9A47D3E012D2B0946 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ReactNativeTHEOplayer-tvOS-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Bundle React Native Code And Images";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+		};
+		2E69EE6949F757C9BD8DF9C5 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -427,7 +513,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests/Pods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		19B54E206FAAF7D707797670 /* [CP] Copy Pods Resources */ = {
+		47128E24A9CFDA3C1456D37C /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -457,7 +543,29 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ReactNativeTHEOplayer-tvOS/Pods-ReactNativeTHEOplayer-tvOS-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		28E824AD327E0F20519619D8 /* [CP] Copy Pods Resources */ = {
+		5DF716C5B9E3D6C89EFDD28C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ReactNativeTHEOplayer-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		75C1B70287B3B56B04FFD16E /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -487,75 +595,23 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests/Pods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Bundle React Native Code And Images";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
-		};
-		3EAE09C2B98A8448EAB946E9 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ReactNativeTHEOplayer-tvOS/Pods-ReactNativeTHEOplayer-tvOS-frameworks.sh",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/THEOplayerSDK-core/THEOplayerSDK.framework/THEOplayerSDK",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/THEOplayerSDK.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ReactNativeTHEOplayer-tvOS/Pods-ReactNativeTHEOplayer-tvOS-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		46AD3B3302DE9D5FAFA699CC /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-ReactNativeTHEOplayer-tvOS-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		5BA2B0560E7D7CE9AF0D0818 /* [CP] Embed Pods Frameworks */ = {
+		7AE975C8F9F08D14972C04F7 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests/Pods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/THEOliveSDK/THEOliveSDK.framework/THEOliveSDK",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/THEOplayer-Integration-THEOlive/Base/THEOplayerTHEOliveIntegration.framework/THEOplayerTHEOliveIntegration",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/THEOplayerSDK-core/THEOplayerSDK.framework/THEOplayerSDK",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/google-cast-sdk-dynamic-xcframework/GoogleCast.framework/GoogleCast",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/THEOliveSDK.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/THEOplayerTHEOliveIntegration.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/THEOplayerSDK.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleCast.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
@@ -565,18 +621,22 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests/Pods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		683118538B5068DC1C841822 /* [CP] Embed Pods Frameworks */ = {
+		885355E0965E3438653AA2E1 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests/Pods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/THEOliveSDK/THEOliveSDK.framework/THEOliveSDK",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/THEOplayer-Integration-THEOlive/Base/THEOplayerTHEOliveIntegration.framework/THEOplayerTHEOliveIntegration",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/THEOplayerSDK-core/THEOplayerSDK.framework/THEOplayerSDK",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/THEOliveSDK.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/THEOplayerTHEOliveIntegration.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/THEOplayerSDK.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
 			);
@@ -585,39 +645,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests/Pods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		748F9736B5DB84741462615C /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ReactNativeTHEOplayer/Pods-ReactNativeTHEOplayer-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/PromisesObjC/FBLPromises_Privacy.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/RCT-Folly-iOS/RCT-Folly_privacy.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/RNDeviceInfo-iOS/RNDeviceInfoPrivacyInfo.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core-iOS/React-Core_privacy.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/React-cxxreact-iOS/React-cxxreact_privacy.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/boost-iOS/boost_privacy.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/glog-iOS/glog_privacy.bundle",
-				"${PODS_ROOT}/../../../ios/style.css",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FBLPromises_Privacy.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RCT-Folly_privacy.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RNDeviceInfoPrivacyInfo.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-Core_privacy.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-cxxreact_privacy.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/boost_privacy.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/glog_privacy.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/style.css",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ReactNativeTHEOplayer/Pods-ReactNativeTHEOplayer-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		AB3A88D1CB03C39A24F1F209 /* [CP] Check Pods Manifest.lock */ = {
+		A391657D4224622247B638B6 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -639,29 +667,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		B9E191269F06C2C6DE0B7BEE /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-ReactNativeTHEOplayer-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		BF7D9DA46C8DD41F30E94E14 /* [CP] Check Pods Manifest.lock */ = {
+		DBB7B2C0D60EB169B1EE19DC /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -721,26 +727,36 @@
 			shellScript = "export RCT_METRO_PORT=\"${RCT_METRO_PORT:=8081}\"\necho \"export RCT_METRO_PORT=${RCT_METRO_PORT}\" > \"${SRCROOT}/../node_modules/react-native/scripts/.packager.env\"\nif [ -z \"${RCT_NO_LAUNCH_PACKAGER+xxx}\" ] ; then\n  if nc -w 5 -z localhost ${RCT_METRO_PORT} ; then\n    if ! curl -s \"http://localhost:${RCT_METRO_PORT}/status\" | grep -q \"packager-status:running\" ; then\n      echo \"Port ${RCT_METRO_PORT} already in use, packager is either not running or not running correctly\"\n      exit 2\n    fi\n  else\n    open \"$SRCROOT/../node_modules/react-native/scripts/launchPackager.command\" || echo \"Can't start packager automatically\"\n  fi\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		FFBBB750AB49D2A12D4B9411 /* [CP] Embed Pods Frameworks */ = {
+		FEDAE03E88A63E5B86AB0A72 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ReactNativeTHEOplayer/Pods-ReactNativeTHEOplayer-frameworks.sh",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/THEOplayerSDK-core/THEOplayerSDK.framework/THEOplayerSDK",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/google-cast-sdk-dynamic-xcframework/GoogleCast.framework/GoogleCast",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
+				"${PODS_ROOT}/Target Support Files/Pods-ReactNativeTHEOplayer/Pods-ReactNativeTHEOplayer-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/PromisesObjC/FBLPromises_Privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/RCT-Folly-iOS/RCT-Folly_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/RNDeviceInfo-iOS/RNDeviceInfoPrivacyInfo.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core-iOS/React-Core_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-cxxreact-iOS/React-cxxreact_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/boost-iOS/boost_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/glog-iOS/glog_privacy.bundle",
+				"${PODS_ROOT}/../../../ios/style.css",
 			);
-			name = "[CP] Embed Pods Frameworks";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/THEOplayerSDK.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleCast.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FBLPromises_Privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RCT-Folly_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RNDeviceInfoPrivacyInfo.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-Core_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-cxxreact_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/boost_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/glog_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/style.css",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ReactNativeTHEOplayer/Pods-ReactNativeTHEOplayer-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ReactNativeTHEOplayer/Pods-ReactNativeTHEOplayer-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -798,7 +814,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E94FE6E5DE0E478F2A505A3B /* Pods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests.debug.xcconfig */;
+			baseConfigurationReference = 4C6A5E3ABFB54922C403FE70 /* Pods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -821,7 +837,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 37F2476D4FFC19937969BA39 /* Pods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests.release.xcconfig */;
+			baseConfigurationReference = 494E609A023667BCC25FC96D /* Pods-ReactNativeTHEOplayer-ReactNativeTHEOplayerTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -841,7 +857,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 53B450B3183AC1FCE970C242 /* Pods-ReactNativeTHEOplayer.debug.xcconfig */;
+			baseConfigurationReference = 5382028B4A5CA084769B806C /* Pods-ReactNativeTHEOplayer.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -873,7 +889,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 212158D9C4053BB12B721822 /* Pods-ReactNativeTHEOplayer.release.xcconfig */;
+			baseConfigurationReference = BA226E625E1229CFF56A2057 /* Pods-ReactNativeTHEOplayer.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -897,7 +913,7 @@
 		};
 		2D02E4971E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 586FDDD06EFF4AC6D6026609 /* Pods-ReactNativeTHEOplayer-tvOS.debug.xcconfig */;
+			baseConfigurationReference = 3AFA87F43FFC18AD17AD4ABD /* Pods-ReactNativeTHEOplayer-tvOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -930,7 +946,7 @@
 		};
 		2D02E4981E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D726618BE2FF02B74D4B3B33 /* Pods-ReactNativeTHEOplayer-tvOS.release.xcconfig */;
+			baseConfigurationReference = 68B332A60D4A06D67C4CFE86 /* Pods-ReactNativeTHEOplayer-tvOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -962,7 +978,7 @@
 		};
 		2D02E4991E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 90DCD6370FFDC116ADAF7756 /* Pods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests.debug.xcconfig */;
+			baseConfigurationReference = DF665C4C4EA4D2812A2E2B62 /* Pods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
@@ -989,7 +1005,7 @@
 		};
 		2D02E49A1E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FC92E903EC76001BC932F05F /* Pods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests.release.xcconfig */;
+			baseConfigurationReference = CFFDDAF8D4FB096A0BF967AE /* Pods-ReactNativeTHEOplayer-tvOS-ReactNativeTHEOplayer-tvOSTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
