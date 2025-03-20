@@ -63,6 +63,7 @@ private const val PROP_CUSTOM_ASSET_KEY = "customAssetKey"
 private const val PROP_OVERRIDE_LAYOUT = "overrideLayout"
 private const val PROP_NETWORK_CODE = "networkCode"
 private const val PROP_USE_ID3 = "useId3"
+private const val PROP_RETRIEVE_POD_ID_URI = "retrievePodIdURI"
 private const val PROP_LATENCY_CONFIGURATION = "latencyConfiguration"
 
 private const val ERROR_IMA_NOT_ENABLED = "Google IMA support not enabled."
@@ -327,12 +328,13 @@ class SourceAdapter {
     }
     return TheoAdDescription(
       adTagParameters = parseAdTagParameters(jsonAdDescription.optJSONObject(PROP_AD_TAG_PARAMETERS)),
-      backdropDoubleBox = jsonAdDescription.optString(PROP_BACKDROP_DOUBLE_BOX),
-      backdropLShape = jsonAdDescription.optString(PROP_BACKDROP_LSHAPE),
-      customAssetKey = jsonAdDescription.optString(PROP_CUSTOM_ASSET_KEY),
-      networkCode = jsonAdDescription.optString(PROP_NETWORK_CODE),
+      backdropDoubleBox = jsonAdDescription.optString(PROP_BACKDROP_DOUBLE_BOX).takeIf { it.isNotEmpty() },
+      backdropLShape = jsonAdDescription.optString(PROP_BACKDROP_LSHAPE).takeIf { it.isNotEmpty() },
+      customAssetKey = jsonAdDescription.optString(PROP_CUSTOM_ASSET_KEY).takeIf { it.isNotEmpty() },
+      networkCode = jsonAdDescription.optString(PROP_NETWORK_CODE).takeIf { it.isNotEmpty() },
       overrideLayout = parseOverrideLayout(jsonAdDescription.optString(PROP_OVERRIDE_LAYOUT)),
-      useId3 = jsonAdDescription.optBoolean(PROP_USE_ID3),
+      useId3 = jsonAdDescription.optBoolean(PROP_USE_ID3, false),
+      retrievePodIdURI = jsonAdDescription.optString(PROP_RETRIEVE_POD_ID_URI).takeIf { it.isNotEmpty() },
     )
   }
 
