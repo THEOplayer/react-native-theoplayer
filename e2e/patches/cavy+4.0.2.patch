@@ -65,7 +65,7 @@ index 40552bf..0af9639 100644
        const time = (stop - start) / 1000;
        
 -      let fullErrorMessage = `${description}  ❌\n   ${e.message}`;
-+      let fullErrorMessage = `${description}  ❌\n   ${JSON.stringify(e)}`;
++      let fullErrorMessage = `${description}  ❌\n   Catched error: ${JSON.stringify(e, null, 2)}`;
        console.warn(fullErrorMessage);
  
        this.results.push({
