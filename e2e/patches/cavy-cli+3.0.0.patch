@@ -20,7 +20,7 @@ index 64faf22..633013b 100644
        case 'singleResult':
          logTestResult(json.data);
          break;
-@@ -62,6 +66,15 @@ function logTestResult(testResultJson) {
+@@ -62,6 +66,16 @@ function logTestResult(testResultJson) {
    }
  };
  
@@ -30,13 +30,14 @@ index 64faf22..633013b 100644
 +    case 'log': console.log(chalk.white(message)); break;
 +    case 'debug': console.log(chalk.yellow(message)); break;
 +    case 'warn': console.log(chalk.bgYellow(message)); break;
++    case 'error': console.log(chalk.red(message)); break;
 +  }
 +}
 +
  // Internal: Accepts a json report object, console.logs the overall result of
  // the test suite and quits the process with either exit code 1 or 0 depending
  // on whether any tests failed.
-@@ -80,6 +93,7 @@ function finishTesting(reportJson) {
+@@ -80,6 +94,7 @@ function finishTesting(reportJson) {
    if (server.locals.outputAsXml) {
      constructXML(fullResults);
    }
@@ -44,7 +45,7 @@ index 64faf22..633013b 100644
  
    // If all tests pass, exit with code 0, else code 42.
    // Code 42 chosen at random so that a test failure can be distinuguished from
-@@ -98,4 +112,16 @@ function finishTesting(reportJson) {
+@@ -98,4 +113,16 @@ function finishTesting(reportJson) {
    console.log('--------------------');
  };
  
