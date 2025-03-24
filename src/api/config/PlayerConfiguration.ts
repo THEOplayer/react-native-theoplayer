@@ -83,17 +83,6 @@ export interface PlayerConfiguration {
   liveOffset?: number;
 
   /**
-   * Sets whether the Media3 extension is used for play-out on Android.
-   *
-   * @experimental
-   * @remarks
-   * <br/> - This parameter only applies to Android platforms.
-   *
-   * @defaultValue `false`.
-   */
-  useMedia3?: boolean;
-
-  /**
    * The THEOlive configuration for the player.
    */
   theoLive?: TheoLiveConfiguration;
