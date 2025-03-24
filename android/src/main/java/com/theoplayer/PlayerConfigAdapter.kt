@@ -17,7 +17,6 @@ import com.theoplayer.media.MediaSessionConfigAdapter
 private const val PROP_LICENSE = "license"
 private const val PROP_LICENSE_URL = "licenseUrl"
 private const val PROP_PRELOAD = "preload"
-private const val PROP_LIVE_OFFSET = "liveOffset"
 private const val PROP_UI_ENABLED = "uiEnabled"
 private const val PROP_CAST_STRATEGY = "strategy"
 private const val PROP_RETRY_CONFIG = "retryConfiguration"
@@ -60,9 +59,6 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
         }
         if (hasKey(PROP_RETRY_CONFIG)) {
           networkConfiguration(networkConfig())
-        }
-        if (hasKey(PROP_LIVE_OFFSET)) {
-          liveOffset(getDouble(PROP_LIVE_OFFSET))
         }
         if (hasKey(PROP_THEOLIVE_CONFIG)) {
           theoLiveConfiguration(theoLiveConfig())
