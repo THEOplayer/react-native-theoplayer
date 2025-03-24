@@ -17,6 +17,7 @@ import com.facebook.react.uimanager.ThemedReactContext
 import com.theoplayer.android.api.THEOplayerView
 import com.theoplayer.android.api.ads.dai.GoogleDaiIntegration
 import com.theoplayer.android.api.ads.dai.GoogleDaiIntegrationFactory
+import com.theoplayer.android.api.ads.ima.GoogleImaConfiguration
 import com.theoplayer.android.api.ads.ima.GoogleImaIntegration
 import com.theoplayer.android.api.ads.ima.GoogleImaIntegrationFactory
 import com.theoplayer.android.api.ads.theoads.TheoAdDescription
@@ -287,7 +288,7 @@ class ReactTHEOplayerContext private constructor(
     try {
       if (BuildConfig.EXTENSION_GOOGLE_IMA) {
         imaIntegration = GoogleImaIntegrationFactory.createGoogleImaIntegration(
-          playerView, configAdapter.imaSdkSettings()
+          playerView, GoogleImaConfiguration(configAdapter.imaSdkSettings())
         ).apply {
           setAdsRenderingSettings(configAdapter.adsRenderSettings())
         }.also {
@@ -300,7 +301,7 @@ class ReactTHEOplayerContext private constructor(
     try {
       if (BuildConfig.EXTENSION_GOOGLE_DAI) {
         daiIntegration = GoogleDaiIntegrationFactory.createGoogleDaiIntegration(
-          playerView, configAdapter.imaSdkSettings()
+          playerView, GoogleImaConfiguration(configAdapter.imaSdkSettings())
         ).apply {
           setAdsRenderingSettings(configAdapter.adsRenderSettings())
         }.also {
