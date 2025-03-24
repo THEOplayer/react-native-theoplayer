@@ -1,4 +1,4 @@
-import { TypedSource } from 'react-native-theoplayer';
+import { MillicastConnectOptions, TypedSource } from 'react-native-theoplayer';
 
 /**
  * Represents a source for a {@link https://dolby.io/products/real-time-streaming/ | Millicast} live stream.
@@ -45,7 +45,7 @@ export interface MillicastSource extends TypedSource {
    *
    * @see https://millicast.github.io/millicast-sdk/View.html#connect
    */
-  connectOptions?: Record<string, any>;
+  connectOptions?: MillicastConnectOptions;
 
   /**
    * The URL of the API endpoint that the SDK communicates with for authentication.
