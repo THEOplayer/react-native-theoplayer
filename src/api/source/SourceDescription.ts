@@ -52,6 +52,17 @@ export enum SourceIntegrationId {
 }
 
 /**
+ * The playback pipeline to use to play a stream.
+ *
+ * @remarks
+ * <br/> - Available on Android only.
+ */
+export enum PlaybackPipeline {
+  LEGACY = 'legacy',
+  MEDIA3 = 'media3'
+}
+
+/**
  * Describes the configuration of a player's source.
  *
  * @public
@@ -339,6 +350,16 @@ export interface BaseSource {
    * <br/> - Ignored for non-HLS streams.
    */
   hls?: HlsPlaybackConfiguration;
+
+  /**
+   * The playback pipeline to use for this stream.
+   *
+   * @defaultValue [PlaybackPipeline.MEDIA3]
+   * @since v9.0.0
+   * @remarks
+   * <br/> - Available on Android only.
+   */
+  playbackPipeline: PlaybackPipeline;
 }
 
 /**
