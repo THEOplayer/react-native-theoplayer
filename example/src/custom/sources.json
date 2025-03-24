@@ -516,9 +516,7 @@
           "type": "millicast",
           "src": "multiview",
           "streamAccountId": "k9Mwad",
-          "connectOptions": {
-            "disableAudio": true
-          }
+          "apiUrl": "https://director.millicast.com/api/director/subscribe"
         }
       ],
       "metadata": {
