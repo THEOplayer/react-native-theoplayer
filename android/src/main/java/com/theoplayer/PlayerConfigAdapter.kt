@@ -21,7 +21,6 @@ private const val PROP_LIVE_OFFSET = "liveOffset"
 private const val PROP_UI_ENABLED = "uiEnabled"
 private const val PROP_CAST_STRATEGY = "strategy"
 private const val PROP_RETRY_CONFIG = "retryConfiguration"
-private const val PROP_HLS_DATE_RANGE = "hlsDateRange"
 private const val PROP_RETRY_MAX_RETRIES = "maxRetries"
 private const val PROP_RETRY_MIN_BACKOFF = "minimumBackoff"
 private const val PROP_RETRY_MAX_BACKOFF = "maximumBackoff"
@@ -64,9 +63,6 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
         }
         if (hasKey(PROP_LIVE_OFFSET)) {
           liveOffset(getDouble(PROP_LIVE_OFFSET))
-        }
-        if (hasKey(PROP_HLS_DATE_RANGE)) {
-          hlsDateRange(getBoolean(PROP_HLS_DATE_RANGE))
         }
         if (hasKey(PROP_THEOLIVE_CONFIG)) {
           theoLiveConfiguration(theoLiveConfig())
