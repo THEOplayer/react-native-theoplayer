@@ -3,7 +3,7 @@ module.exports = {
   entryPoints: ['src/index.tsx'],
   tsconfig: 'tsconfig.build.json',
   out: 'api',
-  hostedBaseUrl: 'https://theoplayer.github.io/react-native-theoplayer/api/',
+  sitemapBaseUrl: 'https://theoplayer.github.io/react-native-theoplayer/api/',
   name: 'React Native THEOplayer',
   readme: 'none',
   plugin: ['typedoc-plugin-external-resolver', 'typedoc-plugin-mdn-links', './plugins/typedoc-platform-icons/dist/index.js'],
@@ -19,5 +19,5 @@ module.exports = {
       dtsPath: '~/THEOplayer.d.ts',
       externalBaseURL: 'https://www.theoplayer.com/docs/theoplayer/v7/api-reference/web',
     },
-  },
+  }
 };
