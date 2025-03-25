@@ -43,7 +43,9 @@ export function load(app: Application): void {
     if (event.contents === undefined) {
       return;
     }
-    event.contents = insertStyle(event.contents);
+    const html = event.contents;
+    const headEndIndex = html.indexOf('</head>');
+    event.contents =  html.slice(0, headEndIndex) + style + html.slice(headEndIndex);
   });
 
   app.converter.on(Converter.EVENT_RESOLVE_BEGIN, (ctx: Context) => {
@@ -87,9 +89,4 @@ export function load(app: Application): void {
       }
     }
   });
-}
-
-function insertStyle(html: string): string  {
-  const headEndIndex = html.indexOf('</head>');
-  return html.slice(0, headEndIndex) + style + html.slice(headEndIndex);
 }
