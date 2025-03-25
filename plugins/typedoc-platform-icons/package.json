@@ -8,7 +8,7 @@
     "build": "tsc"
   },
   "devDependencies": {
-    "typedoc": "^0.28.1",
+    "typedoc": "^0.25.13",
     "typescript": "^5.1.6"
   },
   "files": [
