@@ -20,6 +20,20 @@ export interface MillicastConnectOptions {
   absCaptureTime?: boolean;
 
   /**
+   * Overrides the duration of time over which bandwidth-estimate-calculations occur in usec. By default, this is 150 msec, increasing this may smooth out transitions a little at the cost of not reacting to changes in the network as fast.
+   *
+   * @platform android
+   */
+  bweMonitorDurationUs?: number;
+
+  /**
+   * What percentage of the estimated larger bitrate will we increase by when we think the network is good. So if the previous estimate was 1mbps and the new estimate is 10mbps, and `bweRateChangePercentage` is 0.05, then 0.05*10mbps = 0.5mbps, so the new target at the end of the tick will be 1 + 0.5 = 1.5mbps. This value can be reduced to increase more slowly under good conditions.
+   *
+   * @platform android
+   */
+  bweRateChangePercentage?: number;
+
+  /**
    * A boolean option that determines whether audio playback should be completely disabled. Disabling unnecessary audio helps reduce audio-to-video synchronization delays.
    *
    * @platform ios,android,web
@@ -44,9 +58,9 @@ export interface MillicastConnectOptions {
   drm?: boolean;
 
   /**
-   * True to modify SDP for supporting dtx in opus. Otherwise, False.
+   * Enables Discontinuous Transmission (DTX) on the publishing side to send audio only when a user’s voice is detected.
    *
-   * @platform web
+   * @platform web,android
    * @defaultValue false
    */
   dtx?: boolean;
@@ -70,16 +84,31 @@ export interface MillicastConnectOptions {
   /**
    * Do not receive media from these source ids.
    *
-   * @platform web
+   * @platform web, android
    */
   excludedSourceIds?: string[];
 
   /**
-   * Ask the server to use the playout delay header extension.
+   * Sets the minimum and maximum values for the playout delay.
    *
-   * @platform web
+   * @platform web,android
    */
-  forcePlayoutDelay?: object;
+  forcePlayoutDelay?: MillicastForcePlayoutDelay;
+
+  /**
+   * Forces video to be sent on downlink when switching from higher quality layers.
+   *
+   * @platform android
+   * @defaultValue false
+   */
+  forceSmooth?: boolean;
+
+  /**
+   * The minimum jitter delay that packets of incoming audio/video streams will experience before being played out. This can be tuned to help with networks with higher latency, but be careful using it as it will introduce this delay.
+   *
+   * @platform android
+   */
+  jitterMinimumDelayMs?: number;
 
   /**
    * Select the simulcast encoding layer and svc layers for the main video track, leave empty for automatic layer selection based on bandwidth estimation.
@@ -89,6 +118,13 @@ export interface MillicastConnectOptions {
    * See [LayerInfo](https://millicast.github.io/millicast-sdk/global.html#LayerInfo) for more details
    */
   layer?: MillicastLayerInfo
+
+  /**
+   * Sets the maximum bitrate in KBps that the subscriber can receive.
+   *
+   * @platform android
+   */
+  maximumBitrate?: number;
 
   /**
    * Enable metadata extraction if stream is compatible.
@@ -101,7 +137,7 @@ export interface MillicastConnectOptions {
   /**
    * Number of audio tracks to receive VAD multiplexed audio for secondary sources.
    *
-   * @platform web
+   * @platform web,android
    */
   multiplexedAudioTracks?: number;
 
@@ -113,17 +149,61 @@ export interface MillicastConnectOptions {
   peerConfig?: RTCConfiguration;
 
   /**
-   * ID of the main source that will be received by the default MediaStream.
+   * A specific source to pin to prioritize its audio and video tracks for playback.
    *
-   * @platform web
+   * @platform web,android
    */
   pinnedSourceId?: string;
+
+  /**
+   * The file path for storing Real-Time Communication (RTC) event logs. Using this option requires having the rights upon the destination file path.
+   *
+   * @platform android
+   * @defaultValue ''
+   */
+  rtcEventLogOutputPath?: string;
+
+  /**
+   * The delay for collecting and reporting statistical information, in milliseconds.
+   *
+   * @platform android
+   * @defaultValue 1000
+   */
+  statsDelayMs?: number;
+
+  /**
+   * A boolean option that determines whether stereo audio playback should be enabled or disabled.
+   *
+   * @platform android
+   * @defaultValue true
+   */
+  stereo?: boolean;
+
+  /**
+   * Duration the Transponder will wait before switching back to a higher layer in msec.
+   *
+   * @platform android
+   */
+  upwardsLayerWaitTimeMs?: number;
 }
 
+/**
+ * @category Millicast
+ * @public
+ */
 export interface MillicastLayerInfo {
   encodingId: string;
   spatialLayerId: number;
   temporalLayerId: number;
   maxSpatialLayerId: number;
   maxTemporalLayerId: number;
+}
+
+/**
+ * @category Millicast
+ * @public
+ */
+export interface MillicastForcePlayoutDelay {
+  min?: number;
+  max?: number;
 }
