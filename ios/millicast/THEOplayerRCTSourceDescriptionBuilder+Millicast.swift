@@ -39,25 +39,6 @@ extension THEOplayerRCTSourceDescriptionBuilder {
   
   static func buildConnectOptions(_ connectOptions: NSDictionary?) -> MCClientOptions {
     let result: MCClientOptions = .init()
-    if let audioCodec = connectOptions?["audioCodec"] as? String {
-      result.audioCodec = audioCodec
-    }
-    if let bitrateSettingsDict = connectOptions?["bitrateSettings"] as? NSDictionary {
-      let bitrateSettings: MCBitrateSettings = .init()
-      if let disableBWE = bitrateSettingsDict["disableBWE"] as? Bool {
-        bitrateSettings.disableBWE = disableBWE
-      }
-      if let maxBitrateKbps = bitrateSettingsDict["maxBitrateKbps"] as? Int {
-        bitrateSettings.maxBitrateKbps = maxBitrateKbps
-      }
-      if let minBitrateKbps = bitrateSettingsDict["minBitrateKbps"] as? Int {
-        bitrateSettings.minBitrateKbps = minBitrateKbps
-      }
-      if let startBitrateKbps = bitrateSettingsDict["startBitrateKbps"] as? Int {
-        bitrateSettings.startBitrateKbps = startBitrateKbps
-      }
-      result.bitrateSettings = bitrateSettings
-    }
     if let bweMonitorDurationUs = connectOptions?["bweMonitorDurationUs"] as? NSNumber {
       result.bweMonitorDurationUs = bweMonitorDurationUs
     }
@@ -84,12 +65,12 @@ extension THEOplayerRCTSourceDescriptionBuilder {
     if let dtx = connectOptions?["dtx"] as? Bool {
       result.dtx = dtx
     }
-    if let excludedSourceId = connectOptions?["excludedSourceId"] as? [Any] {
+    if let excludedSourceId = connectOptions?["excludedSourceIds"] as? [Any] {
       result.excludedSourceId = excludedSourceId
     }
     if let forcePlayoutDelayDict = connectOptions?["forcePlayoutDelay"] as? NSDictionary,
-       let maximum = forcePlayoutDelayDict["maximum"] as? Int32,
-       let minimum = forcePlayoutDelayDict["minimum"] as? Int32 {
+       let maximum = forcePlayoutDelayDict["max"] as? Int32,
+       let minimum = forcePlayoutDelayDict["min"] as? Int32 {
       let forcePlayoutDelay: MCForcePlayoutDelay = .init(min: minimum, max: maximum)
       result.forcePlayoutDelay = forcePlayoutDelay
     }
@@ -102,7 +83,7 @@ extension THEOplayerRCTSourceDescriptionBuilder {
     if let maximumBitrate = connectOptions?["maximumBitrate"] as? NSNumber {
       result.maximumBitrate = maximumBitrate
     }
-    if let multiplexedAudioTrack = connectOptions?["multiplexedAudioTrack"] as? Int32 {
+    if let multiplexedAudioTrack = connectOptions?["multiplexedAudioTracks"] as? Int32 {
       result.multiplexedAudioTrack = multiplexedAudioTrack
     }
     if let pinnedSourceId = connectOptions?["pinnedSourceId"] as? String {
