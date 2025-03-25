@@ -113,7 +113,7 @@ object TrackListAdapter {
         cuePayload.putDouble(PROP_PLANNED_DURATION, TypeUtils.encodeInfNan(1e3 * this))
       }
       cuePayload.putBoolean(PROP_END_ON_NEXT, cue.isEndOnNext)
-      cue.customAttributes?.asMap()?.run {
+      cue.customAttributes.asMap()?.run {
         val attributes = Arguments.createMap()
         forEach { (key, value) ->
           when (value) {
