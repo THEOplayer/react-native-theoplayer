@@ -1,0 +1,20 @@
+{
+  "name": "typedoc-platform-icons",
+  "version": "1.0.0",
+  "description": "TypeDoc plugin which renders icon tags for iOS, Android and Web",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typedoc": "^0.28.1",
+    "typescript": "^5.1.6"
+  },
+  "files": [
+    "dist/plugin.js"
+  ],
+  "peerDependencies": {
+    "typedoc": "0.23.x || 0.24.x || 0.25.x || 0.26.x || 0.27.x || 0.28.x"
+  }
+}
