@@ -1,6 +1,33 @@
 import type { CachingPreferredTrackSelection } from "./CachingPreferredTrackSelection";
 
 /**
+ * The types of cache storage supported by THEOplayer.
+ *
+ * @remarks
+ * <br/> - Available only on Android.
+ */
+export enum StorageType {
+  /**
+   * Write to the legacy cache.
+   *
+   * @remarks
+   * <br/> - This was the default for all caching tasks created in THEOplayer version 8.x and earlier.
+   * <br/> - Sources cached with this storage type can be played in both the default playback pipeline and the Media3 playback pipeline.
+   * <br/> - This cache storage will be removed in THEOplayer version 10.
+   */
+  LEGACY = 'legacy',
+
+  /**
+   * Write to the Media3 cache.
+   *
+   * @remarks
+   * <br/> - This is the default starting with THEOplayer version 9.0.
+   * <br/> - Sources cached with this storage type can only be played in the [Media3 playback pipeline][PlaybackPipeline.MEDIA3].
+   */
+  MEDIA3 = 'media3'
+}
+
+/**
  * Describes the configuration of a caching task.
  *
  * @public
@@ -59,4 +86,14 @@ export interface CachingTaskParameters {
    * <br/> - If the download is scheduled/started on WIFI-only mode, and suddenly we would like allow Cellular Network download too, the `CachingTask` has to be removed and scheduled again with the new `CachingParamaters`.
    */
   readonly allowsCellularAccess?: boolean;
+
+  /**
+   * The storage type to use for caching.
+   *
+   * @remarks
+   * <br/> - Available only on Android.
+   *
+   * @defaultValue [StorageType.MEDIA3]
+   */
+  readonly storageType?: StorageType;
 }
