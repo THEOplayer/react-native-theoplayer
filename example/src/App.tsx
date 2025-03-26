@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   AirplayButton,
   CastMessage,
@@ -22,7 +22,7 @@ import {
   TimeLabel,
   UiContainer,
 } from '@theoplayer/react-native-ui';
-import { PlayerConfiguration, PlayerEventType, THEOplayer, THEOplayerView, sdkVersions } from 'react-native-theoplayer';
+import { PlayerConfiguration, PlayerEventType, PresentationMode, sdkVersions, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { SourceMenuButton, SOURCES } from './custom/SourceMenuButton';
 import { BackgroundAudioSubMenu } from './custom/BackgroundAudioSubMenu';
@@ -33,6 +33,8 @@ import { MediaCachingTaskListSubMenu } from './custom/MediaCachingTaskListSubMen
 import { RenderingTargetSubMenu } from './custom/RenderingTargetSubMenu';
 import { AutoPlaySubMenu } from './custom/AutoPlaySubMenu';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { usePresentationMode } from './hooks/usePresentationMode';
+import { Edges } from 'react-native-safe-area-context/src/SafeArea.types';
 
 const playerConfig: PlayerConfiguration = {
   // Get your THEOplayer license from https://portal.theoplayer.com/
@@ -67,6 +69,12 @@ const playerConfig: PlayerConfiguration = {
  */
 export default function App() {
   const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);
+  const presentationMode = usePresentationMode(player);
+
+  // In PiP presentation mode on NewArch Android, there is an issue where SafeAreayView does not update the edges in time,
+  // so explicitly disable them here.
+  const edges: Edges = useMemo(() => (presentationMode === PresentationMode.pip ? [] : ['left', 'top', 'right', 'bottom']), [presentationMode]);
+
   const onPlayerReady = (player: THEOplayer) => {
     setPlayer(player);
     // optional debug logs
@@ -107,7 +115,7 @@ export default function App() {
      */
     <SafeAreaProvider>
       <StatusBar barStyle="light-content" />
-      <SafeAreaView style={{ flex: 1, backgroundColor: 'black' }}>
+      <SafeAreaView edges={edges} style={{ flex: 1, backgroundColor: 'black' }}>
         <View style={styles.container}>
           <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady}>
             {player !== undefined && (
