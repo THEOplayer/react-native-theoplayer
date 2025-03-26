@@ -1,5 +1,9 @@
 # Getting started with Millicast on React Native
 
+[Dolby Millicast](https://dolby.io/products/real-time-streaming/) delivers broadcast quality live streaming
+at sub-second latency, enabling interactivity and fan engagement.
+Using the THEOplayer Millicast integration, you can play your Millicast streams directly through THEOplayer.
+
 ## Usage
 
 1. Follow [our Getting Started guide](./getting-started.md) to set up THEOplayer in your React Native app.
