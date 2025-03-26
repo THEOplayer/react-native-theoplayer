@@ -64,6 +64,8 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
           theoLiveConfiguration(theoLiveConfig())
         }
         pipConfiguration(PipConfiguration.Builder().build())
+        // Opt-out for auto-integrations for now
+        autoIntegrations(false)
       }
     }.build()
   }
