@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added `decription` property for Google IMA ads on Web and Android platforms.
 - Added `networkCode` property for Google DAI configuration on Web platforms.
 - Added `segmentRelativeVttTiming` property on `DashPlaybackConfiguration` for Web to indicate whether segmented WebVTT files' timestamps should be considered relative to the segment start time.
+- Added `storageType` to `CachingTaskParameters` to allow writing to either the legacy cache or Media3 cache on Android.
 
 ## [8.18.0] - 25-04-02
 
