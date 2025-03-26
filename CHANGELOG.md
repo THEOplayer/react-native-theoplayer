@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Exposed THEOads API through the Player API.
+- Added support for Millicast on iOS, Android and Web.
 
 ## [8.17.0] - 25-03-20
 
