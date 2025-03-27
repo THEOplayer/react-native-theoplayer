@@ -177,7 +177,9 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
     this.reset();
     this._facade.dispatchEvent(new BaseEvent(PlayerEventType.SOURCE_CHANGE));
     this._updatePoster();
-    this._showPoster();
+    if (!this._facade.autoplay) {
+      this._showPoster();
+    }
   };
 
   private _onLoadStart = () => {
