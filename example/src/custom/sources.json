@@ -509,7 +509,27 @@
   },
   {
     "name": "Millicast",
-    "os": ["android", "ios", "web"],
+    "os": ["ios", "web"],
+    "source": {
+      "sources": [
+        {
+          "type": "millicast",
+          "src": "multiview",
+          "streamAccountId": "k9Mwad"
+        }
+      ],
+      "metadata": {
+        "title": "Millicast",
+        "subtitle": "Millicast demo",
+        "album": "React-Native THEOplayer demos",
+        "mediaUri": "https://theoplayer.com",
+        "artist": "THEOplayer"
+      }
+    }
+  },
+  {
+    "name": "Millicast",
+    "os": ["android"],
     "source": {
       "sources": [
         {
