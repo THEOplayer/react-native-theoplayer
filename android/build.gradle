@@ -125,7 +125,7 @@ repositories {
 
 // The minimum supported THEOplayer version is 9.0.0
 def theoplayer_sdk_version = safeExtGet('THEOplayer_sdk', '[9.0.0, 10.0.0)')
-def theoplayer_mediasession_version = safeExtGet('THEOplayer_mediasession', '[9.0.0, 10.0.0)')
+def theoplayer_mediasession_version = safeExtGet('THEOplayer_mediasession', '[8.0.0, 10.0.0)')
 
 dependencies {
   //noinspection GradleDynamicVersion
