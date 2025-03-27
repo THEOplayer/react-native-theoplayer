@@ -9,7 +9,7 @@ import com.google.ads.interactivemedia.v3.api.UiElement
 import com.theoplayer.android.api.ads.Ad
 import com.theoplayer.android.api.ads.AdBreak
 import com.theoplayer.android.api.ads.CompanionAd
-import com.theoplayer.android.api.ads.GoogleImaAd
+import com.theoplayer.android.api.ads.ima.GoogleImaAd
 import com.theoplayer.android.api.ads.UniversalAdId
 import com.theoplayer.android.api.event.ads.AdIntegrationKind
 import java.lang.Exception
@@ -105,9 +105,9 @@ object AdAdapter {
         val idPayload = Arguments.createMap()
         idPayload.putString(
           PROP_UNIVERSAL_AD_ID_REGISTRY,
-          universalAdId.universalAdIdRegistry
+          universalAdId?.universalAdIdRegistry
         )
-        idPayload.putString(PROP_UNIVERSAL_AD_ID_VALUE, universalAdId.universalAdIdValue)
+        idPayload.putString(PROP_UNIVERSAL_AD_ID_VALUE, universalAdId?.universalAdIdValue)
         universalAdIdsPayload.pushMap(idPayload)
       }
       adPayload.putArray(PROP_AD_UNIVERSAL_AD_IDS, universalAdIdsPayload)
@@ -217,41 +217,32 @@ object AdAdapter {
         return null
       }
 
-      override fun getImaAd(): com.google.ads.interactivemedia.v3.api.Ad {
-        return parseImaAd(ad)
-      }
+      override val imaAd: com.google.ads.interactivemedia.v3.api.Ad
+        get() = parseImaAd(ad)
 
-      override fun getAdSystem(): String {
-        return ad.getString(PROP_AD_SYSTEM) ?: ""
-      }
+      override val adSystem: String?
+        get() = ad.getString(PROP_AD_SYSTEM)
 
-      override fun getCreativeId(): String? {
-        return ad.getString(PROP_AD_CREATIVE_ID)
-      }
+      override val creativeId: String?
+        get() = ad.getString(PROP_AD_CREATIVE_ID)
 
-      override fun getWrapperAdIds(): List<String> {
-        return emptyList()
-      }
+      override val wrapperAdIds: List<String?>
+        get() = emptyList()
 
-      override fun getWrapperAdSystems(): List<String> {
-        return emptyList()
-      }
+      override val wrapperAdSystems: List<String?>
+        get() = emptyList()
 
-      override fun getWrapperCreativeIds(): List<String> {
-        return emptyList()
-      }
+      override val wrapperCreativeIds: List<String?>
+        get() = emptyList()
 
-      override fun getVastMediaBitrate(): Int {
-        return if (ad.hasKey(PROP_AD_BITRATE)) ad.getInt(PROP_AD_BITRATE) else 0
-      }
+      override val vastMediaBitrate: Int
+        get() = if (ad.hasKey(PROP_AD_BITRATE)) ad.getInt(PROP_AD_BITRATE) else 0
 
-      override fun getUniversalAdIds(): List<UniversalAdId> {
-        return emptyList()
-      }
+      override val universalAdIds: List<UniversalAdId?>
+        get() = emptyList()
 
-      override fun getTraffickingParameters(): String {
-        return ad.getString(PROP_AD_TRAFFICKING_PARAMETERS) ?: ""
-      }
+      override val traffickingParameters: String
+        get() = ad.getString(PROP_AD_TRAFFICKING_PARAMETERS) ?: ""
     }
   }
 

@@ -7,7 +7,7 @@ import com.facebook.react.bridge.WritableMap
 import com.google.ads.interactivemedia.v3.api.AdError
 import com.theoplayer.android.api.ads.Ad
 import com.theoplayer.android.api.ads.AdBreak
-import com.theoplayer.android.api.ads.GoogleImaAd
+import com.theoplayer.android.api.ads.ima.GoogleImaAd
 import com.theoplayer.android.api.ads.ima.GoogleImaAdEvent
 import com.theoplayer.android.api.ads.ima.GoogleImaAdEventType
 import com.theoplayer.android.api.ads.wrapper.AdEventListener
