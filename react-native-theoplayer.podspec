@@ -39,7 +39,7 @@ Pod::Spec.new do |s|
   puts "Adding THEOplayer-Integration-THEOlive"
   s.dependency "THEOplayer-Integration-THEOlive", "~> 8.11"
 
-  # Feature based dependencies
+  # Feature based integration dependencies
   if theofeatures.include?("GOOGLE_IMA")
 	puts "Adding THEOplayer-Integration-GoogleIMA"
     s.dependency "THEOplayer-Integration-GoogleIMA", "~> 8.11"
@@ -54,15 +54,16 @@ Pod::Spec.new do |s|
 	puts "Adding THEOplayer-Integration-THEOads"
     s.ios.dependency "THEOplayer-Integration-THEOads", "~> 8.11"
   end
+  
+  if theofeatures.include?("MILLICAST")
+  puts "Adding THEOplayer-Integration-Millicast"
+    s.dependency "THEOplayer-Integration-Millicast", "~> 8.11"
+  end
 
+  # Feature based connector dependencies
   if theofeatures.include?("SIDELOADED_TEXTTRACKS")
 	puts "Adding THEOplayer-Connector-SideloadedSubtitle"
     s.dependency "THEOplayer-Connector-SideloadedSubtitle", "~> 8.11"
   end
-
-  if theofeatures.include?("MILLICAST")
-	puts "Adding THEOplayer-Integration-Millicast"
-    s.dependency "THEOplayer-Integration-Millicast", "~> 8.11"
-  end
-
+  
 end
