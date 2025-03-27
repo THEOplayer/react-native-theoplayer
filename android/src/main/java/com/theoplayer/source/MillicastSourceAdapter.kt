@@ -2,6 +2,9 @@ package com.theoplayer.source
 
 import com.millicast.subscribers.ForcePlayoutDelay
 import com.millicast.subscribers.Option
+import com.theoplayer.BuildConfig
+import com.theoplayer.android.api.error.ErrorCode
+import com.theoplayer.android.api.error.THEOplayerException
 import com.theoplayer.android.api.millicast.MillicastSource
 import org.json.JSONObject
 
@@ -29,7 +32,13 @@ private const val STATS_DELAY_MS = "statsDelayMs"
 private const val STEREO = "stereo"
 private const val UPWARDS_LAYER_WAIT_TIME_MS = "upwardsLayerWaitTimeMs"
 
+private const val ERROR_MILLICAST_NOT_ENABLED = "Millicast support not enabled."
+
 fun parseMillicastSource(jsonTypedSource: JSONObject): MillicastSource {
+  // Check whether the integration was enabled
+  if (!BuildConfig.EXTENSION_MILLICAST) {
+    throw THEOplayerException(ErrorCode.SOURCE_INVALID, ERROR_MILLICAST_NOT_ENABLED)
+  }
   return MillicastSource(
     src = jsonTypedSource.optString(PROP_SRC),
     streamAccountId = jsonTypedSource.optString(PROP_STREAM_ACCOUNT_ID),
@@ -43,7 +52,7 @@ fun parseMillicastSource(jsonTypedSource: JSONObject): MillicastSource {
   )
 }
 
-fun buildMillicastConnectOptions(jsonObject: JSONObject): Option {
+private fun buildMillicastConnectOptions(jsonObject: JSONObject): Option {
   return Option(
     bweMonitorDurationUs = when (val bweMonitorDurationUs = jsonObject.optInt(BWE_MONITOR_DURATION_US, -1)) {
       -1 -> null
