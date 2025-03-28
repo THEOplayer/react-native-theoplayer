@@ -98,22 +98,24 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     if (!cmcdConfiguration) {
       return undefined;
     }
-    const configuration: Configuration = {
-      transmissionMode: TransmissionMode.QUERY_ARGUMENT,
-    };
+
+    let transmissionMode = TransmissionMode.QUERY_ARGUMENT;
     switch (cmcdConfiguration.transmissionMode) {
       case CmcdTransmissionMode.HTTP_HEADER:
-        configuration.transmissionMode = TransmissionMode.HTTP_HEADER;
+        transmissionMode = TransmissionMode.HTTP_HEADER;
         break;
       case CmcdTransmissionMode.JSON_OBJECT:
-        configuration.transmissionMode = TransmissionMode.JSON_OBJECT;
+        transmissionMode = TransmissionMode.JSON_OBJECT;
         break;
       case CmcdTransmissionMode.QUERY_ARGUMENT:
       case CmcdTransmissionMode.SDK_DEFAULT:
       default:
-        configuration.transmissionMode = TransmissionMode.QUERY_ARGUMENT;
+        transmissionMode = TransmissionMode.QUERY_ARGUMENT;
     }
-    return configuration;
+    return {
+      ...cmcdConfiguration,
+      transmissionMode: transmissionMode,
+    };
   }
 
   play(): void {

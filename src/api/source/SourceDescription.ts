@@ -114,7 +114,7 @@ export interface SourceConfiguration {
 
   /**
    * The configuration for transmitting information to Content Delivery Networks (CDNs)
-   * through Common Media Client Data (CMCD)
+   * through Common Media Client Data (CMCD) (CTA-5004)
    */
   cmcd?: CmcdConfiguration;
 }
