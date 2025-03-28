@@ -114,8 +114,8 @@ class THEOplayerRCTTrackMetadataAggregator {
             startTime = dateRangeCue.startDate.timeIntervalSince1970 - offset
             endTime = dateRangeCue.endDate != nil ? dateRangeCue.endDate!.timeIntervalSince1970 - offset : .infinity
         }
-        entry[PROP_STARTTIME] = THEOplayerRCTTypeUtils.encodeInfNan((startTime ?? 0) * 1000)
-        entry[PROP_ENDTIME] = THEOplayerRCTTypeUtils.encodeInfNan((endTime ?? 0) * 1000)
+        entry[PROP_STARTTIME] = THEOplayerRCTTypeUtils.encodeInfNan(startTime * 1000)
+        entry[PROP_ENDTIME] = THEOplayerRCTTypeUtils.encodeInfNan(endTime * 1000)
         if let content = textTrackCue.content {
             entry[PROP_CUE_CONTENT] = content
         } else if let contentString = textTrackCue.contentString {
