@@ -13,6 +13,7 @@ import type { AdDescription } from './ads/Ads';
 import type { MetadataDescription } from './metadata/MetadataDescription';
 import type { ServerSideAdInsertionConfiguration } from './ads/ssai/ServerSideAdInsertionConfiguration';
 import type { AnalyticsDescription } from './analytics/AnalyticsDescription';
+import { CmcdConfiguration } from './cmcd/CmcdConfiguration';
 
 export type Source = TypedSource;
 
@@ -374,4 +375,16 @@ export interface TypedSource extends BaseSource {
    * <br/> - Available since v2.12.0.
    */
   ssai?: ServerSideAdInsertionConfiguration;
+
+  /**
+   * The configuration for transmitting information to Content Delivery Networks (CDNs)
+   * through Common Media Client Data (CMCD)
+   *
+   * @remarks
+   * Setting this to `true` enables CMCD with the default transmission mode for each SDK:
+   * - Web: HTTP request headers
+   * - Android: Query arguments
+   * - iOS: HTTP request headers
+   */
+  cmcd?: boolean | CmcdConfiguration;
 }
