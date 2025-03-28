@@ -51,7 +51,6 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   private readonly _theoAdsAdapter: THEOAdsWebAdapter;
   private readonly _textTrackState: TextTrackState;
   private readonly _presentationModeManager: WebPresentationModeManager;
-  private readonly _cmcdConnector: CMCDConnector;
   private _player: NativeChromelessPlayer | undefined;
   private _eventForwarder: WebEventForwarder | undefined;
   private _mediaSession: WebMediaSession | undefined = undefined;
@@ -59,6 +58,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   private _backgroundAudioConfiguration: BackgroundAudioConfiguration = defaultBackgroundAudioConfiguration;
   private _pipConfiguration: PiPConfiguration = defaultPipConfiguration;
   private _externalEventRouter: EventBroadcastAPI | undefined = undefined;
+  private _cmcdConnector: CMCDConnector | undefined = undefined;
 
   constructor(player: NativeChromelessPlayer, config?: PlayerConfiguration) {
     super();
@@ -69,7 +69,6 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     this._textTrackState = new DefaultTextTrackState(this);
     this._eventForwarder = new WebEventForwarder(this._player, this);
     this._presentationModeManager = new WebPresentationModeManager(this._player, this);
-    this._cmcdConnector = createCMCDConnector(this._player);
     document.addEventListener('visibilitychange', this.onVisibilityChange);
 
     // Optionally create a media session connector
@@ -90,7 +89,10 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     this._targetVideoQuality = undefined;
     if (this._player) {
       this._player.source = source as NativeSourceDescription;
-      this._cmcdConnector.reconfigure(this.toWebCmcdConfiguration(source?.cmcd));
+      if (source?.cmcd && this._cmcdConnector === undefined) {
+        this._cmcdConnector = createCMCDConnector(this._player);
+      }
+      this._cmcdConnector?.reconfigure(this.toWebCmcdConfiguration(source?.cmcd));
     }
   }
 
@@ -371,7 +373,8 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     document.removeEventListener('visibilitychange', this.onVisibilityChange);
     this._eventForwarder = undefined;
     this._mediaSession = undefined;
-    this._cmcdConnector.destroy();
+    this._cmcdConnector?.destroy();
+    this._cmcdConnector = undefined;
     this._player?.destroy();
     this._player = undefined;
   }
