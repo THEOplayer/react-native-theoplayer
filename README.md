@@ -105,7 +105,7 @@ please reach out to us for support.
 </tr>
 <tr>
 <td><strong>Advertising Integration</strong></td>
-<td colspan="3">Google IMA, Google DAI</td>
+<td colspan="3">Google IMA, Google DAI, THEOads</td>
 </tr>
 <tr>
 <td><strong>Cast Integration</strong></td>
