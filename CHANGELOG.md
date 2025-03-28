@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - No longer showing poster after setting the source when the player has been configured to use autoplay. With autoplay enabled, displaying the poster will only result in a brief flash of the image.
 
+### Added
+
+- Exposed THEOads API through the Player API.
+
 ## [8.17.0] - 25-03-20
 
 ### Fixed
