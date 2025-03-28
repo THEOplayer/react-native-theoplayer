@@ -1,6 +1,5 @@
 import type { ChromelessPlayer } from 'theoplayer';
-import { TheoAdsAPI } from '../../../api/theoads/TheoAdsAPI';
-import { Interstitial } from '../../../api/theoads/interstitial/Interstitial';
+import { TheoAdsAPI, Interstitial } from 'react-native-theoplayer';
 
 export class THEOAdsWebAdapter implements TheoAdsAPI {
   private readonly _player: ChromelessPlayer;
