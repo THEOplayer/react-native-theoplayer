@@ -4,18 +4,18 @@ export class THEOAdsNativeAdapter implements TheoAdsAPI {
   // @ts-ignore
   constructor(private _player: THEOplayerView) {}
 
-  get currentInterstitials(): readonly Interstitial[] {
+  get currentInterstitials(): Promise<readonly Interstitial[]> {
     // TODO
     //return NativeTHEOAdsModule.currentInterstitials(this._player.nativeHandle);
     console.warn('THEOAdsNativeAdapter', 'currentInterstitials - NYI');
-    return [];
+    return Promise.resolve([]);
   }
 
-  get scheduledInterstitials(): readonly Interstitial[] {
+  get scheduledInterstitials(): Promise<readonly Interstitial[]> {
     // TODO
     //return NativeTHEOAdsModule.scheduledInterstitials(this._player.nativeHandle);
     console.warn('THEOAdsNativeAdapter', 'scheduledInterstitials - NYI');
-    return [];
+    return Promise.resolve([]);
   }
 
   replaceAdTagParameters(_adTagParameters?: Record<string, string>): void {

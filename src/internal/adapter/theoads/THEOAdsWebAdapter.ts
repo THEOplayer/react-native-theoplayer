@@ -8,12 +8,12 @@ export class THEOAdsWebAdapter implements TheoAdsAPI {
     this._player = player;
   }
 
-  get currentInterstitials(): readonly Interstitial[] {
-    return this._player.theoads?.currentInterstitials ?? [];
+  get currentInterstitials(): Promise<readonly Interstitial[]> {
+    return Promise.resolve(this._player.theoads?.currentInterstitials ?? []);
   }
 
-  get scheduledInterstitials(): readonly Interstitial[] {
-    return this._player.theoads?.scheduledInterstitials ?? [];
+  get scheduledInterstitials(): Promise<readonly Interstitial[]> {
+    return Promise.resolve(this._player.theoads?.scheduledInterstitials ?? []);
   }
 
   replaceAdTagParameters(adTagParameters?: Record<string, string>): void {
