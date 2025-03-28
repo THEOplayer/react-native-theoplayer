@@ -25,6 +25,7 @@ type EnhancedSourceList = TestSourceDescription[] & SourceListMethods;
 interface SourceListMethods {
   withPlain: () => EnhancedSourceList;
   withAds: () => EnhancedSourceList;
+  withAdsIf: (condition: boolean) => EnhancedSourceList;
 }
 
 export function TestSources(): EnhancedSourceList {
@@ -38,6 +39,9 @@ export function TestSources(): EnhancedSourceList {
       testSources.push(getTestSource(SourceType.HLS));
       testSources.push(getTestSource(SourceType.MP4));
       return testSources as EnhancedSourceList;
+    },
+    withAdsIf(condition: boolean) {
+      return !condition ? (testSources as EnhancedSourceList) : this.withAds();
     },
     withAds() {
       if (Platform.OS === 'android' || Platform.OS === 'web') {
