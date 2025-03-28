@@ -1,22 +1,28 @@
 import { DefaultEventDispatcher } from './event/DefaultEventDispatcher';
-import type {
+import {
   AdsAPI,
+  AspectRatio,
   CastAPI,
+  CmcdConfiguration,
+  CmcdTransmissionMode,
+  EventBroadcastAPI,
   MediaTrack,
   NativeHandleType,
   PlayerConfiguration,
   PlayerEventMap,
+  PlayerEventType,
   PlayerVersion,
   PreloadType,
+  PresentationMode,
   TextTrack,
   TextTrackStyle,
+  TheoAdsAPI,
   THEOplayer,
 } from 'react-native-theoplayer';
-import { AspectRatio, EventBroadcastAPI, PlayerEventType, PresentationMode, TheoAdsAPI } from 'react-native-theoplayer';
 import { THEOplayerWebAdsAdapter } from './ads/THEOplayerWebAdsAdapter';
 import { THEOplayerWebCastAdapter } from './cast/THEOplayerWebCastAdapter';
-import { ChromelessPlayer as NativeChromelessPlayer, SourceDescription as NativeSourceDescription, version as nativeVersion } from 'theoplayer';
 import type { MediaTrack as NativeMediaTrack, TextTrack as NativeTextTrack } from 'theoplayer';
+import { ChromelessPlayer as NativeChromelessPlayer, SourceDescription as NativeSourceDescription, version as nativeVersion } from 'theoplayer';
 import { findNativeQualitiesByUid, fromNativeMediaTrackList } from './web/TrackUtils';
 import type { ABRConfiguration, SourceDescription } from 'src/api/barrel';
 import { WebEventForwarder } from './WebEventForwarder';
@@ -29,6 +35,7 @@ import { EventBroadcastAdapter } from './broadcast/EventBroadcastAdapter';
 import { TextTrackState } from './NativePlayerState';
 import { DefaultTextTrackState } from './DefaultTextTrackState';
 import { THEOAdsWebAdapter } from './theoads/THEOAdsWebAdapter';
+import { CMCDConnector, Configuration, createCMCDConnector, TransmissionMode } from '@theoplayer/cmcd-connector-web';
 
 const defaultBackgroundAudioConfiguration: BackgroundAudioConfiguration = {
   enabled: false,
@@ -44,6 +51,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   private readonly _theoAdsAdapter: THEOAdsWebAdapter;
   private readonly _textTrackState: TextTrackState;
   private readonly _presentationModeManager: WebPresentationModeManager;
+  private readonly _cmcdConnector: CMCDConnector;
   private _player: NativeChromelessPlayer | undefined;
   private _eventForwarder: WebEventForwarder | undefined;
   private _mediaSession: WebMediaSession | undefined = undefined;
@@ -61,6 +69,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     this._textTrackState = new DefaultTextTrackState(this);
     this._eventForwarder = new WebEventForwarder(this._player, this);
     this._presentationModeManager = new WebPresentationModeManager(this._player, this);
+    this._cmcdConnector = createCMCDConnector(this._player);
     document.addEventListener('visibilitychange', this.onVisibilityChange);
 
     // Optionally create a media session connector
@@ -81,7 +90,30 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     this._targetVideoQuality = undefined;
     if (this._player) {
       this._player.source = source as NativeSourceDescription;
+      this._cmcdConnector.reconfigure(this.toWebCmcdConfiguration(source?.cmcd));
     }
+  }
+
+  private toWebCmcdConfiguration(cmcdConfiguration?: CmcdConfiguration): Configuration | undefined {
+    if (!cmcdConfiguration) {
+      return undefined;
+    }
+    const configuration: Configuration = {
+      transmissionMode: TransmissionMode.QUERY_ARGUMENT,
+    };
+    switch (cmcdConfiguration.transmissionMode) {
+      case CmcdTransmissionMode.HTTP_HEADER:
+        configuration.transmissionMode = TransmissionMode.HTTP_HEADER;
+        break;
+      case CmcdTransmissionMode.JSON_OBJECT:
+        configuration.transmissionMode = TransmissionMode.JSON_OBJECT;
+        break;
+      case CmcdTransmissionMode.QUERY_ARGUMENT:
+      case CmcdTransmissionMode.SDK_DEFAULT:
+      default:
+        configuration.transmissionMode = TransmissionMode.QUERY_ARGUMENT;
+    }
+    return configuration;
   }
 
   play(): void {
@@ -337,6 +369,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     document.removeEventListener('visibilitychange', this.onVisibilityChange);
     this._eventForwarder = undefined;
     this._mediaSession = undefined;
+    this._cmcdConnector.destroy();
     this._player?.destroy();
     this._player = undefined;
   }

@@ -27,5 +27,12 @@ export enum CmcdTransmissionMode {
   /**
    * Transmit CMCD data as a JSON object independent of the HTTP object request.
    */
-  JSON_OBJECT
+  JSON_OBJECT,
+  /**
+   * Use the default transmission mode for each SDK:
+   * - Web: Query arguments
+   * - Android: Query arguments
+   * - iOS: HTTP request headers
+   */
+  SDK_DEFAULT
 }

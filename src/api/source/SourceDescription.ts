@@ -111,6 +111,12 @@ export interface SourceConfiguration {
    * List of {@link AnalyticsDescription}s to configure source-related properties for analytics connectors.
    */
   analytics?: AnalyticsDescription[];
+
+  /**
+   * The configuration for transmitting information to Content Delivery Networks (CDNs)
+   * through Common Media Client Data (CMCD)
+   */
+  cmcd?: CmcdConfiguration;
 }
 
 /**
@@ -375,16 +381,4 @@ export interface TypedSource extends BaseSource {
    * <br/> - Available since v2.12.0.
    */
   ssai?: ServerSideAdInsertionConfiguration;
-
-  /**
-   * The configuration for transmitting information to Content Delivery Networks (CDNs)
-   * through Common Media Client Data (CMCD)
-   *
-   * @remarks
-   * Setting this to `true` enables CMCD with the default transmission mode for each SDK:
-   * - Web: HTTP request headers
-   * - Android: Query arguments
-   * - iOS: HTTP request headers
-   */
-  cmcd?: boolean | CmcdConfiguration;
 }

@@ -58,6 +58,7 @@
   "devDependencies": {
     "@eslint/js": "^9.13.0",
     "@react-native/eslint-config": "^0.76.5",
+    "@theoplayer/cmcd-connector-web": "^1.2.0",
     "@types/react": "^18.3.12",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.0",
