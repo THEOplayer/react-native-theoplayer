@@ -12,9 +12,6 @@ import android.graphics.Rect
 import android.graphics.drawable.Icon
 import android.os.Build
 import android.util.Rational
-import android.view.SurfaceView
-import android.view.TextureView
-import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import com.facebook.react.uimanager.ThemedReactContext
@@ -108,7 +105,8 @@ class PipUtils(
     }
     try {
       reactContext.currentActivity?.unregisterReceiver(broadcastReceiver)
-    } catch (ignore: IllegalArgumentException) { /*ignore*/}
+    } catch (ignore: IllegalArgumentException) { /*ignore*/
+    }
     enabled = false
   }
 
@@ -189,17 +187,13 @@ class PipUtils(
   }
 
   private fun getContentViewRect(view: ViewGroup): Rect? {
-    for (i in 0 until view.childCount) {
-      val child: View = view.getChildAt(i)
-      if (child is ViewGroup) {
-        return getContentViewRect(child)
-      } else if (child as? SurfaceView != null || child as? TextureView != null) {
-        val visibleRect = Rect()
-        child.getGlobalVisibleRect(visibleRect)
-        return visibleRect
+    return view.findViewById<ViewGroup>(com.theoplayer.android.R.id.theo_content_player_container)
+      ?.getChildAt(0) // AspectRatioView
+      ?.run {
+        Rect().apply {
+          getGlobalVisibleRect(this)
+        }
       }
-    }
-    return null
   }
 
   @RequiresApi(Build.VERSION_CODES.O)
