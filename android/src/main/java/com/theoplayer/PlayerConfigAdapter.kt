@@ -39,6 +39,7 @@ private const val PROP_ALLOWED_MIMETYPES = "allowedMimeTypes"
 private const val PROP_THEOLIVE_CONFIG = "theoLive"
 private const val PROP_THEOLIVE_EXTERNAL_SESSION_ID = "externalSessionId"
 private const val PROP_THEOLIVE_ANALYTICS_DISABLED = "analyticsDisabled"
+private const val PROP_MULTIMEDIA_TUNNELING_ENABLED = "tunnelingEnabled"
 
 class PlayerConfigAdapter(private val configProps: ReadableMap?) {
 
@@ -66,6 +67,9 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
         pipConfiguration(PipConfiguration.Builder().build())
         // Opt-out for auto-integrations for now
         autoIntegrations(false)
+        if (hasKey(PROP_MULTIMEDIA_TUNNELING_ENABLED)) {
+          tunnelingEnabled(getBoolean(PROP_MULTIMEDIA_TUNNELING_ENABLED))
+        }
       }
     }.build()
   }
