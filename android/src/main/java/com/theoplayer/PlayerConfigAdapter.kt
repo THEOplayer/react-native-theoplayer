@@ -67,8 +67,8 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
         pipConfiguration(PipConfiguration.Builder().build())
         // Opt-out for auto-integrations for now
         autoIntegrations(false)
-        getBoolean(PROP_MULTIMEDIA_TUNNELING_ENABLED)?.let { tunnelingEnabled ->
-          tunnelingEnabled(tunnelingEnabled)
+        if (hasKey(PROP_MULTIMEDIA_TUNNELING_ENABLED)) {
+          tunnelingEnabled(getBoolean(PROP_MULTIMEDIA_TUNNELING_ENABLED))
         }
       }
     }.build()
