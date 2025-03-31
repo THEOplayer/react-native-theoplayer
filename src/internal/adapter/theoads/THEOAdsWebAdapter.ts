@@ -1,6 +1,5 @@
 import type { ChromelessPlayer } from 'theoplayer';
-import { TheoAdsAPI } from '../../../api/theoads/TheoAdsAPI';
-import { Interstitial } from '../../../api/theoads/interstitial/Interstitial';
+import { TheoAdsAPI, Interstitial } from 'react-native-theoplayer';
 
 export class THEOAdsWebAdapter implements TheoAdsAPI {
   private readonly _player: ChromelessPlayer;
@@ -9,12 +8,12 @@ export class THEOAdsWebAdapter implements TheoAdsAPI {
     this._player = player;
   }
 
-  get currentInterstitials(): readonly Interstitial[] {
-    return this._player.theoads?.currentInterstitials ?? [];
+  get currentInterstitials(): Promise<readonly Interstitial[]> {
+    return Promise.resolve(this._player.theoads?.currentInterstitials ?? []);
   }
 
-  get scheduledInterstitials(): readonly Interstitial[] {
-    return this._player.theoads?.scheduledInterstitials ?? [];
+  get scheduledInterstitials(): Promise<readonly Interstitial[]> {
+    return Promise.resolve(this._player.theoads?.scheduledInterstitials ?? []);
   }
 
   replaceAdTagParameters(adTagParameters?: Record<string, string>): void {

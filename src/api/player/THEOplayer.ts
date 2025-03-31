@@ -13,6 +13,7 @@ import type { PiPConfiguration } from '../pip/PiPConfiguration';
 import type { BackgroundAudioConfiguration } from '../backgroundAudio/BackgroundAudioConfiguration';
 import type { PlayerVersion } from './PlayerVersion';
 import type { EventBroadcastAPI } from '../broadcast/EventBroadcastAPI';
+import { TheoAdsAPI } from '../theoads/TheoAdsAPI';
 
 export type PreloadType = 'none' | 'metadata' | 'auto' | '';
 
@@ -227,6 +228,11 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
    * The API for advertisements.
    */
   readonly ads: AdsAPI;
+
+  /**
+   * The API for THEOads advertisements.
+   */
+  readonly theoads: TheoAdsAPI;
 
   /**
    * The API for casting devices.

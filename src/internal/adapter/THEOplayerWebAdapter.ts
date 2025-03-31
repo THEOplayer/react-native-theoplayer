@@ -12,7 +12,7 @@ import type {
   TextTrackStyle,
   THEOplayer,
 } from 'react-native-theoplayer';
-import { AspectRatio, EventBroadcastAPI, PlayerEventType, PresentationMode } from 'react-native-theoplayer';
+import { AspectRatio, EventBroadcastAPI, PlayerEventType, PresentationMode, TheoAdsAPI } from 'react-native-theoplayer';
 import { THEOplayerWebAdsAdapter } from './ads/THEOplayerWebAdsAdapter';
 import { THEOplayerWebCastAdapter } from './cast/THEOplayerWebCastAdapter';
 import { ChromelessPlayer as NativeChromelessPlayer, SourceDescription as NativeSourceDescription, version as nativeVersion } from 'theoplayer';
@@ -28,7 +28,6 @@ import { BaseEvent } from './event/BaseEvent';
 import { EventBroadcastAdapter } from './broadcast/EventBroadcastAdapter';
 import { TextTrackState } from './NativePlayerState';
 import { DefaultTextTrackState } from './DefaultTextTrackState';
-import { TheoAdsAPI } from '../../api/theoads/TheoAdsAPI';
 import { THEOAdsWebAdapter } from './theoads/THEOAdsWebAdapter';
 
 const defaultBackgroundAudioConfiguration: BackgroundAudioConfiguration = {
