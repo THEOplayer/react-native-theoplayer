@@ -41,6 +41,8 @@
 	</dict>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>Bluetooth Always Usage Permission</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Required for Chromecast</string>
 	<key>NSBonjourServices</key>
 	<array>
 		<string>_googlecast._tcp</string>
@@ -48,6 +50,8 @@
 	</array>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>Local Network Usage Permission</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Required for submission</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
@@ -67,9 +71,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>Required for Chromecast</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Required for submission</string>
 </dict>
 </plist>
