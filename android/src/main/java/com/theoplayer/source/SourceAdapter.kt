@@ -447,15 +447,15 @@ class SourceAdapter {
   }
 
   private fun parseCmcdTransmissionMode(cmcdConfiguration : JSONObject) : CMCDTransmissionMode {
-    return try {
+    try {
       val transmissionMode = cmcdConfiguration.optInt(CMCD_TRANSMISSION_MODE)
       if (transmissionMode === CmcdTransmissionMode.QUERY_ARGUMENT.ordinal) {
         return CMCDTransmissionMode.QUERY_ARGUMENT
       }
-      CMCDTransmissionMode.HTTP_HEADER
+      return CMCDTransmissionMode.HTTP_HEADER
     } catch (e: JSONException) {
       e.printStackTrace()
-      CMCDTransmissionMode.HTTP_HEADER
+      return CMCDTransmissionMode.HTTP_HEADER
     }
   }
 }
