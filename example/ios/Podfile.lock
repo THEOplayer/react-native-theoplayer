@@ -1,13 +1,10 @@
 PODS:
   - boost (1.84.0)
   - DoubleConversion (1.1.6)
-  - DSFRegex (3.3.1)
   - FBLazyVector (0.76.5-0)
   - fmt (9.1.0)
   - glog (0.3.5)
   - google-cast-sdk-dynamic-xcframework (4.8.3)
-  - GoogleAds-IMA-iOS-SDK (3.24.0)
-  - GoogleAds-IMA-tvOS-SDK (4.14.1)
   - hermes-engine (0.76.5-0):
     - hermes-engine/Pre-built (= 0.76.5-0)
   - hermes-engine/Pre-built (0.76.5-0)
@@ -1256,13 +1253,10 @@ PODS:
   - react-native-google-cast/RNGoogleCast (4.6.2):
     - PromisesObjC
     - React
-  - react-native-theoplayer (8.15.0):
+  - react-native-theoplayer (8.17.0):
     - React-Core
-    - THEOplayer-Connector-SideloadedSubtitle (~> 8.11)
-    - THEOplayer-Integration-GoogleCast (~> 8.11)
-    - THEOplayer-Integration-GoogleIMA (~> 8.11)
-    - THEOplayer-Integration-THEOlive (~> 8.11)
-    - THEOplayerSDK-core (~> 8.11)
+    - THEOplayer-Integration-THEOlive (~> 8.13)
+    - THEOplayerSDK-core (~> 8.13)
   - React-nativeconfig (0.76.5-0)
   - React-NativeModulesApple (0.76.5-0):
     - glog
@@ -1574,36 +1568,14 @@ PODS:
     - ReactCommon/turbomodule/core
     - Yoga
   - SocketRocket (0.7.1)
-  - Swifter (1.5.0)
-  - SwiftSubtitles (0.9.1):
-    - DSFRegex (~> 3.3.1)
-    - TinyCSV (~> 0.6.1)
-  - THEOliveSDK (3.18.8)
-  - THEOplayer-Connector-SideloadedSubtitle (8.11.0):
-    - Swifter (= 1.5.0)
-    - SwiftSubtitles (= 0.9.1)
-    - THEOplayerSDK-core (~> 8)
-  - THEOplayer-Integration-GoogleCast (8.11.0):
-    - THEOplayer-Integration-GoogleCast/Base (= 8.11.0)
-    - THEOplayer-Integration-GoogleCast/Dependencies (= 8.11.0)
-  - THEOplayer-Integration-GoogleCast/Base (8.11.0)
-  - THEOplayer-Integration-GoogleCast/Dependencies (8.11.0):
-    - google-cast-sdk-dynamic-xcframework (~> 4.8)
-  - THEOplayer-Integration-GoogleIMA (8.11.0):
-    - THEOplayer-Integration-GoogleIMA/Base (= 8.11.0)
-    - THEOplayer-Integration-GoogleIMA/Dependencies (= 8.11.0)
-  - THEOplayer-Integration-GoogleIMA/Base (8.11.0)
-  - THEOplayer-Integration-GoogleIMA/Dependencies (8.11.0):
-    - GoogleAds-IMA-iOS-SDK (~> 3.18)
-    - GoogleAds-IMA-tvOS-SDK (~> 4.8)
-  - THEOplayer-Integration-THEOlive (8.11.0):
-    - THEOplayer-Integration-THEOlive/Base (= 8.11.0)
-    - THEOplayer-Integration-THEOlive/Dependencies (= 8.11.0)
-  - THEOplayer-Integration-THEOlive/Base (8.11.0)
-  - THEOplayer-Integration-THEOlive/Dependencies (8.11.0):
-    - THEOliveSDK (= 3.18.8)
-  - THEOplayerSDK-core (8.11.0)
-  - TinyCSV (0.6.1)
+  - THEOliveSDK (3.18.10)
+  - THEOplayer-Integration-THEOlive (8.14.0):
+    - THEOplayer-Integration-THEOlive/Base (= 8.14.0)
+    - THEOplayer-Integration-THEOlive/Dependencies (= 8.14.0)
+  - THEOplayer-Integration-THEOlive/Base (8.14.0)
+  - THEOplayer-Integration-THEOlive/Dependencies (8.14.0):
+    - THEOliveSDK (= 3.18.10)
+  - THEOplayerSDK-core (8.14.0)
   - Yoga (0.0.0)
 
 DEPENDENCIES:
@@ -1678,21 +1650,12 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - DSFRegex
     - google-cast-sdk-dynamic-xcframework
-    - GoogleAds-IMA-iOS-SDK
-    - GoogleAds-IMA-tvOS-SDK
     - PromisesObjC
     - SocketRocket
-    - Swifter
-    - SwiftSubtitles
     - THEOliveSDK
-    - THEOplayer-Connector-SideloadedSubtitle
-    - THEOplayer-Integration-GoogleCast
-    - THEOplayer-Integration-GoogleIMA
     - THEOplayer-Integration-THEOlive
     - THEOplayerSDK-core
-    - TinyCSV
 
 EXTERNAL SOURCES:
   boost:
@@ -1838,86 +1801,77 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   boost: ad4d3a971e4f0b520a127c02c8c3f98b43394c15
   DoubleConversion: 9a8708fb8299350a38a3425761aaea31263b7443
-  DSFRegex: 8493187c71ac199695245eb9ec98bad4f87a2f0b
   FBLazyVector: cb752fda14981d95de1d03caf160b1de41701b93
   fmt: a150d37a5595336f19c91e6f1db7fcf17d5eb99f
   glog: 9ab333e271c177cecb6362fe27832c88667cb7e9
   google-cast-sdk-dynamic-xcframework: d4dd8d548462f2a4874515fee68c17805d44be42
-  GoogleAds-IMA-iOS-SDK: bf4dc86b31a1d1b27021008200bbeb6faa689901
-  GoogleAds-IMA-tvOS-SDK: f1efc14f85842b0858528dfe5220adfee637a6da
   hermes-engine: 0e3c333b5248ce88a7ffe2f22d0e397f63762ddb
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
-  RCT-Folly: 2512380c804686400e7f60b9e8b60525df4a6191
+  RCT-Folly: 839d900d8e4d2b726f3277dd085d97c8904f9eac
   RCTDeprecation: 76a814dfb165fdf7c532d4b71ce3d688c52236c4
   RCTRequired: 2cba955f7830dc50561bfc75d7e6b2210f5f1c87
   RCTTypeSafety: 79741ac71e447df235869446b0824252bbc0eab1
   React: 52fd388929d0a4c4c4e66bfad8d4b0641aed5411
   React-callinvoker: 8047488da27faed1e536de9c55fccca8280b5fe2
-  React-Core: 18fa48ee97f60301932a03115f367a7248a295fa
-  React-CoreModules: 260ce3f14c051d834a609bbe15c2c8b5a36eaa54
-  React-cxxreact: cb5957a8dbf31676f53c95fac467f80841c41c7c
+  React-Core: 34c3446952319266710b1a6734a52d0dc2518dda
+  React-CoreModules: 8ad531182cbdffa9f4ea6c6fa85447bcb2264db0
+  React-cxxreact: c7b03e8fec0399036729793d8f78da3d5e302c6a
   React-debug: d7ee050566cbbd371449e948ce71b1458c33056c
-  React-defaultsnativemodule: 7ef9b610d3cd6a73bec896caac363004062b579e
-  React-domnativemodule: 2e1ea747ad7de6a1ba3965b2f46dc64e2833e7f4
-  React-Fabric: dc93135b959e4fed32fae534a37ffe0c719fa481
-  React-FabricComponents: 932d301d62f8a0217768c2b53ec26a6bc0577a45
-  React-FabricImage: 7dd48f777a77586e0f3581803d5cdf3dc197a44d
+  React-defaultsnativemodule: 8a47b3de421cf0e669e7ca5b114f16b8d10ec6b1
+  React-domnativemodule: 26a48df702b609e4b558703a6ba871d85cf2fbf2
+  React-Fabric: 3e654d69ca763c0c22a356f22c42dc796ecb7822
+  React-FabricComponents: bb1fbc8628b724654d7083dca4d2a858a5486a1c
+  React-FabricImage: f228e4e572bd6ddb0ecd62e543f84e289cb2dea0
   React-featureflags: 733d17bccc0bbf5aee4f6cfe6421ef1992afbcf8
-  React-featureflagsnativemodule: 60c45262ae337c59195ce8ea97b5c98e69ac956d
-  React-graphics: 7bc003d1de8636a7730766f8e95f6b641d2d62bf
-  React-hermes: cf8576488b373e0aeb87c662a8d9c36ba4b21fcd
-  React-idlecallbacksnativemodule: 586111dfc94cda82ea16d4ec8c744c19237e3c45
-  React-ImageManager: 2f0871a4c1223f022db20c70d6553af2157a2a04
-  React-jserrorhandler: cb48ffa0febdc6c07fbd52e307a39081b7f07c54
-  React-jsi: d387bddd5ccace545ec340e455543969e8a434d7
-  React-jsiexecutor: 30c2dfb419667e21bc02587b0375b8b557a8bce6
-  React-jsinspector: 571d15ccc137cd8a24b113264575f15e149e3b64
-  React-jsitracing: 2d499023ee20b96c58f4c8f677b88c3fde693a0d
-  React-logger: c070a12641053f2c21042a09111ea9145635eecd
-  React-Mapbuffer: 1fd47f568d39a437812c9b949a202046207e22df
-  React-microtasksnativemodule: 8a1d16ce70220abb3e7bd97ec11b6733b78a1bee
-  react-native-google-cast: d7bdfd1a0eeba84afde03b9722351ec29543e74c
-  react-native-theoplayer: c57650ed3d120ba2771380adc5d2a994cf384057
+  React-featureflagsnativemodule: 91794aa9a2d8db4143859c3dc9e7d0af17f03669
+  React-graphics: a7d6d04619b5cd333fd35f3ef0724c69103c4d89
+  React-hermes: 0918bb4bbacc76fb5147c79b6e0ea7bc125fb1ff
+  React-idlecallbacksnativemodule: cff62b9b149ea186ebca1bd9bb3d59c64e5ac825
+  React-ImageManager: 2529867299e099906e62f1ad03d5e985213925f3
+  React-jserrorhandler: 157cd9da1bda91e29fcbdb4d756a8c2b64d498a6
+  React-jsi: e80a7c2c2a488c899e36f4d17d8abbc640f46461
+  React-jsiexecutor: e08fff1783a7984502b80563dd311a07b5a024c9
+  React-jsinspector: ada75a624dd55eef0b108817a927aa557eff25aa
+  React-jsitracing: d80e322735c5dbbae36651188d218a542fd715ec
+  React-logger: 15521cdcf1f95c3d244e07187a918724a6ef78c5
+  React-Mapbuffer: 719d238a3b71a6d770feba2066dbe0523f0e4a14
+  React-microtasksnativemodule: 4f4883b45aae4599809eab5ebd80cd9a2e23e0c7
+  react-native-google-cast: 872b05bf12f7db32c2f66818fdd5406474af25f1
+  react-native-theoplayer: 495abf610a6988db745aab51b042382151e4e837
   React-nativeconfig: c2749040965ef37d9ed7c940788da61214d33825
-  React-NativeModulesApple: d84b513c23175bbdc3e47223a25f5a5a88d59813
-  React-perflogger: 00b7bf94ecb5ed598bc00ecc62c82394057a9b04
-  React-performancetimeline: 2c36c91d71dd46b20c564ac44cc16e49f84a65f2
+  React-NativeModulesApple: 61bce363d9ecc0d92c686fac142a8f7d308c94f1
+  React-perflogger: 5eb473d6027eca24fbf718d90df997b751bb3b74
+  React-performancetimeline: 0006a128bf8cb05380d41a203847a9499e847728
   React-RCTActionSheet: 70d8b5f541c9b7250e7a762e28fba4dbbf3c9065
-  React-RCTAnimation: 6711bb07b07abc7ecce49ed033ea60d924b36c86
-  React-RCTAppDelegate: 0a7e0f2271ecd04f486d093e8bf2741a5740a08c
-  React-RCTBlob: e22f78d936b081397602266f523be0200cbb1f5c
-  React-RCTFabric: 9104560e5853e529548692f958c4d25c0527a5a9
-  React-RCTImage: 16959ce154d34e9ef4bc5f45b1bad00547ab4bf1
-  React-RCTLinking: 25eada87f9b5ea52857c82141991c9c87ea4091f
-  React-RCTNetwork: 7899dee1ecb0434b1cd47451d1b85209b60228fb
-  React-RCTSettings: 728f060ed90ea4cb801aab977a08ed0e83ef8f98
-  React-RCTText: 5679dd0aea773331da5a3bdea54938e4a8f044b2
-  React-RCTVibration: b897df955d9a39fdd1a566cedf6c15ba812475e3
+  React-RCTAnimation: aa3a971529ceebac625453a36885f5012ee76b15
+  React-RCTAppDelegate: 2547a801e2f0c768ca4af2be1696567ed0303da0
+  React-RCTBlob: 75321cad175d6d99289c4972f831d95d08d87a3c
+  React-RCTFabric: c3620ef64ca684fe93aa63f656b19bb49becb70b
+  React-RCTImage: 41f7a583a48172999f2e27cd0be1443aca00d2e7
+  React-RCTLinking: 0d978687b8d2b88ae967450d99f664c167f56ead
+  React-RCTNetwork: 1bf0290900eca9e6ad19db537df9ca1449462437
+  React-RCTSettings: c0d4b980c3548dc5b99bde04a64462dbc351631a
+  React-RCTText: ba95a66f8f6ee8d0ffd79f6ea6671143bf677b37
+  React-RCTVibration: ae7478935c3aeb50502b620934b214066ce796a5
   React-rendererconsistency: 4e15153fb0cb0204ef172eb487e943b099fe50a3
-  React-rendererdebug: 02a8cd13ea66061d10b26c9b8a931bd37969869a
+  React-rendererdebug: 8f46a279cfb2f2a391c25384cdde7c96a0690df1
   React-rncore: 7559cb43b276f6f5f91d201b936dafa7a6875752
-  React-RuntimeApple: 9c4c004c8a0e5de616cb1a4a0149cb812e8c3415
-  React-RuntimeCore: c64242ae031d7c24f9c106711b8c67f685d1baee
+  React-RuntimeApple: df9c11f6b05a9ae82ff18e482366fe45f45eef58
+  React-RuntimeCore: 46808dfe88ce997b8e43815e331e27ec8050554e
   React-runtimeexecutor: ccceefe411ee6070f5eceb32e9a5eb9f88cfbaae
-  React-RuntimeHermes: 325076d85f9eb3ac4617a544b3790627dbec46aa
-  React-runtimescheduler: 40d8cd0489910a2c911818bd7442c38cef7d540f
+  React-RuntimeHermes: 6acf1f3f03cfd050db29ff607ece4c5445debf89
+  React-runtimescheduler: 8cfe0c5ce323610350d95e2df5a75ac132c4e76d
   React-timing: f7b2bffd0844cad9d1602b21e49461106bd53ba9
-  React-utils: 424bfcc3b88d957ab8a8ba87821095b49e254ccd
-  ReactCodegen: fefc2565462ce4357981e7adaa8cb66ede0061b5
-  ReactCommon: 850bb1964f597c563b63e7774952510f6f66729c
-  RNSVG: 536cd3c866c878faf72beaba166c8b02fe2b762b
+  React-utils: fbb98ea338da859a3a87a276280568010fe29268
+  ReactCodegen: 89fdda191d64960e40423bf94ef5f60607e7ba36
+  ReactCommon: ccad5c86e4dadda2d11319c2955be81420fcfc4d
+  RNSVG: 030717ff82ea8f2117347c2fcf52a2d1eafba9ba
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
-  Swifter: e71dd674404923d7f03ebb03f3f222d1c570bc8e
-  SwiftSubtitles: c659af19d710a2946779015464c0577d07fe4666
-  THEOliveSDK: 1c8e11651f82541078277aa1c011da48b6ed112a
-  THEOplayer-Connector-SideloadedSubtitle: de2075ac8bd7a8457ea65c4b28fea012b95d1bf1
-  THEOplayer-Integration-GoogleCast: 5a82931f9aa3c4887972a796426d5e4ae0a689ad
-  THEOplayer-Integration-GoogleIMA: 3f26756aa6d8bac9cad93d6065c33a4d0b2f86e9
-  THEOplayer-Integration-THEOlive: b238fc57d44292241b2f4ec9d2028a7b0935f8e9
-  THEOplayerSDK-core: de8a339c9de714e3aad1eb3c2b3b6f45bc7cda57
-  TinyCSV: fd6228edbcf1c07466ac34b76dac5e052143eaba
+  THEOliveSDK: 61479e7ad8164340a8aaccc211493e2606d4381d
+  THEOplayer-Integration-THEOlive: ca48c878071a8ff8aaa8ddeb19f86daf53ba6458
+  THEOplayerSDK-core: 80ae1fdad332f4a411f00f75b11f3a4bdb0a6b85
   Yoga: 0793c40c110683335b0d62ba3dae95d7e39ac163
 
 PODFILE CHECKSUM: 906e279388e7a9d2ca2109b2c8d15bbb6387a632
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2

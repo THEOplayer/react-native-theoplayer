@@ -107,6 +107,7 @@
     ]
   },
   "dependencies": {
+    "@theoplayer/cmcd-connector-web": "^1.2.0",
     "buffer": "^6.0.3"
   }
 }
