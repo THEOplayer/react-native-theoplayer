@@ -343,7 +343,13 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
   };
 
   private _onPresentationModeChange = (event: NativeSyntheticEvent<NativePresentationModeChangeEvent>) => {
-    this.setState({ presentationMode: event.nativeEvent.presentationMode });
+    const presentationMode = event.nativeEvent.presentationMode;
+    this.setState({ presentationMode }, () => {
+      // Re-measure screen size after transitioning to fullscreen.
+      if (presentationMode === PresentationMode.fullscreen) {
+        this.setState({ screenSize: getFullscreenSize() });
+      }
+    });
     this._facade.dispatchEvent(
       new DefaultPresentationModeChangeEvent(
         event.nativeEvent.presentationMode,

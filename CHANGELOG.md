@@ -31,6 +31,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added the THEOads API for Web.
 - Added `retrievePodIdURI` property to `TheoAdsDescription` for Android and iOS.
 
+### Changed
+
+- Changed the fullscreen screen dimension calculation on Android, taking into account edgeToEdge layouts.
+
 ## [8.16.0] - 25-02-28
 
 ### Changed
@@ -43,6 +47,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed an issue on iOS where `hlsDateRange` was not passed from RN towards iOS native
 - Fixed an issue on Android, where the player would sometimes not initialise correctly in case New Architecture was not being used, resulting in a black screen.
 - Fixed an issue on iOS Safari browsers, where the `presentationmodechange` event would not be dispatched when entering or exiting fullscreen.
+
 
 ## [8.15.0] - 25-02-12
 
