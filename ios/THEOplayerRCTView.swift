@@ -14,6 +14,9 @@ import GoogleInteractiveMediaAds
 #if canImport(THEOplayerGoogleCastIntegration)
 import THEOplayerGoogleCastIntegration
 #endif
+#if canImport(THEOplayerMillicastIntegration)
+import THEOplayerMillicastIntegration
+#endif
 
 public class THEOplayerRCTView: UIView {
     // MARK: Members
@@ -46,7 +49,10 @@ public class THEOplayerRCTView: UIView {
     #if canImport(THEOplayerGoogleCastIntegration)
     var castIntegration: THEOplayerGoogleCastIntegration.CastIntegration?
     #endif
-    
+    #if canImport(THEOplayerMillicastIntegration)
+    var millicastIntegration: THEOplayerMillicastIntegration.MillicastIntegration?
+    #endif
+
     var mediaControlConfig = MediaControlConfig() {
         didSet {
             self.remoteCommandsManager.setMediaControlConfig(mediaControlConfig)
@@ -174,6 +180,7 @@ public class THEOplayerRCTView: UIView {
         self.initAdsIntegration()
         self.initCastIntegration()
         self.initTheoAdsIntegration()
+        self.initMillicastIntegration()
         self.initBackgroundAudio()
         self.initPip()
         return self.player

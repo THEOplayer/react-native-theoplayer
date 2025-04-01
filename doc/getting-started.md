@@ -159,6 +159,7 @@ This section gives an overview of features, limitations and known issues:
 - [Digital Rights Management (DRM)](drm.md)
 - [Fullscreen presentation](fullscreen.md)
 - [Media Caching](media-caching.md)
+- [Millicast](millicast.md)
 - [Picture-in-Picture (PiP)](pip.md)
 - [Subtitles, Closed Captions and Metadata tracks](texttracks.md)
 - [Limitations and known issues](limitations.md)
