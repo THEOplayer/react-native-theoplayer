@@ -105,7 +105,7 @@ please reach out to us for support.
 </tr>
 <tr>
 <td><strong>Advertising Integration</strong></td>
-<td colspan="3">Google IMA, Google DAI</td>
+<td colspan="3">Google IMA, Google DAI, THEOads</td>
 </tr>
 <tr>
 <td><strong>Cast Integration</strong></td>
@@ -178,6 +178,7 @@ This section gives an overview of features, limitations and known issues:
 - [Audio Control Management](./doc/audio-control.md)
 - [Background playback and notifications](./doc/background.md)
 - [Casting with Chromecast and Airplay](./doc/cast.md)
+- [Common Media Client Data (CMCD)](./doc/cmcd.md)
 - [Digital Rights Management (DRM)](./doc/drm.md)
 - [Fullscreen presentation](./doc/fullscreen.md)
 - [Media Caching](./doc/media-caching.md)

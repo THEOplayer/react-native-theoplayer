@@ -1,26 +1,18 @@
 import type { ScaledSize } from 'react-native/Libraries/Utilities/Dimensions';
-import { Dimensions, Platform, StatusBar } from 'react-native';
+import { Dimensions, NativeModules, Platform } from 'react-native';
 
 /**
- * Calculate the device's screen dimensions, while taking into account the statusBar height and orientation on Android.
+ * Calculate the device's screen dimensions, while taking into account the full usable screen dimensions on Android.
  */
 export function getFullscreenSize(): ScaledSize {
   const screenSize = Dimensions.get('screen');
 
-  // Adjust for statusBar height on Android, depending on the device's current orientation.
-  if (Platform.OS === 'android' && Platform.Version >= 29) {
-    const statusBarHeight = StatusBar.currentHeight || 0;
-    if (screenSize.width < screenSize.height) {
-      // portrait
-      if (screenSize.height !== Dimensions.get('window').height + statusBarHeight) {
-        screenSize.height = screenSize.height - statusBarHeight;
-      }
-    } else {
-      // landscape
-      if (screenSize.width !== Dimensions.get('window').width) {
-        screenSize.width = screenSize.width - statusBarHeight;
-      }
-    }
+  // For Android, ask the platform for the full usable screen dimensions.
+  // It should return the full usable screen size, including support for edgeToEdge layouts.
+  // {@link https://developer.android.com/develop/ui/views/layout/edge-to-edge}
+  if (Platform.OS === 'android') {
+    const nativeDims: ScaledSize = NativeModules.THEORCTPlayerModule.getUsableScreenDimensions();
+    return nativeDims.width > 0 && nativeDims.height > 0 ? nativeDims : screenSize;
   }
   return screenSize;
 }

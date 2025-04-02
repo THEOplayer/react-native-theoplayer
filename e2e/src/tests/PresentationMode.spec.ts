@@ -8,7 +8,7 @@ import { TestSourceDescription, TestSources } from '../utils/SourceUtils';
 export default function (spec: TestScope) {
   TestSources()
     .withPlain()
-    .withAds()
+    .withAdsIf(Platform.OS !== 'ios')
     .forEach((testSource: TestSourceDescription) => {
       spec.describe(`Switch between presentation modes during play-out of a ${testSource.description}`, function () {
         spec.it('dispatches presentationmodechange events between inline and fullscreen.', async function () {

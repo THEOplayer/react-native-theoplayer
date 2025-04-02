@@ -156,6 +156,7 @@ This section gives an overview of features, limitations and known issues:
 - [Audio Control Management](audio-control.md)
 - [Background playback and notifications](background.md)
 - [Casting with Chromecast and Airplay](cast.md)
+- [Common Media Client Data (CMCD)](cmcd.md)
 - [Digital Rights Management (DRM)](drm.md)
 - [Fullscreen presentation](fullscreen.md)
 - [Media Caching](media-caching.md)

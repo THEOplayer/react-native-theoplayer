@@ -19,6 +19,7 @@ import {
   ResizeEvent,
   SourceDescription,
   TextTrack,
+  TheoAdsAPI,
   THEOplayer,
   THEOplayerView,
   TimeUpdateEvent,
@@ -46,6 +47,7 @@ import { TextTrackStyleAdapter } from './track/TextTrackStyleAdapter';
 import type { NativePlayerState } from './NativePlayerState';
 import { EventBroadcastAdapter } from './broadcast/EventBroadcastAdapter';
 import { DefaultNativePlayerState } from './DefaultNativePlayerState';
+import { THEOAdsNativeAdapter } from './theoads/THEOAdsNativeAdapter';
 
 const NativePlayerModule = NativeModules.THEORCTPlayerModule;
 
@@ -53,6 +55,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   private readonly _view: THEOplayerView;
   private readonly _state: DefaultNativePlayerState;
   private readonly _adsAdapter: THEOplayerNativeAdsAdapter;
+  private readonly _theoAdsAdapter: THEOAdsNativeAdapter;
   private readonly _castAdapter: THEOplayerNativeCastAdapter;
   private readonly _abrAdapter: AbrAdapter;
   private readonly _textTrackStyleAdapter: TextTrackStyleAdapter;
@@ -64,6 +67,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._view = view;
     this._state = new DefaultNativePlayerState(this);
     this._adsAdapter = new THEOplayerNativeAdsAdapter(this._view);
+    this._theoAdsAdapter = new THEOAdsNativeAdapter(this._view);
     this._castAdapter = new THEOplayerNativeCastAdapter(this, this._view);
     this._abrAdapter = new AbrAdapter(this._view);
     this._textTrackStyleAdapter = new TextTrackStyleAdapter(this._view);
@@ -199,6 +203,10 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   get ads(): AdsAPI {
     return this._adsAdapter;
+  }
+
+  public get theoads(): TheoAdsAPI {
+    return this._theoAdsAdapter;
   }
 
   set autoplay(autoplay: boolean) {

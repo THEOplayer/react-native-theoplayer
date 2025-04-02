@@ -19,10 +19,12 @@ import com.theoplayer.android.api.player.track.texttrack.TextTrackKind
 import com.theoplayer.android.api.source.metadata.ChromecastMetadataImage
 import com.theoplayer.BuildConfig
 import com.theoplayer.android.api.ads.theoads.TheoAdsLayoutOverride
+import com.theoplayer.android.api.cmcd.CMCDTransmissionMode
 import com.theoplayer.android.api.error.ErrorCode
 import com.theoplayer.android.api.source.AdIntegration
 import com.theoplayer.android.api.source.dash.DashPlaybackConfiguration
 import com.theoplayer.android.api.theolive.TheoLiveSource
+import com.theoplayer.cmcd.CmcdTransmissionMode
 import com.theoplayer.drm.ContentProtectionAdapter
 import com.theoplayer.latency.parseLatencyConfiguration
 import com.theoplayer.util.BridgeUtils
@@ -75,6 +77,9 @@ private const val PROP_SSAI_INTEGRATION_GOOGLE_DAI = "google-dai"
 
 private const val INTEGRATION_THEOLIVE = "theolive"
 
+private const val PROP_CMCD = "cmcd"
+private const val CMCD_TRANSMISSION_MODE = "transmissionMode"
+
 class SourceAdapter {
   private val gson = Gson()
 
@@ -95,6 +100,12 @@ class SourceAdapter {
     try {
       val jsonSourceObject = JSONObject(gson.toJson(source.toHashMap()))
 
+      // CMCD
+      var cmcdTransmissionMode: CMCDTransmissionMode? = null
+      if (jsonSourceObject.has(PROP_CMCD)) {
+        cmcdTransmissionMode = parseCmcdTransmissionMode(jsonSourceObject.getJSONObject(PROP_CMCD));
+      }
+
       // typed sources
       val typedSources = ArrayList<TypedSource>()
 
@@ -102,11 +113,11 @@ class SourceAdapter {
       val jsonSources = jsonSourceObject.optJSONArray(PROP_SOURCES)
       if (jsonSources != null) {
         for (i in 0 until jsonSources.length()) {
-          typedSources.add(parseTypedSource(jsonSources[i] as JSONObject))
+          typedSources.add(parseTypedSource(jsonSources[i] as JSONObject, cmcdTransmissionMode))
         }
       } else {
         val jsonSource = jsonSourceObject.optJSONObject(PROP_SOURCES) ?: return null
-        typedSources.add(parseTypedSource(jsonSource))
+        typedSources.add(parseTypedSource(jsonSource, cmcdTransmissionMode))
       }
 
       // poster
@@ -167,16 +178,16 @@ class SourceAdapter {
   }
 
   @Throws(THEOplayerException::class)
-  private fun parseTypedSource(jsonTypedSource: JSONObject): TypedSource {
+  private fun parseTypedSource(jsonTypedSource: JSONObject, cmcdTransmissionMode: CMCDTransmissionMode? = null): TypedSource {
     // Some integrations do not support the Builder pattern
     return when (jsonTypedSource.optString(PROP_INTEGRATION)) {
       INTEGRATION_THEOLIVE -> parseTheoLiveSource(jsonTypedSource)
-      else -> parseTypedSourceFromBuilder(jsonTypedSource)
+      else -> parseTypedSourceFromBuilder(jsonTypedSource, cmcdTransmissionMode)
     }
   }
 
   @Throws(THEOplayerException::class)
-  private fun parseTypedSourceFromBuilder(jsonTypedSource: JSONObject): TypedSource {
+  private fun parseTypedSourceFromBuilder(jsonTypedSource: JSONObject, cmcdTransmissionMode: CMCDTransmissionMode? = null): TypedSource {
     try {
       var tsBuilder = TypedSource.Builder(jsonTypedSource.optString(PROP_SRC))
       val sourceType = parseSourceType(jsonTypedSource)
@@ -215,6 +226,9 @@ class SourceAdapter {
         if (drmConfig != null) {
           tsBuilder.drm(drmConfig)
         }
+      }
+      if (cmcdTransmissionMode != null) {
+        tsBuilder.cmcdTransmissionMode(cmcdTransmissionMode)
       }
       return tsBuilder.build()
     } catch (e: THEOplayerException) {
@@ -430,5 +444,18 @@ class SourceAdapter {
     }
 
     return BridgeUtils.fromJSONObjectToBridge(json)
+  }
+
+  private fun parseCmcdTransmissionMode(cmcdConfiguration : JSONObject) : CMCDTransmissionMode {
+    try {
+      val transmissionMode = cmcdConfiguration.optInt(CMCD_TRANSMISSION_MODE)
+      if (transmissionMode === CmcdTransmissionMode.QUERY_ARGUMENT.ordinal) {
+        return CMCDTransmissionMode.QUERY_ARGUMENT
+      }
+      return CMCDTransmissionMode.HTTP_HEADER
+    } catch (e: JSONException) {
+      e.printStackTrace()
+      return CMCDTransmissionMode.HTTP_HEADER
+    }
   }
 }

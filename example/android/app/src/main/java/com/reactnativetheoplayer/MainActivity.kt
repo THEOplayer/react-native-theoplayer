@@ -6,6 +6,7 @@ import android.content.res.Configuration
 import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
@@ -14,7 +15,16 @@ import com.google.android.gms.cast.framework.CastContext
 
 open class MainActivity : ReactActivity() {
   public override fun onCreate(bundle: Bundle?) {
+    // Edge-to-edge is enforced on Android 15 so that the system bars are transparent or
+    // translucent by default. On earlier versions of Android, remove opaque system bars opaque by
+    // calling enableEdgeToEdge().
+    // On Android 15 and later devices, or after calling enableEdgeToEdge(), gesture navigation is
+    // transparent by default. Three-button navigation is translucent by default or opaque if it is
+    // inside the taskbar on large screen device.
+    // (@link https://developer.android.com/design/ui/mobile/guides/foundations/system-bars#immersive-mode}
+    enableEdgeToEdge()
     super.onCreate(bundle)
+
     // STREAM_MUSIC volume should be changed by the hardware volume controls.
     volumeControlStream = AudioManager.STREAM_MUSIC
     try {

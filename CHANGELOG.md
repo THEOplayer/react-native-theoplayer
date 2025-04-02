@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [8.18.0] - 25-04-02
+
+### Changed
+
+- No longer showing poster after setting the source when the player has been configured to use autoplay. With autoplay enabled, displaying the poster will only result in a brief flash of the image.
+- Changed the fullscreen screen dimension calculation on Android, taking into account edgeToEdge layouts.
+
+### Added
+
+- Exposed THEOads API through the Player API.
+- Added support for Common Media Client Data (CMCD) on all platforms. More info on the [documentation](./doc/cmcd.md) page.
+
+### Fixed
+
+- Fixed an issue on Android where the transition to a PiP window would not focus on the player window.
+
 ## [8.17.0] - 25-03-20
 
 ### Fixed
@@ -33,6 +49,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed an issue on iOS where `hlsDateRange` was not passed from RN towards iOS native
 - Fixed an issue on Android, where the player would sometimes not initialise correctly in case New Architecture was not being used, resulting in a black screen.
 - Fixed an issue on iOS Safari browsers, where the `presentationmodechange` event would not be dispatched when entering or exiting fullscreen.
+
 
 ## [8.15.0] - 25-02-12
 

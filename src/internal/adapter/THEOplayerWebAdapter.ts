@@ -1,22 +1,28 @@
 import { DefaultEventDispatcher } from './event/DefaultEventDispatcher';
-import type {
+import {
   AdsAPI,
+  AspectRatio,
   CastAPI,
+  CmcdConfiguration,
+  CmcdTransmissionMode,
+  EventBroadcastAPI,
   MediaTrack,
   NativeHandleType,
   PlayerConfiguration,
   PlayerEventMap,
+  PlayerEventType,
   PlayerVersion,
   PreloadType,
+  PresentationMode,
   TextTrack,
   TextTrackStyle,
+  TheoAdsAPI,
   THEOplayer,
 } from 'react-native-theoplayer';
-import { AspectRatio, EventBroadcastAPI, PlayerEventType, PresentationMode } from 'react-native-theoplayer';
 import { THEOplayerWebAdsAdapter } from './ads/THEOplayerWebAdsAdapter';
 import { THEOplayerWebCastAdapter } from './cast/THEOplayerWebCastAdapter';
-import { ChromelessPlayer as NativeChromelessPlayer, SourceDescription as NativeSourceDescription, version as nativeVersion } from 'theoplayer';
 import type { MediaTrack as NativeMediaTrack, TextTrack as NativeTextTrack } from 'theoplayer';
+import { ChromelessPlayer as NativeChromelessPlayer, SourceDescription as NativeSourceDescription, version as nativeVersion } from 'theoplayer';
 import { findNativeQualitiesByUid, fromNativeMediaTrackList } from './web/TrackUtils';
 import type { ABRConfiguration, SourceDescription } from 'src/api/barrel';
 import { WebEventForwarder } from './WebEventForwarder';
@@ -28,8 +34,8 @@ import { BaseEvent } from './event/BaseEvent';
 import { EventBroadcastAdapter } from './broadcast/EventBroadcastAdapter';
 import { TextTrackState } from './NativePlayerState';
 import { DefaultTextTrackState } from './DefaultTextTrackState';
-import { TheoAdsAPI } from '../../api/theoads/TheoAdsAPI';
 import { THEOAdsWebAdapter } from './theoads/THEOAdsWebAdapter';
+import { CMCDConnector, Configuration, createCMCDConnector, TransmissionMode } from '@theoplayer/cmcd-connector-web';
 
 const defaultBackgroundAudioConfiguration: BackgroundAudioConfiguration = {
   enabled: false,
@@ -52,6 +58,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   private _backgroundAudioConfiguration: BackgroundAudioConfiguration = defaultBackgroundAudioConfiguration;
   private _pipConfiguration: PiPConfiguration = defaultPipConfiguration;
   private _externalEventRouter: EventBroadcastAPI | undefined = undefined;
+  private _cmcdConnector: CMCDConnector | undefined = undefined;
 
   constructor(player: NativeChromelessPlayer, config?: PlayerConfiguration) {
     super();
@@ -82,7 +89,35 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     this._targetVideoQuality = undefined;
     if (this._player) {
       this._player.source = source as NativeSourceDescription;
+      if (source?.cmcd && this._cmcdConnector === undefined) {
+        this._cmcdConnector = createCMCDConnector(this._player);
+      }
+      this._cmcdConnector?.reconfigure(this.toWebCmcdConfiguration(source?.cmcd));
     }
+  }
+
+  private toWebCmcdConfiguration(cmcdConfiguration?: CmcdConfiguration): Configuration | undefined {
+    if (!cmcdConfiguration) {
+      return undefined;
+    }
+
+    let transmissionMode = TransmissionMode.QUERY_ARGUMENT;
+    switch (cmcdConfiguration.transmissionMode) {
+      case CmcdTransmissionMode.HTTP_HEADER:
+        transmissionMode = TransmissionMode.HTTP_HEADER;
+        break;
+      case CmcdTransmissionMode.JSON_OBJECT:
+        transmissionMode = TransmissionMode.JSON_OBJECT;
+        break;
+      case CmcdTransmissionMode.QUERY_ARGUMENT:
+      case CmcdTransmissionMode.SDK_DEFAULT:
+      default:
+        transmissionMode = TransmissionMode.QUERY_ARGUMENT;
+    }
+    return {
+      ...cmcdConfiguration,
+      transmissionMode: transmissionMode,
+    };
   }
 
   play(): void {
@@ -338,6 +373,8 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     document.removeEventListener('visibilitychange', this.onVisibilityChange);
     this._eventForwarder = undefined;
     this._mediaSession = undefined;
+    this._cmcdConnector?.destroy();
+    this._cmcdConnector = undefined;
     this._player?.destroy();
     this._player = undefined;
   }

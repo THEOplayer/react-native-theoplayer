@@ -59,6 +59,7 @@ let SD_PROP_OVERRIDE_AD_SRC: String = "overrideAdSrc"
 let SD_PROP_USE_ID3: String = "useId3"
 let SD_PROP_RETRIEVE_POD_ID_URI: String = "retrievePodIdURI"
 let SD_PROP_HLS_DATE_RANGE: String = "hlsDateRange"
+let SD_PROP_CMCD: String = "cmcd"
 
 let EXTENSION_HLS: String = ".m3u8"
 let EXTENSION_MP4: String = ".mp4"
@@ -157,8 +158,15 @@ class THEOplayerRCTSourceDescriptionBuilder {
         if let metadataData = sourceData[SD_PROP_METADATA] as? [String:Any] {
             metadataDescription = THEOplayerRCTSourceDescriptionBuilder.buildMetaDataDescription(metadataData)
         }
+      
+        // 6. configure CMCD
+        if let cmcd = sourceData[SD_PROP_CMCD] as? [String:Any] {
+          typedSources.forEach { typedSource in
+            typedSource.cmcd = true;
+          }
+        }
 
-        // 6. construct the SourceDescription
+        // 7. construct the SourceDescription
         let sourceDescription = SourceDescription(sources: typedSources,
                                  textTracks: textTrackDescriptions,
                                  ads: adsDescriptions,

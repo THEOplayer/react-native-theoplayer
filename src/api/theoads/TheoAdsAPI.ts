@@ -13,12 +13,12 @@ export interface TheoAdsAPI {
   /**
    * The currently playing interstitials.
    */
-  currentInterstitials: readonly Interstitial[];
+  currentInterstitials: Promise<readonly Interstitial[]>;
 
   /**
    * List of interstitials which still need to be played.
    */
-  scheduledInterstitials: readonly Interstitial[];
+  scheduledInterstitials: Promise<readonly Interstitial[]>;
 
   /**
    * Replaces all the ad tag parameters used for upcoming ad requests for a live stream.
