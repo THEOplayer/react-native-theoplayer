@@ -67,6 +67,7 @@ private const val PROP_OVERRIDE_LAYOUT = "overrideLayout"
 private const val PROP_NETWORK_CODE = "networkCode"
 private const val PROP_USE_ID3 = "useId3"
 private const val PROP_RETRIEVE_POD_ID_URI = "retrievePodIdURI"
+private const val PROP_SSE_ENDPOINT = "sseEndpoint"
 private const val PROP_LATENCY_CONFIGURATION = "latencyConfiguration"
 private const val PROP_PLAYBACK_PIPELINE = "playbackPipeline"
 
@@ -358,6 +359,7 @@ class SourceAdapter {
       overrideLayout = parseOverrideLayout(jsonAdDescription.optString(PROP_OVERRIDE_LAYOUT)),
       useId3 = jsonAdDescription.optBoolean(PROP_USE_ID3, false),
       retrievePodIdURI = jsonAdDescription.optString(PROP_RETRIEVE_POD_ID_URI).takeIf { it.isNotEmpty() },
+      sseEndpoint = jsonAdDescription.optString(PROP_SSE_ENDPOINT).takeIf { it.isNotEmpty() },
     )
   }
 
