@@ -20,7 +20,7 @@
     "@theoplayer/react-native-analytics-comscore": "^1.8.2",
     "@theoplayer/react-native-analytics-conviva": "^1.8.2",
     "@theoplayer/react-native-analytics-nielsen": "^1.7.2",
-    "@theoplayer/react-native-ui": "^0.9.0",
+    "@theoplayer/react-native-ui": "^0.11.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-native": "npm:react-native-tvos@^0.75.4-0",
