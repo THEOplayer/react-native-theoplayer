@@ -182,6 +182,7 @@ This section gives an overview of features, limitations and known issues:
 - [Digital Rights Management (DRM)](./doc/drm.md)
 - [Fullscreen presentation](./doc/fullscreen.md)
 - [Media Caching](./doc/media-caching.md)
+- [Migrating to THEOplayer 9.x🔥](migrating-to-react-native-theoplayer-9.md)
 - [Picture-in-Picture (PiP)](./doc/pip.md)
 - [Subtitles, Closed Captions and Metadata tracks](./doc/texttracks.md)
 - [Limitations and known issues](./doc/limitations.md)
