@@ -105,17 +105,8 @@ class THEOplayerRCTTrackMetadataAggregator {
         var entry: [String:Any] = [:]
         entry[PROP_ID] = textTrackCue.id
         entry[PROP_UID] = textTrackCue.uid
-        var startTime = textTrackCue.startTime
-        var endTime = textTrackCue.endTime
-        if let dateRangeCue = textTrackCue as? DateRangeCue,
-           let programDateTime = player.currentProgramDateTime?.timeIntervalSince1970 {
-            let currentTime = player.currentTime
-            let offset = programDateTime - currentTime
-            startTime = dateRangeCue.startDate.timeIntervalSince1970 - offset
-            endTime = dateRangeCue.endDate != nil ? dateRangeCue.endDate!.timeIntervalSince1970 - offset : .infinity
-        }
-        entry[PROP_STARTTIME] = THEOplayerRCTTypeUtils.encodeInfNan((startTime ?? 0) * 1000)
-        entry[PROP_ENDTIME] = THEOplayerRCTTypeUtils.encodeInfNan((endTime ?? 0) * 1000)
+        entry[PROP_STARTTIME] = THEOplayerRCTTypeUtils.encodeInfNan(textTrackCue.startTime * 1000)
+        entry[PROP_ENDTIME] = THEOplayerRCTTypeUtils.encodeInfNan(textTrackCue.endTime * 1000)
         if let content = textTrackCue.content {
             entry[PROP_CUE_CONTENT] = content
         } else if let contentString = textTrackCue.contentString {

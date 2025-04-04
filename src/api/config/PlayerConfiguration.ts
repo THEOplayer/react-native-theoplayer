@@ -59,16 +59,6 @@ export interface PlayerConfiguration {
   readonly licenseUrl?: string;
 
   /**
-   * Sets whether the native player is chromeless (without UI).
-   *
-   * @remarks
-   * <br/> - This parameter only applies to Web platforms.
-   *
-   * @deprecated: Use the OpenVideoUI package {@link https://github.com/THEOplayer/react-native-theoplayer-ui}.
-   */
-  readonly chromeless?: boolean;
-
-  /**
    * Sets whether DateRange tags from the playlists should be imported as a textTrack.
    */
   readonly hlsDateRange?: boolean;
@@ -91,25 +81,6 @@ export interface PlayerConfiguration {
    * <br/> - This parameter only applies to Web and Android platforms.
    */
   liveOffset?: number;
-
-  /**
-   * Sets whether the Media3 extension is used for play-out on Android.
-   *
-   * @experimental
-   * @remarks
-   * <br/> - This parameter only applies to Android platforms.
-   *
-   * @defaultValue `false`.
-   */
-  useMedia3?: boolean;
-
-  /**
-   * Sets whether support for THEOlive sources should be enabled.
-   *
-   * @defaultValue `false`.
-   * @deprecated: THEOlive support is always enabled, there is no need to explicitly enable it.
-   */
-  enableTHEOlive?: boolean;
 
   /**
    * The THEOlive configuration for the player.

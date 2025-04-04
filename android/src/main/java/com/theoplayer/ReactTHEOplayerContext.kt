@@ -17,6 +17,7 @@ import com.facebook.react.uimanager.ThemedReactContext
 import com.theoplayer.android.api.THEOplayerView
 import com.theoplayer.android.api.ads.dai.GoogleDaiIntegration
 import com.theoplayer.android.api.ads.dai.GoogleDaiIntegrationFactory
+import com.theoplayer.android.api.ads.ima.GoogleImaConfiguration
 import com.theoplayer.android.api.ads.ima.GoogleImaIntegration
 import com.theoplayer.android.api.ads.ima.GoogleImaIntegrationFactory
 import com.theoplayer.android.api.ads.theoads.TheoAdDescription
@@ -26,8 +27,6 @@ import com.theoplayer.android.api.cast.CastIntegration
 import com.theoplayer.android.api.cast.CastIntegrationFactory
 import com.theoplayer.android.api.event.EventListener
 import com.theoplayer.android.api.event.player.*
-import com.theoplayer.android.api.media3.Media3PlayerIntegration
-import com.theoplayer.android.api.media3.Media3PlayerIntegrationFactory
 import com.theoplayer.android.api.player.Player
 import com.theoplayer.android.api.player.RenderingTarget
 import com.theoplayer.android.connector.mediasession.MediaSessionConnector
@@ -90,7 +89,6 @@ class ReactTHEOplayerContext private constructor(
   private var theoAdsIntegration: TheoAdsIntegration? = null
   var castIntegration: CastIntegration? = null
   @Suppress("UnstableApiUsage")
-  private var media3Integration: Media3PlayerIntegration? = null
   var wasPlayingOnHostPause: Boolean = false
   private var isHostPaused: Boolean = false
 
@@ -290,7 +288,7 @@ class ReactTHEOplayerContext private constructor(
     try {
       if (BuildConfig.EXTENSION_GOOGLE_IMA) {
         imaIntegration = GoogleImaIntegrationFactory.createGoogleImaIntegration(
-          playerView, configAdapter.imaSdkSettings()
+          playerView, GoogleImaConfiguration(configAdapter.imaSdkSettings())
         ).apply {
           setAdsRenderingSettings(configAdapter.adsRenderSettings())
         }.also {
@@ -303,7 +301,7 @@ class ReactTHEOplayerContext private constructor(
     try {
       if (BuildConfig.EXTENSION_GOOGLE_DAI) {
         daiIntegration = GoogleDaiIntegrationFactory.createGoogleDaiIntegration(
-          playerView, configAdapter.imaSdkSettings()
+          playerView, GoogleImaConfiguration(configAdapter.imaSdkSettings())
         ).apply {
           setAdsRenderingSettings(configAdapter.adsRenderSettings())
         }.also {
@@ -335,26 +333,6 @@ class ReactTHEOplayerContext private constructor(
     } catch (e: Exception) {
       Log.w(TAG, "Failed to configure Cast integration ${e.message}")
     }
-    try {
-      if (BuildConfig.EXTENSION_MEDIA3) {
-        @Suppress("UnstableApiUsage")
-        media3Integration =
-          Media3PlayerIntegrationFactory.createMedia3PlayerIntegration { _, source ->
-            // selectedSource -> represents the TypedSource the player picked to play.
-            // source -> represents the SourceDescription passed to the player.
-            // return true -> the Media3 integration pipeline will be used to play the selected source.
-            // return false -> the default pipeline will be used to play the selected source.
-            //
-            // @remark If the source contains THEOads, media3 is always enabled.
-            configAdapter.useMedia3 ||
-              (BuildConfig.EXTENSION_THEOADS && source.ads.any { it is TheoAdDescription })
-          }
-        playerView.player.addIntegration(media3Integration)
-      }
-    } catch (e: Exception) {
-      Log.w(TAG, "Failed to configure Cast integration ${e.message}")
-    }
-
     // Add other future integrations here.
   }
 

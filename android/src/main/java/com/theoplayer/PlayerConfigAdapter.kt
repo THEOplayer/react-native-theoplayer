@@ -17,12 +17,9 @@ import com.theoplayer.media.MediaSessionConfigAdapter
 private const val PROP_LICENSE = "license"
 private const val PROP_LICENSE_URL = "licenseUrl"
 private const val PROP_PRELOAD = "preload"
-private const val PROP_LIVE_OFFSET = "liveOffset"
 private const val PROP_UI_ENABLED = "uiEnabled"
 private const val PROP_CAST_STRATEGY = "strategy"
 private const val PROP_RETRY_CONFIG = "retryConfiguration"
-private const val PROP_HLS_DATE_RANGE = "hlsDateRange"
-private const val PROP_USE_MEDIA3 = "useMedia3"
 private const val PROP_RETRY_MAX_RETRIES = "maxRetries"
 private const val PROP_RETRY_MIN_BACKOFF = "minimumBackoff"
 private const val PROP_RETRY_MAX_BACKOFF = "maximumBackoff"
@@ -46,12 +43,6 @@ private const val PROP_THEOLIVE_ANALYTICS_DISABLED = "analyticsDisabled"
 class PlayerConfigAdapter(private val configProps: ReadableMap?) {
 
   /**
-   * Whether the Media3 extension is used for play-out.
-   */
-  var useMedia3: Boolean = false
-    private set
-
-  /**
    * Get general THEOplayerConfig object; these properties apply:
    * - license: The license for the player.
    * - licenseUrl: The url to fetch the license for the player.
@@ -69,19 +60,12 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
         if (hasKey(PROP_RETRY_CONFIG)) {
           networkConfiguration(networkConfig())
         }
-        if (hasKey(PROP_LIVE_OFFSET)) {
-          liveOffset(getDouble(PROP_LIVE_OFFSET))
-        }
-        if (hasKey(PROP_HLS_DATE_RANGE)) {
-          hlsDateRange(getBoolean(PROP_HLS_DATE_RANGE))
-        }
-        if (hasKey(PROP_USE_MEDIA3)) {
-          useMedia3 = getBoolean(PROP_USE_MEDIA3)
-        }
         if (hasKey(PROP_THEOLIVE_CONFIG)) {
           theoLiveConfiguration(theoLiveConfig())
         }
         pipConfiguration(PipConfiguration.Builder().build())
+        // Opt-out for auto-integrations for now
+        autoIntegrations(false)
       }
     }.build()
   }
