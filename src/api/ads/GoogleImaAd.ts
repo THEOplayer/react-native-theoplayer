@@ -83,4 +83,13 @@ export interface GoogleImaAd extends Ad {
    * <br/> - This corresponds with the apiFramework specified in vast.
    */
   apiFramework: string | undefined;
+
+  /**
+   * The description of the ad from the VAST response.
+   *
+   * @remarks
+   * <br/> - Available for `google-ima` and `google-dai` integrations only.
+   * <br/> - Available on Web and Android.
+   */
+  description: string | undefined;
 }

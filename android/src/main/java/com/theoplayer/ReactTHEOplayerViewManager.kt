@@ -1,12 +1,9 @@
-@file:Suppress("unused")
-
 package com.theoplayer
 
 import com.facebook.react.uimanager.ViewGroupManager
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.annotations.ReactProp
 import com.facebook.react.bridge.ReadableMap
-import com.facebook.react.common.MapBuilder
 
 private const val REACT_CLASS = "THEOplayerRCTView"
 
@@ -35,10 +32,6 @@ class ReactTHEOplayerViewManager : ViewGroupManager<ReactTHEOplayerView>() {
   }
 
   override fun getExportedCustomDirectEventTypeConstants(): Map<String, Any> {
-    val builder = MapBuilder.builder<String, Any>()
-    for (event in PlayerEventEmitter.Events) {
-      builder.put(event, MapBuilder.of("registrationName", event))
-    }
-    return builder.build()
+    return PlayerEventEmitter.Events.associateWith { mapOf("registrationName" to it) }
   }
 }

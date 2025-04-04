@@ -52,6 +52,17 @@ export enum SourceIntegrationId {
 }
 
 /**
+ * The playback pipeline to use to play a stream.
+ *
+ * @remarks
+ * <br/> - Available on Android only.
+ */
+export enum PlaybackPipeline {
+  LEGACY = 'legacy',
+  MEDIA3 = 'media3'
+}
+
+/**
  * Describes the configuration of a player's source.
  *
  * @public
@@ -290,6 +301,17 @@ export interface BaseSource {
   crossOrigin?: CrossOriginSetting;
 
   /**
+   * The offset in seconds used to determine the live point.
+   * This live point is the end of the manifest minus the provided offset.
+   *
+   * @remarks
+   * <br/> - Available on Web and Android.
+   *
+   * @defaultValue Three times the segment's target duration.
+   */
+  liveOffset?: number;
+
+  /**
    * The URL of a time server used by the player to synchronise the time in DASH sources.
    *
    * @remarks
@@ -328,6 +350,16 @@ export interface BaseSource {
    * <br/> - Ignored for non-HLS streams.
    */
   hls?: HlsPlaybackConfiguration;
+
+  /**
+   * The playback pipeline to use for this stream.
+   *
+   * @defaultValue [PlaybackPipeline.MEDIA3]
+   * @since v9.0.0
+   * @remarks
+   * <br/> - Available on Android only.
+   */
+  playbackPipeline: PlaybackPipeline;
 }
 
 /**

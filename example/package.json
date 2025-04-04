@@ -15,7 +15,7 @@
     "pod-update": "cd ios && RCT_NEW_ARCH_ENABLED=1 bundle exec pod update"
   },
   "dependencies": {
-    "@theoplayer/react-native-ui": "^0.10.1",
+    "@theoplayer/react-native-ui": "^0.11.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-native": "npm:react-native-tvos@^0.76.5-0",

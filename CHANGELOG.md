@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [9.0.0] - 25-04-04
+
+### Removed
+
+- Removed `chromeless` property from `PlayerConfiguration`. Only React Native based UIs are supported.
+- Removed ad integration kind `theo`.
+- Removed `enableTHEOlive` property from `PlayerConfiguration` as THEOlive is always enabled.
+
+### Added
+
+- Added `liveOffset` property to `SourceDescription` for Web and Android platforms.
+- Added `description` property for Google IMA ads on Web and Android platforms.
+- Added `networkCode` property for Google DAI configuration on Web platforms.
+- Added `segmentRelativeVttTiming` property on `DashPlaybackConfiguration` for Web to indicate whether segmented WebVTT files' timestamps should be considered relative to the segment start time.
+- Added `storageType` to `CachingTaskParameters` to allow writing to either the legacy cache or Media3 cache on Android.
+
+### Changed
+
+- Reverted DataRangeCue timings calculation on iOS (based on programDateTime offset). Correct values are provided by the native SDK.
+
 ## [8.18.0] - 25-04-02
 
 ### Changed
