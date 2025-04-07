@@ -27,6 +27,8 @@ import com.theoplayer.android.api.cast.CastIntegration
 import com.theoplayer.android.api.cast.CastIntegrationFactory
 import com.theoplayer.android.api.event.EventListener
 import com.theoplayer.android.api.event.player.*
+import com.theoplayer.android.api.millicast.MillicastIntegration
+import com.theoplayer.android.api.millicast.MillicastIntegrationFactory
 import com.theoplayer.android.api.player.Player
 import com.theoplayer.android.api.player.RenderingTarget
 import com.theoplayer.android.connector.mediasession.MediaSessionConnector
@@ -91,6 +93,7 @@ class ReactTHEOplayerContext private constructor(
   @Suppress("UnstableApiUsage")
   var wasPlayingOnHostPause: Boolean = false
   private var isHostPaused: Boolean = false
+  private var millicastIntegration: MillicastIntegration? = null
 
   private val isBackgroundAudioEnabled: Boolean
     get() = backgroundAudioConfig.enabled
@@ -333,6 +336,17 @@ class ReactTHEOplayerContext private constructor(
     } catch (e: Exception) {
       Log.w(TAG, "Failed to configure Cast integration ${e.message}")
     }
+    try {
+      if (BuildConfig.EXTENSION_MILLICAST) {
+        millicastIntegration = MillicastIntegrationFactory.createMillicastIntegration()
+          .also {
+          playerView.player.addIntegration(it)
+        }
+      }
+    } catch (e: Exception) {
+      Log.w(TAG, "Failed to configure Millicast integration ${e.message}")
+    }
+
     // Add other future integrations here.
   }
 
