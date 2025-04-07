@@ -39,3 +39,19 @@ const playerConfig: PlayerConfiguration = {
   useMedia3: true
 };
 ```
+
+### Multimedia tunneling
+
+The Media3 pipeline provides support for multimedia tunneling, as described in the
+[Android documentation](https://source.android.com/docs/devices/tv/multimedia-tunneling).
+This is disabled by default.
+
+To enable multimedia tunneling, pass the `tunnelingEnabled` flag in the
+[player configuration](../src/api/config/PlayerConfiguration.ts) as shown below:
+
+```tsx
+const playerConfig: PlayerConfiguration = {
+  // ...
+  tunnelingEnabled: true
+};
+```
