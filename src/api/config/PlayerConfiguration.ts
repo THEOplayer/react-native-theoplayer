@@ -86,6 +86,22 @@ export interface PlayerConfiguration {
    * The THEOlive configuration for the player.
    */
   theoLive?: TheoLiveConfiguration;
+
+  /**
+   * Whether multimedia tunneling is enabled for the player or not.
+   *
+   * <ul>
+   *     <li>Only supported with the Media3 integration.</li>
+   *     <li>Only supported if the media being played includes both audio and video.</li>
+   *     <li>Only supported on limited number of video codecs and devices.</li>
+   * </ul>
+   *
+   * @defaultValue false
+   *
+   * @remarks
+   * <br/> - This parameter only applies to Android platforms.
+   */
+  tunnelingEnabled?: boolean;
 }
 
 /**

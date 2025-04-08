@@ -15,8 +15,14 @@ The media3 pipeline is available as of `react-native-theoplayer` v8.9.0.
 
 ### Usage
 
+> [!IMPORTANT]
+> As of THEOplayer 9.0, Media3 is the default playback pipeline on Android. It is still possible to opt-out and use the
+> legacy pipeline with the `playbackPipeline` parameter in the `SourceDescription`.
+
+The rest of this section **applies to THEOplayer 8.x only**.
+
 Except for **THEOads sources**, where media3 is **enabled by default**, the "legacy" pipeline remains
-the default for now.
+the default on THEOplayer v8.x.
 
 To enable the new media3 extension, set the `THEOplayer_extensionMedia3` in the app's gradle configuration,
 such as the `gradle.properties` file:
@@ -31,5 +37,21 @@ Additionally, pass the `useMedia3` flag in the [player configuration](../src/api
 const playerConfig: PlayerConfiguration = {
   // ...
   useMedia3: true
+};
+```
+
+### Multimedia tunneling
+
+The Media3 pipeline provides support for multimedia tunneling, as described in the
+[Android documentation](https://source.android.com/docs/devices/tv/multimedia-tunneling).
+This is disabled by default.
+
+To enable multimedia tunneling, pass the `tunnelingEnabled` flag in the
+[player configuration](../src/api/config/PlayerConfiguration.ts) as shown below:
+
+```tsx
+const playerConfig: PlayerConfiguration = {
+  // ...
+  tunnelingEnabled: true
 };
 ```
