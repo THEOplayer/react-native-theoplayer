@@ -163,7 +163,9 @@ object ContentProtectionAdapter {
     payload.putString(PROP_STATUS_TEXT, response.statusText)
     val headers = Arguments.createMap()
     response.headers.entries.forEach { entry ->
-      headers.putString(entry.key, entry.value)
+      entry.key?.let { key ->
+        headers.putString(key, entry.value)
+      }
     }
     payload.putMap(PROP_HEADERS, headers)
     payload.putMap(PROP_REQUEST, fromRequest(integrationId, keySystemId, response.request))
