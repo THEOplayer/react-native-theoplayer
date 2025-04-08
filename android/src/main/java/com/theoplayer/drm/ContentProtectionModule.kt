@@ -237,7 +237,7 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
       Log.d(TAG, "emit $eventName ($requestId)")
     }
     payload.putString(PROP_REQUEST_ID, requestId)
-    val onTimeout = {
+    val onTimeout = Runnable {
       onError(
         THEOplayerException(ErrorCode.CONTENT_PROTECTION_ERROR, "$eventName time-out.")
       )
