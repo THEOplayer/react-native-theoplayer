@@ -15,7 +15,7 @@
         "album": "React-Native THEOplayer demos",
         "mediaUri": "https://theoplayer.com",
         "displayIconUri": "https://cdn.theoplayer.com/video/sintel_old/poster.jpg",
-        "artist": "THEOplayer",
+        "artist": "THEOplayer"
       },
       "textTracks": [{
         "kind": "chapters",
