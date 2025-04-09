@@ -236,14 +236,14 @@ class THEOplayerRCTTrackMetadataAggregator {
         return 0
     }
     
-    class func aggregatedMetadataTrackInfo(metadataTrackDescriptions: [TextTrackDescription], completed: (([[String:Any]]) -> Void)? ) {
+    class func aggregatedMetadataAndChapterTrackInfo(trackDescriptions: [TextTrackDescription], completed: (([[String:Any]]) -> Void)? ) {
         var trackIndex = 0
         var tracksInfo: [[String:Any]] = []
-        for trackDescription in metadataTrackDescriptions {
-            guard trackDescription.kind == .metadata, trackDescription.format == .WebVTT else { continue }
+        for trackDescription in trackDescriptions {
+          guard (trackDescription.kind == .metadata || trackDescription.kind == .chapters), trackDescription.format == .WebVTT else { continue }
             
             let urlString = trackDescription.src.absoluteString
-            THEOplayerRCTSideloadedMetadataProcessor.parseVtt(urlString) { cueArray in
+            THEOplayerRCTSideloadedWebVTTProcessor.parseVtt(urlString) { cueArray in
                 if let cues = cueArray {
                     var track: [String:Any] = [:]
                     let trackUid = 1000 + trackIndex
@@ -269,8 +269,9 @@ class THEOplayerRCTTrackMetadataAggregator {
                         cueIndex += 1
                     }
                     track[PROP_CUES] = cueList
+                  print("cue list length",cueList.count)
                     tracksInfo.append(track)
-                    if tracksInfo.count == metadataTrackDescriptions.count {
+                    if tracksInfo.count == trackDescriptions.count {
                         completed?(tracksInfo)
                     }
                 }
