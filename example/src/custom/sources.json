@@ -6,7 +6,7 @@
       "sources": [
         {
           "src": "https://cdn.theoplayer.com/video/sintel/nosubs.m3u8",
-          "type": "application/x-mpegurl",
+          "type": "application/x-mpegurl"
         }
       ],
       "metadata": {
