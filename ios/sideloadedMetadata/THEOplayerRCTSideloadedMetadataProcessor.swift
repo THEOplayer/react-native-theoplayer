@@ -9,11 +9,11 @@ struct Cue {
     var cueContent: String
 }
 
-class THEOplayerRCTSideloadedMetadataProcessor {
+class THEOplayerRCTSideloadedWebVTTProcessor {
     
-    class func loadTrackInfoFromTrackDescriptions(_ metadataTrackDescriptions: [TextTrackDescription]?, completed: (([[String:Any]]) -> Void)?) {
-        if let trackDescriptions = metadataTrackDescriptions {
-            THEOplayerRCTTrackMetadataAggregator.aggregatedMetadataTrackInfo(metadataTrackDescriptions: trackDescriptions) { tracksInfo in
+    class func loadTrackInfoFromTrackDescriptions(_ trackDescriptions: [TextTrackDescription]?, completed: (([[String:Any]]) -> Void)?) {
+        if let trackDescriptions = trackDescriptions {
+            THEOplayerRCTTrackMetadataAggregator.aggregatedMetadataAndChapterTrackInfo(trackDescriptions: trackDescriptions) { tracksInfo in
                 completed?(tracksInfo)
             }
         } else {
@@ -34,7 +34,7 @@ class THEOplayerRCTSideloadedMetadataProcessor {
                 }
                 
                 if let vttString = String(data: data, encoding: .utf8) {
-                    let cues = THEOplayerRCTSideloadedMetadataProcessor.parseVTTString(vttString)
+                    let cues = THEOplayerRCTSideloadedWebVTTProcessor.parseVTTString(vttString)
                     completion(cues)
                 } else {
                     completion(nil)
@@ -48,7 +48,7 @@ class THEOplayerRCTSideloadedMetadataProcessor {
             var cues: [Cue] = []
             var currentCue: Cue?
             
-        let separator = THEOplayerRCTSideloadedMetadataProcessor.separatorSequence(vttString)
+        let separator = THEOplayerRCTSideloadedWebVTTProcessor.separatorSequence(vttString)
         let lines = vttString.components(separatedBy: separator)
         for line in lines {
             if line.isEmpty {                                               // process unprocessed cue to list

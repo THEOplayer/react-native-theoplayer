@@ -130,14 +130,14 @@ class THEOplayerRCTSourceDescriptionBuilder {
 
         // 3. extract 'textTracks'
         var textTrackDescriptions: [TextTrackDescription]?
-        var metadataTrackDescriptions: [TextTrackDescription]?
+        var metadataAndChapterTrackDescriptions: [TextTrackDescription]?
         if let textTracksDataArray = sourceData[SD_PROP_TEXTTRACKS] as? [[String:Any]] {
             textTrackDescriptions = []
-            metadataTrackDescriptions = []
+          metadataAndChapterTrackDescriptions = []
             for textTracksData in textTracksDataArray {
                 if let textTrackDescription = THEOplayerRCTSourceDescriptionBuilder.buildTextTrackDescriptions(textTracksData) {
-                    if textTrackDescription.kind == .metadata {
-                        metadataTrackDescriptions?.append(textTrackDescription)
+                  if textTrackDescription.kind == .chapters || textTrackDescription.kind == .metadata {
+                      metadataAndChapterTrackDescriptions?.append(textTrackDescription)
                     } else {
                         textTrackDescriptions?.append(textTrackDescription)
                     }
@@ -174,7 +174,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
                                  poster: poster,
                                  metadata: metadataDescription)
         
-        return (sourceDescription, metadataTrackDescriptions)
+        return (sourceDescription, metadataAndChapterTrackDescriptions)
     }
 
     // MARK: Private build methods

@@ -1,5 +1,33 @@
 [
   {
+    "name": "HLS - Sideloaded Chapters",
+    "os": ["ios","android", "web"],
+    "source": {
+      "sources": [
+        {
+          "src": "https://cdn.theoplayer.com/video/sintel/nosubs.m3u8",
+          "type": "application/x-mpegurl"
+        }
+      ],
+      "metadata": {
+        "title": "Sintel",
+        "subtitle": "HLS - Sideloaded Chapters",
+        "album": "React-Native THEOplayer demos",
+        "mediaUri": "https://theoplayer.com",
+        "displayIconUri": "https://cdn.theoplayer.com/video/sintel_old/poster.jpg",
+        "artist": "THEOplayer"
+      },
+      "textTracks": [{
+        "kind": "chapters",
+        "src": "https://cdn.theoplayer.com/video/sintel/chapters.vtt",
+        "format": "webvtt",
+        "srclang": "en",
+        "label": "Chapters",
+        "default": true
+      }]
+    }
+  },
+  {
     "name": "DASH - Thumbnails in manifest",
     "os": ["android", "web"],
     "source": {

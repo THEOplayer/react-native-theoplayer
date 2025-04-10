@@ -5,18 +5,18 @@ import THEOplayerSDK
 
 
 class THEOplayerRCTSideloadedMetadataTrackEventHandler {
-    private var loadedMetadataTracksInfo: [[String:Any]] = []
+    private var loadedMetadataAndChapterTracksInfo: [[String:Any]] = []
     // MARK: Events
     var onNativeTextTrackListEvent: RCTDirectEventBlock?
     var onNativeTextTrackEvent: RCTDirectEventBlock?
     
-    func setLoadedMetadataTracksInfo(_ metadataTracksInfo: [[String:Any]]) {
-        self.loadedMetadataTracksInfo = metadataTracksInfo
-        self.triggerAddMetadataTrackEvent(metadataTracksInfo)
+    func setLoadedMetadataAndChapterTracksInfo(_ tracksInfo: [[String:Any]]) {
+        self.loadedMetadataAndChapterTracksInfo = tracksInfo
+        self.triggerAddMetadataOrChapterTrackEvent(tracksInfo)
     }
     
-    func triggerAddMetadataTrackEvent(_ metadataTrackInfo: [[String:Any]]) {
-        for trackInfo in metadataTrackInfo {
+    func triggerAddMetadataOrChapterTrackEvent(_ trackInfo: [[String:Any]]) {
+        for trackInfo in trackInfo {
             if let addTrackEvent = self.onNativeTextTrackListEvent {
                 addTrackEvent([
                     "track" : trackInfo,
