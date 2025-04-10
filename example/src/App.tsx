@@ -59,7 +59,6 @@ const playerConfig: PlayerConfiguration = {
   ads: {
     theoads: true,
   },
-  useMedia3: true,
 };
 
 /**
