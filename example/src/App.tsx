@@ -23,7 +23,7 @@ import {
   UiContainer,
 } from '@theoplayer/react-native-ui';
 import { PlayerConfiguration, PlayerEventType, PresentationMode, sdkVersions, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
-import { Platform, StatusBar, StyleSheet, View } from 'react-native';
+import { Platform, StatusBar, StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 import { SourceMenuButton, SOURCES } from './custom/SourceMenuButton';
 import { BackgroundAudioSubMenu } from './custom/BackgroundAudioSubMenu';
 import { PiPSubMenu } from './custom/PipSubMenu';
@@ -67,7 +67,12 @@ const playerConfig: PlayerConfiguration = {
  */
 export default function App() {
   const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);
+  const [mounted, setMounted] = React.useState(true);
   const presentationMode = usePresentationMode(player);
+
+  const onMountPressed = () => {
+    setMounted((mounted) => !mounted);
+  };
 
   // In PiP presentation mode on NewArch Android, there is an issue where SafeAreayView does not update the edges in time,
   // so explicitly disable them here.
@@ -114,65 +119,70 @@ export default function App() {
     <SafeAreaProvider>
       <StatusBar barStyle="light-content" />
       <SafeAreaView edges={edges} style={{ flex: 1, backgroundColor: 'black' }}>
+        <TouchableOpacity onPress={onMountPressed}>
+          <Text style={{ color: 'white', backgroundColor: 'green', fontSize: 22 }}>{mounted ? 'unmount' : 'mount'}</Text>
+        </TouchableOpacity>
         <View style={styles.container}>
-          <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady}>
-            {player !== undefined && (
-              <UiContainer
-                theme={{ ...DEFAULT_THEOPLAYER_THEME }}
-                player={player}
-                behind={<CenteredDelayedActivityIndicator size={50} />}
-                top={
-                  <ControlBar>
-                    <MediaCacheMenuButton>
-                      <MediaCacheDownloadButton />
-                      <MediaCachingTaskListSubMenu />
-                    </MediaCacheMenuButton>
-                    {/*This is a custom menu for source selection.*/}
-                    <SourceMenuButton />
-                    {!Platform.isTV && (
-                      <>
-                        <AirplayButton />
-                        <ChromecastButton />
-                      </>
-                    )}
-                    <LanguageMenuButton />
-                    <SettingsMenuButton>
-                      {/*Note: quality selection is not available on iOS */}
-                      <QualitySubMenu />
-                      <PlaybackRateSubMenu />
-                      <BackgroundAudioSubMenu />
-                      <PiPSubMenu />
-                      <AutoPlaySubMenu />
-                      {Platform.OS === 'android' && <RenderingTargetSubMenu />}
-                    </SettingsMenuButton>
-                  </ControlBar>
-                }
-                center={<CenteredControlBar left={<SkipButton skip={-10} />} middle={<PlayButton />} right={<SkipButton skip={30} />} />}
-                bottom={
-                  <>
-                    <ControlBar style={{ justifyContent: 'flex-start' }}>
-                      <CastMessage />
-                    </ControlBar>
-                    {
-                      /*Note: RNSlider is not available on tvOS */
-                      !(Platform.isTV && Platform.OS === 'ios') && (
-                        <ControlBar>
-                          <SeekBar />
-                        </ControlBar>
-                      )
-                    }
+          {mounted && (
+            <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady}>
+              {player !== undefined && (
+                <UiContainer
+                  theme={{ ...DEFAULT_THEOPLAYER_THEME }}
+                  player={player}
+                  behind={<CenteredDelayedActivityIndicator size={50} />}
+                  top={
                     <ControlBar>
-                      <MuteButton />
-                      <TimeLabel showDuration={true} />
-                      <Spacer />
-                      <PipButton />
-                      <FullscreenButton />
+                      <MediaCacheMenuButton>
+                        <MediaCacheDownloadButton />
+                        <MediaCachingTaskListSubMenu />
+                      </MediaCacheMenuButton>
+                      {/*This is a custom menu for source selection.*/}
+                      <SourceMenuButton />
+                      {!Platform.isTV && (
+                        <>
+                          <AirplayButton />
+                          <ChromecastButton />
+                        </>
+                      )}
+                      <LanguageMenuButton />
+                      <SettingsMenuButton>
+                        {/*Note: quality selection is not available on iOS */}
+                        <QualitySubMenu />
+                        <PlaybackRateSubMenu />
+                        <BackgroundAudioSubMenu />
+                        <PiPSubMenu />
+                        <AutoPlaySubMenu />
+                        {Platform.OS === 'android' && <RenderingTargetSubMenu />}
+                      </SettingsMenuButton>
                     </ControlBar>
-                  </>
-                }
-              />
-            )}
-          </THEOplayerView>
+                  }
+                  center={<CenteredControlBar left={<SkipButton skip={-10} />} middle={<PlayButton />} right={<SkipButton skip={30} />} />}
+                  bottom={
+                    <>
+                      <ControlBar style={{ justifyContent: 'flex-start' }}>
+                        <CastMessage />
+                      </ControlBar>
+                      {
+                        /*Note: RNSlider is not available on tvOS */
+                        !(Platform.isTV && Platform.OS === 'ios') && (
+                          <ControlBar>
+                            <SeekBar />
+                          </ControlBar>
+                        )
+                      }
+                      <ControlBar>
+                        <MuteButton />
+                        <TimeLabel showDuration={true} />
+                        <Spacer />
+                        <PipButton />
+                        <FullscreenButton />
+                      </ControlBar>
+                    </>
+                  }
+                />
+              )}
+            </THEOplayerView>
+          )}
         </View>
       </SafeAreaView>
     </SafeAreaProvider>
