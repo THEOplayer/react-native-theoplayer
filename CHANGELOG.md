@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added iOS support for `sseEndpoint` property to `TheoAdDescription`.
 
+### Changed
+
+- Changed the `playbackPipeline` parameter in `SourceConfiguration` to be an optional parameter.
+
 ## [9.0.1] - 25-04-08
 
 ### Fixed
