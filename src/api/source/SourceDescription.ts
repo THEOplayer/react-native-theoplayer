@@ -359,7 +359,7 @@ export interface BaseSource {
    * @remarks
    * <br/> - Available on Android only.
    */
-  playbackPipeline: PlaybackPipeline;
+  playbackPipeline?: PlaybackPipeline;
 }
 
 /**
