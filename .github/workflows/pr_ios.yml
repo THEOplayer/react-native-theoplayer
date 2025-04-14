@@ -16,7 +16,7 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        xcode_version: [ '15.4.0' ]
+        xcode_version: [ '16.1.0' ]
         newArchEnabled: [ 0, 1 ]
         platform: [iOS, tvOS]
     name: Build for ${{ matrix.platform }} using XCode version ${{ matrix.xcode_version }} and ${{matrix.newArchEnabled  == 1 && 'New' || 'Old' }} Architecture
