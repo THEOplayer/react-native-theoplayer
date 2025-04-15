@@ -36,7 +36,8 @@ extension THEOplayerRCTSourceDescriptionBuilder {
 #endif
       return nil
     }
-  
+
+#if canImport(THEOplayerMillicastIntegration)
   static func buildConnectOptions(_ connectOptions: NSDictionary?) -> MCClientOptions {
     let result: MCClientOptions = .init()
     if let bweMonitorDurationUs = connectOptions?["bweMonitorDurationUs"] as? NSNumber {
@@ -184,4 +185,5 @@ extension THEOplayerRCTSourceDescriptionBuilder {
     }
     return result
   }
+#endif
 }
