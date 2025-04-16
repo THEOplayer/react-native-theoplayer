@@ -269,7 +269,6 @@ class THEOplayerRCTTrackMetadataAggregator {
                         cueIndex += 1
                     }
                     track[PROP_CUES] = cueList
-                  print("cue list length",cueList.count)
                     tracksInfo.append(track)
                     if tracksInfo.count == trackDescriptions.count {
                         completed?(tracksInfo)
