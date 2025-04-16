@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 - Changed the `playbackPipeline` parameter in `SourceConfiguration` to be an optional parameter.
+- On iOS we only load the THEOads integration for iOS 15 and higher.
 
 ## [9.0.1] - 25-04-08
 
