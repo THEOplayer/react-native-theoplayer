@@ -15,8 +15,10 @@ extension THEOplayerRCTView {
         
 #if canImport(THEOplayerTHEOadsIntegration)
         // setup integration
-      self.theoAdsIntegration = THEOadsIntegrationFactory.createIntegration(on: player)
-      player.addIntegration(self.theoAdsIntegration!)
+        if #available(iOS 15.0, *) {
+            self.theoAdsIntegration = THEOadsIntegrationFactory.createIntegration(on: player)
+            player.addIntegration(self.theoAdsIntegration!)
+        }
 #endif
         
     }
