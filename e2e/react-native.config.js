@@ -5,10 +5,5 @@ module.exports = {
         ios: null, // this will disable autolinking for this package on iOS
       },
     },
-    '@react-native-community/slider': {
-      platforms: {
-        ios: null, // this will disable autolinking for this package on iOS
-      },
-    },
   },
 };
