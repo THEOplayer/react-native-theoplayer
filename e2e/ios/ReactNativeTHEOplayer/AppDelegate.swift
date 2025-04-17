@@ -3,7 +3,7 @@ import React
 import React_RCTAppDelegate
 import ReactAppDependencyProvider
 
-#if !TARGET_OS_TV
+#if !os(tvOS)
 import GoogleCast
 #endif
 
@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     reactNativeDelegate = delegate
     reactNativeFactory = factory
 
-    #if !TARGET_OS_TV
+    #if !os(tvOS)
       let receiverAppID = "CC1AD845" // default receiver
       let criteria = GCKDiscoveryCriteria(applicationID: receiverAppID)
       let options = GCKCastOptions(discoveryCriteria: criteria)
