@@ -24,6 +24,7 @@ target 'ReactNativeTHEOplayer' do
   platform :ios, min_ios_version_supported
   use_react_native!(
     :path => config[:reactNativePath],
+    :hermes_enabled => false,
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
   pod 'react-native-theoplayer', :path => '../..'
@@ -34,6 +35,7 @@ target 'ReactNativeTHEOplayer-tvOS' do
   platform :tvos, min_ios_version_supported
   use_react_native!(
     :path => config[:reactNativePath],
+    :hermes_enabled => false,
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
   pod 'react-native-theoplayer', :path => '../..'
