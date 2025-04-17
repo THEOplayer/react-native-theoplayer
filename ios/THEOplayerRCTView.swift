@@ -179,10 +179,10 @@ public class THEOplayerRCTView: UIView {
         return self.player
     }
     
-    func processMetadataTracks(metadataTrackDescriptions: [TextTrackDescription]?) {
-        THEOplayerRCTSideloadedMetadataProcessor.loadTrackInfoFromTrackDescriptions(metadataTrackDescriptions) { tracksInfo in
-            self.mainEventHandler.setLoadedMetadataTracksInfo(tracksInfo)
-            self.metadataTrackEventHandler.setLoadedMetadataTracksInfo(tracksInfo)
+    func processMetadataAndChapterTracks(trackDescriptions: [TextTrackDescription]?) {
+      THEOplayerRCTSideloadedWebVTTProcessor.loadTrackInfoFromTrackDescriptions(trackDescriptions) { tracksInfo in
+            self.mainEventHandler.setLoadedMetadataAndChapterTracksInfo(tracksInfo)
+            self.metadataTrackEventHandler.setLoadedMetadataAndChapterTracksInfo(tracksInfo)
         }
     }
     

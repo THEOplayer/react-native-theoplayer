@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Added iOS support for `sseEndpoint` property to `TheoAdDescription`.
+- Added iOS support for sideloaded chapter TextTracks.
 
 ### Changed
 
