@@ -34,6 +34,7 @@ import { RenderingTargetSubMenu } from './custom/RenderingTargetSubMenu';
 import { AutoPlaySubMenu } from './custom/AutoPlaySubMenu';
 import { SafeAreaProvider, SafeAreaView, Edges } from 'react-native-safe-area-context';
 import { usePresentationMode } from './hooks/usePresentationMode';
+import { AutoFocusGuide } from './custom/AutoFocusGuide';
 
 const playerConfig: PlayerConfiguration = {
   // Get your THEOplayer license from https://portal.theoplayer.com/
@@ -122,52 +123,61 @@ export default function App() {
                 player={player}
                 behind={<CenteredDelayedActivityIndicator size={50} />}
                 top={
-                  <ControlBar>
-                    <MediaCacheMenuButton>
-                      <MediaCacheDownloadButton />
-                      <MediaCachingTaskListSubMenu />
-                    </MediaCacheMenuButton>
-                    {/*This is a custom menu for source selection.*/}
-                    <SourceMenuButton />
-                    {!Platform.isTV && (
-                      <>
-                        <AirplayButton />
-                        <ChromecastButton />
-                      </>
-                    )}
-                    <LanguageMenuButton />
-                    <SettingsMenuButton>
-                      {/*Note: quality selection is not available on iOS */}
-                      <QualitySubMenu />
-                      <PlaybackRateSubMenu />
-                      <BackgroundAudioSubMenu />
-                      <PiPSubMenu />
-                      <AutoPlaySubMenu />
-                      {Platform.OS === 'android' && <RenderingTargetSubMenu />}
-                    </SettingsMenuButton>
-                  </ControlBar>
+                  <AutoFocusGuide>
+                    <ControlBar>
+                      <Spacer />
+                      <MediaCacheMenuButton>
+                        <MediaCacheDownloadButton />
+                        <MediaCachingTaskListSubMenu />
+                      </MediaCacheMenuButton>
+                      {/*This is a custom menu for source selection.*/}
+                      <SourceMenuButton />
+                      {!Platform.isTV && (
+                        <>
+                          <AirplayButton />
+                          <ChromecastButton />
+                        </>
+                      )}
+                      <LanguageMenuButton />
+                      <SettingsMenuButton>
+                        {/*Note: quality selection is not available on iOS */}
+                        <QualitySubMenu />
+                        <PlaybackRateSubMenu />
+                        <BackgroundAudioSubMenu />
+                        <PiPSubMenu />
+                        <AutoPlaySubMenu />
+                        {Platform.OS === 'android' && <RenderingTargetSubMenu />}
+                      </SettingsMenuButton>
+                    </ControlBar>
+                  </AutoFocusGuide>
                 }
-                center={<CenteredControlBar left={<SkipButton skip={-10} />} middle={<PlayButton />} right={<SkipButton skip={30} />} />}
+                center={
+                  <AutoFocusGuide>
+                    <CenteredControlBar
+                      style={{ width: Platform.isTV ? '20%' : '60%' }}
+                      left={<SkipButton skip={-10} />}
+                      middle={<PlayButton />}
+                      right={<SkipButton skip={30} />}
+                    />
+                  </AutoFocusGuide>
+                }
                 bottom={
                   <>
                     <ControlBar style={{ justifyContent: 'flex-start' }}>
                       <CastMessage />
                     </ControlBar>
-                    {
-                      /*Note: RNSlider is not available on tvOS */
-                      !(Platform.isTV && Platform.OS === 'ios') && (
-                        <ControlBar>
-                          <SeekBar />
-                        </ControlBar>
-                      )
-                    }
                     <ControlBar>
-                      <MuteButton />
-                      <TimeLabel showDuration={true} />
-                      <Spacer />
-                      <PipButton />
-                      <FullscreenButton />
+                      <SeekBar />
                     </ControlBar>
+                    <AutoFocusGuide>
+                      <ControlBar>
+                        <MuteButton />
+                        <TimeLabel showDuration={true} />
+                        <Spacer />
+                        <PipButton />
+                        <FullscreenButton />
+                      </ControlBar>
+                    </AutoFocusGuide>
                   </>
                 }
               />
