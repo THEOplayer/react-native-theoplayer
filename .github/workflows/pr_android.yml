@@ -106,5 +106,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: screenshots
+          working-directory: e2e
           path: |
-            e2e/screenshots*
+            *.png
