@@ -119,7 +119,7 @@ export default function App() {
           <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady}>
             {player !== undefined && (
               <UiContainer
-                theme={{ ...DEFAULT_THEOPLAYER_THEME }}
+                theme={{ ...DEFAULT_THEOPLAYER_THEME, fadeAnimationTimoutMs: Platform.isTVOS ? 3600000 : 2500 }}
                 player={player}
                 behind={<CenteredDelayedActivityIndicator size={50} />}
                 top={
