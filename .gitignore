@@ -90,3 +90,4 @@ e2e/cavy_results.md
 # Example app
 example/dist
 example/ios/.xcode.env.local
+e2e/screenshots
