@@ -87,3 +87,12 @@ jobs:
         working-directory: e2e
         if: always()
         run: cat cavy_results.md >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          working-directory: e2e
+          name: screenshots
+          path: |
+            *.png
