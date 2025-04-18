@@ -70,7 +70,7 @@ import { Poster } from './poster/Poster';
 const INVALID_HANDLE = -1;
 
 interface THEOplayerRCTViewProps {
-  ref: React.RefObject<THEOplayerViewNativeComponent>;
+  ref: React.RefObject<THEOplayerViewNativeComponent | null>;
   style?: StyleProp<ViewStyle>;
   config?: PlayerConfiguration;
   onNativePlayerReady: (event: NativeSyntheticEvent<NativePlayerStateEvent>) => void;
@@ -115,7 +115,7 @@ interface THEOplayerRCTViewState {
 type THEOplayerViewNativeComponent = HostComponent<THEOplayerRCTViewProps>;
 
 export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOplayerViewProps>, THEOplayerRCTViewState> {
-  private readonly _root: React.RefObject<THEOplayerViewNativeComponent>;
+  private readonly _root: React.RefObject<THEOplayerViewNativeComponent | null>;
   private readonly _facade: THEOplayerAdapter;
   private _dimensionsHandler?: EmitterSubscription = undefined;
 
@@ -375,7 +375,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
     this.setState({ posterActive: false });
   };
 
-  public render(): JSX.Element {
+  public render(): React.JSX.Element {
     const { config, style, posterStyle, children } = this.props;
     const { presentationMode, screenSize: fullscreenSize, posterActive, poster } = this.state;
 
