@@ -67,7 +67,7 @@
     "prettier": "^3.5.3",
     "react": "^19.0.0",
     "react-native": "^0.79.0",
-    "react-native-builder-bob": "^0.29.1",
+    "react-native-builder-bob": "^0.39.1",
     "theoplayer": "^9.0.0",
     "typedoc": "^0.25.13",
     "typedoc-plugin-external-resolver": "^1.0.3",
