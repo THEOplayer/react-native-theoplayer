@@ -7,7 +7,7 @@ public class THEOplayerRCTMainEventHandler {
     // MARK: Members
     private weak var player: THEOplayer?
     private weak var presentationModeContext: THEOplayerRCTPresentationModeContext?
-    private var loadedMetadataTracksInfo: [[String:Any]] = []
+    private var loadedMetadataAndChapterTracksInfo: [[String:Any]] = []
         
     // MARK: Events
     var onNativePlay: RCTDirectEventBlock?
@@ -71,8 +71,8 @@ public class THEOplayerRCTMainEventHandler {
         self.attachListeners()
     }
     
-    func setLoadedMetadataTracksInfo(_ metadataTracksInfo: [[String:Any]]) {
-        self.loadedMetadataTracksInfo = metadataTracksInfo
+    func setLoadedMetadataAndChapterTracksInfo(_ tracksInfo: [[String:Any]]) {
+        self.loadedMetadataAndChapterTracksInfo = tracksInfo
     }
     
     // MARK: - attach/dettach main player Listeners
@@ -276,7 +276,7 @@ public class THEOplayerRCTMainEventHandler {
             if let wplayer = player,
                let welf = self,
                let forwardedLoadedMetadataEvent = self?.onNativeLoadedMetadata {
-                let metadata = THEOplayerRCTTrackMetadataAggregator.aggregateTrackMetadata(player: wplayer, metadataTracksInfo: welf.loadedMetadataTracksInfo)
+              let metadata = THEOplayerRCTTrackMetadataAggregator.aggregateTrackMetadata(player: wplayer, metadataTracksInfo: welf.loadedMetadataAndChapterTracksInfo)
                 print(metadata)
                 forwardedLoadedMetadataEvent(metadata)
             }

@@ -51,6 +51,7 @@ let SD_PROP_METADATA_SUBTITLE: String = "subtitle"
 let SD_PROP_PTS: String = "subtitlePTS"
 let SD_PROP_LOCALTIME: String = "subtitleLocaltime"
 let SD_PROP_NETWORK_CODE: String = "networkCode"
+let SD_PROP_SSE_ENDPOINT: String = "sseEndpoint"
 let SD_PROP_CUSTOM_ASSET_KEY: String = "customAssetKey"
 let SD_PROP_BACKDROP_DOUBLE_BOX: String = "backdropDoubleBox"
 let SD_PROP_BACKDROP_L_SHAPE: String = "backdropLShape"
@@ -129,14 +130,14 @@ class THEOplayerRCTSourceDescriptionBuilder {
 
         // 3. extract 'textTracks'
         var textTrackDescriptions: [TextTrackDescription]?
-        var metadataTrackDescriptions: [TextTrackDescription]?
+        var metadataAndChapterTrackDescriptions: [TextTrackDescription]?
         if let textTracksDataArray = sourceData[SD_PROP_TEXTTRACKS] as? [[String:Any]] {
             textTrackDescriptions = []
-            metadataTrackDescriptions = []
+          metadataAndChapterTrackDescriptions = []
             for textTracksData in textTracksDataArray {
                 if let textTrackDescription = THEOplayerRCTSourceDescriptionBuilder.buildTextTrackDescriptions(textTracksData) {
-                    if textTrackDescription.kind == .metadata {
-                        metadataTrackDescriptions?.append(textTrackDescription)
+                  if textTrackDescription.kind == .chapters || textTrackDescription.kind == .metadata {
+                      metadataAndChapterTrackDescriptions?.append(textTrackDescription)
                     } else {
                         textTrackDescriptions?.append(textTrackDescription)
                     }
@@ -173,7 +174,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
                                  poster: poster,
                                  metadata: metadataDescription)
         
-        return (sourceDescription, metadataTrackDescriptions)
+        return (sourceDescription, metadataAndChapterTrackDescriptions)
     }
 
     // MARK: Private build methods

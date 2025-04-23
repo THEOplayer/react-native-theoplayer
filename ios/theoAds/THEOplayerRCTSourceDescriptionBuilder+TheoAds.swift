@@ -19,6 +19,7 @@ extension THEOplayerRCTSourceDescriptionBuilder {
         //...
         let networkCode = adsData[SD_PROP_NETWORK_CODE] as? String
         let customAssetKey = adsData[SD_PROP_CUSTOM_ASSET_KEY] as? String
+        let sseEndpoint = adsData[SD_PROP_SSE_ENDPOINT] as? String
         var backdropDoubleBox: URL?
         if let backdropDoubleBoxString = adsData[SD_PROP_BACKDROP_DOUBLE_BOX] as? String {
             backdropDoubleBox = URL(string: backdropDoubleBoxString)
@@ -55,6 +56,7 @@ extension THEOplayerRCTSourceDescriptionBuilder {
                                  overrideAdSrc: overrideAdSrc,
                                  adTagParameters: adTagParameters,
                                  useId3: useId3,
+                                 sseEndpoint: sseEndpoint,
                                  retrievePodIdURI: retrievePodIdURI)
 #else
         return nil

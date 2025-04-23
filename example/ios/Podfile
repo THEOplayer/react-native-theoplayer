@@ -19,46 +19,32 @@ end
 install! 'cocoapods', :deterministic_uuids => false
 
 target 'ReactNativeTHEOplayer' do
-
-  platform :ios, '15.1'
-
+  platform :ios, min_ios_version_supported
   use_react_native!(
     :path => config[:reactNativePath],
+    :hermes_enabled => false,
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
-
   pod 'react-native-theoplayer', :path => '../..'
   pod 'react-native-google-cast', :git => 'https://github.com/Danesz/react-native-google-cast.git', branch: 'feature/guestmode_apple_silicon'
-
-  target 'ReactNativeTHEOplayerTests' do
-    inherit! :complete
-    # Pods for testing
-  end
-
 end
 
 target 'ReactNativeTHEOplayer-tvOS' do
-
-  platform :tvos, '15.1'
-
+  platform :tvos, min_ios_version_supported
   use_react_native!(
     :path => config[:reactNativePath],
+    :hermes_enabled => false,
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
-
   pod 'react-native-theoplayer', :path => '../..'
-
-  target 'ReactNativeTHEOplayer-tvOSTests' do
-    inherit! :complete
-    # Pods for testing
-  end
-
 end
 
 post_install do |installer|
+  # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202
   react_native_post_install(
-        installer,
-        config[:reactNativePath],
-        :mac_catalyst_enabled => false
-      )
+    installer,
+    config[:reactNativePath],
+    :mac_catalyst_enabled => false,
+    # :ccache_enabled => true
+  )
 end

@@ -43,6 +43,7 @@ def enabledMediaSession = safeExtGet("THEOplayer_extensionMediaSession", 'true')
 
 android {
   compileSdk safeExtGet('THEOplayer_compileSdkVersion', 34)
+  namespace "com.theoplayer"
 
   defaultConfig {
     minSdkVersion safeExtGet('THEOplayer_minSdkVersion', 21)

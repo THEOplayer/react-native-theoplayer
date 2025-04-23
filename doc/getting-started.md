@@ -153,7 +153,7 @@ This section gives an overview of features, limitations and known issues:
 
 - [Adaptive Bitrate (ABR)](abr.md)
 - [Advertisements](ads.md)
-- [Android Media3 Pipeline🔥](./doc/media3.md)
+- [Android Media3 Pipeline🔥](media3.md)
 - [Audio Control Management](audio-control.md)
 - [Background playback and notifications](background.md)
 - [Casting with Chromecast and Airplay](cast.md)
