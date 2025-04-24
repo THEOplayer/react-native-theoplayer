@@ -20,7 +20,6 @@ import com.theoplayer.android.api.ads.dai.GoogleDaiIntegrationFactory
 import com.theoplayer.android.api.ads.ima.GoogleImaConfiguration
 import com.theoplayer.android.api.ads.ima.GoogleImaIntegration
 import com.theoplayer.android.api.ads.ima.GoogleImaIntegrationFactory
-import com.theoplayer.android.api.ads.theoads.TheoAdDescription
 import com.theoplayer.android.api.ads.theoads.TheoAdsIntegration
 import com.theoplayer.android.api.ads.theoads.TheoAdsIntegrationFactory
 import com.theoplayer.android.api.cast.CastIntegration
