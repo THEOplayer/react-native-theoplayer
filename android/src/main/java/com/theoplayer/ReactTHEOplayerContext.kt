@@ -354,7 +354,7 @@ class ReactTHEOplayerContext private constructor(
     binder?.updateNotification(PlaybackStateCompat.STATE_PLAYING)
     applyAllowedMediaControls()
     audioBecomingNoisyManager.setEnabled(true)
-    audioFocusManager?.retrieveAudioFocus()
+    audioFocusManager?.requestAudioFocus()
   }
 
   private val onPause = EventListener<PauseEvent> {
@@ -416,7 +416,7 @@ class ReactTHEOplayerContext private constructor(
     mediaSessionConnector?.setActive(BuildConfig.EXTENSION_MEDIASESSION)
     playerView.onResume()
     if (!player.isPaused) {
-      audioFocusManager?.retrieveAudioFocus()
+      audioFocusManager?.requestAudioFocus()
     }
   }
 

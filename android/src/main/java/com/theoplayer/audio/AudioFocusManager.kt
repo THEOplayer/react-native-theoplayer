@@ -153,7 +153,7 @@ class AudioFocusManager(
    *
    * @return True if audio focus is granted, false otherwise.
    */
-  fun retrieveAudioFocus(): Boolean {
+  fun requestAudioFocus(): Boolean {
     val result = audioManager?.let {
       AudioManagerCompat.requestAudioFocus(it, audioFocusRequest)
     }
