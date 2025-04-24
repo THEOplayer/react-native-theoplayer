@@ -120,6 +120,10 @@ class AudioFocusManager(
     if (player?.ads?.isPlaying == true) {
       return
     }
+    // Don't pause when the player is muted
+    if (player?.isMuted == true) {
+      return
+    }
     synchronized(focusLock) {
       // We should only resume if playback was interrupted
       resumeOnFocusGain = transient && !(player?.isPaused ?: true)
@@ -153,7 +157,11 @@ class AudioFocusManager(
    *
    * @return True if audio focus is granted, false otherwise.
    */
-  fun retrieveAudioFocus(): Boolean {
+  fun requestAudioFocus(): Boolean {
+    if (player?.isMuted == true) {
+      // There is no point requesting audio focus when the player is muted.
+      return true
+    }
     val result = audioManager?.let {
       AudioManagerCompat.requestAudioFocus(it, audioFocusRequest)
     }

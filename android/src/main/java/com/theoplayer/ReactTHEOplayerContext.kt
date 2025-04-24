@@ -20,7 +20,6 @@ import com.theoplayer.android.api.ads.dai.GoogleDaiIntegrationFactory
 import com.theoplayer.android.api.ads.ima.GoogleImaConfiguration
 import com.theoplayer.android.api.ads.ima.GoogleImaIntegration
 import com.theoplayer.android.api.ads.ima.GoogleImaIntegrationFactory
-import com.theoplayer.android.api.ads.theoads.TheoAdDescription
 import com.theoplayer.android.api.ads.theoads.TheoAdsIntegration
 import com.theoplayer.android.api.ads.theoads.TheoAdsIntegrationFactory
 import com.theoplayer.android.api.cast.CastIntegration
@@ -354,7 +353,7 @@ class ReactTHEOplayerContext private constructor(
     binder?.updateNotification(PlaybackStateCompat.STATE_PLAYING)
     applyAllowedMediaControls()
     audioBecomingNoisyManager.setEnabled(true)
-    audioFocusManager?.retrieveAudioFocus()
+    audioFocusManager?.requestAudioFocus()
   }
 
   private val onPause = EventListener<PauseEvent> {
@@ -368,6 +367,14 @@ class ReactTHEOplayerContext private constructor(
     audioFocusManager?.abandonAudioFocus()
   }
 
+  private val onVolumeChange = EventListener<VolumeChangeEvent> {
+    if (player.isMuted) {
+      audioFocusManager?.abandonAudioFocus()
+    } else {
+      audioFocusManager?.requestAudioFocus()
+    }
+  }
+
   private fun addListeners() {
     player.apply {
       addEventListener(PlayerEventTypes.SOURCECHANGE, onSourceChange)
@@ -375,6 +382,7 @@ class ReactTHEOplayerContext private constructor(
       addEventListener(PlayerEventTypes.PAUSE, onPause)
       addEventListener(PlayerEventTypes.PLAY, onPlay)
       addEventListener(PlayerEventTypes.ENDED, onEnded)
+      addEventListener(PlayerEventTypes.VOLUMECHANGE, onVolumeChange)
     }
   }
 
@@ -385,6 +393,7 @@ class ReactTHEOplayerContext private constructor(
       removeEventListener(PlayerEventTypes.PAUSE, onPause)
       removeEventListener(PlayerEventTypes.PLAY, onPlay)
       removeEventListener(PlayerEventTypes.ENDED, onEnded)
+      removeEventListener(PlayerEventTypes.VOLUMECHANGE, onVolumeChange)
     }
   }
 
@@ -416,7 +425,7 @@ class ReactTHEOplayerContext private constructor(
     mediaSessionConnector?.setActive(BuildConfig.EXTENSION_MEDIASESSION)
     playerView.onResume()
     if (!player.isPaused) {
-      audioFocusManager?.retrieveAudioFocus()
+      audioFocusManager?.requestAudioFocus()
     }
   }
 

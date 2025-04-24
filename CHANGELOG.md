@@ -5,12 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [9.1.1] - 25-04-24
+
+### Fixed
+
+- Fixed an issue on Android where a muted player would still be paused by the `AudioFocusManager`.
+
 ## [9.1.0] - 25-04-23
 
 ### Added
 
 - Added iOS support for `sseEndpoint` property to `TheoAdDescription`.
-- Added iOS support for sideloaded chapter TextTracks.
+- Added iOS support for side-loaded chapter TextTracks.
 
 ### Changed
 
