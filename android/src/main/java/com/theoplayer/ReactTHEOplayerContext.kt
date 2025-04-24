@@ -368,6 +368,14 @@ class ReactTHEOplayerContext private constructor(
     audioFocusManager?.abandonAudioFocus()
   }
 
+  private val onVolumeChange = EventListener<VolumeChangeEvent> {
+    if (player.isMuted) {
+      audioFocusManager?.abandonAudioFocus()
+    } else {
+      audioFocusManager?.requestAudioFocus()
+    }
+  }
+
   private fun addListeners() {
     player.apply {
       addEventListener(PlayerEventTypes.SOURCECHANGE, onSourceChange)
@@ -375,6 +383,7 @@ class ReactTHEOplayerContext private constructor(
       addEventListener(PlayerEventTypes.PAUSE, onPause)
       addEventListener(PlayerEventTypes.PLAY, onPlay)
       addEventListener(PlayerEventTypes.ENDED, onEnded)
+      addEventListener(PlayerEventTypes.VOLUMECHANGE, onVolumeChange)
     }
   }
 
@@ -385,6 +394,7 @@ class ReactTHEOplayerContext private constructor(
       removeEventListener(PlayerEventTypes.PAUSE, onPause)
       removeEventListener(PlayerEventTypes.PLAY, onPlay)
       removeEventListener(PlayerEventTypes.ENDED, onEnded)
+      removeEventListener(PlayerEventTypes.VOLUMECHANGE, onVolumeChange)
     }
   }
 
