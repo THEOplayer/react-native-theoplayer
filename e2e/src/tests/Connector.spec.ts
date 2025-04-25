@@ -13,7 +13,6 @@ import {
   ComscoreMetadata,
   ComscoreUserConsent,
 } from '@theoplayer/react-native-analytics-comscore';
-import { Platform } from 'react-native';
 
 type PlayerFn = (player: THEOplayer) => Promise<void> | void;
 const NoOpPlayerFn: PlayerFn = (_player: THEOplayer) => {};

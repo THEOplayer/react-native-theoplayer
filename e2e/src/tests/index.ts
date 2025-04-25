@@ -6,6 +6,6 @@ import Version from './Version.spec';
 import { Platform } from 'react-native';
 
 export default Platform.select({
-  ios: [Version, Basic, /*Ads,*/ /*Connector,*/ PresentationMode],
+  ios: [Version, Basic, Ads, /*Connector,*/ PresentationMode],
   default: [Version, Basic, Ads, /*Connector,*/ PresentationMode],
 });
