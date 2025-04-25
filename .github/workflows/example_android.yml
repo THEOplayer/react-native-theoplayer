@@ -51,9 +51,9 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
 
       - name: Build example app
-        working-directory: example
+        working-directory: example/android
         run: |
-          npx react-native build-android --mode release
+          ./gradlew assembleRelease
 
       - name: Upload apk
         uses: actions/upload-artifact@v4
