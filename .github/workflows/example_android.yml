@@ -1,0 +1,65 @@
+name: Build example app for Android
+on:
+  workflow_dispatch:
+    inputs:
+      THEOplayerVersion:
+        description: "THEOplayer native SDK version"
+        required: true
+        default: "+"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        api-level: [ 34 ]
+    name: Build for API Level ${{ matrix.api-level }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: adopt
+          cache: gradle
+
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Run npm install
+        run: |
+          corepack enable
+          npm ci
+          cd example
+          npm ci
+          echo "THEOplayer_sdk=${{ github.event.inputs.THEOplayerVersion }}" >> ./android/gradle.properties
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Build example app
+        working-directory: example
+        run: |
+          npm run android-release
+
+      - name: Upload apk
+        uses: actions/upload-artifact@v4
+        with:
+          name: Android APK
+          working-directory: example
+          path: |
+            ./android/app/build/outputs/apk/release/*.apk
