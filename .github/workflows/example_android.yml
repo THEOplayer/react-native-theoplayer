@@ -1,4 +1,4 @@
-name: Build example app for Android
+name: Build Android example app
 on:
   workflow_dispatch:
     inputs:
@@ -6,6 +6,10 @@ on:
         description: "THEOplayer native SDK version"
         required: true
         default: "+"
+      THEOadsEnabled:
+        description: "Enable THEOads"
+        required: true
+        default: "true"
 
 jobs:
   build:
@@ -26,7 +30,7 @@ jobs:
           cache: gradle
 
       - name: Validate Gradle wrapper
-        uses: gradle/actions/wrapper-validation@v3
+        uses: gradle/actions/wrapper-validation@v4
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -41,12 +45,7 @@ jobs:
           cd example
           npm ci
           echo "THEOplayer_sdk=${{ github.event.inputs.THEOplayerVersion }}" >> ./android/gradle.properties
-
-      - name: Enable KVM
-        run: |
-          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-          sudo udevadm control --reload-rules
-          sudo udevadm trigger --name-match=kvm
+          sed -i "s/^THEOplayer_extensionTHEOads =.*$/THEOplayer_extensionTHEOads =${{ github.event.inputs.THEOadsEnabled }}/" ./android/gradle.properties
 
       - name: Gradle cache
         uses: gradle/actions/setup-gradle@v3
@@ -54,7 +53,7 @@ jobs:
       - name: Build example app
         working-directory: example
         run: |
-          npm run android-release
+          npx react-native build-android --mode release
 
       - name: Upload apk
         uses: actions/upload-artifact@v4
