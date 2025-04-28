@@ -1,6 +1,6 @@
 # React Native THEOplayer
 
-![](./doc/logo-react-native.png) ![](./doc/logo-theo.png)
+<img src="./doc/logo-optiview-dark.png#gh-dark-mode-only" height="120" alt="OptiView logo"><img src="./doc/logo-optiview-light.png#gh-light-mode-only" height="120" alt="OptiView logo"><img src="./doc/logo-react-native.png" height="120" alt="React Native logo">
 
 ## License
 
