@@ -87,3 +87,10 @@ jobs:
         working-directory: e2e
         if: always()
         run: cat cavy_results.md >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-screenshots-${{ matrix.platform }}-${{ matrix.newArchEnabled  == true && 'new' || 'old' }}
+          path: e2e/screenshots
