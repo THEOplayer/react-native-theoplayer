@@ -189,7 +189,11 @@ class THEOplayerRCTSourceDescriptionBuilder {
         if let integration = typedSourceData[SD_PROP_INTEGRATION] as? String, integration == "theolive" {
             return THEOplayerRCTSourceDescriptionBuilder.buildTHEOliveDescription(typedSourceData)
         }
-      
+
+        if let type = typedSourceData[SD_PROP_TYPE] as? String, type == "millicast" {
+            return THEOplayerRCTSourceDescriptionBuilder.buildMillicastDescription(typedSourceData)
+        }
+
         if let src = typedSourceData[SD_PROP_SRC] as? String {
         // extract the type
             let type = typedSourceData[SD_PROP_TYPE] as? String ?? THEOplayerRCTSourceDescriptionBuilder.extractMimeType(src)

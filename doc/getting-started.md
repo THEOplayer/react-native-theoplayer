@@ -162,6 +162,7 @@ This section gives an overview of features, limitations and known issues:
 - [Fullscreen presentation](fullscreen.md)
 - [Media Caching](media-caching.md)
 - [Migrating to THEOplayer 9.x🔥](migrating-to-react-native-theoplayer-9.md)
+- [Millicast](millicast.md)
 - [Picture-in-Picture (PiP)](pip.md)
 - [Subtitles, Closed Captions and Metadata tracks](texttracks.md)
 - [Limitations and known issues](limitations.md)

@@ -16,7 +16,7 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        xcode_version: [ '15.4.0' ]
+        xcode_version: [ '16.1.0' ]
         newArchEnabled: [ 0, 1 ]
         platform: [iOS, tvOS]
     name: Build for ${{ matrix.platform }} using XCode version ${{ matrix.xcode_version }} and ${{matrix.newArchEnabled  == 1 && 'New' || 'Old' }} Architecture
@@ -77,7 +77,7 @@ jobs:
         with:
           model: ${{ matrix.platform == 'iOS' && 'iPhone 15' || 'Apple TV' }}
           os: ${{ matrix.platform }}
-          os_version: '>=14.0'
+          os_version: '>=15.0'
 
       - name: Run e2e tests
         working-directory: e2e
