@@ -6,6 +6,7 @@ import com.theoplayer.android.api.player.track.texttrack.TextTrackStyle
 
 private const val PROP_BACKGROUND_COLOR = "backgroundColor"
 private const val PROP_EDGE_STYLE = "edgeStyle"
+private const val PROP_EDGE_COLOR = "edgeColor"
 private const val PROP_FONT_COLOR = "fontColor"
 private const val PROP_FONT_FAMILY = "fontFamily"
 private const val PROP_FONT_SIZE = "fontSize"
@@ -29,6 +30,9 @@ object TextTrackStyleAdapter {
     }
     if (props.hasKey(PROP_EDGE_STYLE)) {
       style.edgeType = edgeStyleFromProps(props.getString(PROP_EDGE_STYLE))
+    }
+    if (props.hasKey(PROP_EDGE_COLOR)) {
+      style.edgeColor = colorFromBridgeColor(props.getMap(PROP_EDGE_COLOR)) ?: Color.WHITE
     }
     if (props.hasKey(PROP_FONT_COLOR)) {
       style.fontColor = colorFromBridgeColor(props.getMap(PROP_FONT_COLOR)) ?: Color.WHITE
