@@ -57,7 +57,7 @@ Pod::Spec.new do |s|
   
   if theofeatures.include?("MILLICAST")
   puts "Adding THEOplayer-Integration-Millicast"
-    s.dependency "THEOplayer-Integration-Millicast", "~> 8.11"
+    s.dependency "THEOplayer-Integration-Millicast", "~> 9.0"
   end
 
   # Feature based connector dependencies
