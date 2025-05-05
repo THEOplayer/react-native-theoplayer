@@ -88,6 +88,17 @@ jobs:
         if: always()
         run: cat cavy_results.md >> $GITHUB_STEP_SUMMARY
 
+      - name: Collecting logs
+        if: failure()
+        run: xcrun simctl spawn booted log collect --output ~/crashlog.logarchive
+
+      - name: Upload crash logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: crash-logs-${{ matrix.platform }}-${{ matrix.newArchEnabled == true && 'new' || 'old' }}
+          path: ~/crashlog.logarchive
+
       - name: Upload screenshots
         if: always()
         uses: actions/upload-artifact@v4

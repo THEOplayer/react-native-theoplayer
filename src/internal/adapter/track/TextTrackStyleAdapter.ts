@@ -8,6 +8,7 @@ const NativePlayerModule = NativeModules.THEORCTPlayerModule;
 export class TextTrackStyleAdapter implements TextTrackStyle {
   private _backgroundColor: string | undefined = undefined;
   private _edgeStyle: EdgeStyle | undefined = undefined;
+  private _edgeColor: string | undefined = undefined;
   private _fontColor: string | undefined = undefined;
   private _fontFamily: string | undefined = undefined;
   private _fontSize: string | undefined = undefined;
@@ -38,6 +39,17 @@ export class TextTrackStyleAdapter implements TextTrackStyle {
     this._edgeStyle = style;
     NativePlayerModule.setTextTrackStyle(this._view.nativeHandle, {
       edgeStyle: style,
+    });
+  }
+
+  get edgeColor(): string | undefined {
+    return this._edgeColor;
+  }
+
+  set edgeColor(color: string | undefined) {
+    this._edgeColor = color;
+    NativePlayerModule.setTextTrackStyle(this._view.nativeHandle, {
+      edgeColor: convertColorToRGBA(color),
     });
   }
 

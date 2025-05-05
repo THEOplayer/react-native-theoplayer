@@ -65,6 +65,14 @@ export interface TextTrackStyle {
   edgeStyle: EdgeStyle | undefined;
 
   /**
+   * The edge color for the text track.
+   *
+   * @remarks
+   * <br/> - Available on Android only.
+   */
+  edgeColor: string | undefined;
+
+  /**
    * The top margin of the area where subtitles are being rendered.
    *
    * @remarks
