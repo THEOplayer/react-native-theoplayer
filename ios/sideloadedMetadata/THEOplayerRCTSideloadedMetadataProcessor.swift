@@ -72,7 +72,9 @@ class THEOplayerRCTSideloadedWebVTTProcessor {
                 }
             }
         }
-        
+        if let cue = currentCue {
+          cues.append(cue)                                                  // append last cue if no newline at end of vtt
+        }
         return cues
     }
     
