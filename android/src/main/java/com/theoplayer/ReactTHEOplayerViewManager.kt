@@ -1,9 +1,9 @@
 package com.theoplayer
 
-import com.facebook.react.uimanager.ViewGroupManager
-import com.facebook.react.uimanager.ThemedReactContext
-import com.facebook.react.uimanager.annotations.ReactProp
 import com.facebook.react.bridge.ReadableMap
+import com.facebook.react.uimanager.ThemedReactContext
+import com.facebook.react.uimanager.ViewGroupManager
+import com.facebook.react.uimanager.annotations.ReactProp
 
 private const val REACT_CLASS = "THEOplayerRCTView"
 
@@ -15,7 +15,9 @@ class ReactTHEOplayerViewManager : ViewGroupManager<ReactTHEOplayerView>() {
   }
 
   override fun createViewInstance(reactContext: ThemedReactContext): ReactTHEOplayerView {
-    return ReactTHEOplayerView(reactContext)
+    return ReactTHEOplayerView(reactContext).also { view ->
+      ReactTHEOplayerViewRepository.addView(view)
+    }
   }
 
   /**
@@ -23,6 +25,7 @@ class ReactTHEOplayerViewManager : ViewGroupManager<ReactTHEOplayerView>() {
    * {@link ViewManager} subclass.
    */
   override fun onDropViewInstance(view: ReactTHEOplayerView) {
+    ReactTHEOplayerViewRepository.dropView(view)
     view.releasePlayer()
   }
 
