@@ -54,7 +54,7 @@ const playerConfig: PlayerConfiguration = {
     mediaSessionEnabled: true,
     skipForwardInterval: 30,
     skipBackwardInterval: 10,
-    convertSkipToSeek: true,
+    convertSkipToSeek: false,
   },
   ads: {
     theoads: true,

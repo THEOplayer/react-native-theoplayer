@@ -57,7 +57,7 @@ class ReactTHEOplayerContext private constructor(
   private val mainHandler = Handler(Looper.getMainLooper())
   private var isBound = AtomicBoolean()
   private var binder: MediaPlaybackService.MediaPlaybackBinder? = null
-  private var mediaSessionConnector: MediaSessionConnector? = null
+  var mediaSessionConnector: MediaSessionConnector? = null
   private var audioBecomingNoisyManager = AudioBecomingNoisyManager(reactContext) {
     // Audio is about to become 'noisy' due to a change in audio outputs: pause the player
     player.pause()

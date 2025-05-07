@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ReactNativeTHEOplayer</string>
+    <string name="browser_service_description">THEOplayer media browser service</string>
 </resources>
