@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Changed the fullscreen dimensions calculation on iOS to make use of the native screen width and height, while taking into account the device orientation. 
 
+## [9.1.2] - 25-05-14
+
+### Fixed
+
+- Prevented a possible crash on iOS/tvOS by deallocating the player instance without calling an explicit 'destroy' that brings the native player API at risk. The erroneous destroy method will be deprecated on the native SDK.
+
 ## [9.1.1] - 25-04-24
 
 ### Fixed

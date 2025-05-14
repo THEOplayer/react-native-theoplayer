@@ -118,7 +118,6 @@ public class THEOplayerRCTView: UIView {
       
         self.destroyBackgroundAudio()
         self.player?.removeAllIntegrations()
-        self.player?.destroy()
         self.player = nil
         if DEBUG_THEOPLAYER_INTERACTION { PrintUtils.printLog(logText: "[NATIVE] THEOplayer instance destroyed.") }
     }
