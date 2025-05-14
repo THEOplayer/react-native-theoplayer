@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [9.1.2] - 25-05-14
+
+### Fixed
+
+- Prevented a possible crash on iOS/tvOS by deallocating the player instance without calling an explicit 'destroy' that brings the native player API at risk. The erroneous destroy method will be deprecated on the native SDK.
+
 ## [9.1.1] - 25-04-24
 
 ### Fixed
