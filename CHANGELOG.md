@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added support for Millicast on iOS, Android and Web.
 - Added support for `TextTrackStyle.edgeColor` on Android.
+- Added support for THEOads on tvOS.
 
 ### Fixed
 
