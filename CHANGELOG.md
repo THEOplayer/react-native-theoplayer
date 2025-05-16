@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added support for Millicast on iOS, Android and Web.
 - Added support for `TextTrackStyle.edgeColor` on Android.
 
+### Fixed
+
+- Fixed an issue where the last cue of a VTT was not parsed if there is no newline after it.
+
 ### Changed
 
 - Changed the fullscreen dimensions calculation on iOS to make use of the native screen width and height, while taking into account the device orientation. 
