@@ -16,10 +16,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed an issue where the last cue of a VTT was not parsed if there is no newline after it.
+- Fixed an issue on Android where a conversion build error would occur when targeting SDK version 9.4.
 
 ### Changed
 
-- Changed the fullscreen dimensions calculation on iOS to make use of the native screen width and height, while taking into account the device orientation. 
+- Changed the fullscreen dimensions calculation on iOS to make use of the native screen width and height, while taking into account the device orientation.
 
 ## [9.1.2] - 25-05-14
 

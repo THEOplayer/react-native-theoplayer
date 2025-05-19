@@ -422,7 +422,7 @@ class SourceAdapter {
         Log.w(TAG, "Failed to parse metadata key $key")
       }
     }
-    return MetadataDescription(metadata)
+    return MetadataDescription(metadata as Map<String, Any?>)
   }
 
   private fun parseDashConfig(dashConfig: JSONObject): DashPlaybackConfiguration {
