@@ -408,7 +408,7 @@ class SourceAdapter {
   }
 
   private fun parseMetadataDescription(metadataDescription: JSONObject): MetadataDescription {
-    val metadata = HashMap<String, Any>()
+    val metadata = HashMap<String, Any?>()
     val keys = metadataDescription.keys()
     while (keys.hasNext()) {
       val key = keys.next()
@@ -422,7 +422,7 @@ class SourceAdapter {
         Log.w(TAG, "Failed to parse metadata key $key")
       }
     }
-    return MetadataDescription(metadata as Map<String, Any?>)
+    return MetadataDescription(metadata as MutableMap<String, Any?>)
   }
 
   private fun parseDashConfig(dashConfig: JSONObject): DashPlaybackConfiguration {
