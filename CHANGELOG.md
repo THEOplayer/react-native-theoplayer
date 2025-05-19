@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed an issue where the last cue of a VTT was not parsed if there is no newline after it.
-- Fixed an issue on Android where a conversion build error would occur when targeting SDK version 9.3.
+- Fixed an issue on Android where a conversion build error would occur when targeting SDK version 9.4.
 
 ### Changed
 
