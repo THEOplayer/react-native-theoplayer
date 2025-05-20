@@ -89,4 +89,6 @@ e2e/cavy_results.md
 
 # Example app
 example/dist
+plugins/typedoc-platform-icons/dist
 example/ios/.xcode.env.local
+e2e/screenshots

@@ -16,7 +16,7 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        xcode_version: [ '15.4.0' ]
+        xcode_version: [ '16.1.0' ]
         newArchEnabled: [ 0, 1 ]
         platform: [iOS, tvOS]
     name: Build for ${{ matrix.platform }} using XCode version ${{ matrix.xcode_version }} and ${{matrix.newArchEnabled  == 1 && 'New' || 'Old' }} Architecture
@@ -77,7 +77,7 @@ jobs:
         with:
           model: ${{ matrix.platform == 'iOS' && 'iPhone 15' || 'Apple TV' }}
           os: ${{ matrix.platform }}
-          os_version: '>=14.0'
+          os_version: '>=15.0'
 
       - name: Run e2e tests
         working-directory: e2e
@@ -87,3 +87,21 @@ jobs:
         working-directory: e2e
         if: always()
         run: cat cavy_results.md >> $GITHUB_STEP_SUMMARY
+
+      - name: Collecting logs
+        if: failure()
+        run: xcrun simctl spawn booted log collect --output ~/crashlog.logarchive
+
+      - name: Upload crash logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: crash-logs-${{ matrix.platform }}-${{ matrix.newArchEnabled == true && 'new' || 'old' }}
+          path: ~/crashlog.logarchive
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-screenshots-${{ matrix.platform }}-${{ matrix.newArchEnabled  == true && 'new' || 'old' }}
+          path: e2e/screenshots

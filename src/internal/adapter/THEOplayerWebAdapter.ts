@@ -261,7 +261,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   }
 
   get textTrackStyle(): TextTrackStyle {
-    return this._player?.textTrackStyle as TextTrackStyle;
+    return this._player?.textTrackStyle as unknown as TextTrackStyle;
   }
 
   get selectedVideoTrack(): number | undefined {

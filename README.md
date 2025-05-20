@@ -1,6 +1,6 @@
 # React Native THEOplayer
 
-![](./doc/logo-react-native.png) ![](./doc/logo-theo.png)
+<img src="./doc/logo-optiview-dark.png#gh-dark-mode-only" height="120" alt="OptiView logo"><img src="./doc/logo-optiview-light.png#gh-light-mode-only" height="120" alt="OptiView logo"><img src="./doc/logo-react-native.png" height="120" alt="React Native logo">
 
 ## License
 
@@ -183,6 +183,7 @@ This section gives an overview of features, limitations and known issues:
 - [Fullscreen presentation](./doc/fullscreen.md)
 - [Media Caching](./doc/media-caching.md)
 - [Migrating to THEOplayer 9.x🔥](./doc/migrating-to-react-native-theoplayer-9.md)
+- [Millicast](./doc/millicast.md)
 - [Picture-in-Picture (PiP)](./doc/pip.md)
 - [Subtitles, Closed Captions and Metadata tracks](./doc/texttracks.md)
 - [Limitations and known issues](./doc/limitations.md)

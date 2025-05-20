@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [9.2.0] - 25-05-20
+
+### Added
+
+- Added support for Millicast on iOS, Android and Web.
+- Added support for `TextTrackStyle.edgeColor` on Android.
+- Added support for THEOads on tvOS.
+
+### Fixed
+
+- Fixed an issue where the last cue of a VTT was not parsed if there is no newline after it.
+- Fixed an issue on Android where a conversion build error would occur when targeting SDK version 9.4.
+
+### Changed
+
+- Changed the fullscreen dimensions calculation on iOS to make use of the native screen width and height, while taking into account the device orientation.
+
 ## [9.1.2] - 25-05-14
 
 ### Fixed

@@ -11,7 +11,6 @@
     "lint": "eslint \"**/*.{ts,tsx}\"",
     "pod-install": "cd ios && RCT_NEW_ARCH_ENABLED=1 bundle exec pod install",
     "pod-update": "cd ios && RCT_NEW_ARCH_ENABLED=1 bundle exec pod update",
-    "postinstall": "patch-package",
     "update-dependencies": "npx ncu '/@theoplayer\\/.*/' -u"
   },
   "dependencies": {
@@ -42,13 +41,12 @@
     "babel-loader": "^8.4.1",
     "babel-plugin-module-resolver": "^5.0.2",
     "babel-plugin-react-native-web": "^0.17.7",
-    "cavy": "^4.0.2",
-    "cavy-cli": "^3.0.0",
+    "cavy": "github:tvanlaerhoven/cavy#v4.1.2",
+    "cavy-cli": "github:tvanlaerhoven/cavy-cli#v3.1.7",
     "copy-webpack-plugin": "^13.0.0",
     "eslint": "^8.57.1",
     "html-webpack-plugin": "^5.6.3",
     "npm-check-updates": "^17.1.13",
-    "patch-package": "^8.0.0",
     "react-native-svg-web": "^1.0.9",
     "typescript": "5.1.6",
     "webpack": "^5.99.5",

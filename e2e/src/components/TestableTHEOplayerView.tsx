@@ -11,7 +11,7 @@ let testPlayerId: number = 0;
  * @param timeout Delay after rejecting the player.
  * @param poll Delay before trying again.
  */
-export const getTestPlayer = async (timeout = 20_000, poll = 200): Promise<THEOplayer> => {
+export const getTestPlayer = async (timeout = 20_000, poll = 1_000): Promise<THEOplayer> => {
   return new Promise((resolve, reject) => {
     const start = Date.now();
     const checkPlayer = () => {

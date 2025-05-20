@@ -79,6 +79,7 @@ private const val ERROR_MISSING_CSAI_INTEGRATION = "Missing CSAI integration"
 private const val PROP_SSAI_INTEGRATION_GOOGLE_DAI = "google-dai"
 
 private const val INTEGRATION_THEOLIVE = "theolive"
+private const val TYPE_MILLICAST = "millicast"
 private const val PLAYBACK_PIPELINE_LEGACY = "legacy"
 
 private const val PROP_CMCD = "cmcd"
@@ -107,7 +108,7 @@ class SourceAdapter {
       // CMCD
       var cmcdTransmissionMode: CMCDTransmissionMode? = null
       if (jsonSourceObject.has(PROP_CMCD)) {
-        cmcdTransmissionMode = parseCmcdTransmissionMode(jsonSourceObject.getJSONObject(PROP_CMCD));
+        cmcdTransmissionMode = parseCmcdTransmissionMode(jsonSourceObject.getJSONObject(PROP_CMCD))
       }
 
       // typed sources
@@ -184,8 +185,9 @@ class SourceAdapter {
   @Throws(THEOplayerException::class)
   private fun parseTypedSource(jsonTypedSource: JSONObject, cmcdTransmissionMode: CMCDTransmissionMode? = null): TypedSource {
     // Some integrations do not support the Builder pattern
-    return when (jsonTypedSource.optString(PROP_INTEGRATION)) {
-      INTEGRATION_THEOLIVE -> parseTheoLiveSource(jsonTypedSource)
+    return when {
+      (jsonTypedSource.optString(PROP_INTEGRATION)) == INTEGRATION_THEOLIVE -> parseTheoLiveSource(jsonTypedSource)
+      (jsonTypedSource.optString(PROP_TYPE)) == TYPE_MILLICAST -> parseMillicastSource(jsonTypedSource)
       else -> parseTypedSourceFromBuilder(jsonTypedSource, cmcdTransmissionMode)
     }
   }
@@ -406,7 +408,7 @@ class SourceAdapter {
   }
 
   private fun parseMetadataDescription(metadataDescription: JSONObject): MetadataDescription {
-    val metadata = HashMap<String, Any>()
+    val metadata = HashMap<String, Any?>()
     val keys = metadataDescription.keys()
     while (keys.hasNext()) {
       val key = keys.next()
@@ -420,7 +422,7 @@ class SourceAdapter {
         Log.w(TAG, "Failed to parse metadata key $key")
       }
     }
-    return MetadataDescription(metadata)
+    return MetadataDescription(metadata as MutableMap<String, Any?>)
   }
 
   private fun parseDashConfig(dashConfig: JSONObject): DashPlaybackConfiguration {

@@ -1,0 +1,63 @@
+name: Build Android example app
+on:
+  workflow_dispatch:
+    inputs:
+      THEOplayerVersion:
+        description: "THEOplayer native SDK version"
+        required: true
+        default: "+"
+      THEOadsEnabled:
+        description: "Enable THEOads"
+        required: true
+        default: "true"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        api-level: [ 34 ]
+    name: Build for API Level ${{ matrix.api-level }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: adopt
+          cache: gradle
+
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Run npm install
+        run: |
+          corepack enable
+          npm ci
+          cd example
+          npm ci
+          echo "THEOplayer_sdk=${{ github.event.inputs.THEOplayerVersion }}" >> ./android/gradle.properties
+          sed -i "s/^THEOplayer_extensionTHEOads =.*$/THEOplayer_extensionTHEOads =${{ github.event.inputs.THEOadsEnabled }}/" ./android/gradle.properties
+
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Build example app
+        working-directory: example/android
+        run: |
+          ./gradlew assembleRelease
+
+      - name: Upload apk
+        uses: actions/upload-artifact@v4
+        with:
+          name: Android APK
+          path: |
+            example/android/app/build/outputs/apk/release/app-release.apk
