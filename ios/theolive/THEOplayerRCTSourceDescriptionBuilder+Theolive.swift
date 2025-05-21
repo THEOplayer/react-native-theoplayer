@@ -5,7 +5,7 @@ import THEOplayerSDK
 import UIKit
 
 #if canImport(THEOplayerTHEOliveIntegration)
-import THEOplayerTHEOliveIntegration
+@_spi(Experimental) import THEOplayerTHEOliveIntegration
 #endif
 
 extension THEOplayerRCTSourceDescriptionBuilder {
@@ -18,7 +18,12 @@ extension THEOplayerRCTSourceDescriptionBuilder {
 #if canImport(THEOplayerTHEOliveIntegration)
       if let src = theoliveData[SD_PROP_SRC] as? String {
           //let headers = typedSourceData[SD_PROP_HEADERS] as? [String:String]
-          return TheoLiveSource(channelId: src)
+          if let type = theoliveData[SD_PROP_TYPE] as? String,
+             type == "application/vnd.theo.hesp+json" {
+              return HespSource(src: src)
+          } else {
+              return TheoLiveSource(channelId: src)
+          }
       }
 #endif
         return nil
