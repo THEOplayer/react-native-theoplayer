@@ -134,11 +134,11 @@ React Native component updates and could affect performance in negative way.
 
 ## Getting started on iOS and tvOS
 
-To define which extra THEOplayer integrations need to be loaded for additional features (currently: IMA ads and/or chromecast) a config file needs to be added to you application folder:
+To define which extra THEOplayer integrations need to be loaded for additional features, a config file needs to be added to you application folder:
 
 Create a json file **[YourApplicationFolder]/react-native-theoplayer.json**, or **[YourApplicationFolder]/theoplayer-config.json**, on the same level as the node_modules folder (both alternatives offer the same functionality).
 
-Edit the file to reflect the features required for your application. The following example adds Google IMA, Chromecast and Sideloaded textTracks to the setup. If one of these is out of your applications scope, you can leave it out to reduce the app's size. When using only basic functionality, leave the features array empty.
+Edit the file to reflect the features required for your application. The following example adds Google IMA and DAI, Chromecast, THEOads, Millicast and Sideloaded textTracks to the setup. If one of these is out of your applications scope, you can leave it out to reduce the app's size. When using only basic functionality, leave the features array empty.
 
 Example:
 ```
@@ -148,17 +148,19 @@ Example:
 			"GOOGLE_IMA",
 			"CHROMECAST",
 			"THEO_ADS",
+			"MILLICAST"
 			"SIDELOADED_TEXTTRACKS"
 		]
 	}
 }
 ```
-- **GOOGLE_IMA**: adds an additional dependency to the THEOplayer-Integration-GoogleIMA cocoapod that delivers the IMA functionality
+- **GOOGLE_IMA**: adds an additional dependency to the THEOplayer-Integration-GoogleIMA cocoapod that delivers the IMA and DAI functionality
 - **CHROMECAST**: adds an additional dependency to the THEOplayer-Integration-GoogleCast cocoapod that delivers the chromecast functionality
 - **THEO_ADS**: adds an additional dependency to the THEOplayer-Integration-TheoAds cocoapod that delivers Server Guided Ad Insertion (SGAI) functionality
+- **MILLICAST**: adds an additional dependency to the THEOplayer-Integration-Millicast cocoapod that Millicast functionality
 - **SIDELOADED_TEXTTRACKS**: adds an additional dependency to the THEOplayer-Connector-SideloadedSubtitle cocoapod that delivers the sideloaded texttracks functionality
 
-Once the project has been setup correctly, set the source to a valid HLS stream, eg.
+Once the project has been setup correctly, define a valid HLS, Millicast or THEOlive source, eg.
 ```typescript
 const source = {
   sources: [
