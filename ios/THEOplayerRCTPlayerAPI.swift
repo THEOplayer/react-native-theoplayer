@@ -389,11 +389,23 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
         let boundsSize: CGSize = UIScreen.main.bounds.size;
         let smallest = boundsSize.width < boundsSize.height ? boundsSize.width : boundsSize.height
         let biggest = boundsSize.width < boundsSize.height ? boundsSize.height : boundsSize.width
+        var orientation = UIInterfaceOrientation.unknown
+        DispatchQueue.main.sync {
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene { // can only be accessed from main thread.
+                orientation = windowScene.interfaceOrientation
+                if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Current orientation: \(orientation.rawValue <= 2 ? "portrait" : "landscape")")}
+            }
+        }
+            
 #if os(iOS)
-        if UIDevice.current.orientation.isPortrait {
+        // iOS, portait
+        if orientation.rawValue <= 2 {
+            if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] portrait dimensions: \(smallest) - \(biggest)")}
             return ["width": smallest, "height": biggest] // ios portrait
         }
 #endif
+        // tvOS and iOS landscape
+        if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] landscape dimensions: \(biggest) - \(smallest)")}
         return ["width": biggest, "height": smallest] // ios landscape or tvos
     }
 }
