@@ -32,7 +32,7 @@ class MediaLibrary() {
     ).apply {
       metadata(
         MetadataDescription(
-          mapOf(
+          mutableMapOf(
             "title" to "The Venture Bros",
             "subtitle" to "Adult Swim",
             "album" to "React-Native THEOplayer demos",
@@ -53,7 +53,7 @@ class MediaLibrary() {
     ).apply {
       metadata(
         MetadataDescription(
-          mapOf(
+          mutableMapOf(
             "title" to "Sintel",
             "subtitle" to "HLS - Sideloaded Chapters",
             "album" to "React-Native THEOplayer demos",
@@ -74,7 +74,7 @@ class MediaLibrary() {
     ).apply {
       metadata(
         MetadataDescription(
-          mapOf(
+          mutableMapOf(
             "title" to "Big Buck Bunny",
             "subtitle" to "DASH - Thumbnails in manifest",
             "album" to "React-Native THEOplayer demos",
