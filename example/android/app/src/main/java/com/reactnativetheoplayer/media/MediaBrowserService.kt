@@ -6,7 +6,7 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.media.MediaBrowserServiceCompat
 import com.theoplayer.ReactTHEOplayerViewRepository
-import com.theoplayer.android.api.source.SourceDescription
+import com.theoplayer.android.api.event.player.PlayerEventTypes
 
 private const val BROWSABLE_ROOT = "/"
 private const val EMPTY_ROOT = "@empty@"
@@ -43,6 +43,12 @@ class MediaBrowserService: MediaBrowserServiceCompat() {
         // Install a playbackPreparer to get media items from the MediaLibrary
         connector.playbackPreparer = MediaPlaybackPreparer(mediaLibrary, connector)
 
+        // Auto-play next item when an asset ends.
+        view.playerContext?.player?.let { player ->
+          player.addEventListener(PlayerEventTypes.ENDED) {
+            connector.queueNavigator?.onSkipToNext(player)
+          }
+        }
       }
     }
   }
