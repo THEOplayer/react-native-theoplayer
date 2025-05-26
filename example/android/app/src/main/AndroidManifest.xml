@@ -57,7 +57,7 @@
 
     <!-- MediaBrowser service -->
     <service
-      android:name=".MediaBrowserService"
+      android:name=".media.MediaBrowserService"
       android:exported="true">
       <intent-filter>
         <action android:name="android.media.browse.MediaBrowserService" />

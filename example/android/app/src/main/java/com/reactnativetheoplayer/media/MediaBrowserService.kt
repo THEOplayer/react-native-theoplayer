@@ -1,16 +1,12 @@
-package com.reactnativetheoplayer
+package com.reactnativetheoplayer.media
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.media.MediaBrowserServiceCompat
 import com.theoplayer.ReactTHEOplayerViewRepository
-import com.theoplayer.android.api.player.Player
 import com.theoplayer.android.api.source.SourceDescription
-import com.theoplayer.android.connector.mediasession.PlaybackPreparer
-import com.theoplayer.android.connector.mediasession.QueueNavigator
 
 private const val BROWSABLE_ROOT = "/"
 private const val EMPTY_ROOT = "@empty@"
@@ -30,8 +26,6 @@ private const val ALLOWED_PLAYBACK_ACTIONS =
 class MediaBrowserService: MediaBrowserServiceCompat() {
   val mediaLibrary: MediaLibrary = MediaLibrary()
 
-  var currentSource: SourceDescription? = null
-
   override fun onCreate() {
     super.onCreate()
 
@@ -44,59 +38,11 @@ class MediaBrowserService: MediaBrowserServiceCompat() {
         sessionToken = connector.mediaSession.sessionToken
 
         // Install a queueNavigator to able next/previous items from the MediaLibrary
-        connector.queueNavigator = object : QueueNavigator {
-          override fun getActiveQueueItemId(player: Player): Long {
-            return mediaLibrary.itemIdFromSource(currentSource)
-          }
-
-          override fun getSupportedQueueNavigatorActions(player: Player): Long {
-            return QueueNavigator.AVAILABLE_ACTIONS
-          }
-
-          override fun onSkipToNext(player: Player) {
-            currentSource = mediaLibrary.nextSource(currentSource)
-            player.source = currentSource
-          }
-
-          override fun onSkipToPrevious(player: Player) {
-            currentSource = mediaLibrary.prevSource(currentSource)
-            player.source = currentSource
-          }
-
-          override fun onSkipToQueueItem(player: Player, id: Long) {
-            // TODO
-          }
-        }
+        connector.queueNavigator = MediaQueueNavigator(mediaLibrary)
 
         // Install a playbackPreparer to get media items from the MediaLibrary
-        connector.playbackPreparer = object : PlaybackPreparer {
+        connector.playbackPreparer = MediaPlaybackPreparer(mediaLibrary, connector)
 
-          override fun getSupportedPrepareActions(): Long {
-            return PlaybackPreparer.AVAILABLE_ACTIONS
-          }
-
-          override fun onPrepare(autoPlay: Boolean) {
-            if (autoPlay) {
-              connector.player?.play()
-            }
-          }
-
-          override fun onPrepareFromMediaId(mediaId: String?, autoPlay: Boolean, extras: Bundle?) {
-            connector.player?.let { player ->
-              currentSource = mediaLibrary.sourceFromMediaId(mediaId)
-              player.source = currentSource
-              if (autoPlay) {
-                player.play()
-              }
-            }
-          }
-
-          override fun onPrepareFromSearch(query: String?, autoPlay: Boolean, extras: Bundle?) {
-          }
-
-          override fun onPrepareFromUri(uri: Uri?, autoPlay: Boolean, extras: Bundle?) {
-          }
-        }
       }
     }
   }

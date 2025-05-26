@@ -1,40 +1,45 @@
-package com.reactnativetheoplayer
+package com.reactnativetheoplayer.media
 
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
+import androidx.core.net.toUri
 import com.theoplayer.android.api.source.SourceDescription
+import com.theoplayer.android.api.source.SourceType
 import com.theoplayer.android.api.source.TypedSource
 import com.theoplayer.android.api.source.metadata.MetadataDescription
-import androidx.core.net.toUri
-import com.theoplayer.android.api.source.SourceType
+import kotlin.collections.get
 
 class MediaLibrary() {
+  private var source: SourceDescription? = null
   private val sourceMap: MutableMap<String, SourceDescription> = mutableMapOf()
   private val sources: MutableList<SourceDescription> = mutableListOf()
 
   val mediaItems: List<MediaBrowserCompat.MediaItem>
     get() = sourceMap.map { item ->
       MediaBrowserCompat.MediaItem(
-        MediaDescriptionCompat.Builder()
-          .setMediaId(item.key)
+        MediaDescriptionCompat.Builder().setMediaId(item.key)
           .setTitle(item.value.metadata?.get("title"))
-          .setSubtitle(item.value.metadata?.get("subtitle"))
-          .setIconUri(item.value.poster?.toUri())
-          .build(),
-        MediaBrowserCompat.MediaItem.FLAG_PLAYABLE
+          .setSubtitle(item.value.metadata?.get("subtitle")).setIconUri(item.value.poster?.toUri())
+          .build(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE
       )
     }
 
-  private fun addSource(key: String, source: SourceDescription) {
-    sourceMap[key] = source
-    sources.add(source)
+  val currentSource: SourceDescription?
+    get() = source
+
+  private fun addSource(key: String, src: SourceDescription) {
+    sourceMap[key] = src
+    sources.add(src)
+    if (source == null) {
+      source = src
+    }
   }
 
   init {
-    addSource("asset1", SourceDescription.Builder(
+    addSource(
+      "asset1", SourceDescription.Builder(
         TypedSource.Builder("https://cdn.theoplayer.com/video/adultswim/clip.m3u8")
-          .type(SourceType.HLSX)
-          .build()
+          .type(SourceType.HLSX).build()
       ).apply {
         metadata(
           MetadataDescription(
@@ -53,10 +58,10 @@ class MediaLibrary() {
       }.build()
     )
 
-    addSource("asset2", SourceDescription.Builder(
+    addSource(
+      "asset2", SourceDescription.Builder(
         TypedSource.Builder("https://cdn.theoplayer.com/video/sintel/nosubs.m3u8")
-          .type(SourceType.HLSX)
-          .build()
+          .type(SourceType.HLSX).build()
       ).apply {
         metadata(
           MetadataDescription(
@@ -75,10 +80,10 @@ class MediaLibrary() {
       }.build()
     )
 
-    addSource("asset3", SourceDescription.Builder(
+    addSource(
+      "asset3", SourceDescription.Builder(
         TypedSource.Builder("https://cdn.theoplayer.com/video/dash/bbb_30fps/bbb_with_multiple_tiled_thumbnails.mpd")
-          .type(SourceType.DASH)
-          .build()
+          .type(SourceType.DASH).build()
       ).apply {
         metadata(
           MetadataDescription(
@@ -98,23 +103,36 @@ class MediaLibrary() {
     )
   }
 
-  fun sourceFromMediaId(mediaId: String?): SourceDescription? {
-    return sourceMap[mediaId]
-  }
-
-  fun itemIdFromSource(sourceDescription: SourceDescription?): Long {
+  private fun itemIdFromSource(sourceDescription: SourceDescription?): Long {
     return sources.indexOf(sourceDescription).toLong()
   }
 
-  fun nextSource(sourceDescription: SourceDescription?): SourceDescription? {
-    return itemIdFromSource(sourceDescription).let { itemId ->
-      if (itemId == -1L) null else sources[(itemId.toInt() + 1).mod(sources.size)]
-    }
+  fun setSourceFromMediaId(mediaId: String?): SourceDescription? {
+    source = sourceMap[mediaId]
+    return source
   }
 
-  fun prevSource(sourceDescription: SourceDescription?): SourceDescription? {
-    return itemIdFromSource(sourceDescription).let { itemId ->
+  fun setSourceFromItemId(itemId: Long): SourceDescription? {
+    val index = itemId.toInt()
+    source = if (index in sources.indices) sources[index] else null
+    return source
+  }
+
+  fun currentItemId(): Long {
+    return sources.indexOf(source).toLong()
+  }
+
+  fun nextSource(): SourceDescription? {
+    source = itemIdFromSource(source).let { itemId ->
+      if (itemId == -1L) null else sources[(itemId.toInt() + 1).mod(sources.size)]
+    }
+    return source
+  }
+
+  fun prevSource(): SourceDescription? {
+    source = itemIdFromSource(source).let { itemId ->
       if (itemId == -1L) null else sources[(itemId.toInt() - 1).mod(sources.size)]
     }
+    return source
   }
 }
