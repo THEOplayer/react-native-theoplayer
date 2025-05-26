@@ -38,16 +38,16 @@ class MediaLibrary() {
   init {
     addSource(
       "asset1", SourceDescription.Builder(
-        TypedSource.Builder("https://cdn.theoplayer.com/video/adultswim/clip.m3u8")
+        TypedSource.Builder("https://cdn.theoplayer.com/video/sintel/nosubs.m3u8")
           .type(SourceType.HLSX).build()
       ).apply {
         metadata(
           MetadataDescription(
             mutableMapOf(
-              "title" to "The Venture Bros",
-              "subtitle" to "Adult Swim",
+              "title" to "Sintel",
+              "subtitle" to "HLS - Sideloaded Chapters",
               "album" to "React-Native THEOplayer demos",
-              "displayIconUri" to "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
+              "displayIconUri" to "https://cdn.theoplayer.com/video/sintel_old/poster.jpg",
               "artist" to "THEOplayer",
               "type" to "tv-show",
               "releaseDate" to "november 29th",
@@ -60,16 +60,16 @@ class MediaLibrary() {
 
     addSource(
       "asset2", SourceDescription.Builder(
-        TypedSource.Builder("https://cdn.theoplayer.com/video/sintel/nosubs.m3u8")
+        TypedSource.Builder("https://cdn.theoplayer.com/video/adultswim/clip.m3u8")
           .type(SourceType.HLSX).build()
       ).apply {
         metadata(
           MetadataDescription(
             mutableMapOf(
-              "title" to "Sintel",
-              "subtitle" to "HLS - Sideloaded Chapters",
+              "title" to "The Venture Bros",
+              "subtitle" to "Adult Swim",
               "album" to "React-Native THEOplayer demos",
-              "displayIconUri" to "https://cdn.theoplayer.com/video/sintel_old/poster.jpg",
+              "displayIconUri" to "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
               "artist" to "THEOplayer",
               "type" to "tv-show",
               "releaseDate" to "november 29th",
