@@ -12,7 +12,9 @@ private const val PROP_FONT_FAMILY = "fontFamily"
 private const val PROP_FONT_SIZE = "fontSize"
 private const val PROP_WINDOW_COLOR = "windowColor"
 private const val PROP_MARGIN_LEFT = "marginLeft"
+private const val PROP_MARGIN_RIGHT = "marginRight"
 private const val PROP_MARGIN_TOP = "marginTop"
+private const val PROP_MARGIN_BOTTOM = "marginBottom"
 private const val PROP_COLOR_R = "r"
 private const val PROP_COLOR_G = "g"
 private const val PROP_COLOR_B = "b"
@@ -54,8 +56,14 @@ object TextTrackStyleAdapter {
     if (props.hasKey(PROP_MARGIN_TOP)) {
       style.marginTop = props.getInt(PROP_MARGIN_TOP)
     }
+    if (props.hasKey(PROP_MARGIN_BOTTOM)) {
+      style.marginBottom = props.getInt(PROP_MARGIN_BOTTOM)
+    }
     if (props.hasKey(PROP_MARGIN_LEFT)) {
       style.marginLeft = props.getInt(PROP_MARGIN_LEFT)
+    }
+    if (props.hasKey(PROP_MARGIN_RIGHT)) {
+      style.marginRight = props.getInt(PROP_MARGIN_RIGHT)
     }
   }
 
