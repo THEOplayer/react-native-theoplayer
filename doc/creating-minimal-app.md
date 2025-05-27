@@ -157,7 +157,7 @@ Example:
 - **GOOGLE_IMA**: adds an additional dependency to the THEOplayer-Integration-GoogleIMA cocoapod that delivers the IMA and DAI functionality
 - **CHROMECAST**: adds an additional dependency to the THEOplayer-Integration-GoogleCast cocoapod that delivers the chromecast functionality
 - **THEO_ADS**: adds an additional dependency to the THEOplayer-Integration-TheoAds cocoapod that delivers Server Guided Ad Insertion (SGAI) functionality
-- **MILLICAST**: adds an additional dependency to the THEOplayer-Integration-Millicast cocoapod that Millicast functionality
+- **MILLICAST**: adds an additional dependency to the THEOplayer-Integration-Millicast cocoapod that delivers the Millicast functionality
 - **SIDELOADED_TEXTTRACKS**: adds an additional dependency to the THEOplayer-Connector-SideloadedSubtitle cocoapod that delivers the sideloaded texttracks functionality
 
 Once the project has been setup correctly, define a valid HLS, Millicast or THEOlive source, eg.
