@@ -252,7 +252,7 @@ class PipUtils(
     val intent = Intent(ACTION_MEDIA_CONTROL).putExtra(EXTRA_ACTION, requestCode)
     val pendingIntent =
       PendingIntent.getBroadcast(reactContext, requestCode, intent, PendingIntent.FLAG_IMMUTABLE)
-    val icon: Icon = Icon.createWithResource(reactContext, if (enabled) iconId else NO_ICON)
+    val icon: Icon = Icon.createWithResource(reactContext, if (enabled) iconId else if (Build.VERSION.SDK_INT in Build.VERSION_CODES.O..Build.VERSION_CODES.R) android.R.drawable.screen_background_light_transparent else NO_ICON)
     val title = reactContext.getString(titleId)
     val desc = reactContext.getString(descId)
     return RemoteAction(icon, title, desc, pendingIntent)
