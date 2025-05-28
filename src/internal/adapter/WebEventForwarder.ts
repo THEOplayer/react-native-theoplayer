@@ -10,6 +10,8 @@ import type {
   RateChangeEvent as NativeRateChangeEvent,
   ReadyStateChangeEvent as NativeReadyStateChangeEvent,
   RemoveTrackEvent,
+  SeekingEvent as NativeSeekingEvent,
+  SeekedEvent as NativeSeekedEvent,
   TextTrack as NativeTextTrack,
   TextTrackCue as NativeTextTrackCue,
   TimeUpdateEvent as NativeTimeUpdateEvent,
@@ -48,6 +50,8 @@ import {
   DefaultRateChangeEvent,
   DefaultReadyStateChangeEvent,
   DefaultResizeEvent,
+  DefaultSeekedEvent,
+  DefaultSeekingEvent,
   DefaultSegmentNotFoundEvent,
   DefaultTextTrackEvent,
   DefaultTextTrackListEvent,
@@ -211,12 +215,12 @@ export class WebEventForwarder {
     this._facade.dispatchEvent(new BaseEvent(PlayerEventType.PAUSE));
   };
 
-  private readonly onSeeking = () => {
-    this._facade.dispatchEvent(new BaseEvent(PlayerEventType.SEEKING));
+  private readonly onSeeking = (event: NativeSeekingEvent) => {
+    this._facade.dispatchEvent(new DefaultSeekingEvent(event.currentTime * 1e3));
   };
 
-  private readonly onSeeked = () => {
-    this._facade.dispatchEvent(new BaseEvent(PlayerEventType.SEEKED));
+  private readonly onSeeked = (event: NativeSeekedEvent) => {
+    this._facade.dispatchEvent(new DefaultSeekedEvent(event.currentTime * 1e3));
   };
 
   private readonly onEnded = () => {

@@ -12,6 +12,7 @@ import {
   ChromecastErrorEvent,
   DurationChangeEvent,
   ErrorEvent,
+  Interstitial,
   LoadedMetadataEvent,
   MediaTrack,
   MediaTrackEvent,
@@ -28,19 +29,21 @@ import {
   RateChangeEvent,
   ReadyStateChangeEvent,
   ResizeEvent,
+  SeekedEvent,
+  SeekingEvent,
   SegmentNotFoundEvent,
   TextTrack,
   TextTrackCue,
   TextTrackEvent,
   TextTrackEventType,
   TextTrackListEvent,
+  TheoAdsEvent,
+  TheoAdsEventType,
   TimeRange,
   TimeUpdateEvent,
   TrackListEventType,
   VolumeChangeEvent,
 } from 'react-native-theoplayer';
-import { TheoAdsEvent, TheoAdsEventType } from '../../../api/event/TheoAdsEvent';
-import { Interstitial } from '../../../api/theoads/interstitial/Interstitial';
 
 export class DefaultLoadedMetadataEvent extends BaseEvent<PlayerEventType.LOADED_METADATA> implements LoadedMetadataEvent {
   constructor(
@@ -133,6 +136,18 @@ export class DefaultSegmentNotFoundEvent extends BaseEvent<PlayerEventType.SEGME
     public retryCount: number,
   ) {
     super(PlayerEventType.SEGMENT_NOT_FOUND);
+  }
+}
+
+export class DefaultSeekingEvent extends BaseEvent<PlayerEventType.SEEKING> implements SeekingEvent {
+  constructor(public readonly currentTime: number) {
+    super(PlayerEventType.SEEKING);
+  }
+}
+
+export class DefaultSeekedEvent extends BaseEvent<PlayerEventType.SEEKED> implements SeekedEvent {
+  constructor(public readonly currentTime: number) {
+    super(PlayerEventType.SEEKED);
   }
 }
 
