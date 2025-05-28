@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed an issue on iOS where the fullscreen dimensions could become wrong when the device is Flat Up or Flat Down on the table, or in an angle close to these.
 
+### Added
+
+- Added `currentTime` property to `SeekingEvent` and `SeekedEvent`, indicating the player time to which is being seeked.
+
 ## [9.2.0] - 25-05-20
 
 ### Added
