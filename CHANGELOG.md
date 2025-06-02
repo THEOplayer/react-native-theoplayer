@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [9.3.0] - 25-06-02
+
+### Fixed
+
+- Fixed an issue on iOS where the fullscreen dimensions could become wrong when the device is Flat Up or Flat Down on the table, or in an angle close to these.
+- Fixed an issue on Android where switching to the PiP window during an IMA ad caused a crash on Android 8-11.
+
+### Added
+
+- Added `currentTime` property to `SeekingEvent` and `SeekedEvent`, indicating the player time to which is being seeked.
+
 ## [9.2.0] - 25-05-20
 
 ### Added

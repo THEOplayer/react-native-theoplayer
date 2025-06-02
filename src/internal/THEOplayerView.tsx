@@ -39,6 +39,8 @@ import {
   DefaultVolumeChangeEvent,
   DefaultTimeupdateEvent,
   DefaultResizeEvent,
+  DefaultSeekingEvent,
+  DefaultSeekedEvent,
 } from './adapter/event/PlayerEvents';
 import type { NativeCastEvent } from './adapter/event/native/NativeCastEvent';
 import type {
@@ -61,6 +63,8 @@ import type {
   NativeTimeUpdateEvent,
   NativeVolumeChangeEvent,
   NativeResizeEvent,
+  NativeSeekingEvent,
+  NativeSeekedEvent,
 } from './adapter/event/native/NativePlayerEvent';
 import type { NativeAdEvent } from './adapter/event/native/NativeAdEvent';
 import { THEOplayerAdapter } from './adapter/THEOplayerAdapter';
@@ -86,8 +90,8 @@ interface THEOplayerRCTViewProps {
   onNativePlay: () => void;
   onNativePlaying: () => void;
   onNativePause: () => void;
-  onNativeSeeking: () => void;
-  onNativeSeeked: () => void;
+  onNativeSeeking: (event: NativeSyntheticEvent<NativeSeekingEvent>) => void;
+  onNativeSeeked: (event: NativeSyntheticEvent<NativeSeekedEvent>) => void;
   onNativeEnded: () => void;
   onNativeWaiting: () => void;
   onNativeTimeUpdate: (event: NativeSyntheticEvent<NativeTimeUpdateEvent>) => void;
@@ -236,12 +240,12 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
     this._facade.dispatchEvent(new BaseEvent(PlayerEventType.PAUSE));
   };
 
-  private _onSeeking = () => {
-    this._facade.dispatchEvent(new BaseEvent(PlayerEventType.SEEKING));
+  private _onSeeking = (event: NativeSyntheticEvent<NativeSeekingEvent>) => {
+    this._facade.dispatchEvent(new DefaultSeekingEvent(event.nativeEvent.currentTime));
   };
 
-  private _onSeeked = () => {
-    this._facade.dispatchEvent(new BaseEvent(PlayerEventType.SEEKED));
+  private _onSeeked = (event: NativeSyntheticEvent<NativeSeekedEvent>) => {
+    this._facade.dispatchEvent(new DefaultSeekedEvent(event.nativeEvent.currentTime));
   };
 
   private _onWaiting = () => {

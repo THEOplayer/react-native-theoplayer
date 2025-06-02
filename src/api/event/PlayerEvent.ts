@@ -145,3 +145,17 @@ export interface SegmentNotFoundEvent extends Event<PlayerEventType.SEGMENT_NOT_
    */
   readonly retryCount: number;
 }
+
+export interface SeekingEvent extends Event<PlayerEventType.SEEKING> {
+  /**
+   * The player's current time.
+   */
+  readonly currentTime: number;
+}
+
+export interface SeekedEvent extends Event<PlayerEventType.SEEKED> {
+  /**
+   * The player's current time.
+   */
+  readonly currentTime: number;
+}
