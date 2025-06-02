@@ -218,7 +218,7 @@ public class THEOplayerRCTMainEventHandler {
         self.seekingListener = player.addEventListener(type: PlayerEventTypes.SEEKING) { [weak self] event in
             if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received SEEKING event from THEOplayer") }
             if let forwardedSeekingEvent = self?.onNativeSeeking {
-                forwardedSeekingEvent([:])
+                forwardedSeekingEvent(["currentTime": 1e3 * event.currentTime])
             }
         }
         if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] Seeking listener attached to THEOplayer") }
@@ -227,7 +227,7 @@ public class THEOplayerRCTMainEventHandler {
         self.timeUpdateListener = player.addEventListener(type: PlayerEventTypes.SEEKED) { [weak self] event in
             if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received SEEKED event from THEOplayer") }
             if let forwardedSeekedEvent = self?.onNativeSeeked {
-                forwardedSeekedEvent([:])
+                forwardedSeekedEvent(["currentTime": 1e3 * event.currentTime])
             }
         }
         if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] Seeked listener attached to THEOplayer") }

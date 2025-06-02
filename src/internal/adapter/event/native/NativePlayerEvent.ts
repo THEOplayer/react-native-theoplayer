@@ -68,6 +68,20 @@ export interface NativeReadyStateChangeEvent {
   readonly readyState: number;
 }
 
+export interface NativeSeekingEvent {
+  /**
+   * The player's currentTime.
+   */
+  readonly currentTime: number;
+}
+
+export interface NativeSeekedEvent {
+  /**
+   * The player's currentTime.
+   */
+  readonly currentTime: number;
+}
+
 export interface NativePresentationModeChangeEvent {
   /**
    * The player's new presentation mode.
