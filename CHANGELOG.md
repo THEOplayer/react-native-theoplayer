@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed an issue on iOS where the fullscreen dimensions could become wrong when the device is Flat Up or Flat Down on the table, or in an angle close to these.
+- Fixed an issue on Android where switching to the PiP window during an IMA ad caused a crash on Android 8-11.
 
 ### Added
 
