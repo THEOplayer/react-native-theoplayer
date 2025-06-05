@@ -14,7 +14,7 @@ export interface PiPConfiguration {
   /**
    * Whether Picture in Picture should reparent player to the root.
    *
-   * @defaultValue `true`
+   * @defaultValue `false`
    * @remark: Only configurable for Android.
    */
   readonly reparentPip?: boolean;
