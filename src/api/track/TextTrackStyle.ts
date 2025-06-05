@@ -60,7 +60,7 @@ export interface TextTrackStyle {
    * <br/> - `'dropshadow'`
    * <br/> - `'raised'`
    * <br/> - `'depressed'`
-   * <br/> - `'uniform`
+   * <br/> - `'uniform'`
    */
   edgeStyle: EdgeStyle | undefined;
 
@@ -85,7 +85,7 @@ export interface TextTrackStyle {
    *
    * @remarks
    * <br/> - The margin is in number of pixels.
-   * <br/> - Available on Web only.
+   * <br/> - Available on Web and Android only.
    */
   marginBottom: number | undefined;
   /**
@@ -101,7 +101,7 @@ export interface TextTrackStyle {
    * @remarks
    * <br/> - The margin is in number of pixels.
    * <br/> - Useful for pushing the subtitles left, so they don't overlap with the UI.
-   * <br/> - Available on Web only.
+   * <br/> - Available on Web and Android only.
    */
   marginRight: number | undefined;
 }
