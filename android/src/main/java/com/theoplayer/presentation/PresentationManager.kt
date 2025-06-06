@@ -149,7 +149,7 @@ class PresentationManager(
     try {
       pipUtils.enable()
       reactContext.currentActivity?.enterPictureInPictureMode(pipUtils.getPipParams())
-      if (BuildConfig.REPARENT_ON_PIP) {
+      if (BuildConfig.REPARENT_ON_PIP && pipConfig.reparentPip == true) {
         reparentPlayerToRoot()
       }
     } catch (_: Exception) {
