@@ -238,7 +238,7 @@ class MediaPlaybackService : Service() {
       ServiceCompat.startForeground(
         this,
         NOTIFICATION_ID,
-        notificationBuilder.build(playbackState, largeIcon, enableMediaControls),
+        notificationBuilder.build(playbackState, largeIcon, mediaSessionConfig.mediaSessionEnabled),
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
           ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
         else 0
