@@ -1,9 +1,6 @@
 /**
  * Represents a Google IMA creative compliant to the VAST specification.
  *
- * @remarks
- * <br/> - Available since v2.60.0.
- *
  * @public
  */
 import type { Ad } from './Ad';

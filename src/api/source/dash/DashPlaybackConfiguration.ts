@@ -15,9 +15,6 @@ export type SeamlessPeriodSwitchStrategy = 'auto' | 'always' | 'never';
 /**
  * Represents a configuration for controlling playback of an MPEG-DASH stream.
  *
- * @remarks
- * <br/> - Available since v2.79.0.
- *
  * @public
  */
 export interface DashPlaybackConfiguration {
@@ -51,7 +48,6 @@ export interface DashPlaybackConfiguration {
    * @platform android
    *
    * @remarks
-   * <br/> - Available since v4.1.0.
    * <br/> - On certain smart TV platforms (such as Tizen 2), playback issues may arise when
    *         the timescale of the media data changes across periods or discontinuities.
    *         In that case, the player may need to shift all the timescales first,
@@ -69,7 +65,6 @@ export interface DashPlaybackConfiguration {
    * @platform web
    *
    * @remarks
-   * <br/> - Available since v4.11.0.
    * <br/> - When specified, if the player decides to shift the timescale (see {@link DashPlaybackConfiguration.needsTimescaleShifting}), the timescale will be set to the
    *         given desired timescale.
    * <br/> - When not specified, if the player decides to shift timescale, the player will decide the timescale to which it should shift.
@@ -94,7 +89,6 @@ export interface DashPlaybackConfiguration {
    * @platform web,android
    *
    * @remarks
-   * <br/> - Available since v5.2.0.
    * <br/> - This only applies to livestreams (with `<MPD type="dynamic">`).
    * <br/> - This only applies to streams that use `<SegmentTimeline>`.
    */

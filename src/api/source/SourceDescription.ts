@@ -314,7 +314,6 @@ export interface BaseSource {
    * The URL of a time server used by the player to synchronise the time in DASH sources.
    *
    * @remarks
-   * <br/> - Available since v2.47.0.
    * <br/> - The time server should return time in ISO-8601 format.
    * <br/> - Overrides the time server provided the DASH manifest's `<UTCTiming>`.
    * <br/> - Only this source will use the time server. Alternatively, for all source use {@link SourceConfiguration.timeServer}.
@@ -328,7 +327,6 @@ export interface BaseSource {
    *
    * @remarks
    * <br/> - This setting must be `true` when using Low-Latency CMAF with ABR.
-   * <br/> - Available since v2.62.0.
    */
   lowLatency?: boolean;
 
@@ -336,7 +334,6 @@ export interface BaseSource {
    * The configuration for controlling playback of an MPEG-DASH stream.
    *
    * @remarks
-   * <br/> - Available since v2.79.0.
    * <br/> - Ignored for non-DASH streams.
    */
   dash?: DashPlaybackConfiguration;
@@ -345,7 +342,6 @@ export interface BaseSource {
    * The configuration for controlling playback of an HLS stream.
    *
    * @remarks
-   * <br/> - Available since v2.82.0.
    * <br/> - Ignored for non-HLS streams.
    */
   hls?: HlsPlaybackConfiguration;
@@ -371,7 +367,6 @@ export interface TypedSource extends BaseSource {
    *
    * @remarks
    * <br/> - Required if the `ssai` property is absent.
-   * <br/> - Available since v2.4.0.
    */
   src?: string;
 
@@ -381,17 +376,11 @@ export interface TypedSource extends BaseSource {
    * <br/> - `'application/x-mpegURL'` or `'application/vnd.apple.mpegurl'`: The media resource is an HLS stream.
    * <br/> - `'video/mp4'`, `'video/webm'` and other formats: The media resource should use native HTML5 playback if supported by the browser.
    * <br/> - `'application/vnd.theo.hesp+json'`: The media resource is an HESP stream.
-   *
-   * @remarks
-   * <br/> - Available since v2.4.0.
    */
   type?: string;
 
   /**
    * The content protection parameters for the media resource.
-   *
-   * @remarks
-   * <br/> - Available since v2.15.0.
    */
   contentProtection?: DRMConfiguration;
 
@@ -407,9 +396,6 @@ export interface TypedSource extends BaseSource {
 
   /**
    * The Server-side Ad Insertion parameters for the media resource.
-   *
-   * @remarks
-   * <br/> - Available since v2.12.0.
    */
   ssai?: ServerSideAdInsertionConfiguration;
 }
