@@ -77,8 +77,7 @@ export interface TheoAdDescription extends AdDescription {
    *
    * @platform web
    *
-   * @remarks
-   * <br/> - Available since v8.17.0.
+   * @since React Native THEOplayer SDK v8.17.0.
    */
   streamActivityMonitorId?: string;
 

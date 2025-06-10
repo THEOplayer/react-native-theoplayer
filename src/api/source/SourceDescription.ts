@@ -350,7 +350,8 @@ export interface BaseSource {
    * The playback pipeline to use for this stream.
    *
    * @defaultValue [PlaybackPipeline.MEDIA3]
-   * @since v9.0.0
+   * @since React Native THEOplayer SDK v9.0.0.
+   * @since Native THEOplayer SDK v9.0.0.
    * @platform android
    */
   playbackPipeline?: PlaybackPipeline;
@@ -389,8 +390,7 @@ export interface TypedSource extends BaseSource {
    *
    * @platform ios,android
    *
-   * @remarks
-   * <br/> - Available since v7.9.0.
+   * @since React Native THEOplayer SDK v7.9.0.
    */
   headers?: { [key: string]: string };
 
