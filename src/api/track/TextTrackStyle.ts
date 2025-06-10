@@ -15,7 +15,7 @@ export interface TextTrackStyle {
    * @example
    * <br/> - `red` will set the color of the text to red.
    * <br/> - `#ff0000` will set the color of the text to red.
-   * <br/> - Available on Web only: `rgba(255,0,0,0.5)` will set the color of the text to red, with 50% opacity.
+   * <br/> - Available for Web only: `rgba(255,0,0,0.5)` will set the color of the text to red, with 50% opacity.
    */
   fontColor: string | undefined;
 
@@ -36,21 +36,22 @@ export interface TextTrackStyle {
    * @example
    * <br/> - `red` will set the background color of the text track to red.
    * <br/> - `#ff0000` will set the background color of the text track to red.
-   * <br/> - Available on Web only: `rgba(255,0,0,0.5)` will set the background color of the text track to red, with 50% opacity.
+   * <br/> - Available for Web only: `rgba(255,0,0,0.5)` will set the background color of the text track to red, with 50% opacity.
    */
   backgroundColor: string | undefined;
 
   /**
    * The window color for the text track.
    *
+   * @platform web,android
+   *
    * @remarks
    * <br/> - This targets the area covering the full width of the text track.
-   * <br/> - Available on Web and Android only.
    *
    * @example
    * <br/> - `red` will set the background color of the window of the text track to red.
    * <br/> - `#ff0000` will set the background color of the window of the text track to red.
-   * <br/> - Available on Web only: `rgba(255,0,0,0.5)` will set the background color of the window of the text track to red, with 50% opacity.
+   * <br/> - Available for Web only: `rgba(255,0,0,0.5)` will set the background color of the window of the text track to red, with 50% opacity.
    */
   windowColor: string | undefined;
 
@@ -67,8 +68,7 @@ export interface TextTrackStyle {
   /**
    * The edge color for the text track.
    *
-   * @remarks
-   * <br/> - Available on Android only.
+   * @platform android
    */
   edgeColor: string | undefined;
 
@@ -83,9 +83,10 @@ export interface TextTrackStyle {
   /**
    * The bottom margin of the area where subtitles are being rendered.
    *
+   * @platform web,android
+   *
    * @remarks
    * <br/> - The margin is in number of pixels.
-   * <br/> - Available on Web and Android only.
    */
   marginBottom: number | undefined;
   /**
@@ -98,10 +99,11 @@ export interface TextTrackStyle {
   /**
    * The right margin  of the area where subtitles are being rendered.
    *
+   * @platform web,android
+   *
    * @remarks
    * <br/> - The margin is in number of pixels.
    * <br/> - Useful for pushing the subtitles left, so they don't overlap with the UI.
-   * <br/> - Available on Web and Android only.
    */
   marginRight: number | undefined;
 }

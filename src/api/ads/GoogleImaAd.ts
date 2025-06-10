@@ -87,9 +87,10 @@ export interface GoogleImaAd extends Ad {
   /**
    * The description of the ad from the VAST response.
    *
+   * @platform web,android
+   *
    * @remarks
    * <br/> - Available for `google-ima` and `google-dai` integrations only.
-   * <br/> - Available on Web and Android.
    */
   description: string | undefined;
 }

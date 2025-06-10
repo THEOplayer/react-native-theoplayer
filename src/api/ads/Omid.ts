@@ -48,6 +48,7 @@ export interface Omid {
 
   /**
    * Adds an {@link OmidFriendlyObstruction}.
+   *
    * @param obstruction
    */
   addFriendlyObstruction(obstruction: OmidFriendlyObstruction): void;

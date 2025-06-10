@@ -54,8 +54,7 @@ export enum SourceIntegrationId {
 /**
  * The playback pipeline to use to play a stream.
  *
- * @remarks
- * <br/> - Available on Android only.
+ * @platform android
  */
 export enum PlaybackPipeline {
   LEGACY = 'legacy',
@@ -262,8 +261,7 @@ export interface TextTrackDescription {
    *
    * @internal
    *
-   * @remarks
-   * <br/> - Available on iOS.
+   * @platform ios
    */
   subtitlePTS?: string;
 
@@ -271,8 +269,10 @@ export interface TextTrackDescription {
    * The localTime that matches the PTS value that is used to sync the track with the video.
    *
    * @internal
+   *
+   * @platform ios
+   *
    * @remarks
-   * <br/> - Available on iOS.
    * <br/> - Format: "HH:mm:mm:SSS"
    * <br/> - Default value is "00:00:00:000"
    */
@@ -304,8 +304,7 @@ export interface BaseSource {
    * The offset in seconds used to determine the live point.
    * This live point is the end of the manifest minus the provided offset.
    *
-   * @remarks
-   * <br/> - Available on Web and Android.
+   * @platform web,android
    *
    * @defaultValue Three times the segment's target duration.
    */
@@ -356,8 +355,7 @@ export interface BaseSource {
    *
    * @defaultValue [PlaybackPipeline.MEDIA3]
    * @since v9.0.0
-   * @remarks
-   * <br/> - Available on Android only.
+   * @platform android
    */
   playbackPipeline?: PlaybackPipeline;
 }
@@ -400,8 +398,9 @@ export interface TypedSource extends BaseSource {
   /**
    * The headers included in the request when retrieving the resource.
    *
+   * @platform ios,android
+   *
    * @remarks
-   * <br/> - Available on iOS and Android.
    * <br/> - Available since v7.9.0.
    */
   headers?: { [key: string]: string };

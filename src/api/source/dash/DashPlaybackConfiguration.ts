@@ -24,8 +24,7 @@ export interface DashPlaybackConfiguration {
   /**
    * Whether to seamlessly switch between DASH periods.
    *
-   * @remarks
-   * <br/> - Available on Web only.
+   * @platform web
    *
    * The player supports two strategies for handling a switch between two periods in an MPEG-DASH stream:
    * <br/> - <strong>Seamless</strong>: Once the player is done buffering the current period, it immediately starts buffering the next period.
@@ -49,9 +48,10 @@ export interface DashPlaybackConfiguration {
    * (Experimental) Whether the timescales of the media data need to be shifted,
    * in order to work around platform-specific issues on certain smart TV platforms.
    *
+   * @platform android
+   *
    * @remarks
    * <br/> - Available since v4.1.0.
-   * <br/> - Available on Web only.
    * <br/> - On certain smart TV platforms (such as Tizen 2), playback issues may arise when
    *         the timescale of the media data changes across periods or discontinuities.
    *         In that case, the player may need to shift all the timescales first,
@@ -66,9 +66,10 @@ export interface DashPlaybackConfiguration {
   /**
    * (Experimental) The desired timescale to which the media data should be shifted.
    *
+   * @platform web
+   *
    * @remarks
    * <br/> - Available since v4.11.0.
-   * <br/> - Available on Web only.
    * <br/> - When specified, if the player decides to shift the timescale (see {@link DashPlaybackConfiguration.needsTimescaleShifting}), the timescale will be set to the
    *         given desired timescale.
    * <br/> - When not specified, if the player decides to shift timescale, the player will decide the timescale to which it should shift.
@@ -82,8 +83,7 @@ export interface DashPlaybackConfiguration {
    *
    * @internal
    *
-   * @remarks
-   * <br/> - Available on Web only.
+   * @platform web
    */
   forceSeekToSynchronize?: boolean;
 
@@ -91,9 +91,10 @@ export interface DashPlaybackConfiguration {
    * (Experimental) Force the player to ignore the availability window of individual segments in the MPD,
    * and instead consider every listed segment to be immediately available.
    *
+   * @platform web,android
+   *
    * @remarks
    * <br/> - Available since v5.2.0.
-   * <br/> - Available on Web and Android.
    * <br/> - This only applies to livestreams (with `<MPD type="dynamic">`).
    * <br/> - This only applies to streams that use `<SegmentTimeline>`.
    */
@@ -102,10 +103,9 @@ export interface DashPlaybackConfiguration {
   /**
    * A flag to indicate whether timestamps of segmented WebVTT subtitles are relative to the segment start time.
    *
-   * @remarks
-   * <br/> - Available on Web only.
+   * @platform web
    *
-   *  @defaultValue `true`
+   * @defaultValue `true`
    */
   segmentRelativeVttTiming?: boolean;
 }
