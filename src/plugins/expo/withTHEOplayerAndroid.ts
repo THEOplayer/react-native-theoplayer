@@ -1,7 +1,7 @@
 import { ConfigPlugin, withProjectBuildGradle, withGradleProperties } from '@expo/config-plugins';
 import { PropertiesItem } from '@expo/config-plugins/build/android/Properties';
 
-type Extension = 'ima' | 'dai' | 'cast';
+type Extension = 'ima' | 'dai' | 'cast' | 'theoads' | 'millicast';
 
 interface THEOplayerPluginProps {
   extensions?: Extension[];
@@ -15,6 +15,10 @@ function mapAndroidExtensionKey(ext: Extension): string | undefined {
       return 'THEOplayer_extensionGoogleDAI';
     case 'cast':
       return 'THEOplayer_extensionCast';
+    case 'theoads':
+      return 'THEOplayer_extensionTHEOads';
+    case 'millicast':
+      return 'THEOplayer_extensionMillicast';
     default:
       return undefined;
   }

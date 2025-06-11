@@ -4,7 +4,7 @@
  * Example:
  *     "plugins": [
  *         ["react-native-theoplayer", {
- *             "extensions": ["ima", "dai", "cast"]
+ *             "extensions": ["ima", "dai", "cast", "theoads", "millicast"]
  *         }]
  *     ]
  */

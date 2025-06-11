@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+- Added `theoads` and `millicast` support for Android Expo plugin.
 - Added support for the new `TextTrackStyle.marginBottom` and `TextTrackStyle.marginRight` API's on THEOplayer Android SDK v9.5.0.
 
 ## [9.3.0] - 25-06-02
