@@ -18,5 +18,7 @@
     "jsxFragmentFactory": "JSX.Fragment",
     "skipLibCheck": true
   },
-  "include": ["./src"]
+  "include": [
+    "./src"
+  ]
 }
