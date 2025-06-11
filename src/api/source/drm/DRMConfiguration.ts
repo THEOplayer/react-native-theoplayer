@@ -1,6 +1,7 @@
 /**
  * Describes the key system configuration.
  *
+ * @category Content Protection
  * @public
  */
 export interface KeySystemConfiguration {
