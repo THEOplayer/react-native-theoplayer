@@ -1,6 +1,7 @@
 /**
  * The Chromecast API.
  *
+ * @category Casting
  * @public
  */
 import type { CastState } from './CastState';

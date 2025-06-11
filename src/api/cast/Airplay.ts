@@ -1,6 +1,7 @@
 /**
  * The Airplay API.
  *
+ * @category Casting
  * @public
  */
 import type { CastState } from './CastState';
