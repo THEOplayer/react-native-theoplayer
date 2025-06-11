@@ -16,6 +16,12 @@ import type { ServerSideAdInsertionConfiguration } from './ads/ssai/ServerSideAd
 import type { AnalyticsDescription } from './analytics/AnalyticsDescription';
 import { CmcdConfiguration } from './cmcd/CmcdConfiguration';
 
+/**
+ * A type alias for a {@link TypedSource} media resource.
+ *
+ * @category Source
+ * @public
+ */
 export type Source = TypedSource;
 
 /**

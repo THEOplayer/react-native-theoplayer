@@ -56,6 +56,8 @@ export interface CertificateResponse extends ContentProtectionResponse {
 
 /**
  * The response of a license request.
+ *
+ * @category Content Protection
  * @public
  */
 export interface LicenseResponse extends ContentProtectionResponse {

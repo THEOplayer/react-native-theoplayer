@@ -1,6 +1,12 @@
 import type { Track } from './Track';
 import type { Quality } from './Quality';
 
+/**
+ * Represents the category of a media track (audio or video).
+ *
+ * @category Media and Text Tracks
+ * @public
+ */
 export type MediaTrackKind = 'main' | 'alternative';
 
 /**

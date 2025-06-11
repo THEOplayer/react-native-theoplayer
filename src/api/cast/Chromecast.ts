@@ -6,6 +6,12 @@
  */
 import type { CastState } from './CastState';
 
+/**
+ * The Chromecast API.
+ *
+ * @category Casting
+ * @public
+ */
 export interface Chromecast {
   /**
    * Whether the player is connected with a chromecast device.

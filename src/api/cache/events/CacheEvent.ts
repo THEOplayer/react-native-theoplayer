@@ -3,7 +3,7 @@ import type { CacheStatus } from '../MediaCacheAPI';
 import type { CachingTask } from '../CachingTask';
 
 /**
- * The events types dispatched by the {@link MediaCacheAPI | cache API}.
+ * The event types dispatched by the {@link MediaCacheAPI | cache API}.
  *
  * @category Caching
  * @category Events

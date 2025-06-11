@@ -1,12 +1,15 @@
-/**
- * The API for advertisements.
- */
 import type { AdDescription } from "../source/ads/Ads";
 import type { AdBreak } from "./AdBreak";
 import type { Ad } from "./Ad";
 import type { GoogleDAI } from "./GoogleDai";
 import { Omid } from './Omid';
 
+/**
+ * The API for advertisements.
+ *
+ * @category Ads
+ * @public
+ */
 export interface AdsAPI {
   /**
    * Whether a linear ad is currently playing.

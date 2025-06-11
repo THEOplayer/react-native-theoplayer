@@ -27,6 +27,7 @@ export enum CacheTaskStatus {
 /**
  * Represents a caching task.
  *
+ * @category Caching
  * @public
  */
 export interface CachingTask extends EventDispatcher<CachingTaskEventMap> {

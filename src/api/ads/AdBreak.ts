@@ -1,10 +1,17 @@
 /**
  * Represents an ad break in the VMAP specification or an ad pod in the VAST specification.
  *
+ * @category Ads
  * @public
  */
 import type { Ad } from './Ad';
 
+/**
+ * Represents an ad break in the VMAP specification or an ad pod in the VAST specification.
+ *
+ * @category Ads
+ * @public
+ */
 export interface AdBreak {
   /**
    * The integration of the ad break, represented by a value from the following list:

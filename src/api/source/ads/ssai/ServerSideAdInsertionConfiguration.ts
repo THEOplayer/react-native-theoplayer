@@ -8,6 +8,14 @@ import type { GoogleDAISSAIIntegrationID } from './GoogleDAIConfiguration';
  * @public
  */
 export type SSAIIntegrationId = GoogleDAISSAIIntegrationID | CustomSSAIIntegrationId;
+
+/**
+ * The identifier of a custom server-side ad insertion, represented by a string value.
+ *
+ * @category Ads
+ * @category SSAI
+ * @public
+ */
 export type CustomSSAIIntegrationId = string;
 
 /**

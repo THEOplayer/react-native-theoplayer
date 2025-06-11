@@ -5,6 +5,13 @@ import type { Quality } from '../track/Quality';
 import type { Event } from './Event';
 import type { PlayerEventType } from '../player/PlayerEventMap';
 
+/**
+ * The event types dispatched by a {@link TextTrackList}.
+ *
+ * @category Media and Text Tracks
+ * @category Events
+ * @public
+ */
 export enum TrackListEventType {
   /**
    * Dispatched when track has been added to the track list.
@@ -22,6 +29,13 @@ export enum TrackListEventType {
   CHANGE_TRACK = 'changetrack',
 }
 
+/**
+ * The events dispatched by a {@link TextTrackList}.
+ *
+ * @category Media and Text Tracks
+ * @category Events
+ * @public
+ */
 export interface TextTrackListEvent extends Event<PlayerEventType.TEXT_TRACK_LIST> {
   readonly subType: TrackListEventType;
   /**
@@ -30,6 +44,13 @@ export interface TextTrackListEvent extends Event<PlayerEventType.TEXT_TRACK_LIS
   readonly track: TextTrack;
 }
 
+/**
+ * The event types dispatched by a {@link TextTrack}.
+ *
+ * @category Media and Text Tracks
+ * @category Events
+ * @public
+ */
 export enum TextTrackEventType {
   /**
    * Dispatched when cue has been added to the text track.
@@ -52,6 +73,13 @@ export enum TextTrackEventType {
   EXIT_CUE = 'exitcue',
 }
 
+/**
+ * The events dispatched by a {@link TextTrack}.
+ *
+ * @category Media and Text Tracks
+ * @category Events
+ * @public
+ */
 export interface TextTrackEvent extends Event<PlayerEventType.TEXT_TRACK> {
   readonly subType: TextTrackEventType;
   /**
@@ -65,12 +93,26 @@ export interface TextTrackEvent extends Event<PlayerEventType.TEXT_TRACK> {
   readonly cue: TextTrackCue;
 }
 
+/**
+ * The type of media track (audio or video) associated with an event.
+ *
+ * @category Media and Text Tracks
+ * @category Events
+ * @public
+ */
 export enum MediaTrackType {
   AUDIO = 'audio',
 
   VIDEO = 'video',
 }
 
+/**
+ * The events dispatched by a {@link MediaTrack}.
+ *
+ * @category Media and Text Tracks
+ * @category Events
+ * @public
+ */
 export interface MediaTrackListEvent extends Event<PlayerEventType.MEDIA_TRACK_LIST> {
   readonly subType: TrackListEventType;
   /**
@@ -84,6 +126,13 @@ export interface MediaTrackListEvent extends Event<PlayerEventType.MEDIA_TRACK_L
   readonly track: MediaTrack;
 }
 
+/**
+ * The event types dispatched by a {@link MediaTrack}.
+ *
+ * @category Media and Text Tracks
+ * @category Events
+ * @public
+ */
 export enum MediaTrackEventType {
   /**
    * Dispatched when the media track's active quality changes.
@@ -91,6 +140,13 @@ export enum MediaTrackEventType {
   ACTIVE_QUALITY_CHANGED = 'activequalitychanged',
 }
 
+/**
+ * The events dispatched by a {@link MediaTrack}.
+ *
+ * @category Media and Text Tracks
+ * @category Events
+ * @public
+ */
 export interface MediaTrackEvent extends Event<PlayerEventType.MEDIA_TRACK> {
   readonly subType: MediaTrackEventType;
   /**

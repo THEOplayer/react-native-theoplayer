@@ -15,7 +15,7 @@ import type { TextTrackCue } from './TextTrackCue';
  * @category Media and Text Tracks
  * @public
  */
-enum TextTrackType {
+export enum TextTrackType {
   cea608 = 'cea608',
   id3 = 'id3',
   srt = 'srt',
@@ -149,6 +149,7 @@ export interface TextTrack extends Track {
  *
  * https://html.spec.whatwg.org/multipage/embedded-content.html#text-track-showing
  *
+ * @category Media and Text Tracks
  * @internal
  */
 export function filterRenderableTracks(textTracks: TextTrack[] | undefined): TextTrack[] | undefined {
@@ -158,6 +159,7 @@ export function filterRenderableTracks(textTracks: TextTrack[] | undefined): Tex
 /**
  * Retain first thumbnail track encountered in the textTracks list.
  *
+ * @category Media and Text Tracks
  * @internal
  */
 export function filterThumbnailTracks(textTracks: TextTrack[] | undefined): TextTrack | undefined {
@@ -167,28 +169,52 @@ export function filterThumbnailTracks(textTracks: TextTrack[] | undefined): Text
 /**
  * Query whether a track is a valid thumbnail track.
  *
+ * @category Media and Text Tracks
  * @internal
  */
 export function isThumbnailTrack(textTrack: TextTrack | undefined): boolean {
   return !!textTrack && (textTrack.kind === 'thumbnails' || (textTrack.kind === 'metadata' && textTrack.label === 'thumbnails'));
 }
-
+/**
+ * Query whether a track is a given cue.
+ *
+ * @category Media and Text Tracks
+ * @internal
+ */
 export function hasTextTrackCue(textTrack: TextTrack, cue: TextTrackCue): boolean {
   return !!(textTrack.cues && cue && textTrack.cues.find((c) => cue.uid === c.uid));
 }
 
+/**
+ * Removes a cue from a text track.
+ *
+ * @category Media and Text Tracks
+ * @internal
+ */
 export function removeTextTrackCue(textTrack?: TextTrack, cue?: TextTrackCue) {
   if (textTrack && textTrack.cues && cue && hasTextTrackCue(textTrack, cue)) {
     textTrack.cues = textTrack.cues.filter((c) => c.uid !== cue.uid);
   }
 }
 
+/**
+ * Adds a cue to a text track.
+ *
+ * @category Media and Text Tracks
+ * @internal
+ */
 export function addTextTrackCue(textTrack?: TextTrack, cue?: TextTrackCue) {
   if (textTrack && textTrack.cues && cue && !hasTextTrackCue(textTrack, cue)) {
     textTrack.cues.push(cue);
   }
 }
 
+/**
+ * Returns a cue from a text track by uid.
+ *
+ * @category Media and Text Tracks
+ * @internal
+ */
 export function findTextTrackByUid(textTracks: TextTrack[], uid: number): TextTrack | undefined {
   return textTracks.find((t) => t.uid === uid);
 }

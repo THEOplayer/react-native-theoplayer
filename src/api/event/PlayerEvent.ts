@@ -6,6 +6,7 @@ import type { Event } from './Event';
  * Dispatched when a player error occurs.
  *
  * @category Events
+ * @category Player
  * @public
  */
 export interface ErrorEvent extends Event<PlayerEventType.ERROR> {
@@ -16,6 +17,7 @@ export interface ErrorEvent extends Event<PlayerEventType.ERROR> {
  * Dispatched when the player determines the duration and dimensions of the media resource.
  *
  * @category Events
+ * @category Player
  * @public
  */
 export interface LoadedMetadataEvent extends Event<PlayerEventType.LOADED_METADATA> {
@@ -33,6 +35,7 @@ export interface LoadedMetadataEvent extends Event<PlayerEventType.LOADED_METADA
  * for example discontinuously.
  *
  * @category Events
+ * @category Player
  * @public
  */
 export interface TimeUpdateEvent extends Event<PlayerEventType.TIME_UPDATE> {
@@ -51,6 +54,7 @@ export interface TimeUpdateEvent extends Event<PlayerEventType.TIME_UPDATE> {
  * Dispatched when player is resized.
  *
  * @category Events
+ * @category Player
  * @public
  */
 export interface ResizeEvent extends Event<PlayerEventType.RESIZE> {
@@ -69,6 +73,7 @@ export interface ResizeEvent extends Event<PlayerEventType.RESIZE> {
  * Dispatched when the player's duration changes.
  *
  * @category Events
+ * @category Player
  * @public
  */
 export interface DurationChangeEvent extends Event<PlayerEventType.DURATION_CHANGE> {
@@ -82,6 +87,7 @@ export interface DurationChangeEvent extends Event<PlayerEventType.DURATION_CHAN
  * Provides additional context information during changes in presentation mode.
  *
  * @category Events
+ * @category Player
  * @public
  */
 export enum PresentationModeChangePipContext {
@@ -107,6 +113,7 @@ export enum PresentationModeChangePipContext {
  * Provides additional context information during changes in PiP presentation mode.
  *
  * @category Events
+ * @category Player
  * @public
  */
 export interface PresentationModeChangeContext {
@@ -120,6 +127,7 @@ export interface PresentationModeChangeContext {
  * Dispatched when the player changes its current presentation mode.
  *
  * @category Events
+ * @category Player
  * @public
  */
 export interface PresentationModeChangeEvent extends Event<PlayerEventType.PRESENTATIONMODE_CHANGE> {
@@ -143,6 +151,7 @@ export interface PresentationModeChangeEvent extends Event<PlayerEventType.PRESE
  * Dispatched when the player's playback rate changes.
  *
  * @category Events
+ * @category Player
  * @public
  */
 export interface RateChangeEvent extends Event<PlayerEventType.RATE_CHANGE> {
@@ -152,6 +161,13 @@ export interface RateChangeEvent extends Event<PlayerEventType.RATE_CHANGE> {
   readonly playbackRate: number;
 }
 
+/**
+ * Dispatched when the player's readystate changes.
+ *
+ * @category Events
+ * @category Player
+ * @public
+ */
 export interface ReadyStateChangeEvent extends Event<PlayerEventType.READYSTATE_CHANGE> {
   /**
    * The player's new ready state.
@@ -163,6 +179,7 @@ export interface ReadyStateChangeEvent extends Event<PlayerEventType.READYSTATE_
  * Dispatched when the player's volume changes.
  *
  * @category Events
+ * @category Player
  * @public
  */
 export interface VolumeChangeEvent extends Event<PlayerEventType.VOLUME_CHANGE> {
@@ -181,6 +198,7 @@ export interface VolumeChangeEvent extends Event<PlayerEventType.VOLUME_CHANGE> 
  * Dispatched when the player loaded media data.
  *
  * @category Events
+ * @category Player
  * @public
  */
 export interface ProgressEvent extends Event<PlayerEventType.PROGRESS> {
@@ -199,6 +217,7 @@ export interface ProgressEvent extends Event<PlayerEventType.PROGRESS> {
  * Dispatched during playback when a segment is not found.
  *
  * @category Events
+ * @category Player
  * @public
  */
 export interface SegmentNotFoundEvent extends Event<PlayerEventType.SEGMENT_NOT_FOUND> {
@@ -222,6 +241,7 @@ export interface SegmentNotFoundEvent extends Event<PlayerEventType.SEGMENT_NOT_
  * Dispatched when the player has started seeking to a new position.
  *
  * @category Events
+ * @category Player
  * @public
  */
 export interface SeekingEvent extends Event<PlayerEventType.SEEKING> {
@@ -235,6 +255,7 @@ export interface SeekingEvent extends Event<PlayerEventType.SEEKING> {
  * Dispatched when the player has finished seeking to a new position.
  *
  * @category Events
+ * @category Player
  * @public
  */
 export interface SeekedEvent extends Event<PlayerEventType.SEEKED> {
