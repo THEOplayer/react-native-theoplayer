@@ -2,6 +2,7 @@
  * Describes the key system configuration.
  *
  * @category Content Protection
+ * @category Source
  * @public
  */
 export interface KeySystemConfiguration {
@@ -100,6 +101,8 @@ export interface KeySystemConfiguration {
  * <br/> - `'temporary'`
  * <br/> - `'persistent'`
  *
+ * @category Content Protection
+ * @category Source
  * @public
  */
 export type LicenseType = 'temporary' | 'persistent';
@@ -107,6 +110,8 @@ export type LicenseType = 'temporary' | 'persistent';
 /**
  * Describes the FairPlay key system configuration.
  *
+ * @category Content Protection
+ * @category Source
  * @public
  */
 export interface FairPlayKeySystemConfiguration extends KeySystemConfiguration {
@@ -119,6 +124,8 @@ export interface FairPlayKeySystemConfiguration extends KeySystemConfiguration {
 /**
  * Describes the PlayReady key system configuration.
  *
+ * @category Content Protection
+ * @category Source
  * @public
  */
 export interface PlayReadyKeySystemConfiguration extends KeySystemConfiguration {
@@ -131,6 +138,8 @@ export interface PlayReadyKeySystemConfiguration extends KeySystemConfiguration 
 /**
  * Describes the Widevine key system configuration.
  *
+ * @category Content Protection
+ * @category Source
  * @public
  */
 export type WidevineKeySystemConfiguration = KeySystemConfiguration;
@@ -138,6 +147,8 @@ export type WidevineKeySystemConfiguration = KeySystemConfiguration;
 /**
  * Describes the ClearKey key system configuration.
  *
+ * @category Content Protection
+ * @category Source
  * @public
  */
 export interface ClearkeyKeySystemConfiguration extends KeySystemConfiguration {
@@ -150,6 +161,8 @@ export interface ClearkeyKeySystemConfiguration extends KeySystemConfiguration {
 /**
  * Describes the ClearKey decryption key.
  *
+ * @category Content Protection
+ * @category Source
  * @public
  */
 export interface ClearkeyDecryptionKey {
@@ -175,6 +188,8 @@ export interface ClearkeyDecryptionKey {
 /**
  * Describes the AES128 key system configuration.
  *
+ * @category Content Protection
+ * @category Source
  * @public
  */
 export interface AES128KeySystemConfiguration {
@@ -192,6 +207,8 @@ export interface AES128KeySystemConfiguration {
 /**
  * Describes the configuration of the DRM.
  *
+ * @category Content Protection
+ * @category Source
  * @public
  */
 export interface DRMConfiguration {
@@ -248,6 +265,8 @@ export interface DRMConfiguration {
 /**
  * The id of a key system. Possible values are 'widevine', 'fairplay' and 'playready'.
  *
+ * @category Content Protection
+ * @category Source
  * @public
  */
 export type KeySystemId = 'widevine' | 'fairplay' | 'playready';

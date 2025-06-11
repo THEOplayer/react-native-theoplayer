@@ -16,6 +16,7 @@
  * @remarks
  * <br/> - See {@link HlsPlaybackConfiguration.discontinuityAlignment}.
  *
+ * @category Source
  * @public
  */
 export type HlsDiscontinuityAlignment = 'auto' | 'playlist' | 'media';
@@ -23,6 +24,7 @@ export type HlsDiscontinuityAlignment = 'auto' | 'playlist' | 'media';
 /**
  * Represents a configuration for controlling playback of an MPEG-DASH stream.
  *
+ * @category Source
  * @public
  */
 export interface HlsPlaybackConfiguration {

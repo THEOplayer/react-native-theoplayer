@@ -6,6 +6,7 @@ import type { ServerSideAdInsertionConfiguration } from './ServerSideAdInsertion
  *
  * @category Ads
  * @category SSAI
+ * @category Source
  * @public
  */
 export type GoogleDAISSAIIntegrationID = 'google-dai';
@@ -17,6 +18,7 @@ export type GoogleDAISSAIIntegrationID = 'google-dai';
  *
  * @category Ads
  * @category SSAI
+ * @category Source
  * @public
  */
 export type DAIAvailabilityType = 'vod' | 'live';
@@ -26,6 +28,7 @@ export type DAIAvailabilityType = 'vod' | 'live';
  *
  * @category Ads
  * @category SSAI
+ * @category Source
  * @public
  */
 export interface GoogleDAIConfiguration extends ServerSideAdInsertionConfiguration {
@@ -91,6 +94,7 @@ export interface GoogleDAIConfiguration extends ServerSideAdInsertionConfigurati
  *
  * @category Ads
  * @category SSAI
+ * @category Source
  * @public
  */
 export interface GoogleDAILiveConfiguration extends GoogleDAIConfiguration {
@@ -114,6 +118,7 @@ export interface GoogleDAILiveConfiguration extends GoogleDAIConfiguration {
  *
  * @category Ads
  * @category SSAI
+ * @category Source
  * @public
  */
 export interface GoogleDAIVodConfiguration extends GoogleDAIConfiguration {
@@ -145,6 +150,7 @@ export interface GoogleDAIVodConfiguration extends GoogleDAIConfiguration {
  *
  * @category Ads
  * @category SSAI
+ * @category Source
  * @public
  */
 export interface GoogleDAITypedSource extends TypedSource {
