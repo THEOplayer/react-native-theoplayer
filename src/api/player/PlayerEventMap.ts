@@ -53,6 +53,9 @@ export enum PlayerEventType {
 /**
  * The events dispatched by THEOplayer.
  *
+ * @category Player
+ * @category Events
+ * @public
  */
 export interface PlayerEventMap {
   /**
