@@ -6,6 +6,7 @@ import { Resolution } from '../resolution/Resolution';
  * <br/> - `'quality'`: The player will optimize ABR behavior to focus displaying the best visual quality to the end-user. This strategy initiates playback with the highest bit rate suitable for the device.
  * <br/> - `'bandwidth'`: The player will optimize the ABR behavior to focus on displaying the most optimal quality based on historic data of available bandwidth and knowledge of the network conditions.
  *
+ * @category ABR
  * @public
  */
 export enum ABRStrategyType {
@@ -17,6 +18,7 @@ export enum ABRStrategyType {
 /**
  * Describes the metadata of the adaptive bitrate strategy.
  *
+ * @category ABR
  * @public
  */
 export interface ABRMetadata {
@@ -31,6 +33,7 @@ export interface ABRMetadata {
 /**
  * Describes the configuration of the adaptive bitrate strategy.
  *
+ * @category ABR
  * @public
  */
 export interface ABRStrategyConfiguration {
@@ -50,6 +53,7 @@ export interface ABRStrategyConfiguration {
 /**
  * The adaptive bitrate stratey.
  *
+ * @category ABR
  * @public
  */
 export type ABRStrategy = ABRStrategyConfiguration | ABRStrategyType;
@@ -57,6 +61,7 @@ export type ABRStrategy = ABRStrategyConfiguration | ABRStrategyType;
 /**
  * Describes the adaptive bitrate configuration.
  *
+ * @category ABR
  * @public
  */
 export interface ABRConfiguration {
