@@ -1,7 +1,21 @@
 import type { Track } from './Track';
 import type { TextTrackCue } from './TextTrackCue';
 
-export enum TextTrackType {
+/**
+ * The content type of a text track, represented by a value from the following list:
+ * <br/> - `'srt'`: The track contains SRT (SubRip Text) content.
+ * <br/> - `'ttml'`: The track contains TTML (Timed Text Markup Language) content.
+ * <br/> - `'webvtt'`: The track contains WebVTT (Web Video Text Tracks) content.
+ * <br/> - `'emsg'`: The track contains emsg (Event Message) content.
+ * <br/> - `'eventstream'`: The track contains Event Stream content.
+ * <br/> - `'id3'`: The track contains ID3 content.
+ * <br/> - `'cea608'`: The track contains CEA608 content.
+ * <br/> - `'daterange'`: The track contains HLS EXT-X-DATERANGE content.
+ *
+ * @category Media and Text Tracks
+ * @public
+ */
+enum TextTrackType {
   cea608 = 'cea608',
   id3 = 'id3',
   srt = 'srt',
@@ -12,6 +26,17 @@ export enum TextTrackType {
   emsg = 'emsg',
 }
 
+/**
+ * The kind of the text track, represented by a value from the following list:
+ * <br/> - `'subtitles'`: The track contains subtitles.
+ * <br/> - `'captions'`: The track contains closed captions, a translation of dialogue and sound effects.
+ * <br/> - `'descriptions'`: The track contains descriptions, a textual description of the video.
+ * <br/> - `'chapters'`: The track contains chapter titles.
+ * <br/> - `'metadata'`: The track contains metadata. This track will not serve display purposes.
+ *
+ * @category Media and Text Tracks
+ * @public
+ */
 export enum TextTrackKind {
   captions = 'captions',
   chapters = 'chapters',
@@ -21,12 +46,32 @@ export enum TextTrackKind {
   thumbnails = 'thumbnails',
 }
 
+/**
+ * The mode of the text track, represented by a value from the following list:
+ * <br/> - `'disabled'`: The track is disabled.
+ * <br/> - `'hidden'`: The track is hidden.
+ * <br/> - `'showing'`: The track is showing.
+ *
+ * @remarks
+ * <br/> - A disabled track is not displayed and exposes no active cues, nor fires cue events.
+ * <br/> - A hidden track is not displayed but exposes active cues and fires cue events.
+ * <br/> - A showing track is displayed, exposes active cues and fires cue events.
+ *
+ * @category Media and Text Tracks
+ * @public
+ */
 export enum TextTrackMode {
   disabled = 'disabled',
   showing = 'showing',
   hidden = 'hidden',
 }
 
+/**
+ * Represents a text track of a media resource.
+ *
+ * @category Media and Text Tracks
+ * @public
+ */
 export interface TextTrack extends Track {
   /**
    * The kind of the text track, represented by a value from the following list:
@@ -101,7 +146,10 @@ export interface TextTrack extends Track {
 
 /**
  * Retain renderable tracks.
+ *
  * https://html.spec.whatwg.org/multipage/embedded-content.html#text-track-showing
+ *
+ * @internal
  */
 export function filterRenderableTracks(textTracks: TextTrack[] | undefined): TextTrack[] | undefined {
   return textTracks && textTracks.filter((textTrack) => textTrack.kind === 'subtitles' || textTrack.kind === 'captions');
@@ -109,6 +157,8 @@ export function filterRenderableTracks(textTracks: TextTrack[] | undefined): Tex
 
 /**
  * Retain first thumbnail track encountered in the textTracks list.
+ *
+ * @internal
  */
 export function filterThumbnailTracks(textTracks: TextTrack[] | undefined): TextTrack | undefined {
   return textTracks && textTracks.find(isThumbnailTrack);
@@ -116,6 +166,8 @@ export function filterThumbnailTracks(textTracks: TextTrack[] | undefined): Text
 
 /**
  * Query whether a track is a valid thumbnail track.
+ *
+ * @internal
  */
 export function isThumbnailTrack(textTrack: TextTrack | undefined): boolean {
   return !!textTrack && (textTrack.kind === 'thumbnails' || (textTrack.kind === 'metadata' && textTrack.label === 'thumbnails'));

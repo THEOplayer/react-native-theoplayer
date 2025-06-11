@@ -4,6 +4,7 @@
  * @remarks
  * <br/> - A specific track type (e.g. {@link TextTrack}) will always be used.
  *
+ * @category Media and Text Tracks
  * @public
  */
 export interface Track {
