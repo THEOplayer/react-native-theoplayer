@@ -5,6 +5,7 @@ import type { ServerSideAdInsertionConfiguration } from './ServerSideAdInsertion
  * The identifier of the Google DAI integration.
  *
  * @category Ads
+ * @category SSAI
  * @public
  */
 export type GoogleDAISSAIIntegrationID = 'google-dai';
@@ -15,6 +16,7 @@ export type GoogleDAISSAIIntegrationID = 'google-dai';
  * <br/> - `'vod'`: The requested stream is a video-on-demand stream.
  *
  * @category Ads
+ * @category SSAI
  * @public
  */
 export type DAIAvailabilityType = 'vod' | 'live';
@@ -23,6 +25,7 @@ export type DAIAvailabilityType = 'vod' | 'live';
  * Represents a configuration for server-side ad insertion with the Google DAI pre-integration.
  *
  * @category Ads
+ * @category SSAI
  * @public
  */
 export interface GoogleDAIConfiguration extends ServerSideAdInsertionConfiguration {
@@ -87,6 +90,7 @@ export interface GoogleDAIConfiguration extends ServerSideAdInsertionConfigurati
  * Represents a configuration for server-side ad insertion with the Google DAI pre-integration for a Live media stream.
  *
  * @category Ads
+ * @category SSAI
  * @public
  */
 export interface GoogleDAILiveConfiguration extends GoogleDAIConfiguration {
@@ -109,6 +113,7 @@ export interface GoogleDAILiveConfiguration extends GoogleDAIConfiguration {
  * Represents a configuration for server-side ad insertion with the Google DAI pre-integration for a VOD media stream.
  *
  * @category Ads
+ * @category SSAI
  * @public
  */
 export interface GoogleDAIVodConfiguration extends GoogleDAIConfiguration {
@@ -139,6 +144,7 @@ export interface GoogleDAIVodConfiguration extends GoogleDAIConfiguration {
  * Represents a media resource with a Google DAI server-side ad insertion request.
  *
  * @category Ads
+ * @category SSAI
  * @public
  */
 export interface GoogleDAITypedSource extends TypedSource {

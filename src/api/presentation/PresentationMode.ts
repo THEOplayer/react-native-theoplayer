@@ -6,7 +6,6 @@
  *
  * @public
  */
-
 export enum PresentationMode {
   fullscreen = 'fullscreen',
   inline = 'inline',
