@@ -1,6 +1,7 @@
 /**
  * Describes the configuration of an analytics integration as part of the SourceDescription.
  *
+ * @category Analytics
  * @public
  */
 export interface AnalyticsDescription {
