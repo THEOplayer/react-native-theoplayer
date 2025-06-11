@@ -6,6 +6,7 @@ import type { CachingTask } from '../CachingTask';
  * The events types dispatched by the {@link MediaCacheAPI | cache API}.
  *
  * @category Caching
+ * @category Events
  * @public
  */
 export enum CacheEventType {
@@ -18,6 +19,7 @@ export enum CacheEventType {
  * The events dispatched by the {@link MediaCacheAPI | cache API}.
  *
  * @category Caching
+ * @category Events
  * @public
  */
 export interface CacheEventMap {
