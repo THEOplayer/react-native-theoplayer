@@ -92,3 +92,4 @@ example/dist
 plugins/typedoc-platform-icons/dist
 example/ios/.xcode.env.local
 e2e/screenshots
+e2e/ios/.xcode.env.local
