@@ -5,11 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [9.3.0] - 25-06-02
+## [Unreleased]
 
 ### Added
 
 - Added support for the new `TextTrackStyle.marginBottom` and `TextTrackStyle.marginRight` API's on THEOplayer Android SDK v9.5.0.
+
+## [9.3.0] - 25-06-02
 
 ### Fixed
 
