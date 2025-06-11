@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed an issue with the Expo plugin where Android extensions would not be properly enabled.
+
 ### Added
 
 - Added support for the new `TextTrackStyle.marginBottom` and `TextTrackStyle.marginRight` API's on THEOplayer Android SDK v9.5.0.
