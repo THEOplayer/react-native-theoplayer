@@ -7,6 +7,7 @@
  * @remarks
  * <br/> - An ad rule is a simplified VMAP alternative only available in the Google IMA integration.
  *
+ * @category Ads
  * @public
  */
 export type AdSourceType = 'vast' | 'vmap' | 'adrule';
@@ -14,6 +15,7 @@ export type AdSourceType = 'vast' | 'vmap' | 'adrule';
 /**
  * Describes the source of the ad.
  *
+ * @category Ads
  * @public
  */
 export interface AdSource {
@@ -33,6 +35,7 @@ export interface AdSource {
 /**
  * Describes an ad break request.
  *
+ * @category Ads
  * @public
  */
 export interface AdDescription {
@@ -97,6 +100,7 @@ export interface AdDescription {
  * @remarks
  * <br/> - An empty string defaults to `'theo'`.
  *
+ * @category Ads
  * @public
  */
 export enum AdIntegrationKind {
