@@ -1,6 +1,7 @@
 /**
  * The type of the interstitial.
  *
+ * @category Ads
  * @category THEOads
  * @public
  */
@@ -9,6 +10,7 @@ export type InterstitialType = 'adbreak' | 'overlay';
 /**
  * The THEOads interstitial.
  *
+ * @category Ads
  * @category THEOads
  * @public
  */

@@ -3,6 +3,7 @@ import { Interstitial } from './Interstitial';
 /**
  * The THEOads interstitial that corresponds with overlay playback.
  *
+ * @category Ads
  * @category THEOads
  * @public
  */
@@ -33,6 +34,7 @@ export interface OverlayInterstitial extends Interstitial {
 /**
  * The position information of the overlay.
  *
+ * @category Ads
  * @category THEOads
  * @public
  */
@@ -46,6 +48,7 @@ export interface OverlayPosition {
 /**
  * The size information of the overlay.
  *
+ * @category Ads
  * @category THEOads
  * @public
  */
