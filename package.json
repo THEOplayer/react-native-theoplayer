@@ -57,6 +57,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
+    "@expo/config-plugins": "^10.0.2",
     "@react-native/eslint-config": "^0.79.0",
     "@types/react": "^19.0.0",
     "eslint": "^8.57.1",
