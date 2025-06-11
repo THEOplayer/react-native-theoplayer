@@ -1,6 +1,12 @@
 import { CacheEventType, MediaCache } from 'react-native-theoplayer';
 import { useEffect, useState } from 'react';
 
+/**
+ * A convenience hook that keeps a list of all caching tasks.
+ *
+ * @category Caching
+ * @public
+ */
 export const useCachingTaskList = (debug = false) => {
   const [tasks, setTasks] = useState([...MediaCache.tasks]);
   useEffect(() => {

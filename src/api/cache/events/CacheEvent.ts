@@ -2,6 +2,12 @@ import type { Event } from '../../event/Event';
 import type { CacheStatus } from '../MediaCacheAPI';
 import type { CachingTask } from '../CachingTask';
 
+/**
+ * The events types dispatched by the {@link MediaCacheAPI | cache API}.
+ *
+ * @category Caching
+ * @public
+ */
 export enum CacheEventType {
   statechange = 'statechange',
   addtask = 'addtask',
@@ -11,6 +17,7 @@ export enum CacheEventType {
 /**
  * The events dispatched by the {@link MediaCacheAPI | cache API}.
  *
+ * @category Caching
  * @public
  */
 export interface CacheEventMap {
@@ -30,6 +37,12 @@ export interface CacheEventMap {
   [CacheEventType.removetask]: RemoveCachingTaskEvent;
 }
 
+/**
+ * CacheStatusChangeEvent is dispatched when the status of a caching task is updated.
+ *
+ * @category Caching
+ * @public
+ */
 export interface CacheStatusChangeEvent extends Event<CacheEventType.statechange> {
   /**
    * The cache's new status.
@@ -38,8 +51,9 @@ export interface CacheStatusChangeEvent extends Event<CacheEventType.statechange
 }
 
 /**
- * Dispatched when a caching task is added.
+ * AddCachingTaskEvent is dispatched when a caching task is added.
  *
+ * @category Caching
  * @public
  */
 export interface AddCachingTaskEvent extends Event<CacheEventType.addtask> {
@@ -50,8 +64,9 @@ export interface AddCachingTaskEvent extends Event<CacheEventType.addtask> {
 }
 
 /**
- * Dispatched when a caching task is removed.
+ * RemoveCachingTaskEvent is dispatched when a caching task is removed.
  *
+ * @category Caching
  * @public
  */
 export interface RemoveCachingTaskEvent extends Event<CacheEventType.removetask> {

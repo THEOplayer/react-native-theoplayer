@@ -1,6 +1,7 @@
 /**
  * The preferred track selection.
  *
+ * @category Caching
  * @public
  */
 export interface CachingPreferredTrackSelection {

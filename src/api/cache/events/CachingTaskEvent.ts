@@ -1,5 +1,11 @@
 import type { Event } from '../../event/Event';
 
+/**
+ * The events types dispatched by the {@link CachingTask}.
+ *
+ * @category Caching
+ * @public
+ */
 export enum CachingTaskEventType {
   progress = 'progress',
   statechange = 'statechange',
@@ -8,6 +14,7 @@ export enum CachingTaskEventType {
 /**
  * The events dispatched by the {@link CachingTask}.
  *
+ * @category Caching
  * @public
  */
 export interface CachingTaskEventMap {

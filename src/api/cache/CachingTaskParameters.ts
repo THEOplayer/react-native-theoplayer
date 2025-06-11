@@ -4,6 +4,8 @@ import type { CachingPreferredTrackSelection } from "./CachingPreferredTrackSele
  * The types of cache storage supported by THEOplayer.
  *
  * @platform android
+ * @category Caching
+ * @public
  */
 export enum StorageType {
   /**
@@ -29,6 +31,7 @@ export enum StorageType {
 /**
  * Describes the configuration of a caching task.
  *
+ * @category Caching
  * @public
  */
 export interface CachingTaskParameters {
