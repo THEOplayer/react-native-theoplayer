@@ -19,8 +19,7 @@ export interface MediaControlConfiguration {
    *
    * @defaultValue `true`
    *
-   * @remarks
-   * <br/> - This property only applies to Web and Android.
+   * @platform web,android
    */
   readonly mediaSessionEnabled?: boolean;
 
@@ -44,8 +43,7 @@ export interface MediaControlConfiguration {
    *
    * @defaultValue `false`
    *
-   * @remarks
-   * <br/> - This property only applies to iOS and Android.
+   * @platform ios,android
    */
   readonly convertSkipToSeek?: boolean;
 }

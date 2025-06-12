@@ -157,9 +157,6 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
 
   /**
    * The text track style API.
-   *
-   * @remarks
-   * Only available for Web.
    */
   readonly textTrackStyle: TextTrackStyle;
 
@@ -186,8 +183,7 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
   /**
    * Used to set the aspect ratio of the player.
    *
-   * @remarks
-   * Only available for iOS and Android.
+   * @platform ios,android
    */
   aspectRatio: AspectRatio;
 
@@ -195,8 +191,8 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
    * Specifies where the player is displaying the video.
    *
    * @defaultValue `SURFACE_VIEW`
-   * @remarks
-   * Only available for Android.
+   *
+   * @platform android
    */
   renderingTarget?: RenderingTarget;
 
@@ -204,8 +200,8 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
    * Toggle the wake-lock on the player view. The screen will time out if disabled.
    *
    * @defaultValue `true`
-   * @remarks
-   * Only available on Android.
+   *
+   * @platform android
    */
   keepScreenOn: boolean;
 

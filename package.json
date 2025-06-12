@@ -1,6 +1,6 @@
 {
   "name": "react-native-theoplayer",
-  "version": "9.3.0",
+  "version": "9.4.0",
   "description": "A THEOplayer video component for react-native.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -32,8 +32,7 @@
     "manifest": "node manifest.js > src/manifest.json",
     "prepare": "npm run manifest && bob build && husky",
     "pods": "cd example && pod-install --quiet",
-    "docs": "npm run plugin:build && typedoc --treatWarningsAsErrors",
-    "plugin:build": "cd plugins/typedoc-platform-icons && tsc"
+    "docs": "typedoc --treatWarningsAsErrors"
   },
   "lint-staged": {
     "(src|example|e2e)/**/*.{js,jsx,ts,tsx}": [
@@ -58,6 +57,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
+    "@expo/config-plugins": "^10.0.2",
     "@react-native/eslint-config": "^0.79.0",
     "@types/react": "^19.0.0",
     "eslint": "^8.57.1",

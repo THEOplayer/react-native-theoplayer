@@ -15,6 +15,7 @@ export interface GoogleImaConfiguration {
    * latency and thus user experience. This applies to all VAST wrapper ads. If
    * the number of redirects exceeds |maxRedirects|, the ad request will fail with
    * error code 302.
+   *
    * @defaultValue `4`
    */
   maxRedirects?: number;
@@ -25,7 +26,8 @@ export interface GoogleImaConfiguration {
   featureFlags?: { [flag: string]: string };
 
   /**
-   * Specifies whether to automatically play VMAP and ad rules ad breaks. The
+   * Specifies whether to automatically play VMAP and ad rules ad breaks.
+   *
    * @defaultValue `true`
    */
   autoPlayAdBreaks?: boolean;
@@ -40,6 +42,7 @@ export interface GoogleImaConfiguration {
    * Toggles debug mode which will output detailed log information to the console.
    * Debug mode should be disabled in Release and will display a watermark when
    * enabled.
+   *
    * @defaultValue `false`
    */
   enableDebugMode?: boolean;
@@ -54,8 +57,8 @@ export interface GoogleImaConfiguration {
   bitrate?: number;
 
   /**
-   * The amount of time that the SDK will wait before moving onto the next ad for loading. 
-   * This value will be specified in seconds. 
+   * The amount of time that the SDK will wait before moving onto the next ad for loading.
+   * This value will be specified in seconds.
    */
   adLoadTimeout?: number;
 }

@@ -76,6 +76,7 @@ export interface MillicastConnectOptions {
    * Override which events will be delivered by the server.
    *
    * @platform web
+   *
    * @remarks
    * Possible values are: `'active'`,`'inactive'`,`'vad'`,`'layers'`,`'viewercount'` and `'updated'`
    */
@@ -85,6 +86,7 @@ export interface MillicastConnectOptions {
    * Do not receive media from these source ids.
    *
    * @platform web,android,ios
+   *
    * @remarks
    * Maps to the property `excludedSourceId` on iOS and Android.
    */
@@ -116,10 +118,11 @@ export interface MillicastConnectOptions {
    * Select the simulcast encoding layer and svc layers for the main video track, leave empty for automatic layer selection based on bandwidth estimation.
    *
    * @platform web
+   *
    * @remarks
    * See [LayerInfo](https://millicast.github.io/millicast-sdk/global.html#LayerInfo) for more details
    */
-  layer?: MillicastLayerInfo
+  layer?: MillicastLayerInfo;
 
   /**
    * Sets the maximum bitrate in KBps that the subscriber can receive.
@@ -140,6 +143,7 @@ export interface MillicastConnectOptions {
    * Number of audio tracks to receive VAD multiplexed audio for secondary sources.
    *
    * @platform web,android,ios
+   *
    * @remarks
    * Maps to the property `multiplexedAudioTrack` on iOS and Android.
    */

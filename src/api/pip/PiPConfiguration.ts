@@ -12,10 +12,20 @@ export interface PiPConfiguration {
   readonly startsAutomatically?: boolean;
 
   /**
+   * Whether Picture in Picture should reparent player to the root.
+   *
+   * @defaultValue `false`
+   *
+   * @platform android
+   */
+  readonly reparentPip?: boolean;
+
+  /**
    * Whether Picture in Picture should remain active when setting a new (non-undefined) source.
    *
    * @defaultValue `false`
-   * @remark: Only configurable for iOS.
+   *
+   * @platform ios
    */
   readonly retainPipOnSourceChange?: boolean;
 }

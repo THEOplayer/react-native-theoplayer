@@ -71,10 +71,11 @@ export interface GoogleDAIConfiguration extends ServerSideAdInsertionConfigurati
     /**
      * The network code for the publisher making this stream request.
      *
+     * @platform web
+     *
      * @remarks
      * <br/> - See {@link https://developers.google.com/ad-manager/dynamic-ad-insertion/sdk/html5/reference/js/StreamRequest#networkCode}
      *         for more information.
-     * <br/> - Available on Web only.
      */
     networkCode?: string;
 }

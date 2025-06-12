@@ -54,8 +54,7 @@ export enum SourceIntegrationId {
 /**
  * The playback pipeline to use to play a stream.
  *
- * @remarks
- * <br/> - Available on Android only.
+ * @platform android
  */
 export enum PlaybackPipeline {
   LEGACY = 'legacy',
@@ -262,8 +261,7 @@ export interface TextTrackDescription {
    *
    * @internal
    *
-   * @remarks
-   * <br/> - Available on iOS.
+   * @platform ios
    */
   subtitlePTS?: string;
 
@@ -271,8 +269,10 @@ export interface TextTrackDescription {
    * The localTime that matches the PTS value that is used to sync the track with the video.
    *
    * @internal
+   *
+   * @platform ios
+   *
    * @remarks
-   * <br/> - Available on iOS.
    * <br/> - Format: "HH:mm:mm:SSS"
    * <br/> - Default value is "00:00:00:000"
    */
@@ -304,8 +304,7 @@ export interface BaseSource {
    * The offset in seconds used to determine the live point.
    * This live point is the end of the manifest minus the provided offset.
    *
-   * @remarks
-   * <br/> - Available on Web and Android.
+   * @platform web,android
    *
    * @defaultValue Three times the segment's target duration.
    */
@@ -315,7 +314,6 @@ export interface BaseSource {
    * The URL of a time server used by the player to synchronise the time in DASH sources.
    *
    * @remarks
-   * <br/> - Available since v2.47.0.
    * <br/> - The time server should return time in ISO-8601 format.
    * <br/> - Overrides the time server provided the DASH manifest's `<UTCTiming>`.
    * <br/> - Only this source will use the time server. Alternatively, for all source use {@link SourceConfiguration.timeServer}.
@@ -329,7 +327,6 @@ export interface BaseSource {
    *
    * @remarks
    * <br/> - This setting must be `true` when using Low-Latency CMAF with ABR.
-   * <br/> - Available since v2.62.0.
    */
   lowLatency?: boolean;
 
@@ -337,7 +334,6 @@ export interface BaseSource {
    * The configuration for controlling playback of an MPEG-DASH stream.
    *
    * @remarks
-   * <br/> - Available since v2.79.0.
    * <br/> - Ignored for non-DASH streams.
    */
   dash?: DashPlaybackConfiguration;
@@ -346,7 +342,6 @@ export interface BaseSource {
    * The configuration for controlling playback of an HLS stream.
    *
    * @remarks
-   * <br/> - Available since v2.82.0.
    * <br/> - Ignored for non-HLS streams.
    */
   hls?: HlsPlaybackConfiguration;
@@ -355,9 +350,9 @@ export interface BaseSource {
    * The playback pipeline to use for this stream.
    *
    * @defaultValue [PlaybackPipeline.MEDIA3]
-   * @since v9.0.0
-   * @remarks
-   * <br/> - Available on Android only.
+   * @since React Native THEOplayer SDK v9.0.0.
+   * @since Native THEOplayer SDK v9.0.0.
+   * @platform android
    */
   playbackPipeline?: PlaybackPipeline;
 }
@@ -373,7 +368,6 @@ export interface TypedSource extends BaseSource {
    *
    * @remarks
    * <br/> - Required if the `ssai` property is absent.
-   * <br/> - Available since v2.4.0.
    */
   src?: string;
 
@@ -383,34 +377,25 @@ export interface TypedSource extends BaseSource {
    * <br/> - `'application/x-mpegURL'` or `'application/vnd.apple.mpegurl'`: The media resource is an HLS stream.
    * <br/> - `'video/mp4'`, `'video/webm'` and other formats: The media resource should use native HTML5 playback if supported by the browser.
    * <br/> - `'application/vnd.theo.hesp+json'`: The media resource is an HESP stream.
-   *
-   * @remarks
-   * <br/> - Available since v2.4.0.
    */
   type?: string;
 
   /**
    * The content protection parameters for the media resource.
-   *
-   * @remarks
-   * <br/> - Available since v2.15.0.
    */
   contentProtection?: DRMConfiguration;
 
   /**
    * The headers included in the request when retrieving the resource.
    *
-   * @remarks
-   * <br/> - Available on iOS and Android.
-   * <br/> - Available since v7.9.0.
+   * @platform ios,android
+   *
+   * @since React Native THEOplayer SDK v7.9.0.
    */
   headers?: { [key: string]: string };
 
   /**
    * The Server-side Ad Insertion parameters for the media resource.
-   *
-   * @remarks
-   * <br/> - Available since v2.12.0.
    */
   ssai?: ServerSideAdInsertionConfiguration;
 }

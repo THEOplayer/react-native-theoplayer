@@ -66,8 +66,7 @@ export interface PlayerConfiguration {
   /**
    * The retry configuration for the player.
    *
-   * @remarks
-   * <br/> - This parameter only applies to Web and Android platforms.
+   * @platform web,android
    */
   readonly retryConfiguration?: RetryConfiguration;
 
@@ -77,8 +76,7 @@ export interface PlayerConfiguration {
    *
    * @defaultValue Three times the target duration of a segment, as specified by the manifest.
    *
-   * @remarks
-   * <br/> - This parameter only applies to Web and Android platforms.
+   * @platform web,android
    */
   liveOffset?: number;
 
@@ -90,22 +88,22 @@ export interface PlayerConfiguration {
   /**
    * Whether multimedia tunneling is enabled for the player or not.
    *
-   * <ul>
-   *     <li>Only supported with the Media3 integration.</li>
-   *     <li>Only supported if the media being played includes both audio and video.</li>
-   *     <li>Only supported on limited number of video codecs and devices.</li>
-   * </ul>
-   *
    * @defaultValue false
    *
+   * @platform android
+   *
    * @remarks
-   * <br/> - This parameter only applies to Android platforms.
+   * <br/> - Only supported with the Media3 integration.
+   * <br/> - Only supported if the media being played includes both audio and video.
+   * <br/> - Only supported on limited number of video codecs and devices.
    */
   tunnelingEnabled?: boolean;
 }
 
 /**
  * The muted autoplay policy of a player for web.
+ *
+ * @remarks
  * <br/> - `'none'`: Disallow muted autoplay. If the player is requested to autoplay while unmuted, and the platform does not support unmuted autoplay, the player will not start playback.
  * <br/> - `'all'`: Allow muted autoplay. If the player is requested to autoplay while unmuted, and the platform supports muted autoplay, the player will start muted playback.
  * <br/> - `'content'`: Allow muted autoplay only for the main content. Disallow muted autoplay for e.g. advertisements. (Not yet supported.)

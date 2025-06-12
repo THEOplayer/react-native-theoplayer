@@ -3,8 +3,7 @@ import type { CachingPreferredTrackSelection } from "./CachingPreferredTrackSele
 /**
  * The types of cache storage supported by THEOplayer.
  *
- * @remarks
- * <br/> - Available only on Android.
+ * @platform android
  */
 export enum StorageType {
   /**
@@ -36,13 +35,14 @@ export interface CachingTaskParameters {
   /**
    * The amount of data to cache for the given stream.
    *
+   * @platform web,android
+   *
    * @remarks
-   * <br/> - Available only on Web and Android. On iOS this value we always be '100%'.
+   * <br/> - On iOS this value will always be '100%'.
    *
    * Possible formats:
    * <br/> - A number in seconds.
    * <br/> - A percentage string (XX%) for a proportion of the content duration.
-   *
    */
   readonly amount: number | string;
 
@@ -71,8 +71,9 @@ export interface CachingTaskParameters {
   /**
    * The preferred audio/text tracks to cache.
    *
+   * @platform ios,android
+   *
    * @remarks
-   * <br/> - Available only on iOS and Android.
    * <br/> - By default, the first track will be picked.
    */
   readonly preferredTrackSelection?: CachingPreferredTrackSelection;
@@ -80,8 +81,9 @@ export interface CachingTaskParameters {
   /**
    * An indication of whether the data should be cached on a cellular network, or only on WIFI. Defaults to true.
    *
+   * @platform ios
+   *
    * @remarks
-   * <br/> - Available only on iOS.
    * <br/> - The value can not be changed on a scheduled asset.
    * <br/> - If the download is scheduled/started on WIFI-only mode, and suddenly we would like allow Cellular Network download too, the `CachingTask` has to be removed and scheduled again with the new `CachingParamaters`.
    */
@@ -90,10 +92,9 @@ export interface CachingTaskParameters {
   /**
    * The storage type to use for caching.
    *
-   * @remarks
-   * <br/> - Available only on Android.
-   *
    * @defaultValue [StorageType.MEDIA3]
+   *
+   * @platform android
    */
   readonly storageType?: StorageType;
 }
