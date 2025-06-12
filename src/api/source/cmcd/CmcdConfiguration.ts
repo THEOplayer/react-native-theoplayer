@@ -6,16 +6,14 @@ export interface CmcdConfiguration {
   /**
    * The content ID parameter which should be passed as a CMCD value. If left empty, no content ID will be sent.
    *
-   * @remarks
-   * Web only
+   * @platform web
    */
   contentID?: string;
 
   /**
    * The session ID parameter which should be passed as a CMCD value. If left empty, a UUIDv4 will be generated when applying the configuration.
    *
-   * @remarks
-   * Web only
+   * @platform web
    */
   sessionID?: string;
 
@@ -23,8 +21,7 @@ export interface CmcdConfiguration {
    * A flag to indicate if request IDs should be sent or not.
    * When set to a truthy value, a UUIDv4 will be sent as a request id (`rid`) with every request to allow for request tracing.
    *
-   * @remarks
-   * Web only
+   * @platform web
    */
   sendRequestID?: boolean;
 
@@ -32,8 +29,7 @@ export interface CmcdConfiguration {
    * The target URI where client data is to be delivered in case the {@link transmissionMode} is set
    * to {@link CmcdTransmissionMode.JSON_OBJECT}.
    *
-   * @remarks
-   * Web only
+   * @platform web
    */
   jsonObjectTargetURI?: string;
 
@@ -42,8 +38,7 @@ export interface CmcdConfiguration {
    * Note custom keys MUST carry a hyphenated prefix to ensure that there will not be a namespace collision with future
    * revisions to the specification. Clients SHOULD use a reverse-DNS syntax when defining their own prefix.
    *
-   * @remarks
-   * Web only
+   * @platform web
    */
   customKeys?: {
     [key: string]: string | number | boolean;

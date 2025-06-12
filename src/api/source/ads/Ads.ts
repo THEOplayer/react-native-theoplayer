@@ -78,7 +78,6 @@ export interface AdDescription {
    * @remarks
    * <br/> - A timestamp which is not in the playback window will result in the ad break not being started.
    * <br/> - VMAP resources will ignore this value as they contain an internal offset.
-   * <br/> - Since 2.18, numbers are supported for the Google IMA integration, since 2.21 other formats as well.
    *
    * @defaultValue `'start'`
    *

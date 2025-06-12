@@ -75,9 +75,9 @@ export interface TheoAdDescription extends AdDescription {
   /**
    * The streamActivityMonitorId added to the GAM Pod stream request.
    *
-   * @remarks
-   * <br/> - Available since v8.17.0.
-   * <br/> - Available on Web only.
+   * @platform web
+   *
+   * @since React Native THEOplayer SDK v8.17.0.
    */
   streamActivityMonitorId?: string;
 

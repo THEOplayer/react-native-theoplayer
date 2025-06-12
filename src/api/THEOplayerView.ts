@@ -19,8 +19,7 @@ export interface THEOplayerViewProps {
    *
    * @defaultValue A style that enforces aspectRatio 16:9.
    *
-   * @remarks
-   * <br/> - This property only applies to iOS & Android platforms.
+   * @platform ios,android
    */
   posterStyle?: StyleProp<ImageStyle> | undefined;
 

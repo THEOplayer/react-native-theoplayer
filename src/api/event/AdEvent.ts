@@ -112,16 +112,14 @@ export enum AdEventType {
   /**
    * Dispatched when an ad is clicked.
    *
-   * @remarks
-   * <br/> - Available only on iOS and Android.
+   * @platform ios,android
    */
   AD_CLICKED = 'adclicked',
 
   /**
    * Dispatched when a non-clickthrough portion of an ad is tapped.
    *
-   * @remarks
-   * <br/> - Available only on iOS and Android.
+   * @platform ios,android
    */
   AD_TAPPED = 'adtapped',
 
@@ -131,8 +129,7 @@ export enum AdEventType {
    * - On iOS and Android mobile apps, the SDK will navigate to the landing page.
    * - On tvOS and Android TV, the SDK will present a modal dialog containing the VAST icon fallback image.
    *
-   * @remarks
-   * <br/> - Available only on Android.
+   * @platform android
    *
    * @see <a href="https://developers.google.com/interactive-media-ads/docs/sdks/android/client-side/api/reference/com/google/ads/interactivemedia/v3/api/AdEvent.AdEventType#public-static-final-adevent.adeventtype-icon_tapped">Android IMA reference</a>
    */
@@ -141,8 +138,7 @@ export enum AdEventType {
   /**
    * Dispatched when the user has closed the icon fallback image dialog.
    *
-   * @remarks
-   * <br/> - Available only on Android.
+   * @platform android
    *
    * @see <a href="https://developers.google.com/interactive-media-ads/docs/sdks/android/client-side/api/reference/com/google/ads/interactivemedia/v3/api/AdEvent.AdEventType#public-static-final-adevent.adeventtype-icon_fallback_image_closed">Android IMA reference</a>
    */

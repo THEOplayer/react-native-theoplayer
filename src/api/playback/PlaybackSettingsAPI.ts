@@ -12,11 +12,10 @@ export interface PlaybackSettingsAPI {
    * </ul>
    *
    * @experimental
+   *
    * @param {boolean} useFastStartup Whether fast startup is enabled.
    *
-   * @remarks
-   * - This API is experimental.
-   * - This property is supported on Android platforms only.
+   * @platform android
    */
   useFastStartup(useFastStartup: boolean): void;
 
@@ -31,9 +30,7 @@ export interface PlaybackSettingsAPI {
    * @param {number} correctionMs The correction delay in milliseconds.
    *                              Positive values advance the audio, while negative values delay it.
    *
-   * @remarks
-   * - This API is experimental.
-   * - This property is supported on Android platforms only.
+   * @platform android
    */
   setLipSyncCorrection(correctionMs: number): void;
 }

@@ -15,7 +15,8 @@ export interface BackgroundAudioConfiguration {
    * Whether background audio should be resumed after an interruption on iOS (e.g. incoming call).
    *
    * @defaultValue `false`
-   * @remarks Applies to iOS only, impacting behaviour for handling interruptions.
+   *
+   * @platform ios
    */
   readonly shouldResumeAfterInterruption?: boolean;
 
@@ -23,7 +24,8 @@ export interface BackgroundAudioConfiguration {
    * Specify the mode for the native iOS AVAudioSession.
    *
    * @defaultValue `AudioSessionMode.MOVIE_PLAYBACK`
-   * @remarks Applies to iOS only, impacting behaviour for handling interruptions.
+   *
+   * @platform ios
    */
   readonly audioSessionMode?: AudioSessionMode;
 }

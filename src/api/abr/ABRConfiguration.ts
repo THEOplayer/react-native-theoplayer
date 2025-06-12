@@ -64,20 +64,20 @@ export interface ABRConfiguration {
    * The adaptive bitrate strategy.
    *
    * @defaultValue `'bandwidth'`
-   * @remarks
-   * <br/> - This property is currently supported on Web and Android platforms only.
+   *
+   * @platform web,android
    */
   strategy?: ABRStrategy;
 
   /**
    * The amount which the player should buffer ahead of the current playback position, in seconds.
    *
+   * @defaultValue `20`
+   *
    * @remarks
    * <br/> - Before v4.3.0: This duration has a maximum of 60 seconds.
    * <br/> - After v4.3.0: This duration has no maximum.
    * <br/> - The player might reduce or ignore the configured amount because of device or performance constraints.
-   *
-   * @defaultValue `20`
    */
   targetBuffer?: number;
 
@@ -91,8 +91,7 @@ export interface ABRConfiguration {
    *
    * @defaultValue `30`
    *
-   * @remarks
-   * <br/> - This property is currently supported on Web platforms only.
+   * @platform web
    */
   bufferLookbackWindow?: number;
 
@@ -104,8 +103,7 @@ export interface ABRConfiguration {
    * it will reduce `maxBufferLength` and restrict `targetBuffer` to be less than
    * this maximum.
    *
-   * @remarks
-   * <br/> - This property is currently supported on Web platforms only.
+   * @platform web
    */
   readonly maxBufferLength?: number;
 
@@ -115,8 +113,7 @@ export interface ABRConfiguration {
    * Set preferredPeakBitRate to non-zero to indicate that the player should attempt to limit item playback to that bit rate, expressed in bits per second.
    * If network bandwidth consumption cannot be lowered to meet the preferredPeakBitRate, it will be reduced as much as possible while continuing to play the item.
    *
-   * @remarks
-   * <br/> - This property is supported on iOS platforms only.
+   * @platform ios
    */
   preferredPeakBitRate?: number;
 
@@ -126,8 +123,7 @@ export interface ABRConfiguration {
    * The default value is (0,0), which indicates that the client enforces no limit on video resolution. Other values indicate a preferred maximum video resolution.
    * It only applies to HTTP Live Streaming asset.
    *
-   * @remarks
-   * <br/> - This property is supported on iOS platforms only.
+   * @platform ios
    */
   preferredMaximumResolution?: Resolution;
 }
