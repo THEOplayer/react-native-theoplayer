@@ -3,6 +3,7 @@ import type { AdDescription, AdSource } from "./Ads";
 /**
  * Describes an ad break request.
  *
+ * @category Ads
  * @public
  */
 export interface THEOplayerAdDescription extends AdDescription {

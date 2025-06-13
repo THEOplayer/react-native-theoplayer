@@ -2,6 +2,8 @@ import type { CertificateRequest, ContentProtectionRequest, LicenseRequest } fro
 
 /**
  * The response, either of a license or for a certificate request.
+ *
+ * @category Content Protection
  * @public
  */
 export interface ContentProtectionResponse {
@@ -41,6 +43,8 @@ export interface ContentProtectionResponse {
 
 /**
  * The response of a certificate request.
+ *
+ * @category Content Protection
  * @public
  */
 export interface CertificateResponse extends ContentProtectionResponse {
@@ -52,6 +56,8 @@ export interface CertificateResponse extends ContentProtectionResponse {
 
 /**
  * The response of a license request.
+ *
+ * @category Content Protection
  * @public
  */
 export interface LicenseResponse extends ContentProtectionResponse {

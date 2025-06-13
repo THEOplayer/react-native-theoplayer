@@ -1,5 +1,11 @@
 import { NodeHandle } from 'react-native';
 
+/**
+ * The list of reasons for which an obstruction would be registered as friendly.
+ *
+ * @category Ads
+ * @public
+ */
 export enum OmidFriendlyObstructionPurpose {
   /**
    * The video overlay is one of the video player's control button.
@@ -22,6 +28,12 @@ export enum OmidFriendlyObstructionPurpose {
   OTHER = 'other',
 }
 
+/**
+ * Represents a friendly obstruction instance for OMID.
+ *
+ * @category Ads
+ * @public
+ */
 export interface OmidFriendlyObstruction {
   /**
    * The View of the friendly obstruction.
@@ -43,6 +55,9 @@ export interface OmidFriendlyObstruction {
 
 /**
  * The Omid API, which can be used to add as well as remove friendly video controls overlay obstructions.
+ *
+ * @category Ads
+ * @public
  */
 export interface Omid {
 

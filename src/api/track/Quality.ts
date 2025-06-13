@@ -1,6 +1,7 @@
 /**
  * Represents a quality of a media track.
  *
+ * @category Media and Text Tracks
  * @public
  */
 export interface Quality {
@@ -54,6 +55,7 @@ export interface Quality {
 /**
  * Represents a quality of a video track.
  *
+ * @category Media and Text Tracks
  * @public
  */
 export interface VideoQuality extends Quality {
@@ -81,6 +83,7 @@ export interface VideoQuality extends Quality {
 /**
  * Represents a quality of an audio track.
  *
+ * @category Media and Text Tracks
  * @public
  */
 export interface AudioQuality extends Quality {

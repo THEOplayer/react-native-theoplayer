@@ -1,6 +1,7 @@
 /**
  * Describes the configuration of Google IMA.
  *
+ * @category Ads
  * @internal
  */
 export interface GoogleImaConfiguration {

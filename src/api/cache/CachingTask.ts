@@ -4,6 +4,7 @@ import type { CachingTaskLicense } from './CachingTaskLicense';
 import type { CachingTaskParameters } from './CachingTaskParameters';
 import type { CachingTaskEventMap } from './events/CachingTaskEvent';
 import type { TimeRange } from '../timeranges/TimeRange';
+
 /**
  * The cache task status, represented by a value from the following list:
  * <br/> - `'idle'`: The task has been created, but has not started downloading content.
@@ -12,6 +13,7 @@ import type { TimeRange } from '../timeranges/TimeRange';
  * <br/> - `'error'`: The task has encountered an error while downloading or evicting content.
  * <br/> - `'evicted'`: All data associated with the task has been removed because the task expired or the user invoked the {@link CachingTask.remove|remove} method.
  *
+ * @category Caching
  * @public
  */
 export enum CacheTaskStatus {
@@ -25,6 +27,7 @@ export enum CacheTaskStatus {
 /**
  * Represents a caching task.
  *
+ * @category Caching
  * @public
  */
 export interface CachingTask extends EventDispatcher<CachingTaskEventMap> {

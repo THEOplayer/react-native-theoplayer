@@ -4,6 +4,7 @@ import type { DRMConfiguration } from 'react-native-theoplayer';
 /**
  * Factory pattern to create {@link ContentProtectionIntegration}s.
  *
+ * @category Content Protection
  * @public
  */
 export interface ContentProtectionIntegrationFactory {

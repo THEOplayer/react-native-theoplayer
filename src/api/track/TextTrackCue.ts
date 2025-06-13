@@ -1,6 +1,7 @@
 /**
  * Represents a cue of a text track.
  *
+ * @category Media and Text Tracks
  * @public
  */
 export interface TextTrackCue {

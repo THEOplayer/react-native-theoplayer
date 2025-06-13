@@ -1,6 +1,7 @@
 /**
  * Describes the UI related configuration of the player.
  *
+ * @category UI
  * @public
  */
 export interface UIConfiguration {

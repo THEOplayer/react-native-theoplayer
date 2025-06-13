@@ -5,6 +5,7 @@
  * <br/> - `'connecting'`: Cast device available and the player is connecting.
  * <br/> - `'connected'`: Cast device available and the player is connected.
  *
+ * @category Casting
  * @public
  */
 export enum CastState {

@@ -8,6 +8,7 @@
  *                     Use this if you notice that the player never preloads the next period, even though you know that the current platform
  *                     should support it.
  *
+ * @category Source
  * @public
  */
 export type SeamlessPeriodSwitchStrategy = 'auto' | 'always' | 'never';
@@ -15,6 +16,7 @@ export type SeamlessPeriodSwitchStrategy = 'auto' | 'always' | 'never';
 /**
  * Represents a configuration for controlling playback of an MPEG-DASH stream.
  *
+ * @category Source
  * @public
  */
 export interface DashPlaybackConfiguration {

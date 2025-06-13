@@ -150,4 +150,10 @@ export class NativeMediaCache extends DefaultEventDispatcher<CacheEventMap> impl
   }
 }
 
+/**
+ * The media cache API.
+ *
+ * @category Caching
+ * @public
+ */
 export const MediaCache: MediaCacheAPI = new NativeMediaCache();

@@ -3,8 +3,10 @@ import type { Chromecast } from './Chromecast';
 
 /**
  * The API for casting.
+ *
+ * @category Casting
+ * @public
  */
-
 export interface CastAPI {
   /**
    * Whether the player is connected with a casting device.

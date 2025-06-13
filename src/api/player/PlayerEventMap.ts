@@ -17,6 +17,13 @@ import type { AdEvent } from '../event/AdEvent';
 import type { CastEvent } from '../event/CastEvent';
 import type { TheoAdsEvent } from '../event/TheoAdsEvent';
 
+/**
+ * The event types dispatched by the {@link Player}.
+ *
+ * @category Player
+ * @category Events
+ * @public
+ */
 export enum PlayerEventType {
   PLAY = 'play',
   CANPLAY = 'canplay',
@@ -53,6 +60,9 @@ export enum PlayerEventType {
 /**
  * The events dispatched by THEOplayer.
  *
+ * @category Player
+ * @category Events
+ * @public
  */
 export interface PlayerEventMap {
   /**

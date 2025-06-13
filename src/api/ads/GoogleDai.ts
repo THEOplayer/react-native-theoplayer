@@ -1,6 +1,7 @@
 /**
  * The Google DAI API.
  *
+ * @category Ads
  * @public
  */
 export interface GoogleDAI {

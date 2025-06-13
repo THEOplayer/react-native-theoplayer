@@ -1,6 +1,7 @@
 /**
  * Describes the metadata of a source.
  *
+ * @category Source
  * @public
  */
 export interface MetadataDescription {

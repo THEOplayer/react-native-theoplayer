@@ -3,6 +3,7 @@ import type { AdDescription, AdIntegrationKind, AdSource } from "./Ads";
 /**
  * Describes a Google IMA ad break request.
  *
+ * @category Ads
  * @public
  */
 export interface IMAAdDescription extends AdDescription {

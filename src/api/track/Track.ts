@@ -4,6 +4,7 @@
  * @remarks
  * <br/> - A specific track type (e.g. {@link TextTrack}) will always be used.
  *
+ * @category Media and Text Tracks
  * @public
  */
 export interface Track {
@@ -46,18 +47,42 @@ export interface Track {
   readonly language: string;
 }
 
+/**
+ * Checks whether a track list contains a given track.
+ *
+ * @category Media and Text Tracks
+ * @internal
+ */
 export function hasTrack<TTrack extends Track>(trackList: TTrack[], track: TTrack): boolean {
   return !!(trackList && track && trackList.find((t) => t.uid === track.uid));
 }
 
+/**
+ * Removes a track from a track list.
+ *
+ * @category Media and Text Tracks
+ * @internal
+ */
 export function removeTrack<TTrack extends Track>(trackList: TTrack[], track: TTrack): TTrack[] {
   return trackList && track ? trackList.filter((t) => t.uid !== track.uid) : trackList;
 }
 
+/**
+ * Adds a track to a track list.
+ *
+ * @category Media and Text Tracks
+ * @internal
+ */
 export function addTrack<TTrack extends Track>(trackList: TTrack[], track: TTrack): TTrack[] {
   return trackList && track && !hasTrack(trackList, track) ? sortTracks([...trackList, track]) : trackList;
 }
 
+/**
+ * Sort a track list based on the track's uids, which is how they are listed in the manifest.
+ *
+ * @category Media and Text Tracks
+ * @internal
+ */
 export function sortTracks<TTrack extends Track>(trackList?: TTrack[]): TTrack[] {
   return trackList?.sort((t1: TTrack, t2: TTrack) => t1.uid - t2.uid) || [];
 }

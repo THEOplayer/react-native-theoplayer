@@ -24,6 +24,7 @@ export type PreloadType = 'none' | 'metadata' | 'auto' | '';
  * <br/> - `FILL`: Scales the player so that all content fits inside the bounding box, which will be stretched to fill it entirely.
  * <br/> - `ASPECT_FILL`: Scales the player so that the content fills up the entire bounding box, keeping the original aspect ratio of the content.
  *
+ * @category Player
  * @public
  * @defaultValue `'FIT'`
  */
@@ -39,6 +40,7 @@ export enum AspectRatio {
  * <br/> - `SURFACE_VIEW` (default): Render video to a {@link https://developer.android.com/reference/android/view/SurfaceView | SurfaceView}.
  * <br/> - `TEXTURE_VIEW`: Render video to a {@link https://developer.android.com/reference/android/view/TextureView | TextureView}.
  *
+ * @category Player
  * @public
  * @defaultValue `'SURFACE_VIEW'`
  */
@@ -51,6 +53,9 @@ export type NativeHandleType = unknown;
 
 /**
  * The THEOplayer API.
+ *
+ * @category Player
+ * @public
  */
 export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
   /**

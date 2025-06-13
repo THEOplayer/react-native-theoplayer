@@ -1,6 +1,13 @@
 import type { Ad, AdBreak, PlayerEventType } from 'react-native-theoplayer';
 import type { Event } from './Event';
 
+/**
+ * The events dispatched by the {@link AdsAPI | Ads API}.
+ *
+ * @category Ads
+ * @category Events
+ * @public
+ */
 export interface AdEvent extends Event<PlayerEventType.AD_EVENT> {
   /**
    * Type of ad event.
@@ -13,6 +20,13 @@ export interface AdEvent extends Event<PlayerEventType.AD_EVENT> {
   ad: Ad | AdBreak;
 }
 
+/**
+ * The event types dispatched by the {@link AdsAPI | Ads API}.
+ *
+ * @category Ads
+ * @category Events
+ * @public
+ */
 export enum AdEventType {
   /**
    * Dispatched when an ad break is added.

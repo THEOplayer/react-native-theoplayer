@@ -10,6 +10,7 @@ import type { CachingTaskList } from './CachingTaskList';
  * <br/> - `'uninitialised'`: Previously stored caching tasks are unavailable.
  * <br/> - `'initialised'`: Previously stored caching tasks are now available.
  *
+ * @category Caching
  * @public
  */
 export enum CacheStatus {
@@ -20,6 +21,7 @@ export enum CacheStatus {
 /**
  * The media cache API.
  *
+ * @category Caching
  * @public
  */
 export interface MediaCacheAPI extends EventDispatcher<CacheEventMap> {
