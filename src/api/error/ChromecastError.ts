@@ -33,7 +33,7 @@ export type ChromecastErrorCode =
 /**
  * An error that occurred while casting or attempting to cast to Chromecast.
  *
- * @category Error
+ * @category Errors
  * @categort Casting
  * @public
  */
