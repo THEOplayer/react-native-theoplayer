@@ -3,15 +3,25 @@ require "json"
 package = JSON.parse(File.read(File.join(__dir__, "package.json")))
 
 theofeatures = []
-theoconfigfiles = ["theoplayer-config.json", "react-native-theoplayer.json"]
-theoconfigfiles.each do |configfile|
-  configpath = File.join(__dir__ + "/../../", configfile)
-  if File.exist?(configpath)
-    puts "THEOplayer config found: #{configfile}"
-    theoconfig = JSON.parse(File.read(configpath))
-    theofeatures = theoconfig["ios"]["features"]
+
+# Try to read features from ENV (comma-separated), e.g. "THEO_ADS,GOOGLE_IMA"
+if ENV["THEO_FEATURES"]
+  puts "Reading THEOplayer features from ENV"
+  theofeatures = ENV["THEO_FEATURES"].split(",").map(&:strip)
+end
+
+# Fallback to config files if ENV not set or empty
+if theofeatures.empty?
+  theoconfigfiles = ["theoplayer-config.json", "react-native-theoplayer.json"]
+  theoconfigfiles.each do |configfile|
+    configpath = File.join(__dir__ + "/../../", configfile)
+    if File.exist?(configpath)
+      puts "THEOplayer config found: #{configfile}"
+      theoconfig = JSON.parse(File.read(configpath))
+      theofeatures = theoconfig["ios"]["features"]
+    end
+    break if theofeatures.length() > 0
   end
-  break if theofeatures.length() > 0
 end
 
 Pod::Spec.new do |s|
