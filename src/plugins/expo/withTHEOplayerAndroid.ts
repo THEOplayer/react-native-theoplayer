@@ -1,11 +1,6 @@
 import { ConfigPlugin, withProjectBuildGradle, withGradleProperties } from '@expo/config-plugins';
 import { PropertiesItem } from '@expo/config-plugins/build/android/Properties';
-
-type Extension = 'ima' | 'dai' | 'cast' | 'theoads' | 'millicast';
-
-interface THEOplayerPluginProps {
-  extensions?: Extension[];
-}
+import { THEOplayerPluginProps, Extension } from './Common';
 
 function mapAndroidExtensionKey(ext: Extension): string | undefined {
   switch (ext) {
@@ -38,10 +33,10 @@ const applyAndroidExtensions: ConfigPlugin<THEOplayerPluginProps['extensions']> 
 };
 
 export const withTHEOplayerAndroid: ConfigPlugin<THEOplayerPluginProps> = (config, props = {}) => {
-  const { extensions } = props;
+  const { extensions, android } = props;
 
   // Apply Android extensions
-  config = applyAndroidExtensions(config, extensions);
+  config = applyAndroidExtensions(config, android?.extensions ?? extensions);
 
   // Add THEOplayer and local Maven repos to the project's repositories
   return withProjectBuildGradle(config, (config) => {
