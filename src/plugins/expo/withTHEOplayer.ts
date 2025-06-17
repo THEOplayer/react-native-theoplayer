@@ -1,9 +1,9 @@
 import { ConfigPlugin } from '@expo/config-plugins';
-import { withAndroidTHEOplayer } from './withTHEOplayerAndroid';
+import { withTHEOplayerAndroid } from './withTHEOplayerAndroid';
 
 const withTHEOplayerAndroidWrapper: ConfigPlugin = (config, props: any) => {
   // Apply Android modifications
-  return withAndroidTHEOplayer(config, props);
+  return withTHEOplayerAndroid(config, props);
 };
 
 export default withTHEOplayerAndroidWrapper;

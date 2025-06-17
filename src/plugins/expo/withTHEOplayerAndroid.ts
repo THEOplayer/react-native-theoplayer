@@ -37,7 +37,7 @@ const applyAndroidExtensions: ConfigPlugin<THEOplayerPluginProps['extensions']> 
   });
 };
 
-export const withAndroidTHEOplayer: ConfigPlugin<THEOplayerPluginProps> = (config, props = {}) => {
+export const withTHEOplayerAndroid: ConfigPlugin<THEOplayerPluginProps> = (config, props = {}) => {
   const { extensions } = props;
 
   // Apply Android extensions
