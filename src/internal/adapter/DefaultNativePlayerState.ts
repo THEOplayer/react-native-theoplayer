@@ -25,6 +25,7 @@ export class DefaultNativePlayerState extends DefaultTextTrackState implements N
   seeking = false;
   volume = 1;
   currentTime = 0;
+  currentProgramDateTime: number | undefined = undefined;
   duration = NaN;
   playbackRate = 1;
   preload: PreloadType = 'none';
