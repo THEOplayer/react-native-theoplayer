@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added Expo plugin support for iOS. More info on the [documentation](./doc/expo.md) page.
 
+### Fixed
+
+- Fixed an issue where a delayed `PresentationModeChange` event on Android could cause lay-out issues when going in to fullscreen mode.
+
 ## [9.4.0] - 25-06-12
 
 ### Fixed
