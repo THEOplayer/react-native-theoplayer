@@ -328,7 +328,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   }
 
   get currentProgramDateTime(): number | undefined {
-    return this._player?.currentProgramDateTime ? this._player.currentProgramDateTime.getTime() : undefined;
+    return this._player?.currentProgramDateTime?.getTime();
   }
 
   get aspectRatio(): AspectRatio {
