@@ -1346,7 +1346,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-theoplayer (9.3.0):
+  - react-native-theoplayer (9.4.0):
     - React-Core
     - THEOplayer-Connector-SideloadedSubtitle (~> 9.3)
     - THEOplayer-Integration-GoogleCast (~> 9.3)
@@ -2034,7 +2034,7 @@ SPEC CHECKSUMS:
   React-microtasksnativemodule: 43ee48f78becfcf482526314d03716a9485d6e6e
   react-native-google-cast: 872b05bf12f7db32c2f66818fdd5406474af25f1
   react-native-safe-area-context: b0ee54c424896b916aab46212b884cb8794308d7
-  react-native-theoplayer: 8ea4c9040152066eef9d5166c0f428337e0fe8a3
+  react-native-theoplayer: e972747c0b4717d2747545273418c34a65a436b2
   React-NativeModulesApple: 3eadbfd59638503272db810155ac80151b09fc15
   React-oscompat: 7a8843b653d2dfbcd543163245005262195d4b6e
   React-perflogger: bc67f4a2dac836a6c79a134ccdff8c79910566f1
