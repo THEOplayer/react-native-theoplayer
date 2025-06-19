@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Added Expo plugin support for iOS. More info on the [documentation](./doc/expo.md) page.
-- Added currentProgramDateTime to public API
+- Added `currentProgramDateTime` to player API.
 
 ## [9.4.0] - 25-06-12
 
