@@ -186,6 +186,11 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
   currentTime: number;
 
   /**
+   * The programDateTime for the current playback position of the media, in milliseconds.
+   */
+  currentProgramDateTime: number | undefined;
+
+  /**
    * Used to set the aspect ratio of the player.
    *
    * @platform ios,android
