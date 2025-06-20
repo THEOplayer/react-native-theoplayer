@@ -16,6 +16,7 @@ let PROP_KIND: String = "kind"
 let PROP_LANGUAGE: String = "language"
 let PROP_MODE: String = "mode"
 let PROP_LABEL: String = "label"
+let PROP_UNLOCALIZED_LABEL: String = "unlocalizedLabel"
 let PROP_ENABLED: String = "enabled"
 let PROP_TYPE: String = "type"
 let PROP_QUALITIES: String = "qualities"
@@ -73,6 +74,7 @@ class THEOplayerRCTTrackMetadataAggregator {
         entry[PROP_LANGUAGE] = textTrack.language
         entry[PROP_MODE] = textTrack.mode._rawValue
         entry[PROP_LABEL] = textTrack.label
+        entry[PROP_UNLOCALIZED_LABEL] = textTrack.unlocalizedLabel
         entry[PROP_TYPE] = textTrack.type
         entry[PROP_SRC] = textTrack.src
         entry[PROP_FORCED] = textTrack.forced
@@ -175,6 +177,7 @@ class THEOplayerRCTTrackMetadataAggregator {
         entry[PROP_KIND] = audioTrack.kind
         entry[PROP_LANGUAGE] = audioTrack.language
         entry[PROP_LABEL] = audioTrack.label
+        entry[PROP_UNLOCALIZED_LABEL] = audioTrack.unlocalizedLabel
         entry[PROP_ENABLED] = audioTrack.enabled
         entry[PROP_QUALITIES] = []          // empty: qualities are not being exposed on iOS
         //entry[PROP_ACTIVE_QUALITY] =      // undefined: qualities are not being exposed on iOS
@@ -216,6 +219,7 @@ class THEOplayerRCTTrackMetadataAggregator {
         entry[PROP_KIND] = videoTrack.kind
         entry[PROP_LANGUAGE] = videoTrack.language
         entry[PROP_LABEL] = videoTrack.label
+        entry[PROP_UNLOCALIZED_LABEL] = videoTrack.unlocalizedLabel
         entry[PROP_ENABLED] = videoTrack.enabled
         entry[PROP_QUALITIES] = []          // empty: qualities are not being exposed on iOS
         //entry[PROP_ACTIVE_QUALITY] =      // undefined: qualities are not being exposed on iOS

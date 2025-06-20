@@ -84,6 +84,13 @@ export interface TextTrack extends Track {
   readonly kind: TextTrackKind;
 
   /**
+   * The unlocalized label of the text track, as extracted from the manifest.
+   *
+   * @platform ios
+   */
+  readonly unlocalizedLabel?: string;
+
+  /**
    * The label of the text track.
    */
   readonly label: string;

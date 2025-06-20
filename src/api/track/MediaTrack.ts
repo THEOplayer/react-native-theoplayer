@@ -47,6 +47,13 @@ export interface MediaTrack extends Track {
   readonly label: string;
 
   /**
+   * The unlocalized label of the media track, as extracted from the manifest.
+   *
+   * @platform ios
+   */
+  readonly unlocalizedLabel?: string;
+
+  /**
    * The language of the media track.
    */
   readonly language: string;
