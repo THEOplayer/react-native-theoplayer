@@ -172,4 +172,10 @@ export class NativeContentProtectionRegistry implements ContentProtectionAPI {
   };
 }
 
+/**
+ * The registry for adding custom content protection (DRM) integrations.
+ *
+ * @category Content Protection
+ * @public
+ */
 export const ContentProtectionRegistry: ContentProtectionAPI = new NativeContentProtectionRegistry();

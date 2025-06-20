@@ -4,12 +4,17 @@ import { Interstitial } from './Interstitial';
 
 /**
  *  The layout of the THEOad.
+ *
+ *  @category Ads
+ *  @category THEOads
+ *  @public
  */
 export type TheoAdsLayout = 'single' | 'l-shape' | 'double';
 
 /**
  * The THEOads interstitial that corresponds with ad playback.
  *
+ * @category Ads
  * @category THEOads
  * @public
  */

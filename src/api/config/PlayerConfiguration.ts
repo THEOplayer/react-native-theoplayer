@@ -5,6 +5,12 @@ import type { RetryConfiguration } from '../utils/RetryConfiguration';
 import type { UIConfiguration } from '../ui/UIConfiguration';
 import { TheoLiveConfiguration } from '../theolive/TheoLiveConfiguration';
 
+/**
+ * Describes a player's configuration.
+ *
+ * @category Player
+ * @public
+ */
 export interface PlayerConfiguration {
   /**
    * The directory in which the THEOplayer library worker files are located.

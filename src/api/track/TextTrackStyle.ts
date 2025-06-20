@@ -1,6 +1,7 @@
 /**
  * The text track style API.
  *
+ * @category Media and Text Tracks
  * @public
  */
 export interface TextTrackStyle {
@@ -116,6 +117,7 @@ export interface TextTrackStyle {
  * <br/> - `'depressed'`
  * <br/> - `'uniform'`
  *
+ * @category Media and Text Tracks
  * @public
  */
 export enum EdgeStyle {

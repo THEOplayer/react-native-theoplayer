@@ -1,6 +1,7 @@
 /**
  * Represents a companion ad which is displayed near the video player.
  *
+ * @category Ads
  * @public
  */
 export interface CompanionAd {

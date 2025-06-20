@@ -228,10 +228,7 @@ class PresentationManager(
         hide(WindowInsetsCompat.Type.systemBars())
       }
 
-      // Delay the event making sure it does not arrive before animations ended.
-      viewCtx.playerView.postOnAnimation {
-        updatePresentationMode(PresentationMode.FULLSCREEN)
-      }
+      updatePresentationMode(PresentationMode.FULLSCREEN)
 
       if (BuildConfig.REPARENT_ON_FULLSCREEN) {
         reparentPlayerToRoot()

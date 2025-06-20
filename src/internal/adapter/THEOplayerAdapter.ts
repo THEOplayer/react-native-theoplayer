@@ -108,6 +108,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   private onTimeupdate = (event: TimeUpdateEvent) => {
     this._state.currentTime = event.currentTime;
+    this._state.currentProgramDateTime = event.currentProgramDateTime;
   };
 
   private onResize = (event: ResizeEvent) => {
@@ -265,6 +266,10 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
     this._state.currentTime = seekTime;
     NativePlayerModule.setCurrentTime(this._view.nativeHandle, seekTime);
+  }
+
+  get currentProgramDateTime(): number | undefined {
+    return this._state.currentProgramDateTime;
   }
 
   get duration(): number {

@@ -1,6 +1,13 @@
 import { Event, PlayerEventType } from 'react-native-theoplayer';
 import { Interstitial } from '../theoads/interstitial/Interstitial';
 
+/**
+ * The THEOads event dispatched by the {@link AdsAPI | Ads API}.
+ *
+ * @category Events
+ * @category THEOads
+ * @public
+ */
 export interface TheoAdsEvent extends Event<PlayerEventType.THEOADS_EVENT> {
   /**
    * Type of THEOads event.
@@ -13,6 +20,13 @@ export interface TheoAdsEvent extends Event<PlayerEventType.THEOADS_EVENT> {
   interstitial: Interstitial;
 }
 
+/**
+ * The THEOads event types dispatched by the {@link AdsAPI | Ads API}.
+ *
+ * @category Events
+ * @category THEOads
+ * @public
+ */
 export enum TheoAdsEventType {
   /**
    * Fired when an interstitial is added.

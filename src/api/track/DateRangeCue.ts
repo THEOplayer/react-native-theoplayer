@@ -3,6 +3,7 @@ import type { TextTrackCue } from './TextTrackCue';
 /**
  * Represents a cue of a HLS date range metadata text track.
  *
+ * @category Media and Text Tracks
  * @public
  */
 export interface DateRangeCue extends TextTrackCue {
@@ -68,6 +69,9 @@ export interface DateRangeCue extends TextTrackCue {
 
 /**
  * Check whether a text track cue is of type DateRangeCue.
+ *
+ * @category Media and Text Tracks
+ * @public
  */
 export function isDateRangeCue(cue: TextTrackCue): cue is DateRangeCue {
   return (cue as DateRangeCue).customAttributes != undefined;

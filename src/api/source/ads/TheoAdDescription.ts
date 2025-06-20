@@ -7,6 +7,7 @@ import { AdDescription, AdIntegrationKind } from './Ads';
  * <br/> - For THEOads, one configured ad break request enables server guided ad playback for the entire stream.
  *
  * @category Ads
+ * @public
  */
 export interface TheoAdDescription extends AdDescription {
   /**

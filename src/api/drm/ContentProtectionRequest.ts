@@ -1,5 +1,7 @@
 /**
  * A request, either for a certificate or a license.
+ *
+ * @category Content Protection
  * @public
  */
 export interface ContentProtectionRequest {
@@ -41,12 +43,15 @@ export interface ContentProtectionRequest {
 /**
  * A request for a certificate.
  *
+ * @category Content Protection
  * @public
  */
 export type CertificateRequest = ContentProtectionRequest;
 
 /**
  * A request for a license.
+ *
+ * @category Content Protection
  * @public
  */
 export interface LicenseRequest extends ContentProtectionRequest {

@@ -5,6 +5,7 @@ import { Interstitial } from './interstitial/Interstitial';
  *
  * @since React Native THEOplayer SDK v8.17.0.
  *
+ * @category Ads
  * @category THEOads
  * @public
  */

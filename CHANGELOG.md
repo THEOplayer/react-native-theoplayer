@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [9.5.0] - 25-06-20
+
+### Added
+
+- Added Expo plugin support for iOS. More info on the [documentation](./doc/expo.md) page.
+- Added `currentProgramDateTime` to player API.
+
+### Fixed
+
+- Fixed an issue where a delayed `PresentationModeChange` event on Android could cause lay-out issues when going in to fullscreen mode.
+
 ## [9.4.0] - 25-06-12
 
 ### Fixed

@@ -1,11 +1,18 @@
 import type { Track } from './Track';
 import type { Quality } from './Quality';
 
+/**
+ * Represents the category of a media track (audio or video).
+ *
+ * @category Media and Text Tracks
+ * @public
+ */
 export type MediaTrackKind = 'main' | 'alternative';
 
 /**
  * Represents a media track (audio or video) of a media resource.
  *
+ * @category Media and Text Tracks
  * @public
  */
 export interface MediaTrack extends Track {
@@ -60,14 +67,32 @@ export interface MediaTrack extends Track {
   readonly enabled: boolean;
 }
 
+/**
+ * Find a media track by `uid` in a list of media tracks.
+ *
+ * @category Media and Text Tracks
+ * @public
+ */
 export function findMediaTrackByUid(mediaTracks: MediaTrack[], uid: number | undefined): MediaTrack | undefined {
   return mediaTracks.find((track) => track.uid === uid);
 }
 
+/**
+ * Find a quality by `uid` in a list of media tracks.
+ *
+ * @category Media and Text Tracks
+ * @public
+ */
 export function findQualityByUid(mediaTrack: MediaTrack, uid: number | undefined): Quality | undefined {
   return mediaTrack.qualities.find((quality) => quality.uid === uid);
 }
 
+/**
+ * Find a list of qualities by `uid` in a list of media tracks.
+ *
+ * @category Media and Text Tracks
+ * @public
+ */
 export function findQualitiesByUid(mediaTrack: MediaTrack | undefined, uid: number | number[] | undefined): Quality[] | undefined {
   if (uid && mediaTrack) {
     if (Array.isArray(uid)) {

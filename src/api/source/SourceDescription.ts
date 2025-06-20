@@ -4,6 +4,7 @@
  * @remarks
  * <br/> - Can be a string value representing the URL of a media resource, a {@link TypedSource}.
  *
+ * @category Source
  * @public
  */
 import type { DashPlaybackConfiguration } from './dash/DashPlaybackConfiguration';
@@ -15,6 +16,12 @@ import type { ServerSideAdInsertionConfiguration } from './ads/ssai/ServerSideAd
 import type { AnalyticsDescription } from './analytics/AnalyticsDescription';
 import { CmcdConfiguration } from './cmcd/CmcdConfiguration';
 
+/**
+ * A type alias for a {@link TypedSource} media resource.
+ *
+ * @category Source
+ * @public
+ */
 export type Source = TypedSource;
 
 /**
@@ -23,6 +30,7 @@ export type Source = TypedSource;
  * @remarks
  * <br/> - The order of sources when using a list determines their priority when attempting playback.
  *
+ * @category Source
  * @public
  */
 export type Sources = Source | Source[];
@@ -36,6 +44,7 @@ export type Sources = Source | Source[];
  * @remarks
  * <br/> - See {@link https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_settings_attributes | The crossorigin attribute: Requesting CORS access to content}
  *
+ * @category Source
  * @public
  */
 export type CrossOriginSetting = '' | 'anonymous' | 'use-credentials';
@@ -54,7 +63,9 @@ export enum SourceIntegrationId {
 /**
  * The playback pipeline to use to play a stream.
  *
+ * @category Source
  * @platform android
+ * @public
  */
 export enum PlaybackPipeline {
   LEGACY = 'legacy',
@@ -64,6 +75,7 @@ export enum PlaybackPipeline {
 /**
  * Describes the configuration of a player's source.
  *
+ * @category Source
  * @public
  */
 export interface SourceConfiguration {
@@ -132,6 +144,7 @@ export interface SourceConfiguration {
 /**
  * Describes the configuration of a player's source.
  *
+ * @category Source
  * @public
  */
 export interface SourceDescription extends SourceConfiguration {
@@ -187,6 +200,8 @@ export interface SourceDescription extends SourceConfiguration {
 /**
  * Describes the configuration of a side-loaded text track.
  *
+ * @category Source
+ * @category Media and Text Tracks
  * @public
  */
 export interface TextTrackDescription {
@@ -282,6 +297,7 @@ export interface TextTrackDescription {
 /**
  * Represents the common properties of a media resource.
  *
+ * @category Source
  * @public
  */
 export interface BaseSource {
@@ -360,6 +376,7 @@ export interface BaseSource {
 /**
  * Represents a media resource characterized by a URL to the resource and optionally information about the resource.
  *
+ * @category Source
  * @public
  */
 export interface TypedSource extends BaseSource {

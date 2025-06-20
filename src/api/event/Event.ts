@@ -1,6 +1,7 @@
 /**
- * Fired when an event occurs.
+ * Dispatched when an event occurs.
  *
+ * @category Events
  * @public
  */
 export interface Event<TType extends string = string> {

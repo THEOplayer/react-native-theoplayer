@@ -1,6 +1,7 @@
 /**
  * Represents a Google IMA creative compliant to the VAST specification.
  *
+ * @category Ads
  * @public
  */
 import type { Ad } from './Ad';

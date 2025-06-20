@@ -1,10 +1,17 @@
 /**
  * Describes the configuration of advertisement.
  *
+ * @category Ads
  * @public
  */
 import type { GoogleImaConfiguration } from './GoogleImaConfiguration';
 
+/**
+ * Describes the configuration of advertisement.
+ *
+ * @category Ads
+ * @public
+ */
 export interface AdsConfiguration {
   /**
    * Allows configuring which mime types are allowed during ad playback.
@@ -76,6 +83,7 @@ export interface AdsConfiguration {
  * @remarks
  * <br/> - For Google IMA, preloading starts 4 seconds before ad playback.
  *
+ * @category Ads
  * @public
  */
 export type AdPreloadType = 'none' | 'midroll-and-postroll';
@@ -86,6 +94,7 @@ export type AdPreloadType = 'none' | 'midroll-and-postroll';
  * <br/> - `'insecure'`: Ads will load in a friendly iframe. This allows access to the site via JavaScript.
  * <br/> - `'disabled'`: Ads will error when requested.
  *
+ * @category Ads
  * @public
  */
 export type VPAIDMode = 'enabled' | 'insecure' | 'disabled';

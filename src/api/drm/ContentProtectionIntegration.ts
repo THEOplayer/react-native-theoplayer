@@ -4,7 +4,7 @@ import type { CertificateResponse, LicenseResponse } from './ContentProtectionRe
 /**
  * A synchronous or asynchronous return type
  *
- * @public
+ * @internal
  */
 export type MaybeAsync<T> = T | PromiseLike<T>;
 
@@ -13,6 +13,7 @@ export type BufferSource = ArrayBufferView | ArrayBuffer;
 /**
  * This ContentProtectionIntegration defines some methods to alter license and certificate requests and responses.
  *
+ * @category Content Protection
  * @public
  */
 export interface ContentProtectionIntegration {

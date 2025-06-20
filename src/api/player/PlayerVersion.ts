@@ -1,3 +1,9 @@
+/**
+ * Provides version info of the player.
+ *
+ * @category Player
+ * @public
+ */
 export interface PlayerVersion {
   /**
    * The version of the THEOplayer SDK.

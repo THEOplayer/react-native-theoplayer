@@ -1,10 +1,11 @@
+import type { CastState } from './CastState';
+
 /**
  * The Airplay API.
  *
+ * @category Casting
  * @public
  */
-import type { CastState } from './CastState';
-
 export interface Airplay {
   /**
    * Whether the player is connected with an airplay device.

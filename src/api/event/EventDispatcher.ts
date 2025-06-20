@@ -13,6 +13,7 @@ import type { EventListener } from './EventListener';
  * }
  * ```
  *
+ * @category Events
  * @public
  */
 export type EventMap<TType extends string> = Record<TType, Event<TType>>;
@@ -20,13 +21,14 @@ export type EventMap<TType extends string> = Record<TType, Event<TType>>;
 /**
  * Helper type to extract string keys from type objects.
  *
- * @public
+ * @internal
  */
 export type StringKeyOf<T> = Extract<keyof T, string>;
 
 /**
  * Dispatches events that are fired.
  *
+ * @category Events
  * @public
  */
 export interface EventDispatcher<TEventMap extends EventMap<StringKeyOf<TEventMap>>> {

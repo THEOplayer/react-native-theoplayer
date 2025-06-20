@@ -1,10 +1,17 @@
 /**
  * The {@link CachingTask}'s license API.
  *
+ * @category Caching
  * @public
  */
 import type { DRMConfiguration } from 'react-native-theoplayer';
 
+/**
+ * The {@link CachingTask}'s license API.
+ *
+ * @category Caching
+ * @public
+ */
 export interface CachingTaskLicense {
   /**
    * Renew all the licenses associated with this task.

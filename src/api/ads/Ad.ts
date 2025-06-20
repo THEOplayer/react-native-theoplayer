@@ -1,11 +1,12 @@
-/**
- * Represents a VAST creative. It is either a linear or non-linear ad.
- *
- * @public
- */
 import type { AdBreak } from './AdBreak';
 import type { CompanionAd } from 'theoplayer';
 
+/**
+ * Represents a VAST creative. It is either a linear or non-linear ad.
+ *
+ * @category Ads
+ * @public
+ */
 export interface Ad {
   /**
    * The source ad server information included in the ad response.
@@ -141,6 +142,7 @@ export interface Ad {
  * <br/> - An ad is loaded when the ad resource (e.g. VAST file) is downloaded.
  * <br/> - another remark
  *
+ * @category Ads
  * @public
  */
 export type AdReadyState = 'none' | 'ready';
@@ -148,6 +150,7 @@ export type AdReadyState = 'none' | 'ready';
 /**
  * Represents the information regarding the universal identifier of an ad.
  *
+ * @category Ads
  * @public
  */
 export interface UniversalAdId {
@@ -171,6 +174,7 @@ export interface UniversalAdId {
 /**
  * Represents a non-linear ad in the VAST specification.
  *
+ * @category Ads
  * @public
  */
 export interface NonLinearAd extends Ad {
@@ -207,6 +211,7 @@ export interface NonLinearAd extends Ad {
  * @remarks
  * <br/> - `'streaming'` is currently not supported.
  *
+ * @category Ads
  * @public
  */
 export type DeliveryType = 'progressive' | 'streaming';
@@ -217,6 +222,7 @@ export type DeliveryType = 'progressive' | 'streaming';
  * @remarks
  * <br/> - This metadata is retrieved from the VAST file.
  *
+ * @category Ads
  * @public
  */
 export interface MediaFile {
@@ -249,6 +255,7 @@ export interface MediaFile {
 /**
  * Represents a linear ad in the VAST specification.
  *
+ * @category Ads
  * @public
  */
 export interface LinearAd extends Ad {

@@ -1,6 +1,9 @@
 /**
  * The configuration for transmitting information to Content Delivery Networks (CDNs)
  * through Common Media Client Data (CMCD) (CTA-5004)
+ *
+ * @category Source
+ * @public
  */
 export interface CmcdConfiguration {
   /**
@@ -50,6 +53,12 @@ export interface CmcdConfiguration {
   transmissionMode: CmcdTransmissionMode
 }
 
+/**
+ * The CMCD transmission mode.
+ *
+ * @category Source
+ * @public
+ */
 export enum CmcdTransmissionMode {
   /**
    * Transmit CMCD data as a custom HTTP request header.

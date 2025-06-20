@@ -1,6 +1,12 @@
 import { CacheTaskStatus, CachingTask, CachingTaskEventType } from 'react-native-theoplayer';
 import { useEffect, useState } from 'react';
 
+/**
+ * A convenience hook that keeps the current status of a caching task.
+ *
+ * @category Caching
+ * @public
+ */
 export const useCachingTaskStatus = (task: CachingTask, debug = false) => {
   const [status, setStatus] = useState<CacheTaskStatus | undefined>(task.status);
   useEffect(() => {

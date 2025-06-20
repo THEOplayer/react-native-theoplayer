@@ -1,6 +1,7 @@
 /**
  * Describes the configuration of the Cast integrations.
  *
+ * @category Casting
  * @public
  */
 export interface CastConfiguration {
@@ -25,6 +26,7 @@ export interface CastConfiguration {
  * <br/> - `'manual'` : The player will take over an existing session if there is one and the cast button is clicked. Otherwise it will prompt the user with all available devices.
  * <br/> - `'disabled'` : The player is not affected by cast sessions and is not castable.
  *
+ * @category Casting
  * @public
  */
 export type JoinStrategy = 'auto' | 'manual' | 'disabled';
@@ -32,6 +34,7 @@ export type JoinStrategy = 'auto' | 'manual' | 'disabled';
 /**
  * Describes the configuration of the Chromecast integration.
  *
+ * @category Casting
  * @public
  */
 export interface ChromecastConfiguration {
