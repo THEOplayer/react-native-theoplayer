@@ -1,36 +1,36 @@
 buildscript {
-  ext.safeExtGet = { prop, fallback ->
-    rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
-  }
+    ext.safeExtGet = { prop, fallback ->
+        rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+    }
 
-  repositories {
-    google()
-    mavenCentral()
-  }
+    repositories {
+        google()
+        mavenCentral()
+    }
 
-  dependencies {
-    classpath "com.android.tools.build:gradle:${safeExtGet('gradlePluginVersion', '8.3.2')}"
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${safeExtGet('kotlinVersion', '1.9.21')}"
-  }
+    dependencies {
+        classpath "com.android.tools.build:gradle:${safeExtGet('gradlePluginVersion', '8.3.2')}"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${safeExtGet('kotlinVersion', '1.9.21')}"
+    }
 }
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 def safeExtGet(prop, fallback) {
-  rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+    rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
 }
 
 static def versionString(version) {
-  return "${version == '+' ? 'latest' : version}"
+    return "${version == '+' ? 'latest' : version}"
 }
 
 def isNewArchitectureEnabled() {
-  // To opt-in for the New Architecture, you can either:
-  // - Set `newArchEnabled` to true inside the `gradle.properties` file
-  // - Invoke gradle with `-newArchEnabled=true`
-  // - Set an environment variable `ORG_GRADLE_PROJECT_newArchEnabled=true`
-  return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
+    // To opt-in for the New Architecture, you can either:
+    // - Set `newArchEnabled` to true inside the `gradle.properties` file
+    // - Invoke gradle with `-newArchEnabled=true`
+    // - Set an environment variable `ORG_GRADLE_PROJECT_newArchEnabled=true`
+    return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
 }
 
 // Extensions
@@ -43,77 +43,77 @@ def enabledMediaSession = safeExtGet("THEOplayer_extensionMediaSession", 'true')
 def enabledMillicast = safeExtGet("THEOplayer_extensionMillicast", 'false').toBoolean()
 
 android {
-  compileSdk safeExtGet('THEOplayer_compileSdkVersion', 34)
-  namespace "com.theoplayer"
+    compileSdk safeExtGet('THEOplayer_compileSdkVersion', 34)
+    namespace "com.theoplayer"
 
-  defaultConfig {
-    minSdkVersion safeExtGet('THEOplayer_minSdkVersion', 21)
-    targetSdkVersion safeExtGet('THEOplayer_targetSdkVersion', 34)
-    versionCode 1
-    versionName "1.0"
+    defaultConfig {
+        minSdkVersion safeExtGet('THEOplayer_minSdkVersion', 21)
+        targetSdkVersion safeExtGet('THEOplayer_targetSdkVersion', 34)
+        versionCode 1
+        versionName "1.0"
 
-    // Optionally limit timeUpdate rate. Possible values:
-    // - "com.theoplayer.TimeUpdateRate.UNLIMITED"
-    // - "com.theoplayer.TimeUpdateRate.LIMITED_ONE_HZ"
-    // - "com.theoplayer.TimeUpdateRate.LIMITED_TWO_HZ"
-    // - "com.theoplayer.TimeUpdateRate.LIMITED_THREE_HZ"
-    def TimeUpdateRate = "com.theoplayer.TimeUpdateRate"
-    buildConfigField TimeUpdateRate, "TIMEUPDATE_RATE", safeExtGet('THEOplayer_timeUpdateRate', "${TimeUpdateRate}.UNLIMITED")
+        // Optionally limit timeUpdate rate. Possible values:
+        // - "com.theoplayer.TimeUpdateRate.UNLIMITED"
+        // - "com.theoplayer.TimeUpdateRate.LIMITED_ONE_HZ"
+        // - "com.theoplayer.TimeUpdateRate.LIMITED_TWO_HZ"
+        // - "com.theoplayer.TimeUpdateRate.LIMITED_THREE_HZ"
+        def TimeUpdateRate = "com.theoplayer.TimeUpdateRate"
+        buildConfigField TimeUpdateRate, "TIMEUPDATE_RATE", safeExtGet('THEOplayer_timeUpdateRate', "${TimeUpdateRate}.UNLIMITED")
 
-    // Optionally re-parent player view on fullscreen or PiP event
-    buildConfigField "boolean", "REPARENT_ON_FULLSCREEN", "${safeExtGet('THEOplayer_reparent_on_fullscreen', 'true')}"
-    buildConfigField "boolean", "REPARENT_ON_PIP", "${safeExtGet('THEOplayer_reparent_on_PiP', 'false')}"
+        // Optionally re-parent player view on fullscreen or PiP event
+        buildConfigField "boolean", "REPARENT_ON_FULLSCREEN", "${safeExtGet('THEOplayer_reparent_on_fullscreen', 'true')}"
+        buildConfigField "boolean", "REPARENT_ON_PIP", "${safeExtGet('THEOplayer_reparent_on_PiP', 'false')}"
 
-    // Optionally log events to logcat
-    buildConfigField "boolean", "LOG_PLAYER_EVENTS", "${safeExtGet('THEOplayer_logPlayerEvents', 'false')}"
-    buildConfigField "boolean", "LOG_VIEW_EVENTS", "${safeExtGet('THEOplayer_logViewEvents', 'false')}"
-    buildConfigField "boolean", "LOG_MEDIASESSION_EVENTS", "${safeExtGet('THEOplayer_logMediaSessionEvents', 'false')}"
-    buildConfigField "boolean", "USE_PLAYBACK_SERVICE", "${safeExtGet('THEOplayer_usePlaybackService', 'true')}"
+        // Optionally log events to logcat
+        buildConfigField "boolean", "LOG_PLAYER_EVENTS", "${safeExtGet('THEOplayer_logPlayerEvents', 'false')}"
+        buildConfigField "boolean", "LOG_VIEW_EVENTS", "${safeExtGet('THEOplayer_logViewEvents', 'false')}"
+        buildConfigField "boolean", "LOG_MEDIASESSION_EVENTS", "${safeExtGet('THEOplayer_logMediaSessionEvents', 'false')}"
+        buildConfigField "boolean", "USE_PLAYBACK_SERVICE", "${safeExtGet('THEOplayer_usePlaybackService', 'true')}"
 
-    // Extension buildConfig fields
-    buildConfigField "boolean", "EXTENSION_GOOGLE_IMA", "${enabledGoogleIMA}"
-    buildConfigField "boolean", "EXTENSION_GOOGLE_DAI", "${enabledGoogleDAI}"
-    buildConfigField "boolean", "EXTENSION_THEOADS", "${enabledTHEOads}"
-    buildConfigField "boolean", "EXTENSION_ADS", "${enabledAds}"
-    buildConfigField "boolean", "EXTENSION_CAST", "${enabledCast}"
-    buildConfigField "boolean", "EXTENSION_MEDIASESSION", "${enabledMediaSession}"
-    buildConfigField "boolean", "EXTENSION_MILLICAST", "${enabledMillicast}"
+        // Extension buildConfig fields
+        buildConfigField "boolean", "EXTENSION_GOOGLE_IMA", "${enabledGoogleIMA}"
+        buildConfigField "boolean", "EXTENSION_GOOGLE_DAI", "${enabledGoogleDAI}"
+        buildConfigField "boolean", "EXTENSION_THEOADS", "${enabledTHEOads}"
+        buildConfigField "boolean", "EXTENSION_ADS", "${enabledAds}"
+        buildConfigField "boolean", "EXTENSION_CAST", "${enabledCast}"
+        buildConfigField "boolean", "EXTENSION_MEDIASESSION", "${enabledMediaSession}"
+        buildConfigField "boolean", "EXTENSION_MILLICAST", "${enabledMillicast}"
 
-    buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
+        buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
 
-    consumerProguardFiles 'proguard-rules.pro'
-  }
-
-  buildTypes {
-    debug {
-      minifyEnabled false
+        consumerProguardFiles 'proguard-rules.pro'
     }
-    release {
-      minifyEnabled false
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+        }
+        release {
+            minifyEnabled false
+        }
     }
-  }
-  lint {
-    disable 'GradleCompatible'
-  }
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
-  }
-  packagingOptions {
-    exclude 'META-INF/kotlin-stdlib.kotlin_module'
-    exclude 'META-INF/annotation-experimental_release.kotlin_module'
-  }
+    lint {
+        disable 'GradleCompatible'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    packagingOptions {
+        exclude 'META-INF/kotlin-stdlib.kotlin_module'
+        exclude 'META-INF/annotation-experimental_release.kotlin_module'
+    }
 }
 
 allprojects {
-  repositories {
-    mavenLocal()
-    maven { url "https://maven.theoplayer.com/releases" }
-    maven { url "https://maven.theoplayer.com/snapshots" }
-    maven { url("$rootDir/../node_modules/react-native-theoplayer/android/local") }
-    google()
-    mavenCentral()
-  }
+    repositories {
+        mavenLocal()
+        maven { url "https://maven.theoplayer.com/releases" }
+        maven { url "https://maven.theoplayer.com/snapshots" }
+        maven { url("$rootDir/../node_modules/react-native-theoplayer/android/local") }
+        google()
+        mavenCentral()
+    }
 }
 
 // The minimum supported THEOplayer version is 9.5.0
@@ -127,42 +127,42 @@ def gsonVersion = "2.12.1"
 def millicastVersion = safeExtGet('millicastVersion', '2.0.0')
 
 dependencies {
-  //noinspection GradleDynamicVersion
-  implementation "com.facebook.react:react-native:+"  // From node_modules
-  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
-  implementation "androidx.appcompat:appcompat:$appcompatVersion"
-  implementation "androidx.core:core-ktx:$corektxVersion"
-  implementation "com.google.code.gson:gson:$gsonVersion"
+    //noinspection GradleDynamicVersion
+    implementation("com.facebook.react:react-native:+")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
+    implementation("androidx.appcompat:appcompat:$appcompatVersion")
+    implementation("androidx.core:core-ktx:$corektxVersion")
+    implementation("com.google.code.gson:gson:$gsonVersion")
 
-  println("Using THEOplayer (${versionString(theoVersion)})")
-  implementation "com.theoplayer.theoplayer-sdk-android:core:$theoVersion"
-  implementation "com.theoplayer.theoplayer-sdk-android:ads-wrapper:$theoAdsWrapperVersion"
-  implementation "com.theoplayer.android-connector:mediasession:$theoMediaSessionVersion"
+    println("Using THEOplayer (${versionString(theoVersion)})")
+    implementation("com.theoplayer.theoplayer-sdk-android:core:$theoVersion")
+    implementation("com.theoplayer.theoplayer-sdk-android:ads-wrapper:$theoAdsWrapperVersion")
+    implementation("com.theoplayer.android-connector:mediasession:$theoMediaSessionVersion")
 
-  def addOptiViewDependency = { enabled, notation, additional = null ->
-    if (enabled) {
-      println("Enable $notation.")
-      implementation "com.theoplayer.theoplayer-sdk-android:$notation:$theoVersion"
-      if (additional) implementation "$additional"
-    } else {
-      println("Disable $notation.")
-      compileOnly "com.theoplayer.theoplayer-sdk-android:$notation:$theoVersion"
-      if (additional) compileOnly "$additional"
+    def addOptiViewDependency = { enabled, notation, additional = null ->
+        if (enabled) {
+            println("Enable $notation.")
+            implementation "com.theoplayer.theoplayer-sdk-android:$notation:$theoVersion"
+            if (additional) implementation "$additional"
+        } else {
+            println("Disable $notation.")
+            compileOnly "com.theoplayer.theoplayer-sdk-android:$notation:$theoVersion"
+            if (additional) compileOnly "$additional"
+        }
     }
-  }
 
-  addOptiViewDependency(enabledGoogleIMA, 'integration-ads-ima')
-  addOptiViewDependency(enabledGoogleDAI, 'integration-ads-dai')
-  addOptiViewDependency(enabledTHEOads, 'integration-ads-theoads')
-  addOptiViewDependency(enabledCast, 'integration-cast')
-  addOptiViewDependency(enabledMillicast, 'integration-millicast', "com.millicast:millicast-sdk-android:$millicastVersion")
+    addOptiViewDependency(enabledGoogleIMA, 'integration-ads-ima')
+    addOptiViewDependency(enabledGoogleDAI, 'integration-ads-dai')
+    addOptiViewDependency(enabledTHEOads, 'integration-ads-theoads')
+    addOptiViewDependency(enabledCast, 'integration-cast')
+    addOptiViewDependency(enabledMillicast, 'integration-millicast', "com.millicast:millicast-sdk-android:$millicastVersion")
 }
 
 // Make sure to align all ads extension versions
 configurations.configureEach {
-  resolutionStrategy {
-    force "com.theoplayer.theoplayer-sdk-android:integration-ads-ima:$theoVersion"
-    force "com.theoplayer.theoplayer-sdk-android:integration-ads-dai:$theoVersion"
-    force "com.theoplayer.theoplayer-sdk-android:integration-ads-theoads:$theoVersion"
-  }
+    resolutionStrategy {
+        force "com.theoplayer.theoplayer-sdk-android:integration-ads-ima:$theoVersion"
+        force "com.theoplayer.theoplayer-sdk-android:integration-ads-dai:$theoVersion"
+        force "com.theoplayer.theoplayer-sdk-android:integration-ads-theoads:$theoVersion"
+    }
 }
