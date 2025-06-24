@@ -117,31 +117,36 @@ allprojects {
 }
 
 // The minimum supported THEOplayer version is 9.5.0
-def theoplayer_sdk_version = safeExtGet('THEOplayer_sdk', '[9.5.0, 10.0.0)')
-def theoplayer_mediasession_version = safeExtGet('THEOplayer_mediasession', '[8.0.0, 10.0.0)')
-def theoplayer_ads_wrapper_version = "9.0.0"
+def theoVersion = safeExtGet('THEOplayer_sdk', '[9.5.0, 10.0.0)')
+def theoMediaSessionVersion = safeExtGet('THEOplayer_mediasession', '[8.0.0, 10.0.0)')
+def theoAdsWrapperVersion = "9.0.0"
+def coroutinesVersion = safeExtGet('coroutinesVersion', '1.7.3')
+def appcompatVersion = safeExtGet('appcompatVersion', '1.7.1')
+def corektxVersion = safeExtGet('corektxVersion', '1.13.1')
+def gsonVersion = "2.12.1"
+def millicastVersion = safeExtGet('millicastVersion', '2.0.0')
 
 dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"  // From node_modules
-  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${safeExtGet('coroutinesVersion', '1.7.3')}"
-  implementation "androidx.appcompat:appcompat:${safeExtGet('appcompatVersion', '1.7.1')}"
-  implementation "androidx.core:core-ktx:${safeExtGet('corektxVersion', '1.13.1')}"
-  implementation "com.google.code.gson:gson:2.12.1"
+  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+  implementation "androidx.appcompat:appcompat:$appcompatVersion"
+  implementation "androidx.core:core-ktx:$corektxVersion"
+  implementation "com.google.code.gson:gson:$gsonVersion"
 
-  println("Using THEOplayer (${versionString(theoplayer_sdk_version)})")
-  implementation "com.theoplayer.theoplayer-sdk-android:core:$theoplayer_sdk_version"
-  implementation "com.theoplayer.theoplayer-sdk-android:ads-wrapper:$theoplayer_ads_wrapper_version"
-  implementation "com.theoplayer.android-connector:mediasession:$theoplayer_mediasession_version"
+  println("Using THEOplayer (${versionString(theoVersion)})")
+  implementation "com.theoplayer.theoplayer-sdk-android:core:$theoVersion"
+  implementation "com.theoplayer.theoplayer-sdk-android:ads-wrapper:$theoAdsWrapperVersion"
+  implementation "com.theoplayer.android-connector:mediasession:$theoMediaSessionVersion"
 
   def addOptiViewDependency = { enabled, notation, additional = null ->
     if (enabled) {
       println("Enable $notation.")
-      implementation "com.theoplayer.theoplayer-sdk-android:$notation:$theoplayer_sdk_version"
+      implementation "com.theoplayer.theoplayer-sdk-android:$notation:$theoVersion"
       if (additional) implementation "$additional"
     } else {
       println("Disable $notation.")
-      compileOnly "com.theoplayer.theoplayer-sdk-android:$notation:$theoplayer_sdk_version"
+      compileOnly "com.theoplayer.theoplayer-sdk-android:$notation:$theoVersion"
       if (additional) compileOnly "$additional"
     }
   }
@@ -150,14 +155,14 @@ dependencies {
   addOptiViewDependency(enabledGoogleDAI, 'integration-ads-dai')
   addOptiViewDependency(enabledTHEOads, 'integration-ads-theoads')
   addOptiViewDependency(enabledCast, 'integration-cast')
-  addOptiViewDependency(enabledMillicast, 'integration-millicast', "com.millicast:millicast-sdk-android:2.0.0")
+  addOptiViewDependency(enabledMillicast, 'integration-millicast', "com.millicast:millicast-sdk-android:$millicastVersion")
 }
 
 // Make sure to align all ads extension versions
 configurations.configureEach {
   resolutionStrategy {
-    force "com.theoplayer.theoplayer-sdk-android:integration-ads-ima:$theoplayer_sdk_version"
-    force "com.theoplayer.theoplayer-sdk-android:integration-ads-dai:$theoplayer_sdk_version"
-    force "com.theoplayer.theoplayer-sdk-android:integration-ads-theoads:$theoplayer_sdk_version"
+    force "com.theoplayer.theoplayer-sdk-android:integration-ads-ima:$theoVersion"
+    force "com.theoplayer.theoplayer-sdk-android:integration-ads-dai:$theoVersion"
+    force "com.theoplayer.theoplayer-sdk-android:integration-ads-theoads:$theoVersion"
   }
 }
