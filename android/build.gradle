@@ -105,7 +105,7 @@ android {
   }
 }
 
-rootProject.allprojects {
+allprojects {
   repositories {
     mavenLocal()
     maven { url "https://maven.theoplayer.com/releases" }
@@ -144,47 +144,23 @@ dependencies {
   implementation "com.theoplayer.theoplayer-sdk-android:ads-wrapper:$theoplayer_ads_wrapper_version"
   implementation "com.theoplayer.android-connector:mediasession:$theoplayer_mediasession_version"
 
-  if (enabledGoogleIMA) {
-    println('Enable THEOplayer IMA extension.')
-    implementation "com.theoplayer.theoplayer-sdk-android:integration-ads-ima:$theoplayer_sdk_version"
-  } else {
-    println('Disable THEOplayer IMA extension.')
-    compileOnly "com.theoplayer.theoplayer-sdk-android:integration-ads-ima:$theoplayer_sdk_version"
+  def addOptiViewDependency = { enabled, notation, additional = null ->
+    if (enabled) {
+      println("Enable $notation.")
+      implementation "com.theoplayer.theoplayer-sdk-android:$notation:$theoplayer_sdk_version"
+      if (additional) implementation "$additional"
+    } else {
+      println("Disable $notation.")
+      compileOnly "com.theoplayer.theoplayer-sdk-android:$notation:$theoplayer_sdk_version"
+      if (additional) compileOnly "$additional"
+    }
   }
 
-  if (enabledGoogleDAI) {
-    println('Enable THEOplayer DAI extension.')
-    implementation "com.theoplayer.theoplayer-sdk-android:integration-ads-dai:$theoplayer_sdk_version"
-  } else {
-    println('Disable THEOplayer DAI extension.')
-    compileOnly "com.theoplayer.theoplayer-sdk-android:integration-ads-dai:$theoplayer_sdk_version"
-  }
-
-  if (enabledTHEOads) {
-    println('Enable THEOplayer THEOads extension.')
-    implementation "com.theoplayer.theoplayer-sdk-android:integration-ads-theoads:$theoplayer_sdk_version"
-  } else {
-    println('Disable THEOplayer THEOads extension.')
-    compileOnly "com.theoplayer.theoplayer-sdk-android:integration-ads-theoads:$theoplayer_sdk_version"
-  }
-
-  if (enabledCast) {
-    println('Enable THEOplayer cast extension.')
-    implementation "com.theoplayer.theoplayer-sdk-android:integration-cast:$theoplayer_sdk_version"
-  } else {
-    println('Disable THEOplayer cast extension.')
-    compileOnly "com.theoplayer.theoplayer-sdk-android:integration-cast:$theoplayer_sdk_version"
-  }
-
-  if (enabledMillicast) {
-    println('Enable THEOplayer millicast extension.')
-    implementation "com.theoplayer.theoplayer-sdk-android:integration-millicast:${theoplayer_sdk_version}"
-    implementation "com.millicast:millicast-sdk-android:2.0.0"
-  } else {
-    println('Disable THEOplayer millicast extension.')
-    compileOnly "com.theoplayer.theoplayer-sdk-android:integration-millicast:${theoplayer_sdk_version}"
-    compileOnly "com.millicast:millicast-sdk-android:2.0.0"
-  }
+  addOptiViewDependency(enabledGoogleIMA, 'integration-ads-ima')
+  addOptiViewDependency(enabledGoogleDAI, 'integration-ads-dai')
+  addOptiViewDependency(enabledTHEOads, 'integration-ads-theoads')
+  addOptiViewDependency(enabledCast, 'integration-cast')
+  addOptiViewDependency(enabledMillicast, 'integration-millicast', "com.millicast:millicast-sdk-android:2.0.0")
 }
 
 // Make sure to align all ads extension versions
