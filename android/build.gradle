@@ -105,15 +105,19 @@ android {
     }
 }
 
-allprojects {
+// Make sure all subprojects can resolve THEOplayer modules
+rootProject.allprojects {
     repositories {
-        mavenLocal()
         maven { url "https://maven.theoplayer.com/releases" }
         maven { url "https://maven.theoplayer.com/snapshots" }
         maven { url("$rootDir/../node_modules/react-native-theoplayer/android/local") }
-        google()
-        mavenCentral()
+        mavenLocal()
     }
+}
+
+repositories {
+    google()
+    mavenCentral()
 }
 
 // The minimum supported THEOplayer version is 9.5.0
