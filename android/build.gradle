@@ -125,7 +125,7 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"  // From node_modules
   implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${safeExtGet('coroutinesVersion', '1.7.3')}"
-  implementation "androidx.appcompat:appcompat:${safeExtGet('appcompatVersion', '1.6.1')}"
+  implementation "androidx.appcompat:appcompat:${safeExtGet('appcompatVersion', '1.7.1')}"
   implementation "androidx.core:core-ktx:${safeExtGet('corektxVersion', '1.13.1')}"
   implementation "com.google.code.gson:gson:2.12.1"
 
