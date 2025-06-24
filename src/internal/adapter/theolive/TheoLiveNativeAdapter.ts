@@ -1,7 +1,7 @@
 import type { HespLatencies, TheoLiveAPI, THEOplayerView } from 'react-native-theoplayer';
 import { NativeModules } from 'react-native';
 
-const NativeTheoLiveModule = NativeModules.THEORCTTheoLiveModule;
+const NativeTheoLiveModule = NativeModules.THEORCTTHEOliveModule;
 
 export class TheoLiveNativeAdapter implements TheoLiveAPI {
   constructor(private _player: THEOplayerView) {}
