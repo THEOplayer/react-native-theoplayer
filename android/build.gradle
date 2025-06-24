@@ -131,6 +131,22 @@ def gsonVersion = "2.12.1"
 def millicastVersion = safeExtGet('millicastVersion', '2.0.0')
 
 dependencies {
+    def addOptiViewIntegration = { enabled, notation, additional = null ->
+        if (enabled) {
+            println("Enable $notation.")
+            implementation("com.theoplayer.theoplayer-sdk-android:$notation:$theoVersion") {
+                version {
+                    strictly theoVersion
+                }
+            }
+            if (additional) implementation "$additional"
+        } else {
+            println("Disable $notation.")
+            compileOnly("com.theoplayer.theoplayer-sdk-android:$notation:$theoVersion")
+            if (additional) compileOnly "$additional"
+        }
+    }
+
     //noinspection GradleDynamicVersion
     implementation("com.facebook.react:react-native:+")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
@@ -143,30 +159,9 @@ dependencies {
     implementation("com.theoplayer.theoplayer-sdk-android:ads-wrapper:$theoAdsWrapperVersion")
     implementation("com.theoplayer.android-connector:mediasession:$theoMediaSessionVersion")
 
-    def addOptiViewDependency = { enabled, notation, additional = null ->
-        if (enabled) {
-            println("Enable $notation.")
-            implementation "com.theoplayer.theoplayer-sdk-android:$notation:$theoVersion"
-            if (additional) implementation "$additional"
-        } else {
-            println("Disable $notation.")
-            compileOnly "com.theoplayer.theoplayer-sdk-android:$notation:$theoVersion"
-            if (additional) compileOnly "$additional"
-        }
-    }
-
-    addOptiViewDependency(enabledGoogleIMA, 'integration-ads-ima')
-    addOptiViewDependency(enabledGoogleDAI, 'integration-ads-dai')
-    addOptiViewDependency(enabledTHEOads, 'integration-ads-theoads')
-    addOptiViewDependency(enabledCast, 'integration-cast')
-    addOptiViewDependency(enabledMillicast, 'integration-millicast', "com.millicast:millicast-sdk-android:$millicastVersion")
-}
-
-// Make sure to align all ads extension versions
-configurations.configureEach {
-    resolutionStrategy {
-        force "com.theoplayer.theoplayer-sdk-android:integration-ads-ima:$theoVersion"
-        force "com.theoplayer.theoplayer-sdk-android:integration-ads-dai:$theoVersion"
-        force "com.theoplayer.theoplayer-sdk-android:integration-ads-theoads:$theoVersion"
-    }
+    addOptiViewIntegration(enabledGoogleIMA || enabledGoogleDAI || enabledTHEOads, 'integration-ads-ima')
+    addOptiViewIntegration(enabledGoogleDAI || enabledTHEOads, 'integration-ads-dai')
+    addOptiViewIntegration(enabledTHEOads, 'integration-ads-theoads')
+    addOptiViewIntegration(enabledCast, 'integration-cast')
+    addOptiViewIntegration(enabledMillicast, 'integration-millicast', "com.millicast:millicast-sdk-android:$millicastVersion")
 }
