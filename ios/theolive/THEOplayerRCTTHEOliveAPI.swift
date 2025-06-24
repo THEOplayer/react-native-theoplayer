@@ -31,10 +31,11 @@ class THEOplayerRCTTHEOliveAPI: NSObject, RCTBridgeModule {
             if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
                let player = theView.player,
                let theolive = player.theoLive {
-                /*if let currentLatency = theolive.currentLatency {
-                    resolve(currentLatency)
-                }*/
-                resolve(-1)
+                var foundLatency: Double = -1
+                if let currentLatency = theolive.currentLatency {
+                    foundLatency = currentLatency
+                }
+                resolve(foundLatency)
             } else {
                 if DEBUG_THEOLIVE_API { PrintUtils.printLog(logText: "[NATIVE] Could not get currentLatency (THEOlive module unavailable).") }
                 reject(ERROR_CODE_THEOLIVE_ACCESS_FAILURE, ERROR_MESSAGE_THEOLIVE_ACCESS_FAILURE, nil)
@@ -48,15 +49,16 @@ class THEOplayerRCTTHEOliveAPI: NSObject, RCTBridgeModule {
             if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
                let player = theView.player,
                let theolive = player.theoLive {
-                /*if let latencies = theolive.latencies {
-                    resolve([
+                var foundLatencies: [String:Any] = [:]
+                if let latencies = theolive.latencies {
+                    foundLatencies = [
                         "engineLatency": latencies.engineLatency,
                         "distributionLatency": latencies.distributionLatency,
                         "playerLatency": latencies.playerLatency,
                         "theoliveLatency": latencies.theoliveLatency
-                    ])
-                 }*/
-                resolve([:])
+                    ]
+                }
+                resolve(foundLatencies)
             } else {
                 if DEBUG_THEOLIVE_API { PrintUtils.printLog(logText: "[NATIVE] Could not get latencies (THEOlive module unavailable).") }
                 reject(ERROR_CODE_THEOLIVE_ACCESS_FAILURE, ERROR_MESSAGE_THEOLIVE_ACCESS_FAILURE, nil)

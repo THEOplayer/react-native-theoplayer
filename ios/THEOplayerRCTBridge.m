@@ -272,10 +272,12 @@ RCT_EXTERN_METHOD(broadcastEvent:(nonnull NSNumber *)node
 // ----------------------------------------------------------------------------
 @interface RCT_EXTERN_REMAP_MODULE(THEORCTTHEOliveModule, THEOplayerRCTTHEOliveAPI, NSObject)
 
-RCT_EXTERN_METHOD(currentLatency:(RCTPromiseResolveBlock)resolve
+RCT_EXTERN_METHOD(currentLatency:(nonnull NSNumber *)node
+                  resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(latencies:(RCTPromiseResolveBlock)resolve
+RCT_EXTERN_METHOD(latencies:(nonnull NSNumber *)node
+                  resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
 @end
