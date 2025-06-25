@@ -33,4 +33,16 @@ export interface TheoLiveConfiguration {
    * @defaultValue `false`
    */
   readonly analyticsDisabled?: boolean;
+
+
+  /**
+   * Whether THEOlive uses the new experimental pipeline.
+   *
+   * @remarks
+   * <br/> - Available on iOS only.
+   * <br/> - Experimental pipeline, not to be used for distribution builds.
+   *
+   * @defaultValue `false`
+   */
+  readonly useExperimentalPipeline?: boolean;
 }
