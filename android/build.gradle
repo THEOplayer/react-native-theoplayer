@@ -126,8 +126,8 @@ repositories {
   maven { url "https://maven.theoplayer.com/releases" }
 }
 
-// The minimum supported THEOplayer version is 9.5.0
-def theoplayer_sdk_version = safeExtGet('THEOplayer_sdk', '[9.5.0, 10.0.0)')
+// The minimum supported THEOplayer version is 9.6.0
+def theoplayer_sdk_version = safeExtGet('THEOplayer_sdk', '[9.6.0, 10.0.0)')
 def theoplayer_mediasession_version = safeExtGet('THEOplayer_mediasession', '[8.0.0, 10.0.0)')
 def theoplayer_ads_wrapper_version = "9.0.0"
 
