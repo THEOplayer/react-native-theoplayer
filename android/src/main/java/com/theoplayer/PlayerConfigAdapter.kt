@@ -39,6 +39,7 @@ private const val PROP_ALLOWED_MIMETYPES = "allowedMimeTypes"
 private const val PROP_THEOLIVE_CONFIG = "theoLive"
 private const val PROP_THEOLIVE_EXTERNAL_SESSION_ID = "externalSessionId"
 private const val PROP_THEOLIVE_ANALYTICS_DISABLED = "analyticsDisabled"
+private const val PROP_THEOLIVE_DICOVERY_URL = "discoveryUrl"
 private const val PROP_MULTIMEDIA_TUNNELING_ENABLED = "tunnelingEnabled"
 
 class PlayerConfigAdapter(private val configProps: ReadableMap?) {
@@ -219,7 +220,8 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
       externalSessionId = config?.getString(PROP_THEOLIVE_EXTERNAL_SESSION_ID),
       analyticsDisabled = if (config?.hasKey(PROP_THEOLIVE_ANALYTICS_DISABLED) == true)
         config.getBoolean(PROP_THEOLIVE_ANALYTICS_DISABLED)
-      else false
+      else false,
+      discoveryUrl = config?.getString(PROP_THEOLIVE_DICOVERY_URL)
     ).build()
   }
 }
