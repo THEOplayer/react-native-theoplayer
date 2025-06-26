@@ -45,4 +45,9 @@ export interface TheoLiveConfiguration {
    * @defaultValue `false`
    */
   readonly useLegacyTHEOlive?: boolean;
+
+  /**
+   * Override for the discovery URL.
+   */
+  readonly discoveryUrl?: string;
 }
