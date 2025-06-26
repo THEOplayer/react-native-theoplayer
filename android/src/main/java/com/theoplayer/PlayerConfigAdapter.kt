@@ -27,6 +27,7 @@ private const val PROP_CAST_CONFIGURATION = "cast"
 private const val PROP_ADS_CONFIGURATION = "ads"
 private const val PROP_IMA_CONFIGURATION = "ima"
 private const val PROP_IMA_AD_LOAD_TIMEOUT = "adLoadTimeout"
+private const val PROP_IMA_FOCUS_SKIP_BUTTON_WHEN_AVAILABLE = "focusSkipButtonWhenAvailable"
 private const val PROP_MEDIA_CONTROL = "mediaControl"
 private const val PROP_PPID = "ppid"
 private const val PROP_MAX_REDIRECTS = "maxRedirects"
@@ -175,6 +176,10 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
         // we unify the prop from javascript by multiplying it by 1000 here
         if (hasKey(PROP_IMA_AD_LOAD_TIMEOUT)) {
           setLoadVideoTimeout(getInt(PROP_IMA_AD_LOAD_TIMEOUT) * 1000)
+        }
+
+        if (hasKey(PROP_IMA_FOCUS_SKIP_BUTTON_WHEN_AVAILABLE)) {
+          focusSkipButtonWhenAvailable = getBoolean(PROP_IMA_FOCUS_SKIP_BUTTON_WHEN_AVAILABLE)
         }
       }
     }

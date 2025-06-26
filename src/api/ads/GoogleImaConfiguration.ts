@@ -62,4 +62,14 @@ export interface GoogleImaConfiguration {
    * This value will be specified in seconds.
    */
   adLoadTimeout?: number;
+
+
+  /**
+   * Whether to focus on the skip button when the skippable ad can be skipped on Android TV. This is a no-op on non-Android TV devices.
+   * 
+   * @defaultValue `false`
+   * 
+   * @platform android
+   */
+  focusSkipButtonWhenAvailable?: boolean
 }
