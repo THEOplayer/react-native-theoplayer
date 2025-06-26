@@ -43,4 +43,9 @@ export interface TheoLiveConfiguration {
    * @defaultValue `false`
    */
   readonly useExperimentalPipeline?: boolean;
+
+  /**
+   * Override for the discovery URL.
+   */
+  readonly discoveryUrl?: string;
 }
