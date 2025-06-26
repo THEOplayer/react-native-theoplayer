@@ -44,7 +44,7 @@ Pod::Spec.new do |s|
   # THEOplayer Dependency
   puts "Adding THEOplayerSDK-core"
   s.dependency "THEOplayerSDK-core", "~> 9.6"
-  
+
   # THEOlive Dependency
   puts "Adding THEOplayer-Integration-THEOlive"
   s.dependency "THEOplayer-Integration-THEOlive", "~> 9.6"
@@ -64,7 +64,7 @@ Pod::Spec.new do |s|
 	puts "Adding THEOplayer-Integration-THEOads"
     s.dependency "THEOplayer-Integration-THEOads", "~> 9.6"
   end
-  
+
   if theofeatures.include?("MILLICAST")
   puts "Adding THEOplayer-Integration-Millicast"
     s.dependency "THEOplayer-Integration-Millicast", "~> 9.6"
@@ -75,5 +75,5 @@ Pod::Spec.new do |s|
 	puts "Adding THEOplayer-Connector-SideloadedSubtitle"
     s.dependency "THEOplayer-Connector-SideloadedSubtitle", "~> 9.6"
   end
-  
+
 end
