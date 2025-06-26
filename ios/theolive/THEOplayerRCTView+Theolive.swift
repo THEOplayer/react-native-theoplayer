@@ -15,7 +15,8 @@ extension THEOplayerRCTView {
 
 #if canImport(THEOplayerTHEOliveIntegration)
         let THEOliveConfig = THEOliveConfiguration(externalSessionId: self.theoliveConfig.externalSessionId,
-                                           experimentalHespContentPlayer: self.theoliveConfig.useExperimentalPipeline)
+                                                   experimentalHespContentPlayer: self.theoliveConfig.useExperimentalPipeline,
+                                                   discoveryUrl: self.theoliveConfig.discoveryUrl)
         
         self.THEOliveIntegration = THEOliveIntegrationFactory.createIntegration(with: THEOliveConfig)
         player.addIntegration(self.THEOliveIntegration!)
