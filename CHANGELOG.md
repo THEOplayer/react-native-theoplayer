@@ -5,11 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [9.6.0] - 25-06-27
 
 ### Added
 
-- Added, for HLS on iOS, the unlocalizedLabel to the text-, audio- and videoTracks API, which contains the unmodified label as extracted from the manifest.
+- Added, for HLS on iOS, the `unlocalizedLabel` to the text-, audio- and videoTracks API, which contains the unmodified label as extracted from the manifest.
 - Added a flag `focusSkipButtonWhenAvailable` to `GoogleImaConfiguration`.
 
 ## [9.5.0] - 25-06-20
