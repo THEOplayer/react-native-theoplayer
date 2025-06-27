@@ -48,9 +48,13 @@
     "typescript": "5.1.6",
     "webpack": "^5.99.5",
     "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.1"
+    "webpack-dev-server": "^5.2.1",
+    "react-native-theoplayer": "file:../"
   },
   "overrides": {
+    "@theoplayer/react-native-ui": {
+      "react-native-theoplayer": "$react-native-theoplayer"
+    },
     "react-native-google-cast": {
       "react-native": "$react-native"
     },
