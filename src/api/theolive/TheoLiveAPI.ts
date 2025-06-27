@@ -37,11 +37,11 @@ export interface TheoLiveAPI {
   /**
    * The latency measured for the playing THEOlive channel
    */
-  currentLatency(): Promise<number>;
+  currentLatency: Promise<number>;
 
   /**
    * A set of latency metrics, measured at different parts of the HESP pipeline.
    */
-  latencies(): Promise<HespLatencies>;
+  latencies: Promise<HespLatencies>;
 
 }

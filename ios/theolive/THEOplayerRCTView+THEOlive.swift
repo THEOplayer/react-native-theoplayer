@@ -15,10 +15,10 @@ extension THEOplayerRCTView {
         
 #if canImport(THEOplayerTHEOliveIntegration)
         let THEOliveConfig = THEOliveConfiguration(externalSessionId: self.theoliveConfig.externalSessionId,
-                                                   experimentalHespContentPlayer: self.theoliveConfig.useExperimentalPipeline)
+                                                   experimentalHespContentPlayer: !self.theoliveConfig.useLegacyTHEOlive)
         
         if DEBUG_THEOLIVE_API {
-            PrintUtils.printLog(logText: "[NATIVE] Using \(self.theoliveConfig.useExperimentalPipeline ? "experimental" : "legacy") theolive pipeline.")
+            PrintUtils.printLog(logText: "[NATIVE] Using \(self.theoliveConfig.useLegacyTHEOlive ? "legacy" : "new") theolive pipeline.")
         }
         
         self.THEOliveIntegration = THEOliveIntegrationFactory.createIntegration(with: THEOliveConfig)

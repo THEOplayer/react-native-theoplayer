@@ -6,11 +6,11 @@ const NativeTheoLiveModule = NativeModules.THEORCTTHEOliveModule;
 export class TheoLiveNativeAdapter implements TheoLiveAPI {
   constructor(private _player: THEOplayerView) {}
 
-  currentLatency(): Promise<number> {
+  get currentLatency(): Promise<number> {
     return NativeTheoLiveModule.currentLatency(this._player.nativeHandle);
   }
 
-  latencies(): Promise<HespLatencies> {
+  get latencies(): Promise<HespLatencies> {
     return NativeTheoLiveModule.latencies(this._player.nativeHandle);
   }
 }

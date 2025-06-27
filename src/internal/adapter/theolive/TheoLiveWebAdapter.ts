@@ -4,12 +4,12 @@ import type { ChromelessPlayer } from 'theoplayer';
 export class TheoLiveWebAdapter implements TheoLiveAPI {
   constructor(private _player: ChromelessPlayer) {}
 
-  currentLatency(): Promise<number> {
+  get currentLatency(): Promise<number> {
     const currentLatency = this._player.latency.currentLatency;
     return currentLatency ? Promise.resolve(currentLatency) : Promise.reject<number>('latency not available');
   }
 
-  latencies(): Promise<HespLatencies> {
+  get latencies(): Promise<HespLatencies> {
     const webLatencies = this._player.hesp?.latencies;
     if (webLatencies) {
       return Promise.resolve({

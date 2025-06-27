@@ -36,13 +36,13 @@ export interface TheoLiveConfiguration {
 
 
   /**
-   * Whether THEOlive uses the new experimental pipeline.
+   * Whether THEOlive uses the new pipeline or stick to the legacy implementation.
    *
    * @remarks
    * <br/> - Available on iOS only.
-   * <br/> - Experimental pipeline, not to be used for distribution builds.
+   * <br/> - When enabled, theolive channels will be streamed using the legacy pipeline.
    *
    * @defaultValue `false`
    */
-  readonly useExperimentalPipeline?: boolean;
+  readonly useLegacyTHEOlive?: boolean;
 }
