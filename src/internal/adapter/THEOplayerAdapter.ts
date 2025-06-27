@@ -20,6 +20,7 @@ import {
   SourceDescription,
   TextTrack,
   TheoAdsAPI,
+  TheoLiveAPI,
   THEOplayer,
   THEOplayerView,
   TimeUpdateEvent,
@@ -48,6 +49,7 @@ import type { NativePlayerState } from './NativePlayerState';
 import { EventBroadcastAdapter } from './broadcast/EventBroadcastAdapter';
 import { DefaultNativePlayerState } from './DefaultNativePlayerState';
 import { THEOAdsNativeAdapter } from './theoads/THEOAdsNativeAdapter';
+import { TheoLiveNativeAdapter } from './theolive/TheoLiveNativeAdapter';
 
 const NativePlayerModule = NativeModules.THEORCTPlayerModule;
 
@@ -59,6 +61,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   private readonly _castAdapter: THEOplayerNativeCastAdapter;
   private readonly _abrAdapter: AbrAdapter;
   private readonly _textTrackStyleAdapter: TextTrackStyleAdapter;
+  private readonly _theoliveAdapter: TheoLiveNativeAdapter;
   private _externalEventRouter: EventBroadcastAPI | undefined = undefined;
   private _playerVersion!: PlayerVersion;
 
@@ -71,6 +74,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._castAdapter = new THEOplayerNativeCastAdapter(this, this._view);
     this._abrAdapter = new AbrAdapter(this._view);
     this._textTrackStyleAdapter = new TextTrackStyleAdapter(this._view);
+    this._theoliveAdapter = new TheoLiveNativeAdapter(this._view);
 
     this.addEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
     this.addEventListener(PlayerEventType.PAUSE, this.onPause);
@@ -208,6 +212,10 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   public get theoads(): TheoAdsAPI {
     return this._theoAdsAdapter;
+  }
+
+  get theolive(): TheoLiveAPI {
+    return this._theoliveAdapter;
   }
 
   set autoplay(autoplay: boolean) {

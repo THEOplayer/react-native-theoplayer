@@ -17,6 +17,9 @@ import THEOplayerGoogleCastIntegration
 #if canImport(THEOplayerMillicastIntegration)
 import THEOplayerMillicastIntegration
 #endif
+#if canImport(THEOplayerTHEOliveIntegration)
+import THEOplayerTHEOliveIntegration
+#endif
 
 public class THEOplayerRCTView: UIView {
     // MARK: Members
@@ -38,10 +41,11 @@ public class THEOplayerRCTView: UIView {
     var adsConfig = AdsConfig()
     var castConfig = CastConfig()
     var uiConfig = UIConfig()
+    var theoliveConfig = THEOliveConfig()
     
     // integrations
     #if canImport(THEOplayerTHEOadsIntegration)
-    var theoAdsIntegration: THEOplayerTHEOadsIntegration.THEOadsIntegration?
+    var THEOadsIntegration: THEOplayerTHEOadsIntegration.THEOadsIntegration?
     #endif
     #if canImport(THEOplayerGoogleIMAIntegration)
     var imaIntegration: THEOplayerGoogleIMAIntegration.GoogleImaIntegration?
@@ -51,6 +55,9 @@ public class THEOplayerRCTView: UIView {
     #endif
     #if canImport(THEOplayerMillicastIntegration)
     var millicastIntegration: THEOplayerMillicastIntegration.MillicastIntegration?
+    #endif
+    #if canImport(THEOplayerTHEOliveIntegration)
+    var THEOliveIntegration: THEOplayerTHEOliveIntegration.THEOliveIntegration?
     #endif
 
     var mediaControlConfig = MediaControlConfig() {
@@ -178,7 +185,8 @@ public class THEOplayerRCTView: UIView {
         
         self.initAdsIntegration()
         self.initCastIntegration()
-        self.initTheoAdsIntegration()
+        self.initTHEOadsIntegration()
+        self.initTHEOliveIntegration()
         self.initMillicastIntegration()
         self.initBackgroundAudio()
         self.initPip()
@@ -205,6 +213,7 @@ public class THEOplayerRCTView: UIView {
         self.parseCastConfig(configDict: configDict)
         self.parseUIConfig(configDict: configDict)
         self.parseMediaControlConfig(configDict: configDict)
+        self.parseTHEOliveConfig(configDict: configDict)
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] config prop updated.") }
         
         // Given the bridged config, create the initial THEOplayer instance

@@ -1,4 +1,4 @@
-// THEOplayerRCTView+TheoAds.swift
+// THEOplayerRCTView+THEOads.swift
 
 import Foundation
 import THEOplayerSDK
@@ -8,15 +8,15 @@ import THEOplayerTHEOadsIntegration
 #endif
 
 extension THEOplayerRCTView {
-    func initTheoAdsIntegration() {
+    func initTHEOadsIntegration() {
         guard let player = self.player else {
             return
         }
         
 #if canImport(THEOplayerTHEOadsIntegration)
         // setup integration
-      self.theoAdsIntegration = THEOadsIntegrationFactory.createIntegration(on: player)
-      player.addIntegration(self.theoAdsIntegration!)
+      self.THEOadsIntegration = THEOadsIntegrationFactory.createIntegration(on: player)
+      player.addIntegration(self.THEOadsIntegration!)
 #endif
         
     }
