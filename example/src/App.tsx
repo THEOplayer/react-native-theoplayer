@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useMemo, useState } from 'react';
 import {
   AirplayButton,
+  AutoFocusGuide,
   CastMessage,
   CenteredControlBar,
   CenteredDelayedActivityIndicator,
@@ -122,34 +123,41 @@ export default function App() {
                 player={player}
                 behind={<CenteredDelayedActivityIndicator size={50} />}
                 top={
-                  <ControlBar>
-                    <MediaCacheMenuButton>
-                      <MediaCacheDownloadButton />
-                      <MediaCachingTaskListSubMenu />
-                    </MediaCacheMenuButton>
-                    {/*This is a custom menu for source selection.*/}
-                    <SourceMenuButton />
-                    {!Platform.isTV && (
-                      <>
-                        <AirplayButton />
-                        <ChromecastButton />
-                      </>
-                    )}
-                    <LanguageMenuButton />
-                    <SettingsMenuButton>
-                      {/*Note: quality selection is not available on iOS */}
-                      <QualitySubMenu />
-                      <PlaybackRateSubMenu />
-                      <BackgroundAudioSubMenu />
-                      <PiPSubMenu />
-                      <AutoPlaySubMenu />
-                      {Platform.OS === 'android' && <RenderingTargetSubMenu />}
-                    </SettingsMenuButton>
-                  </ControlBar>
+                  <AutoFocusGuide>
+                    <ControlBar>
+                      <Spacer />
+                      <MediaCacheMenuButton>
+                        <MediaCacheDownloadButton />
+                        <MediaCachingTaskListSubMenu />
+                      </MediaCacheMenuButton>
+                      {/*This is a custom menu for source selection.*/}
+                      <SourceMenuButton />
+                      {!Platform.isTV && (
+                        <>
+                          <AirplayButton />
+                          <ChromecastButton />
+                        </>
+                      )}
+                      <LanguageMenuButton />
+                      <SettingsMenuButton>
+                        {/*Note: quality selection is not available on iOS */}
+                        <QualitySubMenu />
+                        <PlaybackRateSubMenu />
+                        <BackgroundAudioSubMenu />
+                        <PiPSubMenu />
+                        <AutoPlaySubMenu />
+                        {Platform.OS === 'android' && <RenderingTargetSubMenu />}
+                      </SettingsMenuButton>
+                    </ControlBar>
+                  </AutoFocusGuide>
                 }
-                center={<CenteredControlBar left={<SkipButton skip={-10} />} middle={<PlayButton />} right={<SkipButton skip={30} />} />}
+                center={
+                  <AutoFocusGuide>
+                    <CenteredControlBar left={<SkipButton skip={-10} />} middle={<PlayButton />} right={<SkipButton skip={30} />} />
+                  </AutoFocusGuide>
+                }
                 bottom={
-                  <>
+                  <AutoFocusGuide>
                     <ControlBar style={{ justifyContent: 'flex-start' }}>
                       <CastMessage />
                     </ControlBar>
@@ -168,7 +176,7 @@ export default function App() {
                       <PipButton />
                       <FullscreenButton />
                     </ControlBar>
-                  </>
+                  </AutoFocusGuide>
                 }
               />
             )}
