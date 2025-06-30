@@ -26,6 +26,7 @@ import com.theoplayer.android.api.error.ErrorCode
 import com.theoplayer.android.api.error.THEOplayerException
 import com.theoplayer.android.api.player.PresentationMode
 
+@Suppress("KotlinConstantConditions", "SimplifyBooleanWithConstants")
 @SuppressLint("UnspecifiedRegisterReceiverFlag")
 class PresentationManager(
   private val viewCtx: ReactTHEOplayerContext,
@@ -149,15 +150,20 @@ class PresentationManager(
     try {
       pipUtils.enable()
       reactContext.currentActivity?.enterPictureInPictureMode(pipUtils.getPipParams())
-      if (BuildConfig.REPARENT_ON_PIP && pipConfig.reparentPip == true) {
-        reparentPlayerToRoot()
-      }
     } catch (_: Exception) {
       onPipError()
     }
   }
 
+  /**
+   * Called when the transition into PiP either starts (transitioningToPip = true)
+   * or after it ends (transitioningToPip = false)
+   */
   private fun onEnterPip(transitioningToPip: Boolean = false) {
+    if (BuildConfig.REPARENT_ON_PIP && pipConfig.reparentPip == true) {
+      reparentPlayerToRoot()
+    }
+
     updatePresentationMode(
       PresentationMode.PICTURE_IN_PICTURE,
       if (transitioningToPip)
@@ -166,6 +172,9 @@ class PresentationManager(
     )
   }
 
+  /**
+   * Called when the PiP exit transition starts.
+   */
   private fun onExitPip() {
     val pipCtx: PresentationModeChangePipContext =
       if ((reactContext.currentActivity as? ComponentActivity)
@@ -175,7 +184,7 @@ class PresentationManager(
       } else {
         PresentationModeChangePipContext.RESTORED
       }
-    if (BuildConfig.REPARENT_ON_PIP) {
+    if (BuildConfig.REPARENT_ON_PIP && pipConfig.reparentPip == true) {
       reparentPlayerToOriginal()
     }
     updatePresentationMode(PresentationMode.INLINE, PresentationModeChangeContext(pipCtx))
