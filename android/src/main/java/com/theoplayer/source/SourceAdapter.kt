@@ -187,6 +187,7 @@ class SourceAdapter {
     // Some integrations do not support the Builder pattern
     return when {
       (jsonTypedSource.optString(PROP_INTEGRATION)) == INTEGRATION_THEOLIVE -> parseTheoLiveSource(jsonTypedSource)
+      (jsonTypedSource.optString(PROP_TYPE)) == INTEGRATION_THEOLIVE -> parseTheoLiveSource(jsonTypedSource)
       (jsonTypedSource.optString(PROP_TYPE)) == TYPE_MILLICAST -> parseMillicastSource(jsonTypedSource)
       else -> parseTypedSourceFromBuilder(jsonTypedSource, cmcdTransmissionMode)
     }
