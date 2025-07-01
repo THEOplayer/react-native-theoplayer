@@ -1,4 +1,4 @@
-// THEOplayerRCTSourceDescriptionBuilder+TheoAds.swift
+// THEOplayerRCTSourceDescriptionBuilder+THEOads.swift
 
 import Foundation
 import THEOplayerSDK
@@ -14,7 +14,7 @@ extension THEOplayerRCTSourceDescriptionBuilder {
      Creates a THEOplayer GoogleImaAdDescription. This requires an ads property in the RN source description.
      - returns: a THEOplayer GoogleImaAdDescription
      */
-    static func buildSingleTheoAdsDescription(_ adsData: [String:Any]) -> AdDescription? {
+    static func buildSingleTHEOadsDescription(_ adsData: [String:Any]) -> AdDescription? {
 #if canImport(THEOplayerTHEOadsIntegration)
         //...
         let networkCode = adsData[SD_PROP_NETWORK_CODE] as? String

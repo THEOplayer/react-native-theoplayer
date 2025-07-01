@@ -33,4 +33,21 @@ export interface TheoLiveConfiguration {
    * @defaultValue `false`
    */
   readonly analyticsDisabled?: boolean;
+
+
+  /**
+   * Whether THEOlive uses the new pipeline or stick to the legacy implementation.
+   *
+   * @remarks
+   * <br/> - Available on iOS only.
+   * <br/> - When enabled, theolive channels will be streamed using the legacy pipeline.
+   *
+   * @defaultValue `false`
+   */
+  readonly useLegacyTHEOlive?: boolean;
+
+  /**
+   * Override for the discovery URL.
+   */
+  readonly discoveryUrl?: string;
 }

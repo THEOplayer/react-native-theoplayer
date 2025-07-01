@@ -164,5 +164,3 @@ source, and show a list of the currently available caching tasks.
 
 | ![main](./media_caching_1.png) | ![main](./media_caching_2.png) |
 |--------------------------------|--------------------------------|
-
-## Known Limitations

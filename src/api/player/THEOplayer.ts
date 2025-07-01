@@ -14,6 +14,7 @@ import type { BackgroundAudioConfiguration } from '../backgroundAudio/Background
 import type { PlayerVersion } from './PlayerVersion';
 import type { EventBroadcastAPI } from '../broadcast/EventBroadcastAPI';
 import { TheoAdsAPI } from '../theoads/TheoAdsAPI';
+import { TheoLiveAPI } from '../theolive/TheoLiveAPI';
 
 export type PreloadType = 'none' | 'metadata' | 'auto' | '';
 
@@ -271,4 +272,9 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
    * The height of the player.
    */
   readonly height: number | undefined;
+
+  /**
+   * The API for theolive.
+   */
+  readonly theolive: TheoLiveAPI;
 }

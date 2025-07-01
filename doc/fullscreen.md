@@ -110,7 +110,7 @@ HomeIndicatorViewController *rootViewController = [HomeIndicatorViewController n
 self.window.rootViewController = rootViewController;
 ```
 
-Our iOS presentationMode changing code checks if the rootViewController is of type HomeIndicatorViewController and will, in that case, automatically take care of showing/hiding the home indicator.
+Our iOS presentationMode changing code checks if the `rootViewController` is of type `HomeIndicatorViewController` and will, in that case, automatically take care of showing/hiding the home indicator.
 
 ## Portals for iOS and Android
 
