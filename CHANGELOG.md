@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+- Added the theolive discoveryUrl to the PlayerConfiguration's theolive properties.
 - Added focusguides (@THEOplayer/react-native-ui feature) to the example app for tvOS.
 
 ## [9.6.0] - 25-06-27
