@@ -9,8 +9,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Added, for HLS on iOS, the unlocalizedLabel to the text-, audio- and videoTracks API, which contains the unmodified label as extracted from the manifest.
 - Added the theolive discoveryUrl to the PlayerConfiguration's theolive properties.
+- Added focusguides (@THEOplayer/react-native-ui feature) to the example app for tvOS.
+
+## [9.6.0] - 25-06-27
+
+### Added
+
+- Added, for HLS on iOS, the `unlocalizedLabel` to the text-, audio- and videoTracks API, which contains the unmodified label as extracted from the manifest.
+- Added a flag `focusSkipButtonWhenAvailable` to `GoogleImaConfiguration`.
 
 ## [9.5.0] - 25-06-20
 
