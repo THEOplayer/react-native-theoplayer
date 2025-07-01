@@ -144,8 +144,7 @@ sources in the [example application](./example-app.md) demonstrate:
 The [`@theoplayer/react-native-ui`](https://github.com/THEOplayer/react-native-theoplayer-ui) package provides a
 thumbnail viewer the interprets thumbnail cues and displays them above the progress bar.
 
-[//]: # ( TODO: insert picture from react-native-theoplayer-ui)
-[//]: # (# ![]&#40;&#41;)
+![thumbnails](./thumbnails.png)
 
 ## Styling subtitles and closed captions
 
@@ -164,8 +163,8 @@ which enables the customization of subtitles and closed captions' appearance. We
 | `edgeStyle`       | The edge style of the text.                                       | An enum value, either `none` (default), `dropshadow`, `raised`, `depressed`, `uniform`. | All platforms.                                                     |
 | `marginTop`       | The top margin of the area where subtitles are being rendered.    | A positive numeric value specifying the number of pixels.                               | All platforms.                                                     |
 | `marginLeft`      | The left margin of the area where subtitles are being rendered.   | A positive numeric value specifying the number of pixels.                               | All platforms.                                                     |
-| `marginBottom`    | The bottom margin of the area where subtitles are being rendered. | A positive numeric value specifying the number of pixels.                               | Web only.                                                          |
-| `marginRight`     | The right margin  of the area where subtitles are being rendered. | A positive numeric value specifying the number of pixels.                               | Web only.                                                          |
+| `marginBottom`    | The bottom margin of the area where subtitles are being rendered. | A positive numeric value specifying the number of pixels.                               | Web and Android.                                                   |
+| `marginRight`     | The right margin  of the area where subtitles are being rendered. | A positive numeric value specifying the number of pixels.                               | Web and Android.                                                   |
 
 ### Examples
 
