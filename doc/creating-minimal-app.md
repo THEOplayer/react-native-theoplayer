@@ -97,12 +97,12 @@ set various Android-specific react-native-theoplayer options:
 
 ```groovy
 # Version of the (Android) THEOplayer SDK, if not specified, the latest available version is set.
-#THEOplayer_sdk=5.0.3
+#THEOplayer_sdk=9.6.1
 
 # Override Android sdk versions
-#THEOplayer_compileSdkVersion = 33
+#THEOplayer_compileSdkVersion = 35
 #THEOplayer_minSdkVersion = 21
-#THEOplayer_targetSdkVersion = 33
+#THEOplayer_targetSdkVersion = 35
 
 # Toggle player event logging using tag 'VideoPlayer' (default: false)
 #THEOplayer_logPlayerEvents = true
@@ -118,6 +118,9 @@ set various Android-specific react-native-theoplayer options:
 #THEOplayer_extensionGoogleDAI = true
 #THEOplayer_extensionCast = true
 #THEOplayer_extensionMediaSession = true
+#THEOplayer_extensionTHEOads = true
+#THEOplayer_extensionMediaSession = true
+#THEOplayer_extensionMillicast = true
 
 # Optionally limit timeUpdate rate, which could improve performance.
 # Possible values: (default: UNLIMITED)
@@ -126,6 +129,18 @@ set various Android-specific react-native-theoplayer options:
 # - com.theoplayer.TimeUpdateRate.LIMITED_TWO_HZ
 # - com.theoplayer.TimeUpdateRate.LIMITED_THREE_HZ
 #THEOplayer_timeUpdateRate = com.theoplayer.TimeUpdateRate.LIMITED_TWO_HZ
+
+# Toggle whether to use a media service for background playback
+#THEOplayer_usePlaybackService = true
+
+# Toggle whether to reparent the playerView to the top-most node of the view hierarchy when going
+# into fullscreen.
+# See https://github.com/THEOplayer/react-native-theoplayer/blob/develop/doc/fullscreen.md.
+#THEOplayer_reparent_on_fullscreen = true
+
+# Toggle whether to reparent the playerView to the top-most node of the view hierarchy when going
+# into PiP.
+#THEOplayer_reparent_on_PiP = false
 ```
 
 For optimal performance, make sure to build your app in release mode, and  optionally limit the number of `timeupdate`
