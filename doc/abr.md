@@ -3,7 +3,7 @@
 ## Overview
 
 The playback quality during play-out of a stream is determined by the ABR algorithm.
-On starting play-out of a stream, the ABR *strategy* determines which quality to prefer, while during play-out the
+On starting play-out of a stream, the ABR `strategy` determines which quality to prefer, while during play-out the
 network's bandwidth is
 monitored to select an optimal quality.
 

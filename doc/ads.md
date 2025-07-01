@@ -41,7 +41,7 @@ THEOplayer_extensionGoogleIMA = true
 <details>
 <summary>iOS/tvOS</summary>
 
-To enable Google IMA you can add the "GOOGLE_IMA" [feature flag](./creating-minimal-app.md#getting-started-on-ios-and-tvos) to react-native-theoplayer.json (or theoplayer-config.json)
+To enable Google IMA you can add the "GOOGLE_IMA" [feature flag](./creating-minimal-app.md#getting-started-on-ios-and-tvos) to `react-native-theoplayer.json` (or `theoplayer-config.json`)
 
 </details>
 
@@ -88,6 +88,8 @@ const imaSource = {
 
 The API's [`AdSource`](../src/api/source/ads/Ads.ts) description provides additional information on
 the configurable properties.
+
+It is also possible to pass a configuration to the IMA SDK via the `ads` API. For more information see the [GoogleImaConfiguration API](https://github.com/THEOplayer/react-native-theoplayer/blob/develop/src/api/ads/GoogleImaConfiguration.ts).
 
 ## Getting started with Google DAI
 

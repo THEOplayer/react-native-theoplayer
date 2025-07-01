@@ -228,11 +228,11 @@ to the receiver. Common fields include `poster`, `title`, `subtitle`, `album` an
 |---------------------------------|
 | Casting a stream with metadata. |
 
-## Airplay
+## AirPlay
 
-For iOS and Web Safari, also Airplay is supported. Similar to chromecast, you can listen to or check the airplay cast
-state and use the player's Airplay API to either start or join an Airplay session. When implementing a simple airplay
-button you can toggle Airplay using:
+On iOS and Web Safari, along with Chromecast, AirPlay is also supported. Similar to Chromecast, you can listen to or check the AirPlay cast
+state and use the player's AirPlay API to either start or join an AirPlay session. When implementing a simple AirPlay
+button you can toggle AirPlay using:
 
 ```typescript
 player.cast.airplay?.state().then((airplayCastState) => {
@@ -248,7 +248,7 @@ player.cast.airplay?.state().then((airplayCastState) => {
 ## Cast API
 
 The `THEOplayerView` provides the [THEOplayer API](../src/api/player/THEOplayer.ts) using the `onPlayerReady` callback,
-where you can access the [CastAPI](../src/api/event/CastEvent.ts) to control or start cast sessions, either Chromecast or Airplay.
+where you can access the [CastAPI](../src/api/event/CastEvent.ts) to control or start cast sessions, either Chromecast or AirPlay.
 ## Subscribing to Cast Events
 
 The `THEOplayerView` provides the [THEOplayer API](../src/api/player/THEOplayer.ts) using the `onPlayerReady` callback,
