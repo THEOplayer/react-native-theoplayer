@@ -166,7 +166,7 @@ class PresentationManager(
    * or after it ends (transitioningToPip = false)
    */
   private fun onEnterPip(transitioningToPip: Boolean = false) {
-    if (BuildConfig.REPARENT_ON_PIP && pipConfig.reparentPip == true) {
+    if (BuildConfig.REPARENT_ON_PIP && !transitioningToPip && pipConfig.reparentPip == true) {
       reparentPlayerToRoot()
     }
 
