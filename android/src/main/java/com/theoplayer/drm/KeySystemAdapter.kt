@@ -17,6 +17,7 @@ object KeySystemAdapter {
       KeySystemId.WIDEVINE -> "widevine"
       KeySystemId.PLAYREADY -> "playready"
       KeySystemId.FAIRPLAY -> "fairplay"
+      else -> ""
     }
   }
 }
