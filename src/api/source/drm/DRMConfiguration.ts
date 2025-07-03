@@ -263,10 +263,10 @@ export interface DRMConfiguration {
 }
 
 /**
- * The id of a key system. Possible values are 'widevine', 'fairplay' and 'playready'.
+ * The id of a key system.
  *
  * @category Content Protection
  * @category Source
  * @public
  */
-export type KeySystemId = 'widevine' | 'fairplay' | 'playready';
+export type KeySystemId = 'widevine' | 'fairplay' | 'playready' | 'clearkey';
