@@ -16,6 +16,7 @@ import type { MediaTrackEvent, MediaTrackListEvent, TextTrackEvent, TextTrackLis
 import type { AdEvent } from '../event/AdEvent';
 import type { CastEvent } from '../event/CastEvent';
 import type { TheoAdsEvent } from '../event/TheoAdsEvent';
+import type { TheoLiveEvent } from '../event/TheoLiveEvent';
 
 /**
  * The event types dispatched by the {@link Player}.
@@ -49,6 +50,7 @@ export enum PlayerEventType {
   MEDIA_TRACK = 'mediatrack',
   AD_EVENT = 'adevent',
   THEOADS_EVENT = 'theoads',
+  THEOLIVE_EVENT = 'theolive',
   CAST_EVENT = 'castevent',
   VOLUME_CHANGE = 'volumechange',
   WAITING = 'waiting',
@@ -204,6 +206,11 @@ export interface PlayerEventMap {
    * Dispatched when a THEOads event occurs.
    */
   [PlayerEventType.THEOADS_EVENT]: TheoAdsEvent;
+
+  /**
+   * Dispatched when a THEOlive event occurs.
+   */
+  [PlayerEventType.THEOLIVE_EVENT]: TheoLiveEvent;
 
   /**
    * Dispatched when a cast event occurs, either for Chromecast or Airplay.
