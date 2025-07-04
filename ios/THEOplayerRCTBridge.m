@@ -46,9 +46,8 @@ RCT_EXPORT_VIEW_PROPERTY(onNativeMediaTrackEvent, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativePlayerReady, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativePresentationModeChange, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeResize, RCTDirectEventBlock);
-
 RCT_EXPORT_VIEW_PROPERTY(onNativeAdEvent, RCTDirectEventBlock);
-
+RCT_EXPORT_VIEW_PROPERTY(onNativeTHEOliveEvent, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeCastEvent, RCTDirectEventBlock);
 
 @end
