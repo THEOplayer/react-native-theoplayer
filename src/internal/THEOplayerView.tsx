@@ -13,7 +13,15 @@ import {
   ViewStyle,
 } from 'react-native';
 import type { ScaledSize, EmitterSubscription } from 'react-native';
-import { isDateRangeCue, PlayerConfiguration, PlayerError, PresentationMode, TextTrackCue, THEOplayerViewProps } from 'react-native-theoplayer';
+import {
+  isDateRangeCue,
+  PlayerConfiguration,
+  PlayerError,
+  PresentationMode,
+  TextTrackCue,
+  TheoLiveEventType,
+  THEOplayerViewProps,
+} from 'react-native-theoplayer';
 import { CastEventType, PlayerEventType } from 'react-native-theoplayer';
 
 import styles from './THEOplayerView.style';
@@ -41,6 +49,8 @@ import {
   DefaultResizeEvent,
   DefaultSeekingEvent,
   DefaultSeekedEvent,
+  DefaultTheoLiveDistributionEvent,
+  DefaultTheoLiveEvent,
 } from './adapter/event/PlayerEvents';
 import type { NativeCastEvent } from './adapter/event/native/NativeCastEvent';
 import type {
@@ -67,6 +77,7 @@ import type {
   NativeSeekedEvent,
 } from './adapter/event/native/NativePlayerEvent';
 import type { NativeAdEvent } from './adapter/event/native/NativeAdEvent';
+import type { NativeTheoLiveEvent } from './adapter/event/native/NativeTheoLiveEvent';
 import { THEOplayerAdapter } from './adapter/THEOplayerAdapter';
 import { getFullscreenSize } from './utils/Dimensions';
 import { Poster } from './poster/Poster';
@@ -103,6 +114,7 @@ interface THEOplayerRCTViewProps {
   onNativeMediaTrackListEvent: (event: NativeSyntheticEvent<NativeMediaTrackListEvent>) => void;
   onNativeMediaTrackEvent: (event: NativeSyntheticEvent<NativeMediaTrackEvent>) => void;
   onNativeAdEvent: (event: NativeSyntheticEvent<NativeAdEvent>) => void;
+  onNativeTHEOliveEvent: (event: NativeSyntheticEvent<NativeTheoLiveEvent>) => void;
   onNativeCastEvent: (event: NativeSyntheticEvent<NativeCastEvent>) => void;
   onNativePresentationModeChange: (event: NativeSyntheticEvent<NativePresentationModeChangeEvent>) => void;
   onNativeResize: (event: NativeSyntheticEvent<NativeResizeEvent>) => void;
@@ -332,6 +344,16 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
     this._facade.dispatchEvent(new DefaultAdEvent(nativeEvent.type, nativeEvent.ad));
   };
 
+  private _onTHEOliveEvent = (event: NativeSyntheticEvent<NativeTheoLiveEvent>) => {
+    const nativeEvent = event.nativeEvent;
+    if (nativeEvent.type === TheoLiveEventType.DISTRIBUTION_LOAD_START || nativeEvent.type === TheoLiveEventType.DISTRIBUTION_OFFLINE) {
+      const { distributionId } = nativeEvent as unknown as { distributionId: string };
+      this._facade.dispatchEvent(new DefaultTheoLiveDistributionEvent(nativeEvent.type as TheoLiveEventType, distributionId));
+    } else {
+      this._facade.dispatchEvent(new DefaultTheoLiveEvent(nativeEvent.type as TheoLiveEventType));
+    }
+  };
+
   private _onCastEvent = (event: NativeSyntheticEvent<NativeCastEvent>) => {
     switch (event.nativeEvent.type) {
       case CastEventType.CHROMECAST_STATE_CHANGE:
@@ -415,6 +437,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
           onNativeMediaTrackListEvent={this._onMediaTrackListEvent}
           onNativeMediaTrackEvent={this._onMediaTrackEvent}
           onNativeAdEvent={this._onAdEvent}
+          onNativeTHEOliveEvent={this._onTHEOliveEvent}
           onNativeCastEvent={this._onCastEvent}
           onNativePresentationModeChange={this._onPresentationModeChange}
           onNativeResize={this._onResize}
