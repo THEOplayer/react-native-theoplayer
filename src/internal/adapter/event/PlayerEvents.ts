@@ -39,6 +39,9 @@ import {
   TextTrackListEvent,
   TheoAdsEvent,
   TheoAdsEventType,
+  TheoLiveEvent,
+  TheoLiveDistributionEvent,
+  TheoLiveEventType,
   TimeRange,
   TimeUpdateEvent,
   TrackListEventType,
@@ -206,6 +209,21 @@ export class DefaultTheoAdsEvent extends BaseEvent<PlayerEventType.THEOADS_EVENT
     public interstitial: Interstitial,
   ) {
     super(PlayerEventType.THEOADS_EVENT);
+  }
+}
+
+export class DefaultTheoLiveEvent extends BaseEvent<PlayerEventType.THEOLIVE_EVENT> implements TheoLiveEvent {
+  constructor(public subType: TheoLiveEventType) {
+    super(PlayerEventType.THEOLIVE_EVENT);
+  }
+}
+
+export class DefaultTheoLiveDistributionEvent extends BaseEvent<PlayerEventType.THEOLIVE_EVENT> implements TheoLiveDistributionEvent {
+  constructor(
+    public subType: TheoLiveEventType,
+    public distributionId: number,
+  ) {
+    super(PlayerEventType.THEOLIVE_EVENT);
   }
 }
 
