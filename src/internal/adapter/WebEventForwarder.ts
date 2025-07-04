@@ -354,7 +354,7 @@ export class WebEventForwarder {
 
   private readonly onTheoLiveEvent = (event: NativeEvent) => {
     if (event.type === TheoLiveEventType.DISTRIBUTION_LOAD_START || event.type === TheoLiveEventType.DISTRIBUTION_OFFLINE) {
-      const { distributionId } = event as unknown as { distributionId: number };
+      const { distributionId } = event as unknown as { distributionId: string };
       this._facade.dispatchEvent(new DefaultTheoLiveDistributionEvent(event.type as TheoLiveEventType, distributionId));
     } else {
       this._facade.dispatchEvent(new DefaultTheoLiveEvent(event.type as TheoLiveEventType));

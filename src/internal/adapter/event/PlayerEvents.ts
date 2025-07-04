@@ -221,7 +221,7 @@ export class DefaultTheoLiveEvent extends BaseEvent<PlayerEventType.THEOLIVE_EVE
 export class DefaultTheoLiveDistributionEvent extends BaseEvent<PlayerEventType.THEOLIVE_EVENT> implements TheoLiveDistributionEvent {
   constructor(
     public subType: TheoLiveEventType,
-    public distributionId: number,
+    public distributionId: string,
   ) {
     super(PlayerEventType.THEOLIVE_EVENT);
   }

@@ -19,7 +19,7 @@ export interface TheoLiveDistributionEvent extends TheoLiveEvent {
    * The distribution identifier
    *
    */
-  distributionId: number;
+  distributionId: string;
 }
 
 /**
