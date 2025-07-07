@@ -43,6 +43,7 @@ import com.theoplayer.android.api.player.track.texttrack.TextTrackKind
 import com.theoplayer.android.api.player.track.texttrack.TextTrackMode
 import com.theoplayer.cast.CastEventAdapter
 import com.theoplayer.presentation.PresentationModeChangeContext
+import com.theoplayer.theolive.THEOliveEventAdapter
 import com.theoplayer.track.*
 import com.theoplayer.util.PayloadBuilder
 import kotlin.math.floor
@@ -75,6 +76,7 @@ private const val EVENT_MEDIATRACK_LIST_EVENT = "onNativeMediaTrackListEvent"
 private const val EVENT_MEDIATRACK_EVENT = "onNativeMediaTrackEvent"
 private const val EVENT_AD_EVENT = "onNativeAdEvent"
 private const val EVENT_CAST_EVENT = "onNativeCastEvent"
+private const val EVENT_THEOLIVE_EVENT = "onNativeTHEOliveEvent"
 private const val EVENT_PRESENTATIONMODECHANGE = "onNativePresentationModeChange"
 private const val EVENT_VOLUMECHANGE = "onNativeVolumeChange"
 private const val EVENT_RESIZE = "onNativeResize"
@@ -117,6 +119,7 @@ class PlayerEventEmitter internal constructor(
     EVENT_MEDIATRACK_EVENT,
     EVENT_AD_EVENT,
     EVENT_CAST_EVENT,
+    EVENT_THEOLIVE_EVENT,
     EVENT_PRESENTATIONMODECHANGE,
     EVENT_VOLUMECHANGE,
     EVENT_RESIZE
@@ -151,6 +154,7 @@ class PlayerEventEmitter internal constructor(
       EVENT_MEDIATRACK_EVENT,
       EVENT_AD_EVENT,
       EVENT_CAST_EVENT,
+      EVENT_THEOLIVE_EVENT,
       EVENT_PRESENTATIONMODECHANGE,
       EVENT_VOLUMECHANGE,
       EVENT_RESIZE
@@ -164,6 +168,7 @@ class PlayerEventEmitter internal constructor(
   private val videoTrackListeners = HashMap<EventType<*>, EventListener<*>>()
   private var adEventAdapter: AdEventAdapter? = null
   private var castEventAdapter: CastEventAdapter? = null
+  private var theoLiveEventAdapter: THEOliveEventAdapter? = null
   private var lastTimeUpdate: Long = 0
   private var lastCurrentTime = 0.0
   private var resizeListener = View.OnLayoutChangeListener { v, _, _, _, _, oldLeft, oldTop, oldRight, oldBottom ->
@@ -672,6 +677,12 @@ class PlayerEventEmitter internal constructor(
       }
     }
 
+    theoLiveEventAdapter = THEOliveEventAdapter(player.theoLive, object : THEOliveEventAdapter.Emitter {
+      override fun emit(payload: WritableMap?) {
+        receiveEvent(EVENT_THEOLIVE_EVENT, payload)
+      }
+    })
+
     // Attach view size listener
     playerView.addOnLayoutChangeListener(resizeListener)
   }
@@ -714,5 +725,6 @@ class PlayerEventEmitter internal constructor(
 
     castEventAdapter?.destroy()
     adEventAdapter?.destroy()
+    theoLiveEventAdapter?.destroy()
   }
 }
