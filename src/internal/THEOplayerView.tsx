@@ -13,15 +13,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import type { ScaledSize, EmitterSubscription } from 'react-native';
-import {
-  isDateRangeCue,
-  PlayerConfiguration,
-  PlayerError,
-  PresentationMode,
-  TextTrackCue,
-  TheoLiveEventType,
-  THEOplayerViewProps,
-} from 'react-native-theoplayer';
+import { isDateRangeCue, PlayerConfiguration, PlayerError, PresentationMode, TextTrackCue, THEOplayerViewProps } from 'react-native-theoplayer';
 import { CastEventType, PlayerEventType } from 'react-native-theoplayer';
 
 import styles from './THEOplayerView.style';
@@ -49,8 +41,6 @@ import {
   DefaultResizeEvent,
   DefaultSeekingEvent,
   DefaultSeekedEvent,
-  DefaultTheoLiveDistributionEvent,
-  DefaultTheoLiveEvent,
 } from './adapter/event/PlayerEvents';
 import type { NativeCastEvent } from './adapter/event/native/NativeCastEvent';
 import type {
@@ -77,7 +67,7 @@ import type {
   NativeSeekedEvent,
 } from './adapter/event/native/NativePlayerEvent';
 import type { NativeAdEvent } from './adapter/event/native/NativeAdEvent';
-import type { NativeTheoLiveEvent } from './adapter/event/native/NativeTheoLiveEvent';
+import { fromNativeTheoLiveEvent, NativeTheoLiveEvent } from './adapter/event/native/NativeTheoLiveEvent';
 import { THEOplayerAdapter } from './adapter/THEOplayerAdapter';
 import { getFullscreenSize } from './utils/Dimensions';
 import { Poster } from './poster/Poster';
@@ -345,13 +335,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
   };
 
   private _onTHEOliveEvent = (event: NativeSyntheticEvent<NativeTheoLiveEvent>) => {
-    const nativeEvent = event.nativeEvent;
-    if (nativeEvent.type === TheoLiveEventType.DISTRIBUTION_LOAD_START || nativeEvent.type === TheoLiveEventType.DISTRIBUTION_OFFLINE) {
-      const { distributionId } = nativeEvent as unknown as { distributionId: string };
-      this._facade.dispatchEvent(new DefaultTheoLiveDistributionEvent(nativeEvent.type as TheoLiveEventType, distributionId));
-    } else {
-      this._facade.dispatchEvent(new DefaultTheoLiveEvent(nativeEvent.type as TheoLiveEventType));
-    }
+    this._facade.dispatchEvent(fromNativeTheoLiveEvent(event));
   };
 
   private _onCastEvent = (event: NativeSyntheticEvent<NativeCastEvent>) => {

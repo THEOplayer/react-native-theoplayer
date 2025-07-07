@@ -46,6 +46,8 @@ import {
   TimeUpdateEvent,
   TrackListEventType,
   VolumeChangeEvent,
+  TheoLiveEndpoint,
+  TheoLiveEndpointLoadedEvent,
 } from 'react-native-theoplayer';
 
 export class DefaultLoadedMetadataEvent extends BaseEvent<PlayerEventType.LOADED_METADATA> implements LoadedMetadataEvent {
@@ -222,6 +224,15 @@ export class DefaultTheoLiveDistributionEvent extends BaseEvent<PlayerEventType.
   constructor(
     public subType: TheoLiveEventType,
     public distributionId: string,
+  ) {
+    super(PlayerEventType.THEOLIVE_EVENT);
+  }
+}
+
+export class DefaultTheoLiveEndpointLoadedEvent extends BaseEvent<PlayerEventType.THEOLIVE_EVENT> implements TheoLiveEndpointLoadedEvent {
+  constructor(
+    public subType: TheoLiveEventType,
+    public endpoint?: TheoLiveEndpoint,
   ) {
     super(PlayerEventType.THEOLIVE_EVENT);
   }
