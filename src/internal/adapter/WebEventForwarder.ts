@@ -22,7 +22,7 @@ import type {
   TheoLiveApiEventMap as NativeTheoLiveEventMap,
   InterstitialEvent,
 } from 'theoplayer';
-import type { AdEvent, MediaTrack, TimeRange } from 'react-native-theoplayer';
+import { AdEvent, MediaTrack, TheoLiveEndpoint, TimeRange } from 'react-native-theoplayer';
 import {
   AdEventType,
   CastState,
@@ -59,6 +59,7 @@ import {
   DefaultTextTrackListEvent,
   DefaultTheoAdsEvent,
   DefaultTheoLiveDistributionEvent,
+  DefaultTheoLiveEndpointLoadedEvent,
   DefaultTheoLiveEvent,
   DefaultTimeupdateEvent,
   DefaultVolumeChangeEvent,
@@ -356,6 +357,9 @@ export class WebEventForwarder {
     if (event.type === TheoLiveEventType.DISTRIBUTION_LOAD_START || event.type === TheoLiveEventType.DISTRIBUTION_OFFLINE) {
       const { distributionId } = event as unknown as { distributionId: string };
       this._facade.dispatchEvent(new DefaultTheoLiveDistributionEvent(event.type as TheoLiveEventType, distributionId));
+    } else if (event.type === TheoLiveEventType.ENDPOINT_LOADED) {
+      const { endpoint } = event as unknown as { endpoint: TheoLiveEndpoint };
+      this._facade.dispatchEvent(new DefaultTheoLiveEndpointLoadedEvent(event.type as TheoLiveEventType, endpoint));
     } else {
       this._facade.dispatchEvent(new DefaultTheoLiveEvent(event.type as TheoLiveEventType));
     }
