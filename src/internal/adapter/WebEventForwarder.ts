@@ -19,9 +19,10 @@ import type {
   VolumeChangeEvent as NativeVolumeChangeEvent,
   DimensionChangeEvent as NativeDimensionChangeEvent,
   TheoAdsEventsMap as NativeTheoAdsEventMap,
+  TheoLiveApiEventMap as NativeTheoLiveEventMap,
   InterstitialEvent,
 } from 'theoplayer';
-import type { AdEvent, MediaTrack, TimeRange } from 'react-native-theoplayer';
+import { AdEvent, MediaTrack, TheoLiveEndpoint, TimeRange } from 'react-native-theoplayer';
 import {
   AdEventType,
   CastState,
@@ -33,6 +34,7 @@ import {
   TextTrackMode,
   TrackListEventType,
   TheoAdsEventType,
+  TheoLiveEventType,
 } from 'react-native-theoplayer';
 import type { THEOplayerWebAdapter } from './THEOplayerWebAdapter';
 import { BaseEvent } from './event/BaseEvent';
@@ -56,6 +58,9 @@ import {
   DefaultTextTrackEvent,
   DefaultTextTrackListEvent,
   DefaultTheoAdsEvent,
+  DefaultTheoLiveDistributionEvent,
+  DefaultTheoLiveEndpointLoadedEvent,
+  DefaultTheoLiveEvent,
   DefaultTimeupdateEvent,
   DefaultVolumeChangeEvent,
 } from './event/PlayerEvents';
@@ -112,6 +117,7 @@ export class WebEventForwarder {
 
     this._player.ads?.addEventListener(FORWARDED_AD_EVENTS, this.onAdEvent);
     this._player.theoads?.addEventListener(FORWARDED_THEOADS_EVENTS, this.onTheoAdsEvent);
+    this._player.theoLive?.addEventListener(FORWARDED_THEOLIVE_EVENTS, this.onTheoLiveEvent);
   }
 
   unload(): void {
@@ -158,6 +164,7 @@ export class WebEventForwarder {
 
     this._player.ads?.removeEventListener(FORWARDED_AD_EVENTS, this.onAdEvent);
     this._player.theoads?.removeEventListener(FORWARDED_THEOADS_EVENTS, this.onTheoAdsEvent);
+    this._player.theoLive?.removeEventListener(FORWARDED_THEOLIVE_EVENTS, this.onTheoLiveEvent);
   }
 
   private readonly onSourceChange = () => {
@@ -346,6 +353,18 @@ export class WebEventForwarder {
     this._facade.dispatchEvent(new DefaultTheoAdsEvent(event.type as TheoAdsEventType, event.interstitial));
   };
 
+  private readonly onTheoLiveEvent = (event: NativeEvent) => {
+    if (event.type === TheoLiveEventType.DISTRIBUTION_LOAD_START || event.type === TheoLiveEventType.DISTRIBUTION_OFFLINE) {
+      const { distributionId } = event as unknown as { distributionId: string };
+      this._facade.dispatchEvent(new DefaultTheoLiveDistributionEvent(event.type as TheoLiveEventType, distributionId));
+    } else if (event.type === TheoLiveEventType.ENDPOINT_LOADED) {
+      const { endpoint } = event as unknown as { endpoint: TheoLiveEndpoint };
+      this._facade.dispatchEvent(new DefaultTheoLiveEndpointLoadedEvent(event.type as TheoLiveEventType, endpoint));
+    } else {
+      this._facade.dispatchEvent(new DefaultTheoLiveEvent(event.type as TheoLiveEventType));
+    }
+  };
+
   private readonly onAddTextTrackCue = (track: NativeTextTrack) => (event: NativeEvent<'addcue'>) => {
     const { cue } = event as unknown as { cue: NativeTextTrackCue };
     if (cue) {
@@ -411,6 +430,15 @@ const FORWARDED_THEOADS_EVENTS = [
   TheoAdsEventType.INTERSTITIAL_UPDATE,
   TheoAdsEventType.INTERSTITIAL_ERROR,
 ] as (keyof NativeTheoAdsEventMap)[];
+
+const FORWARDED_THEOLIVE_EVENTS = [
+  TheoLiveEventType.DISTRIBUTION_LOAD_START,
+  TheoLiveEventType.DISTRIBUTION_OFFLINE,
+  TheoLiveEventType.ENDPOINT_LOADED,
+  TheoLiveEventType.ENTER_BADNETWORKMODE,
+  TheoLiveEventType.EXIT_BADNETWORKMODE,
+  TheoLiveEventType.INTENT_TO_FALLBACK,
+] as (keyof NativeTheoLiveEventMap)[];
 
 function fromTimeRanges(timeRanges: TimeRanges): TimeRange[] {
   const result: TimeRange[] = [];

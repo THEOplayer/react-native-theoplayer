@@ -6,3 +6,4 @@ export * from './CastEvent';
 export * from './PlayerEvent';
 export * from './TrackEvent';
 export * from './TheoAdsEvent';
+export * from './TheoLiveEvent';

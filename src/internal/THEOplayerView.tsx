@@ -67,6 +67,7 @@ import type {
   NativeSeekedEvent,
 } from './adapter/event/native/NativePlayerEvent';
 import type { NativeAdEvent } from './adapter/event/native/NativeAdEvent';
+import { fromNativeTheoLiveEvent, NativeTheoLiveEvent } from './adapter/event/native/NativeTheoLiveEvent';
 import { THEOplayerAdapter } from './adapter/THEOplayerAdapter';
 import { getFullscreenSize } from './utils/Dimensions';
 import { Poster } from './poster/Poster';
@@ -103,6 +104,7 @@ interface THEOplayerRCTViewProps {
   onNativeMediaTrackListEvent: (event: NativeSyntheticEvent<NativeMediaTrackListEvent>) => void;
   onNativeMediaTrackEvent: (event: NativeSyntheticEvent<NativeMediaTrackEvent>) => void;
   onNativeAdEvent: (event: NativeSyntheticEvent<NativeAdEvent>) => void;
+  onNativeTHEOliveEvent: (event: NativeSyntheticEvent<NativeTheoLiveEvent>) => void;
   onNativeCastEvent: (event: NativeSyntheticEvent<NativeCastEvent>) => void;
   onNativePresentationModeChange: (event: NativeSyntheticEvent<NativePresentationModeChangeEvent>) => void;
   onNativeResize: (event: NativeSyntheticEvent<NativeResizeEvent>) => void;
@@ -332,6 +334,10 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
     this._facade.dispatchEvent(new DefaultAdEvent(nativeEvent.type, nativeEvent.ad));
   };
 
+  private _onTHEOliveEvent = (event: NativeSyntheticEvent<NativeTheoLiveEvent>) => {
+    this._facade.dispatchEvent(fromNativeTheoLiveEvent(event));
+  };
+
   private _onCastEvent = (event: NativeSyntheticEvent<NativeCastEvent>) => {
     switch (event.nativeEvent.type) {
       case CastEventType.CHROMECAST_STATE_CHANGE:
@@ -415,6 +421,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
           onNativeMediaTrackListEvent={this._onMediaTrackListEvent}
           onNativeMediaTrackEvent={this._onMediaTrackEvent}
           onNativeAdEvent={this._onAdEvent}
+          onNativeTHEOliveEvent={this._onTHEOliveEvent}
           onNativeCastEvent={this._onCastEvent}
           onNativePresentationModeChange={this._onPresentationModeChange}
           onNativeResize={this._onResize}
