@@ -19,7 +19,7 @@ This page is structured as follows:
 - [Controlling the CachingTask](#controlling-the-cachingtask)
 - [Listening for Cache events](#listening-for-cache-events)
 - [Using React hooks](#using-react-hooks)
-- [Known Limitations](#known-limitations)
+- [The Example App](#the-example-app)
 
 ### Caching Workflow
 Caching a media asset encompasses the following stages:
