@@ -5,6 +5,7 @@ import { SourceIntegrationId, TypedSource } from 'react-native-theoplayer';
  *
  * @category Source
  * @public
+ * @deprecated use {@link TypedSource.type} instead.
  */
 export interface TheoLiveSource extends TypedSource {
     integration: SourceIntegrationId.THEO_LIVE;

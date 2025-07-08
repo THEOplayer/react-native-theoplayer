@@ -55,6 +55,7 @@ export type CrossOriginSetting = '' | 'anonymous' | 'use-credentials';
  *
  * @category Source
  * @public
+ * @deprecated use {@link TypedSource.type} instead.
  */
 export enum SourceIntegrationId {
   THEO_LIVE = 'theolive'
@@ -306,6 +307,8 @@ export interface BaseSource {
    *
    * @remarks
    * <br/> - This can be used to signal that a source is specific to an integration.
+   *
+   * @deprecated use {@link TypedSource.type} instead.
    */
   integration?: SourceIntegrationId;
 
