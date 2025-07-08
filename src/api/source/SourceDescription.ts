@@ -397,6 +397,8 @@ export interface TypedSource extends BaseSource {
    * <br/> - `'application/x-mpegURL'` or `'application/vnd.apple.mpegurl'`: The media resource is an HLS stream.
    * <br/> - `'video/mp4'`, `'video/webm'` and other formats: The media resource should use native HTML5 playback if supported by the browser.
    * <br/> - `'application/vnd.theo.hesp+json'`: The media resource is an HESP stream.
+   * <br/> - `'millicast'`: The media resource is a {@link MillicastSource | Millicast stream}.
+   * <br/> - `'theolive'`: The media resource is a {@link TheoLiveSource | THEOlive stream}.
    */
   type?: string;
 
