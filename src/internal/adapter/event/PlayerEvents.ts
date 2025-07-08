@@ -39,10 +39,15 @@ import {
   TextTrackListEvent,
   TheoAdsEvent,
   TheoAdsEventType,
+  TheoLiveEvent,
+  TheoLiveDistributionEvent,
+  TheoLiveEventType,
   TimeRange,
   TimeUpdateEvent,
   TrackListEventType,
   VolumeChangeEvent,
+  TheoLiveEndpoint,
+  TheoLiveEndpointLoadedEvent,
 } from 'react-native-theoplayer';
 
 export class DefaultLoadedMetadataEvent extends BaseEvent<PlayerEventType.LOADED_METADATA> implements LoadedMetadataEvent {
@@ -206,6 +211,30 @@ export class DefaultTheoAdsEvent extends BaseEvent<PlayerEventType.THEOADS_EVENT
     public interstitial: Interstitial,
   ) {
     super(PlayerEventType.THEOADS_EVENT);
+  }
+}
+
+export class DefaultTheoLiveEvent extends BaseEvent<PlayerEventType.THEOLIVE_EVENT> implements TheoLiveEvent {
+  constructor(public subType: TheoLiveEventType) {
+    super(PlayerEventType.THEOLIVE_EVENT);
+  }
+}
+
+export class DefaultTheoLiveDistributionEvent extends BaseEvent<PlayerEventType.THEOLIVE_EVENT> implements TheoLiveDistributionEvent {
+  constructor(
+    public subType: TheoLiveEventType,
+    public distributionId: string,
+  ) {
+    super(PlayerEventType.THEOLIVE_EVENT);
+  }
+}
+
+export class DefaultTheoLiveEndpointLoadedEvent extends BaseEvent<PlayerEventType.THEOLIVE_EVENT> implements TheoLiveEndpointLoadedEvent {
+  constructor(
+    public subType: TheoLiveEventType,
+    public endpoint?: TheoLiveEndpoint,
+  ) {
+    super(PlayerEventType.THEOLIVE_EVENT);
   }
 }
 
