@@ -10,8 +10,6 @@ import THEOplayerTHEOliveIntegration
 let EVENT_TYPE_DISTRIBUTION_LOAD_START: String = "distributionloadstart"
 let EVENT_TYPE_DISTRIBUTION_OFFLINE: String = "distributionoffline"
 let EVENT_TYPE_ENDPOINT_LOADED: String = "endpointloaded"
-let EVENT_TYPE_ENTER_BADNETWORKMODE: String = "enterbadnetworkmode"
-let EVENT_TYPE_EXIT_BADNETWORKMODE: String = "exitbadnetworkmode"
 let EVENT_TYPE_INTENT_TO_FALLBACK: String = "intenttofallback"
 
 let THEOLIVE_EVENT_PROP_TYPE: String = "type"
@@ -28,8 +26,6 @@ class THEOplayerRCTTHEOliveEventHandler {
     private var distributionLoadStartListener: EventListener?
     private var distributionOfflineListener: EventListener?
     private var endPointLoadedListener: EventListener?
-    private var enterBadNetworkModeListener: EventListener?
-    private var exitBadNetworkModeListener: EventListener?
     private var intentToFallbackListener: EventListener?
 
     // MARK: - destruction
@@ -89,28 +85,6 @@ class THEOplayerRCTTHEOliveEventHandler {
         }
         if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] EndPointLoaded listener attached to THEOplayer.theolive") }
 
-        // ENTER_BADNETWORKMODE
-        self.enterBadNetworkModeListener = player.network.addEventListener(type: NetworkEventTypes.ENTER_BADNETWORKMODE) { [weak self] event in
-            if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received EnterBadNetworkMode event from THEOplayer.network") }
-            if let forwardedTHEOliveEvent = self?.onNativeTHEOliveEvent {
-                forwardedTHEOliveEvent([
-                    THEOLIVE_EVENT_PROP_TYPE: EVENT_TYPE_ENTER_BADNETWORKMODE
-                ])
-            }
-        }
-        if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] EnterBadNetworkMode listener attached to THEOplayer.network") }
-
-        // EXIT_BADNETWORKMODE
-        self.exitBadNetworkModeListener = player.network.addEventListener(type: NetworkEventTypes.EXIT_BADNETWORKMODE) { [weak self] event in
-            if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received ExitBadNetworkMode event from THEOplayer.network") }
-            if let forwardedTHEOliveEvent = self?.onNativeTHEOliveEvent {
-                forwardedTHEOliveEvent([
-                    THEOLIVE_EVENT_PROP_TYPE: EVENT_TYPE_EXIT_BADNETWORKMODE
-                ])
-            }
-        }
-        if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] ExitBadNetworkMode listener attached to THEOplayer.network") }
-
         // INTENT_TO_FALLBACK
         self.intentToFallbackListener = player.theoLive?.addEventListener(type: THEOliveEventTypes.INTENT_TO_FALLBACK) { [weak self] event in
             if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received IntentToFallback event from THEOlive") }
@@ -155,24 +129,6 @@ class THEOplayerRCTTHEOliveEventHandler {
                 listener: endPointLoadedListener
             )
             if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] EndPointLoaded listener detached from THEOplayer.theolive") }
-        }
-        
-        // ENTER_BADNETWORKMODE
-        if let enterBadNetworkModeListener = self.enterBadNetworkModeListener {
-            player.network.removeEventListener(
-                type: NetworkEventTypes.ENTER_BADNETWORKMODE,
-                listener: enterBadNetworkModeListener
-            )
-            if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] EnterBadNetworkMode listener detached from THEOplayer.network") }
-        }
-        
-        // EXIT_BADNETWORKMODE
-        if let exitBadNetworkModeListener = self.exitBadNetworkModeListener {
-            player.network.removeEventListener(
-                type: NetworkEventTypes.EXIT_BADNETWORKMODE,
-                listener: exitBadNetworkModeListener
-            )
-            if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] ExitBadNetworkMode listener detached from THEOplayer.network") }
         }
         
         // INTENT_TO_FALLBACK

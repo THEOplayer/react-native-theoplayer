@@ -74,22 +74,6 @@ export enum TheoLiveEventType {
   ENDPOINT_LOADED = 'endpointloaded',
 
   /**
-   * Dispatched when the player enters bad network mode.
-   *
-   * @platform ios,web
-   * @public
-   */
-  ENTER_BADNETWORKMODE = 'enterbadnetworkmode',
-
-  /**
-   * Dispatched when the player exits bad network mode.
-   *
-   * @platform ios,web
-   * @public
-   */
-  EXIT_BADNETWORKMODE = 'exitbadnetworkmode',
-
-  /**
    * Dispatched when the player cannot play the current primary publication and would like to fallback.
    * If a fallback has been configured it will fallback, otherwise only the event is dispatched.
    *

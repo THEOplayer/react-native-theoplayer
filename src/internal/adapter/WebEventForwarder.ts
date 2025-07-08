@@ -435,8 +435,6 @@ const FORWARDED_THEOLIVE_EVENTS = [
   TheoLiveEventType.DISTRIBUTION_LOAD_START,
   TheoLiveEventType.DISTRIBUTION_OFFLINE,
   TheoLiveEventType.ENDPOINT_LOADED,
-  TheoLiveEventType.ENTER_BADNETWORKMODE,
-  TheoLiveEventType.EXIT_BADNETWORKMODE,
   TheoLiveEventType.INTENT_TO_FALLBACK,
 ] as (keyof NativeTheoLiveEventMap)[];
 
