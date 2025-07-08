@@ -1,7 +1,7 @@
 import { Event, PlayerEventType, TheoLiveEndpoint } from 'react-native-theoplayer';
 
 /**
- * The THEOlive event dispatched by the {@link THEOliveAPI | THEOlive API}.
+ * The THEOlive event dispatched by the {@link TheoLiveAPI THEOlive API}.
  *
  * @category Events
  * @category THEOlive
@@ -35,7 +35,7 @@ export interface TheoLiveDistributionEvent extends TheoLiveEvent {
  */
 export interface TheoLiveEndpointLoadedEvent extends TheoLiveEvent {
   /**
-   * The distribution identifier
+   * The endpoint info
    *
    * @platform android,web
    */
