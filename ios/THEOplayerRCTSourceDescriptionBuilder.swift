@@ -185,12 +185,14 @@ class THEOplayerRCTSourceDescriptionBuilder {
      */
     private static func buildTypedSource(_ typedSourceData: [String:Any]) -> TypedSource? {
         let contentProtection = extractDrmConfiguration(from: typedSourceData)
+        let integration = typedSourceData[SD_PROP_INTEGRATION] as? String
+        let type = typedSourceData[SD_PROP_TYPE] as? String
         
-        if let integration = typedSourceData[SD_PROP_INTEGRATION] as? String, integration == "theolive" {
+        if integration == "theolive" || type == "theolive" {
             return THEOplayerRCTSourceDescriptionBuilder.buildTHEOliveDescription(typedSourceData)
         }
 
-        if let type = typedSourceData[SD_PROP_TYPE] as? String, type == "millicast" {
+        if type == "millicast" {
             return THEOplayerRCTSourceDescriptionBuilder.buildMillicastDescription(typedSourceData)
         }
 

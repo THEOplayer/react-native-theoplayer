@@ -78,7 +78,7 @@ private const val ERROR_MISSING_CSAI_INTEGRATION = "Missing CSAI integration"
 
 private const val PROP_SSAI_INTEGRATION_GOOGLE_DAI = "google-dai"
 
-private const val INTEGRATION_THEOLIVE = "theolive"
+private const val TYPE_THEOLIVE = "theolive"
 private const val TYPE_MILLICAST = "millicast"
 private const val PLAYBACK_PIPELINE_LEGACY = "legacy"
 
@@ -184,10 +184,14 @@ class SourceAdapter {
 
   @Throws(THEOplayerException::class)
   private fun parseTypedSource(jsonTypedSource: JSONObject, cmcdTransmissionMode: CMCDTransmissionMode? = null): TypedSource {
-    // Some integrations do not support the Builder pattern
+    // Property `integration` will be replaced with `type`.
+    val integration = jsonTypedSource.optString(PROP_INTEGRATION)
+    val type = jsonTypedSource.optString(PROP_TYPE)
+
+    // Note: Some integrations do not support the Builder pattern
     return when {
-      (jsonTypedSource.optString(PROP_INTEGRATION)) == INTEGRATION_THEOLIVE -> parseTheoLiveSource(jsonTypedSource)
-      (jsonTypedSource.optString(PROP_TYPE)) == TYPE_MILLICAST -> parseMillicastSource(jsonTypedSource)
+      type == TYPE_THEOLIVE || integration == TYPE_THEOLIVE -> parseTheoLiveSource(jsonTypedSource)
+      type == TYPE_MILLICAST -> parseMillicastSource(jsonTypedSource)
       else -> parseTypedSourceFromBuilder(jsonTypedSource, cmcdTransmissionMode)
     }
   }

@@ -5,7 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [9.7.1]
+## [9.8.0] - 25-07-08
+
+### Changed
+
+- Deprecated the `BaseSource.integration` property in favor of `TypedSource.type`.
+
+## Added
+
+- Added support for `THEOlive` events.
+
+## Fixed
+
+- Fixed an issue on Android where, depending on the project structure, the Maven repository list would be incorrect.
+
+## [9.7.1] - 25-07-03
 
 ### Fixed
 

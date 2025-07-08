@@ -24,3 +24,4 @@ export * from './player/barrel';
 export * from './presentation/barrel';
 export * from './version/barrel';
 export * from './theoads/barrel';
+export * from './theolive/barrel';

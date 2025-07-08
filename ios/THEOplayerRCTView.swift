@@ -30,6 +30,7 @@ public class THEOplayerRCTView: UIView {
     var mediaTrackEventHandler: THEOplayerRCTMediaTrackEventHandler
     var metadataTrackEventHandler: THEOplayerRCTSideloadedMetadataTrackEventHandler
     var adEventHandler: THEOplayerRCTAdsEventHandler
+    var theoliveEventHandler: THEOplayerRCTTHEOliveEventHandler
     var castEventHandler: THEOplayerRCTCastEventHandler
     var presentationModeManager: THEOplayerRCTPresentationModeManager
     var backgroundAudioManager: THEOplayerRCTBackgroundAudioManager
@@ -95,6 +96,7 @@ public class THEOplayerRCTView: UIView {
         self.mediaTrackEventHandler = THEOplayerRCTMediaTrackEventHandler()
         self.metadataTrackEventHandler = THEOplayerRCTSideloadedMetadataTrackEventHandler()
         self.adEventHandler = THEOplayerRCTAdsEventHandler()
+        self.theoliveEventHandler = THEOplayerRCTTHEOliveEventHandler()
         self.castEventHandler = THEOplayerRCTCastEventHandler()
         self.presentationModeManager = THEOplayerRCTPresentationModeManager()
         self.backgroundAudioManager = THEOplayerRCTBackgroundAudioManager()
@@ -115,6 +117,7 @@ public class THEOplayerRCTView: UIView {
         self.textTrackEventHandler.destroy()
         self.mediaTrackEventHandler.destroy()
         self.adEventHandler.destroy()
+        self.theoliveEventHandler.destroy()
         self.castEventHandler.destroy()
         self.nowPlayingManager.destroy()
         self.remoteCommandsManager.destroy()
@@ -149,6 +152,7 @@ public class THEOplayerRCTView: UIView {
             self.textTrackEventHandler.setPlayer(player)
             self.mediaTrackEventHandler.setPlayer(player)
             self.adEventHandler.setPlayer(player)
+            self.theoliveEventHandler.setPlayer(player)
             self.castEventHandler.setPlayer(player)
             self.nowPlayingManager.setPlayer(player)
             self.remoteCommandsManager.setPlayer(player)
@@ -403,5 +407,13 @@ public class THEOplayerRCTView: UIView {
     func setOnNativeAdEvent(nativeAdEvent: @escaping RCTDirectEventBlock) {
         self.adEventHandler.onNativeAdEvent = nativeAdEvent
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeAdEvent prop set.") }
+    }
+    
+    // MARK: - Listener based THEOLIVE event bridging
+    
+    @objc(setOnNativeTHEOliveEvent:)
+    func setOnNativeTHEOliveEvent(nativeTHEOliveEvent: @escaping RCTDirectEventBlock) {
+        self.theoliveEventHandler.onNativeTHEOliveEvent = nativeTHEOliveEvent
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeTHEOliveEvent prop set.") }
     }
 }

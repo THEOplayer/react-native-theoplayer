@@ -118,6 +118,10 @@ rootProject.allprojects {
 repositories {
     google()
     mavenCentral()
+    maven { url "https://maven.theoplayer.com/releases" }
+    maven { url "https://maven.theoplayer.com/snapshots" }
+    maven { url("$rootDir/../node_modules/react-native-theoplayer/android/local") }
+    mavenLocal()
 }
 
 // The minimum supported THEOplayer version is 9.7.0
