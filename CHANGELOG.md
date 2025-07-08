@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Deprecated the `BaseSource.integration` property in favor of `TypedSource.type`.
+
 ## Added
 
 - Added support for `THEOlive` events.
