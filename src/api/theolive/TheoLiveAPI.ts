@@ -1,7 +1,7 @@
 /**
  * Latency metrics for HESP pipeline
  *
- * @category TheoLive
+ * @category THEOlive
  * @public
  */
 
@@ -28,9 +28,11 @@ export interface HespLatencies {
 }
 
 /**
- * The API for THEOlive streaming.
+ * The THEOlive API.
  *
- * @category TheoLive
+ * @since React Native THEOplayer SDK v9.8.0.
+ *
+ * @category THEOlive
  * @public
  */
 export interface TheoLiveAPI {

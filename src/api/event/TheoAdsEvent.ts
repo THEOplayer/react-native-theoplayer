@@ -2,7 +2,7 @@ import { Event, PlayerEventType } from 'react-native-theoplayer';
 import { Interstitial } from '../theoads/interstitial/Interstitial';
 
 /**
- * The THEOads event dispatched by the {@link AdsAPI | Ads API}.
+ * The THEOads event dispatched by the {@link TheoAdsAPI THEOads API}.
  *
  * @category Events
  * @category THEOads
