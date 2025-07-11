@@ -3,7 +3,6 @@ import { useMemo, useState } from 'react';
 import {
   AirplayButton,
   AutoFocusGuide,
-  CastMessage,
   CenteredControlBar,
   CenteredDelayedActivityIndicator,
   ChromecastButton,
@@ -24,7 +23,7 @@ import {
   UiContainer,
 } from '@theoplayer/react-native-ui';
 import { PlayerConfiguration, PlayerEventType, PresentationMode, sdkVersions, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
-import { Platform, StatusBar, StyleSheet, View } from 'react-native';
+import { Platform, ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native';
 import { SourceMenuButton, SOURCES } from './custom/SourceMenuButton';
 import { BackgroundAudioSubMenu } from './custom/BackgroundAudioSubMenu';
 import { PiPSubMenu } from './custom/PipSubMenu';
@@ -35,6 +34,13 @@ import { RenderingTargetSubMenu } from './custom/RenderingTargetSubMenu';
 import { AutoPlaySubMenu } from './custom/AutoPlaySubMenu';
 import { SafeAreaProvider, SafeAreaView, Edges } from 'react-native-safe-area-context';
 import { usePresentationMode } from './hooks/usePresentationMode';
+
+/**
+ * Demonstrates a THEOplayerView inside a ScrollView. For Android, THEOplayer_reparent_on_PiP needs to be enabled
+ * in gradle.properties, and `player.pipConfiguration.reparentPip` needs to be set. In that case we will reparent
+ * the view similar to fullscreen presentation mode, making it unnecessary to make changes to the UI before going
+ * into PiP.
+ */
 
 const playerConfig: PlayerConfiguration = {
   // Get your THEOplayer license from https://portal.theoplayer.com/
@@ -101,6 +107,7 @@ export default function App() {
     player.pipConfiguration = {
       startsAutomatically: true,
       retainPipOnSourceChange: true,
+      reparentPip: true,
     };
 
     console.log('THEOplayer is ready');
@@ -116,73 +123,84 @@ export default function App() {
     <SafeAreaProvider>
       <StatusBar barStyle="light-content" />
       <SafeAreaView edges={edges} style={{ flex: 1, backgroundColor: 'black' }}>
-        <View style={styles.container}>
-          <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady}>
-            {player !== undefined && (
-              <UiContainer
-                theme={{ ...DEFAULT_THEOPLAYER_THEME }}
-                player={player}
-                behind={<CenteredDelayedActivityIndicator size={50} />}
-                top={
-                  <AutoFocusGuide>
-                    <ControlBar>
-                      <Spacer />
-                      <MediaCacheMenuButton>
-                        <MediaCacheDownloadButton />
-                        <MediaCachingTaskListSubMenu />
-                      </MediaCacheMenuButton>
-                      {/*This is a custom menu for source selection.*/}
-                      <SourceMenuButton />
-                      {!Platform.isTV && (
-                        <>
-                          <AirplayButton />
-                          <ChromecastButton />
-                        </>
-                      )}
-                      <LanguageMenuButton />
-                      <SettingsMenuButton>
-                        {/*Note: quality selection is not available on iOS */}
-                        <QualitySubMenu />
-                        <PlaybackRateSubMenu />
-                        <BackgroundAudioSubMenu />
-                        <PiPSubMenu />
-                        <AutoPlaySubMenu />
-                        {Platform.OS === 'android' && <RenderingTargetSubMenu />}
-                      </SettingsMenuButton>
-                    </ControlBar>
-                  </AutoFocusGuide>
-                }
-                center={
-                  <AutoFocusGuide>
-                    <CenteredControlBar left={<SkipButton skip={-10} />} middle={<PlayButton />} right={<SkipButton skip={30} />} />
-                  </AutoFocusGuide>
-                }
-                bottom={
-                  <AutoFocusGuide>
-                    <ControlBar style={{ justifyContent: 'flex-start' }}>
-                      <CastMessage />
-                    </ControlBar>
-                    {
-                      /*Note: RNSlider is not available on tvOS */
-                      !(Platform.isTV && Platform.OS === 'ios') && (
-                        <ControlBar>
-                          <SeekBar />
-                        </ControlBar>
-                      )
-                    }
-                    <ControlBar>
-                      <MuteButton />
-                      <TimeLabel showDuration={true} />
-                      <Spacer />
-                      <PipButton />
-                      <FullscreenButton />
-                    </ControlBar>
-                  </AutoFocusGuide>
-                }
-              />
-            )}
-          </THEOplayerView>
-        </View>
+        <ScrollView>
+          <Text style={styles.textBlock}>Scroll up and down</Text>
+          <Text style={styles.textBlock}>Here's some preplayer content.</Text>
+          {Array.from({ length: 10 }, (_, i) => (
+            <Text key={i} style={styles.textBlock}>
+              More filler text...........
+            </Text>
+          ))}
+          <View style={{ width: '100%', aspectRatio: 16 / 9 }}>
+            <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady}>
+              {player !== undefined && (
+                <UiContainer
+                  theme={{ ...DEFAULT_THEOPLAYER_THEME }}
+                  player={player}
+                  behind={<CenteredDelayedActivityIndicator size={50} />}
+                  top={
+                    <AutoFocusGuide>
+                      <ControlBar>
+                        <Spacer />
+                        <MediaCacheMenuButton>
+                          <MediaCacheDownloadButton />
+                          <MediaCachingTaskListSubMenu />
+                        </MediaCacheMenuButton>
+                        {/*This is a custom menu for source selection.*/}
+                        <SourceMenuButton />
+                        {!Platform.isTV && (
+                          <>
+                            <AirplayButton />
+                            <ChromecastButton />
+                          </>
+                        )}
+                        <LanguageMenuButton />
+                        <SettingsMenuButton>
+                          {/*Note: quality selection is not available on iOS */}
+                          <QualitySubMenu />
+                          <PlaybackRateSubMenu />
+                          <BackgroundAudioSubMenu />
+                          <PiPSubMenu />
+                          <AutoPlaySubMenu />
+                          {Platform.OS === 'android' && <RenderingTargetSubMenu />}
+                        </SettingsMenuButton>
+                      </ControlBar>
+                    </AutoFocusGuide>
+                  }
+                  center={
+                    <AutoFocusGuide>
+                      <CenteredControlBar left={<SkipButton skip={-10} />} middle={<PlayButton />} right={<SkipButton skip={30} />} />
+                    </AutoFocusGuide>
+                  }
+                  bottom={
+                    <AutoFocusGuide>
+                      {
+                        /*Note: RNSlider is not available on tvOS */
+                        !(Platform.isTV && Platform.OS === 'ios') && (
+                          <ControlBar>
+                            <SeekBar />
+                          </ControlBar>
+                        )
+                      }
+                      <ControlBar>
+                        <MuteButton />
+                        <TimeLabel showDuration={true} />
+                        <Spacer />
+                        <PipButton />
+                        <FullscreenButton />
+                      </ControlBar>
+                    </AutoFocusGuide>
+                  }
+                />
+              )}
+            </THEOplayerView>
+          </View>
+          {Array.from({ length: 10 }, (_, i) => (
+            <Text key={i} style={styles.textBlock}>
+              More filler text...........
+            </Text>
+          ))}
+        </ScrollView>
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -195,5 +213,11 @@ const styles = StyleSheet.create({
     marginHorizontal: Platform.select({ ios: 2, default: 0 }),
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  textBlock: {
+    width: '100%',
+    height: 50,
+    backgroundColor: 'black',
+    color: 'white',
   },
 });
