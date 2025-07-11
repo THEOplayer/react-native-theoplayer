@@ -32,9 +32,9 @@ class THEOplayerRCTTHEOliveAPI: NSObject, RCTBridgeModule {
                let player = theView.player,
                let theolive = player.theoLive {
                 var foundLatency: Double = -1
-                /*if let currentLatency = theolive.currentLatency {
+                if let currentLatency = theolive.currentLatency {
                     foundLatency = currentLatency
-                }*/
+                }
                 resolve(foundLatency)
             } else {
                 if DEBUG_THEOLIVE_API { PrintUtils.printLog(logText: "[NATIVE] Could not get currentLatency (THEOlive module unavailable).") }
@@ -50,14 +50,14 @@ class THEOplayerRCTTHEOliveAPI: NSObject, RCTBridgeModule {
                let player = theView.player,
                let theolive = player.theoLive {
                 var foundLatencies: [String:Any] = [:]
-                /*if let latencies = theolive.latencies {
+                if let latencies = theolive.latencies {
                     foundLatencies = [
                         "engineLatency": latencies.engineLatency,
                         "distributionLatency": latencies.distributionLatency,
                         "playerLatency": latencies.playerLatency,
                         "theoliveLatency": latencies.theoliveLatency
                     ]
-                }*/
+                }
                 resolve(foundLatencies)
             } else {
                 if DEBUG_THEOLIVE_API { PrintUtils.printLog(logText: "[NATIVE] Could not get latencies (THEOlive module unavailable).") }
