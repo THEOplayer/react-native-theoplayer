@@ -18,6 +18,7 @@ public class THEOplayerRCTPresentationModeManager {
         
     // MARK: Events
     var onNativePresentationModeChange: RCTDirectEventBlock?
+    var onNativeOrientationChanged: RCTDirectEventBlock?
     
     // MARK: player Listeners
     private var presentationModeChangeListener: EventListener?
@@ -92,6 +93,10 @@ public class THEOplayerRCTPresentationModeManager {
             setHomeIndicatorHidden(true)
         }
         self.rnInlineMode = .fullscreen
+      
+        // Dimensions change listener in RN doesn't fire as expected after reparenting
+        // due to lazy init of RN views in New Arch so we listen to device orientation instead
+        startListeningOrientationChanges()
     }
     
     private func exitFullscreen() {
@@ -104,6 +109,8 @@ public class THEOplayerRCTPresentationModeManager {
             self.moveView(containerView, to: inlineParentView)
         }
         self.rnInlineMode = .inline
+      
+        stopListeningOrientationChanges()
     }
 
     private func setHomeIndicatorHidden(_ hidden: Bool) {
@@ -201,6 +208,9 @@ public class THEOplayerRCTPresentationModeManager {
         guard let player = self.player else {
             return
         }
+      
+        // In case we closed the player before calling `exitFullscreen`
+        stopListeningOrientationChanges()
         
         // PRESENTATION_MODE_CHANGE
         if let presentationModeChangeListener = self.presentationModeChangeListener {
@@ -208,6 +218,55 @@ public class THEOplayerRCTPresentationModeManager {
             if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] PresentationModeChange listener dettached from THEOplayer") }
         }
     }
+  
+    // MARK: - physical device orientation handling
+    private func startListeningOrientationChanges() {
+#if !os(tvOS)
+        guard !isListeningToOrientationChanges else {
+          return
+        }
+    
+        UIDevice.current.beginGeneratingDeviceOrientationNotifications()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.handleOrientationChange),
+            name: UIDevice.orientationDidChangeNotification,
+            object: nil
+        )
+    
+        isListeningToOrientationChanges = true
+#endif
+    }
+  
+    private func stopListeningOrientationChanges() {
+#if !os(tvOS)
+        NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
+    
+        guard isListeningToOrientationChanges else {
+            return
+        }
+        UIDevice.current.endGeneratingDeviceOrientationNotifications()
+    
+        isListeningToOrientationChanges = false
+#endif
+    }
+  
+#if !os(tvOS)
+    private var isListeningToOrientationChanges = false
+  
+    @objc private func handleOrientationChange() {
+        notifyNativeOrientationChanged(UIDevice.current.orientation)
+    }
+  
+    private func notifyNativeOrientationChanged(_ orientation: UIDeviceOrientation) {
+        DispatchQueue.main.async {
+            guard let forwardedNativeOrientationChanged = self.onNativeOrientationChanged
+            else { return }
+      
+            forwardedNativeOrientationChanged(["orientation": orientation.rawValue])
+        }
+    }
+#endif
 }
 
 // UIView extension to look for parent views

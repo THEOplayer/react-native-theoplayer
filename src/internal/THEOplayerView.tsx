@@ -78,6 +78,7 @@ interface THEOplayerRCTViewProps {
   ref: React.RefObject<THEOplayerViewNativeComponent | null>;
   style?: StyleProp<ViewStyle>;
   config?: PlayerConfiguration;
+  onNativeOrientationChanged: () => void;
   onNativePlayerReady: (event: NativeSyntheticEvent<NativePlayerStateEvent>) => void;
   onNativeSourceChange: () => void;
   onNativeLoadStart: () => void;
@@ -395,6 +396,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
           ref={this._root}
           style={StyleSheet.absoluteFill}
           config={config || {}}
+          onNativeOrientationChanged={this._onDimensionsChanged}
           onNativePlayerReady={this._onNativePlayerReady}
           onNativeSourceChange={this._onSourceChange}
           onNativeLoadStart={this._onLoadStart}

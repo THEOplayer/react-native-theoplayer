@@ -234,6 +234,14 @@ public class THEOplayerRCTView: UIView {
         self.onNativePlayerReady = nativePlayerReady
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativePlayerReady prop set.") }
     }
+  
+    // MARK: - Orientation changed event bridging
+  
+    @objc(setOnNativeOrientationChanged:)
+    func setOnNativeOrientationChanged(nativeOrientationChanged: @escaping RCTDirectEventBlock) {
+        self.presentationModeManager.onNativeOrientationChanged = nativeOrientationChanged
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeOrientationChanged prop set.") }
+    }
     
     // MARK: - Listener based MAIN event bridging
     
