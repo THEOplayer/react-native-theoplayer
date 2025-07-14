@@ -59,6 +59,7 @@ let SD_PROP_OVERRIDE_LAYOUT: String = "overrideLayout"
 let SD_PROP_OVERRIDE_AD_SRC: String = "overrideAdSrc"
 let SD_PROP_USE_ID3: String = "useId3"
 let SD_PROP_RETRIEVE_POD_ID_URI: String = "retrievePodIdURI"
+let SD_PROP_INITIALIZATION_DELAY: String = "initializationDelay"
 let SD_PROP_HLS_DATE_RANGE: String = "hlsDateRange"
 let SD_PROP_CMCD: String = "cmcd"
 
