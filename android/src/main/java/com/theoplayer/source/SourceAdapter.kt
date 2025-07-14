@@ -366,7 +366,7 @@ class SourceAdapter {
       overrideLayout = parseOverrideLayout(jsonAdDescription.optString(PROP_OVERRIDE_LAYOUT)),
       useId3 = jsonAdDescription.optBoolean(PROP_USE_ID3, false),
       retrievePodIdURI = jsonAdDescription.optString(PROP_RETRIEVE_POD_ID_URI).takeIf { it.isNotEmpty() },
-      initializationDelay = jsonAdDescription.optDouble(PROP_INITIALIZATION_DELAY).takeIf { it.isNotEmpty() },
+      initializationDelay = jsonAdDescription.optDouble(PROP_INITIALIZATION_DELAY),
       sseEndpoint = jsonAdDescription.optString(PROP_SSE_ENDPOINT).takeIf { it.isNotEmpty() },
     )
   }
