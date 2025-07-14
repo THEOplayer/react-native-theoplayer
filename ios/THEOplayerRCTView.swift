@@ -28,6 +28,7 @@ public class THEOplayerRCTView: UIView {
     public private(set) var broadcastEventHandler: THEOplayerRCTBroadcastEventHandler
     var textTrackEventHandler: THEOplayerRCTTextTrackEventHandler
     var mediaTrackEventHandler: THEOplayerRCTMediaTrackEventHandler
+    var deviceEventHandler: THEOplayerRCTDeviceEventHandler
     var metadataTrackEventHandler: THEOplayerRCTSideloadedMetadataTrackEventHandler
     var adEventHandler: THEOplayerRCTAdsEventHandler
     var theoliveEventHandler: THEOplayerRCTTHEOliveEventHandler
@@ -94,6 +95,7 @@ public class THEOplayerRCTView: UIView {
         self.broadcastEventHandler = THEOplayerRCTBroadcastEventHandler()
         self.textTrackEventHandler = THEOplayerRCTTextTrackEventHandler()
         self.mediaTrackEventHandler = THEOplayerRCTMediaTrackEventHandler()
+        self.deviceEventHandler = THEOplayerRCTDeviceEventHandler()
         self.metadataTrackEventHandler = THEOplayerRCTSideloadedMetadataTrackEventHandler()
         self.adEventHandler = THEOplayerRCTAdsEventHandler()
         self.theoliveEventHandler = THEOplayerRCTTHEOliveEventHandler()
@@ -116,6 +118,7 @@ public class THEOplayerRCTView: UIView {
         self.mainEventHandler.destroy()
         self.textTrackEventHandler.destroy()
         self.mediaTrackEventHandler.destroy()
+        self.deviceEventHandler.destroy()
         self.adEventHandler.destroy()
         self.theoliveEventHandler.destroy()
         self.castEventHandler.destroy()
@@ -233,14 +236,6 @@ public class THEOplayerRCTView: UIView {
     func setOnNativePlayerReady(nativePlayerReady: @escaping RCTDirectEventBlock) {
         self.onNativePlayerReady = nativePlayerReady
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativePlayerReady prop set.") }
-    }
-  
-    // MARK: - Orientation changed event bridging
-  
-    @objc(setOnNativeOrientationChanged:)
-    func setOnNativeOrientationChanged(nativeOrientationChanged: @escaping RCTDirectEventBlock) {
-        self.presentationModeManager.onNativeOrientationChanged = nativeOrientationChanged
-        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeOrientationChanged prop set.") }
     }
     
     // MARK: - Listener based MAIN event bridging
@@ -399,6 +394,14 @@ public class THEOplayerRCTView: UIView {
     func setOnNativeMediaTrackEvent(nativeMediaTrackEvent: @escaping RCTDirectEventBlock) {
         self.mediaTrackEventHandler.onNativeMediaTrackEvent = nativeMediaTrackEvent
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeMediaTrackEvent prop set.") }
+    }
+    
+    // MARK: - Observer based device event bridging
+    
+    @objc(setOnNativeDeviceOrientationChanged:)
+    func setOnNativeDeviceOrientationChanged(nativeDeviceOrientationChanged: @escaping RCTDirectEventBlock) {
+        self.deviceEventHandler.onNativeDeviceOrientationChanged = nativeDeviceOrientationChanged
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeDeviceOrientationChanged prop set.") }
     }
     
     // MARK: - Listener based CAST event bridging

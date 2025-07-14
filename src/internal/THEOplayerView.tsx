@@ -50,7 +50,7 @@ import type {
   NativeTextTrackListEvent,
 } from './adapter/event/native/NativeTrackEvent';
 import { toMediaTrackType, toMediaTrackTypeEventType, toTextTrackEventType, toTrackListEventType } from './adapter/event/native/NativeTrackEvent';
-import type {
+import {
   NativeDurationChangeEvent,
   NativeErrorEvent,
   NativeLoadedMetadataEvent,
@@ -78,7 +78,6 @@ interface THEOplayerRCTViewProps {
   ref: React.RefObject<THEOplayerViewNativeComponent | null>;
   style?: StyleProp<ViewStyle>;
   config?: PlayerConfiguration;
-  onNativeOrientationChanged: () => void;
   onNativePlayerReady: (event: NativeSyntheticEvent<NativePlayerStateEvent>) => void;
   onNativeSourceChange: () => void;
   onNativeLoadStart: () => void;
@@ -108,6 +107,7 @@ interface THEOplayerRCTViewProps {
   onNativeTHEOliveEvent: (event: NativeSyntheticEvent<NativeTheoLiveEvent>) => void;
   onNativeCastEvent: (event: NativeSyntheticEvent<NativeCastEvent>) => void;
   onNativePresentationModeChange: (event: NativeSyntheticEvent<NativePresentationModeChangeEvent>) => void;
+  onNativeDeviceOrientationChanged: () => void;
   onNativeResize: (event: NativeSyntheticEvent<NativeResizeEvent>) => void;
 }
 
@@ -396,7 +396,6 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
           ref={this._root}
           style={StyleSheet.absoluteFill}
           config={config || {}}
-          onNativeOrientationChanged={this._onDimensionsChanged}
           onNativePlayerReady={this._onNativePlayerReady}
           onNativeSourceChange={this._onSourceChange}
           onNativeLoadStart={this._onLoadStart}
@@ -426,6 +425,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
           onNativeTHEOliveEvent={this._onTHEOliveEvent}
           onNativeCastEvent={this._onCastEvent}
           onNativePresentationModeChange={this._onPresentationModeChange}
+          onNativeDeviceOrientationChanged={this._onDeviceOrientationChanged}
           onNativeResize={this._onResize}
         />
         {posterActive && <Poster uri={poster} style={posterStyle} />}

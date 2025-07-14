@@ -43,7 +43,7 @@ RCT_EXPORT_VIEW_PROPERTY(onNativeTextTrackListEvent, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeTextTrackEvent, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeMediaTrackListEvent, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeMediaTrackEvent, RCTDirectEventBlock);
-RCT_EXPORT_VIEW_PROPERTY(onNativeOrientationChanged, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeDeviceOrientationChanged, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativePlayerReady, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativePresentationModeChange, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeResize, RCTDirectEventBlock);
