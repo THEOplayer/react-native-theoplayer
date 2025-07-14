@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added initializationDelay to TheoAdsDecription, to delay THEOads session creation for more optimal ads monetisation.
 
+### Fixed
+
+- Fixed an issue on iOS where on iPads the fullscreen dimensions were not correctly updated after the first device orientation change.
+
 ## [9.8.0] - 25-07-08
 
 ### Changed
