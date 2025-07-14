@@ -142,7 +142,10 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
   }
 
   componentDidMount() {
-    this._dimensionsHandler = Dimensions.addEventListener('change', this._onDimensionsChanged);
+    if (Platform.OS !== 'ios') {
+      // On iOS we use the native deviceOrientation event.
+      this._dimensionsHandler = Dimensions.addEventListener('change', this._onDimensionsChanged);
+    }
   }
 
   componentWillUnmount() {
@@ -170,6 +173,14 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
 
   private _onDimensionsChanged = () => {
     this.setState({ screenSize: getFullscreenSize() });
+  };
+
+  private _onDeviceOrientationChanged = () => {
+    if (Platform.OS === 'ios') {
+      // On iOS, we use the native deviceOrientation event to update the screenSize
+      // because of an issue on iPad with React-native's Dimensions.
+      this._onDimensionsChanged();
+    }
   };
 
   private _onNativePlayerReady = (event: NativeSyntheticEvent<NativePlayerStateEvent>) => {
