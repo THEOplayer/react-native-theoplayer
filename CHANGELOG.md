@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [9.9.0] - 25-07-14
+
+### Added
+
+- Added initializationDelay to TheoAdsDecription, to delay THEOads session creation for more optimal ads monetisation.
+
+### Fixed
+
+- Fixed an issue on iOS where on iPads the fullscreen dimensions were not correctly updated after the first device orientation change.
+
 ## [9.8.0] - 25-07-08
 
 ### Changed

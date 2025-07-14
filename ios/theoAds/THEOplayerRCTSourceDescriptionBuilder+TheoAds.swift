@@ -48,6 +48,8 @@ extension THEOplayerRCTSourceDescriptionBuilder {
         let adTagParameters = adsData[SD_PROP_AD_TAG_PARAMETERS] as? [String:String]
         let useId3 = adsData[SD_PROP_USE_ID3] as? Bool
         let retrievePodIdURI = adsData[SD_PROP_RETRIEVE_POD_ID_URI] as? String
+        let initializationDelay = adsData[SD_PROP_INITIALIZATION_DELAY] as? Double
+        
         return THEOAdDescription(networkCode: networkCode,
                                  customAssetKey: customAssetKey,
                                  backdropDoubleBox: backdropDoubleBox,
@@ -57,7 +59,8 @@ extension THEOplayerRCTSourceDescriptionBuilder {
                                  adTagParameters: adTagParameters,
                                  useId3: useId3,
                                  sseEndpoint: sseEndpoint,
-                                 retrievePodIdURI: retrievePodIdURI)
+                                 retrievePodIdURI: retrievePodIdURI,
+                                 initializationDelay: initializationDelay)
 #else
         return nil
 #endif
