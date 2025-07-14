@@ -102,6 +102,11 @@ export interface TheoAdDescription extends AdDescription {
    * The endpoint from where to retrieve the server-sent events.
    */
   sseEndpoint?: string;
+
+  /**
+   * The amount of seconds we wait to initialize THEOads.
+   */
+  initializationDelay?: number;
 }
 
 /**
