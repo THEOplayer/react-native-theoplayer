@@ -9,6 +9,7 @@ import com.google.gson.Gson
 import com.theoplayer.android.api.contentprotection.KeySystemId
 import com.theoplayer.android.api.contentprotection.Request
 import com.theoplayer.android.api.contentprotection.Response
+import com.theoplayer.android.api.source.drm.ClearkeyKeySystemConfiguration
 import com.theoplayer.android.api.source.drm.DRMConfiguration
 import com.theoplayer.android.api.source.drm.DRMIntegrationId
 import com.theoplayer.android.api.source.drm.KeySystemConfiguration
@@ -27,6 +28,7 @@ const val PROP_KEYSYSTEM_ID: String = "keySystemId"
 const val PROP_DRM_CONFIG: String = "drmConfig"
 const val PROP_PLAYREADY: String = "playready"
 const val PROP_WIDEVINE: String = "widevine"
+const val PROP_CLEARKEY: String = "clearkey"
 const val PROP_REQUEST_ID: String = "requestId"
 const val PROP_URL: String = "url"
 const val PROP_METHOD: String = "method"
@@ -42,6 +44,9 @@ const val PROP_LICENSE_TYPE_TEMPORARY: String = "temporary"
 const val PROP_LICENSE_TYPE_PERSISTENT: String = "persistent"
 const val PROP_QUERY_PARAMETERS: String = "queryParameters"
 const val PROP_CERTIFICATE: String = "certificate"
+const val PROP_KEYS: String = "keys"
+const val PROP_ID: String = "id"
+const val PROP_VALUE: String = "value"
 
 object ContentProtectionAdapter {
 
@@ -93,6 +98,9 @@ object ContentProtectionAdapter {
       if (jsonConfig.has(PROP_PLAYREADY)) {
         playready(keySystemConfigurationFromJson(jsonConfig.getJSONObject(PROP_PLAYREADY)))
       }
+      if (jsonConfig.has(PROP_CLEARKEY)) {
+        clearkey(clearkeyKeySystemConfigurationFromJson(jsonConfig.getJSONObject(PROP_CLEARKEY)))
+      }
       if (jsonConfig.has(PROP_INTEGRATION_PARAMETERS)) {
         integrationParameters(fromJSONObjectToMap(jsonConfig.getJSONObject(PROP_INTEGRATION_PARAMETERS)))
       }
@@ -111,6 +119,30 @@ object ContentProtectionAdapter {
         certificate(config.getString(PROP_CERTIFICATE).toByteArray())
       }
     }.build()
+  }
+
+  private fun clearkeyKeySystemConfigurationFromJson(config: JSONObject): ClearkeyKeySystemConfiguration {
+    val jsonKeys = config.optJSONArray(PROP_KEYS)
+    val keys = mutableListOf<ClearkeyKeySystemConfiguration.ClearkeyDecryptionKey>()
+    if (jsonKeys != null) {
+      for (i in 0 until jsonKeys.length()) {
+        val jsonKey = jsonKeys.optJSONObject(i)
+        if (jsonKey != null) {
+          val id = jsonKey.optString(PROP_ID)
+          val value = jsonKey.optString(PROP_VALUE)
+          if (!id.isNullOrEmpty() && !value.isNullOrEmpty()) {
+            keys.add(ClearkeyKeySystemConfiguration.ClearkeyDecryptionKey(id, value))
+          }
+        }
+      }
+    }
+    return ClearkeyKeySystemConfiguration.Builder(config.optString(PROP_LICENSE_ACQUISITION_URL))
+      .apply {
+        useCredentials(config.optBoolean(PROP_USE_CREDENTIALS))
+        headers(fromJSONObjectToMap(config.optJSONObject(PROP_HEADERS)))
+        queryParameters(fromJSONObjectToMap(config.optJSONObject(PROP_QUERY_PARAMETERS)))
+        keys(keys.toTypedArray())
+      }.build()
   }
 
   private fun licenseTypeFromString(str: String?): LicenseType? {
