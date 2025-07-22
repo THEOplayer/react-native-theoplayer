@@ -10,6 +10,11 @@ export interface THEOplayerViewProps {
   config?: PlayerConfiguration;
 
   /**
+   * Render something instead of the player view.
+   */
+  customPlayerRender?: (playerProps: any) => React.JSX.Element;
+
+  /**
    * The style applied to the player view.
    */
   style?: StyleProp<ViewStyle>;

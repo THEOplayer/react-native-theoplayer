@@ -398,7 +398,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
   };
 
   public render(): React.JSX.Element {
-    const { config, style, posterStyle, children } = this.props;
+    const { config, customPlayerRender, style, posterStyle, children } = this.props;
     const { presentationMode, screenSize: fullscreenSize, posterActive, poster } = this.state;
 
     const playerProps = {
@@ -440,7 +440,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
 
     return (
       <View style={[styles.base, style, presentationMode === PresentationMode.fullscreen ? fullscreenSize : {}]}>
-        <THEOplayerRCTView {...playerProps} />
+        {customPlayerRender ? customPlayerRender({ ...playerProps }) : <THEOplayerRCTView {...playerProps} />}
         {posterActive && <Poster uri={poster} style={posterStyle} />}
         {children}
       </View>
