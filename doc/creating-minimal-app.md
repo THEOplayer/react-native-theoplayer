@@ -16,7 +16,7 @@ In the following steps we will be using `npm` as the Node.js package manager.
 First initialize a new project with a React Native app template:
 
 ```bash
-$ npx react-native init rntheodemo --template=react-native-template-typescript
+npx @react-native-community/cli init rntheodemo
 $ cd rntheodemo
 ```
 
