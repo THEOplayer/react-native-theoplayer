@@ -172,10 +172,10 @@ public class THEOplayerRCTView: UIView {
         var payload: [String: Any] = [:]
         
         if let player = self.player {
-            // Get existing (?) tracks info from the player
+            // Get existing tracks info from the player
             let metadataTracksInfo = mainEventHandler.loadedMetadataAndChapterTracksInfo
             let metadata = THEOplayerRCTTrackMetadataAggregator.aggregateTrackMetadata(player: player, metadataTracksInfo: metadataTracksInfo)
-            
+            // General player state + source payload
             payload["state"] = THEOplayerRCTPayloadBuilder()
                 .source(player.source)
                 .currentTime(player.currentTime)
@@ -190,6 +190,7 @@ public class THEOplayerRCTView: UIView {
                 .build()
         }
         
+        // Add version info
         let versionString = THEOplayer.version
         payload["version"] = [
             "version": versionString,
