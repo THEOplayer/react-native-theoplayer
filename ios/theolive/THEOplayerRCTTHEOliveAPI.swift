@@ -65,6 +65,18 @@ class THEOplayerRCTTHEOliveAPI: NSObject, RCTBridgeModule {
             }
         }
     }
+    
+    @objc(setAuthToken:token:)
+    func setAuthToken(_ node: NSNumber, token: String) -> Void {
+        DispatchQueue.main.async {
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let player = theView.player,
+               let theoLive = player.theoLive {
+                //theoLive.setAuthToken(token)
+                if true || DEBUG_THEOLIVE_API { PrintUtils.printLog(logText: "[NATIVE] THEOlive authToken updated: \(token).") }
+            }
+        }
+    }
 
 #else
 
@@ -78,6 +90,11 @@ class THEOplayerRCTTHEOliveAPI: NSObject, RCTBridgeModule {
     func latencies(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if DEBUG_THEOLIVE_API { print(ERROR_MESSAGE_THEOLIVE_UNSUPPORTED_FEATURE) }
         reject(ERROR_CODE_THEOLIVE_ACCESS_FAILURE, ERROR_MESSAGE_THEOLIVE_ACCESS_FAILURE, nil)
+    }
+    
+    @objc(setAuthToken:token:)
+    func setAuthToken(_ node: NSNumber, token: NSString) -> Void {
+        if DEBUG_THEOLIVE_API { print(ERROR_MESSAGE_THEOLIVE_UNSUPPORTED_FEATURE) }
     }
 
 #endif

@@ -280,4 +280,8 @@ RCT_EXTERN_METHOD(latencies:(nonnull NSNumber *)node
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(setAuthToken:(nonnull NSNumber *)node
+                  token:(nonnull NSString *)token)
+
 @end
+
