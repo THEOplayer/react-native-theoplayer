@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Prevented passing infinite or NaN for intializationDelay in TheoAdDescription, on the Android bridge.
+- 
+### Added
+
+- Added support for Clearkey DRM on Android.
 
 ## [9.9.0] - 25-07-14
 
