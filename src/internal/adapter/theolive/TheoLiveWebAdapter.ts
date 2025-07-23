@@ -22,4 +22,15 @@ export class TheoLiveWebAdapter implements TheoLiveAPI {
       return Promise.reject<HespLatencies>('latencies not available');
     }
   }
+
+  set authToken(token: string) {
+    console.log(`Setting new token on native theoplayer: ${token}`);
+    //this._player.theoLive.authToken = token;
+  }
+
+  get authToken(): string | undefined {
+    console.log(`Fetching token from native theoplayer.`);
+    return undefined;
+    //return this._player.theoLive.authToken;
+  }
 }

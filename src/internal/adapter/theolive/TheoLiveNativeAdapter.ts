@@ -4,6 +4,7 @@ import { NativeModules, Platform } from 'react-native';
 const NativeTheoLiveModule = NativeModules.THEORCTTHEOliveModule;
 
 export class TheoLiveNativeAdapter implements TheoLiveAPI {
+  private _token: string | undefined;
   constructor(private _player: THEOplayerView) {}
 
   get currentLatency(): Promise<number> {
@@ -25,5 +26,14 @@ export class TheoLiveNativeAdapter implements TheoLiveAPI {
       playerLatency: -1,
       theoliveLatency: -1,
     });
+  }
+
+  set authToken(token: string) {
+    this._token = token;
+    NativeTheoLiveModule.setAuthToken(this._player.nativeHandle, token);
+  }
+
+  get authToken(): string | undefined {
+    return this._token;
   }
 }
