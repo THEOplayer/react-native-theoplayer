@@ -11,6 +11,7 @@ import com.theoplayer.cast.CastModule
 import com.theoplayer.broadcast.EventBroadcastModule
 import com.theoplayer.playback.PlaybackSettingsModule
 import com.theoplayer.player.PlayerModule
+import com.theoplayer.player.THEOliveModule
 
 class ReactTHEOplayerPackage : ReactPackage {
   override fun createNativeModules(reactContext: ReactApplicationContext): List<NativeModule> {
@@ -21,7 +22,8 @@ class ReactTHEOplayerPackage : ReactPackage {
       CastModule(reactContext),
       CacheModule(reactContext),
       EventBroadcastModule(reactContext),
-      PlaybackSettingsModule(reactContext)
+      PlaybackSettingsModule(reactContext),
+      THEOliveModule(reactContext)
     )
   }
 
