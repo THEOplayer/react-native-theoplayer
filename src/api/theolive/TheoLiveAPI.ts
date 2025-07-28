@@ -50,5 +50,4 @@ export interface TheoLiveAPI {
    * The authentication token used when requesting THEOlive manifests or segments.
    */
   authToken?: string;
-
 }
