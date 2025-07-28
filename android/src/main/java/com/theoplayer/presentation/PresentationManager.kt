@@ -34,6 +34,7 @@ class PresentationManager(
 ) {
   private var supportsPip = false
   private var onUserLeaveHintReceiver: BroadcastReceiver? = null
+  private var onUserLeaveHintRunnable: Runnable? = null
   private var onPictureInPictureModeChanged: BroadcastReceiver? = null
   private val pipUtils: PipUtils = PipUtils(viewCtx, reactContext)
   private val fullScreenLayoutObserver = FullScreenLayoutObserver()
@@ -49,14 +50,27 @@ class PresentationManager(
   var pipConfig: PipConfig = PipConfig()
 
   init {
-    onUserLeaveHintReceiver = object : BroadcastReceiver() {
-      override fun onReceive(context: Context?, intent: Intent?) {
-        // Optionally into PiP mode when the app goes to background.
+    // On Android 16+, the broadcasted onUserLeaveHint comes too late to activate PiP presentation
+    // mode, and the activity will not go into PiP when the user backgrounds the app. In this case
+    // we rely on the newer addOnUserLeaveHintListener and ignore the broadcast event.
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+      onUserLeaveHintReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+          if (pipConfig.startsAutomatically == true) {
+            setPresentation(PresentationMode.PICTURE_IN_PICTURE)
+          }
+        }
+      }
+    } else {
+      onUserLeaveHintRunnable = Runnable {
         if (pipConfig.startsAutomatically == true) {
           setPresentation(PresentationMode.PICTURE_IN_PICTURE)
         }
+      }.also {
+        (reactContext.currentActivity as? ComponentActivity)?.addOnUserLeaveHintListener(it)
       }
     }
+
     onPictureInPictureModeChanged = object : BroadcastReceiver() {
       override fun onReceive(context: Context?, intent: Intent?) {
         val transitioningToPip = intent
@@ -79,18 +93,14 @@ class PresentationManager(
       reactContext.currentActivity?.registerReceiver(
         onUserLeaveHintReceiver, IntentFilter("onUserLeaveHint"), Context.RECEIVER_EXPORTED
       )
-    } else {
-      reactContext.currentActivity?.registerReceiver(
-        onUserLeaveHintReceiver, IntentFilter("onUserLeaveHint")
-      )
-    }
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
       reactContext.currentActivity?.registerReceiver(
         onPictureInPictureModeChanged, IntentFilter("onPictureInPictureModeChanged"),
         Context.RECEIVER_EXPORTED
       )
     } else {
+      reactContext.currentActivity?.registerReceiver(
+        onUserLeaveHintReceiver, IntentFilter("onUserLeaveHint")
+      )
       reactContext.currentActivity?.registerReceiver(
         onPictureInPictureModeChanged, IntentFilter("onPictureInPictureModeChanged")
       )
@@ -100,6 +110,11 @@ class PresentationManager(
   fun destroy() {
     try {
       reactContext.currentActivity?.unregisterReceiver(onUserLeaveHintReceiver)
+      onUserLeaveHintRunnable?.let {
+        (reactContext.currentActivity as? ComponentActivity)?.addOnUserLeaveHintListener(
+          it
+        )
+      }
       reactContext.currentActivity?.unregisterReceiver(onPictureInPictureModeChanged)
       fullScreenLayoutObserver.remove()
       pipUtils.destroy()
