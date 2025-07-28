@@ -26,6 +26,11 @@ import com.theoplayer.android.api.error.ErrorCode
 import com.theoplayer.android.api.error.THEOplayerException
 import com.theoplayer.android.api.player.PresentationMode
 
+const val IS_TRANSITION_INTO_PIP = "isTransitioningToPip"
+const val IS_IN_PIP_MODE = "isInPictureInPictureMode"
+const val ON_USER_LEAVE_HINT = "onUserLeaveHint"
+const val ON_PIP_MODE_CHANGED = "onPictureInPictureModeChanged"
+
 @SuppressLint("UnspecifiedRegisterReceiverFlag")
 class PresentationManager(
   private val viewCtx: ReactTHEOplayerContext,
@@ -74,8 +79,8 @@ class PresentationManager(
     onPictureInPictureModeChanged = object : BroadcastReceiver() {
       override fun onReceive(context: Context?, intent: Intent?) {
         val transitioningToPip = intent
-          ?.getBooleanExtra("isTransitioningToPip", false) ?: false
-        val inPip = intent?.getBooleanExtra("isInPictureInPictureMode", false) ?: false
+          ?.getBooleanExtra(IS_TRANSITION_INTO_PIP, false) ?: false
+        val inPip = intent?.getBooleanExtra(IS_IN_PIP_MODE, false) ?: false
         // Dispatch event on every PiP mode change
         when {
           transitioningToPip -> onEnterPip(true)
@@ -91,18 +96,18 @@ class PresentationManager(
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
       reactContext.currentActivity?.registerReceiver(
-        onUserLeaveHintReceiver, IntentFilter("onUserLeaveHint"), Context.RECEIVER_EXPORTED
+        onUserLeaveHintReceiver, IntentFilter(ON_USER_LEAVE_HINT), Context.RECEIVER_EXPORTED
       )
       reactContext.currentActivity?.registerReceiver(
-        onPictureInPictureModeChanged, IntentFilter("onPictureInPictureModeChanged"),
+        onPictureInPictureModeChanged, IntentFilter(ON_PIP_MODE_CHANGED),
         Context.RECEIVER_EXPORTED
       )
     } else {
       reactContext.currentActivity?.registerReceiver(
-        onUserLeaveHintReceiver, IntentFilter("onUserLeaveHint")
+        onUserLeaveHintReceiver, IntentFilter(ON_USER_LEAVE_HINT)
       )
       reactContext.currentActivity?.registerReceiver(
-        onPictureInPictureModeChanged, IntentFilter("onPictureInPictureModeChanged")
+        onPictureInPictureModeChanged, IntentFilter(ON_PIP_MODE_CHANGED)
       )
     }
   }
