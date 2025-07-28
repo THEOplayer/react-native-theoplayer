@@ -43,12 +43,12 @@ def enabledMediaSession = safeExtGet("THEOplayer_extensionMediaSession", 'true')
 def enabledMillicast = safeExtGet("THEOplayer_extensionMillicast", 'false').toBoolean()
 
 android {
-    compileSdk safeExtGet('THEOplayer_compileSdkVersion', 34)
+    compileSdk safeExtGet('THEOplayer_compileSdkVersion', 35)
     namespace "com.theoplayer"
 
     defaultConfig {
         minSdkVersion safeExtGet('THEOplayer_minSdkVersion', 21)
-        targetSdkVersion safeExtGet('THEOplayer_targetSdkVersion', 34)
+        targetSdkVersion safeExtGet('THEOplayer_targetSdkVersion', 35)
         versionCode 1
         versionName "1.0"
 
