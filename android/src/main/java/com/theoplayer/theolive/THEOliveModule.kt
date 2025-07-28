@@ -43,7 +43,7 @@ class THEOliveModule(context: ReactApplicationContext) : ReactContextBaseJavaMod
   @ReactMethod
   fun setAuthToken(tag: Int, token: String) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      view?.player?.theoLive.authToken = token
+      view?.player?.theoLive?.authToken = token
     }
   }
 }
