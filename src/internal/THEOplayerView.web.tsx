@@ -52,23 +52,19 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
     };
   }, [container]);
 
-  if (!CSS.supports('aspect-ratio', '16/9')) {
-    return (
-      <div id={'theoplayer-root-container'} style={{ display: 'contents' }}>
-        <div style={styles.containerNoAspectRatio}>
-          <div ref={container} style={styles.absoluteFillNoAspectRatio} />
-        </div>
-        {children}
-      </div>
-    );
-  }
-
   return (
-    // Note: display: contents causes an element's children to appear as if they were direct children of the element's parent,
+    // Note: `display: contents` causes an element's children to appear as if they were direct children of the element's parent,
     // ignoring the element itself.
     // It's necessary to make sure we do not interfere with the IMA container
     <div id={'theoplayer-root-container'} style={{ display: 'contents' }}>
-      <div ref={container} style={styles.container} className={'theoplayer-container'} />
+      {!CSS.supports('aspect-ratio', '16/9') ? (
+        // Handle aspect-ratio 16/9 with padding-top: 56.25% to support older versions
+        <div style={styles.containerNoAspectRatio}>
+          <div ref={container} style={styles.absoluteFillNoAspectRatio} />
+        </div>
+      ) : (
+        <div ref={container} style={styles.container} className="theoplayer-container" />
+      )}
       {children}
     </div>
   );
