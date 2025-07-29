@@ -60,7 +60,7 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
       {!CSS.supports('aspect-ratio', '16/9') ? (
         // Handle aspect-ratio 16/9 with padding-top: 56.25% to support older versions
         <div style={styles.containerNoAspectRatio}>
-          <div ref={container} style={styles.absoluteFillNoAspectRatio} />
+          <div ref={container} style={styles.absoluteFillNoAspectRatio} className="theoplayer-container" />
         </div>
       ) : (
         <div ref={container} style={styles.container} className="theoplayer-container" />
