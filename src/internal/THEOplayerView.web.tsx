@@ -58,7 +58,8 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
     // It's necessary to make sure we do not interfere with the IMA container
     <div id={'theoplayer-root-container'} style={{ display: 'contents' }}>
       {!CSS.supports('aspect-ratio', '16/9') ? (
-        // Handle aspect-ratio 16/9 with padding-top: 56.25% to support older versions
+        // Handle aspect-ratio 16/9 with padding-top: 56.25% to support older versions.
+        // {@link https://www.w3schools.com/howto/howto_css_aspect_ratio.asp}
         <div style={styles.containerNoAspectRatio}>
           <div ref={container} style={styles.absoluteFillNoAspectRatio} className="theoplayer-container" />
         </div>
