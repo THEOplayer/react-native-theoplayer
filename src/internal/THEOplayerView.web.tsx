@@ -55,8 +55,8 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
   if (!CSS.supports('aspect-ratio', '16/9')) {
     return (
       <div id={'theoplayer-root-container'} style={{ display: 'contents' }}>
-        <div style={{ width: '100%', position: 'relative', paddingTop: '56.25%' }}>
-          <div ref={container} style={{ position: 'absolute', top: 0, left: 0, bottom: 0, right: 0, width: '100%', height: '100%' }} />
+        <div style={styles.containerNoAspectRatio}>
+          <div ref={container} style={styles.absoluteFillNoAspectRatio} />
         </div>
         {children}
       </div>
@@ -85,5 +85,19 @@ const styles = {
     maxHeight: '100vh',
     maxWidth: '100vw',
     aspectRatio: '16 / 9',
+  } as React.CSSProperties,
+  containerNoAspectRatio: {
+    width: '100%',
+    position: 'relative',
+    paddingTop: '56.25%',
+  } as React.CSSProperties,
+  absoluteFillNoAspectRatio: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    width: '100%',
+    height: '100%',
   } as React.CSSProperties,
 };
