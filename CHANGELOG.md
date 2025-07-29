@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
+- Fixed an issue on Web in case the `aspect-ratio` CSS property is not supported on older browsers.
 - Prevented passing infinite or NaN for intializationDelay in TheoAdDescription, on the Android bridge.
 - 
 ### Added
