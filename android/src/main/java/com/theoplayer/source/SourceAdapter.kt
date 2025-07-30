@@ -272,14 +272,7 @@ class SourceAdapter {
   private fun parseSourceType(jsonTypedSource: JSONObject): SourceType? {
     val type = jsonTypedSource.optString(PROP_TYPE)
     if (type.isNotEmpty()) {
-      when (type) {
-        "application/dash+xml" -> return SourceType.DASH
-        "application/x-mpegurl" -> return SourceType.HLSX
-        "application/vnd.theo.hesp+json" -> return SourceType.HESP
-        "application/vnd.apple.mpegurl" -> return SourceType.HLS
-        "video/mp4" -> return SourceType.MP4
-        "audio/mpeg" -> return SourceType.MP3
-      }
+      SourceType.entries.find { it.mimeType == type }?.let { return it }
     } else {
       // No type given, check for known extension.
       val src = jsonTypedSource.optString(PROP_SRC).toUri()
