@@ -2,6 +2,7 @@ package com.theoplayer.source
 
 import android.text.TextUtils
 import android.util.Log
+import androidx.core.net.toUri
 import com.google.gson.Gson
 import com.theoplayer.android.api.ads.theoads.TheoAdDescription
 import com.theoplayer.android.api.error.THEOplayerException
@@ -281,12 +282,14 @@ class SourceAdapter {
       }
     } else {
       // No type given, check for known extension.
-      val src = jsonTypedSource.optString(PROP_SRC)
-      when {
-        src.endsWith(".mpd") -> return SourceType.DASH
-        src.endsWith(".m3u8") -> return SourceType.HLSX
-        src.endsWith(".mp4") -> return SourceType.MP4
-        src.endsWith(".mp3") -> return SourceType.MP3
+      val src = jsonTypedSource.optString(PROP_SRC).toUri()
+      src.lastPathSegment?.let { fileName ->
+        when {
+          fileName.endsWith(".mpd") -> return SourceType.DASH
+          fileName.endsWith(".m3u8") -> return SourceType.HLSX
+          fileName.endsWith(".mp4") -> return SourceType.MP4
+          fileName.endsWith(".mp3") -> return SourceType.MP3
+        }
       }
     }
     return null
