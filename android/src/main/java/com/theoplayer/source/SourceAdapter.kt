@@ -271,38 +271,22 @@ class SourceAdapter {
   private fun parseSourceType(jsonTypedSource: JSONObject): SourceType? {
     val type = jsonTypedSource.optString(PROP_TYPE)
     if (type.isNotEmpty()) {
-      if ("application/dash+xml" == type) {
-        return SourceType.DASH
-      }
-      if ("application/x-mpegurl" == type) {
-        return SourceType.HLSX
-      }
-      if ("application/vnd.theo.hesp+json" == type) {
-        return SourceType.HESP
-      }
-      if ("application/vnd.apple.mpegurl" == type) {
-        return SourceType.HLS
-      }
-      if ("video/mp4" == type) {
-        return SourceType.MP4
-      }
-      if ("audio/mpeg" == type) {
-        return SourceType.MP3
+      when (type) {
+        "application/dash+xml" -> return SourceType.DASH
+        "application/x-mpegurl" -> return SourceType.HLSX
+        "application/vnd.theo.hesp+json" -> return SourceType.HESP
+        "application/vnd.apple.mpegurl" -> return SourceType.HLS
+        "video/mp4" -> return SourceType.MP4
+        "audio/mpeg" -> return SourceType.MP3
       }
     } else {
       // No type given, check for known extension.
       val src = jsonTypedSource.optString(PROP_SRC)
-      if (src.endsWith(".mpd")) {
-        return SourceType.DASH
-      }
-      if (src.endsWith(".m3u8")) {
-        return SourceType.HLSX
-      }
-      if (src.endsWith(".mp4")) {
-        return SourceType.MP4
-      }
-      if (src.endsWith(".mp3")) {
-        return SourceType.MP3
+      when {
+        src.endsWith(".mpd") -> return SourceType.DASH
+        src.endsWith(".m3u8") -> return SourceType.HLSX
+        src.endsWith(".mp4") -> return SourceType.MP4
+        src.endsWith(".mp3") -> return SourceType.MP3
       }
     }
     return null
