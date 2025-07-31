@@ -36,8 +36,6 @@ export interface TheoLiveDistributionEvent extends TheoLiveEvent {
 export interface TheoLiveEndpointLoadedEvent extends TheoLiveEvent {
   /**
    * The endpoint info
-   *
-   * @platform android,web
    */
   endpoint?: TheoLiveEndpoint;
 }
