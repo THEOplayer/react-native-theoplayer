@@ -14,11 +14,17 @@ let PROP_ENDPOINT_AD_SRC: String = "adSrc"
 let PROP_ENDPOINT_WEIGHT: String = "weight"
 let PROP_ENDPOINT_PRIORITY: String = "priority"
 let PROP_ENDPOINT_CONTENT_PROTECTION: String = "contentProtection"
+let PROP_REASON_ERROR_CODE: String = "errorCode"
+let PROP_REASON_ERROR_MESSAGE: String = "errorMessage"
 
 class THEOplayerRCTTHEOliveEventAdapter {
 
 #if canImport(THEOplayerTHEOliveIntegration)
-    class func fromEndpoint(endpoint: THEOplayerTHEOliveIntegration.EndpointAPI) -> [String:Any] {
+    class func fromEndpoint(endpoint: THEOplayerTHEOliveIntegration.EndpointAPI?) -> [String:Any] {
+        guard let endpoint = endpoint else {
+            return [:]
+        }
+        
         var endpointData: [String:Any] = [:]
         
         if let hespSrc = endpoint.hespSrc {
@@ -39,6 +45,17 @@ class THEOplayerRCTTHEOliveEventAdapter {
         endpointData[PROP_ENDPOINT_WEIGHT] = endpoint.weight
         endpointData[PROP_ENDPOINT_PRIORITY] = endpoint.priority
         return endpointData
+    }
+    
+    class func fromReason(reason: THEOplayerSDK.THEOError?) -> [String:Any] {
+        guard let reason = reason else {
+            return [:]
+        }
+        
+        return [
+            PROP_REASON_ERROR_CODE: String(reason.code.rawValue),
+            PROP_REASON_ERROR_MESSAGE: reason.message
+        ]
     }
 #endif
     
