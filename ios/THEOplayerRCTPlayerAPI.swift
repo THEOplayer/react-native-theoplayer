@@ -132,6 +132,20 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                         player.abr.preferredMaximumResolution = CGSize(width: Double(width), height: Double(height))
                     }
                 }
+                if let configuredStrategy = abrConfig["strategy"] as? String {
+                    player.abr.strategy = ABRStrategyConfiguration(type: THEOplayerRCTTypeUtils.abrStrategyFromString(configuredStrategy))
+                } else if let configuredStrategy = abrConfig["strategy"] as? [String:Any] {
+                    if let type = configuredStrategy["type"] as? String {
+                        let abrType = THEOplayerRCTTypeUtils.abrStrategyFromString(type)
+                        var abrMetadata: ABRMetadata?
+                        if let metadata = configuredStrategy["metadata"] as? [String:Any],
+                           let bitrate = metadata["bitrate"] as? Double {
+                            abrMetadata = ABRMetadata(bitrate: bitrate)
+                        }
+                        let strategy = ABRStrategyConfiguration(type: abrType, metadata: abrMetadata)
+                        player.abr.strategy = strategy
+                    }
+                }
             }
         }
     }
