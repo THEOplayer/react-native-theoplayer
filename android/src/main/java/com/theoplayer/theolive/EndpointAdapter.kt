@@ -10,12 +10,12 @@ import com.theoplayer.android.api.theolive.KeySystemConfiguration
 private const val PROP_HESP_SRC = "hespSrc"
 private const val PROP_HLS_SRC = "hlsSrc"
 private const val PROP_AD_SRC = "adSrc"
+private const val PROP_CDN = "cdn"
 private const val PROP_TARGET_LATENCY = "targetLatency"
 private const val PROP_WEIGHT = "weight"
 private const val PROP_PRIORITY = "priority"
 private const val PROP_CONTENT_PROTECTION = "contentProtection"
 private const val PROP_INTEGRATION = "integration"
-
 private const val PROP_WIDEVINE = "widevine"
 private const val PROP_PLAYREADY = "playready"
 private const val PROP_FAIRPLAY = "fairplay"
@@ -29,6 +29,7 @@ object EndpointAdapter {
       endPoint.hespSrc?.let { putString(PROP_HESP_SRC, it) }
       endPoint.hlsSrc?.let { putString(PROP_HLS_SRC, it) }
       endPoint.adSrc?.let { putString(PROP_AD_SRC, it) }
+      endPoint.cdn?.let { putString(PROP_CDN, it) }
       endPoint.targetLatency?.let { putDouble(PROP_TARGET_LATENCY, it) }
       putInt(PROP_WEIGHT, endPoint.weight)
       putInt(PROP_PRIORITY, endPoint.priority)
