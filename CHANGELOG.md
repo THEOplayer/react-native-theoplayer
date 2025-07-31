@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Added support for Clearkey DRM on Android.
+- Added `endpoint` property to THEOlive `EndpointLoaded` event.
 
 ## [9.9.0] - 25-07-14
 

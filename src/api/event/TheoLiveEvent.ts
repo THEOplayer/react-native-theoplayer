@@ -1,4 +1,4 @@
-import { Event, PlayerEventType, TheoLiveEndpoint } from 'react-native-theoplayer';
+import { Event, PlayerError, PlayerEventType, TheoLiveEndpoint } from 'react-native-theoplayer';
 
 /**
  * The THEOlive event dispatched by the {@link TheoLiveAPI THEOlive API}.
@@ -36,10 +36,21 @@ export interface TheoLiveDistributionEvent extends TheoLiveEvent {
 export interface TheoLiveEndpointLoadedEvent extends TheoLiveEvent {
   /**
    * The endpoint info
-   *
-   * @platform android,web
    */
   endpoint?: TheoLiveEndpoint;
+}
+
+/**
+ * Fired when the player cannot play the current primary publication and would like to fallback. If a fallback has been configured it will fallback,
+ * otherwise only the event is fired.
+ *
+ * @public
+ */
+export interface TheoLiveIntentToFallbackEvent extends TheoLiveEvent {
+  /**
+   * The reason why the player chose to fallback.
+   */
+  reason?: PlayerError;
 }
 
 /**
