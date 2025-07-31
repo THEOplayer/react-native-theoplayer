@@ -5,13 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [Unreleased]
 
 ### Fixed
 
 - Fixed an issue on Web in case the `aspect-ratio` CSS property is not supported on older browsers.
 - Prevented passing infinite or NaN for intializationDelay in TheoAdDescription, on the Android bridge.
-- 
+- Fixed and issue on Android where transitioning automatically into PiP presentation mode would fail on Android 16+.
+
 ### Added
 
 - Added support for Clearkey DRM on Android.
