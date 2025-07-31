@@ -2,6 +2,7 @@ package com.theoplayer.source
 
 import android.text.TextUtils
 import android.util.Log
+import androidx.core.net.toUri
 import com.google.gson.Gson
 import com.theoplayer.android.api.ads.theoads.TheoAdDescription
 import com.theoplayer.android.api.error.THEOplayerException
@@ -271,38 +272,17 @@ class SourceAdapter {
   private fun parseSourceType(jsonTypedSource: JSONObject): SourceType? {
     val type = jsonTypedSource.optString(PROP_TYPE)
     if (type.isNotEmpty()) {
-      if ("application/dash+xml" == type) {
-        return SourceType.DASH
-      }
-      if ("application/x-mpegurl" == type) {
-        return SourceType.HLSX
-      }
-      if ("application/vnd.theo.hesp+json" == type) {
-        return SourceType.HESP
-      }
-      if ("application/vnd.apple.mpegurl" == type) {
-        return SourceType.HLS
-      }
-      if ("video/mp4" == type) {
-        return SourceType.MP4
-      }
-      if ("audio/mpeg" == type) {
-        return SourceType.MP3
-      }
+      SourceType.entries.find { it.mimeType == type }?.let { return it }
     } else {
       // No type given, check for known extension.
-      val src = jsonTypedSource.optString(PROP_SRC)
-      if (src.endsWith(".mpd")) {
-        return SourceType.DASH
-      }
-      if (src.endsWith(".m3u8")) {
-        return SourceType.HLSX
-      }
-      if (src.endsWith(".mp4")) {
-        return SourceType.MP4
-      }
-      if (src.endsWith(".mp3")) {
-        return SourceType.MP3
+      val src = jsonTypedSource.optString(PROP_SRC).toUri()
+      src.lastPathSegment?.let { fileName ->
+        when {
+          fileName.endsWith(".mpd") -> return SourceType.DASH
+          fileName.endsWith(".m3u8") -> return SourceType.HLSX
+          fileName.endsWith(".mp4") -> return SourceType.MP4
+          fileName.endsWith(".mp3") -> return SourceType.MP3
+        }
       }
     }
     return null
