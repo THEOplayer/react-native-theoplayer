@@ -71,9 +71,9 @@ class THEOplayerRCTTHEOliveAPI: NSObject, RCTBridgeModule {
         DispatchQueue.main.async {
             if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
                let player = theView.player,
-               let theoLive = player.theoLive {
-                //theoLive.setAuthToken(token)
-                if true || DEBUG_THEOLIVE_API { PrintUtils.printLog(logText: "[NATIVE] THEOlive authToken updated: \(token).") }
+               var theoLive = player.theoLive {
+                theoLive.authToken = token
+                if DEBUG_THEOLIVE_API { PrintUtils.printLog(logText: "[NATIVE] THEOlive authToken updated: \(token).") }
             }
         }
     }
