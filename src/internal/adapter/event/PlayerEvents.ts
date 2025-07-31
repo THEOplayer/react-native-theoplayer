@@ -48,6 +48,7 @@ import {
   VolumeChangeEvent,
   TheoLiveEndpoint,
   TheoLiveEndpointLoadedEvent,
+  TheoLiveIntentToFallbackEvent,
 } from 'react-native-theoplayer';
 
 export class DefaultLoadedMetadataEvent extends BaseEvent<PlayerEventType.LOADED_METADATA> implements LoadedMetadataEvent {
@@ -233,6 +234,15 @@ export class DefaultTheoLiveEndpointLoadedEvent extends BaseEvent<PlayerEventTyp
   constructor(
     public subType: TheoLiveEventType,
     public endpoint?: TheoLiveEndpoint,
+  ) {
+    super(PlayerEventType.THEOLIVE_EVENT);
+  }
+}
+
+export class DefaultTheoLiveIntentToFallbackEvent extends BaseEvent<PlayerEventType.THEOLIVE_EVENT> implements TheoLiveIntentToFallbackEvent {
+  constructor(
+    public subType: TheoLiveEventType,
+    public reason?: PlayerError,
   ) {
     super(PlayerEventType.THEOLIVE_EVENT);
   }

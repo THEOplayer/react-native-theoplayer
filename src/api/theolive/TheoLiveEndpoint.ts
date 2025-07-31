@@ -9,6 +9,7 @@ export interface TheoLiveEndpoint {
   hespSrc?: string;
   hlsSrc?: string;
   adSrc?: string;
+  cdn?: string;
   weight: number;
   priority: number;
   contentProtection?: ChannelDrmConfigResponse;
