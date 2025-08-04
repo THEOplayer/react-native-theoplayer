@@ -20,7 +20,7 @@ private const val TAG = "ReactTHEOplayerView"
 class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
   FrameLayout(reactContext), LifecycleEventListener {
 
-  private val eventEmitter: PlayerEventEmitter =
+  val eventEmitter: PlayerEventEmitter =
     PlayerEventEmitter(reactContext.reactApplicationContext, this)
   val broadcast = EventBroadcastAdapter(this)
   var presentationManager: PresentationManager? = null
