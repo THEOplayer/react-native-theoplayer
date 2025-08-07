@@ -1,15 +1,20 @@
 package com.theoplayer.presentation
 
 import android.util.Log
+import android.view.View
+import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import androidx.core.view.children
 import com.facebook.react.views.view.ReactViewGroup
+import com.theoplayer.ReactTHEOplayerView
 
-private val TAG = "FSLayoutObserver"
+private const val TAG = "FSLayoutObserver"
 
 /**
  * FullScreenLayoutObserver makes sure that the React Native view does not get the layout
- * defined in React-Native during fullscreen presentation mode. We want to enforce fullscreen
+ * defined in ReactNative during fullscreen presentation mode. We want to enforce fullscreen
  * position & size.
+ * Similarly for picture-in-picture presentation mode, enforce a view that stretches the whole screen.
  */
 class FullScreenLayoutObserver {
   private var globalLayoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null
@@ -20,13 +25,22 @@ class FullScreenLayoutObserver {
       Log.w(TAG, "A previously attached ViewGroup was not properly detached.")
     }
 
-    viewGroup?.let {
+    viewGroup?.let { reactPlayerGroup ->
       globalLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
-        it.post {
-          it.layout(0, 0, viewGroup.width, viewGroup.height)
+        val root = getRootViewFrom(reactPlayerGroup)
+        reactPlayerGroup.post {
+          applyOnViewTree(reactPlayerGroup) { view ->
+            if (view == reactPlayerGroup || view is ReactTHEOplayerView) {
+              view.measure(
+                View.MeasureSpec.makeMeasureSpec(root.width, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(root.height, View.MeasureSpec.EXACTLY)
+              )
+              view.layout(0, 0, view.measuredWidth, view.measuredHeight)
+            }
+          }
         }
       }
-      it.viewTreeObserver.addOnGlobalLayoutListener(globalLayoutListener)
+      reactPlayerGroup.viewTreeObserver.addOnGlobalLayoutListener(globalLayoutListener)
       attached = viewGroup
     }
   }
@@ -35,5 +49,26 @@ class FullScreenLayoutObserver {
     attached?.viewTreeObserver?.removeOnGlobalLayoutListener(globalLayoutListener)
     attached = null
     globalLayoutListener = null
+  }
+}
+
+/**
+ * Find the view root, most likely the decorView
+ */
+fun getRootViewFrom(view: View): View {
+  var current = view
+  while (current.parent is View) {
+    current = current.parent as View
+  }
+  return current
+}
+
+/**
+ * Conditionally apply an operation on each view in a hierarchy.
+ */
+fun applyOnViewTree(view: View, doOp: (View) -> Unit) {
+  doOp(view)
+  if (view is ViewGroup) {
+    view.children.forEach { ch -> applyOnViewTree(ch, doOp) }
   }
 }

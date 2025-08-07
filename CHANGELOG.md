@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- Fixed an issue on Android where transitioning into picture-in-picture presentation mode with the `THEOplayer_reparent_on_PiP` flag enabled would sometimes break the lay-out.
+
 ## [9.9.1] - 25-07-31
 
 ### Fixed
@@ -18,7 +24,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added support for Clearkey DRM on Android.
 - Added `endpoint` property to THEOlive `EndpointLoaded` event.
-- Added support for ABRStrategyConfiguration on iOS 
+- Added support for `ABRStrategyConfiguration` on iOS.
 
 ## [9.9.0] - 25-07-14
 
