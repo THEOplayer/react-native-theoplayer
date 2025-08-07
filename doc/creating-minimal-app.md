@@ -51,7 +51,7 @@ Finally, replace the `App.tsx` with this minimal code:
 
 ```tsx
 import React from 'react';
-import {Platform, View} from 'react-native';
+import {View} from 'react-native';
 import {PlayerConfiguration, SourceDescription, PlayerEventType, THEOplayer, THEOplayerView} from 'react-native-theoplayer';
 
 const playerConfig: PlayerConfiguration = {
