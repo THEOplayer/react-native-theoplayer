@@ -12,6 +12,8 @@ import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
 import com.facebook.react.defaults.DefaultReactActivityDelegate
 import com.google.android.gms.cast.framework.CastContext
+import android.view.View
+import android.view.ViewGroup
 
 open class MainActivity : ReactActivity() {
   public override fun onCreate(bundle: Bundle?) {
@@ -84,10 +86,28 @@ open class MainActivity : ReactActivity() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM &&
       pipState.isTransitioningToPip
     ) {
+      // Hide uiContainer when transitioning to PiP
+      // The container needs to be tagged with
+      (window.decorView as ViewGroup).findViewByContentDescription("uiContainer")?.visibility = View.GONE
+
       Intent("onPictureInPictureModeChanged").also {
         it.putExtra("isTransitioningToPip", true)
         sendBroadcast(it)
       }
     }
   }
+}
+
+fun ViewGroup.findViewByContentDescription(contentDescription: String): View? {
+  for (i in 0 until childCount) {
+    val child = getChildAt(i)
+    if (child is ViewGroup) {
+      val found = child.findViewByContentDescription(contentDescription)
+      if (found != null) return found
+    }
+    if (child.contentDescription?.toString() == contentDescription) {
+      return child
+    }
+  }
+  return null
 }
