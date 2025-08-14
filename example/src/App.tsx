@@ -119,67 +119,69 @@ export default function App() {
         <View style={styles.container}>
           <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady}>
             {player !== undefined && (
-              <UiContainer
-                theme={{ ...DEFAULT_THEOPLAYER_THEME }}
-                player={player}
-                behind={<CenteredDelayedActivityIndicator size={50} />}
-                top={
-                  <AutoFocusGuide>
-                    <ControlBar>
-                      <Spacer />
-                      <MediaCacheMenuButton>
-                        <MediaCacheDownloadButton />
-                        <MediaCachingTaskListSubMenu />
-                      </MediaCacheMenuButton>
-                      {/*This is a custom menu for source selection.*/}
-                      <SourceMenuButton />
-                      {!Platform.isTV && (
-                        <>
-                          <AirplayButton />
-                          <ChromecastButton />
-                        </>
-                      )}
-                      <LanguageMenuButton />
-                      <SettingsMenuButton>
-                        {/*Note: quality selection is not available on iOS */}
-                        <QualitySubMenu />
-                        <PlaybackRateSubMenu />
-                        <BackgroundAudioSubMenu />
-                        <PiPSubMenu />
-                        <AutoPlaySubMenu />
-                        {Platform.OS === 'android' && <RenderingTargetSubMenu />}
-                      </SettingsMenuButton>
-                    </ControlBar>
-                  </AutoFocusGuide>
-                }
-                center={
-                  <AutoFocusGuide>
-                    <CenteredControlBar left={<SkipButton skip={-10} />} middle={<PlayButton />} right={<SkipButton skip={30} />} />
-                  </AutoFocusGuide>
-                }
-                bottom={
-                  <AutoFocusGuide>
-                    <ControlBar style={{ justifyContent: 'flex-start' }}>
-                      <CastMessage />
-                    </ControlBar>
-                    {
-                      /*Note: RNSlider is not available on tvOS */
-                      !(Platform.isTV && Platform.OS === 'ios') && (
-                        <ControlBar>
-                          <SeekBar />
-                        </ControlBar>
-                      )
-                    }
-                    <ControlBar>
-                      <MuteButton />
-                      <TimeLabel showDuration={true} />
-                      <Spacer />
-                      <PipButton />
-                      <FullscreenButton />
-                    </ControlBar>
-                  </AutoFocusGuide>
-                }
-              />
+              <View accessible={true} accessibilityLabel="uiContainer" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
+                <UiContainer
+                  theme={{ ...DEFAULT_THEOPLAYER_THEME, fadeAnimationTimoutMs: 10000 }}
+                  player={player}
+                  behind={<CenteredDelayedActivityIndicator size={50} />}
+                  top={
+                    <AutoFocusGuide>
+                      <ControlBar>
+                        <Spacer />
+                        <MediaCacheMenuButton>
+                          <MediaCacheDownloadButton />
+                          <MediaCachingTaskListSubMenu />
+                        </MediaCacheMenuButton>
+                        {/*This is a custom menu for source selection.*/}
+                        <SourceMenuButton />
+                        {!Platform.isTV && (
+                          <>
+                            <AirplayButton />
+                            <ChromecastButton />
+                          </>
+                        )}
+                        <LanguageMenuButton />
+                        <SettingsMenuButton>
+                          {/*Note: quality selection is not available on iOS */}
+                          <QualitySubMenu />
+                          <PlaybackRateSubMenu />
+                          <BackgroundAudioSubMenu />
+                          <PiPSubMenu />
+                          <AutoPlaySubMenu />
+                          {Platform.OS === 'android' && <RenderingTargetSubMenu />}
+                        </SettingsMenuButton>
+                      </ControlBar>
+                    </AutoFocusGuide>
+                  }
+                  center={
+                    <AutoFocusGuide>
+                      <CenteredControlBar left={<SkipButton skip={-10} />} middle={<PlayButton />} right={<SkipButton skip={30} />} />
+                    </AutoFocusGuide>
+                  }
+                  bottom={
+                    <AutoFocusGuide>
+                      <ControlBar style={{ justifyContent: 'flex-start' }}>
+                        <CastMessage />
+                      </ControlBar>
+                      {
+                        /*Note: RNSlider is not available on tvOS */
+                        !(Platform.isTV && Platform.OS === 'ios') && (
+                          <ControlBar>
+                            <SeekBar />
+                          </ControlBar>
+                        )
+                      }
+                      <ControlBar>
+                        <MuteButton />
+                        <TimeLabel showDuration={true} />
+                        <Spacer />
+                        <PipButton />
+                        <FullscreenButton />
+                      </ControlBar>
+                    </AutoFocusGuide>
+                  }
+                />
+              </View>
             )}
           </THEOplayerView>
         </View>
