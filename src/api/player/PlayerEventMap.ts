@@ -11,6 +11,8 @@ import type {
   PresentationModeChangeEvent,
   VolumeChangeEvent,
   ResizeEvent,
+  SeekedEvent,
+  SeekingEvent,
 } from '../event/PlayerEvent';
 import type { MediaTrackEvent, MediaTrackListEvent, TextTrackEvent, TextTrackListEvent } from '../event/TrackEvent';
 import type { AdEvent } from '../event/AdEvent';
@@ -135,12 +137,12 @@ export interface PlayerEventMap {
   /**
    * Dispatched when a seek operation starts and the player is seeking a new position.
    */
-  [PlayerEventType.SEEKING]: Event<PlayerEventType.SEEKING>;
+  [PlayerEventType.SEEKING]: SeekingEvent;
 
   /**
    * Dispatched when a seek operation completed and the current playback position has changed.
    */
-  [PlayerEventType.SEEKED]: Event<PlayerEventType.SEEKED>;
+  [PlayerEventType.SEEKED]: SeekedEvent;
 
   /**
    * Dispatched when playback has stopped because the end of the media was reached or because
