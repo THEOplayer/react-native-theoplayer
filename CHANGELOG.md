@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed an issue on Android where transitioning into picture-in-picture presentation mode with the `THEOplayer_reparent_on_PiP` flag enabled would sometimes break the lay-out.
+- Fixed an issue on iOS where a listener for `seeked` events was not properly created.
 
 ## [9.9.1] - 25-07-31
 
