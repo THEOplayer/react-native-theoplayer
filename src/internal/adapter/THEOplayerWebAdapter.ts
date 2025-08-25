@@ -23,7 +23,7 @@ import {
 } from 'react-native-theoplayer';
 import { THEOplayerWebAdsAdapter } from './ads/THEOplayerWebAdsAdapter';
 import { THEOplayerWebCastAdapter } from './cast/THEOplayerWebCastAdapter';
-import type { MediaTrack as NativeMediaTrack, TextTrack as NativeTextTrack } from 'theoplayer';
+import type { DimensionChangeEvent, MediaTrack as NativeMediaTrack, TextTrack as NativeTextTrack } from 'theoplayer';
 import { ChromelessPlayer as NativeChromelessPlayer, SourceDescription as NativeSourceDescription, version as nativeVersion } from 'theoplayer';
 import { findNativeQualitiesByUid, fromNativeMediaTrackList } from './web/TrackUtils';
 import type { ABRConfiguration, SourceDescription } from 'src/api/barrel';
@@ -62,6 +62,8 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   private _pipConfiguration: PiPConfiguration = defaultPipConfiguration;
   private _externalEventRouter: EventBroadcastAPI | undefined = undefined;
   private _cmcdConnector: CMCDConnector | undefined = undefined;
+  private _width: number | undefined = undefined;
+  private _height: number | undefined = undefined;
 
   constructor(player: NativeChromelessPlayer, config?: PlayerConfiguration) {
     super();
@@ -74,6 +76,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     this._eventForwarder = new WebEventForwarder(this._player, this);
     this._presentationModeManager = new WebPresentationModeManager(this._player, this);
     document.addEventListener('visibilitychange', this.onVisibilityChange);
+    this._player.addEventListener('dimensionchange', this.onPlayerDimensionChange);
 
     // Optionally create a media session connector
     if (config?.mediaControl?.mediaSessionEnabled !== false) {
@@ -387,6 +390,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     this._mediaSession = undefined;
     this._cmcdConnector?.destroy();
     this._cmcdConnector = undefined;
+    this._player?.removeEventListener('dimensionchange', this.onPlayerDimensionChange);
     this._player?.destroy();
     this._player = undefined;
   }
@@ -405,6 +409,14 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     this._mediaSession?.updateMediaSession();
   };
 
+  private readonly onPlayerDimensionChange = (event: DimensionChangeEvent) => {
+    if (!this._player) {
+      return;
+    }
+    this._width = event.width;
+    this._height = event.height;
+  };
+
   get nativeHandle(): NativeHandleType {
     return this._player;
   }
@@ -414,11 +426,11 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   }
 
   get width(): number | undefined {
-    return this._player?.videoWidth;
+    return this._width;
   }
 
   get height(): number | undefined {
-    return this._player?.videoHeight;
+    return this._height;
   }
 
   get videoWidth(): number | undefined {
