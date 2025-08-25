@@ -420,4 +420,12 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   get height(): number | undefined {
     return this._player?.videoHeight;
   }
+
+  get videoWidth(): number | undefined {
+    return this._player?.videoWidth;
+  }
+
+  get videoHeight(): number | undefined {
+    return this._player?.videoHeight;
+  }
 }

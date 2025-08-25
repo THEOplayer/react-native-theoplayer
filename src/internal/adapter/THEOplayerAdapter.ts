@@ -524,4 +524,12 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   get height(): number | undefined {
     return this._state.height;
   }
+
+  get videoWidth(): number | undefined {
+    return this._state.videoWidth;
+  }
+
+  get videoHeight(): number | undefined {
+    return this._state.videoHeight;
+  }
 }
