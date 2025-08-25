@@ -22,6 +22,7 @@ import com.facebook.react.views.view.ReactViewGroup
 import com.theoplayer.BuildConfig
 import com.theoplayer.PlayerEventEmitter
 import com.theoplayer.ReactTHEOplayerContext
+import com.theoplayer.ReactTHEOplayerView
 import com.theoplayer.android.api.error.ErrorCode
 import com.theoplayer.android.api.error.THEOplayerException
 import com.theoplayer.android.api.player.PresentationMode
@@ -161,11 +162,18 @@ class PresentationManager(
     }
   }
 
+  private fun setSecondaryChildrenVisibility(visible: Boolean) = reactPlayerGroup?.children?.forEach {
+    if (it !is ReactTHEOplayerView) {
+      it.visibility = if (visible) View.VISIBLE else View.INVISIBLE
+    }
+  }
+
   /**
    * Called when the transition into PiP either starts (transitioningToPip = true)
    * or after it ends (transitioningToPip = false)
    */
   private fun onEnterPip(transitioningToPip: Boolean = false) {
+    setSecondaryChildrenVisibility(false)
     if (BuildConfig.REPARENT_ON_PIP && !transitioningToPip && pipConfig.reparentPip == true) {
       reparentPlayerToRoot()
     }
@@ -181,6 +189,7 @@ class PresentationManager(
    * Called when the PiP exit transition starts.
    */
   private fun onExitPip() {
+    setSecondaryChildrenVisibility(true)
     val pipCtx: PresentationModeChangePipContext =
       if ((reactContext.currentActivity as? ComponentActivity)?.lifecycle?.currentState == Lifecycle.State.CREATED) {
         PresentationModeChangePipContext.CLOSED
