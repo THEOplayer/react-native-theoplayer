@@ -162,7 +162,7 @@ class PresentationManager(
     }
   }
 
-  private fun setSecondaryChildrenVisibility(visible: Boolean) = reactPlayerGroup?.children?.forEach {
+  private fun setPlayerSiblingsVisibility(visible: Boolean) = reactPlayerGroup?.children?.forEach {
     if (it !is ReactTHEOplayerView) {
       it.visibility = if (visible) View.VISIBLE else View.INVISIBLE
     }
@@ -173,7 +173,7 @@ class PresentationManager(
    * or after it ends (transitioningToPip = false)
    */
   private fun onEnterPip(transitioningToPip: Boolean = false) {
-    setSecondaryChildrenVisibility(false)
+    setPlayerSiblingsVisibility(false)
     if (BuildConfig.REPARENT_ON_PIP && !transitioningToPip && pipConfig.reparentPip == true) {
       reparentPlayerToRoot()
     }
@@ -189,7 +189,7 @@ class PresentationManager(
    * Called when the PiP exit transition starts.
    */
   private fun onExitPip() {
-    setSecondaryChildrenVisibility(true)
+    setPlayerSiblingsVisibility(true)
     val pipCtx: PresentationModeChangePipContext =
       if ((reactContext.currentActivity as? ComponentActivity)?.lifecycle?.currentState == Lifecycle.State.CREATED) {
         PresentationModeChangePipContext.CLOSED
