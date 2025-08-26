@@ -2,13 +2,13 @@
 
 buildscript {
   ext {
-    buildToolsVersion = "35.0.0"
+    buildToolsVersion = "36.0.0"
     // React Native 0.74+ needs minSdkVersion 23+
     // React Native 0.76+ needs minSdkVersion 24+
     // supportsPictureInPicture and networkSecurityConfig need minSdkVersion 24+
     minSdkVersion = 24
-    compileSdkVersion = 35
-    targetSdkVersion = 35
+    compileSdkVersion = 36
+    targetSdkVersion = 36
     ndkVersion = "27.1.12297006"
     castFrameworkVersion = "21.4.0"
     kotlinVersion = "2.0.21"

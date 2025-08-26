@@ -52,6 +52,8 @@
 	<string>Local Network Usage Permission</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Required for submission</string>
+	<key>RCTNewArchEnabled</key>
+	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
