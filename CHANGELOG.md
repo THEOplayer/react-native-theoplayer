@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- Upgraded the example app to React-Native v0.80.
+- Upgraded the example app to React-Native v0.81.
 
 ## [9.10.0] - 25-08-19
 
