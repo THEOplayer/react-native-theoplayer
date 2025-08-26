@@ -14,6 +14,8 @@ let EVENT_TYPE_INTENT_TO_FALLBACK: String = "intenttofallback"
 
 let THEOLIVE_EVENT_PROP_TYPE: String = "type"
 let THEOLIVE_EVENT_PROP_DISTRIBUTION_ID: String = "distributionId"
+let THEOLIVE_EVENT_PROP_ENDPOINT: String = "endpoint"
+let THEOLIVE_EVENT_PROP_REASON: String = "reason"
 
 class THEOplayerRCTTHEOliveEventHandler {
     // MARK: Members
@@ -79,7 +81,8 @@ class THEOplayerRCTTHEOliveEventHandler {
             if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received EndPointLoaded event from THEOlive") }
             if let forwardedTHEOliveEvent = self?.onNativeTHEOliveEvent {
                 forwardedTHEOliveEvent([
-                    THEOLIVE_EVENT_PROP_TYPE: EVENT_TYPE_ENDPOINT_LOADED
+                    THEOLIVE_EVENT_PROP_TYPE: EVENT_TYPE_ENDPOINT_LOADED,
+                    THEOLIVE_EVENT_PROP_ENDPOINT: THEOplayerRCTTHEOliveEventAdapter.fromEndpoint(endpoint: event.endpoint)
                 ])
             }
         }
@@ -90,7 +93,8 @@ class THEOplayerRCTTHEOliveEventHandler {
             if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received IntentToFallback event from THEOlive") }
             if let forwardedTHEOliveEvent = self?.onNativeTHEOliveEvent {
                 forwardedTHEOliveEvent([
-                    THEOLIVE_EVENT_PROP_TYPE: EVENT_TYPE_INTENT_TO_FALLBACK
+                    THEOLIVE_EVENT_PROP_TYPE: EVENT_TYPE_INTENT_TO_FALLBACK,
+                    THEOLIVE_EVENT_PROP_REASON: THEOplayerRCTTHEOliveEventAdapter.fromReason(reason: event.reason)
                 ])
             }
         }

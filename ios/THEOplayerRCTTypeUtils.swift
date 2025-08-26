@@ -59,6 +59,19 @@ class THEOplayerRCTTypeUtils {
         }
     }
     
+    class func abrStrategyFromString(_ strategy: String) -> ABRStrategyType {
+        switch strategy {
+        case "performance":
+            return ABRStrategyType.performance
+        case "quality":
+            return ABRStrategyType.quality
+        case "bandwidth":
+            return ABRStrategyType.bandwidth
+        default:
+            return ABRStrategyType.bandwidth
+        }
+    }
+    
     class func aspectRatioFromString(_ ratio: String) -> AspectRatio {
         switch ratio {
         case "fit":

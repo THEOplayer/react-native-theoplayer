@@ -397,9 +397,17 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
     this.setState({ posterActive: false });
   };
 
+  private styleOverride() {
+    const { presentationMode, screenSize: fullscreenSize } = this.state;
+    return presentationMode === PresentationMode.fullscreen ||
+      (Platform.OS === 'android' && presentationMode === PresentationMode.pip && this._facade?.pipConfiguration?.reparentPip == true)
+      ? fullscreenSize
+      : {};
+  }
+
   public render(): React.JSX.Element {
     const { config, customPlayerRender, style, posterStyle, children } = this.props;
-    const { presentationMode, screenSize: fullscreenSize, posterActive, poster } = this.state;
+    const { posterActive, poster } = this.state;
 
     const playerProps = {
       ref: this._root,
@@ -439,7 +447,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
     } as THEOplayerRCTViewProps;
 
     return (
-      <View style={[styles.base, style, presentationMode === PresentationMode.fullscreen ? fullscreenSize : {}]}>
+      <View style={[styles.base, style, this.styleOverride()]}>
         {customPlayerRender ? customPlayerRender({ ...playerProps }) : <THEOplayerRCTView {...playerProps} />}
         {posterActive && <Poster uri={poster} style={posterStyle} />}
         {children}

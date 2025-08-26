@@ -16,42 +16,42 @@ In the following steps we will be using `npm` as the Node.js package manager.
 First initialize a new project with a React Native app template:
 
 ```bash
-$ npx react-native init rntheodemo --template=react-native-template-typescript
-$ cd rntheodemo
+npx @react-native-community/cli init rntheodemo
+cd rntheodemo
 ```
 
 Alternatively use a template that also provides support for tvOS, as it will create a dependency to
 `react-native-tvos`, a fork of the main React Native branch:
 
 ```bash
-$ npx react-native init rntheodemo --template=react-native-template-typescript-tv@6.5.8-0
-$ cd rntheodemo
+npx @react-native-community/cli init rntheodemo --template=react-native-template-typescript-tv@6.5.8-0
+cd rntheodemo
 ```
 
 Next, include the dependency to `react-native-theoplayer`.
 
 ```bash
-$ npm i
-$ npm i react-native-theoplayer
+npm i
+npm i react-native-theoplayer
 ```
 
 or optionally specifying a specific version of the package:
 
 ```bash
-$ npm i react-native-theoplayer@<version>
+npm i react-native-theoplayer@<version>
 ```
 
 Note: depending on your node version, an extra `--legacy-peer-deps` option has to be added:
 
 ```bash
-$ npm i react-native-theoplayer --legacy-peer-deps
+npm i react-native-theoplayer --legacy-peer-deps
 ```
 
 Finally, replace the `App.tsx` with this minimal code:
 
 ```tsx
 import React from 'react';
-import {Platform, View} from 'react-native';
+import {View} from 'react-native';
 import {PlayerConfiguration, SourceDescription, PlayerEventType, THEOplayer, THEOplayerView} from 'react-native-theoplayer';
 
 const playerConfig: PlayerConfiguration = {
@@ -163,7 +163,7 @@ Example:
 			"GOOGLE_IMA",
 			"CHROMECAST",
 			"THEO_ADS",
-			"MILLICAST"
+			"MILLICAST",
 			"SIDELOADED_TEXTTRACKS"
 		]
 	}

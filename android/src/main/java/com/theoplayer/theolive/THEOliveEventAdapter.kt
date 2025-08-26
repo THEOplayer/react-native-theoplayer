@@ -8,11 +8,12 @@ import com.theoplayer.android.api.event.player.theolive.EndpointLoadedEvent
 import com.theoplayer.android.api.event.player.theolive.IntentToFallbackEvent
 import com.theoplayer.android.api.event.player.theolive.TheoLiveEventTypes
 import com.theoplayer.android.api.player.theolive.TheoLive
+import com.theoplayer.util.PayloadBuilder
 
 private const val EVENT_PROP_TYPE = "type"
-
 private const val EVENT_PROP_DISTRIBUTION_ID = "distributionId"
 private const val EVENT_PROP_ENDPOINT = "endpoint"
+private const val EVENT_PROP_REASON = "reason"
 
 class THEOliveEventAdapter(private val theoLiveApi: TheoLive, private val emitter: Emitter) {
 
@@ -55,9 +56,12 @@ class THEOliveEventAdapter(private val theoLiveApi: TheoLive, private val emitte
     })
   }
 
-  private fun onIntentOfFallback(_event: IntentToFallbackEvent) {
+  private fun onIntentOfFallback(event: IntentToFallbackEvent) {
     emitter.emit(Arguments.createMap().apply {
       putString(EVENT_PROP_TYPE, "intenttofallback")
+      event.reason?.let {
+        putMap(EVENT_PROP_REASON, PayloadBuilder().error(it.code.id.toString(), it.message).build())
+      }
     })
   }
 }
