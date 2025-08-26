@@ -22,7 +22,7 @@ import type {
   TheoLiveApiEventMap as NativeTheoLiveEventMap,
   InterstitialEvent,
 } from 'theoplayer';
-import { AdEvent, MediaTrack, TheoLiveEndpoint, TimeRange } from 'react-native-theoplayer';
+import { AdEvent, MediaTrack, PlayerError, TheoLiveEndpoint, TimeRange } from 'react-native-theoplayer';
 import {
   AdEventType,
   CastState,
@@ -61,6 +61,7 @@ import {
   DefaultTheoLiveDistributionEvent,
   DefaultTheoLiveEndpointLoadedEvent,
   DefaultTheoLiveEvent,
+  DefaultTheoLiveIntentToFallbackEvent,
   DefaultTimeupdateEvent,
   DefaultVolumeChangeEvent,
 } from './event/PlayerEvents';
@@ -360,6 +361,9 @@ export class WebEventForwarder {
     } else if (event.type === TheoLiveEventType.ENDPOINT_LOADED) {
       const { endpoint } = event as unknown as { endpoint: TheoLiveEndpoint };
       this._facade.dispatchEvent(new DefaultTheoLiveEndpointLoadedEvent(event.type as TheoLiveEventType, endpoint));
+    } else if (event.type === TheoLiveEventType.INTENT_TO_FALLBACK) {
+      const { reason } = event as unknown as { reason: PlayerError };
+      this._facade.dispatchEvent(new DefaultTheoLiveIntentToFallbackEvent(event.type as TheoLiveEventType, reason));
     } else {
       this._facade.dispatchEvent(new DefaultTheoLiveEvent(event.type as TheoLiveEventType));
     }

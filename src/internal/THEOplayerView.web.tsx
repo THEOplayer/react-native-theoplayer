@@ -53,11 +53,19 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
   }, [container]);
 
   return (
-    // Note: display: contents causes an element's children to appear as if they were direct children of the element's parent,
+    // Note: `display: contents` causes an element's children to appear as if they were direct children of the element's parent,
     // ignoring the element itself.
     // It's necessary to make sure we do not interfere with the IMA container
     <div id={'theoplayer-root-container'} style={{ display: 'contents' }}>
-      <div ref={container} style={styles.container} className={'theoplayer-container'} />
+      {!CSS.supports('aspect-ratio', '16/9') ? (
+        // Handle aspect-ratio 16/9 with padding-top: 56.25% to support older versions.
+        // {@link https://www.w3schools.com/howto/howto_css_aspect_ratio.asp}
+        <div style={styles.containerNoAspectRatio}>
+          <div ref={container} style={styles.absoluteFillNoAspectRatio} className="theoplayer-container" />
+        </div>
+      ) : (
+        <div ref={container} style={styles.container} className="theoplayer-container" />
+      )}
       {children}
     </div>
   );
@@ -74,5 +82,19 @@ const styles = {
     maxHeight: '100vh',
     maxWidth: '100vw',
     aspectRatio: '16 / 9',
+  } as React.CSSProperties,
+  containerNoAspectRatio: {
+    width: '100%',
+    position: 'relative',
+    paddingTop: '56.25%',
+  } as React.CSSProperties,
+  absoluteFillNoAspectRatio: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    width: '100%',
+    height: '100%',
   } as React.CSSProperties,
 };

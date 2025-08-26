@@ -43,12 +43,12 @@ def enabledMediaSession = safeExtGet("THEOplayer_extensionMediaSession", 'true')
 def enabledMillicast = safeExtGet("THEOplayer_extensionMillicast", 'false').toBoolean()
 
 android {
-    compileSdk safeExtGet('THEOplayer_compileSdkVersion', 34)
+    compileSdk safeExtGet('THEOplayer_compileSdkVersion', 35)
     namespace "com.theoplayer"
 
     defaultConfig {
         minSdkVersion safeExtGet('THEOplayer_minSdkVersion', 21)
-        targetSdkVersion safeExtGet('THEOplayer_targetSdkVersion', 34)
+        targetSdkVersion safeExtGet('THEOplayer_targetSdkVersion', 35)
         versionCode 1
         versionName "1.0"
 
@@ -124,15 +124,16 @@ repositories {
     mavenLocal()
 }
 
-// The minimum supported THEOplayer version is 9.8.0
-def theoVersion = safeExtGet('THEOplayer_sdk', '[9.8.0, 10.0.0)')
+// The minimum supported THEOplayer version is 9.9.0
+def theoVersion = safeExtGet('THEOplayer_sdk', '[9.9.0, 10.0.0)')
 def theoMediaSessionVersion = safeExtGet('THEOplayer_mediasession', '[8.0.0, 10.0.0)')
 def theoAdsWrapperVersion = "9.0.0"
-def coroutinesVersion = safeExtGet('coroutinesVersion', '1.7.3')
+def coroutinesVersion = safeExtGet('coroutinesVersion', '1.10.2')
 def appcompatVersion = safeExtGet('appcompatVersion', '1.7.1')
 def corektxVersion = safeExtGet('corektxVersion', '1.13.1')
-def gsonVersion = "2.12.1"
-def millicastVersion = safeExtGet('millicastVersion', '2.0.0')
+def gsonVersion = safeExtGet('gsonVersion', '2.13.1')
+def activityktxVersion = safeExtGet('activityktxVersion', '1.10.1')
+def millicastVersion = safeExtGet('millicastVersion', '2.4.3')
 
 dependencies {
     def addOptiViewIntegration = { enabled, notation, additional = null ->
@@ -156,6 +157,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
     implementation("androidx.appcompat:appcompat:$appcompatVersion")
     implementation("androidx.core:core-ktx:$corektxVersion")
+    implementation("androidx.activity:activity-ktx:$activityktxVersion")
     implementation("com.google.code.gson:gson:$gsonVersion")
 
     println("Using THEOplayer (${versionString(theoVersion)})")

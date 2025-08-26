@@ -17,6 +17,8 @@ import {
   RateChangeEvent,
   RenderingTarget,
   ResizeEvent,
+  SeekedEvent,
+  SeekingEvent,
   SourceDescription,
   TextTrack,
   TheoAdsAPI,
@@ -139,12 +141,14 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._state.playbackRate = event.playbackRate;
   };
 
-  private onSeeking = () => {
+  private onSeeking = (e: SeekingEvent) => {
     this._state.seeking = true;
+    this._state.currentTime = e.currentTime;
   };
 
-  private onSeeked = () => {
+  private onSeeked = (e: SeekedEvent) => {
     this._state.seeking = false;
+    this._state.currentTime = e.currentTime;
   };
 
   private onProgress = (event: ProgressEvent) => {

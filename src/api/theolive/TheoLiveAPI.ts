@@ -46,4 +46,8 @@ export interface TheoLiveAPI {
    */
   latencies: Promise<HespLatencies>;
 
+  /**
+   * The authentication token used when requesting THEOlive manifests or segments.
+   */
+  authToken?: string;
 }

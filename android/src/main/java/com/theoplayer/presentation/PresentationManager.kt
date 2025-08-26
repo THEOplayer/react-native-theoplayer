@@ -26,6 +26,12 @@ import com.theoplayer.android.api.error.ErrorCode
 import com.theoplayer.android.api.error.THEOplayerException
 import com.theoplayer.android.api.player.PresentationMode
 
+const val IS_TRANSITION_INTO_PIP = "isTransitioningToPip"
+const val IS_IN_PIP_MODE = "isInPictureInPictureMode"
+const val ON_USER_LEAVE_HINT = "onUserLeaveHint"
+const val ON_PIP_MODE_CHANGED = "onPictureInPictureModeChanged"
+
+@Suppress("KotlinConstantConditions", "SimplifyBooleanWithConstants")
 @SuppressLint("UnspecifiedRegisterReceiverFlag")
 class PresentationManager(
   private val viewCtx: ReactTHEOplayerContext,
@@ -34,34 +40,28 @@ class PresentationManager(
 ) {
   private var supportsPip = false
   private var onUserLeaveHintReceiver: BroadcastReceiver? = null
+  private var onUserLeaveHintRunnable: Runnable = Runnable {
+    if (pipConfig.startsAutomatically == true) {
+      setPresentation(PresentationMode.PICTURE_IN_PICTURE)
+    }
+  }
   private var onPictureInPictureModeChanged: BroadcastReceiver? = null
   private val pipUtils: PipUtils = PipUtils(viewCtx, reactContext)
   private val fullScreenLayoutObserver = FullScreenLayoutObserver()
   private val playerGroupRestoreOptions by lazy {
     PlayerGroupRestoreOptions()
   }
-
   var currentPresentationMode: PresentationMode = PresentationMode.INLINE
     private set
   var currentPresentationModeChangeContext: PresentationModeChangeContext? = null
     private set
-
   var pipConfig: PipConfig = PipConfig()
 
   init {
-    onUserLeaveHintReceiver = object : BroadcastReceiver() {
-      override fun onReceive(context: Context?, intent: Intent?) {
-        // Optionally into PiP mode when the app goes to background.
-        if (pipConfig.startsAutomatically == true) {
-          setPresentation(PresentationMode.PICTURE_IN_PICTURE)
-        }
-      }
-    }
     onPictureInPictureModeChanged = object : BroadcastReceiver() {
       override fun onReceive(context: Context?, intent: Intent?) {
-        val transitioningToPip = intent
-          ?.getBooleanExtra("isTransitioningToPip", false) ?: false
-        val inPip = intent?.getBooleanExtra("isInPictureInPictureMode", false) ?: false
+        val transitioningToPip = intent?.getBooleanExtra(IS_TRANSITION_INTO_PIP, false) ?: false
+        val inPip = intent?.getBooleanExtra(IS_IN_PIP_MODE, false) ?: false
         // Dispatch event on every PiP mode change
         when {
           transitioningToPip -> onEnterPip(true)
@@ -75,35 +75,50 @@ class PresentationManager(
         reactContext.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
     }
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-      reactContext.currentActivity?.registerReceiver(
-        onUserLeaveHintReceiver, IntentFilter("onUserLeaveHint"), Context.RECEIVER_EXPORTED
-      )
-    } else {
-      reactContext.currentActivity?.registerReceiver(
-        onUserLeaveHintReceiver, IntentFilter("onUserLeaveHint")
-      )
-    }
+    reactContext.currentActivity?.let { activity ->
+      // On Android 16+, the broadcasted onUserLeaveHint comes too late to activate PiP presentation
+      // mode, and the activity will not go into PiP when the user backgrounds the app. In this case
+      // we rely on the newer addOnUserLeaveHintListener and ignore the broadcast event.
+      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+        onUserLeaveHintReceiver = object : BroadcastReceiver() {
+          override fun onReceive(context: Context?, intent: Intent?) {
+            onUserLeaveHintRunnable.run()
+          }
+        }
+      } else {
+        (activity as? ComponentActivity)?.addOnUserLeaveHintListener(onUserLeaveHintRunnable)
+      }
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-      reactContext.currentActivity?.registerReceiver(
-        onPictureInPictureModeChanged, IntentFilter("onPictureInPictureModeChanged"),
-        Context.RECEIVER_EXPORTED
-      )
-    } else {
-      reactContext.currentActivity?.registerReceiver(
-        onPictureInPictureModeChanged, IntentFilter("onPictureInPictureModeChanged")
-      )
+      @SuppressLint("UnspecifiedRegisterReceiverFlag")
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        activity.registerReceiver(
+          onUserLeaveHintReceiver,
+          IntentFilter(ON_USER_LEAVE_HINT),
+          Context.RECEIVER_EXPORTED
+        )
+        activity.registerReceiver(
+          onPictureInPictureModeChanged,
+          IntentFilter(ON_PIP_MODE_CHANGED),
+          Context.RECEIVER_EXPORTED
+        )
+      } else {
+        activity.registerReceiver(onUserLeaveHintReceiver, IntentFilter(ON_USER_LEAVE_HINT))
+        activity.registerReceiver(onPictureInPictureModeChanged, IntentFilter(ON_PIP_MODE_CHANGED))
+      }
     }
   }
 
   fun destroy() {
     try {
-      reactContext.currentActivity?.unregisterReceiver(onUserLeaveHintReceiver)
-      reactContext.currentActivity?.unregisterReceiver(onPictureInPictureModeChanged)
+      reactContext.currentActivity?.let { activity ->
+        activity.unregisterReceiver(onUserLeaveHintReceiver)
+        (activity as? ComponentActivity)?.addOnUserLeaveHintListener(onUserLeaveHintRunnable)
+        activity.unregisterReceiver(onPictureInPictureModeChanged)
+      }
+
       fullScreenLayoutObserver.remove()
       pipUtils.destroy()
-    } catch (ignore: Exception) {
+    } catch (_: Exception) {
     }
   }
 
@@ -126,62 +141,60 @@ class PresentationManager(
 
   private fun enterPip() {
     // PiP not supported
-    if (!supportsPip || Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-      return
-    }
+    if (!supportsPip || Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
 
     // Already in right PiP state?
-    if (currentPresentationMode == PresentationMode.PICTURE_IN_PICTURE) {
-      return
-    }
+    if (currentPresentationMode == PresentationMode.PICTURE_IN_PICTURE) return
 
     // Check to see whether this activity is in the process of finishing, either because you
     // called finish on it or someone else has requested that it finished.
-    if (reactContext.currentActivity?.isFinishing == true) {
-      return
-    }
+    if (reactContext.currentActivity?.isFinishing == true) return
 
     // Check whether the special permission Picture-in-Picture is given.
-    if (!hasPipPermission()) {
-      return
-    }
+    if (!hasPipPermission()) return
 
     try {
       pipUtils.enable()
       reactContext.currentActivity?.enterPictureInPictureMode(pipUtils.getPipParams())
-      if (BuildConfig.REPARENT_ON_PIP && pipConfig.reparentPip == true) {
-        reparentPlayerToRoot()
-      }
     } catch (_: Exception) {
       onPipError()
     }
   }
 
+  /**
+   * Called when the transition into PiP either starts (transitioningToPip = true)
+   * or after it ends (transitioningToPip = false)
+   */
   private fun onEnterPip(transitioningToPip: Boolean = false) {
+    if (BuildConfig.REPARENT_ON_PIP && !transitioningToPip && pipConfig.reparentPip == true) {
+      reparentPlayerToRoot()
+    }
+
     updatePresentationMode(
       PresentationMode.PICTURE_IN_PICTURE,
-      if (transitioningToPip)
-        PresentationModeChangeContext(PresentationModeChangePipContext.TRANSITIONING_TO_PIP)
+      if (transitioningToPip) PresentationModeChangeContext(PresentationModeChangePipContext.TRANSITIONING_TO_PIP)
       else null
     )
   }
 
+  /**
+   * Called when the PiP exit transition starts.
+   */
   private fun onExitPip() {
     val pipCtx: PresentationModeChangePipContext =
-      if ((reactContext.currentActivity as? ComponentActivity)
-          ?.lifecycle?.currentState == Lifecycle.State.CREATED
-      ) {
+      if ((reactContext.currentActivity as? ComponentActivity)?.lifecycle?.currentState == Lifecycle.State.CREATED) {
         PresentationModeChangePipContext.CLOSED
       } else {
         PresentationModeChangePipContext.RESTORED
       }
-    if (BuildConfig.REPARENT_ON_PIP) {
+    if (BuildConfig.REPARENT_ON_PIP && pipConfig.reparentPip == true) {
       reparentPlayerToOriginal()
     }
     updatePresentationMode(PresentationMode.INLINE, PresentationModeChangeContext(pipCtx))
     pipUtils.disable()
   }
 
+  @Suppress("DEPRECATION")
   private fun hasPipPermission(): Boolean {
     val appOps = reactContext.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager?
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -192,7 +205,6 @@ class PresentationManager(
           reactContext.packageName
         ) == AppOpsManager.MODE_ALLOWED
       } else {
-        @Suppress("DEPRECATION")
         appOps?.checkOpNoThrow(
           AppOpsManager.OPSTR_PICTURE_IN_PICTURE,
           reactContext.applicationInfo.uid,
@@ -210,9 +222,7 @@ class PresentationManager(
   }
 
   private fun setFullscreen(fullscreen: Boolean) {
-    if ((fullscreen && currentPresentationMode == PresentationMode.FULLSCREEN) ||
-      (!fullscreen && currentPresentationMode == PresentationMode.INLINE)
-    ) {
+    if ((fullscreen && currentPresentationMode == PresentationMode.FULLSCREEN) || (!fullscreen && currentPresentationMode == PresentationMode.INLINE)) {
       return
     }
     val activity = reactContext.currentActivity ?: return
@@ -254,8 +264,7 @@ class PresentationManager(
       val activity = reactContext.currentActivity ?: return null
       // Try to search in parents and as a fallback option from root to bottom using depth-first order
       return reactPlayerGroup?.getClosestParentOfType()
-        ?: (activity.window.decorView.rootView as? ViewGroup)
-          ?.getClosestParentOfType(false)
+        ?: (activity.window.decorView.rootView as? ViewGroup)?.getClosestParentOfType(false)
     }
 
   private fun reparentPlayerToRoot() {
@@ -281,7 +290,9 @@ class PresentationManager(
 
         // Re-parent the playerViewGroup from the root node to its original parent
         removeView(playerGroup)
-        playerGroupRestoreOptions.parentNode?.addView(playerGroup, playerGroupRestoreOptions.childIndex ?: 0)
+        playerGroupRestoreOptions.parentNode?.addView(
+          playerGroup, playerGroupRestoreOptions.childIndex ?: 0
+        )
         playerGroupRestoreOptions.reset()
       }
     }
@@ -289,12 +300,9 @@ class PresentationManager(
 // endregion
 
   private fun updatePresentationMode(
-    presentationMode: PresentationMode,
-    context: PresentationModeChangeContext? = null
+    presentationMode: PresentationMode, context: PresentationModeChangeContext? = null
   ) {
-    if (presentationMode == currentPresentationMode &&
-      context == currentPresentationModeChangeContext
-    ) {
+    if (presentationMode == currentPresentationMode && context == currentPresentationModeChangeContext) {
       return
     }
     val prevPresentationMode = currentPresentationMode

@@ -1,6 +1,11 @@
-import { TheoLiveEndpoint, TheoLiveEvent, TheoLiveEventType } from 'react-native-theoplayer';
+import { PlayerError, TheoLiveEndpoint, TheoLiveEvent, TheoLiveEventType } from 'react-native-theoplayer';
 import { NativeSyntheticEvent } from 'react-native';
-import { DefaultTheoLiveDistributionEvent, DefaultTheoLiveEndpointLoadedEvent, DefaultTheoLiveEvent } from '../PlayerEvents';
+import {
+  DefaultTheoLiveDistributionEvent,
+  DefaultTheoLiveEndpointLoadedEvent,
+  DefaultTheoLiveIntentToFallbackEvent,
+  DefaultTheoLiveEvent,
+} from '../PlayerEvents';
 
 export interface NativeTheoLiveEvent {
   /**
@@ -17,6 +22,11 @@ export interface NativeTheoLiveEvent {
    * Description of the THEOlive endpoint.
    */
   endpoint: TheoLiveEndpoint | undefined;
+
+  /**
+   * The reason for the fallback.
+   */
+  reason: PlayerError | undefined;
 }
 
 export function fromNativeTheoLiveEvent(event: NativeSyntheticEvent<NativeTheoLiveEvent>): TheoLiveEvent {
@@ -28,6 +38,8 @@ export function fromNativeTheoLiveEvent(event: NativeSyntheticEvent<NativeTheoLi
       return new DefaultTheoLiveDistributionEvent(TheoLiveEventType.DISTRIBUTION_OFFLINE, nativeEvent.distributionId ?? '');
     case TheoLiveEventType.ENDPOINT_LOADED:
       return new DefaultTheoLiveEndpointLoadedEvent(TheoLiveEventType.ENDPOINT_LOADED, nativeEvent.endpoint);
+    case TheoLiveEventType.INTENT_TO_FALLBACK:
+      return new DefaultTheoLiveIntentToFallbackEvent(TheoLiveEventType.INTENT_TO_FALLBACK, nativeEvent.reason);
     default:
       return new DefaultTheoLiveEvent(event.type as TheoLiveEventType);
   }
