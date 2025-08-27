@@ -113,7 +113,7 @@ class PresentationManager(
       reactContext.currentActivity?.let { activity ->
         onUserLeaveHintReceiver?.let { activity.unregisterReceiver(it) }
         (activity as? ComponentActivity)?.removeOnUserLeaveHintListener(onUserLeaveHintRunnable)
-        onPictureInPictureModeChanged?.let{ activity.unregisterReceiver(it) }
+        onPictureInPictureModeChanged?.let { activity.unregisterReceiver(it) }
       }
 
       fullScreenLayoutObserver.remove()
