@@ -112,7 +112,7 @@ class PresentationManager(
     try {
       reactContext.currentActivity?.let { activity ->
         onUserLeaveHintReceiver?.let { activity.unregisterReceiver(it) }
-        (activity as? ComponentActivity)?.removeOnUserLeaveHintListener (onUserLeaveHintRunnable)
+        (activity as? ComponentActivity)?.removeOnUserLeaveHintListener(onUserLeaveHintRunnable)
         onPictureInPictureModeChanged?.let{ activity.unregisterReceiver(it) }
       }
 
