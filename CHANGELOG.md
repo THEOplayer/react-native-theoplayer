@@ -7,9 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed an issue on Android where the app could still enter picture-in-picture presentation mode after closing the player.
+
 ### Changed
 
 - Upgraded the example app to React-Native v0.81.
+- All child views of `<THEOplayerView>` are being hidden when transitioning to picture-in-picture presentation mode on Android.
 
 ## [9.10.0] - 25-08-19
 
