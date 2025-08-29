@@ -406,47 +406,49 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
   }
 
   public render(): React.JSX.Element {
-    const { config, style, posterStyle, children } = this.props;
+    const { config, customPlayerRender, style, posterStyle, children } = this.props;
     const { posterActive, poster } = this.state;
+
+    const playerProps = {
+      ref: this._root,
+      style: StyleSheet.absoluteFill,
+      config: config || {},
+      onNativePlayerReady: this._onNativePlayerReady,
+      onNativeSourceChange: this._onSourceChange,
+      onNativeLoadStart: this._onLoadStart,
+      onNativeLoadedData: this._onLoadedData,
+      onNativeLoadedMetadata: this._onLoadedMetadata,
+      onNativeVolumeChange: this._onVolumeChange,
+      onNativeError: this._onError,
+      onNativeProgress: this._onProgress,
+      onNativeCanPlay: this._onCanPlay,
+      onNativePlay: this._onPlay,
+      onNativePlaying: this._onPlaying,
+      onNativePause: this._onPause,
+      onNativeSeeking: this._onSeeking,
+      onNativeSeeked: this._onSeeked,
+      onNativeWaiting: this._onWaiting,
+      onNativeEnded: this._onEnded,
+      onNativeReadyStateChange: this._onReadStateChange,
+      onNativeTimeUpdate: this._onTimeUpdate,
+      onNativeDurationChange: this._onDurationChange,
+      onNativeRateChange: this._onRateChange,
+      onNativeSegmentNotFound: this._onSegmentNotFound,
+      onNativeTextTrackListEvent: this._onTextTrackListEvent,
+      onNativeTextTrackEvent: this._onTextTrackEvent,
+      onNativeMediaTrackListEvent: this._onMediaTrackListEvent,
+      onNativeMediaTrackEvent: this._onMediaTrackEvent,
+      onNativeAdEvent: this._onAdEvent,
+      onNativeTHEOliveEvent: this._onTHEOliveEvent,
+      onNativeCastEvent: this._onCastEvent,
+      onNativePresentationModeChange: this._onPresentationModeChange,
+      onNativeDeviceOrientationChanged: this._onDeviceOrientationChanged,
+      onNativeResize: this._onResize,
+    } as THEOplayerRCTViewProps;
 
     return (
       <View style={[styles.base, style, this.styleOverride()]}>
-        <THEOplayerRCTView
-          ref={this._root}
-          style={StyleSheet.absoluteFill}
-          config={config || {}}
-          onNativePlayerReady={this._onNativePlayerReady}
-          onNativeSourceChange={this._onSourceChange}
-          onNativeLoadStart={this._onLoadStart}
-          onNativeLoadedData={this._onLoadedData}
-          onNativeLoadedMetadata={this._onLoadedMetadata}
-          onNativeVolumeChange={this._onVolumeChange}
-          onNativeError={this._onError}
-          onNativeProgress={this._onProgress}
-          onNativeCanPlay={this._onCanPlay}
-          onNativePlay={this._onPlay}
-          onNativePlaying={this._onPlaying}
-          onNativePause={this._onPause}
-          onNativeSeeking={this._onSeeking}
-          onNativeSeeked={this._onSeeked}
-          onNativeWaiting={this._onWaiting}
-          onNativeEnded={this._onEnded}
-          onNativeReadyStateChange={this._onReadStateChange}
-          onNativeTimeUpdate={this._onTimeUpdate}
-          onNativeDurationChange={this._onDurationChange}
-          onNativeRateChange={this._onRateChange}
-          onNativeSegmentNotFound={this._onSegmentNotFound}
-          onNativeTextTrackListEvent={this._onTextTrackListEvent}
-          onNativeTextTrackEvent={this._onTextTrackEvent}
-          onNativeMediaTrackListEvent={this._onMediaTrackListEvent}
-          onNativeMediaTrackEvent={this._onMediaTrackEvent}
-          onNativeAdEvent={this._onAdEvent}
-          onNativeTHEOliveEvent={this._onTHEOliveEvent}
-          onNativeCastEvent={this._onCastEvent}
-          onNativePresentationModeChange={this._onPresentationModeChange}
-          onNativeDeviceOrientationChanged={this._onDeviceOrientationChanged}
-          onNativeResize={this._onResize}
-        />
+        {customPlayerRender ? customPlayerRender({ ...playerProps }) : <THEOplayerRCTView {...playerProps} />}
         {posterActive && <Poster uri={poster} style={posterStyle} />}
         {children}
       </View>
