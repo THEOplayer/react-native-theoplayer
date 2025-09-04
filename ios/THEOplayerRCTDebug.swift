@@ -45,8 +45,11 @@ let DEBUG_CACHE_EVENTS = DEBUG && false
 // Debug flag to monitor cache API usage
 let DEBUG_CACHE_API = DEBUG && false
 
-// Debug flag to monitor theolive API usage
+// Debug flag to monitor THEOLive API usage
 let DEBUG_THEOLIVE_API = DEBUG && false
+
+// Debug flag to monitor THEOAds API usage
+let DEBUG_THEOADS_API = DEBUG && false
 
 // Debug flag to monitor AudioSession interruptions (e.g. phone cll)
 let DEBUG_INTERRUPTIONS = DEBUG && false

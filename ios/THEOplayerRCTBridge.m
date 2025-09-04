@@ -285,3 +285,21 @@ RCT_EXTERN_METHOD(setAuthToken:(nonnull NSNumber *)node
 
 @end
 
+// ----------------------------------------------------------------------------
+// THEOAds Module
+// ----------------------------------------------------------------------------
+@interface RCT_EXTERN_REMAP_MODULE(THEORCTTHEOAdsModule, THEOplayerRCTTHEOAdsAPI, NSObject)
+
+RCT_EXTERN_METHOD(currentInterstitials:(nonnull NSNumber *)node
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(scheduledInterstitials:(nonnull NSNumber *)node
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(replaceAdTagParameters:(nonnull NSNumber *)node
+                  adTagParameters:(nullable NSDictionary *)adTagParameters)
+
+@end
+
