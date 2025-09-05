@@ -24,7 +24,7 @@ import {
   UiContainer,
 } from '@theoplayer/react-native-ui';
 import { PlayerConfiguration, PlayerEventType, PresentationMode, sdkVersions, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
-import { Platform, StatusBar, StyleSheet, View } from 'react-native';
+import { Platform, StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
 import { SourceMenuButton, SOURCES } from './custom/SourceMenuButton';
 import { BackgroundAudioSubMenu } from './custom/BackgroundAudioSubMenu';
 import { PiPSubMenu } from './custom/PipSubMenu';
@@ -69,6 +69,7 @@ const playerConfig: PlayerConfiguration = {
 export default function App() {
   const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);
   const presentationMode = usePresentationMode(player);
+  const isDarkMode = useColorScheme() === 'dark';
 
   // In PiP presentation mode on NewArch Android, there is an issue where SafeAreayView does not update the edges in time,
   // so explicitly disable them here.
@@ -114,7 +115,7 @@ export default function App() {
      * {@link https://appandflow.github.io/react-native-safe-area-context/api/safe-area-provider}
      */
     <SafeAreaProvider>
-      <StatusBar barStyle="light-content" />
+      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <SafeAreaView edges={edges} style={{ flex: 1, backgroundColor: 'black' }}>
         <View style={styles.container}>
           <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady}>
