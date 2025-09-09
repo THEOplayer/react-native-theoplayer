@@ -57,7 +57,7 @@ class THEOplayerRCTTHEOAdsAPI: NSObject, RCTBridgeModule {
         }
     }
     
-    @objc(replaceAdTagParameters:token:)
+    @objc(replaceAdTagParameters:adTagParameters:)
     func replaceAdTagParameters(_ node: NSNumber, adTagParameters: [String:Any]?) -> Void {
         DispatchQueue.main.async {
             if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
