@@ -65,11 +65,14 @@ class THEOplayerRCTTHEOAdsAPI: NSObject, RCTBridgeModule {
     func replaceAdTagParameters(_ node: NSNumber, adTagParameters: [String:Any]?) -> Void {
         DispatchQueue.main.async {
             if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
-               let player = theView.player {
-                
-                // TODO
-                
-                if DEBUG_THEOADS_API { PrintUtils.printLog(logText: "[NATIVE] THEOAds adTagParameters replaced.") }
+               let player = theView.player,
+               let theoAds = player.ads.theoAds {
+                if let newParams = adTagParameters as? [String: String] {
+                    theoAds.replaceAdTagParams(params: newParams)
+                    if DEBUG_THEOADS_API { PrintUtils.printLog(logText: "[NATIVE] THEOAds adTagParameters replaced.") }
+                } else {
+                    if DEBUG_THEOADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not replace THEOAds adTagParameters.") }
+                }
             }
         }
     }
