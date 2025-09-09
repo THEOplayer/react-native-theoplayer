@@ -27,14 +27,14 @@ let PROP_OVERLAY_INTERSTITIAL_SIZE: String = "size"
 class THEOplayerRCTTHEOadsEventAdapter {
 
 #if canImport(THEOplayerTHEOadsIntegration)
-    class func fromInterstitial(interstitial: THEOplayerTHEOadsIntegration.Interstitial?) -> [String:Any] {
+    class func fromInterstitial(_ interstitial: THEOplayerTHEOadsIntegration.Interstitial?) -> [String:Any] {
         guard let interstitial = interstitial else {
             return [:]
         }
         
         var interstitialData: [String:Any] = [:]
         interstitialData[PROP_INTERSTITIAL_ID] = interstitial.id
-        interstitialData[PROP_INTERSTITIAL_TYPE] = THEOplayerRCTTHEOadsEventAdapter.fromInterstitialType(interstitialType: interstitial.type)
+        interstitialData[PROP_INTERSTITIAL_TYPE] = THEOplayerRCTTHEOadsEventAdapter.fromInterstitialType(interstitial.type)
         interstitialData[PROP_INTERSTITIAL_START_TIME] = interstitial.startTime
         if let duration = interstitial.duration {
             interstitialData[PROP_INTERSTITIAL_DURATION] = duration
@@ -42,7 +42,7 @@ class THEOplayerRCTTHEOadsEventAdapter {
         
         // ADBREAK-INTERSTITIAL SPECIFIC:
         if let adBreakInterstitial = interstitial as? THEOplayerTHEOadsIntegration.AdBreakInterstitial {
-            interstitialData[PROP_ADBREAK_INTERSTITIAL_LAYOUT] = THEOplayerRCTTHEOadsEventAdapter.fromInterstitialLayout(interstitialLayout: adBreakInterstitial.layout)
+            interstitialData[PROP_ADBREAK_INTERSTITIAL_LAYOUT] = THEOplayerRCTTHEOadsEventAdapter.fromInterstitialLayout(adBreakInterstitial.layout)
             if let backdropUri = adBreakInterstitial.backdropUri {
                 interstitialData[PROP_ADBREAK_INTERSTITIAL_BACKDROPURI] = backdropUri
             }
@@ -62,14 +62,14 @@ class THEOplayerRCTTHEOadsEventAdapter {
             if let clickThrough = overlayInterstitial.clickThrough {
                 interstitialData[PROP_OVERLAY_INTERSTITIAL_CLICKTHROUGH] = clickThrough
             }
-            interstitialData[PROP_OVERLAY_INTERSTITIAL_POSITION] = THEOplayerRCTTHEOadsEventAdapter.fromOverlayPosition(overlayPosition: overlayInterstitial.position)
-            interstitialData[PROP_OVERLAY_INTERSTITIAL_SIZE] = THEOplayerRCTTHEOadsEventAdapter.fromOverlaySize(overlaySize: overlayInterstitial.size)
+            interstitialData[PROP_OVERLAY_INTERSTITIAL_POSITION] = THEOplayerRCTTHEOadsEventAdapter.fromOverlayPosition(overlayInterstitial.position)
+            interstitialData[PROP_OVERLAY_INTERSTITIAL_SIZE] = THEOplayerRCTTHEOadsEventAdapter.fromOverlaySize(overlayInterstitial.size)
         }
         
         return interstitialData
     }
     
-    class func fromInterstitialType(interstitialType: THEOplayerTHEOadsIntegration.InterstitialType) -> String {
+    class func fromInterstitialType(_ interstitialType: THEOplayerTHEOadsIntegration.InterstitialType) -> String {
         switch interstitialType {
         case InterstitialType.adbreak:
             return "adbreak"
@@ -78,7 +78,7 @@ class THEOplayerRCTTHEOadsEventAdapter {
         }
     }
     
-    class func fromInterstitialLayout(interstitialLayout: THEOplayerTHEOadsIntegration.THEOadsLayout) -> String {
+    class func fromInterstitialLayout(_ interstitialLayout: THEOplayerTHEOadsIntegration.THEOadsLayout) -> String {
         switch interstitialLayout {
         case THEOadsLayout.single:
             return "single"
@@ -89,7 +89,7 @@ class THEOplayerRCTTHEOadsEventAdapter {
         }
     }
     
-    class func fromOverlayPosition(overlayPosition: THEOplayerTHEOadsIntegration.OverlayPosition) -> [String:Any] {
+    class func fromOverlayPosition(_ overlayPosition: THEOplayerTHEOadsIntegration.OverlayPosition) -> [String:Any] {
         var overlayPositionData: [String:Any] = [:]
         if let left = overlayPosition.left {
             overlayPositionData["left"] = left
@@ -106,7 +106,7 @@ class THEOplayerRCTTHEOadsEventAdapter {
         return overlayPositionData
     }
     
-    class func fromOverlaySize(overlaySize: THEOplayerTHEOadsIntegration.OverlaySize) -> [String:Any] {
+    class func fromOverlaySize(_ overlaySize: THEOplayerTHEOadsIntegration.OverlaySize) -> [String:Any] {
         var overlaySizeData: [String:Any] = [:]
         overlaySizeData["width"] = overlaySize.width
         overlaySizeData["height"] = overlaySize.height

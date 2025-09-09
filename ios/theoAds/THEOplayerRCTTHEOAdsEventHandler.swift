@@ -58,7 +58,7 @@ class THEOplayerRCTTHEOadsEventHandler {
             if let forwardedTHEOadsEvent = self?.onNativeTHEOadsEvent {
                 forwardedTHEOadsEvent([
                     THEOADS_EVENT_PROP_TYPE: EVENT_TYPE_ADD_INTERSTITIAL,
-                    THEOADS_EVENT_PROP_INTERSTITIAL: THEOplayerRCTTHEOadsEventAdapter.fromInterstitial(interstitial: event.interstitial)
+                    THEOADS_EVENT_PROP_INTERSTITIAL: THEOplayerRCTTHEOadsEventAdapter.fromInterstitial(event.interstitial)
                 ])
             }
         }
@@ -70,7 +70,7 @@ class THEOplayerRCTTHEOadsEventHandler {
             if let forwardedTHEOadsEvent = self?.onNativeTHEOadsEvent {
                 forwardedTHEOadsEvent([
                     THEOADS_EVENT_PROP_TYPE: EVENT_TYPE_INTERSTITIAL_BEGIN,
-                    THEOADS_EVENT_PROP_INTERSTITIAL: THEOplayerRCTTHEOadsEventAdapter.fromInterstitial(interstitial: event.interstitial)
+                    THEOADS_EVENT_PROP_INTERSTITIAL: THEOplayerRCTTHEOadsEventAdapter.fromInterstitial(event.interstitial)
                 ])
             }
         }
@@ -82,7 +82,7 @@ class THEOplayerRCTTHEOadsEventHandler {
             if let forwardedTHEOadsEvent = self?.onNativeTHEOadsEvent {
                 forwardedTHEOadsEvent([
                     THEOADS_EVENT_PROP_TYPE: EVENT_TYPE_INTERSTITIAL_END,
-                    THEOADS_EVENT_PROP_INTERSTITIAL: THEOplayerRCTTHEOadsEventAdapter.fromInterstitial(interstitial: event.interstitial)
+                    THEOADS_EVENT_PROP_INTERSTITIAL: THEOplayerRCTTHEOadsEventAdapter.fromInterstitial(event.interstitial)
                 ])
             }
         }
@@ -94,7 +94,7 @@ class THEOplayerRCTTHEOadsEventHandler {
             if let forwardedTHEOadsEvent = self?.onNativeTHEOadsEvent {
                 forwardedTHEOadsEvent([
                     THEOADS_EVENT_PROP_TYPE: EVENT_TYPE_INTERSTITIAL_UPDATE,
-                    THEOADS_EVENT_PROP_INTERSTITIAL: THEOplayerRCTTHEOadsEventAdapter.fromInterstitial(interstitial: event.interstitial)
+                    THEOADS_EVENT_PROP_INTERSTITIAL: THEOplayerRCTTHEOadsEventAdapter.fromInterstitial(event.interstitial)
                 ])
             }
         }
@@ -106,7 +106,7 @@ class THEOplayerRCTTHEOadsEventHandler {
             if let forwardedTHEOadsEvent = self?.onNativeTHEOadsEvent {
                 var interstitialData: [String: Any] = [:]
                 interstitialData[THEOADS_EVENT_PROP_TYPE] = EVENT_TYPE_INTERSTITIAL_ERROR
-                interstitialData[THEOADS_EVENT_PROP_INTERSTITIAL] = THEOplayerRCTTHEOadsEventAdapter.fromInterstitial(interstitial: event.interstitial)
+                interstitialData[THEOADS_EVENT_PROP_INTERSTITIAL] = THEOplayerRCTTHEOadsEventAdapter.fromInterstitial(event.interstitial)
                 if let errorMessage = event.message {
                     interstitialData[THEOADS_EVENT_PROP_MESSAGE] = errorMessage
                 }
