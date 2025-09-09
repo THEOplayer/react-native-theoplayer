@@ -29,11 +29,13 @@ class THEOplayerRCTTHEOAdsAPI: NSObject, RCTBridgeModule {
     func currentInterstitials(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         DispatchQueue.main.async {
             if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
-               let player = theView.player {
-                
-                // TODO
-                resolve([:])
-                
+               let player = theView.player,
+               let theoAds = player.ads.theoAds {
+                var currentInterstitials: [[String:Any]] = []
+                for interstitial in theoAds.currentInterstitials {
+                    currentInterstitials.append(THEOplayerRCTTHEOadsEventAdapter.fromInterstitial(interstitial))
+                }
+                resolve(currentInterstitials)
             } else {
                 if DEBUG_THEOADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not get currentInterstitials (THEOAds module unavailable).") }
                 reject(ERROR_CODE_THEOADS_ACCESS_FAILURE, ERROR_MESSAGE_THEOADS_ACCESS_FAILURE, nil)
@@ -45,11 +47,13 @@ class THEOplayerRCTTHEOAdsAPI: NSObject, RCTBridgeModule {
     func scheduledInterstitials(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         DispatchQueue.main.async {
             if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
-               let player = theView.player {
-                
-                // TODO
-                resolve([:])
-                
+               let player = theView.player,
+               let theoAds = player.ads.theoAds {
+                var scheduledInterstitials: [[String:Any]] = []
+                for interstitial in theoAds.scheduledInterstitials {
+                    scheduledInterstitials.append(THEOplayerRCTTHEOadsEventAdapter.fromInterstitial(interstitial))
+                }
+                resolve(scheduledInterstitials)
             } else {
                 if DEBUG_THEOADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not get scheduledInterstitials (THEOAds module unavailable).") }
                 reject(ERROR_CODE_THEOADS_ACCESS_FAILURE, ERROR_MESSAGE_THEOADS_ACCESS_FAILURE, nil)
