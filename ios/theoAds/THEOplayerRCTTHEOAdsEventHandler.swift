@@ -54,7 +54,7 @@ class THEOplayerRCTTHEOadsEventHandler {
 #if canImport(THEOplayerTHEOadsIntegration)
         // ADD_INTERSTITIAL
         self.addInterstitialListener = player.ads.theoAds?.addEventListener(type: THEOadsEventTypes.ADD_INTERSTITIAL) { [weak self] event in
-            if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received DistributionLoadStart event from THEOlive") }
+            if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received AddInterstitial event from THEOplayer.ads.theoAds") }
             if let forwardedTHEOadsEvent = self?.onNativeTHEOadsEvent {
                 forwardedTHEOadsEvent([
                     THEOADS_EVENT_PROP_TYPE: EVENT_TYPE_ADD_INTERSTITIAL,
@@ -63,6 +63,57 @@ class THEOplayerRCTTHEOadsEventHandler {
             }
         }
         if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] AddInterstitial listener attached to THEOplayer.ads.theoAds") }
+        
+        // INTERSTITIAL_BEGIN
+        self.interstitialBeginListener = player.ads.theoAds?.addEventListener(type: THEOadsEventTypes.INTERSTITIAL_BEGIN) { [weak self] event in
+            if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received InterstitialBegin event from THEOplayer.ads.theoAds") }
+            if let forwardedTHEOadsEvent = self?.onNativeTHEOadsEvent {
+                forwardedTHEOadsEvent([
+                    THEOADS_EVENT_PROP_TYPE: EVENT_TYPE_INTERSTITIAL_BEGIN,
+                    THEOADS_EVENT_PROP_INTERSTITIAL: THEOplayerRCTTHEOadsEventAdapter.fromInterstitial(interstitial: event.interstitial)
+                ])
+            }
+        }
+        if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] InterstitialBegin listener attached to THEOplayer.ads.theoAds") }
+        
+        // INTERSTITIAL_END
+        self.interstitialEndListener = player.ads.theoAds?.addEventListener(type: THEOadsEventTypes.INTERSTITIAL_END) { [weak self] event in
+            if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received InterstitialEnd event from THEOplayer.ads.theoAds") }
+            if let forwardedTHEOadsEvent = self?.onNativeTHEOadsEvent {
+                forwardedTHEOadsEvent([
+                    THEOADS_EVENT_PROP_TYPE: EVENT_TYPE_INTERSTITIAL_END,
+                    THEOADS_EVENT_PROP_INTERSTITIAL: THEOplayerRCTTHEOadsEventAdapter.fromInterstitial(interstitial: event.interstitial)
+                ])
+            }
+        }
+        if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] InterstitialEnd listener attached to THEOplayer.ads.theoAds") }
+        
+        // INTERSTITIAL_UPDATE
+        self.interstitialUpdateListener = player.ads.theoAds?.addEventListener(type: THEOadsEventTypes.INTERSTITIAL_UPDATE) { [weak self] event in
+            if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received InterstitialUpdate event from THEOplayer.ads.theoAds") }
+            if let forwardedTHEOadsEvent = self?.onNativeTHEOadsEvent {
+                forwardedTHEOadsEvent([
+                    THEOADS_EVENT_PROP_TYPE: EVENT_TYPE_INTERSTITIAL_UPDATE,
+                    THEOADS_EVENT_PROP_INTERSTITIAL: THEOplayerRCTTHEOadsEventAdapter.fromInterstitial(interstitial: event.interstitial)
+                ])
+            }
+        }
+        if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] InterstitialUpdate listener attached to THEOplayer.ads.theoAds") }
+        
+        // INTERSTITIAL_ERROR
+        self.interstitialErrorListener = player.ads.theoAds?.addEventListener(type: THEOadsEventTypes.INTERSTITIAL_ERROR) { [weak self] event in
+            if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received InterstitialError event from THEOplayer.ads.theoAds") }
+            if let forwardedTHEOadsEvent = self?.onNativeTHEOadsEvent {
+                var interstitialData: [String: Any] = [:]
+                interstitialData[THEOADS_EVENT_PROP_TYPE] = EVENT_TYPE_INTERSTITIAL_ERROR
+                interstitialData[THEOADS_EVENT_PROP_INTERSTITIAL] = THEOplayerRCTTHEOadsEventAdapter.fromInterstitial(interstitial: event.interstitial)
+                if let errorMessage = event.message {
+                    interstitialData[THEOADS_EVENT_PROP_MESSAGE] = errorMessage
+                }
+                forwardedTHEOadsEvent(interstitialData)
+            }
+        }
+        if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] InterstitialError listener attached to THEOplayer.ads.theoAds") }
         
 #endif
     }
@@ -82,6 +133,41 @@ class THEOplayerRCTTHEOadsEventHandler {
             if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] AddInterstitial listener detached from THEOplayer.ads.theoAds") }
         }
         
+        // INTERSTITIAL_BEGIN
+        if let interstitialBeginListener = self.interstitialBeginListener {
+            player.ads.theoAds?.removeEventListener(
+                type: THEOadsEventTypes.INTERSTITIAL_BEGIN,
+                listener: interstitialBeginListener
+            )
+            if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] InterstitialBegin listener detached from THEOplayer.ads.theoAds") }
+        }
+        
+        // INTERSTITIAL_END
+        if let interstitialEndListener = self.interstitialEndListener {
+            player.ads.theoAds?.removeEventListener(
+                type: THEOadsEventTypes.INTERSTITIAL_END,
+                listener: interstitialEndListener
+            )
+            if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] InterstitialEnd listener detached from THEOplayer.ads.theoAds") }
+        }
+        
+        // INTERSTITIAL_UPDATE
+        if let interstitialUpdateListener = self.interstitialUpdateListener {
+            player.ads.theoAds?.removeEventListener(
+                type: THEOadsEventTypes.INTERSTITIAL_UPDATE,
+                listener: interstitialUpdateListener
+            )
+            if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] InterstitialUpdate listener detached from THEOplayer.ads.theoAds") }
+        }
+        
+        // INTERSTITIAL_ERROR
+        if let interstitialErrorListener = self.interstitialErrorListener {
+            player.ads.theoAds?.removeEventListener(
+                type: THEOadsEventTypes.INTERSTITIAL_ERROR,
+                listener: interstitialErrorListener
+            )
+            if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] InterstitialError listener detached from THEOplayer.ads.theoAds") }
+        }
 #endif
 
     }
