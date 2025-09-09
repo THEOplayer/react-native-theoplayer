@@ -15,7 +15,7 @@ export class THEOAdsNativeAdapter implements TheoAdsAPI {
     return NativeTHEOAdsModule.scheduledInterstitials(this._player.nativeHandle);
   }
 
-  replaceAdTagParameters(_adTagParameters?: Record<string, string>): void {
-    NativeTHEOAdsModule.replaceAdTagParameters(this._player.nativeHandle);
+  replaceAdTagParameters(adTagParameters?: Record<string, string>): void {
+    NativeTHEOAdsModule.replaceAdTagParameters(this._player.nativeHandle, adTagParameters);
   }
 }
