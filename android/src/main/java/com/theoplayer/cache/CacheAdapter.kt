@@ -6,7 +6,6 @@ import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableArray
 import com.facebook.react.bridge.WritableMap
 import com.theoplayer.android.api.cache.CacheStatus
-import com.theoplayer.android.api.cache.CacheStorageType
 import com.theoplayer.android.api.cache.CachingParameters
 import com.theoplayer.android.api.cache.CachingPreferredTrackSelection
 import com.theoplayer.android.api.cache.CachingTask
@@ -27,7 +26,6 @@ private const val PROP_PARAMETERS_BANDWIDTH = "bandwidth"
 private const val PROP_PARAMETERS_PREFERRED_TRACK_SELECTION = "preferredTrackSelection"
 private const val PROP_PARAMETERS_AUDIO_TRACK_SELECTION = "audioTrackSelection"
 private const val PROP_PARAMETERS_TEXT_TRACK_SELECTION = "textTrackSelection"
-private const val PROP_PARAMETERS_STORAGE_TYPE = "storageType"
 private const val PROP_DURATION = "duration"
 private const val PROP_CACHED = "cached"
 private const val PROP_SECONDS_CACHED = "secondsCached"
@@ -103,12 +101,6 @@ object CacheAdapter {
       if (parameters.hasKey(PROP_PARAMETERS_PREFERRED_TRACK_SELECTION)) {
         preferredTrackSelection(parsePreferredTrackSelection(parameters.getMap(PROP_PARAMETERS_PREFERRED_TRACK_SELECTION)))
       }
-      if (parameters.hasKey(PROP_PARAMETERS_STORAGE_TYPE)) {
-        storageType(when (parameters.getString(PROP_PARAMETERS_STORAGE_TYPE)) {
-          "legacy" -> CacheStorageType.LEGACY
-          else -> CacheStorageType.MEDIA3
-        })
-      }
     }.build()
   }
 
@@ -129,10 +121,6 @@ object CacheAdapter {
         putString(PROP_PARAMETERS_AMOUNT, parameters.amount)
         putDouble(PROP_PARAMETERS_BANDWIDTH, parameters.bandwidth.toDouble())
         putDouble(PROP_PARAMETERS_EXPIRATION_DATE, parameters.expirationDate.time.toDouble())
-        putString(PROP_PARAMETERS_STORAGE_TYPE, when (parameters.storageType) {
-          CacheStorageType.LEGACY -> "legacy"
-          CacheStorageType.MEDIA3 -> "media3"
-        })
       }
     }
   }

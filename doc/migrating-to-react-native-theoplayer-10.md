@@ -18,6 +18,12 @@ npm install react-native-theoplayer@10
 On Android platforms, the Media3 playback pipeline is now the only available pipeline. **The legacy
 pipeline has been removed.**
 
+### Cache storage type `legacy` removed
+
+With the removal of the legacy pipeline,
+the option to cache media content for this pipeline by setting `CachingTaskParameters.storageType`
+was also removed.
+
 ### PlaybackSettingsAPI removed on Android
 
 The `PlaybackSettingsAPI`, which allowed to control start-up and lip sync correction on the legacy
