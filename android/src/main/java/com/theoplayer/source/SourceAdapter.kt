@@ -261,8 +261,7 @@ class SourceAdapter {
   @Throws(THEOplayerException::class)
   fun parseAdFromJS(map: ReadableMap): AdDescription? {
     return try {
-      val jsonAdDescription = JSONObject(gson.toJson(map.toHashMap()))
-      parseAdFromJS(jsonAdDescription)
+      parseAdFromJS(JSONObject(gson.toJson(map.toHashMap())))
     } catch (e: JSONException) {
       e.printStackTrace()
       null
@@ -293,12 +292,8 @@ class SourceAdapter {
     val integrationStr = jsonAdDescription.optString(PROP_INTEGRATION)
     return if (!TextUtils.isEmpty(integrationStr)) {
       when (integrationStr) {
-        AdIntegration.GOOGLE_IMA.adIntegration -> parseImaAdFromJS(
-          jsonAdDescription
-        )
-        AdIntegration.THEO_ADS.adIntegration -> parseTheoAdFromJS(
-          jsonAdDescription
-        )
+        AdIntegration.GOOGLE_IMA.adIntegration -> parseImaAdFromJS(jsonAdDescription)
+        AdIntegration.THEO_ADS.adIntegration -> parseTheoAdFromJS(jsonAdDescription)
         else -> {
           throw THEOplayerException(
             ErrorCode.AD_ERROR,
@@ -357,40 +352,33 @@ class SourceAdapter {
       ?.toMap() ?: emptyMap()
 
   private fun parseOverrideLayout(override: String?): TheoAdsLayoutOverride? {
-    if (override == null) {
-      return null
-    }
-    when (override) {
-      "single" -> return TheoAdsLayoutOverride.SINGLE
-      "single-if-mobile" -> return TheoAdsLayoutOverride.SINGLE
+    return when (override) {
+      "single", "single-if-mobile" -> return TheoAdsLayoutOverride.SINGLE
       "l-shape" -> return TheoAdsLayoutOverride.LSHAPE
       "double" -> return TheoAdsLayoutOverride.DOUBLE
+      else -> null
     }
-    return null
   }
 
   @Throws(JSONException::class)
   private fun parseTextTrackFromJS(jsonTextTrack: JSONObject): TextTrackDescription {
-    val builder = TextTrackDescription.Builder(jsonTextTrack.optString(PROP_SRC))
+    return TextTrackDescription.Builder(jsonTextTrack.optString(PROP_SRC))
       .isDefault(jsonTextTrack.optBoolean(PROP_DEFAULT))
       .label(jsonTextTrack.optString(PROP_LABEL))
       .srclang(jsonTextTrack.optString(PROP_SRCLANG))
       .kind(parseTextTrackKind(jsonTextTrack.optString(PROP_KIND))!!)
-    return builder.build()
+      .build()
   }
 
   private fun parseTextTrackKind(kind: String?): TextTrackKind? {
-    if (kind == null) {
-      return null
-    }
-    when (kind) {
+    return when (kind) {
       "subtitles" -> return TextTrackKind.SUBTITLES
       "metadata" -> return TextTrackKind.METADATA
       "captions" -> return TextTrackKind.CAPTIONS
       "chapters" -> return TextTrackKind.CHAPTERS
       "descriptions" -> return TextTrackKind.DESCRIPTIONS
+      else -> null
     }
-    return null
   }
 
   private fun parseMetadataDescription(metadataDescription: JSONObject): MetadataDescription {
@@ -404,7 +392,7 @@ class SourceAdapter {
         } else {
           metadata[key] = metadataDescription[key]
         }
-      } catch (e: JSONException) {
+      } catch (_: JSONException) {
         Log.w(TAG, "Failed to parse metadata key $key")
       }
     }
@@ -419,11 +407,11 @@ class SourceAdapter {
 
   @Throws(JSONException::class)
   private fun parseMetadataImages(metadataImages: JSONArray): List<ChromecastMetadataImage> {
-    val imageList: MutableList<ChromecastMetadataImage> = ArrayList()
-    for (i in 0 until metadataImages.length()) {
-      imageList.add(parseMetadataImage(metadataImages.getJSONObject(i)))
+    return mutableListOf<ChromecastMetadataImage>().apply {
+      for (i in 0 until metadataImages.length()) {
+        add(parseMetadataImage(metadataImages.getJSONObject(i)))
+      }
     }
-    return imageList
   }
 
   @Throws(JSONException::class)
