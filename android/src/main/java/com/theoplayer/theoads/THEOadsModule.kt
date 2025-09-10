@@ -1,19 +1,32 @@
 package com.theoplayer.theoads
 
 import com.facebook.react.bridge.*
+import com.facebook.react.module.annotations.ReactModule
+import com.facebook.react.module.model.ReactModuleInfo
 import com.theoplayer.*
 import com.theoplayer.android.api.ads.theoads.theoAds
 import com.theoplayer.theoads.THEOadsAdapter.fromInterstitialList
 import com.theoplayer.util.ViewResolver
 
-private const val TAG = "THEORCTTHEOAdsModule"
-
 @Suppress("unused")
+@ReactModule(name = THEOadsModule.NAME)
 class THEOadsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(context) {
+  companion object {
+    const val NAME = "THEORCTTHEOAdsModule"
+    val INFO = ReactModuleInfo(
+      name = NAME,
+      className = NAME,
+      canOverrideExistingModule = false,
+      needsEagerInit = false,
+      isCxxModule = false,
+      isTurboModule = false,
+    )
+  }
+
   private val viewResolver: ViewResolver = ViewResolver(context)
 
   override fun getName(): String {
-    return TAG
+    return NAME
   }
 
   @ReactMethod
