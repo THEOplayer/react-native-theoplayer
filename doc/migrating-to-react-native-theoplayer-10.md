@@ -11,12 +11,19 @@ Run the following command to install THEOplayer React Native SDK version 10:
 npm install react-native-theoplayer@10
 ```
 
-## Media3 as the only available playback pipeline on Android
+## Breaking Changes on Android
+
+### Media3 became the only available playback pipeline on Android
 
 On Android platforms, the Media3 playback pipeline is now the only available pipeline. **The legacy
 pipeline has been removed.**
 
-## PlaybackSettingsAPI removed on Android
+### PlaybackSettingsAPI removed on Android
 
 The `PlaybackSettingsAPI`, which allowed to control start-up and lip sync correction on the legacy
 pipeline, has been removed.
+
+### Updated `minSdk` to API 23 on Android
+
+This aligns with [other Android Jetpack libraries requiring API 23 as of June 2025](https://developer.android.com/jetpack/androidx/versions#version-table).
+

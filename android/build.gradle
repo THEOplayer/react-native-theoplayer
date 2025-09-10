@@ -47,7 +47,7 @@ android {
     namespace "com.theoplayer"
 
     defaultConfig {
-        minSdkVersion safeExtGet('THEOplayer_minSdkVersion', 21)
+        minSdkVersion safeExtGet('THEOplayer_minSdkVersion', 23)
         targetSdkVersion safeExtGet('THEOplayer_targetSdkVersion', 35)
         versionCode 1
         versionName "1.0"
