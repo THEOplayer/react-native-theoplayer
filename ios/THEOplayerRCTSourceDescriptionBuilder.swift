@@ -162,7 +162,8 @@ class THEOplayerRCTSourceDescriptionBuilder {
         }
       
         // 6. configure CMCD
-        if let cmcd = sourceData[SD_PROP_CMCD] as? [String:Any] {
+        let cmcd = sourceData[SD_PROP_CMCD] as? [String:Any]
+        if cmcd != nil {
           typedSources.forEach { typedSource in
             typedSource.cmcd = true;
           }
