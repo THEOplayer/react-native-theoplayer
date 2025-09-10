@@ -23,7 +23,6 @@ import com.theoplayer.android.api.ads.theoads.TheoAdsLayoutOverride
 import com.theoplayer.android.api.cmcd.CMCDTransmissionMode
 import com.theoplayer.android.api.error.ErrorCode
 import com.theoplayer.android.api.source.AdIntegration
-import com.theoplayer.android.api.source.PlaybackPipeline
 import com.theoplayer.android.api.source.dash.DashPlaybackConfiguration
 import com.theoplayer.android.api.theolive.TheoLiveSource
 import com.theoplayer.cmcd.CmcdTransmissionMode
@@ -71,7 +70,6 @@ private const val PROP_RETRIEVE_POD_ID_URI = "retrievePodIdURI"
 private const val PROP_INITIALIZATION_DELAY = "initializationDelay"
 private const val PROP_SSE_ENDPOINT = "sseEndpoint"
 private const val PROP_LATENCY_CONFIGURATION = "latencyConfiguration"
-private const val PROP_PLAYBACK_PIPELINE = "playbackPipeline"
 
 private const val ERROR_IMA_NOT_ENABLED = "Google IMA support not enabled."
 private const val ERROR_THEOADS_NOT_ENABLED = "THEOads support not enabled."
@@ -82,7 +80,6 @@ private const val PROP_SSAI_INTEGRATION_GOOGLE_DAI = "google-dai"
 
 private const val TYPE_THEOLIVE = "theolive"
 private const val TYPE_MILLICAST = "millicast"
-private const val PLAYBACK_PIPELINE_LEGACY = "legacy"
 
 private const val PROP_CMCD = "cmcd"
 private const val CMCD_TRANSMISSION_MODE = "transmissionMode"
@@ -238,12 +235,6 @@ class SourceAdapter {
         if (drmConfig != null) {
           tsBuilder.drm(drmConfig)
         }
-      }
-      if (jsonTypedSource.has(PROP_PLAYBACK_PIPELINE)) {
-        tsBuilder.playbackPipeline(when(jsonTypedSource.getString(PROP_PLAYBACK_PIPELINE)) {
-          PLAYBACK_PIPELINE_LEGACY -> PlaybackPipeline.LEGACY
-          else -> PlaybackPipeline.MEDIA3
-        })
       }
       if (cmcdTransmissionMode != null) {
         tsBuilder.cmcdTransmissionMode(cmcdTransmissionMode)

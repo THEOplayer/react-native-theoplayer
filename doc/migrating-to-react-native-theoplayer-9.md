@@ -1,6 +1,6 @@
 # Migrating to THEOplayer React Native SDK 9.x
 
-This article will guide you through updating from THEOplayer React Native SDK version 9 (from version 8),
+This article will guide you through updating to THEOplayer React Native SDK version 9 (from version 8),
 and the changes needed in your code.
 
 ## Update React Native THEOplayer
