@@ -620,7 +620,7 @@ class PlayerEventEmitter internal constructor(
     if (BuildConfig.LOG_PLAYER_EVENTS) {
       try {
         Log.d(TAG, "receiveEvent $type $event")
-      } catch (ignore: RuntimeException) {
+      } catch (_: RuntimeException) {
       }
     }
     UIManagerHelper.getUIManager(
@@ -628,6 +628,7 @@ class PlayerEventEmitter internal constructor(
       if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
         UIManagerType.FABRIC
       } else {
+        @Suppress("DEPRECATION")
         UIManagerType.DEFAULT
       })?.receiveEvent(UIManagerHelper.getSurfaceId(playerView), viewId, type, event)
   }
