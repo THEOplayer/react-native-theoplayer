@@ -9,7 +9,6 @@ import com.theoplayer.cache.CacheModule
 import com.theoplayer.drm.ContentProtectionModule
 import com.theoplayer.cast.CastModule
 import com.theoplayer.broadcast.EventBroadcastModule
-import com.theoplayer.playback.PlaybackSettingsModule
 import com.theoplayer.player.PlayerModule
 import com.theoplayer.theolive.THEOliveModule
 import com.theoplayer.theoads.THEOadsModule
@@ -23,7 +22,6 @@ class ReactTHEOplayerPackage : ReactPackage {
       CastModule(reactContext),
       CacheModule(reactContext),
       EventBroadcastModule(reactContext),
-      PlaybackSettingsModule(reactContext),
       THEOliveModule(reactContext),
       THEOadsModule(reactContext)
     )
