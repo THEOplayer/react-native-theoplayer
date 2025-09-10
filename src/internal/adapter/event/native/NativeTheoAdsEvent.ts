@@ -4,12 +4,12 @@ import { DefaultTheoAdsErrorEvent, DefaultTheoAdsEvent } from '../PlayerEvents';
 
 export interface NativeTheoAdsEvent {
   /**
-   * Type of TheoLive event.
+   * Type of TheoAds event.
    */
   type: TheoAdsEventType;
 
   /**
-   * Interstitial refered to by the TheoLive event.
+   * Interstitial referred to by the TheoAds event.
    */
   interstitial: Interstitial;
 
