@@ -127,7 +127,7 @@ repositories {
 // The minimum supported THEOplayer version is 9.9.0
 def theoVersion = safeExtGet('THEOplayer_sdk', '[9.9.0, 11.0.0)')
 def theoMediaSessionVersion = safeExtGet('THEOplayer_mediasession', '[8.0.0, 11.0.0)')
-def theoAdsWrapperVersion = "9.0.0"
+def theoAdsWrapperVersion = "10.0.0"
 def coroutinesVersion = safeExtGet('coroutinesVersion', '1.10.2')
 def appcompatVersion = safeExtGet('appcompatVersion', '1.7.1')
 def corektxVersion = safeExtGet('corektxVersion', '1.16.0')
