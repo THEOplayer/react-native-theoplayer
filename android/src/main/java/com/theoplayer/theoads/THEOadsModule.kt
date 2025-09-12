@@ -32,21 +32,32 @@ class THEOadsModule(context: ReactApplicationContext) : ReactContextBaseJavaModu
   @ReactMethod
   fun currentInterstitials(tag: Int, promise: Promise) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      promise.resolve(fromInterstitialList(view?.player?.theoAds?.currentInterstitials))
+      if (BuildConfig.EXTENSION_THEOADS) {
+        promise.resolve(fromInterstitialList(view?.player?.theoAds?.currentInterstitials))
+      } else {
+        promise.resolve(Arguments.createArray())
+      }
     }
   }
 
   @ReactMethod
   fun scheduledInterstitials(tag: Int, promise: Promise) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      promise.resolve(fromInterstitialList(view?.player?.theoAds?.scheduledInterstitials))
+      if (BuildConfig.EXTENSION_THEOADS) {
+        promise.resolve(fromInterstitialList(view?.player?.theoAds?.scheduledInterstitials))
+      } else {
+        promise.resolve(Arguments.createArray())
+      }
     }
   }
 
   @ReactMethod
   fun replaceAdTagParameters(tag: Int, adTagParameters: ReadableMap) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      view?.player?.theoAds?.replaceAdTagParameters(adTagParameters.toHashMap().mapValues { it.value.toString() })
+      if (BuildConfig.EXTENSION_THEOADS) {
+        view?.player?.theoAds?.replaceAdTagParameters(
+          adTagParameters.toHashMap().mapValues { it.value.toString() })
+      }
     }
   }
 }

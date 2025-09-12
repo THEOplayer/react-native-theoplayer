@@ -690,11 +690,14 @@ class PlayerEventEmitter internal constructor(
       }
     })
 
-    theoAdsEventAdapter = THEOadsEventAdapter(player.theoAds, object : THEOadsEventAdapter.Emitter {
-      override fun emit(payload: WritableMap?) {
-        receiveEvent(EVENT_THEOADS_EVENT, payload)
-      }
-    })
+    if (BuildConfig.EXTENSION_THEOADS) {
+      theoAdsEventAdapter =
+        THEOadsEventAdapter(player.theoAds, object : THEOadsEventAdapter.Emitter {
+          override fun emit(payload: WritableMap?) {
+            receiveEvent(EVENT_THEOADS_EVENT, payload)
+          }
+        })
+    }
 
     // Attach view size listener
     playerView.addOnLayoutChangeListener(resizeListener)
