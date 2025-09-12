@@ -5,7 +5,7 @@ require Pod::Executable.execute_command('node', ['-p',
   )', __dir__]).strip
 
 source 'https://github.com/react-native-tvos/react-native-tvos-podspecs.git'
-source 'https://cdn.cocoapods.org/'
+source 'https://github.com/CocoaPods/Specs.git'
 
 prepare_react_native_project!
 config = use_native_modules!
