@@ -9,8 +9,8 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:${safeExtGet('gradlePluginVersion', '8.3.2')}"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${safeExtGet('kotlinVersion', '1.9.21')}"
+        classpath "com.android.tools.build:gradle:${safeExtGet('gradlePluginVersion', '8.12.3')}"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${safeExtGet('kotlinVersion', '2.2.10')}"
     }
 }
 
@@ -125,12 +125,12 @@ repositories {
 }
 
 // The minimum supported THEOplayer version is 9.9.0
-def theoVersion = safeExtGet('THEOplayer_sdk', '[9.9.0, 10.0.0)')
-def theoMediaSessionVersion = safeExtGet('THEOplayer_mediasession', '[8.0.0, 10.0.0)')
+def theoVersion = safeExtGet('THEOplayer_sdk', '[9.9.0, 11.0.0)')
+def theoMediaSessionVersion = safeExtGet('THEOplayer_mediasession', '[8.0.0, 11.0.0)')
 def theoAdsWrapperVersion = "9.0.0"
 def coroutinesVersion = safeExtGet('coroutinesVersion', '1.10.2')
 def appcompatVersion = safeExtGet('appcompatVersion', '1.7.1')
-def corektxVersion = safeExtGet('corektxVersion', '1.13.1')
+def corektxVersion = safeExtGet('corektxVersion', '1.16.0')
 def gsonVersion = safeExtGet('gsonVersion', '2.13.1')
 def activityktxVersion = safeExtGet('activityktxVersion', '1.10.1')
 def millicastVersion = safeExtGet('millicastVersion', '2.5.0')
