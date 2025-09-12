@@ -15,7 +15,7 @@
     "pod-update": "cd ios && RCT_NEW_ARCH_ENABLED=1 bundle exec pod update"
   },
   "dependencies": {
-    "@theoplayer/react-native-ui": "^0.15.0",
+    "@theoplayer/react-native-ui": "^0.17.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-native": "npm:react-native-tvos@^0.81.0-0",
@@ -49,7 +49,7 @@
     "webpack": "^5.99.5",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.1",
-    "theoplayer": "^9.12.0"
+    "theoplayer": "^10"
   },
   "overrides": {
     "react-native-google-cast": {
@@ -57,6 +57,9 @@
     },
     "@miblanchard/react-native-slider": {
       "react-native": "$react-native"
+    },
+    "@theoplayer/react-native-ui" : {
+      "theoplayer": "$theoplayer"
     }
   },
   "engines": {
