@@ -57,9 +57,6 @@
     },
     "@miblanchard/react-native-slider": {
       "react-native": "$react-native"
-    },
-    "@theoplayer/react-native-ui" : {
-      "theoplayer": "$theoplayer"
     }
   },
   "engines": {
