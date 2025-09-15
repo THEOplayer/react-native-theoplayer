@@ -5,6 +5,8 @@ import android.os.Looper
 import android.util.Base64
 import android.util.Log
 import com.facebook.react.bridge.*
+import com.facebook.react.module.annotations.ReactModule
+import com.facebook.react.module.model.ReactModuleInfo
 import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter
 import com.theoplayer.BuildConfig
 import com.theoplayer.android.api.THEOplayerGlobal
@@ -19,11 +21,11 @@ data class BridgeRequest(
   val onTimeout: Runnable
 )
 
-private const val TAG = "ContentProtectionModule"
-
 private const val EVENT_CERTIFICATE_REQUEST = "onCertificateRequest"
-private const val EVENT_CERTIFICATE_REQUEST_PROCESSED_AS_REQUEST = "onCertificateRequestProcessedAsRequest"
-private const val EVENT_CERTIFICATE_REQUEST_PROCESSED_AS_CERTIFICATE = "onCertificateRequestProcessedAsCertificate"
+private const val EVENT_CERTIFICATE_REQUEST_PROCESSED_AS_REQUEST =
+  "onCertificateRequestProcessedAsRequest"
+private const val EVENT_CERTIFICATE_REQUEST_PROCESSED_AS_CERTIFICATE =
+  "onCertificateRequestProcessedAsCertificate"
 private const val EVENT_CERTIFICATE_RESPONSE = "onCertificateResponse"
 private const val EVENT_CERTIFICATE_RESPONSE_PROCESSED = "onCertificateResponseProcessed"
 private const val EVENT_BUILD_INTEGRATION = "onBuildIntegration"
@@ -35,10 +37,20 @@ private const val EVENT_LICENSE_RESPONSE = "onLicenseResponse"
 private const val EVENT_LICENSE_RESPONSE_PROCESSED = "onLicenseResponseProcessed"
 
 @Suppress("unused")
+@ReactModule(name = ContentProtectionModule.NAME)
 class ContentProtectionModule(private val context: ReactApplicationContext) :
   ReactContextBaseJavaModule(context) {
 
   companion object {
+    const val NAME = "THEORCTContentProtectionModule"
+    val INFO = ReactModuleInfo(
+      name = NAME,
+      className = ContentProtectionModule::class.qualifiedName!!,
+      canOverrideExistingModule = false,
+      needsEagerInit = false,
+      isCxxModule = false,
+      isTurboModule = false,
+    )
     const val REQUEST_TIMEOUT_MS = 10000L
   }
 
@@ -49,7 +61,7 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
   private val requestQueue: HashMap<String, BridgeRequest> = HashMap()
 
   override fun getName(): String {
-    return "THEORCTContentProtectionModule"
+    return NAME
   }
 
   @ReactMethod
@@ -66,7 +78,7 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
           .registerContentProtectionIntegration(integrationId, keySystemId, factory)
       }
     } else {
-      Log.e(TAG, "Invalid keySystemId $keySystemIdStr")
+      Log.e(NAME, "Invalid keySystemId $keySystemIdStr")
     }
   }
 
@@ -131,7 +143,8 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
         EVENT_CERTIFICATE_REQUEST_PROCESSED_AS_REQUEST to { result ->
           request.url = result.getString(PROP_URL)!!
           request.method = RequestMethodAdapter.fromString(result.getString(PROP_METHOD))
-          val headers = result.getMap(PROP_HEADERS)?.toHashMap()?.mapValues { entry -> entry.value as? String }
+          val headers =
+            result.getMap(PROP_HEADERS)?.toHashMap()?.mapValues { entry -> entry.value as? String }
           if (headers != null) {
             request.headers = headers
           }
@@ -180,7 +193,8 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
         EVENT_LICENSE_REQUEST_PROCESSED_AS_REQUEST to { result ->
           request.url = result.getString(PROP_URL)!!
           request.method = RequestMethodAdapter.fromString(result.getString(PROP_METHOD))
-          val headers = result.getMap(PROP_HEADERS)?.toHashMap()?.mapValues { entry -> entry.value as? String }
+          val headers =
+            result.getMap(PROP_HEADERS)?.toHashMap()?.mapValues { entry -> entry.value as? String }
           if (headers != null) {
             request.headers = headers
           }
@@ -234,7 +248,7 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
   ) {
     val requestId = createRequestId()
     if (BuildConfig.DEBUG) {
-      Log.d(TAG, "emit $eventName ($requestId)")
+      Log.d(NAME, "emit $eventName ($requestId)")
     }
     payload.putString(PROP_REQUEST_ID, requestId)
     val onTimeout = Runnable {
@@ -252,7 +266,7 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
   private fun receive(eventName: String, payload: ReadableMap) {
     val requestId = payload.getString(PROP_REQUEST_ID)
     if (BuildConfig.DEBUG) {
-      Log.d(TAG, "receive $eventName ($requestId)")
+      Log.d(NAME, "receive $eventName ($requestId)")
     }
     val request = requestQueue.remove(requestId)
     if (request != null) {
@@ -262,7 +276,10 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
         onEventResult(payload)
       } else {
         request.onError(
-          THEOplayerException(ErrorCode.CONTENT_PROTECTION_ERROR, "Unknown bridge event: $eventName.")
+          THEOplayerException(
+            ErrorCode.CONTENT_PROTECTION_ERROR,
+            "Unknown bridge event: $eventName."
+          )
         )
       }
     }

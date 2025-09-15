@@ -49,6 +49,7 @@ RCT_EXPORT_VIEW_PROPERTY(onNativePresentationModeChange, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeResize, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeAdEvent, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeTHEOliveEvent, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeTHEOadsEvent, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeCastEvent, RCTDirectEventBlock);
 
 @end
@@ -282,6 +283,24 @@ RCT_EXTERN_METHOD(latencies:(nonnull NSNumber *)node
 
 RCT_EXTERN_METHOD(setAuthToken:(nonnull NSNumber *)node
                   token:(nonnull NSString *)token)
+
+@end
+
+// ----------------------------------------------------------------------------
+// THEOAds Module
+// ----------------------------------------------------------------------------
+@interface RCT_EXTERN_REMAP_MODULE(THEORCTTHEOAdsModule, THEOplayerRCTTHEOAdsAPI, NSObject)
+
+RCT_EXTERN_METHOD(currentInterstitials:(nonnull NSNumber *)node
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(scheduledInterstitials:(nonnull NSNumber *)node
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(replaceAdTagParameters:(nonnull NSNumber *)node
+                  adTagParameters:(nullable NSDictionary *)adTagParameters)
 
 @end
 

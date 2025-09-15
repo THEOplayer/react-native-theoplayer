@@ -12,6 +12,7 @@ import com.facebook.react.uimanager.common.UIManagerType
 import com.theoplayer.ads.AdEventAdapter
 import com.theoplayer.ads.AdEventAdapter.AdEventEmitter
 import com.theoplayer.android.api.THEOplayerGlobal
+import com.theoplayer.android.api.ads.theoads.theoAds
 import com.theoplayer.android.api.error.THEOplayerException
 import com.theoplayer.android.api.event.EventListener
 import com.theoplayer.android.api.event.EventType
@@ -43,6 +44,7 @@ import com.theoplayer.android.api.player.track.texttrack.TextTrackKind
 import com.theoplayer.android.api.player.track.texttrack.TextTrackMode
 import com.theoplayer.cast.CastEventAdapter
 import com.theoplayer.presentation.PresentationModeChangeContext
+import com.theoplayer.theoads.THEOadsEventAdapter
 import com.theoplayer.theolive.THEOliveEventAdapter
 import com.theoplayer.track.*
 import com.theoplayer.util.PayloadBuilder
@@ -77,6 +79,7 @@ private const val EVENT_MEDIATRACK_EVENT = "onNativeMediaTrackEvent"
 private const val EVENT_AD_EVENT = "onNativeAdEvent"
 private const val EVENT_CAST_EVENT = "onNativeCastEvent"
 private const val EVENT_THEOLIVE_EVENT = "onNativeTHEOliveEvent"
+private const val EVENT_THEOADS_EVENT = "onNativeTHEOadsEvent"
 private const val EVENT_PRESENTATIONMODECHANGE = "onNativePresentationModeChange"
 private const val EVENT_VOLUMECHANGE = "onNativeVolumeChange"
 private const val EVENT_RESIZE = "onNativeResize"
@@ -120,6 +123,7 @@ class PlayerEventEmitter internal constructor(
     EVENT_AD_EVENT,
     EVENT_CAST_EVENT,
     EVENT_THEOLIVE_EVENT,
+    EVENT_THEOADS_EVENT,
     EVENT_PRESENTATIONMODECHANGE,
     EVENT_VOLUMECHANGE,
     EVENT_RESIZE
@@ -155,6 +159,7 @@ class PlayerEventEmitter internal constructor(
       EVENT_AD_EVENT,
       EVENT_CAST_EVENT,
       EVENT_THEOLIVE_EVENT,
+      EVENT_THEOADS_EVENT,
       EVENT_PRESENTATIONMODECHANGE,
       EVENT_VOLUMECHANGE,
       EVENT_RESIZE
@@ -169,6 +174,7 @@ class PlayerEventEmitter internal constructor(
   private var adEventAdapter: AdEventAdapter? = null
   private var castEventAdapter: CastEventAdapter? = null
   private var theoLiveEventAdapter: THEOliveEventAdapter? = null
+  private var theoAdsEventAdapter: THEOadsEventAdapter? = null
   private var lastTimeUpdate: Long = 0
   private var lastCurrentTime = 0.0
   private var resizeListener = View.OnLayoutChangeListener { v, _, _, _, _, oldLeft, oldTop, oldRight, oldBottom ->
@@ -614,7 +620,7 @@ class PlayerEventEmitter internal constructor(
     if (BuildConfig.LOG_PLAYER_EVENTS) {
       try {
         Log.d(TAG, "receiveEvent $type $event")
-      } catch (ignore: RuntimeException) {
+      } catch (_: RuntimeException) {
       }
     }
     UIManagerHelper.getUIManager(
@@ -622,6 +628,7 @@ class PlayerEventEmitter internal constructor(
       if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
         UIManagerType.FABRIC
       } else {
+        @Suppress("DEPRECATION")
         UIManagerType.DEFAULT
       })?.receiveEvent(UIManagerHelper.getSurfaceId(playerView), viewId, type, event)
   }
@@ -683,6 +690,15 @@ class PlayerEventEmitter internal constructor(
       }
     })
 
+    if (BuildConfig.EXTENSION_THEOADS) {
+      theoAdsEventAdapter =
+        THEOadsEventAdapter(player.theoAds, object : THEOadsEventAdapter.Emitter {
+          override fun emit(payload: WritableMap?) {
+            receiveEvent(EVENT_THEOADS_EVENT, payload)
+          }
+        })
+    }
+
     // Attach view size listener
     playerView.addOnLayoutChangeListener(resizeListener)
   }
@@ -726,5 +742,6 @@ class PlayerEventEmitter internal constructor(
     castEventAdapter?.destroy()
     adEventAdapter?.destroy()
     theoLiveEventAdapter?.destroy()
+    theoAdsEventAdapter?.destroy()
   }
 }

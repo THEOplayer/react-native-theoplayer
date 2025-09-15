@@ -165,7 +165,7 @@ object ContentProtectionAdapter {
       if (widevine != null) {
         putMap(PROP_WIDEVINE, Arguments.createMap().apply {
           putString(PROP_LA_URL, widevine.licenseAcquisitionURL)
-          putBoolean(PROP_USE_CREDENTIALS, widevine.isUseCredentials)
+          putBoolean(PROP_USE_CREDENTIALS, widevine.useCredentials)
         })
       }
     }

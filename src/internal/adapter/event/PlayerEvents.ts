@@ -38,6 +38,7 @@ import {
   TextTrackEventType,
   TextTrackListEvent,
   TheoAdsEvent,
+  TheoAdsErrorEvent,
   TheoAdsEventType,
   TheoLiveEvent,
   TheoLiveDistributionEvent,
@@ -210,6 +211,16 @@ export class DefaultTheoAdsEvent extends BaseEvent<PlayerEventType.THEOADS_EVENT
   constructor(
     public subType: TheoAdsEventType,
     public interstitial: Interstitial,
+  ) {
+    super(PlayerEventType.THEOADS_EVENT);
+  }
+}
+
+export class DefaultTheoAdsErrorEvent extends BaseEvent<PlayerEventType.THEOADS_EVENT> implements TheoAdsErrorEvent {
+  constructor(
+    public subType: TheoAdsEventType,
+    public interstitial: Interstitial,
+    public message: string | undefined,
   ) {
     super(PlayerEventType.THEOADS_EVENT);
   }

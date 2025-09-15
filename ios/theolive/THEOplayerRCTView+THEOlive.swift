@@ -4,7 +4,7 @@ import Foundation
 import THEOplayerSDK
 
 #if canImport(THEOplayerTHEOliveIntegration)
-@_spi(Experimental) import THEOplayerTHEOliveIntegration
+import THEOplayerTHEOliveIntegration
 #endif
 
 extension THEOplayerRCTView {
@@ -15,11 +15,7 @@ extension THEOplayerRCTView {
         
 #if canImport(THEOplayerTHEOliveIntegration)
         let THEOliveConfig = THEOliveConfiguration(externalSessionId: self.theoliveConfig.externalSessionId,
-                                                   experimentalHespContentPlayer: !self.theoliveConfig.useLegacyTHEOlive,
                                                    discoveryUrl: self.theoliveConfig.discoveryUrl)
-        if DEBUG_THEOLIVE_API {
-            PrintUtils.printLog(logText: "[NATIVE] Using \(self.theoliveConfig.useLegacyTHEOlive ? "legacy" : "new") theolive pipeline.")
-        }
         
         self.THEOliveIntegration = THEOliveIntegrationFactory.createIntegration(with: THEOliveConfig)
         player.addIntegration(self.THEOliveIntegration!)

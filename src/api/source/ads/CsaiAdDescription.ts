@@ -6,7 +6,7 @@ import type { AdDescription, AdSource } from "./Ads";
  * @category Ads
  * @public
  */
-export interface THEOplayerAdDescription extends AdDescription {
+export interface CsaiAdDescription extends AdDescription {
   /**
    * The source of the ad
    *

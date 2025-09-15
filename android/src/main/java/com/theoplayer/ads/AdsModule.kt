@@ -1,10 +1,10 @@
-@file:Suppress("unused")
-
 package com.theoplayer.ads
 
 import android.util.Log
 import android.view.View
 import com.facebook.react.bridge.*
+import com.facebook.react.module.annotations.ReactModule
+import com.facebook.react.module.model.ReactModuleInfo
 import com.theoplayer.source.SourceAdapter
 import com.theoplayer.util.ViewResolver
 import com.theoplayer.ReactTHEOplayerView
@@ -12,18 +12,30 @@ import com.theoplayer.android.api.ads.OmidFriendlyObstruction
 import com.theoplayer.android.api.ads.OmidFriendlyObstructionPurpose
 import com.theoplayer.android.api.error.THEOplayerException
 
-private const val TAG = "THEORCTAdsModule"
-
 private const val PROP_OMID_VIEW = "view"
 private const val PROP_OMID_PURPOSE = "purpose"
 private const val PROP_OMID_REASON = "reason"
 
+@Suppress("unused")
+@ReactModule(name = AdsModule.NAME)
 class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(context) {
+  companion object {
+    const val NAME = "THEORCTAdsModule"
+    val INFO = ReactModuleInfo(
+      name = NAME,
+      className = NAME,
+      canOverrideExistingModule = false,
+      needsEagerInit = false,
+      isCxxModule = false,
+      isTurboModule = false,
+    )
+  }
+
   private val sourceHelper = SourceAdapter()
   private val viewResolver: ViewResolver = ViewResolver(context)
 
   override fun getName(): String {
-    return TAG
+    return NAME
   }
 
   // Add an ad break request.
@@ -34,7 +46,7 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
         try {
           view.adsApi.schedule(sourceHelper.parseAdFromJS(ad))
         } catch (exception: THEOplayerException) {
-          Log.e(TAG, exception.message!!)
+          Log.e(NAME, exception.message!!)
         }
       }
     }

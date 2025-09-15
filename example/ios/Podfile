@@ -5,7 +5,7 @@ require Pod::Executable.execute_command('node', ['-p',
   )', __dir__]).strip
 
 source 'https://github.com/react-native-tvos/react-native-tvos-podspecs.git'
-source 'https://cdn.cocoapods.org/'
+source 'https://github.com/CocoaPods/Specs.git'
 
 prepare_react_native_project!
 config = use_native_modules!
@@ -22,7 +22,6 @@ target 'ReactNativeTHEOplayer' do
   platform :ios, min_ios_version_supported
   use_react_native!(
     :path => config[:reactNativePath],
-    :hermes_enabled => false,
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
   pod 'react-native-theoplayer', :path => '../..'
@@ -33,7 +32,6 @@ target 'ReactNativeTHEOplayer-tvOS' do
   platform :tvos, min_ios_version_supported
   use_react_native!(
     :path => config[:reactNativePath],
-    :hermes_enabled => false,
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
   pod 'react-native-theoplayer', :path => '../..'
