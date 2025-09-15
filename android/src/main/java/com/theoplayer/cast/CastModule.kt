@@ -1,5 +1,3 @@
-@file:Suppress("unused")
-
 package com.theoplayer.cast
 
 import com.facebook.react.bridge.ReactApplicationContext
@@ -7,14 +5,30 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.theoplayer.util.ViewResolver
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.Promise
+import com.facebook.react.module.annotations.ReactModule
+import com.facebook.react.module.model.ReactModuleInfo
 import com.theoplayer.ReactTHEOplayerView
 import com.theoplayer.android.api.cast.chromecast.PlayerCastState
 
+@Suppress("unused")
+@ReactModule(name = CastModule.NAME)
 class CastModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(context) {
+  companion object {
+    const val NAME = "THEORCTCastModule"
+    val INFO = ReactModuleInfo(
+      name = NAME,
+      className = NAME,
+      canOverrideExistingModule = false,
+      needsEagerInit = false,
+      isCxxModule = false,
+      isTurboModule = false,
+    )
+  }
+
   private val viewResolver: ViewResolver = ViewResolver(context)
 
   override fun getName(): String {
-    return "THEORCTCastModule"
+    return NAME
   }
 
   @ReactMethod

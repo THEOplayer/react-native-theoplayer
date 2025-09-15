@@ -16,8 +16,11 @@ The Media3 pipeline is available as of `react-native-theoplayer` v8.9.0.
 ### Usage
 
 > [!IMPORTANT]
-> As of THEOplayer 9.0, Media3 is the default playback pipeline on Android. It is still possible to opt-out and use the
-> legacy pipeline with the `playbackPipeline` parameter in the `SourceDescription`.
+> As of THEOplayer 9.0, Media3 is the default playback pipeline on Android. In this version, it is still possible to
+> opt-out and use the legacy pipeline with the `playbackPipeline` parameter in the `SourceDescription`.
+
+> [!IMPORTANT]
+> As of THEOplayer 10.0, the legacy pipeline has been removed.
 
 The rest of this section **applies to THEOplayer 8.x only**.
 

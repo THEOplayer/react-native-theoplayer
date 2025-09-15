@@ -1,26 +1,21 @@
 import { TheoAdsAPI, Interstitial, type THEOplayerView } from 'react-native-theoplayer';
+import { NativeModules } from 'react-native';
+
+const NativeTHEOAdsModule = NativeModules.THEORCTTHEOAdsModule;
 
 export class THEOAdsNativeAdapter implements TheoAdsAPI {
   // @ts-ignore
   constructor(private _player: THEOplayerView) {}
 
   get currentInterstitials(): Promise<readonly Interstitial[]> {
-    // TODO
-    //return NativeTHEOAdsModule.currentInterstitials(this._player.nativeHandle);
-    console.warn('THEOAdsNativeAdapter', 'currentInterstitials - NYI');
-    return Promise.resolve([]);
+    return NativeTHEOAdsModule.currentInterstitials(this._player.nativeHandle);
   }
 
   get scheduledInterstitials(): Promise<readonly Interstitial[]> {
-    // TODO
-    //return NativeTHEOAdsModule.scheduledInterstitials(this._player.nativeHandle);
-    console.warn('THEOAdsNativeAdapter', 'scheduledInterstitials - NYI');
-    return Promise.resolve([]);
+    return NativeTHEOAdsModule.scheduledInterstitials(this._player.nativeHandle);
   }
 
-  replaceAdTagParameters(_adTagParameters?: Record<string, string>): void {
-    //return NativeTHEOAdsModule.replaceAdTagParameters(this._player.nativeHandle);
-    console.warn('THEOAdsNativeAdapter', 'replaceAdTagParameters - NYI');
-    // TODO
+  replaceAdTagParameters(adTagParameters?: Record<string, string>): void {
+    NativeTHEOAdsModule.replaceAdTagParameters(this._player.nativeHandle, adTagParameters);
   }
 }

@@ -2,6 +2,8 @@ package com.theoplayer.player
 
 import android.os.Build
 import com.facebook.react.bridge.*
+import com.facebook.react.module.annotations.ReactModule
+import com.facebook.react.module.model.ReactModuleInfo
 import com.theoplayer.*
 import com.theoplayer.abr.ABRConfigurationAdapter
 import com.theoplayer.android.api.player.AspectRatio
@@ -17,14 +19,25 @@ import com.theoplayer.presentation.PipConfigAdapter
 import com.theoplayer.track.TextTrackStyleAdapter
 import com.theoplayer.util.ViewResolver
 
-private const val TAG = "THEORCTPlayerModule"
-
 @Suppress("unused")
+@ReactModule(name = PlayerModule.NAME)
 class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(context) {
+  companion object {
+    const val NAME = "THEORCTPlayerModule"
+    val INFO = ReactModuleInfo(
+      name = NAME,
+      className = NAME,
+      canOverrideExistingModule = false,
+      needsEagerInit = false,
+      isCxxModule = false,
+      isTurboModule = false,
+    )
+  }
+
   private val viewResolver: ViewResolver = ViewResolver(context)
 
   override fun getName(): String {
-    return TAG
+    return NAME
   }
 
   // The native version string of the Android THEOplayer SDK.

@@ -276,7 +276,7 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                 }
                 if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Showing textTrack \(uidValue) on TheoPlayer") }
                 for i in 0...textTracks.count-1 {
-                    var textTrack: TextTrack = textTracks.get(i)
+                    let textTrack: TextTrack = textTracks.get(i)
                     if textTrack.uid == uidValue {
                         textTrack.mode = TextTrackMode.showing
                     } else if textTrack.mode == TextTrackMode.showing {
@@ -299,7 +299,7 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                 }
                 if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Enabling audioTrack \(uidValue) on TheoPlayer") }
                 for i in 0...audioTracks.count-1 {
-                    var audioTrack: MediaTrack = audioTracks.get(i)
+                    let audioTrack: MediaTrack = audioTracks.get(i)
                     audioTrack.enabled = (audioTrack.uid == uidValue)
                 }
             }
@@ -318,7 +318,7 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                 }
                 if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Enabling videoTrack \(uidValue) on TheoPlayer") }
                 for i in 0...videoTracks.count-1 {
-                    var videoTrack: MediaTrack = videoTracks.get(i)
+                    let videoTrack: MediaTrack = videoTracks.get(i)
                     videoTrack.enabled = (videoTrack.uid == uidValue)
                 }
             }

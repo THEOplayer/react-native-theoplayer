@@ -21,6 +21,20 @@ export interface TheoAdsEvent extends Event<PlayerEventType.THEOADS_EVENT> {
 }
 
 /**
+ * Fired when an interstitial has errored.
+ *
+ * @category Events
+ * @category THEOads
+ * @public
+ */
+export interface TheoAdsErrorEvent extends TheoAdsEvent {
+  /**
+   * Type of THEOads event.
+   */
+  message: string | undefined;
+}
+
+/**
  * The THEOads event types dispatched by the {@link AdsAPI | Ads API}.
  *
  * @category Events

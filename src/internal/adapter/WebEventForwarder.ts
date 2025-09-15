@@ -57,6 +57,7 @@ import {
   DefaultSegmentNotFoundEvent,
   DefaultTextTrackEvent,
   DefaultTextTrackListEvent,
+  DefaultTheoAdsErrorEvent,
   DefaultTheoAdsEvent,
   DefaultTheoLiveDistributionEvent,
   DefaultTheoLiveEndpointLoadedEvent,
@@ -351,7 +352,12 @@ export class WebEventForwarder {
   };
 
   private readonly onTheoAdsEvent = (event: InterstitialEvent<any>) => {
-    this._facade.dispatchEvent(new DefaultTheoAdsEvent(event.type as TheoAdsEventType, event.interstitial));
+    if (event.type === TheoAdsEventType.INTERSTITIAL_ERROR) {
+      const { message } = event as unknown as { message: string | undefined };
+      this._facade.dispatchEvent(new DefaultTheoAdsErrorEvent(event.type as TheoAdsEventType, event.interstitial, message));
+    } else {
+      this._facade.dispatchEvent(new DefaultTheoAdsEvent(event.type as TheoAdsEventType, event.interstitial));
+    }
   };
 
   private readonly onTheoLiveEvent = (event: NativeEvent) => {

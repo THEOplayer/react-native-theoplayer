@@ -1,4 +1,3 @@
-@file:Suppress("unused")
 package com.theoplayer.broadcast
 
 import com.facebook.react.bridge.ReactApplicationContext
@@ -6,18 +5,29 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.module.annotations.ReactModule
+import com.facebook.react.module.model.ReactModuleInfo
 import com.theoplayer.ReactTHEOplayerView
 import com.theoplayer.util.ViewResolver
 
-private const val TAG = "THEORCTEventBroadcastModule"
-
-@ReactModule(name = TAG)
+@Suppress("unused")
+@ReactModule(name = EventBroadcastModule.NAME)
 class EventBroadcastModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(context) {
+  companion object {
+    const val NAME = "THEORCTEventBroadcastModule"
+    val INFO = ReactModuleInfo(
+      name = NAME,
+      className = NAME,
+      canOverrideExistingModule = false,
+      needsEagerInit = false,
+      isCxxModule = false,
+      isTurboModule = false,
+    )
+  }
 
   private val viewResolver: ViewResolver = ViewResolver(context)
 
   override fun getName(): String {
-    return TAG
+    return NAME
   }
 
   /**

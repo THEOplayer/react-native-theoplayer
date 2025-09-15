@@ -24,7 +24,7 @@ class THEOplayerRCTTHEOliveEventHandler {
     // MARK: Events
     var onNativeTHEOliveEvent: RCTDirectEventBlock?
 
-    // MARK: Ad Listeners
+    // MARK: THEOlive Listeners
     private var distributionLoadStartListener: EventListener?
     private var distributionOfflineListener: EventListener?
     private var endPointLoadedListener: EventListener?

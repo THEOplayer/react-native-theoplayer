@@ -1,5 +1,3 @@
-@file:Suppress("unused")
-
 package com.theoplayer.cache
 
 import android.os.Handler
@@ -12,8 +10,11 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableMap
+import com.facebook.react.module.annotations.ReactModule
+import com.facebook.react.module.model.ReactModuleInfo
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.google.gson.Gson
+import com.theoplayer.ads.AdsModule
 import com.theoplayer.util.ViewResolver
 import com.theoplayer.android.api.THEOplayerGlobal
 import com.theoplayer.android.api.cache.Cache
@@ -30,8 +31,6 @@ import com.theoplayer.source.SourceAdapter
 import org.json.JSONException
 import org.json.JSONObject
 
-private const val TAG = "THEORCTCacheModule"
-
 private const val PROP_STATUS = "status"
 private const val PROP_ID = "id"
 private const val PROP_TASK = "task"
@@ -39,8 +38,22 @@ private const val PROP_TASKS = "tasks"
 private const val PROP_PROGRESS = "progress"
 private const val PROP_ERROR = "error"
 
+@Suppress("unused")
+@ReactModule(name = CacheModule.NAME)
 class CacheModule(private val context: ReactApplicationContext) :
   ReactContextBaseJavaModule(context) {
+  companion object {
+    const val NAME = "THEORCTCacheModule"
+    val INFO = ReactModuleInfo(
+      name = NAME,
+      className = NAME,
+      canOverrideExistingModule = false,
+      needsEagerInit = false,
+      isCxxModule = false,
+      isTurboModule = false,
+    )
+  }
+
   private val viewResolver: ViewResolver = ViewResolver(context)
   private val onTaskProgress = mutableMapOf<String, EventListener<CachingTaskProgressEvent>>()
   private val onTaskError = mutableMapOf<String, EventListener<CachingTaskErrorEvent>>()
@@ -59,7 +72,7 @@ class CacheModule(private val context: ReactApplicationContext) :
           emit("onCacheStatusChange", Arguments.createMap().apply {
             putString(PROP_STATUS, CacheAdapter.fromCacheStatus(event.status))
           })
-       }
+        }
         // Listen for add task events
         tasks.addEventListener(CachingTaskListEventTypes.ADD_TASK) { event ->
           event.task?.let { task ->
@@ -88,7 +101,7 @@ class CacheModule(private val context: ReactApplicationContext) :
   }
 
   override fun getName(): String {
-    return TAG
+    return NAME
   }
 
   private fun addCachingTaskListeners(task: CachingTask) {
@@ -233,7 +246,7 @@ class CacheModule(private val context: ReactApplicationContext) :
 
   private fun taskById(id: String): CachingTask? {
     return cache.tasks.getTaskById(id) ?: run {
-      Log.w(TAG, "CachingTask with id $id not found")
+      Log.w(NAME, "CachingTask with id $id not found")
       return null
     }
   }

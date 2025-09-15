@@ -68,6 +68,7 @@ import {
 } from './adapter/event/native/NativePlayerEvent';
 import type { NativeAdEvent } from './adapter/event/native/NativeAdEvent';
 import { fromNativeTheoLiveEvent, NativeTheoLiveEvent } from './adapter/event/native/NativeTheoLiveEvent';
+import { fromNativeTheoAdsEvent, NativeTheoAdsEvent } from './adapter/event/native/NativeTheoAdsEvent';
 import { THEOplayerAdapter } from './adapter/THEOplayerAdapter';
 import { getFullscreenSize } from './utils/Dimensions';
 import { Poster } from './poster/Poster';
@@ -105,6 +106,7 @@ interface THEOplayerRCTViewProps {
   onNativeMediaTrackEvent: (event: NativeSyntheticEvent<NativeMediaTrackEvent>) => void;
   onNativeAdEvent: (event: NativeSyntheticEvent<NativeAdEvent>) => void;
   onNativeTHEOliveEvent: (event: NativeSyntheticEvent<NativeTheoLiveEvent>) => void;
+  onNativeTHEOadsEvent: (event: NativeSyntheticEvent<NativeTheoAdsEvent>) => void;
   onNativeCastEvent: (event: NativeSyntheticEvent<NativeCastEvent>) => void;
   onNativePresentationModeChange: (event: NativeSyntheticEvent<NativePresentationModeChangeEvent>) => void;
   onNativeDeviceOrientationChanged: () => void;
@@ -350,6 +352,10 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
     this._facade.dispatchEvent(fromNativeTheoLiveEvent(event));
   };
 
+  private _onTHEOadsEvent = (event: NativeSyntheticEvent<NativeTheoAdsEvent>) => {
+    this._facade.dispatchEvent(fromNativeTheoAdsEvent(event));
+  };
+
   private _onCastEvent = (event: NativeSyntheticEvent<NativeCastEvent>) => {
     switch (event.nativeEvent.type) {
       case CastEventType.CHROMECAST_STATE_CHANGE:
@@ -442,6 +448,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
           onNativeMediaTrackEvent={this._onMediaTrackEvent}
           onNativeAdEvent={this._onAdEvent}
           onNativeTHEOliveEvent={this._onTHEOliveEvent}
+          onNativeTHEOadsEvent={this._onTHEOadsEvent}
           onNativeCastEvent={this._onCastEvent}
           onNativePresentationModeChange={this._onPresentationModeChange}
           onNativeDeviceOrientationChanged={this._onDeviceOrientationChanged}
