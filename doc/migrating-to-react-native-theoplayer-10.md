@@ -11,7 +11,19 @@ Run the following command to install THEOplayer React Native SDK version 10:
 npm install react-native-theoplayer@10
 ```
 
+## Breaking Changes on Web
+
+The breaking changes for the native Web SDK are listed in the v10 [changelog](https://optiview.dolby.com/docs/theoplayer/changelog/#-breaking-changes).
+
+## Breaking Changes on iOS
+
+The breaking changes for the native Web SDK are listed in the v10 [changelog](https://optiview.dolby.com/docs/theoplayer/changelog/#-breaking-changes-2).
+
 ## Breaking Changes on Android
+
+The breaking changes for the native Android SDK are listed in the v10 [changelog](https://optiview.dolby.com/docs/theoplayer/changelog/#-breaking-changes-1).
+
+The following updates in particular impact the React Native SDK on Android.
 
 ### Media3 became the only available playback pipeline on Android
 
