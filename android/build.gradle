@@ -133,7 +133,6 @@ def appcompatVersion = safeExtGet('appcompatVersion', '1.7.1')
 def corektxVersion = safeExtGet('corektxVersion', '1.16.0')
 def gsonVersion = safeExtGet('gsonVersion', '2.13.1')
 def activityktxVersion = safeExtGet('activityktxVersion', '1.10.1')
-def millicastVersion = safeExtGet('millicastVersion', '2.5.0')
 
 dependencies {
     def addOptiViewIntegration = { enabled, notation, additional = null ->
@@ -169,5 +168,5 @@ dependencies {
     addOptiViewIntegration(enabledGoogleDAI || enabledTHEOads, 'integration-ads-dai')
     addOptiViewIntegration(enabledTHEOads, 'integration-ads-theoads')
     addOptiViewIntegration(enabledCast, 'integration-cast')
-    addOptiViewIntegration(enabledMillicast, 'integration-millicast', "com.millicast:millicast-sdk-android:$millicastVersion")
+    addOptiViewIntegration(enabledMillicast, 'integration-millicast')
 }
