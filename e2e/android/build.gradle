@@ -9,7 +9,7 @@ buildscript {
     minSdkVersion = 24
     compileSdkVersion = 36
     targetSdkVersion = 36
-    ndkVersion = "27.1.12297006"
+    ndkVersion = "29.0.14033849"
     castFrameworkVersion = "22.0.0"
     kotlinVersion = "2.2.10"
     agpVersion = "8.12.3"
