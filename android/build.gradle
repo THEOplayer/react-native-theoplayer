@@ -43,12 +43,12 @@ def enabledMediaSession = safeExtGet("THEOplayer_extensionMediaSession", 'true')
 def enabledMillicast = safeExtGet("THEOplayer_extensionMillicast", 'false').toBoolean()
 
 android {
-    compileSdk safeExtGet('THEOplayer_compileSdkVersion', 35)
+    compileSdk safeExtGet('THEOplayer_compileSdkVersion', 36)
     namespace "com.theoplayer"
 
     defaultConfig {
         minSdkVersion safeExtGet('THEOplayer_minSdkVersion', 23)
-        targetSdkVersion safeExtGet('THEOplayer_targetSdkVersion', 35)
+        targetSdkVersion safeExtGet('THEOplayer_targetSdkVersion', 36)
         versionCode 1
         versionName "1.0"
 
@@ -124,8 +124,8 @@ repositories {
     mavenLocal()
 }
 
-// The minimum supported THEOplayer version is 9.9.0
-def theoVersion = safeExtGet('THEOplayer_sdk', '[9.9.0, 11.0.0)')
+// The minimum supported THEOplayer version is 10.0.1
+def theoVersion = safeExtGet('THEOplayer_sdk', '[10.0.1, 11.0.0)')
 def theoMediaSessionVersion = safeExtGet('THEOplayer_mediasession', '[8.0.0, 11.0.0)')
 def theoAdsWrapperVersion = "10.0.0"
 def coroutinesVersion = safeExtGet('coroutinesVersion', '1.10.2')
@@ -133,7 +133,6 @@ def appcompatVersion = safeExtGet('appcompatVersion', '1.7.1')
 def corektxVersion = safeExtGet('corektxVersion', '1.16.0')
 def gsonVersion = safeExtGet('gsonVersion', '2.13.1')
 def activityktxVersion = safeExtGet('activityktxVersion', '1.10.1')
-def millicastVersion = safeExtGet('millicastVersion', '2.5.0')
 
 dependencies {
     def addOptiViewIntegration = { enabled, notation, additional = null ->
@@ -169,5 +168,5 @@ dependencies {
     addOptiViewIntegration(enabledGoogleDAI || enabledTHEOads, 'integration-ads-dai')
     addOptiViewIntegration(enabledTHEOads, 'integration-ads-theoads')
     addOptiViewIntegration(enabledCast, 'integration-cast')
-    addOptiViewIntegration(enabledMillicast, 'integration-millicast', "com.millicast:millicast-sdk-android:$millicastVersion")
+    addOptiViewIntegration(enabledMillicast, 'integration-millicast')
 }
