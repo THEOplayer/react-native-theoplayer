@@ -56,7 +56,7 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
     // Note: `display: contents` causes an element's children to appear as if they were direct children of the element's parent,
     // ignoring the element itself.
     // It's necessary to make sure we do not interfere with the IMA container
-    <div id={'theoplayer-root-container'} style={{ display: 'contents' }}>
+    <div id={'theoplayer-root-container'} style={{ display: CSS.supports('display', 'contents') ? 'contents' : 'flex' }}>
       {!CSS.supports('aspect-ratio', '16/9') ? (
         // Handle aspect-ratio 16/9 with padding-top: 56.25% to support older versions.
         // {@link https://www.w3schools.com/howto/howto_css_aspect_ratio.asp}

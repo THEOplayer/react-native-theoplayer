@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed an issue on Android where play-out of Millicast sources in the example app would fail. The Android NDK version needs to be at least v28.
+- Fixed an issue on Web where on older devices the `display: contents` style property is sometimes not supported.
 
 ## [10.0.0] - 25-09-15
 
