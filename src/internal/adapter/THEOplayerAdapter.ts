@@ -40,6 +40,7 @@ import {
   THEOplayerView,
   TimeUpdateEvent,
   TrackListEventType,
+  VideoResizeEvent,
 } from 'react-native-theoplayer';
 import { THEOplayerNativeAdsAdapter } from './ads/THEOplayerNativeAdsAdapter';
 import { THEOplayerNativeCastAdapter } from './cast/THEOplayerNativeCastAdapter';
@@ -91,6 +92,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this.addEventListener(PlayerEventType.PRESENTATIONMODE_CHANGE, this.onPresentationModeChange);
     this.addEventListener(PlayerEventType.RESIZE, this.onResize);
     this.addEventListener(PlayerEventType.DIMENSION_CHANGE, this.onDimensionChange);
+    this.addEventListener(PlayerEventType.VIDEO_RESIZE, this.onVideoResize);
   }
 
   private hasValidSource(): boolean {
@@ -125,6 +127,11 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   private onDimensionChange = (event: DimensionChangeEvent) => {
     this._state.width = event.width;
     this._state.height = event.height;
+  };
+
+  private onVideoResize = (event: VideoResizeEvent) => {
+    this._state.videoWidth = event.videoWidth;
+    this._state.videoHeight = event.videoHeight;
   };
 
   private onLoadedMetadata = (event: LoadedMetadataEvent) => {

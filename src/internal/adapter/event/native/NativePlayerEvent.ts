@@ -123,6 +123,18 @@ export interface NativeDimensionChangeEvent {
   readonly height: number;
 }
 
+export interface NativeVideoResizeEvent {
+  /**
+   * The width of the video.
+   */
+  readonly videoWidth: number;
+
+  /**
+   * The height of the video.
+   */
+  readonly videoHeight: number;
+}
+
 export interface NativeSegmentNotFoundEvent {
   /**
    * Start time of the segment.

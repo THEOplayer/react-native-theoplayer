@@ -91,6 +91,25 @@ export interface ResizeEvent extends Event<PlayerEventType.RESIZE> {
 }
 
 /**
+ * Dispatched when video is resized.
+ *
+ * @category Events
+ * @category Player
+ * @public
+ */
+export interface VideoResizeEvent extends Event<PlayerEventType.VIDEO_RESIZE> {
+  /**
+   * The video's current width.
+   */
+  readonly videoWidth: number;
+
+  /**
+   * The video's current height.
+   */
+  readonly videoHeight: number;
+}
+
+/**
  * Dispatched when the player's duration changes.
  *
  * @category Events

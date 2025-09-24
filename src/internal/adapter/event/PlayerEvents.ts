@@ -51,6 +51,7 @@ import {
   TheoLiveEndpointLoadedEvent,
   TheoLiveIntentToFallbackEvent,
   DimensionChangeEvent,
+  VideoResizeEvent,
 } from 'react-native-theoplayer';
 
 export class DefaultLoadedMetadataEvent extends BaseEvent<PlayerEventType.LOADED_METADATA> implements LoadedMetadataEvent {
@@ -110,6 +111,15 @@ export class DefaultDimensionChangeEvent extends BaseEvent<PlayerEventType.DIMEN
     public height: number,
   ) {
     super(PlayerEventType.DIMENSION_CHANGE);
+  }
+}
+
+export class DefaultVideoResizeEvent extends BaseEvent<PlayerEventType.VIDEO_RESIZE> implements VideoResizeEvent {
+  constructor(
+    public videoWidth: number,
+    public videoHeight: number,
+  ) {
+    super(PlayerEventType.VIDEO_RESIZE);
   }
 }
 

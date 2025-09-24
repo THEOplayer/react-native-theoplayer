@@ -42,6 +42,7 @@ import {
   DefaultResizeEvent,
   DefaultSeekingEvent,
   DefaultSeekedEvent,
+  DefaultVideoResizeEvent,
 } from './adapter/event/PlayerEvents';
 import type { NativeCastEvent } from './adapter/event/native/NativeCastEvent';
 import type {
@@ -66,6 +67,7 @@ import {
   NativeDimensionChangeEvent,
   NativeSeekingEvent,
   NativeSeekedEvent,
+  NativeVideoResizeEvent,
 } from './adapter/event/native/NativePlayerEvent';
 import type { NativeAdEvent } from './adapter/event/native/NativeAdEvent';
 import { fromNativeTheoLiveEvent, NativeTheoLiveEvent } from './adapter/event/native/NativeTheoLiveEvent';
@@ -112,6 +114,7 @@ interface THEOplayerRCTViewProps {
   onNativePresentationModeChange: (event: NativeSyntheticEvent<NativePresentationModeChangeEvent>) => void;
   onNativeDeviceOrientationChanged: () => void;
   onNativeDimensionChange: (event: NativeSyntheticEvent<NativeDimensionChangeEvent>) => void;
+  onNativeVideoResize: (event: NativeSyntheticEvent<NativeVideoResizeEvent>) => void;
 }
 
 interface THEOplayerRCTViewState {
@@ -395,6 +398,12 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
     this._facade.dispatchEvent(new DefaultDimensionChangeEvent(width, height));
   };
 
+  private _onVideoResize = (_event: NativeSyntheticEvent<NativeVideoResizeEvent>) => {
+    const videoWidth = this._facade.videoWidth;
+    const videoHeight = this._facade.videoHeight;
+    this._facade.dispatchEvent(new DefaultVideoResizeEvent(videoWidth ?? 0, videoHeight ?? 0));
+  };
+
   private _updatePoster = () => {
     this.setState({ poster: this._facade.source?.poster });
   };
@@ -457,6 +466,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
           onNativePresentationModeChange={this._onPresentationModeChange}
           onNativeDeviceOrientationChanged={this._onDeviceOrientationChanged}
           onNativeDimensionChange={this._onDimensionChange}
+          onNativeVideoResize={this._onVideoResize}
         />
         {posterActive && <Poster uri={poster} style={posterStyle} />}
         {children}

@@ -14,6 +14,7 @@ import type {
   ResizeEvent,
   SeekedEvent,
   SeekingEvent,
+  VideoResizeEvent,
 } from '../event/PlayerEvent';
 import type { MediaTrackEvent, MediaTrackListEvent, TextTrackEvent, TextTrackListEvent } from '../event/TrackEvent';
 import type { AdEvent } from '../event/AdEvent';
@@ -64,6 +65,7 @@ export enum PlayerEventType {
    */
   RESIZE = 'resize',
   DIMENSION_CHANGE = 'dimensionchange',
+  VIDEO_RESIZE = 'videoresize',
 }
 
 /**
@@ -240,4 +242,9 @@ export interface PlayerEventMap {
    * Dispatched when the player size changes.
    */
   [PlayerEventType.DIMENSION_CHANGE]: DimensionChangeEvent;
+
+  /**
+   * Dispatched when the video size changes.
+   */
+  [PlayerEventType.VIDEO_RESIZE]: VideoResizeEvent;
 }
