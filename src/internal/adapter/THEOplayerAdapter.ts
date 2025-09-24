@@ -10,6 +10,7 @@ import {
   DurationChangeEvent,
   EventBroadcastAPI,
   findMediaTrackByUid,
+  isVideoQuality,
   LoadedMetadataEvent,
   MediaTrack,
   MediaTrackEvent,
@@ -169,16 +170,24 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   };
 
   private onMediaTrack = (event: MediaTrackEvent) => {
-    const { subType, trackType, trackUid } = event;
+    const { subType, trackType, trackUid, qualities } = event;
     const tracks = trackType === MediaTrackType.VIDEO ? this._state.videoTracks : this._state.audioTracks;
     const track = findMediaTrackByUid(tracks, trackUid);
     switch (subType) {
       case MediaTrackEventType.ACTIVE_QUALITY_CHANGED:
-        // Update local state
-        if (track) {
-          Object.assign(track, { ...track, activeQuality: event.qualities });
+        if (!track) {
+          break;
         }
-        break;
+
+        // Update local state
+        Object.assign(track, { ...track, activeQuality: qualities });
+
+        if (!isVideoQuality(qualities)) {
+          break;
+        }
+
+        this._state.videoWidth = qualities.width;
+        this._state.videoHeight = qualities.height;
     }
   };
 

@@ -1,3 +1,5 @@
+import { isArray } from '../../internal/utils/TypeUtils';
+
 /**
  * Represents a quality of a media track.
  *
@@ -78,6 +80,19 @@ export interface VideoQuality extends Quality {
    * The timestamp of the first frame of the video quality, in seconds.
    */
   readonly firstFrame: number;
+}
+
+export function isVideoQuality(qualities: Quality | Quality[] | undefined): qualities is VideoQuality {
+    if (!qualities) {
+      return false;
+    }
+
+    let quality = qualities;
+    if (isArray(qualities) && qualities.length > 0) {
+      quality = qualities[0];
+    }
+
+    return (quality as VideoQuality).height !== undefined;
 }
 
 /**
