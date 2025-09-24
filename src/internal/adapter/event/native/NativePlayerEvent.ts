@@ -111,7 +111,7 @@ export interface NativeProgressEvent {
   readonly buffered: TimeRange[];
 }
 
-export interface NativeResizeEvent {
+export interface NativeDimensionChangeEvent {
   /**
    * The width of the player.
    */

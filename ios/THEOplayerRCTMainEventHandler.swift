@@ -29,7 +29,7 @@ public class THEOplayerRCTMainEventHandler {
     var onNativeRateChange: RCTDirectEventBlock?
     var onNativeWaiting: RCTDirectEventBlock?
     var onNativeCanPlay: RCTDirectEventBlock?
-    var onNativeResize: RCTDirectEventBlock?
+    var onNativeDimensionChange: RCTDirectEventBlock?
     
     // MARK: player Listeners
     private var playListener: EventListener?
@@ -51,7 +51,7 @@ public class THEOplayerRCTMainEventHandler {
     private var rateChangeListener: EventListener?
     private var waitingListener: EventListener?
     private var canPlayListener: EventListener?
-    private var resizeListener: EventListener?
+    private var dimensionChangeListener: EventListener?
     private var presentationModeChangeListener: EventListener?
     
     // MARK: player observer
@@ -325,12 +325,12 @@ public class THEOplayerRCTMainEventHandler {
         }
         if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] Resize listener attached to THEOplayer") }*/
         
-        // RESIZE: implemented using videoRect Observation
+        // DIMENSION CHANGE: implemented using videoRect Observation
         self.videoRectObserver = player.observe(\.videoRect, options: [.new]) { [weak self, weak player] view, change in
             if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Observed videoRect change on THEOplayer") }
             if let wplayer = player,
-               let forwardedResizeEvent = self?.onNativeResize {
-                forwardedResizeEvent(
+               let forwardedDimensionChangeEvent = self?.onNativeDimensionChange {
+                forwardedDimensionChangeEvent(
                     [
                         "width": wplayer.frame.width,
                         "height": wplayer.frame.height,
