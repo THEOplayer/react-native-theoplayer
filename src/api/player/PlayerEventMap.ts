@@ -1,5 +1,6 @@
 import type { Event } from '../event/Event';
 import type {
+  DimensionChangeEvent,
   DurationChangeEvent,
   ErrorEvent,
   LoadedMetadataEvent,
@@ -59,6 +60,7 @@ export enum PlayerEventType {
   PRESENTATIONMODE_CHANGE = 'presentationmodechange',
   DESTROY = 'destroy',
   RESIZE = 'resize',
+  DIMENSION_CHANGE = 'dimensionchange',
 }
 
 /**
@@ -226,6 +228,13 @@ export interface PlayerEventMap {
 
   /**
    * Dispatched when the player size changes.
+   *
+   * @deprecated Use {@link dimensionchange} instead.
    */
   [PlayerEventType.RESIZE]: ResizeEvent;
+
+  /**
+   * Dispatched when the player size changes.
+   */
+  [PlayerEventType.DIMENSION_CHANGE]: DimensionChangeEvent;
 }

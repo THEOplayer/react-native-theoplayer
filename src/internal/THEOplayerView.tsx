@@ -24,6 +24,7 @@ import {
   DefaultAirplayStateChangeEvent,
   DefaultChromecastChangeEvent,
   DefaultChromecastErrorEvent,
+  DefaultDimensionChangeEvent,
   DefaultDurationChangeEvent,
   DefaultErrorEvent,
   DefaultLoadedMetadataEvent,
@@ -388,7 +389,10 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
   };
 
   private _onResize = (event: NativeSyntheticEvent<NativeResizeEvent>) => {
-    this._facade.dispatchEvent(new DefaultResizeEvent(event.nativeEvent.width, event.nativeEvent.height));
+    const width = event.nativeEvent.width;
+    const height = event.nativeEvent.height;
+    this._facade.dispatchEvent(new DefaultResizeEvent(width, height));
+    this._facade.dispatchEvent(new DefaultDimensionChangeEvent(width, height));
   };
 
   private _updatePoster = () => {

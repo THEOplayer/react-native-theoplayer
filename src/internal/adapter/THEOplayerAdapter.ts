@@ -1,45 +1,44 @@
 import { DefaultEventDispatcher } from './event/DefaultEventDispatcher';
 import {
   ABRConfiguration,
+  addTrack,
   AdsAPI,
+  AspectRatio,
+  BackgroundAudioConfiguration,
   CastAPI,
+  DimensionChangeEvent,
   DurationChangeEvent,
   EventBroadcastAPI,
+  findMediaTrackByUid,
   LoadedMetadataEvent,
   MediaTrack,
   MediaTrackEvent,
+  MediaTrackEventType,
   MediaTrackListEvent,
+  MediaTrackType,
   NativeHandleType,
   PiPConfiguration,
   PlayerEventMap,
+  PlayerEventType,
+  PlayerVersion,
+  PreloadType,
+  PresentationMode,
   PresentationModeChangeEvent,
   ProgressEvent,
   RateChangeEvent,
+  removeTrack,
   RenderingTarget,
   ResizeEvent,
   SeekedEvent,
   SeekingEvent,
   SourceDescription,
   TextTrack,
+  TextTrackStyle,
   TheoAdsAPI,
   TheoLiveAPI,
   THEOplayer,
   THEOplayerView,
   TimeUpdateEvent,
-} from 'react-native-theoplayer';
-import {
-  addTrack,
-  AspectRatio,
-  BackgroundAudioConfiguration,
-  findMediaTrackByUid,
-  MediaTrackEventType,
-  MediaTrackType,
-  PlayerEventType,
-  PlayerVersion,
-  PreloadType,
-  PresentationMode,
-  removeTrack,
-  TextTrackStyle,
   TrackListEventType,
 } from 'react-native-theoplayer';
 import { THEOplayerNativeAdsAdapter } from './ads/THEOplayerNativeAdsAdapter';
@@ -91,6 +90,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this.addEventListener(PlayerEventType.MEDIA_TRACK_LIST, this.onMediaTrackList);
     this.addEventListener(PlayerEventType.PRESENTATIONMODE_CHANGE, this.onPresentationModeChange);
     this.addEventListener(PlayerEventType.RESIZE, this.onResize);
+    this.addEventListener(PlayerEventType.DIMENSION_CHANGE, this.onDimensionChange);
   }
 
   private hasValidSource(): boolean {
@@ -118,6 +118,11 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   };
 
   private onResize = (event: ResizeEvent) => {
+    this._state.width = event.width;
+    this._state.height = event.height;
+  };
+
+  private onDimensionChange = (event: DimensionChangeEvent) => {
     this._state.width = event.width;
     this._state.height = event.height;
   };

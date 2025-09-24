@@ -50,6 +50,7 @@ import {
   TheoLiveEndpoint,
   TheoLiveEndpointLoadedEvent,
   TheoLiveIntentToFallbackEvent,
+  DimensionChangeEvent,
 } from 'react-native-theoplayer';
 
 export class DefaultLoadedMetadataEvent extends BaseEvent<PlayerEventType.LOADED_METADATA> implements LoadedMetadataEvent {
@@ -91,12 +92,24 @@ export class DefaultVolumeChangeEvent extends BaseEvent<PlayerEventType.VOLUME_C
   }
 }
 
+/**
+ * @deprecated Use {@link DefaultDimensionChangeEvent} instead
+ */
 export class DefaultResizeEvent extends BaseEvent<PlayerEventType.RESIZE> implements ResizeEvent {
   constructor(
     public width: number,
     public height: number,
   ) {
     super(PlayerEventType.RESIZE);
+  }
+}
+
+export class DefaultDimensionChangeEvent extends BaseEvent<PlayerEventType.DIMENSION_CHANGE> implements DimensionChangeEvent {
+  constructor(
+    public width: number,
+    public height: number,
+  ) {
+    super(PlayerEventType.DIMENSION_CHANGE);
   }
 }
 
