@@ -30,6 +30,7 @@ public class THEOplayerRCTMainEventHandler {
     var onNativeWaiting: RCTDirectEventBlock?
     var onNativeCanPlay: RCTDirectEventBlock?
     var onNativeDimensionChange: RCTDirectEventBlock?
+    var onNativeVideoResize: RCTDirectEventBlock?
     
     // MARK: player Listeners
     private var playListener: EventListener?
@@ -53,6 +54,7 @@ public class THEOplayerRCTMainEventHandler {
     private var canPlayListener: EventListener?
     private var dimensionChangeListener: EventListener?
     private var presentationModeChangeListener: EventListener?
+    private var videoResizeListener: EventListener?
     
     // MARK: player observer
     private var videoRectObserver: NSKeyValueObservation?
@@ -310,20 +312,20 @@ public class THEOplayerRCTMainEventHandler {
         }
         if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] CanPlay listener attached to THEOplayer") }
         
-        // RESIZE: TODO on iOS SDK
-        /*self.resizeListener = player.addEventListener(type: PlayerEventTypes.RESIZE) { [weak self, weak player] event in
+        // RESIZE
+        self.videoResizeListener = player.addEventListener(type: PlayerEventTypes.RESIZE) { [weak self, weak player] event in
             if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received RESIZE event from THEOplayer") }
             if let wplayer = player,
-               let forwardedResizeEvent = self?.onNativeResize {
-                forwardedResizeEvent(
+               let forwardedVideoResizeEvent = self?.onNativeVideoResize {
+                forwardedVideoResizeEvent(
                     [
-                        "width": wplayer.frame.width,
-                        "height": wplayer.frame.height,
+                        "videoWidth": wplayer.videoWidth,
+                        "videoHeight": wplayer.videoHeight,
                     ]
                 )
             }
         }
-        if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] Resize listener attached to THEOplayer") }*/
+        if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] Resize listener attached to THEOplayer") }
         
         // DIMENSION CHANGE: implemented using videoRect Observation
         self.videoRectObserver = player.observe(\.videoRect, options: [.new]) { [weak self, weak player] view, change in
@@ -460,5 +462,10 @@ public class THEOplayerRCTMainEventHandler {
         }*/
         self.videoRectObserver?.invalidate()
         self.videoRectObserver = nil
+      
+        if let videoResizeListener = self.videoResizeListener {
+          player.removeEventListener(type: PlayerEventTypes.RESIZE, listener: videoResizeListener)
+          if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] Resize listener dettached from THEOplayer") }
+        }
     }
 }

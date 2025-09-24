@@ -363,6 +363,12 @@ public class THEOplayerRCTView: UIView {
         self.mainEventHandler.onNativeDimensionChange = nativeDimensionChange
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeDimensionChange prop set.") }
     }
+  
+    @objc(setOnNativeVideoResize:)
+    func setOnNativeVideoResize(nativeVideoResize: @escaping RCTDirectEventBlock) {
+        self.mainEventHandler.onNativeVideoResize = nativeVideoResize
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeVideoResize prop set.") }
+    }
     
     // MARK: - Listener based PRESENTATIONMODE event bridging
     
