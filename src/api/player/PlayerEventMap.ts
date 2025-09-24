@@ -59,6 +59,9 @@ export enum PlayerEventType {
   WAITING = 'waiting',
   PRESENTATIONMODE_CHANGE = 'presentationmodechange',
   DESTROY = 'destroy',
+  /**
+   * @deprecated Use {@link PlayerEventType.DIMENSION_CHANGE} instead
+   */
   RESIZE = 'resize',
   DIMENSION_CHANGE = 'dimensionchange',
 }
