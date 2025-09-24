@@ -57,6 +57,9 @@ private const val EVENT_PROP_MUTED = "muted"
 private const val EVENT_PROP_WIDTH = "width"
 private const val EVENT_PROP_HEIGHT = "height"
 
+private const val EVENT_PROP_VIDEO_WIDTH = "videoWidth"
+private const val EVENT_PROP_VIDEO_HEIGHT = "videoHeight"
+
 class PayloadBuilder {
   private val payload: WritableMap = Arguments.createMap()
 
@@ -137,6 +140,11 @@ class PayloadBuilder {
   fun size(width: Int, height: Int) = apply {
     payload.putInt(EVENT_PROP_WIDTH, width)
     payload.putInt(EVENT_PROP_HEIGHT, height)
+  }
+
+  fun videoSize(videoWidth: Int, videoHeight: Int) = apply {
+    payload.putInt(EVENT_PROP_VIDEO_WIDTH, videoWidth)
+    payload.putInt(EVENT_PROP_VIDEO_HEIGHT, videoHeight)
   }
   fun seekable(ranges: TimeRanges?) = apply {
     payload.putArray(EVENT_PROP_SEEKABLE, fromTimeRanges(ranges))

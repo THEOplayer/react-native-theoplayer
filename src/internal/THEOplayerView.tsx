@@ -398,10 +398,8 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
     this._facade.dispatchEvent(new DefaultDimensionChangeEvent(width, height));
   };
 
-  private _onVideoResize = (_event: NativeSyntheticEvent<NativeVideoResizeEvent>) => {
-    const videoWidth = this._facade.videoWidth;
-    const videoHeight = this._facade.videoHeight;
-    this._facade.dispatchEvent(new DefaultVideoResizeEvent(videoWidth ?? 0, videoHeight ?? 0));
+  private _onVideoResize = (event: NativeSyntheticEvent<NativeVideoResizeEvent>) => {
+    this._facade.dispatchEvent(new DefaultVideoResizeEvent(event.nativeEvent.videoWidth, event.nativeEvent.videoHeight));
   };
 
   private _updatePoster = () => {

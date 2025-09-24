@@ -83,6 +83,7 @@ private const val EVENT_THEOADS_EVENT = "onNativeTHEOadsEvent"
 private const val EVENT_PRESENTATIONMODECHANGE = "onNativePresentationModeChange"
 private const val EVENT_VOLUMECHANGE = "onNativeVolumeChange"
 private const val EVENT_DIMENSIONCHANGE = "onNativeDimensionChange"
+private const val EVENT_VIDEORESIZE = "onNativeVideoResize"
 
 private const val EVENT_PROP_TYPE = "type"
 private const val EVENT_PROP_STATE = "state"
@@ -126,7 +127,8 @@ class PlayerEventEmitter internal constructor(
     EVENT_THEOADS_EVENT,
     EVENT_PRESENTATIONMODECHANGE,
     EVENT_VOLUMECHANGE,
-    EVENT_DIMENSIONCHANGE
+    EVENT_DIMENSIONCHANGE,
+    EVENT_VIDEORESIZE
   )
   annotation class VideoEvents
 
@@ -162,7 +164,8 @@ class PlayerEventEmitter internal constructor(
       EVENT_THEOADS_EVENT,
       EVENT_PRESENTATIONMODECHANGE,
       EVENT_VOLUMECHANGE,
-      EVENT_DIMENSIONCHANGE
+      EVENT_DIMENSIONCHANGE,
+      EVENT_VIDEORESIZE
     )
   }
 
@@ -233,6 +236,8 @@ class PlayerEventEmitter internal constructor(
       EventListener { event: PresentationModeChange -> onPresentationModeChange(event) }
     playerListeners[PlayerEventTypes.VOLUMECHANGE] =
       EventListener { event: VolumeChangeEvent -> onVolumeChange(event) }
+    playerListeners[PlayerEventTypes.RESIZE] =
+      EventListener { event: ResizeEvent -> onResize(event) }
     textTrackListeners[TextTrackListEventTypes.ADDTRACK] =
       EventListener { event: AddTrackEvent -> onTextTrackAdd(event) }
     textTrackListeners[TextTrackListEventTypes.REMOVETRACK] =
@@ -442,6 +447,13 @@ class PlayerEventEmitter internal constructor(
     receiveEvent(
       EVENT_DIMENSIONCHANGE,
       PayloadBuilder().size(width, height).build()
+    )
+  }
+
+  private fun onResize(event: ResizeEvent) {
+    receiveEvent(
+      EVENT_VIDEORESIZE,
+      PayloadBuilder().videoSize(event.width, event.height).build()
     )
   }
 
