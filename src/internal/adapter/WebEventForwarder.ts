@@ -148,6 +148,7 @@ export class WebEventForwarder {
     this._player.removeEventListener('ratechange', this.onPlaybackRateChange);
     this._player.removeEventListener('segmentnotfound', this.onSegmentNotFound);
     this._player.removeEventListener('volumechange', this.onVolumeChangeEvent);
+    this._player.removeEventListener('dimensionchange', this.onDimensionChange);
 
     this._player.textTracks.removeEventListener('addtrack', this.onAddTextTrack);
     this._player.textTracks.removeEventListener('removetrack', this.onRemoveTextTrack);
