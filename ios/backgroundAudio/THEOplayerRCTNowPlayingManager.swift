@@ -16,6 +16,9 @@ class THEOplayerRCTNowPlayingManager {
     private var rateChangeListener: EventListener?
     private var seekedListener: EventListener?
     private var sourceChangeListener: EventListener?
+    private var chromecastStateChangeListener: EventListener?
+
+    private var appTerminationObserver: Any?
     
     // MARK: - destruction
     func destroy() {
@@ -67,18 +70,19 @@ class THEOplayerRCTNowPlayingManager {
                 self?.processNowPlayingToInfoCenter()
             }
         } else {
-          self.clearNowPlayingOnInfoCenter()
+            self.clearNowPlayingOnInfoCenter()
         }
     }
     
     private func processNowPlayingToInfoCenter() {
         let nowPlayingInfo = self.nowPlayingInfo
-        DispatchQueue.main.async {
-            if !nowPlayingInfo.isEmpty {
+        if !nowPlayingInfo.isEmpty {
+            DispatchQueue.main.async {
                 MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
-            } else {
-                MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
+                if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] nowPlayingInfo processed to infoCenter.") }
             }
+        } else {
+            self.clearNowPlayingOnInfoCenter()
         }
     }
 
@@ -125,15 +129,7 @@ class THEOplayerRCTNowPlayingManager {
     private func updateSubtitle(_ metadataSubtitle: String?) {
         if let subtitle = metadataSubtitle {
             self.nowPlayingInfo[MPMediaItemPropertyArtist] = subtitle
-        }
-    }
-    
-    private func updateDuration(_ playerDuration: Double?) {
-        if let duration = playerDuration {
-            self.nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = duration.isInfinite
-            if (!duration.isInfinite) {
-                self.nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = duration
-            }
+            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] subtitle [\(subtitle)] stored in nowPlayingInfo.") }
         }
     }
     
@@ -187,6 +183,17 @@ class THEOplayerRCTNowPlayingManager {
         if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] currentTime [\(currentTime)] stored in nowPlayingInfo.") }
     }
     
+    private func updateDuration(_ duration: Double?) {
+        if let duration = duration {
+            let isLiveStream = duration.isInfinite
+            self.nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = isLiveStream
+            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] isLiveStream [\(isLiveStream)] stored in nowPlayingInfo.") }
+            if !isLiveStream {
+                self.nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = duration
+                if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] duration [\(duration)] stored in nowPlayingInfo.") }
+            }
+        }
+    }
     
     @objc
     private func appWillTerminate() {
@@ -214,12 +221,8 @@ class THEOplayerRCTNowPlayingManager {
             if let welf = self,
                let wplayer = player,
                let duration = wplayer.duration {
-                welf.nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = duration.isInfinite
-                if (!duration.isInfinite) {
-                    welf.nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = duration
-                    if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE] DURATION_CHANGE: Updating duration on NowPlayingInfoCenter...") }
-                    welf.processNowPlayingToInfoCenter()
-                }
+                welf.updateDuration(duration)
+                welf.processNowPlayingToInfoCenter()
             }
         }
         
