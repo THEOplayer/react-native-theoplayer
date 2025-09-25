@@ -50,7 +50,6 @@ class THEOplayerRCTNowPlayingManager {
            let sourceDescription = player.source,
            let metadata = sourceDescription.metadata {
             let artWorkUrlString = self.getArtWorkUrlStringFromSourceDescription(sourceDescription)
-            self.updatePlaybackState()
             self.nowPlayingInfo = [String : Any]()
             self.updateTitle(metadata.title)
             self.updateArtist(metadata.metadataKeys?["artist"] as? String)
@@ -84,14 +83,6 @@ class THEOplayerRCTNowPlayingManager {
     private func clearNowPlayingOnInfoCenter() {
         DispatchQueue.main.async {
             MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
-        }
-    }
-    
-    private func processPlaybackStateToInfoCenter(paused: Bool) {
-        if #available(iOS 13.0, tvOS 13.0, *) {
-            DispatchQueue.main.async {
-                MPNowPlayingInfoCenter.default().playbackState = paused ? MPNowPlayingPlaybackState.paused : MPNowPlayingPlaybackState.playing
-            }
         }
     }
     
@@ -154,14 +145,7 @@ class THEOplayerRCTNowPlayingManager {
     
     private func updateMediaType() {
         self.nowPlayingInfo[MPNowPlayingInfoPropertyMediaType] = NSNumber(value: 2)
-    }
-    
-    private func updatePlaybackState() {
-        if #available(iOS 13.0, tvOS 13.0, *) {
-            if let player = self.player {
-                self.processPlaybackStateToInfoCenter(paused: player.paused)
-            }
-        }
+        if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] mediaType [hardcoded 2, for video] stored in nowPlayingInfo.") }
     }
     
     private func updateArtWork(_ urlString: String?, completion: (() -> Void)?) {
@@ -217,7 +201,6 @@ class THEOplayerRCTNowPlayingManager {
             if let welf = self,
                let wplayer = player {
                 welf.updatePlaybackRate(wplayer.playbackRate)
-                welf.updatePlaybackState()
                 welf.updateCurrentTime(wplayer.currentTime)
                 if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE] PLAYING: Updating playbackState and time on NowPlayingInfoCenter...") }
                 welf.processNowPlayingToInfoCenter()
@@ -229,7 +212,6 @@ class THEOplayerRCTNowPlayingManager {
             if let welf = self,
                let wplayer = player {
                 welf.updatePlaybackRate(0)
-                welf.updatePlaybackState()
                 welf.updateCurrentTime(wplayer.currentTime)
                 if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE] PAUSED: Updating PlaybackState and time on NowPlayingInfoCenter...") }
                 welf.processNowPlayingToInfoCenter()
