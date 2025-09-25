@@ -195,6 +195,10 @@ class THEOplayerRCTNowPlayingManager {
         }
     }
     
+    private func handleChromecastStateChange(_ state: THEOplayerSDK.PlayerCastState) {
+        if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] Processing chromecast state \(state._rawValue).") }
+    }
+    
     @objc
     private func appWillTerminate() {
         if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] App will terminate notification received.") }
@@ -276,6 +280,14 @@ class THEOplayerRCTNowPlayingManager {
             if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO-EVENT] SOURCE_CHANGE") }
             self?.updateNowPlaying()
         }
+
+        // CHROME_CAST STATE_CHANGE
+        self.chromecastStateChangeListener = player.cast?.chromecast?.addEventListener(type: ChromecastEventTypes.STATE_CHANGE) { [weak self] event in
+            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO-EVENT] CHROMECAST STATE_CHANGE") }
+            if let welf = self {
+                welf.handleChromecastStateChange(event.state)
+            }
+        }
     }
     
     private func detachListeners() {
@@ -320,6 +332,11 @@ class THEOplayerRCTNowPlayingManager {
         // SOURCE_CHANGE
         if let sourceChangeListener = self.sourceChangeListener {
             player.removeEventListener(type: PlayerEventTypes.SOURCE_CHANGE, listener: sourceChangeListener)
+        }
+        
+        // CHROME_CAST STATE_CHANGE
+        if let chromecastStateChangeListener = self.chromecastStateChangeListener {
+            player.cast?.chromecast?.removeEventListener(type: ChromecastEventTypes.STATE_CHANGE, listener: chromecastStateChangeListener)
         }
     }
 }
