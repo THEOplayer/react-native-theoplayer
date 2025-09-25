@@ -20,4 +20,9 @@ data class MediaSessionConfig (
    * Whether "skip track" events should be handled the same as "fast-forward/rewind".
    */
   var convertSkipToSeek: Boolean = false,
+
+  /**
+   * Whether to allow play/pause of live assets.
+   */
+  var allowLivePlayPause: Boolean = true,
 )
