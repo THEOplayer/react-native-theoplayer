@@ -89,7 +89,6 @@ class ReactTHEOplayerContext private constructor(
   var imaIntegration: GoogleImaIntegration? = null
   private var theoAdsIntegration: TheoAdsIntegration? = null
   var castIntegration: CastIntegration? = null
-  @Suppress("UnstableApiUsage")
   var wasPlayingOnHostPause: Boolean = false
   private var isHostPaused: Boolean = false
   private var millicastIntegration: MillicastIntegration? = null
@@ -167,10 +166,14 @@ class ReactTHEOplayerContext private constructor(
     val isLive = player.duration.isInfinite()
     val isInAd = player.ads.isPlaying
     mediaSessionConnector?.enabledPlaybackActions = when {
-      isInAd || isLive && !isTV -> 0
-      isLive && isTV -> ALLOWED_PLAYBACK_ACTIONS xor
+      // Allow trick-play for live events if configured
+      isLive && mediaSessionConfig.allowLivePlayPause -> ALLOWED_PLAYBACK_ACTIONS xor
         PlaybackStateCompat.ACTION_FAST_FORWARD xor
         PlaybackStateCompat.ACTION_REWIND
+      isLive && !mediaSessionConfig.allowLivePlayPause -> 0
+      // Do not allow playback actions during ad play-out
+      isInAd -> 0
+
       else -> ALLOWED_PLAYBACK_ACTIONS
     }
   }
@@ -284,6 +287,7 @@ class ReactTHEOplayerContext private constructor(
         queueNavigator = MediaQueueNavigator(mediaSessionConfig)
       }
     }
+    applyAllowedMediaControls()
   }
 
   private fun addIntegrations() {
