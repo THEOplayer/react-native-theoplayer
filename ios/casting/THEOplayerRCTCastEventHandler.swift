@@ -52,7 +52,7 @@ class THEOplayerRCTCastEventHandler {
             if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received Chromecast STATE_CHANGE event from THEOplayer cast.chromecast") }
             if let forwardedCastEvent = self?.onNativeCastEvent {
                 let newCastState = event.state._rawValue
-                if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] New Chromecast state: \(newCastState)") }
+                if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received new Chromecast state: \(newCastState)") }
                 forwardedCastEvent([
                     CAST_EVENT_PROP_TYPE: EVENT_TYPE_CHROMECAST_STATE_CHANGE,
                     CAST_EVENT_PROP_STATE: newCastState
