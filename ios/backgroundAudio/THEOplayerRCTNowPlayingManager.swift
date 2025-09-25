@@ -21,6 +21,7 @@ class THEOplayerRCTNowPlayingManager {
     private var appTerminationObserver: Any?
     private var elapsedTimeTimer: Timer?
     
+    //private var printTimer: Timer?
     
     // MARK: - destruction
     func destroy() {
@@ -46,6 +47,21 @@ class THEOplayerRCTNowPlayingManager {
         
         // attach listeners
         self.attachListeners()
+        
+        //FOR DEBUGGING:
+        /*self.printTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true, block: { t in
+            if let info = MPNowPlayingInfoCenter.default().nowPlayingInfo {
+                print("[CURRENT INFO] MPNowPlayingInfoCenter.default().nowPlayingInfo = ")
+                info.forEach { (key: String, value: Any) in
+                    print("[CURRENT INFO]   -> \(key): \(value)")
+                }
+                print("[CURRENT INFO] playerInfo = ")
+                print("[CURRENT INFO]   -> currentTime: \(player.currentTime)")
+                print("[CURRENT INFO]   -> playbackRate: \(player.playbackRate)")
+                print("[CURRENT INFO]   -> paused: \(player.paused)")
+                print("[CURRENT INFO]   -> duration: \(player.duration ?? -1)")
+            }
+        })*/
     }
     
     func updateNowPlaying() {
