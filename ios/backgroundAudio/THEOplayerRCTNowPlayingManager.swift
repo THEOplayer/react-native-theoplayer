@@ -19,6 +19,8 @@ class THEOplayerRCTNowPlayingManager {
     private var chromecastStateChangeListener: EventListener?
 
     private var appTerminationObserver: Any?
+    private var elapsedTimeTimer: Timer?
+    
     
     // MARK: - destruction
     func destroy() {
@@ -197,6 +199,30 @@ class THEOplayerRCTNowPlayingManager {
     
     private func handleChromecastStateChange(_ state: THEOplayerSDK.PlayerCastState) {
         if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] Processing chromecast state \(state._rawValue).") }
+        if state == .connected {
+            // start reporting currentTime updates
+            self.elapsedTimeTimer?.invalidate()
+            self.elapsedTimeTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] t in
+                if let welf = self,
+                   let player = welf.player {
+                    let t = player.currentTime
+                    let r = player.paused ? player.playbackRate : 0.0
+                    welf.nowPlayingInfo = MPNowPlayingInfoCenter.default().nowPlayingInfo ?? [:]
+                    welf.nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = t
+                    welf.nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = r
+                    if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] currentTime [\(t)] stored in nowPlayingInfo.") }
+                    if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] playbackRate [\(r)] stored in nowPlayingInfo.") }
+                    welf.processNowPlayingToInfoCenter()
+                }
+            })
+            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] elapsedTimeTimer activated.") }
+        } else {
+            if self.elapsedTimeTimer != nil {
+                self.elapsedTimeTimer?.invalidate()
+                self.elapsedTimeTimer = nil;
+                if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] elapsedTimeTimer deactivted.") }
+            }
+        }
     }
     
     @objc
