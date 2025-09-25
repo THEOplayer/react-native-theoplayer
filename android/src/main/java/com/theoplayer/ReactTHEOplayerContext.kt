@@ -31,6 +31,7 @@ import com.theoplayer.android.api.millicast.MillicastIntegrationFactory
 import com.theoplayer.android.api.player.Player
 import com.theoplayer.android.api.player.RenderingTarget
 import com.theoplayer.android.connector.mediasession.MediaSessionConnector
+import com.theoplayer.android.connector.mediasession.MediaSessionListener
 import com.theoplayer.audio.AudioBecomingNoisyManager
 import com.theoplayer.audio.AudioFocusManager
 import com.theoplayer.audio.BackgroundAudioConfig
@@ -127,6 +128,18 @@ class ReactTHEOplayerContext private constructor(
 
     override fun onServiceDisconnected(className: ComponentName?) {
       binder = null
+    }
+  }
+
+  private val mediaSessionListener = object : MediaSessionListener() {
+    override fun onStop() {
+      binder?.stopForegroundService()
+    }
+    override fun onPlay() {
+      // Optionally seek to live, if configured.
+      if (mediaSessionConfig.seekToLiveOnPlay && player.duration.isInfinite()) {
+        player.currentTime = Double.POSITIVE_INFINITY
+      }
     }
   }
 
@@ -269,6 +282,7 @@ class ReactTHEOplayerContext private constructor(
   private fun applyMediaSessionConfig(connector: MediaSessionConnector?, config: MediaSessionConfig) {
     connector?.apply {
       debug = BuildConfig.LOG_MEDIASESSION_EVENTS
+      removeListener(mediaSessionListener)
 
       player = this@ReactTHEOplayerContext.player
 
@@ -282,12 +296,16 @@ class ReactTHEOplayerContext private constructor(
       // Pass metadata from source description
       setMediaSessionMetadata(player?.source)
 
+      // Do not let MediaButtons restart the player when media session is not active.
+      // https://developer.android.com/media/legacy/media-buttons#restarting-inactive-mediasessions
+      this.mediaSession.setMediaButtonReceiver(null)
+
       // Install a queue navigator, but only if we want to handle skip buttons.
       if (mediaSessionConfig.convertSkipToSeek) {
         queueNavigator = MediaQueueNavigator(mediaSessionConfig)
       }
+      addListener(mediaSessionListener)
     }
-    applyAllowedMediaControls()
   }
 
   private fun addIntegrations() {
