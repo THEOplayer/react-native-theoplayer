@@ -24,10 +24,10 @@ data class MediaSessionConfig (
   /**
    * Whether to allow play/pause of live assets.
    */
-  var allowLivePlayPause: Boolean = true,
+  var allowLivePlayPause: Boolean = false,
 
   /**
    * Whether to seek to live when resuming a live stream.
    */
-  var seekToLiveOnPlay: Boolean = false,
+  var seekToLiveOnResume: Boolean = false,
 )

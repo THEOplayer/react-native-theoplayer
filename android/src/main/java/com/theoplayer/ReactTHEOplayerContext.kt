@@ -137,7 +137,7 @@ class ReactTHEOplayerContext private constructor(
     }
     override fun onPlay() {
       // Optionally seek to live, if configured.
-      if (mediaSessionConfig.seekToLiveOnPlay && player.duration.isInfinite()) {
+      if (mediaSessionConfig.seekToLiveOnResume && player.duration.isInfinite()) {
         player.currentTime = Double.POSITIVE_INFINITY
       }
     }
