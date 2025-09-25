@@ -13,11 +13,9 @@ import android.util.Log
 import androidx.core.app.ServiceCompat
 import androidx.core.content.ContextCompat
 import androidx.media.session.MediaButtonReceiver
-import com.theoplayer.BuildConfig
 import com.theoplayer.ReactTHEOplayerContext
 import com.theoplayer.android.api.player.Player
 import com.theoplayer.android.connector.mediasession.MediaSessionConnector
-import com.theoplayer.android.connector.mediasession.MediaSessionListener
 
 private const val STOP_SERVICE_IF_APP_REMOVED = true
 
@@ -119,7 +117,6 @@ class MediaPlaybackService : Service() {
 
   override fun onDestroy() {
     super.onDestroy()
-    removeListeners()
     mediaSessionConnector.destroy()
     playerContext = null
   }
@@ -147,16 +144,7 @@ class MediaPlaybackService : Service() {
     }
 
     // Create a MediaSessionConnector.
-    mediaSessionConnector = MediaSessionConnector(mediaSession).apply {
-      debug = BuildConfig.LOG_MEDIASESSION_EVENTS
-
-      // Set mediaSession active
-      setActive(BuildConfig.EXTENSION_MEDIASESSION)
-
-      // Do not let MediaButtons restart the player when media session is not active.
-      // https://developer.android.com/media/legacy/media-buttons#restarting-inactive-mediasessions
-      mediaSession.setMediaButtonReceiver(null)
-    }
+    mediaSessionConnector = MediaSessionConnector(mediaSession)
   }
 
   private fun stopForegroundService() {
@@ -165,26 +153,8 @@ class MediaPlaybackService : Service() {
   }
 
   private fun connectPlayerContext(playerContext: ReactTHEOplayerContext) {
-    if (this.playerContext != null) {
-      removeListeners()
-    }
     this.playerContext = playerContext
-    addListeners()
     updateNotification()
-  }
-
-  private val mediaSessionListener = object : MediaSessionListener() {
-    override fun onStop() {
-      stopForegroundService()
-    }
-  }
-
-  private fun addListeners() {
-    mediaSessionConnector.addListener(mediaSessionListener)
-  }
-
-  private fun removeListeners() {
-    mediaSessionConnector.removeListener(mediaSessionListener)
   }
 
   private fun updateNotification() {
