@@ -58,7 +58,11 @@ public class THEOplayerRCTPresentationModeManager {
         return viewControllers
     }
 
-    private func moveView(_ movingView: UIView, to targetView: UIView) {
+    /**
+     * Moves a view to a new parent.
+     * The view is inserted at the provided targetViewIndex or else at the front.
+     */
+    private func moveView(_ movingView: UIView, to targetView: UIView, targetViewIndex: Int? = nil) {
         // detach the moving viewControllers from their parent
         let movingViewControllers = self.movingVCs(for: movingView)
         movingViewControllers.forEach { movedVC in
@@ -67,8 +71,13 @@ public class THEOplayerRCTPresentationModeManager {
         
         // move the actual view
         movingView.removeFromSuperview()
-        targetView.addSubview(movingView)
-        targetView.bringSubviewToFront(movingView)
+        if let viewIndex = targetViewIndex {
+            let safeIndex = min(viewIndex, targetView.subviews.count)
+            targetView.insertSubview(movingView, at: safeIndex)
+        } else {
+            targetView.addSubview(movingView)
+            targetView.bringSubviewToFront(movingView)
+        }
         
         // attach the moving viewControllers to their new parent
         if let targetViewController = targetView.findViewController() {
