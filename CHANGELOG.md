@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed an issue on Android where play-out of Millicast sources in the example app would fail. The Android NDK version needs to be at least v28.
 - Fixed an issue on Web where on older devices the `display: contents` style property is sometimes not supported.
 - Fixed an issue on Android where the `MediaPlaybackService` could be restarted after the app was closed, in some cases causing a `ForegroundServiceDidNotStartInTimeException`. A conditional receiver makes sure the service is never restarted.
+- Fixed an issue on iOS where a setup with multiple players could cause a view index NSInternalInconsistencyException after moving players in and out of fullscreen. 
 
 ## [10.0.0] - 25-09-15
 
