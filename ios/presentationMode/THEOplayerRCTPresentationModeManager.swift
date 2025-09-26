@@ -105,6 +105,12 @@ public class THEOplayerRCTPresentationModeManager {
         }
         self.rnInlineMode = .inline
     }
+    
+    /*private func logSubviews(of parent: UIView) {
+        for (index, subview) in parent.subviews.enumerated() {
+            print("Index \(index): \(type(of: subview)) - \(subview)")
+        }
+    }*/
 
     private func setHomeIndicatorHidden(_ hidden: Bool) {
 #if os(iOS)
