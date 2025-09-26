@@ -15,6 +15,7 @@ public class THEOplayerRCTPresentationModeManager {
   
     private weak var containerView: UIView?                  // view containing the playerView and it's siblings (e.g. UI)
     private weak var inlineParentView: UIView?               // target view for inline representation
+    private var inlineParentViewIndex: Int?
         
     // MARK: Events
     var onNativePresentationModeChange: RCTDirectEventBlock?
@@ -94,9 +95,11 @@ public class THEOplayerRCTPresentationModeManager {
         
         // move the player
         if let containerView = self.containerView,
+           let inlineParentView = self.inlineParentView,
            let fullscreenParentView = self.view?.findParentViewOfType(["RCTRootContentView", "RCTRootComponentView"])  {
-            self.moveView(containerView, to: fullscreenParentView)
-
+            self.inlineParentViewIndex = inlineParentView.subviews.firstIndex(of: containerView)
+            self.moveView(containerView, to: fullscreenParentView, targetViewIndex: nil)
+            
             // start hiding home indicator
             setHomeIndicatorHidden(true)
         }
