@@ -16,7 +16,6 @@ class THEOplayerRCTNowPlayingManager {
     private var rateChangeListener: EventListener?
     private var seekedListener: EventListener?
     private var sourceChangeListener: EventListener?
-    private var chromecastStateChangeListener: EventListener?
 
     private var appTerminationObserver: Any?
     private var chromecastUpdateTimer: Timer?
@@ -222,34 +221,6 @@ class THEOplayerRCTNowPlayingManager {
         }
     }
     
-    private func handleChromecastStateChange(_ state: THEOplayerSDK.PlayerCastState) {
-        if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] Processing chromecast state \(state._rawValue).") }
-        if state == .connected {
-            if self.chromecastUpdateTimer == nil {
-                // start reporting currentTime updates
-                self.chromecastUpdateTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] t in
-                    if let welf = self,
-                       let player = welf.player {
-                        let time = player.currentTime
-                        let rate = player.paused ? 0.0 : player.playbackRate
-                        welf.nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = time
-                        welf.nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = rate
-                        if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] CHROMECAST UPDATE: currentTime [\(time)] stored in nowPlayingInfo.") }
-                        if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] CHROMECAST UPDATE: playbackRate [\(rate)] stored in nowPlayingInfo.") }
-                        welf.processNowPlayingToInfoCenter()
-                    }
-                })
-                if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] elapsedTimeTimer activated.") }
-            }
-        } else {
-            if self.chromecastUpdateTimer != nil {
-                self.chromecastUpdateTimer?.invalidate()
-                self.chromecastUpdateTimer = nil;
-                if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] elapsedTimeTimer deactivated.") }
-            }
-        }
-    }
-    
     @objc
     private func appWillTerminate() {
         if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] App will terminate notification received.") }
@@ -331,14 +302,6 @@ class THEOplayerRCTNowPlayingManager {
             if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO-EVENT] SOURCE_CHANGE \(event.source == nil ? "to nil" : "")") }
             self?.updateNowPlaying()
         }
-
-        // CHROME_CAST STATE_CHANGE
-        self.chromecastStateChangeListener = player.cast?.chromecast?.addEventListener(type: ChromecastEventTypes.STATE_CHANGE) { [weak self] event in
-            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO-EVENT] CHROMECAST STATE_CHANGE") }
-            if let welf = self {
-                welf.handleChromecastStateChange(event.state)
-            }
-        }
     }
     
     private func detachListeners() {
@@ -383,11 +346,6 @@ class THEOplayerRCTNowPlayingManager {
         // SOURCE_CHANGE
         if let sourceChangeListener = self.sourceChangeListener {
             player.removeEventListener(type: PlayerEventTypes.SOURCE_CHANGE, listener: sourceChangeListener)
-        }
-        
-        // CHROME_CAST STATE_CHANGE
-        if let chromecastStateChangeListener = self.chromecastStateChangeListener {
-            player.cast?.chromecast?.removeEventListener(type: ChromecastEventTypes.STATE_CHANGE, listener: chromecastStateChangeListener)
         }
     }
 }
