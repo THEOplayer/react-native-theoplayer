@@ -113,7 +113,7 @@ public class THEOplayerRCTPresentationModeManager {
         // move the player
         if let containerView = self.containerView,
            let inlineParentView = self.inlineParentView {
-            self.moveView(containerView, to: inlineParentView)
+            self.moveView(containerView, to: inlineParentView, targetViewIndex: self.inlineParentViewIndex)
         }
         self.rnInlineMode = .inline
     }
