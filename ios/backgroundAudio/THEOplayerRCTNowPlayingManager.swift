@@ -225,22 +225,22 @@ class THEOplayerRCTNowPlayingManager {
     private func handleChromecastStateChange(_ state: THEOplayerSDK.PlayerCastState) {
         if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] Processing chromecast state \(state._rawValue).") }
         if state == .connected {
-            // start reporting currentTime updates
-            self.chromecastUpdateTimer?.invalidate()
-            self.chromecastUpdateTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] t in
-                if let welf = self,
-                   let player = welf.player {
-                    let time = player.currentTime
-                    let rate = player.paused ? player.playbackRate : 0.0
-                    welf.nowPlayingInfo = MPNowPlayingInfoCenter.default().nowPlayingInfo ?? [:]
-                    welf.nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = time
-                    welf.nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = rate
-                    if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] currentTime [\(time)] stored in nowPlayingInfo.") }
-                    if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] playbackRate [\(rate)] stored in nowPlayingInfo.") }
-                    welf.processNowPlayingToInfoCenter()
-                }
-            })
-            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] elapsedTimeTimer activated.") }
+            if self.chromecastUpdateTimer == nil {
+                // start reporting currentTime updates
+                self.chromecastUpdateTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] t in
+                    if let welf = self,
+                       let player = welf.player {
+                        let time = player.currentTime
+                        let rate = player.paused ? 0.0 : player.playbackRate
+                        welf.nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = time
+                        welf.nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = rate
+                        if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] CHROMECAST UPDATE: currentTime [\(time)] stored in nowPlayingInfo.") }
+                        if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] CHROMECAST UPDATE: playbackRate [\(rate)] stored in nowPlayingInfo.") }
+                        welf.processNowPlayingToInfoCenter()
+                    }
+                })
+                if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] elapsedTimeTimer activated.") }
+            }
         } else {
             if self.chromecastUpdateTimer != nil {
                 self.chromecastUpdateTimer?.invalidate()
