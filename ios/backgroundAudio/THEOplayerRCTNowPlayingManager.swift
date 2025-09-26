@@ -96,7 +96,7 @@ class THEOplayerRCTNowPlayingManager {
     private func processNowPlayingToInfoCenter() {
         let nowPlayingInfo = self.nowPlayingInfo
         if !nowPlayingInfo.isEmpty {
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
                 if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] nowPlayingInfo processed to infoCenter.") }
                 
@@ -110,7 +110,7 @@ class THEOplayerRCTNowPlayingManager {
     }
 
     private func clearNowPlayingOnInfoCenter() {
-        DispatchQueue.main.async {
+        Task { @MainActor in
             MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
             if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] clearing nowPlayingInfo (to nil) on infoCenter.") }
             
