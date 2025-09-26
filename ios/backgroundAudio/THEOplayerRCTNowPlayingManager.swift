@@ -16,9 +16,7 @@ class THEOplayerRCTNowPlayingManager {
     private var rateChangeListener: EventListener?
     private var seekedListener: EventListener?
     private var sourceChangeListener: EventListener?
-
     private var appTerminationObserver: Any?
-    private var chromecastUpdateTimer: Timer?
     
     // MARK: - destruction
     func destroy() {
@@ -215,7 +213,7 @@ class THEOplayerRCTNowPlayingManager {
             self.nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = isLiveStream
             if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] isLiveStream [\(isLiveStream)] stored in nowPlayingInfo.") }
             if !isLiveStream {
-                self.nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = duration
+                self.nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = NSNumber(value: duration)
                 if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] duration [\(duration)] stored in nowPlayingInfo.") }
             }
         }
