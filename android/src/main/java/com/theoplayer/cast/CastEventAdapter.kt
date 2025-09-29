@@ -6,6 +6,7 @@ import com.theoplayer.android.api.cast.Cast
 import com.theoplayer.android.api.cast.chromecast.CastError
 import com.theoplayer.android.api.cast.chromecast.ErrorCode
 import com.theoplayer.android.api.cast.chromecast.PlayerCastState
+import com.theoplayer.android.api.event.EventListener
 import com.theoplayer.android.api.event.chromecast.CastErrorEvent
 import com.theoplayer.android.api.event.chromecast.CastStateChangeEvent
 import com.theoplayer.android.api.event.chromecast.ChromecastEventTypes
@@ -22,17 +23,20 @@ class CastEventAdapter(private val castApi: Cast, private val emitter: Emitter) 
     fun emit(payload: WritableMap?)
   }
 
+  private val onCastError: EventListener<CastErrorEvent> = EventListener { handleCastError(it) }
+  private val onStateChange: EventListener<CastStateChangeEvent> = EventListener { handleStateChange(it) }
+
   init {
-    castApi.chromecast.addEventListener(ChromecastEventTypes.ERROR, this::onCastError)
-    castApi.chromecast.addEventListener(ChromecastEventTypes.STATECHANGE, this::onStateChange)
+    castApi.chromecast.addEventListener(ChromecastEventTypes.ERROR, onCastError)
+    castApi.chromecast.addEventListener(ChromecastEventTypes.STATECHANGE, onStateChange)
   }
 
   fun destroy() {
-    castApi.chromecast.removeEventListener(ChromecastEventTypes.ERROR, this::onCastError)
-    castApi.chromecast.removeEventListener(ChromecastEventTypes.STATECHANGE, this::onStateChange)
+    castApi.chromecast.removeEventListener(ChromecastEventTypes.ERROR, onCastError)
+    castApi.chromecast.removeEventListener(ChromecastEventTypes.STATECHANGE, onStateChange)
   }
 
-  private fun onCastError(event: CastErrorEvent) {
+  private fun handleCastError(event: CastErrorEvent) {
     val payload = Arguments.createMap()
     payload.putString(EVENT_PROP_TYPE, "chromecasterror")
     payload.putMap(EVENT_PROP_ERROR, serializeError(event.error))
@@ -62,7 +66,7 @@ class CastEventAdapter(private val castApi: Cast, private val emitter: Emitter) 
     return errorPayload
   }
 
-  private fun onStateChange(event: CastStateChangeEvent) {
+  private fun handleStateChange(event: CastStateChangeEvent) {
     val payload = Arguments.createMap()
     payload.putString(EVENT_PROP_TYPE, "chromecaststatechange")
     if (event.state != null) {
