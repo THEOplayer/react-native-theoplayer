@@ -15,6 +15,7 @@ public class THEOplayerRCTPresentationModeManager {
   
     private weak var containerView: UIView?                  // view containing the playerView and it's siblings (e.g. UI)
     private weak var inlineParentView: UIView?               // target view for inline representation
+    private var inlineParentViewIndex: Int?
         
     // MARK: Events
     var onNativePresentationModeChange: RCTDirectEventBlock?
@@ -58,7 +59,11 @@ public class THEOplayerRCTPresentationModeManager {
         return viewControllers
     }
 
-    private func moveView(_ movingView: UIView, to targetView: UIView) {
+    /**
+     * Moves a view to a new parent.
+     * The view is inserted at the provided targetViewIndex or else at the front.
+     */
+    private func moveView(_ movingView: UIView, to targetView: UIView, targetViewIndex: Int? = nil) {
         // detach the moving viewControllers from their parent
         let movingViewControllers = self.movingVCs(for: movingView)
         movingViewControllers.forEach { movedVC in
@@ -67,8 +72,13 @@ public class THEOplayerRCTPresentationModeManager {
         
         // move the actual view
         movingView.removeFromSuperview()
-        targetView.addSubview(movingView)
-        targetView.bringSubviewToFront(movingView)
+        if let viewIndex = targetViewIndex {
+            let safeIndex = min(viewIndex, targetView.subviews.count)
+            targetView.insertSubview(movingView, at: safeIndex)
+        } else {
+            targetView.addSubview(movingView)
+            targetView.bringSubviewToFront(movingView)
+        }
         
         // attach the moving viewControllers to their new parent
         if let targetViewController = targetView.findViewController() {
@@ -85,9 +95,11 @@ public class THEOplayerRCTPresentationModeManager {
         
         // move the player
         if let containerView = self.containerView,
+           let inlineParentView = self.inlineParentView,
            let fullscreenParentView = self.view?.findParentViewOfType(["RCTRootContentView", "RCTRootComponentView"])  {
-            self.moveView(containerView, to: fullscreenParentView)
-
+            self.inlineParentViewIndex = inlineParentView.subviews.firstIndex(of: containerView)
+            self.moveView(containerView, to: fullscreenParentView, targetViewIndex: nil)
+            
             // start hiding home indicator
             setHomeIndicatorHidden(true)
         }
@@ -101,10 +113,16 @@ public class THEOplayerRCTPresentationModeManager {
         // move the player
         if let containerView = self.containerView,
            let inlineParentView = self.inlineParentView {
-            self.moveView(containerView, to: inlineParentView)
+            self.moveView(containerView, to: inlineParentView, targetViewIndex: self.inlineParentViewIndex)
         }
         self.rnInlineMode = .inline
     }
+    
+    /*private func logSubviews(of parent: UIView) {
+        for (index, subview) in parent.subviews.enumerated() {
+            print("Index \(index): \(type(of: subview)) - \(subview)")
+        }
+    }*/
 
     private func setHomeIndicatorHidden(_ hidden: Bool) {
 #if os(iOS)
