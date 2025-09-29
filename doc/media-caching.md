@@ -14,6 +14,7 @@ The Media Cache feature is accessible on all platforms except for tvOS.
 
 This page is structured as follows:
 
+- [Prerequisites](#prerequisites)
 - [Caching Workflow](#caching-workflow)
 - [Creating a CachingTask](#creating-a-cachingtask)
 - [Controlling the CachingTask](#controlling-the-cachingtask)
@@ -21,7 +22,19 @@ This page is structured as follows:
 - [Using React hooks](#using-react-hooks)
 - [The Example App](#the-example-app)
 
-### Caching Workflow
+## Prerequisites
+
+### Android
+
+Android applications that use the media cache feature must [declare](../example/android/app/src/main/AndroidManifest.xml)
+the `FOREGROUND_SERVICE_DATA_SYNC` permission in their `AndroidManifest.xml`. Media cache downloads are handled by an
+Android Service, which must run in the foreground to display a notification that tracks the download progress.
+
+```
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+```
+
+## Caching Workflow
 Caching a media asset encompasses the following stages:
 
 - CachingTask creation: The caching process commences by creating a CachingTask, which orchestrates the downloading of the media content for offline access.
