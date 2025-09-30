@@ -12,6 +12,7 @@ let PROP_INTERSTITIAL_ID: String = "id"
 let PROP_INTERSTITIAL_TYPE: String = "type"
 let PROP_INTERSTITIAL_START_TIME: String = "startTime"
 let PROP_INTERSTITIAL_DURATION: String = "duration"
+let PROP_AD_TAG_PARAMETERS: Dictionary<String, String> = "duration"
 
 // adbreak specific
 let PROP_ADBREAK_INTERSTITIAL_LAYOUT: String = "layout"
@@ -52,6 +53,8 @@ class THEOplayerRCTTHEOadsEventAdapter {
                 ads.append(THEOplayerRCTAdAdapter.fromAd(ad: ad))
             }
             interstitialData[PROP_ADBREAK_INTERSTITIAL_ADS] = ads
+            // TODO this should not be adBreakInterstitial specific. PR to update on native iOS is open
+            interstitialData[PROP_AD_TAG_PARAMETERS] = adBreakInterstitial.adTagParameters
         }
         
         // OVERLAY-INTERSTITIAL SPECIFIC
