@@ -12,7 +12,7 @@ let PROP_INTERSTITIAL_ID: String = "id"
 let PROP_INTERSTITIAL_TYPE: String = "type"
 let PROP_INTERSTITIAL_START_TIME: String = "startTime"
 let PROP_INTERSTITIAL_DURATION: String = "duration"
-let PROP_AD_TAG_PARAMETERS: Dictionary<String, String> = "duration"
+let PROP_AD_TAG_PARAMETERS: String = "adTagParameters"
 
 // adbreak specific
 let PROP_ADBREAK_INTERSTITIAL_LAYOUT: String = "layout"
