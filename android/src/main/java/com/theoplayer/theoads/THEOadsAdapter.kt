@@ -69,7 +69,7 @@ object THEOadsAdapter {
   }
 
   fun fromAdTagParameters(adTagParameters: Map<String, String>): WritableMap {
-    const writableMap = Arguments.createMap();
+    val writableMap = Arguments.createMap();
     for ((key, value) in adTagParameters) {
       writableMap.putString(key, value)
     }
