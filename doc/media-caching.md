@@ -34,6 +34,21 @@ Android Service, which must run in the foreground to display a notification that
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 ```
 
+### iOS
+
+The iOS player SDK needs a valid license **when the download is started**, which differs from other platforms
+that only check the license on play-out.
+
+The license can be configured either in the `PlayerConfiguration` when creating a
+player, or by putting it in the `Info.plist` of your app:
+
+```
+<key>THEOplayerLicense</key>
+<string>[license]</string>
+```
+
+Also note that the MediaCache feature is **not supported on iOS simulators**.
+
 ## Caching Workflow
 Caching a media asset encompasses the following stages:
 
