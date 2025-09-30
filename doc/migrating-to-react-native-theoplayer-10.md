@@ -41,6 +41,16 @@ was also removed.
 The `PlaybackSettingsAPI`, which allowed to control start-up and lip sync correction on the legacy
 pipeline, has been removed.
 
+### Update `compileSdk` to 36 or higher
+
+The underlying Android SDK depends on the AndroidX Core library, which requires `compileSdk 36` as of
+version 1.17.0.
+
+Update the `compileSdk` to be `36` (or higher) in your module-level `build.gradle` file.
+
+We also recommend updating the Android Gradle Plugin to the latest version. In Android Studio, go to
+Tools → AGP Upgrade Assistant and follow the steps to update AGP in your project.
+
 ### Updated `minSdk` to API 23 on Android
 
 This aligns with [other Android Jetpack libraries requiring API 23 as of June 2025](https://developer.android.com/jetpack/androidx/versions#version-table).
