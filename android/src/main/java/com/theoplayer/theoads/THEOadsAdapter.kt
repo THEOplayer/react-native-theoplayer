@@ -64,8 +64,16 @@ object THEOadsAdapter {
         putMap(PROP_SIZE, fromOverlaySize(interstitial.size))
       }
 
-      putMap(PROP_AD_TAG_PARAMETERS, interstitial.adTagParameters)
+      putMap(PROP_AD_TAG_PARAMETERS, fromAdTagParameters(interstitial.adTagParameters))
     }
+  }
+
+  fun fromAdTagParameters(adTagParameters: Map<String, String>): WritableMap {
+    const writableMap = Arguments.createMap();
+    for ((key, value) in adTagParameters) {
+      writableMap.putString(key, value)
+    }
+    return writableMap
   }
 
   fun fromOverlayPosition(position: OverlayPosition): WritableMap {
