@@ -28,7 +28,7 @@ class THEOadsEventAdapter(private val api: TheoAdsIntegration, private val emitt
     fun emit(payload: WritableMap?)
   }
 
-  private val onEvent: EventListener<TheoAdsEvent<*>> = EventListener { handleEvent(it) }
+  private val onEvent = EventListener<TheoAdsEvent<*>> { handleEvent(it) }
 
   init {
     FORWARDED_EVENTS.forEach { api.addEventListener(it, onEvent) }

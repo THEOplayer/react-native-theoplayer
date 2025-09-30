@@ -22,10 +22,14 @@ class THEOliveEventAdapter(private val theoLiveApi: TheoLive, private val emitte
     fun emit(payload: WritableMap?)
   }
 
-  private val onDistributionLoadStart: EventListener<DistributionLoadStartEvent> = EventListener { onDistributionLoadStart(it) }
-  private val onDistributionOffline: EventListener<DistributionOfflineEvent> = EventListener { onDistributionOffline(it) }
-  private val onEndPointLoaded: EventListener<EndpointLoadedEvent> = EventListener { onEndPointLoaded(it) }
-  private val onIntentOfFallback: EventListener<IntentToFallbackEvent> = EventListener { onIntentOfFallback(it) }
+  private val onDistributionLoadStart =
+    EventListener<DistributionLoadStartEvent> { onDistributionLoadStart(it) }
+  private val onDistributionOffline =
+    EventListener<DistributionOfflineEvent> { onDistributionOffline(it) }
+  private val onEndPointLoaded =
+    EventListener<EndpointLoadedEvent> { onEndPointLoaded(it) }
+  private val onIntentOfFallback =
+    EventListener<IntentToFallbackEvent> { onIntentOfFallback(it) }
 
   init {
     theoLiveApi.addEventListener(TheoLiveEventTypes.DISTRIBUTIONLOADSTART, onDistributionLoadStart)
@@ -35,7 +39,10 @@ class THEOliveEventAdapter(private val theoLiveApi: TheoLive, private val emitte
   }
 
   fun destroy() {
-    theoLiveApi.removeEventListener(TheoLiveEventTypes.DISTRIBUTIONLOADSTART, onDistributionLoadStart)
+    theoLiveApi.removeEventListener(
+      TheoLiveEventTypes.DISTRIBUTIONLOADSTART,
+      onDistributionLoadStart
+    )
     theoLiveApi.removeEventListener(TheoLiveEventTypes.DISTRIBUTIONOFFLINE, onDistributionOffline)
     theoLiveApi.removeEventListener(TheoLiveEventTypes.ENDPOINTLOADED, onEndPointLoaded)
     theoLiveApi.removeEventListener(TheoLiveEventTypes.INTENTTOFALLBACK, onIntentOfFallback)

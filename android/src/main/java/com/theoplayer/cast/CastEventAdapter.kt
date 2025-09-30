@@ -23,8 +23,8 @@ class CastEventAdapter(private val castApi: Cast, private val emitter: Emitter) 
     fun emit(payload: WritableMap?)
   }
 
-  private val onCastError: EventListener<CastErrorEvent> = EventListener { handleCastError(it) }
-  private val onStateChange: EventListener<CastStateChangeEvent> = EventListener { handleStateChange(it) }
+  private val onCastError = EventListener<CastErrorEvent> { handleCastError(it) }
+  private val onStateChange = EventListener<CastStateChangeEvent> { handleStateChange(it) }
 
   init {
     castApi.chromecast.addEventListener(ChromecastEventTypes.ERROR, onCastError)
@@ -43,7 +43,7 @@ class CastEventAdapter(private val castApi: Cast, private val emitter: Emitter) 
     emitter.emit(payload)
   }
 
-  private fun serializeError(error: CastError): WritableMap  {
+  private fun serializeError(error: CastError): WritableMap {
     val errorPayload = Arguments.createMap()
     @Suppress("SENSELESS_NULL_IN_WHEN")
     errorPayload.putString(
