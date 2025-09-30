@@ -40,7 +40,8 @@ class THEOplayerRCTTHEOadsEventAdapter {
         if let duration = interstitial.duration {
             interstitialData[PROP_INTERSTITIAL_DURATION] = duration
         }
-        
+        interstitialData[PROP_AD_TAG_PARAMETERS] = interstitial.adTagParameters
+
         // ADBREAK-INTERSTITIAL SPECIFIC:
         if let adBreakInterstitial = interstitial as? THEOplayerTHEOadsIntegration.AdBreakInterstitial {
             interstitialData[PROP_ADBREAK_INTERSTITIAL_LAYOUT] = THEOplayerRCTTHEOadsEventAdapter.fromInterstitialLayout(adBreakInterstitial.layout)
@@ -53,8 +54,6 @@ class THEOplayerRCTTHEOadsEventAdapter {
                 ads.append(THEOplayerRCTAdAdapter.fromAd(ad: ad))
             }
             interstitialData[PROP_ADBREAK_INTERSTITIAL_ADS] = ads
-            // TODO this should not be adBreakInterstitial specific. PR to update on native iOS is open
-            interstitialData[PROP_AD_TAG_PARAMETERS] = adBreakInterstitial.adTagParameters
         }
         
         // OVERLAY-INTERSTITIAL SPECIFIC
