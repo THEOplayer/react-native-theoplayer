@@ -61,7 +61,7 @@ export enum PlayerEventType {
   PRESENTATIONMODE_CHANGE = 'presentationmodechange',
   DESTROY = 'destroy',
   /**
-   * @deprecated Use {@link PlayerEventType.DIMENSION_CHANGE} instead
+   * @deprecated Use {@link PlayerEventType.DIMENSION_CHANGE} instead. This event is set for removal in version 11.
    */
   RESIZE = 'resize',
   DIMENSION_CHANGE = 'dimensionchange',
@@ -234,7 +234,7 @@ export interface PlayerEventMap {
   /**
    * Dispatched when the player size changes.
    *
-   * @deprecated Use {@link dimensionchange} instead.
+   * @deprecated Use {@link dimensionchange} instead. This event is set for removal in version 11.
    */
   [PlayerEventType.RESIZE]: ResizeEvent;
 

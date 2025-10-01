@@ -76,7 +76,7 @@ export interface DimensionChangeEvent extends Event<PlayerEventType.DIMENSION_CH
  * @category Player
  * @public
  *
- * @deprecated use {@link DimensionChangeEvent} instead
+ * @deprecated use {@link DimensionChangeEvent} instead. This event is set for removal in version 11.
  */
 export interface ResizeEvent extends Event<PlayerEventType.RESIZE> {
   /**
