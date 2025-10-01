@@ -453,14 +453,12 @@ public class THEOplayerRCTMainEventHandler {
             if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] CanPlay listener dettached from THEOplayer") }
         }
         
-        // RESIZE
-        /*if let resizeListener = self.resizeListener {
-            player.removeEventListener(type: PlayerEventTypes.RESIZE, listener: resizeListener)
-            if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] Resize listener dettached from THEOplayer") }
-        }*/
+        // DIMENSION CHANGE
+        if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] Invalidate dimensionChangeObserver from THEOplayer") }
         self.dimensionChangeObserver?.invalidate()
         self.dimensionChangeObserver = nil
       
+        // RESIZE
         if let videoResizeListener = self.videoResizeListener {
           player.removeEventListener(type: PlayerEventTypes.RESIZE, listener: videoResizeListener)
           if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] Resize listener dettached from THEOplayer") }
