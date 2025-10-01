@@ -57,7 +57,7 @@ public class THEOplayerRCTMainEventHandler {
     private var videoResizeListener: EventListener?
     
     // MARK: player observer
-    private var videoRectObserver: NSKeyValueObservation?
+    private var dimensionChangeObserver: NSKeyValueObservation?
     
     // MARK: - destruction
     func destroy() {
@@ -328,7 +328,7 @@ public class THEOplayerRCTMainEventHandler {
         if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] Resize listener attached to THEOplayer") }
         
         // DIMENSION CHANGE: implemented using videoRect Observation
-        self.videoRectObserver = player.observe(\.videoRect, options: [.new]) { [weak self, weak player] view, change in
+        self.dimensionChangeObserver = player.observe(\.videoRect, options: [.new]) { [weak self, weak player] view, change in
             if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Observed videoRect change on THEOplayer") }
             if let wplayer = player,
                let forwardedDimensionChangeEvent = self?.onNativeDimensionChange {
@@ -460,8 +460,8 @@ public class THEOplayerRCTMainEventHandler {
             player.removeEventListener(type: PlayerEventTypes.RESIZE, listener: resizeListener)
             if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] Resize listener dettached from THEOplayer") }
         }*/
-        self.videoRectObserver?.invalidate()
-        self.videoRectObserver = nil
+        self.dimensionChangeObserver?.invalidate()
+        self.dimensionChangeObserver = nil
       
         if let videoResizeListener = self.videoResizeListener {
           player.removeEventListener(type: PlayerEventTypes.RESIZE, listener: videoResizeListener)
