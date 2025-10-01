@@ -29,7 +29,6 @@ import {
   RateChangeEvent,
   removeTrack,
   RenderingTarget,
-  ResizeEvent,
   SeekedEvent,
   SeekingEvent,
   SourceDescription,
@@ -91,7 +90,6 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this.addEventListener(PlayerEventType.MEDIA_TRACK, this.onMediaTrack);
     this.addEventListener(PlayerEventType.MEDIA_TRACK_LIST, this.onMediaTrackList);
     this.addEventListener(PlayerEventType.PRESENTATIONMODE_CHANGE, this.onPresentationModeChange);
-    this.addEventListener(PlayerEventType.RESIZE, this.onResize);
     this.addEventListener(PlayerEventType.DIMENSION_CHANGE, this.onDimensionChange);
     this.addEventListener(PlayerEventType.VIDEO_RESIZE, this.onVideoResize);
   }
@@ -118,11 +116,6 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   private onTimeupdate = (event: TimeUpdateEvent) => {
     this._state.currentTime = event.currentTime;
     this._state.currentProgramDateTime = event.currentProgramDateTime;
-  };
-
-  private onResize = (event: ResizeEvent) => {
-    this._state.width = event.width;
-    this._state.height = event.height;
   };
 
   private onDimensionChange = (event: DimensionChangeEvent) => {
