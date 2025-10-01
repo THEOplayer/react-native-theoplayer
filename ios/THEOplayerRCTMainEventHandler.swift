@@ -52,8 +52,6 @@ public class THEOplayerRCTMainEventHandler {
     private var rateChangeListener: EventListener?
     private var waitingListener: EventListener?
     private var canPlayListener: EventListener?
-    private var dimensionChangeListener: EventListener?
-    private var presentationModeChangeListener: EventListener?
     private var videoResizeListener: EventListener?
     
     // MARK: player observer
