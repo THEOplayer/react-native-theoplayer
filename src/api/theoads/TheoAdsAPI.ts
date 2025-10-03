@@ -1,4 +1,6 @@
+import { EventDispatcher } from '../event/EventDispatcher';
 import { Interstitial } from './interstitial/Interstitial';
+import { TheoAdsEventMap } from './TheoAdsEventMap';
 
 /**
  * The THEOads API.
@@ -9,7 +11,7 @@ import { Interstitial } from './interstitial/Interstitial';
  * @category THEOads
  * @public
  */
-export interface TheoAdsAPI {
+export interface TheoAdsAPI extends EventDispatcher<TheoAdsEventMap> {
   /**
    * The currently playing interstitials.
    */
