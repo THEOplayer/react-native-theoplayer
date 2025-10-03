@@ -48,17 +48,17 @@ export interface MediaControlConfiguration {
   readonly convertSkipToSeek?: boolean;
 
   /**
-   * A flag that controls whether play/pause for live streams is enabled.
+   * A flag that indicates whether controls for live streams are enabled.
    *
-   * @defaultValue `false`
+   * @defaultValue `true`
    *
    * @platform ios,android
    */
-  readonly allowLivePlayPause?: boolean;
+  readonly enableControlsForLive?: boolean;
 
   /**
    * A flag that controls whether to seek to the live edge when resuming a paused live stream.
-   * Note that {@allowLivePlayPause} needs to be enabled for this property to have effect.
+   * Note that {@enableControlsForLive} needs to be enabled for this property to have effect.
    *
    * @defaultValue `false`
    *
