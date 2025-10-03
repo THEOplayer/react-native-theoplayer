@@ -101,8 +101,7 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     
     @objc private func onPlayCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
         if let player = self.player,
-           !self.inAd,
-           player.paused {
+           !self.inAd {
             player.play()
             if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Play command handled.") }
         } else {
@@ -113,8 +112,7 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     
     @objc private func onPauseCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
         if let player = self.player,
-           !self.inAd,
-           !player.paused {
+           !self.inAd {
             player.pause()
             if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Pause command handled.") }
         } else {
@@ -127,8 +125,10 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         if let player = self.player,
            !self.inAd {
             if player.paused {
+                if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Toggled to playing.") }
                 player.play()
             } else {
+                if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Toggled to paused.") }
                 player.pause()
             }
             if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Toggle play/pause command handled.") }
