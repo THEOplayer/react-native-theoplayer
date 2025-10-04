@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added an explicit clearing of the NowPlayingInfo on iOS, when the app receives a willTerminateNotification, to make sure all NowPlayingInfo is removed from the lock screen when an app is closed.
 
+- Added `fontPath` to `TextTrackStyle` to allow loading custom fonts from the Android assets folder.
+
 ### Fixed
 
 - Fixed an issue on Android where play-out of Millicast sources in the example app would fail. The Android NDK version needs to be at least v28.
