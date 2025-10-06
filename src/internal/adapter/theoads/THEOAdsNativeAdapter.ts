@@ -18,12 +18,12 @@ export class THEOAdsNativeAdapter implements TheoAdsAPI {
 
   async getCurrentInterstitials(): Promise<readonly Interstitial[]> {
     const interstitials: Interstitial[] = await NativeTHEOAdsModule.currentInterstitials(this._player.nativeHandle);
-    return interstitials.map(createNativeInterstitial);
+    return interstitials.map((interstitial) => createNativeInterstitial(this._player.nativeHandle, interstitial));
   }
 
   async getScheduledInterstitials(): Promise<readonly Interstitial[]> {
     const interstitials: Interstitial[] = await NativeTHEOAdsModule.scheduledInterstitials(this._player.nativeHandle);
-    return interstitials.map(createNativeInterstitial);
+    return interstitials.map((interstitial) => createNativeInterstitial(this._player.nativeHandle, interstitial));
   }
 
   replaceAdTagParameters(adTagParameters?: Record<string, string>): void {
