@@ -54,7 +54,7 @@ abstract class NativeInterstitial implements Interstitial {
 }
 
 export class NativeAdBreakInterstitial extends NativeInterstitial implements AdBreakInterstitial {
-  type: 'adbreak' = 'adbreak';
+  type = 'adbreak' as const;
   readonly layout: TheoAdsLayout;
   readonly backdropUri: string | undefined;
   readonly ads: readonly Ad[];
@@ -68,7 +68,7 @@ export class NativeAdBreakInterstitial extends NativeInterstitial implements AdB
 }
 
 export class NativeOverlayInterstitial extends NativeInterstitial implements OverlayInterstitial {
-  type: 'overlay' = 'overlay';
+  type = 'overlay' as const;
   readonly imageUrl: string | undefined;
   readonly clickThrough: string | undefined;
   readonly position: OverlayPosition;
