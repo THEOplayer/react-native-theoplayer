@@ -5,11 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [10.1.0] - 25-10-06
 
 ### Added
 
-- Added an explicit clearing of the NowPlayingInfo on iOS, when the app receives a willTerminateNotification, to make sure all NowPlayingInfo is removed from the lock screen when an app is closed.
+- Added an explicit clearing of the NowPlayingInfo on iOS, when the app receives a `willTerminateNotification`, to make sure all NowPlayingInfo is removed from the lock screen when an app is closed.
 
 ### Fixed
 
