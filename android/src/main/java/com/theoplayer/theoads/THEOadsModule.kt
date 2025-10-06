@@ -67,7 +67,7 @@ class THEOadsModule(context: ReactApplicationContext) : ReactContextBaseJavaModu
       if (BuildConfig.EXTENSION_THEOADS) {
         val theoAds = view?.player?.theoAds
         val interstitials = theoAds?.currentInterstitials + theoAds?.scheduledInterstitials
-        interstitials.find { it.id == id }?.let { interstitial -> 
+        interstitials?.find { it.id == id }?.let { interstitial -> 
           interstitial.adTagParameters = adTagParameters.toHashMap().mapValues { it.value.toString() }
         }
       }
