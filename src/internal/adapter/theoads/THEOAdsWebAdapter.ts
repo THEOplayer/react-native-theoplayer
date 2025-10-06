@@ -1,13 +1,10 @@
+import { Interstitial, TheoAdsAPI } from 'react-native-theoplayer';
 import type { ChromelessPlayer } from 'theoplayer';
-import { TheoAdsAPI, Interstitial } from 'react-native-theoplayer';
-import { DefaultEventDispatcher } from '../event/DefaultEventDispatcher';
-import { TheoAdsEventMap } from '../../../api/theoads/TheoAdsEventMap';
 
-export class THEOAdsWebAdapter extends DefaultEventDispatcher<TheoAdsEventMap> implements TheoAdsAPI {
+export class THEOAdsWebAdapter implements TheoAdsAPI {
   private readonly _player: ChromelessPlayer;
 
   constructor(player: ChromelessPlayer) {
-    super();
     this._player = player;
   }
 

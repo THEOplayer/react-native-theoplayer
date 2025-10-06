@@ -1,16 +1,12 @@
 import { NativeModules } from 'react-native';
 import { Interstitial, TheoAdsAPI, type THEOplayerView } from 'react-native-theoplayer';
-import { TheoAdsEventMap } from '../../../api/theoads/TheoAdsEventMap';
-import { DefaultEventDispatcher } from '../event/DefaultEventDispatcher';
 import { createNativeInterstitial } from './NativeInterstitialAdapter';
 
 const NativeTHEOAdsModule = NativeModules.THEORCTTHEOAdsModule;
 
-export class THEOAdsNativeAdapter extends DefaultEventDispatcher<TheoAdsEventMap> implements TheoAdsAPI {
+export class THEOAdsNativeAdapter implements TheoAdsAPI {
   // @ts-ignore
-  constructor(private _player: THEOplayerView) {
-    super();
-  }
+  constructor(private _player: THEOplayerView) {}
 
   get currentInterstitials(): Promise<readonly Interstitial[]> {
     return this.getCurrentInterstitials();
