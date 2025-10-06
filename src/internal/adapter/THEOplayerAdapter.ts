@@ -1,46 +1,46 @@
 import { DefaultEventDispatcher } from './event/DefaultEventDispatcher';
 import {
   ABRConfiguration,
+  addTrack,
   AdsAPI,
+  AspectRatio,
+  BackgroundAudioConfiguration,
   CastAPI,
+  DimensionChangeEvent,
   DurationChangeEvent,
   EventBroadcastAPI,
+  findMediaTrackByUid,
+  isVideoQuality,
   LoadedMetadataEvent,
   MediaTrack,
   MediaTrackEvent,
+  MediaTrackEventType,
   MediaTrackListEvent,
+  MediaTrackType,
   NativeHandleType,
   PiPConfiguration,
   PlayerEventMap,
+  PlayerEventType,
+  PlayerVersion,
+  PreloadType,
+  PresentationMode,
   PresentationModeChangeEvent,
   ProgressEvent,
   RateChangeEvent,
+  removeTrack,
   RenderingTarget,
-  ResizeEvent,
   SeekedEvent,
   SeekingEvent,
   SourceDescription,
   TextTrack,
+  TextTrackStyle,
   TheoAdsAPI,
   TheoLiveAPI,
   THEOplayer,
   THEOplayerView,
   TimeUpdateEvent,
-} from 'react-native-theoplayer';
-import {
-  addTrack,
-  AspectRatio,
-  BackgroundAudioConfiguration,
-  findMediaTrackByUid,
-  MediaTrackEventType,
-  MediaTrackType,
-  PlayerEventType,
-  PlayerVersion,
-  PreloadType,
-  PresentationMode,
-  removeTrack,
-  TextTrackStyle,
   TrackListEventType,
+  VideoResizeEvent,
 } from 'react-native-theoplayer';
 import { THEOplayerNativeAdsAdapter } from './ads/THEOplayerNativeAdsAdapter';
 import { THEOplayerNativeCastAdapter } from './cast/THEOplayerNativeCastAdapter';
@@ -90,7 +90,8 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this.addEventListener(PlayerEventType.MEDIA_TRACK, this.onMediaTrack);
     this.addEventListener(PlayerEventType.MEDIA_TRACK_LIST, this.onMediaTrackList);
     this.addEventListener(PlayerEventType.PRESENTATIONMODE_CHANGE, this.onPresentationModeChange);
-    this.addEventListener(PlayerEventType.RESIZE, this.onResize);
+    this.addEventListener(PlayerEventType.DIMENSION_CHANGE, this.onDimensionChange);
+    this.addEventListener(PlayerEventType.VIDEO_RESIZE, this.onVideoResize);
   }
 
   private hasValidSource(): boolean {
@@ -117,9 +118,14 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._state.currentProgramDateTime = event.currentProgramDateTime;
   };
 
-  private onResize = (event: ResizeEvent) => {
+  private onDimensionChange = (event: DimensionChangeEvent) => {
     this._state.width = event.width;
     this._state.height = event.height;
+  };
+
+  private onVideoResize = (event: VideoResizeEvent) => {
+    this._state.videoWidth = event.videoWidth;
+    this._state.videoHeight = event.videoHeight;
   };
 
   private onLoadedMetadata = (event: LoadedMetadataEvent) => {
@@ -157,16 +163,24 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   };
 
   private onMediaTrack = (event: MediaTrackEvent) => {
-    const { subType, trackType, trackUid } = event;
+    const { subType, trackType, trackUid, qualities } = event;
     const tracks = trackType === MediaTrackType.VIDEO ? this._state.videoTracks : this._state.audioTracks;
     const track = findMediaTrackByUid(tracks, trackUid);
     switch (subType) {
       case MediaTrackEventType.ACTIVE_QUALITY_CHANGED:
-        // Update local state
-        if (track) {
-          Object.assign(track, { ...track, activeQuality: event.qualities });
+        if (!track) {
+          break;
         }
-        break;
+
+        // Update local state
+        Object.assign(track, { ...track, activeQuality: qualities });
+
+        if (!isVideoQuality(qualities)) {
+          break;
+        }
+
+        this._state.videoWidth = qualities.width;
+        this._state.videoHeight = qualities.height;
     }
   };
 
@@ -523,5 +537,13 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   get height(): number | undefined {
     return this._state.height;
+  }
+
+  get videoWidth(): number | undefined {
+    return this._state.videoWidth;
+  }
+
+  get videoHeight(): number | undefined {
+    return this._state.videoHeight;
   }
 }

@@ -24,6 +24,7 @@ import {
   DefaultAirplayStateChangeEvent,
   DefaultChromecastChangeEvent,
   DefaultChromecastErrorEvent,
+  DefaultDimensionChangeEvent,
   DefaultDurationChangeEvent,
   DefaultErrorEvent,
   DefaultLoadedMetadataEvent,
@@ -41,6 +42,7 @@ import {
   DefaultResizeEvent,
   DefaultSeekingEvent,
   DefaultSeekedEvent,
+  DefaultVideoResizeEvent,
 } from './adapter/event/PlayerEvents';
 import type { NativeCastEvent } from './adapter/event/native/NativeCastEvent';
 import type {
@@ -62,9 +64,10 @@ import {
   NativeSegmentNotFoundEvent,
   NativeTimeUpdateEvent,
   NativeVolumeChangeEvent,
-  NativeResizeEvent,
+  NativeDimensionChangeEvent,
   NativeSeekingEvent,
   NativeSeekedEvent,
+  NativeVideoResizeEvent,
 } from './adapter/event/native/NativePlayerEvent';
 import type { NativeAdEvent } from './adapter/event/native/NativeAdEvent';
 import { fromNativeTheoLiveEvent, NativeTheoLiveEvent } from './adapter/event/native/NativeTheoLiveEvent';
@@ -110,7 +113,8 @@ interface THEOplayerRCTViewProps {
   onNativeCastEvent: (event: NativeSyntheticEvent<NativeCastEvent>) => void;
   onNativePresentationModeChange: (event: NativeSyntheticEvent<NativePresentationModeChangeEvent>) => void;
   onNativeDeviceOrientationChanged: () => void;
-  onNativeResize: (event: NativeSyntheticEvent<NativeResizeEvent>) => void;
+  onNativeDimensionChange: (event: NativeSyntheticEvent<NativeDimensionChangeEvent>) => void;
+  onNativeVideoResize: (event: NativeSyntheticEvent<NativeVideoResizeEvent>) => void;
 }
 
 interface THEOplayerRCTViewState {
@@ -387,8 +391,15 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
     );
   };
 
-  private _onResize = (event: NativeSyntheticEvent<NativeResizeEvent>) => {
-    this._facade.dispatchEvent(new DefaultResizeEvent(event.nativeEvent.width, event.nativeEvent.height));
+  private _onDimensionChange = (event: NativeSyntheticEvent<NativeDimensionChangeEvent>) => {
+    const width = event.nativeEvent.width;
+    const height = event.nativeEvent.height;
+    this._facade.dispatchEvent(new DefaultResizeEvent(width, height));
+    this._facade.dispatchEvent(new DefaultDimensionChangeEvent(width, height));
+  };
+
+  private _onVideoResize = (event: NativeSyntheticEvent<NativeVideoResizeEvent>) => {
+    this._facade.dispatchEvent(new DefaultVideoResizeEvent(event.nativeEvent.videoWidth, event.nativeEvent.videoHeight));
   };
 
   private _updatePoster = () => {
@@ -452,7 +463,8 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
           onNativeCastEvent={this._onCastEvent}
           onNativePresentationModeChange={this._onPresentationModeChange}
           onNativeDeviceOrientationChanged={this._onDeviceOrientationChanged}
-          onNativeResize={this._onResize}
+          onNativeDimensionChange={this._onDimensionChange}
+          onNativeVideoResize={this._onVideoResize}
         />
         {posterActive && <Poster uri={poster} style={posterStyle} />}
         {children}

@@ -111,7 +111,7 @@ export interface NativeProgressEvent {
   readonly buffered: TimeRange[];
 }
 
-export interface NativeResizeEvent {
+export interface NativeDimensionChangeEvent {
   /**
    * The width of the player.
    */
@@ -121,6 +121,18 @@ export interface NativeResizeEvent {
    * The height of the player.
    */
   readonly height: number;
+}
+
+export interface NativeVideoResizeEvent {
+  /**
+   * The width of the video.
+   */
+  readonly videoWidth: number;
+
+  /**
+   * The height of the video.
+   */
+  readonly videoHeight: number;
 }
 
 export interface NativeSegmentNotFoundEvent {

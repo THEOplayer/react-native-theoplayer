@@ -43,6 +43,7 @@ import {
   DefaultAirplayStateChangeEvent,
   DefaultChromecastChangeEvent,
   DefaultChromecastErrorEvent,
+  DefaultDimensionChangeEvent,
   DefaultDurationChangeEvent,
   DefaultErrorEvent,
   DefaultLoadedMetadataEvent,
@@ -64,6 +65,7 @@ import {
   DefaultTheoLiveEvent,
   DefaultTheoLiveIntentToFallbackEvent,
   DefaultTimeupdateEvent,
+  DefaultVideoResizeEvent,
   DefaultVolumeChangeEvent,
 } from './event/PlayerEvents';
 import { fromNativeCue, fromNativeMediaTrack, fromNativeTextTrack } from './web/TrackUtils';
@@ -100,6 +102,7 @@ export class WebEventForwarder {
     this._player.addEventListener('segmentnotfound', this.onSegmentNotFound);
     this._player.addEventListener('volumechange', this.onVolumeChangeEvent);
     this._player.addEventListener('dimensionchange', this.onDimensionChange);
+    this._player.addEventListener('resize', this.onVideoResize);
 
     this._player.textTracks.addEventListener('addtrack', this.onAddTextTrack);
     this._player.textTracks.addEventListener('removetrack', this.onRemoveTextTrack);
@@ -147,6 +150,8 @@ export class WebEventForwarder {
     this._player.removeEventListener('ratechange', this.onPlaybackRateChange);
     this._player.removeEventListener('segmentnotfound', this.onSegmentNotFound);
     this._player.removeEventListener('volumechange', this.onVolumeChangeEvent);
+    this._player.removeEventListener('dimensionchange', this.onDimensionChange);
+    this._player.removeEventListener('resize', this.onVideoResize);
 
     this._player.textTracks.removeEventListener('addtrack', this.onAddTextTrack);
     this._player.textTracks.removeEventListener('removetrack', this.onRemoveTextTrack);
@@ -266,6 +271,11 @@ export class WebEventForwarder {
 
   private readonly onDimensionChange = (event: NativeDimensionChangeEvent) => {
     this._facade.dispatchEvent(new DefaultResizeEvent(event.width, event.height));
+    this._facade.dispatchEvent(new DefaultDimensionChangeEvent(event.width, event.height));
+  };
+
+  private readonly onVideoResize = (_event: NativeEvent<'resize'>) => {
+    this._facade.dispatchEvent(new DefaultVideoResizeEvent(this._player.videoWidth, this._player.videoHeight));
   };
 
   private readonly onAddTextTrack = (event: AddTrackEvent) => {

@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Added an explicit clearing of the NowPlayingInfo on iOS, when the app receives a willTerminateNotification, to make sure all NowPlayingInfo is removed from the lock screen when an app is closed.
+- Added `videoWidth` and `videoHeight` properties to `THEOplayer` containing the active video's resolution in pixels.
+- Added `videoresize` player event enabling monitoring of video rendition resizes.
+- Added `dimensionchange` player event enabling monitoring of player resizes. This event is set to replace the now deprecated `resize` player event.
 
 - Added `fontPath` to `TextTrackStyle` to allow loading custom fonts from the Android assets folder.
 
@@ -20,6 +23,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed an issue on Android where the `MediaPlaybackService` could be restarted after the app was closed, in some cases causing a `ForegroundServiceDidNotStartInTimeException`. A conditional receiver makes sure the service is never restarted.
 - Fixed an issue on iOS where a setup with multiple players could cause a view index NSInternalInconsistencyException after moving players in and out of fullscreen.
 - Fixed an issue on Android where some event listeners were not properly disposed of after destroying the player.
+- Fixed an issue on Web where the `width` and `height` properties on `THEOplayer` would show the active video rendition's resolution width and height instead of the width and height of the video element.
 
 ## [10.0.0] - 25-09-15
 
