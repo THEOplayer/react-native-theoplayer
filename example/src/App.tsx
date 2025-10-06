@@ -180,6 +180,11 @@ export default function App() {
                     </ControlBar>
                   </AutoFocusGuide>
                 }
+                adCenter={
+                  <AutoFocusGuide>
+                    <CenteredControlBar middle={<PlayButton />} />
+                  </AutoFocusGuide>
+                }
               />
             )}
           </THEOplayerView>
