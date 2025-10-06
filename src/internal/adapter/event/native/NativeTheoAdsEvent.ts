@@ -1,6 +1,7 @@
 import { Interstitial, TheoAdsEvent, TheoAdsEventType } from 'react-native-theoplayer';
 import { NativeSyntheticEvent } from 'react-native';
 import { DefaultTheoAdsErrorEvent, DefaultTheoAdsEvent } from '../PlayerEvents';
+import { createNativeInterstitial } from '../../theoads/NativeInterstitialAdapter';
 
 export interface NativeTheoAdsEvent {
   /**
@@ -23,8 +24,12 @@ export function fromNativeTheoAdsEvent(event: NativeSyntheticEvent<NativeTheoAds
   const { nativeEvent } = event;
   switch (event.type) {
     case TheoAdsEventType.INTERSTITIAL_ERROR:
-      return new DefaultTheoAdsErrorEvent(TheoAdsEventType.INTERSTITIAL_ERROR, nativeEvent.interstitial, nativeEvent.message);
+      return new DefaultTheoAdsErrorEvent(
+        TheoAdsEventType.INTERSTITIAL_ERROR,
+        createNativeInterstitial(nativeEvent.interstitial),
+        nativeEvent.message,
+      );
     default:
-      return new DefaultTheoAdsEvent(event.type as TheoAdsEventType, nativeEvent.interstitial);
+      return new DefaultTheoAdsEvent(event.type as TheoAdsEventType, createNativeInterstitial(nativeEvent.interstitial));
   }
 }
