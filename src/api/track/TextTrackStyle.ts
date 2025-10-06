@@ -29,6 +29,14 @@ export interface TextTrackStyle {
   fontSize: string | undefined;
 
   /**
+   * The path to a font in the Android `app/src/main/assets/` folder.
+   * 
+   * @remarks
+   * Only supported on Android.
+   */
+  fontPath: string | undefined;
+
+  /**
    * The background color for the text track.
    *
    * @remarks
