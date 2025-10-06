@@ -26,7 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     reactNativeFactory = factory
 
     #if !os(tvOS)
-      let receiverAppID = "CC1AD845" // default receiver
+      let receiverAppID = "87169DE4"
       let criteria = GCKDiscoveryCriteria(applicationID: receiverAppID)
       let options = GCKCastOptions(discoveryCriteria: criteria)
       options.startDiscoveryAfterFirstTapOnCastButton = false

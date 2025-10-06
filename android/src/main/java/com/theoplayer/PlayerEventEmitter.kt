@@ -82,7 +82,8 @@ private const val EVENT_THEOLIVE_EVENT = "onNativeTHEOliveEvent"
 private const val EVENT_THEOADS_EVENT = "onNativeTHEOadsEvent"
 private const val EVENT_PRESENTATIONMODECHANGE = "onNativePresentationModeChange"
 private const val EVENT_VOLUMECHANGE = "onNativeVolumeChange"
-private const val EVENT_RESIZE = "onNativeResize"
+private const val EVENT_DIMENSIONCHANGE = "onNativeDimensionChange"
+private const val EVENT_VIDEORESIZE = "onNativeVideoResize"
 
 private const val EVENT_PROP_TYPE = "type"
 private const val EVENT_PROP_STATE = "state"
@@ -126,7 +127,8 @@ class PlayerEventEmitter internal constructor(
     EVENT_THEOADS_EVENT,
     EVENT_PRESENTATIONMODECHANGE,
     EVENT_VOLUMECHANGE,
-    EVENT_RESIZE
+    EVENT_DIMENSIONCHANGE,
+    EVENT_VIDEORESIZE
   )
   annotation class VideoEvents
 
@@ -162,7 +164,8 @@ class PlayerEventEmitter internal constructor(
       EVENT_THEOADS_EVENT,
       EVENT_PRESENTATIONMODECHANGE,
       EVENT_VOLUMECHANGE,
-      EVENT_RESIZE
+      EVENT_DIMENSIONCHANGE,
+      EVENT_VIDEORESIZE
     )
   }
 
@@ -177,9 +180,9 @@ class PlayerEventEmitter internal constructor(
   private var theoAdsEventAdapter: THEOadsEventAdapter? = null
   private var lastTimeUpdate: Long = 0
   private var lastCurrentTime = 0.0
-  private var resizeListener = View.OnLayoutChangeListener { v, _, _, _, _, oldLeft, oldTop, oldRight, oldBottom ->
+  private var dimensionChangeListener = View.OnLayoutChangeListener { v, _, _, _, _, oldLeft, oldTop, oldRight, oldBottom ->
     if (v.width != oldRight - oldLeft || v.height != oldBottom - oldTop) {
-      onResize(v.width, v.height)
+      onDimensionChange(v.width, v.height)
     }
   }
 
@@ -233,6 +236,8 @@ class PlayerEventEmitter internal constructor(
       EventListener { event: PresentationModeChange -> onPresentationModeChange(event) }
     playerListeners[PlayerEventTypes.VOLUMECHANGE] =
       EventListener { event: VolumeChangeEvent -> onVolumeChange(event) }
+    playerListeners[PlayerEventTypes.RESIZE] =
+      EventListener { event: ResizeEvent -> onResize(event) }
     textTrackListeners[TextTrackListEventTypes.ADDTRACK] =
       EventListener { event: AddTrackEvent -> onTextTrackAdd(event) }
     textTrackListeners[TextTrackListEventTypes.REMOVETRACK] =
@@ -438,10 +443,17 @@ class PlayerEventEmitter internal constructor(
     )
   }
 
-  private fun onResize(width: Int, height: Int) {
+  private fun onDimensionChange(width: Int, height: Int) {
     receiveEvent(
-      EVENT_RESIZE,
+      EVENT_DIMENSIONCHANGE,
       PayloadBuilder().size(width, height).build()
+    )
+  }
+
+  private fun onResize(event: ResizeEvent) {
+    receiveEvent(
+      EVENT_VIDEORESIZE,
+      PayloadBuilder().videoSize(event.width, event.height).build()
     )
   }
 
@@ -700,7 +712,7 @@ class PlayerEventEmitter internal constructor(
     }
 
     // Attach view size listener
-    playerView.addOnLayoutChangeListener(resizeListener)
+    playerView.addOnLayoutChangeListener(dimensionChangeListener)
   }
 
   fun removeListeners(player: Player?) {
@@ -737,7 +749,7 @@ class PlayerEventEmitter internal constructor(
     }
 
     // Remove view size listener
-    playerView.removeOnLayoutChangeListener(resizeListener)
+    playerView.removeOnLayoutChangeListener(dimensionChangeListener)
 
     castEventAdapter?.destroy()
     adEventAdapter?.destroy()

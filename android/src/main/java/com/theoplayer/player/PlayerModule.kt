@@ -253,7 +253,7 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
   fun setTextTrackStyle(tag: Int, style: ReadableMap?) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.player?.let { player ->
-        TextTrackStyleAdapter.applyTextTrackStyle(player.textTrackStyle, style)
+        TextTrackStyleAdapter.applyTextTrackStyle(player.textTrackStyle, reactApplicationContext, style)
       }
     }
   }

@@ -2,6 +2,7 @@ package com.theoplayer.theolive
 
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.WritableMap
+import com.theoplayer.android.api.event.EventListener
 import com.theoplayer.android.api.event.player.theolive.DistributionLoadStartEvent
 import com.theoplayer.android.api.event.player.theolive.DistributionOfflineEvent
 import com.theoplayer.android.api.event.player.theolive.EndpointLoadedEvent
@@ -21,18 +22,30 @@ class THEOliveEventAdapter(private val theoLiveApi: TheoLive, private val emitte
     fun emit(payload: WritableMap?)
   }
 
+  private val onDistributionLoadStart =
+    EventListener<DistributionLoadStartEvent> { onDistributionLoadStart(it) }
+  private val onDistributionOffline =
+    EventListener<DistributionOfflineEvent> { onDistributionOffline(it) }
+  private val onEndPointLoaded =
+    EventListener<EndpointLoadedEvent> { onEndPointLoaded(it) }
+  private val onIntentOfFallback =
+    EventListener<IntentToFallbackEvent> { onIntentOfFallback(it) }
+
   init {
-    theoLiveApi.addEventListener(TheoLiveEventTypes.DISTRIBUTIONLOADSTART, this::onDistributionLoadStart)
-    theoLiveApi.addEventListener(TheoLiveEventTypes.DISTRIBUTIONOFFLINE, this::onDistributionOffline)
-    theoLiveApi.addEventListener(TheoLiveEventTypes.ENDPOINTLOADED, this::onEndPointLoaded)
-    theoLiveApi.addEventListener(TheoLiveEventTypes.INTENTTOFALLBACK, this::onIntentOfFallback)
+    theoLiveApi.addEventListener(TheoLiveEventTypes.DISTRIBUTIONLOADSTART, onDistributionLoadStart)
+    theoLiveApi.addEventListener(TheoLiveEventTypes.DISTRIBUTIONOFFLINE, onDistributionOffline)
+    theoLiveApi.addEventListener(TheoLiveEventTypes.ENDPOINTLOADED, onEndPointLoaded)
+    theoLiveApi.addEventListener(TheoLiveEventTypes.INTENTTOFALLBACK, onIntentOfFallback)
   }
 
   fun destroy() {
-    theoLiveApi.removeEventListener(TheoLiveEventTypes.DISTRIBUTIONLOADSTART, this::onDistributionLoadStart)
-    theoLiveApi.removeEventListener(TheoLiveEventTypes.DISTRIBUTIONOFFLINE, this::onDistributionOffline)
-    theoLiveApi.removeEventListener(TheoLiveEventTypes.ENDPOINTLOADED, this::onEndPointLoaded)
-    theoLiveApi.removeEventListener(TheoLiveEventTypes.INTENTTOFALLBACK, this::onIntentOfFallback)
+    theoLiveApi.removeEventListener(
+      TheoLiveEventTypes.DISTRIBUTIONLOADSTART,
+      onDistributionLoadStart
+    )
+    theoLiveApi.removeEventListener(TheoLiveEventTypes.DISTRIBUTIONOFFLINE, onDistributionOffline)
+    theoLiveApi.removeEventListener(TheoLiveEventTypes.ENDPOINTLOADED, onEndPointLoaded)
+    theoLiveApi.removeEventListener(TheoLiveEventTypes.INTENTTOFALLBACK, onIntentOfFallback)
   }
 
   private fun onDistributionLoadStart(event: DistributionLoadStartEvent) {

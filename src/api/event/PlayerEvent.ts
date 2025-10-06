@@ -51,11 +51,32 @@ export interface TimeUpdateEvent extends Event<PlayerEventType.TIME_UPDATE> {
 }
 
 /**
+ * Dispatched when the player dimensions are updated.
+ *
+ * @category Events
+ * @category Player
+ * @public
+ */
+export interface DimensionChangeEvent extends Event<PlayerEventType.DIMENSION_CHANGE> {
+  /**
+   * The player's current width.
+   */
+  readonly width: number;
+
+  /**
+   * The player's current height.
+   */
+  readonly height: number;
+}
+
+/**
  * Dispatched when player is resized.
  *
  * @category Events
  * @category Player
  * @public
+ *
+ * @deprecated use {@link DimensionChangeEvent} instead. This event is set for removal in version 11.
  */
 export interface ResizeEvent extends Event<PlayerEventType.RESIZE> {
   /**
@@ -67,6 +88,25 @@ export interface ResizeEvent extends Event<PlayerEventType.RESIZE> {
    * The player's current height.
    */
   readonly height: number;
+}
+
+/**
+ * Dispatched when video is resized.
+ *
+ * @category Events
+ * @category Player
+ * @public
+ */
+export interface VideoResizeEvent extends Event<PlayerEventType.VIDEO_RESIZE> {
+  /**
+   * The video's current width.
+   */
+  readonly videoWidth: number;
+
+  /**
+   * The video's current height.
+   */
+  readonly videoHeight: number;
 }
 
 /**

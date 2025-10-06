@@ -8,6 +8,7 @@ import com.theoplayer.android.api.ads.theoads.event.InterstitialEvent
 import com.theoplayer.android.api.ads.theoads.event.TheoAdsErrorEvent
 import com.theoplayer.android.api.ads.theoads.event.TheoAdsEvent
 import com.theoplayer.android.api.ads.theoads.event.TheoAdsEventTypes
+import com.theoplayer.android.api.event.EventListener
 
 private const val EVENT_PROP_TYPE = "type"
 private const val EVENT_PROP_INTERSTITIAL = "interstitial"
@@ -27,15 +28,17 @@ class THEOadsEventAdapter(private val api: TheoAdsIntegration, private val emitt
     fun emit(payload: WritableMap?)
   }
 
+  private val onEvent = EventListener<TheoAdsEvent<*>> { handleEvent(it) }
+
   init {
-    FORWARDED_EVENTS.forEach { api.addEventListener(it, this::onEvent) }
+    FORWARDED_EVENTS.forEach { api.addEventListener(it, onEvent) }
   }
 
   fun destroy() {
-    FORWARDED_EVENTS.forEach { api.removeEventListener(it, this::onEvent) }
+    FORWARDED_EVENTS.forEach { api.removeEventListener(it, onEvent) }
   }
 
-  private fun onEvent(event: TheoAdsEvent<*>) {
+  private fun handleEvent(event: TheoAdsEvent<*>) {
     emitter.emit(Arguments.createMap().apply {
       putString(EVENT_PROP_TYPE, event.type.name)
       (event as? InterstitialEvent)?.let {

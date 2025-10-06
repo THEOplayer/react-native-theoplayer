@@ -12,6 +12,7 @@ export class TextTrackStyleAdapter implements TextTrackStyle {
   private _fontColor: string | undefined = undefined;
   private _fontFamily: string | undefined = undefined;
   private _fontSize: string | undefined = undefined;
+  private _fontPath: string | undefined = undefined;
   private _windowColor: string | undefined = undefined;
   private _marginBottom: number | undefined = undefined;
   private _marginTop: number | undefined = undefined;
@@ -73,6 +74,17 @@ export class TextTrackStyleAdapter implements TextTrackStyle {
     NativePlayerModule.setTextTrackStyle(this._view.nativeHandle, {
       fontFamily: family,
     });
+  }
+
+  get fontPath(): string | undefined {
+    return this._fontPath
+  }
+
+  set fontPath(path: string) {
+    this._fontPath = path
+    NativePlayerModule.setTextTrackStyle(this._view.nativeHandle, {
+      fontPath: path
+    })
   }
 
   get fontSize(): string | undefined {

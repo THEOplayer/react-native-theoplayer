@@ -1,5 +1,6 @@
 import type { Event } from '../event/Event';
 import type {
+  DimensionChangeEvent,
   DurationChangeEvent,
   ErrorEvent,
   LoadedMetadataEvent,
@@ -13,6 +14,7 @@ import type {
   ResizeEvent,
   SeekedEvent,
   SeekingEvent,
+  VideoResizeEvent,
 } from '../event/PlayerEvent';
 import type { MediaTrackEvent, MediaTrackListEvent, TextTrackEvent, TextTrackListEvent } from '../event/TrackEvent';
 import type { AdEvent } from '../event/AdEvent';
@@ -58,7 +60,12 @@ export enum PlayerEventType {
   WAITING = 'waiting',
   PRESENTATIONMODE_CHANGE = 'presentationmodechange',
   DESTROY = 'destroy',
+  /**
+   * @deprecated Use {@link PlayerEventType.DIMENSION_CHANGE} instead. This event is set for removal in version 11.
+   */
   RESIZE = 'resize',
+  DIMENSION_CHANGE = 'dimensionchange',
+  VIDEO_RESIZE = 'videoresize',
 }
 
 /**
@@ -226,6 +233,18 @@ export interface PlayerEventMap {
 
   /**
    * Dispatched when the player size changes.
+   *
+   * @deprecated Use {@link dimensionchange} instead. This event is set for removal in version 11.
    */
   [PlayerEventType.RESIZE]: ResizeEvent;
+
+  /**
+   * Dispatched when the player size changes.
+   */
+  [PlayerEventType.DIMENSION_CHANGE]: DimensionChangeEvent;
+
+  /**
+   * Dispatched when the video size changes.
+   */
+  [PlayerEventType.VIDEO_RESIZE]: VideoResizeEvent;
 }

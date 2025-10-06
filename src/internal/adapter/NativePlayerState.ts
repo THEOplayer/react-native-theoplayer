@@ -33,6 +33,8 @@ export interface MediaTrackState {
   targetVideoQuality: number | number[] | undefined;
   selectedVideoTrack: number | undefined;
   selectedAudioTrack: number | undefined;
+  videoWidth: number | undefined;
+  videoHeight: number | undefined;
 }
 
 export interface TextTrackState {

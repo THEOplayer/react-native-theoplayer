@@ -84,7 +84,6 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         // update the enabled state to have correct visual representation in the lockscreen
         commandCenter.pauseCommand.isEnabled =  self.hasSource && !self.inAd
         commandCenter.playCommand.isEnabled = self.hasSource && !self.inAd
-        commandCenter.pauseCommand.isEnabled =  self.hasSource && !self.inAd
         commandCenter.togglePlayPauseCommand.isEnabled =  self.hasSource && !self.inAd
         commandCenter.stopCommand.isEnabled =  self.hasSource && !self.inAd
         commandCenter.changePlaybackPositionCommand.isEnabled =  self.hasSource && !self.isLive && !self.inAd

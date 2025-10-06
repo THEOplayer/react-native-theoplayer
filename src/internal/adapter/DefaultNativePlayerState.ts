@@ -39,6 +39,8 @@ export class DefaultNativePlayerState extends DefaultTextTrackState implements N
   selectedVideoTrack: number | undefined = undefined;
   width: number | undefined = undefined;
   height: number | undefined = undefined;
+  videoWidth: number | undefined = undefined;
+  videoHeight: number | undefined = undefined;
 
   apply(state: Partial<NativePlayerState>): void {
     Object.assign(this, state);

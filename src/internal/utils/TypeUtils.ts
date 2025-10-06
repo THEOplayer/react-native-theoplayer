@@ -37,3 +37,9 @@ export const isArrayBufferView_: typeof ArrayBuffer.isView =
 export function isBufferSource(bufferSource: any): bufferSource is BufferSource {
   return bufferSource instanceof ArrayBuffer || isArrayBufferView_(bufferSource);
 }
+
+export const isArray: <T = any>(arg: unknown) => arg is T[] =
+  Array.isArray ||
+  function isArray(arg: unknown): arg is unknown[] {
+    return objectToString.call(arg) === '[object Array]';
+  };

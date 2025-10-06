@@ -1,6 +1,8 @@
 package com.theoplayer.track
 
 import android.graphics.Color
+import android.graphics.Typeface
+import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReadableMap
 import com.theoplayer.android.api.player.track.texttrack.TextTrackStyle
 
@@ -10,6 +12,7 @@ private const val PROP_EDGE_COLOR = "edgeColor"
 private const val PROP_FONT_COLOR = "fontColor"
 private const val PROP_FONT_FAMILY = "fontFamily"
 private const val PROP_FONT_SIZE = "fontSize"
+private const val PROP_FONT_PATH = "fontPath"
 private const val PROP_WINDOW_COLOR = "windowColor"
 private const val PROP_MARGIN_LEFT = "marginLeft"
 private const val PROP_MARGIN_RIGHT = "marginRight"
@@ -22,7 +25,7 @@ private const val PROP_COLOR_A = "a"
 
 object TextTrackStyleAdapter {
 
-  fun applyTextTrackStyle(style: TextTrackStyle, props: ReadableMap?) {
+  fun applyTextTrackStyle(style: TextTrackStyle, context: ReactApplicationContext, props: ReadableMap?) {
     if (props == null) {
       return
     }
@@ -64,6 +67,10 @@ object TextTrackStyleAdapter {
     }
     if (props.hasKey(PROP_MARGIN_RIGHT)) {
       style.marginRight = props.getInt(PROP_MARGIN_RIGHT)
+    }
+    if (props.hasKey(PROP_FONT_PATH)) {
+      val font = Typeface.createFromAsset(context.assets, props.getString(PROP_FONT_PATH))
+      style.font = font
     }
   }
 
