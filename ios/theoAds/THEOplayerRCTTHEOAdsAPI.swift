@@ -84,9 +84,9 @@ class THEOplayerRCTTHEOAdsAPI: NSObject, RCTBridgeModule {
                let player = theView.player,
                let theoAds = player.ads.theoAds,
                let newParams = adTagParameters as? [String:String] {
-                let allInterstitials = theoAds.currentInterstitials + theoAds.scheduledInterstitials
-                var interstitial = allInterstitials.first(where: { $0.id == id })
-                interstitial?.adTagParameters = newParams
+              let allInterstitials = theoAds.currentInterstitials + theoAds.scheduledInterstitials
+              var interstitial = allInterstitials.first(where: { $0.id == id })
+              interstitial?.adTagParameters = newParams
             }
         }
     }
