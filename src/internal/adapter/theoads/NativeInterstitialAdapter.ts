@@ -27,7 +27,7 @@ abstract class NativeInterstitial implements Interstitial {
     this.type = interstitial.type;
     this.startTime = interstitial.startTime;
     this.duration = interstitial.duration;
-    this._adTagParameters = interstitial.adTagParameters;
+    this._adTagParameters = this.createAdTagParametersProxy(interstitial.adTagParameters);
   }
 
   get adTagParameters(): Record<string, string> {
