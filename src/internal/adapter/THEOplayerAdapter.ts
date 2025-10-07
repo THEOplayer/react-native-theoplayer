@@ -546,4 +546,10 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   get videoHeight(): number | undefined {
     return this._state.videoHeight;
   }
+
+  willUnmount(): void {
+    if (Platform.OS === 'ios') {
+      NativePlayerModule.willUnmount(this._view.nativeHandle);
+    }
+  }
 }
