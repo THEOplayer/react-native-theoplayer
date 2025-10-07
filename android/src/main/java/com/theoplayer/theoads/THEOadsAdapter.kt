@@ -13,7 +13,7 @@ import com.theoplayer.android.api.ads.theoads.OverlaySize
 import com.theoplayer.android.api.ads.theoads.TheoAdsLayout
 
 private const val PROP_ID = "id"
-private const val PROP_TYPE = "TYPE"
+private const val PROP_TYPE = "type"
 private const val PROP_START_TIME = "startTime"
 private const val PROP_DURATION = "duration"
 private const val PROP_AD_TAG_PARAMETERS = "adTagParameters"
