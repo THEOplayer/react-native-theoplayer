@@ -9,7 +9,7 @@ public class THEOplayerRCTPresentationModeManager {
     private weak var player: THEOplayer?
     private weak var view: UIView?
     var presentationModeContext = THEOplayerRCTPresentationModeContext()
-    private var presentationMode: THEOplayerSDK.PresentationMode = .inline
+    private(set) var presentationMode: THEOplayerSDK.PresentationMode = .inline
     private var rnInlineMode: THEOplayerSDK.PresentationMode = .inline // while native player is inline, RN player can be inline or fullsceen
 
   
@@ -178,7 +178,7 @@ public class THEOplayerRCTPresentationModeManager {
         self.presentationMode = newPresentationMode
         // adjust presentationMode to RN layout
         if newPresentationMode == .inline {
-             self.presentationMode = self.rnInlineMode
+            self.presentationMode = self.rnInlineMode
         }
     
         // notify the presentationMode change
