@@ -80,7 +80,7 @@ class THEOplayerRCTTHEOadsEventAdapter {
         }
     }
 
-    class func fromInterstitialAdTagParameters(_ adTagParameters: THEOplayerTHEOadsIntegration.Interstitial.adTagParameters) -> [String:Any] {
+    class func fromInterstitialAdTagParameters(_ adTagParameters: [String:String]) -> [String:Any] {
       var adTagParametersData: [String:Any] = [:]
       for (key, value) in adTagParameters {
         adTagParametersData[key] = value
