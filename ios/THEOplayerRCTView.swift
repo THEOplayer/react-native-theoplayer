@@ -115,6 +115,9 @@ public class THEOplayerRCTView: UIView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("[NATIVE] init(coder:) has not been implemented")
     }
+    
+    func willUnmount() {
+    }
   
     deinit {
         self.mainEventHandler.destroy()

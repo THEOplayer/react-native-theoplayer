@@ -423,4 +423,13 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
         if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] landscape dimensions: \(biggest) - \(smallest)")}
         return ["width": biggest, "height": smallest] // ios landscape or tvos
     }
+    
+    @objc(willUnmount:)
+    func willUnmount(_ node: NSNumber) -> Void {
+        DispatchQueue.main.async {
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView {
+                theView.willUnmount()
+            }
+        }
+    }
 }
