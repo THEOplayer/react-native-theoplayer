@@ -84,10 +84,12 @@ export default function App() {
     player.addEventListener(PlayerEventType.READYSTATE_CHANGE, console.log);
     player.addEventListener(PlayerEventType.PLAY, console.log);
     player.addEventListener(PlayerEventType.PLAYING, console.log);
+    player.addEventListener(PlayerEventType.WAITING, console.log);
     player.addEventListener(PlayerEventType.PAUSE, console.log);
     player.addEventListener(PlayerEventType.SEEKING, console.log);
     player.addEventListener(PlayerEventType.SEEKED, console.log);
     player.addEventListener(PlayerEventType.ENDED, console.log);
+    player.addEventListener(PlayerEventType.ERROR, console.log);
     player.addEventListener(PlayerEventType.THEOLIVE_EVENT, console.log);
 
     sdkVersions().then((versions) => console.log(`[theoplayer] ${JSON.stringify(versions, null, 4)}`));
