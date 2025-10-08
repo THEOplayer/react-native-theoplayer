@@ -69,11 +69,9 @@ object THEOadsAdapter {
   }
 
   fun fromAdTagParameters(adTagParameters: Map<String, String>): WritableMap {
-    val writableMap = Arguments.createMap();
-    for ((key, value) in adTagParameters) {
-      writableMap.putString(key, value)
+    return Arguments.createMap().apply {
+      adTagParameters.forEach { (key, value) -> putString(key, value) }
     }
-    return writableMap
   }
 
   fun fromOverlayPosition(position: OverlayPosition): WritableMap {
