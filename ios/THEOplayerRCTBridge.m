@@ -120,6 +120,8 @@ RCT_EXTERN_METHOD(setTextTrackStyle:(nonnull NSNumber *)node
 RCT_EXTERN_METHOD(setKeepScreenOn:(nonnull NSNumber *)node
                   keepScreenOn:(BOOL)keepScreenOn)
 
+RCT_EXTERN_METHOD(willUnmount:(nonnull NSNumber *)node)
+
 RCT_EXTERN__BLOCKING_SYNCHRONOUS_METHOD(getUsableScreenDimensions)
 
 @end
