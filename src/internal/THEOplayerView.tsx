@@ -360,7 +360,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
   };
 
   private _onTHEOadsEvent = (event: NativeSyntheticEvent<NativeTheoAdsEvent>) => {
-    this._facade.dispatchEvent(fromNativeTheoAdsEvent(event));
+    this._facade.dispatchEvent(fromNativeTheoAdsEvent(this.nativeHandle, event));
   };
 
   private _onCastEvent = (event: NativeSyntheticEvent<NativeCastEvent>) => {

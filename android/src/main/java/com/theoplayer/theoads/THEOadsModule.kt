@@ -60,4 +60,18 @@ class THEOadsModule(context: ReactApplicationContext) : ReactContextBaseJavaModu
       }
     }
   }
+
+  @ReactMethod
+  fun setAdTagParameters(tag: Int, id: String, adTagParameters: ReadableMap) {
+    viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
+      if (BuildConfig.EXTENSION_THEOADS) {
+        view?.player?.theoAds?.let { theoads ->
+          val interstitials = theoads.currentInterstitials + theoads.scheduledInterstitials
+          interstitials.find { it.id == id }?.let { interstitial ->
+            interstitial.adTagParameters = adTagParameters.toHashMap().mapValues { it.value.toString() }
+          }
+        }
+      }
+    }
+  }
 }

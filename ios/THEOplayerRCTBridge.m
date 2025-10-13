@@ -305,5 +305,9 @@ RCT_EXTERN_METHOD(scheduledInterstitials:(nonnull NSNumber *)node
 RCT_EXTERN_METHOD(replaceAdTagParameters:(nonnull NSNumber *)node
                   adTagParameters:(nullable NSDictionary *)adTagParameters)
 
+RCT_EXTERN_METHOD(setAdTagParameters:(nonnull NSNumber *)node
+                  id:(nonnull NSString *)id
+                  adTagParameters:(nullable NSDictionary *)adTagParameters)
+
 @end
 

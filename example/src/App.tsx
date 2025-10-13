@@ -75,6 +75,13 @@ export default function App() {
   // so explicitly disable them here.
   const edges: Edges = useMemo(() => (presentationMode === PresentationMode.pip ? [] : ['left', 'top', 'right', 'bottom']), [presentationMode]);
 
+  const onTheoAdsEvent = (event: TheoAdsEvent) => {
+    console.log(event);
+    if (event.subType === TheoAdsEventType.ADD_INTERSTITIAL) {
+      event.interstitial.adTagParameters['CustomKey'] = 'CustomValue';
+    }
+  };
+
   const onPlayerReady = (player: THEOplayer) => {
     setPlayer(player);
     // optional debug logs
@@ -91,6 +98,8 @@ export default function App() {
     player.addEventListener(PlayerEventType.ENDED, console.log);
     player.addEventListener(PlayerEventType.ERROR, console.log);
     player.addEventListener(PlayerEventType.THEOLIVE_EVENT, console.log);
+    player.addEventListener(PlayerEventType.ERROR, console.log);
+    player.addEventListener(PlayerEventType.THEOADS_EVENT, onTheoAdsEvent);
 
     sdkVersions().then((versions) => console.log(`[theoplayer] ${JSON.stringify(versions, null, 4)}`));
 
