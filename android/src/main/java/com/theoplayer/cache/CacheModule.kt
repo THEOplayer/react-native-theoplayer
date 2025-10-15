@@ -14,7 +14,6 @@ import com.facebook.react.module.annotations.ReactModule
 import com.facebook.react.module.model.ReactModuleInfo
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.google.gson.Gson
-import com.theoplayer.ads.AdsModule
 import com.theoplayer.util.ViewResolver
 import com.theoplayer.android.api.THEOplayerGlobal
 import com.theoplayer.android.api.cache.Cache
