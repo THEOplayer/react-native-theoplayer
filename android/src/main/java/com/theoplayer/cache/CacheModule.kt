@@ -26,6 +26,7 @@ import com.theoplayer.android.api.event.cache.task.CachingTaskEventTypes
 import com.theoplayer.android.api.event.cache.task.CachingTaskProgressEvent
 import com.theoplayer.android.api.event.cache.task.CachingTaskStateChangeEvent
 import com.theoplayer.android.api.event.cache.tasklist.CachingTaskListEventTypes
+import com.theoplayer.cache.CacheAdapter.fromCachingTask
 import com.theoplayer.drm.ContentProtectionAdapter
 import com.theoplayer.source.SourceAdapter
 import org.json.JSONException
@@ -184,16 +185,15 @@ class CacheModule(private val context: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun createTask(source: ReadableMap, parameters: ReadableMap) {
-    val sourceDescription = sourceAdapter.parseSourceFromJS(source)
-    if (sourceDescription != null) {
+  fun createTask(source: ReadableMap, parameters: ReadableMap, promise: Promise) {
+    sourceAdapter.parseSourceFromJS(source)?.let { sourceDescription ->
       handler.post {
-        cache.createTask(
+        promise.resolve(fromCachingTask(cache.createTask(
           sourceDescription,
           CacheAdapter.parseCachingParameters(parameters)
-        )
+        )))
       }
-    }
+    } ?: promise.resolve(null)
   }
 
   @ReactMethod
