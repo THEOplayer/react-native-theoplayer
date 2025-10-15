@@ -23,7 +23,16 @@ import {
   TimeLabel,
   UiContainer,
 } from '@theoplayer/react-native-ui';
-import { PlayerConfiguration, PlayerEventType, PresentationMode, sdkVersions, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
+import {
+  PlayerConfiguration,
+  PlayerEventType,
+  PresentationMode,
+  sdkVersions,
+  TheoAdsEvent,
+  TheoAdsEventType,
+  THEOplayer,
+  THEOplayerView,
+} from 'react-native-theoplayer';
 import { Platform, StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
 import { SourceMenuButton, SOURCES } from './custom/SourceMenuButton';
 import { BackgroundAudioSubMenu } from './custom/BackgroundAudioSubMenu';
