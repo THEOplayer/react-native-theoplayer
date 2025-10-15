@@ -78,7 +78,7 @@ class CacheModule(private val context: ReactApplicationContext) :
           event.task?.let { task ->
             // Notify AddCachingTaskEvent event
             emit("onAddCachingTaskEvent", Arguments.createMap().apply {
-              putMap(PROP_TASK, CacheAdapter.fromCachingTask(task))
+              putMap(PROP_TASK, fromCachingTask(task))
             })
             // Add CachingTask listeners
             addCachingTaskListeners(task)
@@ -90,7 +90,7 @@ class CacheModule(private val context: ReactApplicationContext) :
           event.task?.let { task ->
             // Notify RemoveCachingTaskEvent event
             emit("onRemoveCachingTaskEvent", Arguments.createMap().apply {
-              putMap(PROP_TASK, CacheAdapter.fromCachingTask(event.task))
+              putMap(PROP_TASK, fromCachingTask(event.task))
             })
             // Remove CachingTask listeners
             removeCachingTaskListeners(task)
