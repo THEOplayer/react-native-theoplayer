@@ -40,7 +40,7 @@ export interface TheoLiveConfiguration {
    *
    * @remarks
    * <br/> - Available on iOS only.
-   * <br/> - When enabled, theolive channels will be streamed using the legacy pipeline.
+   * <br/> - When enabled, THEOlive channels will be streamed using the legacy pipeline.
    *
    * @defaultValue `false`
    */

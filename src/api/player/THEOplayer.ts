@@ -284,7 +284,7 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
   readonly videoHeight: number | undefined;
 
   /**
-   * The API for theolive.
+   * The API for THEOlive.
    */
   readonly theolive: TheoLiveAPI;
 }
