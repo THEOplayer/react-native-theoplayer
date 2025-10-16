@@ -9,8 +9,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-- Fixed a issue on iOS where the player crashed when it was destroyed while in fullscreen.
+- Fixed an issue on iOS where the player crashed when it was destroyed while in fullscreen.
 - Fixed an issue on Android where creating a caching task with `MediaCache.createTask` would not return the created `task`.
+
+### Changed
+
+- Added `THEOplayer.theoLive` and deprecated `THEOplayer.theolive`, to be consistent with the THEOplayer SDKs for other platforms.
 
 ## [10.1.0] - 25-10-06
 

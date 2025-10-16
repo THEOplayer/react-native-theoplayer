@@ -232,6 +232,10 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     return this._theoAdsAdapter;
   }
 
+  get theoLive(): TheoLiveAPI {
+    return this._theoliveAdapter;
+  }
+
   get theolive(): TheoLiveAPI {
     return this._theoliveAdapter;
   }

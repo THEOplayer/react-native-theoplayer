@@ -22,7 +22,7 @@ export interface HespLatencies {
   playerLatency?: number;
 
   /**
-   * The total latency introduced by the theolive pipeline: from frame ingested till displayed on screen.
+   * The total latency introduced by the THEOlive pipeline: from frame ingested till displayed on screen.
    */
   theoliveLatency?: number
 }
