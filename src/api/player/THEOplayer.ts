@@ -286,5 +286,12 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
   /**
    * The API for THEOlive.
    */
+  readonly theoLive: TheoLiveAPI;
+
+  /**
+   * The API for THEOlive.
+   *
+   * @deprecated use {@link THEOplayer.theoLive} instead.
+   */
   readonly theolive: TheoLiveAPI;
 }
