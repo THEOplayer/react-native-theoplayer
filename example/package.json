@@ -39,6 +39,7 @@
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "babel-loader": "^8.4.1",
+    "babel-plugin-react-compiler": "^1.0.0",
     "babel-plugin-react-native-web": "^0.17.7",
     "copy-webpack-plugin": "^13.0.1",
     "eslint": "^8.57.1",
