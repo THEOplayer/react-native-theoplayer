@@ -144,7 +144,7 @@ No additional configuration is required to support picture-in-picture on iOS.
 On web platforms, only the "out-of-app" PiP presentation mode is supported, allowing the PiP window to float
 independently from the browser window on the desktop.
 The THEOplayer Web SDK refers to this as
-[native-picture-in-picture](https://www.theoplayer.com/docs/theoplayer/v8/api-reference/web/types/PresentationMode.html)
+[native-picture-in-picture](https://www.theoplayer.com/docs/theoplayer/v10/api-reference/web/types/PresentationMode.html)
 , distinguishing it from the "in-app" floating player window used in picture-in-picture mode.
 Note that except for the native PiP controls,
 any user interface defined in React Native will not be shown in the PiP window.
