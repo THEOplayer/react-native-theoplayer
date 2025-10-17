@@ -24,6 +24,6 @@ export const useCachingTaskList = (debug = false) => {
       MediaCache.removeEventListener(CacheEventType.removetask, taskListChangeListener);
       MediaCache.addEventListener(CacheEventType.statechange, taskListChangeListener);
     };
-  }, []);
+  }, [debug]);
   return tasks;
 };
