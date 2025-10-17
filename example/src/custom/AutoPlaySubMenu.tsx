@@ -12,7 +12,7 @@ export interface PipSubMenuProps {
 }
 
 export function AutoPlaySubMenu(props?: PipSubMenuProps) {
-  const ctx = useContext(PlayerContext);
+  const { player } = useContext(PlayerContext);
 
   return (
     <CustomSubMenu
@@ -24,9 +24,10 @@ export function AutoPlaySubMenu(props?: PipSubMenuProps) {
         { label: 'Enabled', value: true },
       ]}
       onOptionSelected={(option: Option<boolean>) => {
-        ctx.player.autoplay = option.value;
+        // eslint-disable-next-line react-hooks/immutability
+        player.autoplay = option.value;
       }}
-      currentOption={() => ctx.player.autoplay ?? false}
+      currentOption={() => player.autoplay ?? false}
     />
   );
 }

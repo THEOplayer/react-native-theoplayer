@@ -15,7 +15,7 @@ export interface BackgroundAudioSubMenuProps {
  * A button component that opens a backgroundAudio selection menu for the `react-native-theoplayer` UI.
  */
 export const BackgroundAudioSubMenu = (props?: BackgroundAudioSubMenuProps) => {
-  const ctx = useContext(PlayerContext);
+  const { player } = useContext(PlayerContext);
 
   return (
     <>
@@ -28,9 +28,10 @@ export const BackgroundAudioSubMenu = (props?: BackgroundAudioSubMenuProps) => {
           { label: 'Enabled', value: true },
         ]}
         onOptionSelected={(option: Option<boolean>) => {
-          ctx.player.backgroundAudioConfiguration = { ...ctx.player.backgroundAudioConfiguration, enabled: option.value };
+          // eslint-disable-next-line react-hooks/immutability
+          player.backgroundAudioConfiguration = { ...player.backgroundAudioConfiguration, enabled: option.value };
         }}
-        currentOption={() => ctx.player.backgroundAudioConfiguration.enabled ?? false}
+        currentOption={() => player.backgroundAudioConfiguration.enabled ?? false}
       />
       <CustomSubMenu
         title={'Background Audio: interruption handling'}
@@ -41,9 +42,10 @@ export const BackgroundAudioSubMenu = (props?: BackgroundAudioSubMenuProps) => {
           { label: 'Resume', value: true },
         ]}
         onOptionSelected={(option: Option<boolean>) => {
-          ctx.player.backgroundAudioConfiguration = { ...ctx.player.backgroundAudioConfiguration, shouldResumeAfterInterruption: option.value };
+          // eslint-disable-next-line react-hooks/immutability
+          player.backgroundAudioConfiguration = { ...player.backgroundAudioConfiguration, shouldResumeAfterInterruption: option.value };
         }}
-        currentOption={() => ctx.player.backgroundAudioConfiguration.shouldResumeAfterInterruption ?? false}
+        currentOption={() => player.backgroundAudioConfiguration.shouldResumeAfterInterruption ?? false}
       />
     </>
   );
