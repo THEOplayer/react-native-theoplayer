@@ -2,10 +2,12 @@
 import eslint from '@eslint/js';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import typescriptEslint from 'typescript-eslint';
+import reactHooks from 'eslint-plugin-react-hooks';
 
 export default typescriptEslint.config(
   eslint.configs.recommended,
   ...typescriptEslint.configs.recommended,
+  reactHooks.configs.flat.recommended,
   eslintConfigPrettier,
   {
     rules: {
