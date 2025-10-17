@@ -20,7 +20,7 @@ export const MediaCacheDownloadButton = () => {
         },
       });
     }
-  }, []);
+  }, [player]);
 
   return <MenuRadioButton label={'Create download task'} uid={0} onSelect={onPress} />;
 };
