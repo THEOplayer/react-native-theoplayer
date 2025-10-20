@@ -13,7 +13,7 @@ export interface RenderingTargetSubMenuProps {
 }
 
 export function RenderingTargetSubMenu(props?: RenderingTargetSubMenuProps) {
-  const ctx = useContext(PlayerContext);
+  const { player } = useContext(PlayerContext);
 
   return (
     <CustomSubMenu
@@ -28,9 +28,10 @@ export function RenderingTargetSubMenu(props?: RenderingTargetSubMenuProps) {
         },
       ]}
       onOptionSelected={(option: Option<RenderingTarget>) => {
-        ctx.player.renderingTarget = option.value;
+        // eslint-disable-next-line react-hooks/immutability
+        player.renderingTarget = option.value;
       }}
-      currentOption={() => ctx.player.renderingTarget ?? RenderingTarget.SURFACE_VIEW}
+      currentOption={() => player.renderingTarget ?? RenderingTarget.SURFACE_VIEW}
     />
   );
 }

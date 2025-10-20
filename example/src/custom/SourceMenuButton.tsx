@@ -17,14 +17,14 @@ export const SourceMenuButton = () => {
 };
 
 export const SourceMenuView = () => {
-  // @ts-ignore
-  const context = useContext(PlayerContext);
-  const selectedSource = SOURCES.find((source) => source.source === context.player.source);
+  const { player } = useContext(PlayerContext);
+  const selectedSource = SOURCES.find((source) => source.source === player.source);
   const [localSourceId, setLocalSourceId] = useState<number | undefined>(selectedSource ? SOURCES.indexOf(selectedSource) : undefined);
 
   const selectSource = (id: number | undefined) => {
     setLocalSourceId(id);
-    context.player.source = id !== undefined ? SOURCES[id].source : undefined;
+    // eslint-disable-next-line react-hooks/immutability
+    player.source = id !== undefined ? SOURCES[id].source : undefined;
   };
   return (
     <MenuView

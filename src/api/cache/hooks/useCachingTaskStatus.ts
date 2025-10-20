@@ -21,6 +21,6 @@ export const useCachingTaskStatus = (task: CachingTask, debug = false) => {
     return () => {
       task.removeEventListener(CachingTaskEventType.statechange, onStateChange);
     };
-  }, []);
+  }, [task, debug]);
   return status;
 };
