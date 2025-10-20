@@ -259,6 +259,10 @@ class THEOplayerRCTMediaTrackEventHandler {
                 //"frameRate": 0, // not available on iOS SDK
                 //"firstFrame": 0 // not available on iOS SDK
             ]
+            if let averageBandwidth = activeQuality.averageBandwidth {
+                quality["averageBandwidth"] = averageBandwidth
+            }
+            
             forwardedMediaTrackEvent([
                 "trackUid" : track.uid,
                 "type" : MediaTrackEventType.ACTIVE_QUALITY_CHANGED.rawValue,
@@ -287,6 +291,9 @@ class THEOplayerRCTMediaTrackEventHandler {
                 "available": true,
                 //"audioSamplingRate": 0 // not available on iOS SDK
             ]
+            if let averageBandwidth = activeQuality.averageBandwidth {
+                quality["averageBandwidth"] = averageBandwidth
+            }
             
             forwardedMediaTrackEvent([
                 "trackUid" : track.uid,
