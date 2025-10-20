@@ -13,9 +13,10 @@ import com.theoplayer.android.api.ads.theoads.OverlaySize
 import com.theoplayer.android.api.ads.theoads.TheoAdsLayout
 
 private const val PROP_ID = "id"
-private const val PROP_TYPE = "TYPE"
+private const val PROP_TYPE = "type"
 private const val PROP_START_TIME = "startTime"
 private const val PROP_DURATION = "duration"
+private const val PROP_AD_TAG_PARAMETERS = "adTagParameters"
 private const val PROP_BACKDROP_URI = "backdropUri"
 private const val PROP_LAYOUT = "layout"
 private const val PROP_ADS = "ads"
@@ -62,6 +63,14 @@ object THEOadsAdapter {
         putMap(PROP_POSITION, fromOverlayPosition(interstitial.position))
         putMap(PROP_SIZE, fromOverlaySize(interstitial.size))
       }
+
+      putMap(PROP_AD_TAG_PARAMETERS, fromAdTagParameters(interstitial.adTagParameters))
+    }
+  }
+
+  fun fromAdTagParameters(adTagParameters: Map<String, String>): WritableMap {
+    return Arguments.createMap().apply {
+      adTagParameters.forEach { (key, value) -> putString(key, value) }
     }
   }
 

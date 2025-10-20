@@ -208,7 +208,7 @@ We refer to the [example application](example-app.md) and its [code](https://git
 ### libraryConfiguration
 
 When passing the `PlayerConfiguration` object while creating the player, the
-[`libraryConfiguration`](https://www.theoplayer.com/docs/theoplayer/v7/api-reference/web/interfaces/PlayerConfiguration.html#libraryLocation) parameter specifies
+[`libraryConfiguration`](https://www.theoplayer.com/docs/theoplayer/v10/api-reference/web/interfaces/PlayerConfiguration.html#libraryLocation) parameter specifies
 where the THEOplayer web worker files are located. The worker files are dynamically loaded and
 necessary to play-out MPEG-TS based HLS streams. By default it is set to the location where npm installed THEOplayer
 ('./node_modules/theoplayer').

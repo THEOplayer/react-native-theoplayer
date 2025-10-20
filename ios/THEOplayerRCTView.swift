@@ -115,6 +115,15 @@ public class THEOplayerRCTView: UIView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("[NATIVE] init(coder:) has not been implemented")
     }
+    
+    func willUnmount() {
+        // before destruction, make sure the view reparenting is reset when player was put in fullscreen
+        if self.presentationModeManager.presentationMode == .fullscreen {
+            if DEBUG_THEOPLAYER_INTERACTION {PrintUtils.printLog(logText: "[NATIVE] willUnmount with presentationMode: \(self.presentationModeManager.presentationMode._rawValue)")}
+            
+            self.setPresentationMode(newPresentationMode: PresentationMode.inline)
+        }
+    }
   
     deinit {
         self.mainEventHandler.destroy()

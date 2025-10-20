@@ -155,6 +155,9 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
   }
 
   componentWillUnmount() {
+    // Allow proper cleanup on the native player before destruction
+    this._facade.willUnmount();
+
     // Notify the player will be destroyed.
     const { onPlayerDestroy } = this.props;
     if (onPlayerDestroy) {
@@ -357,7 +360,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
   };
 
   private _onTHEOadsEvent = (event: NativeSyntheticEvent<NativeTheoAdsEvent>) => {
-    this._facade.dispatchEvent(fromNativeTheoAdsEvent(event));
+    this._facade.dispatchEvent(fromNativeTheoAdsEvent(this.nativeHandle, event));
   };
 
   private _onCastEvent = (event: NativeSyntheticEvent<NativeCastEvent>) => {

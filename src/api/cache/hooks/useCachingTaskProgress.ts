@@ -21,6 +21,6 @@ export const useCachingTaskProgress = (task: CachingTask, debug = true) => {
     return () => {
       task.removeEventListener(CachingTaskEventType.progress, onProgress);
     };
-  }, []);
+  }, [task, debug]);
   return progress;
 };

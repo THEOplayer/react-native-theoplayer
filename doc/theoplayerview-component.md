@@ -74,7 +74,7 @@ created in React Native. The accompanying example application provides a basic U
 
 You can set a source using the `source` property on the [THEOplayer API](../src/api/player/THEOplayer.ts). The type
 definition of `SourceDescription` maps to the type used in
-the [Web SDK's documentation](https://www.theoplayer.com/docs/theoplayer/v7/api-reference/web/interfaces/SourceDescription.html).
+the [Web SDK's documentation](https://www.theoplayer.com/docs/theoplayer/v10/api-reference/web/interfaces/SourceDescription.html).
 
 ```typescript
 player.source = {

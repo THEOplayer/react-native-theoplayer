@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [10.2.0] - 25-10-20
+
+### Fixed
+
+- Fixed an issue on iOS where the player crashed when it was destroyed while in fullscreen.
+- Fixed an issue on Android where creating a caching task with `MediaCache.createTask` would not return the created `task`.
+- Fixed an issue where setting `player.theoLive.authToken = undefined` would cause a crash on Android.
+
+### Changed
+
+- Added `THEOplayer.theoLive` and deprecated `THEOplayer.theolive`, to be consistent with the THEOplayer SDKs for other platforms.
+
 ## [10.1.0] - 25-10-06
 
 ### Added

@@ -14,7 +14,6 @@ import com.facebook.react.module.annotations.ReactModule
 import com.facebook.react.module.model.ReactModuleInfo
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.google.gson.Gson
-import com.theoplayer.ads.AdsModule
 import com.theoplayer.util.ViewResolver
 import com.theoplayer.android.api.THEOplayerGlobal
 import com.theoplayer.android.api.cache.Cache
@@ -26,6 +25,7 @@ import com.theoplayer.android.api.event.cache.task.CachingTaskEventTypes
 import com.theoplayer.android.api.event.cache.task.CachingTaskProgressEvent
 import com.theoplayer.android.api.event.cache.task.CachingTaskStateChangeEvent
 import com.theoplayer.android.api.event.cache.tasklist.CachingTaskListEventTypes
+import com.theoplayer.cache.CacheAdapter.fromCachingTask
 import com.theoplayer.drm.ContentProtectionAdapter
 import com.theoplayer.source.SourceAdapter
 import org.json.JSONException
@@ -78,7 +78,7 @@ class CacheModule(private val context: ReactApplicationContext) :
           event.task?.let { task ->
             // Notify AddCachingTaskEvent event
             emit("onAddCachingTaskEvent", Arguments.createMap().apply {
-              putMap(PROP_TASK, CacheAdapter.fromCachingTask(task))
+              putMap(PROP_TASK, fromCachingTask(task))
             })
             // Add CachingTask listeners
             addCachingTaskListeners(task)
@@ -90,7 +90,7 @@ class CacheModule(private val context: ReactApplicationContext) :
           event.task?.let { task ->
             // Notify RemoveCachingTaskEvent event
             emit("onRemoveCachingTaskEvent", Arguments.createMap().apply {
-              putMap(PROP_TASK, CacheAdapter.fromCachingTask(event.task))
+              putMap(PROP_TASK, fromCachingTask(event.task))
             })
             // Remove CachingTask listeners
             removeCachingTaskListeners(task)
@@ -184,16 +184,15 @@ class CacheModule(private val context: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun createTask(source: ReadableMap, parameters: ReadableMap) {
-    val sourceDescription = sourceAdapter.parseSourceFromJS(source)
-    if (sourceDescription != null) {
+  fun createTask(source: ReadableMap, parameters: ReadableMap, promise: Promise) {
+    sourceAdapter.parseSourceFromJS(source)?.let { sourceDescription ->
       handler.post {
-        cache.createTask(
+        promise.resolve(fromCachingTask(cache.createTask(
           sourceDescription,
           CacheAdapter.parseCachingParameters(parameters)
-        )
+        )))
       }
-    }
+    } ?: promise.resolve(null)
   }
 
   @ReactMethod

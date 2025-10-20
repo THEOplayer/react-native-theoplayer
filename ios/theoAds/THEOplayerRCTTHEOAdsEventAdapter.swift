@@ -12,6 +12,7 @@ let PROP_INTERSTITIAL_ID: String = "id"
 let PROP_INTERSTITIAL_TYPE: String = "type"
 let PROP_INTERSTITIAL_START_TIME: String = "startTime"
 let PROP_INTERSTITIAL_DURATION: String = "duration"
+let PROP_AD_TAG_PARAMETERS: String = "adTagParameters"
 
 // adbreak specific
 let PROP_ADBREAK_INTERSTITIAL_LAYOUT: String = "layout"
@@ -39,7 +40,8 @@ class THEOplayerRCTTHEOadsEventAdapter {
         if let duration = interstitial.duration {
             interstitialData[PROP_INTERSTITIAL_DURATION] = duration
         }
-        
+        interstitialData[PROP_AD_TAG_PARAMETERS] = interstitial.adTagParameters
+
         // ADBREAK-INTERSTITIAL SPECIFIC:
         if let adBreakInterstitial = interstitial as? THEOplayerTHEOadsIntegration.AdBreakInterstitial {
             interstitialData[PROP_ADBREAK_INTERSTITIAL_LAYOUT] = THEOplayerRCTTHEOadsEventAdapter.fromInterstitialLayout(adBreakInterstitial.layout)
@@ -77,7 +79,7 @@ class THEOplayerRCTTHEOadsEventAdapter {
             return "overlay"
         }
     }
-    
+
     class func fromInterstitialLayout(_ interstitialLayout: THEOplayerTHEOadsIntegration.THEOadsLayout) -> String {
         switch interstitialLayout {
         case THEOadsLayout.single:

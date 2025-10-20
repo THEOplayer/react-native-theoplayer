@@ -4,7 +4,7 @@ import { ChromelessPlayer } from 'theoplayer';
 import { THEOplayerWebAdapter } from './adapter/THEOplayerWebAdapter';
 
 export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProps>) {
-  const { config, children } = props;
+  const { config, children, onPlayerReady, onPlayerDestroy } = props;
   const player = useRef<ChromelessPlayer | null>(null);
   const adapter = useRef<THEOplayerWebAdapter | null>(null);
   const container = useRef<null | HTMLDivElement>(null);
@@ -38,19 +38,18 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
       window.nativePlayer = player;
 
       // Notify the player is ready
-      props.onPlayerReady?.(adapter.current);
+      onPlayerReady?.(adapter.current);
     }
 
     // Clean-up
     return () => {
       // Notify the player will be destroyed.
-      const { onPlayerDestroy } = props;
       if (adapter?.current && onPlayerDestroy) {
         onPlayerDestroy(adapter?.current);
       }
       adapter?.current?.destroy();
     };
-  }, [container]);
+  }, [config, container, onPlayerReady, onPlayerDestroy]);
 
   return (
     // Note: `display: contents` causes an element's children to appear as if they were direct children of the element's parent,

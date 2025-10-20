@@ -15,7 +15,7 @@ export class TheoLiveNativeAdapter implements TheoLiveAPI {
     return NativeTheoLiveModule.latencies(this._player.nativeHandle);
   }
 
-  set authToken(token: string) {
+  set authToken(token: string | undefined) {
     this._token = token;
     NativeTheoLiveModule.setAuthToken(this._player.nativeHandle, token);
   }

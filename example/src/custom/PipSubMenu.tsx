@@ -12,7 +12,7 @@ export interface PipSubMenuProps {
 }
 
 export function PiPSubMenu(props?: PipSubMenuProps) {
-  const ctx = useContext(PlayerContext);
+  const { player } = useContext(PlayerContext);
 
   return (
     <>
@@ -25,9 +25,10 @@ export function PiPSubMenu(props?: PipSubMenuProps) {
           { label: 'Enabled', value: true },
         ]}
         onOptionSelected={(option: Option<boolean>) => {
-          ctx.player.pipConfiguration = { ...ctx.player.pipConfiguration, startsAutomatically: option.value };
+          // eslint-disable-next-line react-hooks/immutability
+          player.pipConfiguration = { ...player.pipConfiguration, startsAutomatically: option.value };
         }}
-        currentOption={() => ctx.player.pipConfiguration.startsAutomatically ?? false}
+        currentOption={() => player.pipConfiguration.startsAutomatically ?? false}
       />
       <CustomSubMenu
         title={'Retain Picture-in-Picture on new source'}
@@ -38,9 +39,10 @@ export function PiPSubMenu(props?: PipSubMenuProps) {
           { label: 'Enabled', value: true },
         ]}
         onOptionSelected={(option: Option<boolean>) => {
-          ctx.player.pipConfiguration = { ...ctx.player.pipConfiguration, retainPipOnSourceChange: option.value };
+          // eslint-disable-next-line react-hooks/immutability
+          player.pipConfiguration = { ...player.pipConfiguration, retainPipOnSourceChange: option.value };
         }}
-        currentOption={() => ctx.player.pipConfiguration.retainPipOnSourceChange ?? false}
+        currentOption={() => player.pipConfiguration.retainPipOnSourceChange ?? false}
       />
     </>
   );

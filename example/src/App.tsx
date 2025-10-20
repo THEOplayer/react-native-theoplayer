@@ -23,7 +23,16 @@ import {
   TimeLabel,
   UiContainer,
 } from '@theoplayer/react-native-ui';
-import { PlayerConfiguration, PlayerEventType, PresentationMode, sdkVersions, THEOplayer, THEOplayerView } from 'react-native-theoplayer';
+import {
+  PlayerConfiguration,
+  PlayerEventType,
+  PresentationMode,
+  sdkVersions,
+  TheoAdsEvent,
+  TheoAdsEventType,
+  THEOplayer,
+  THEOplayerView,
+} from 'react-native-theoplayer';
 import { Platform, StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
 import { SourceMenuButton, SOURCES } from './custom/SourceMenuButton';
 import { BackgroundAudioSubMenu } from './custom/BackgroundAudioSubMenu';
@@ -75,6 +84,13 @@ export default function App() {
   // so explicitly disable them here.
   const edges: Edges = useMemo(() => (presentationMode === PresentationMode.pip ? [] : ['left', 'top', 'right', 'bottom']), [presentationMode]);
 
+  const onTheoAdsEvent = (event: TheoAdsEvent) => {
+    console.log(event);
+    if (event.subType === TheoAdsEventType.ADD_INTERSTITIAL) {
+      event.interstitial.adTagParameters['CustomKey'] = 'CustomValue';
+    }
+  };
+
   const onPlayerReady = (player: THEOplayer) => {
     setPlayer(player);
     // optional debug logs
@@ -84,11 +100,15 @@ export default function App() {
     player.addEventListener(PlayerEventType.READYSTATE_CHANGE, console.log);
     player.addEventListener(PlayerEventType.PLAY, console.log);
     player.addEventListener(PlayerEventType.PLAYING, console.log);
+    player.addEventListener(PlayerEventType.WAITING, console.log);
     player.addEventListener(PlayerEventType.PAUSE, console.log);
     player.addEventListener(PlayerEventType.SEEKING, console.log);
     player.addEventListener(PlayerEventType.SEEKED, console.log);
     player.addEventListener(PlayerEventType.ENDED, console.log);
+    player.addEventListener(PlayerEventType.ERROR, console.log);
     player.addEventListener(PlayerEventType.THEOLIVE_EVENT, console.log);
+    player.addEventListener(PlayerEventType.ERROR, console.log);
+    player.addEventListener(PlayerEventType.THEOADS_EVENT, onTheoAdsEvent);
 
     sdkVersions().then((versions) => console.log(`[theoplayer] ${JSON.stringify(versions, null, 4)}`));
 
@@ -178,6 +198,11 @@ export default function App() {
                       <PipButton />
                       <FullscreenButton />
                     </ControlBar>
+                  </AutoFocusGuide>
+                }
+                adCenter={
+                  <AutoFocusGuide>
+                    <CenteredControlBar middle={<PlayButton />} />
                   </AutoFocusGuide>
                 }
               />
