@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
   AirplayButton,
   AutoFocusGuide,
@@ -91,7 +91,7 @@ export default function App() {
     }
   };
 
-  const onPlayerReady = (player: THEOplayer) => {
+  const onPlayerReady = useCallback((player: THEOplayer) => {
     setPlayer(player);
     // optional debug logs
     player.addEventListener(PlayerEventType.SOURCE_CHANGE, console.log);
@@ -125,7 +125,7 @@ export default function App() {
     };
 
     console.log('THEOplayer is ready');
-  };
+  }, []);
 
   return (
     /**

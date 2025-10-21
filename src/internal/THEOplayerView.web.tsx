@@ -49,7 +49,9 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
       }
       adapter?.current?.destroy();
     };
-  }, [config, container, onPlayerReady, onPlayerDestroy]);
+    // TODO: Follow the rules of react hooks, to be fixed in next major because it's a breaking change for some customers.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [container]);
 
   return (
     // Note: `display: contents` causes an element's children to appear as if they were direct children of the element's parent,
