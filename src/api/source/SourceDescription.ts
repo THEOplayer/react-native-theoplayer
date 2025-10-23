@@ -105,13 +105,6 @@ export interface SourceConfiguration {
   timeServer?: string;
 
   /**
-   * Whether the player should parse and expose date ranges from HLS playlists.
-   *
-   * @defaultValue `false`
-   */
-  hlsDateRange?: boolean;
-
-  /**
    * Describes the metadata of a source.
    *
    * @public
@@ -326,6 +319,13 @@ export interface BaseSource {
    * <br/> - Only this source will use the time server. Alternatively, for all source use {@link SourceConfiguration.timeServer}.
    */
   timeServer?: string;
+
+  /**
+   * Whether the player should parse and expose date ranges from HLS manifests.
+   *
+   * @defaultValue `false`
+   */
+  hlsDateRange?: boolean;
 
   /**
    * Whether the source should be played in the low-latency-mode of the player.
