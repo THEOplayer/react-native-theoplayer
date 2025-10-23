@@ -20,6 +20,8 @@ class NativeAd: THEOplayerSDK.Ad {
     var width: Int? = nil
     /** The height of the advertisement, in pixels.*/
     var height: Int? = nil
+    /** Whether the ad is slate or not */
+    var isSlate: Bool
     /** The kind of the ad integration.*/
     var integration: THEOplayerSDK.AdIntegrationKind
     /** The duration of the LinearAd, as provided by the VAST file, in seconds.*/
@@ -29,7 +31,7 @@ class NativeAd: THEOplayerSDK.Ad {
     /**The type of custom ad integration.*/
     var customIntegration: String? = nil
     
-    init(adBreak: AdBreak, companions: [THEOplayerSDK.CompanionAd], type: String, id: String? = nil, skipOffset: Int? = nil, resourceURI: String? = nil, width: Int? = nil, height: Int? = nil, integration: THEOplayerSDK.AdIntegrationKind, duration: Int? = 0, clickThrough: String?, customIntegration: String?) {
+    init(adBreak: AdBreak, companions: [THEOplayerSDK.CompanionAd], type: String, id: String? = nil, skipOffset: Int? = nil, resourceURI: String? = nil, width: Int? = nil, height: Int? = nil, isSlate: Bool = false, integration: THEOplayerSDK.AdIntegrationKind, duration: Int? = 0, clickThrough: String?, customIntegration: String?) {
         self.adBreak = adBreak
         self.companions = companions
         self.type = type
@@ -38,6 +40,7 @@ class NativeAd: THEOplayerSDK.Ad {
         self.resourceURI = resourceURI
         self.width = width
         self.height = height
+        self.isSlate = isSlate
         self.integration = integration
         self.duration = duration
         self.clickThrough = clickThrough
