@@ -78,6 +78,8 @@ RCT_EXTERN_METHOD(setABRConfig:(nonnull NSNumber *)node
 RCT_EXTERN_METHOD(setCurrentTime:(nonnull NSNumber *)node
                   time:(nonnull NSNumber *)time)
 
+RCT_EXTERN_METHOD(goLive:(nonnull NSNumber *)node)
+
 RCT_EXTERN_METHOD(setMuted:(nonnull NSNumber *)node
                   muted:(BOOL)muted)
 

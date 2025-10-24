@@ -5,11 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- When the player's `currentTime` is set to `Infinity` on mobile platforms, the player will seek to the live edge rather than the end of the `seekable` range.
+
 ## [10.2.2] - 25-10-23
+
+### Fixed
 
 - Fixed a build issue on iOS/tvOS due to a breaking change on the THEOplayerSDK.Ad protocol in iOS SDK 10.3.0 .
 
 ## [10.2.1] - 25-10-21
+
+### Fixed
 
 - Fixed an issue on web where the `<THEOplayerView>` would be re-rendered non-stop.
 
