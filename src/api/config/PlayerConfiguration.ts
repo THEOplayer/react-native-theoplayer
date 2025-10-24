@@ -104,6 +104,20 @@ export interface PlayerConfiguration {
    * <br/> - Only supported on limited number of video codecs and devices.
    */
   tunnelingEnabled?: boolean;
+
+  /**
+   * Whether the player should use android.net.http.HttpEngine or Cronet for its network stack, if available.
+   *
+   * @defaultValue true
+   *
+   * @platform android
+   *
+   * @remarks
+   * <br/> - Only supported with the Media3 integration.
+   * <br/> - When set to true, the player will attempt to use either android.net.http.HttpEngine or Cronet for its network requests.
+   * <br/> - When set to false, the player will always use java.net.HttpURLConnection.
+   */
+  useHttpEngine?: boolean;
 }
 
 /**
