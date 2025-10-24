@@ -21,8 +21,10 @@ import type {
   TheoAdsEventsMap as NativeTheoAdsEventMap,
   TheoLiveApiEventMap as NativeTheoLiveEventMap,
   InterstitialEvent,
+  AdEvent as NativeAdEvent,
+  AdBreakEvent as NativeAdBreakEvent,
 } from 'theoplayer';
-import { AdEvent, MediaTrack, PlayerError, TheoLiveEndpoint, TimeRange } from 'react-native-theoplayer';
+import { MediaTrack, PlayerError, TheoLiveEndpoint, TimeRange } from 'react-native-theoplayer';
 import {
   AdEventType,
   CastState,
@@ -358,8 +360,13 @@ export class WebEventForwarder {
   };
 
   private readonly onAdEvent = (event: NativeEvent) => {
-    const castedEvent = event as AdEvent;
+    const castedEvent = event as NativeAdEvent<any>;
     this._facade.dispatchEvent(new DefaultAdEvent(event.type as AdEventType, castedEvent.ad));
+  };
+
+  private readonly onAdBreakEvent = (event: NativeEvent) => {
+    const castedEvent = event as NativeAdBreakEvent<any>;
+    this._facade.dispatchEvent(new DefaultAdEvent(event.type as AdEventType, castedEvent.adBreak));
   };
 
   private readonly onTheoAdsEvent = (event: InterstitialEvent<any>) => {
