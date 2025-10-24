@@ -3,8 +3,8 @@ const path = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
+const pkg = require('../../package.json');
 const projectDirectory = path.resolve(__dirname, '../..');
-
 const appDirectory = path.resolve(__dirname, '..');
 
 // A folder for any stub components we need in case there is no counterpart for it on react-native-web.
@@ -95,6 +95,8 @@ module.exports = {
   resolve: {
     extensions: ['.web.js', '.web.ts', '.web.tsx', '.js', '.ts', '.tsx'],
     alias: {
+      [pkg.name]: path.resolve(projectDirectory, pkg.source),
+
       'react-native$': 'react-native-web',
       'react-native-url-polyfill': 'url-polyfill',
       'react-native-google-cast': path.resolve(stubDirectory, 'CastButtonStub'),
