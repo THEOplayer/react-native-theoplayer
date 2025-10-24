@@ -422,13 +422,7 @@ export class WebEventForwarder {
 }
 
 const FORWARDED_AD_EVENTS = [
-  AdEventType.ADD_AD_BREAK,
-  AdEventType.REMOVE_AD_BREAK,
   AdEventType.AD_LOADED,
-  AdEventType.AD_BREAK_BEGIN,
-  AdEventType.AD_BREAK_END,
-  AdEventType.AD_BREAK_CHANGE,
-  AdEventType.UPDATE_AD_BREAK,
   AdEventType.ADD_AD,
   AdEventType.AD_BEGIN,
   AdEventType.AD_END,
@@ -441,6 +435,15 @@ const FORWARDED_AD_EVENTS = [
   AdEventType.AD_ERROR,
   AdEventType.AD_METADATA,
   AdEventType.AD_BUFFERING,
+] as (keyof NativeAdsEventMap)[];
+
+const FORWARDED_ADBREAK_EVENTS = [
+  AdEventType.ADD_AD_BREAK,
+  AdEventType.REMOVE_AD_BREAK,
+  AdEventType.AD_BREAK_BEGIN,
+  AdEventType.AD_BREAK_END,
+  AdEventType.AD_BREAK_CHANGE,
+  AdEventType.UPDATE_AD_BREAK,
 ] as (keyof NativeAdsEventMap)[];
 
 const FORWARDED_THEOADS_EVENTS = [
