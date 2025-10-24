@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+- Added `useHttpEngine` to `PlayerConfiguration` to allow toggling the use of HttpEngine for network requests on Android.
+
 ## [10.2.2] - 25-10-23
 
 - Fixed a build issue on iOS/tvOS due to a breaking change on the THEOplayerSDK.Ad protocol in iOS SDK 10.3.0 .
