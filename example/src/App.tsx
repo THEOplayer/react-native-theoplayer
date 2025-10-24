@@ -45,6 +45,22 @@ import { AutoPlaySubMenu } from './custom/AutoPlaySubMenu';
 import { SafeAreaProvider, SafeAreaView, Edges } from 'react-native-safe-area-context';
 import { usePresentationMode } from './hooks/usePresentationMode';
 
+import { ConvivaConfiguration, ConvivaMetadata, useConviva } from '@theoplayer/react-native-analytics-conviva';
+
+const TEST_CUSTOMER_KEY = 'MY_CUSTOMER_KEY';
+const TOUCHSTONE_SERVICE_URL = 'https://theoplayer-test.ts-testonly.conviva.com';
+export const convivaConfig: ConvivaConfiguration = {
+  customerKey: TEST_CUSTOMER_KEY, // Can be a test or production key.
+  debug: true,
+  gatewayUrl: TOUCHSTONE_SERVICE_URL,
+};
+
+export const convivaMetadata: ConvivaMetadata = {
+  ['Conviva.applicationName']: 'THEOplayer',
+  ['Conviva.viewerId']: 'your_viewer_id',
+  ['customTag1']: 'customValue1',
+};
+
 const playerConfig: PlayerConfiguration = {
   // Get your THEOplayer license from https://portal.theoplayer.com/
   // Without a license, only demo sources hosted on '*.theoplayer.com' domains can be played.
@@ -79,6 +95,7 @@ export default function App() {
   const [player, setPlayer] = useState<THEOplayer | undefined>(undefined);
   const presentationMode = usePresentationMode(player);
   const isDarkMode = useColorScheme() === 'dark';
+  const [_conviva, initConviva] = useConviva(convivaMetadata, convivaConfig);
 
   // In PiP presentation mode on NewArch Android, there is an issue where SafeAreayView does not update the edges in time,
   // so explicitly disable them here.
@@ -93,6 +110,8 @@ export default function App() {
 
   const onPlayerReady = useCallback((player: THEOplayer) => {
     setPlayer(player);
+    initConviva(player);
+
     // optional debug logs
     player.addEventListener(PlayerEventType.SOURCE_CHANGE, console.log);
     player.addEventListener(PlayerEventType.LOADED_DATA, console.log);
