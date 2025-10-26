@@ -1,3 +1,10 @@
+export interface EndpointMillicastSource {
+  name: string;
+  accountId: string;
+  subscriberToken?: string;
+  directorUrl?: string;
+}
+
 /**
  * Description of a THEOlive Endpoint.
  *
@@ -6,6 +13,7 @@
  * @public
  */
 export interface TheoLiveEndpoint {
+  millicastSrc?: EndpointMillicastSource;
   hespSrc?: string;
   hlsSrc?: string;
   adSrc?: string;
