@@ -162,6 +162,17 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
         }
     }
 
+    @objc(goLive:)
+    func goLive(_ node: NSNumber) -> Void {
+        DispatchQueue.main.async {
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let player = theView.player {
+                if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] goLive on TheoPlayer") }
+                player.setCurrentTime(.infinity)
+            }
+        }
+    }
+
     @objc(setMuted:muted:)
     func setMuted(_ node: NSNumber, muted: Bool) -> Void {
         DispatchQueue.main.async {

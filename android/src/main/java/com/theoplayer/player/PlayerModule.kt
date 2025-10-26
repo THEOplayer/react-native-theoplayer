@@ -68,6 +68,13 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
   }
 
   @ReactMethod
+  fun goLive(tag: Int) {
+    viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
+      view?.player?.currentTime = Double.POSITIVE_INFINITY
+    }
+  }
+
+  @ReactMethod
   fun setPaused(tag: Int, paused: Boolean) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       if (paused) {
