@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## Unreleased
 
 ### Fixed
 
@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 - When the player's `currentTime` is set to `Infinity` on mobile platforms, the player will seek to the live edge rather than the end of the `seekable` range.
+- Added `useHttpEngine` to `PlayerConfiguration` to allow toggling the use of HttpEngine for network requests on Android.
 
 ## [10.2.2] - 25-10-23
 

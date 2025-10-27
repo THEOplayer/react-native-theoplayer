@@ -23,6 +23,7 @@ private const val PROP_RETRY_CONFIG = "retryConfiguration"
 private const val PROP_RETRY_MAX_RETRIES = "maxRetries"
 private const val PROP_RETRY_MIN_BACKOFF = "minimumBackoff"
 private const val PROP_RETRY_MAX_BACKOFF = "maximumBackoff"
+private const val PROP_USE_HTTPENGINE = "useHttpEngine"
 private const val PROP_CAST_CONFIGURATION = "cast"
 private const val PROP_ADS_CONFIGURATION = "ads"
 private const val PROP_IMA_CONFIGURATION = "ima"
@@ -60,7 +61,7 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
         getString(PROP_LICENSE_URL)?.let { licenseUrl ->
           licenseUrl(licenseUrl)
         }
-        if (hasKey(PROP_RETRY_CONFIG)) {
+        if (hasKey(PROP_RETRY_CONFIG) || hasKey(PROP_USE_HTTPENGINE)) {
           networkConfiguration(networkConfig())
         }
         if (hasKey(PROP_THEOLIVE_CONFIG)) {
@@ -81,6 +82,7 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
    * - maxRetries: The maximum amount of retries before the player throws a fatal error.
    * - minimumBackoff: The initial delay in milliseconds before a retry request occurs.
    * - maximumBackoff: The maximum amount of delay in milliseconds between retry requests.
+   * - useHttpEngine: Whether the player should use android.net.http.HttpEngine or Cronet for its network stack, if available.
    */
   private fun networkConfig(): NetworkConfiguration {
     return NetworkConfiguration.Builder().apply {
@@ -93,6 +95,11 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
         }
         if (hasKey(PROP_RETRY_MAX_BACKOFF)) {
           maximumBackOff(getDouble(PROP_RETRY_MAX_BACKOFF).toLong())
+        }
+      }
+      configProps?.run {
+        if (hasKey(PROP_USE_HTTPENGINE)) {
+          useHttpEngine(getBoolean(PROP_USE_HTTPENGINE))
         }
       }
     }.build()
