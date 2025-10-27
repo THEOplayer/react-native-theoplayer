@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed an issue on web, where adbreak related AdEvents did no longer contain the adBreak info.
+
 ### Changed
 
 - When the player's `currentTime` is set to `Infinity` on mobile platforms, the player will seek to the live edge rather than the end of the `seekable` range.

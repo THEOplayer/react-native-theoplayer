@@ -21,8 +21,10 @@ import type {
   TheoAdsEventsMap as NativeTheoAdsEventMap,
   TheoLiveApiEventMap as NativeTheoLiveEventMap,
   InterstitialEvent,
+  AdEvent as NativeAdEvent,
+  AdBreakEvent as NativeAdBreakEvent,
 } from 'theoplayer';
-import { AdEvent, MediaTrack, PlayerError, TheoLiveEndpoint, TimeRange } from 'react-native-theoplayer';
+import { MediaTrack, PlayerError, TheoLiveEndpoint, TimeRange } from 'react-native-theoplayer';
 import {
   AdEventType,
   CastState,
@@ -121,6 +123,7 @@ export class WebEventForwarder {
     this._player.cast?.airplay?.addEventListener('statechange', this.onAirplayStateChange);
 
     this._player.ads?.addEventListener(FORWARDED_AD_EVENTS, this.onAdEvent);
+    this._player.ads?.addEventListener(FORWARDED_ADBREAK_EVENTS, this.onAdBreakEvent);
     this._player.theoads?.addEventListener(FORWARDED_THEOADS_EVENTS, this.onTheoAdsEvent);
     this._player.theoLive?.addEventListener(FORWARDED_THEOLIVE_EVENTS, this.onTheoLiveEvent);
   }
@@ -170,6 +173,7 @@ export class WebEventForwarder {
     this._player.cast?.airplay?.removeEventListener('statechange', this.onAirplayStateChange);
 
     this._player.ads?.removeEventListener(FORWARDED_AD_EVENTS, this.onAdEvent);
+    this._player.ads?.removeEventListener(FORWARDED_ADBREAK_EVENTS, this.onAdBreakEvent);
     this._player.theoads?.removeEventListener(FORWARDED_THEOADS_EVENTS, this.onTheoAdsEvent);
     this._player.theoLive?.removeEventListener(FORWARDED_THEOLIVE_EVENTS, this.onTheoLiveEvent);
   }
@@ -357,8 +361,13 @@ export class WebEventForwarder {
   };
 
   private readonly onAdEvent = (event: NativeEvent) => {
-    const castedEvent = event as AdEvent;
+    const castedEvent = event as NativeAdEvent<string>;
     this._facade.dispatchEvent(new DefaultAdEvent(event.type as AdEventType, castedEvent.ad));
+  };
+
+  private readonly onAdBreakEvent = (event: NativeEvent) => {
+    const castedEvent = event as NativeAdBreakEvent<string>;
+    this._facade.dispatchEvent(new DefaultAdEvent(event.type as AdEventType, castedEvent.adBreak));
   };
 
   private readonly onTheoAdsEvent = (event: InterstitialEvent<any>) => {
@@ -422,13 +431,7 @@ export class WebEventForwarder {
 }
 
 const FORWARDED_AD_EVENTS = [
-  AdEventType.ADD_AD_BREAK,
-  AdEventType.REMOVE_AD_BREAK,
   AdEventType.AD_LOADED,
-  AdEventType.AD_BREAK_BEGIN,
-  AdEventType.AD_BREAK_END,
-  AdEventType.AD_BREAK_CHANGE,
-  AdEventType.UPDATE_AD_BREAK,
   AdEventType.ADD_AD,
   AdEventType.AD_BEGIN,
   AdEventType.AD_END,
@@ -441,6 +444,15 @@ const FORWARDED_AD_EVENTS = [
   AdEventType.AD_ERROR,
   AdEventType.AD_METADATA,
   AdEventType.AD_BUFFERING,
+] as (keyof NativeAdsEventMap)[];
+
+const FORWARDED_ADBREAK_EVENTS = [
+  AdEventType.ADD_AD_BREAK,
+  AdEventType.REMOVE_AD_BREAK,
+  AdEventType.AD_BREAK_BEGIN,
+  AdEventType.AD_BREAK_END,
+  AdEventType.AD_BREAK_CHANGE,
+  AdEventType.UPDATE_AD_BREAK,
 ] as (keyof NativeAdsEventMap)[];
 
 const FORWARDED_THEOADS_EVENTS = [
