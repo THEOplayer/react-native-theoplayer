@@ -262,11 +262,6 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     return this._state.seekable ?? [];
   }
 
-  private seekableEnd(): number {
-    const ranges = this.seekable;
-    return ranges.length === 0 ? 0 : ranges[ranges.length - 1].end;
-  }
-
   get buffered() {
     return this._state.buffered ?? [];
   }
@@ -288,14 +283,13 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
       return;
     }
 
-    // Sanitise currentTime
-    let seekTime = currentTime;
+    this._state.currentTime = currentTime;
     if (currentTime === Infinity) {
-      seekTime = this.seekableEnd();
+      // Old Architecture does not allow passing Infinite or NaN values over the bridge.
+      NativePlayerModule.goLive(this._view.nativeHandle);
+    } else {
+      NativePlayerModule.setCurrentTime(this._view.nativeHandle, currentTime);
     }
-
-    this._state.currentTime = seekTime;
-    NativePlayerModule.setCurrentTime(this._view.nativeHandle, seekTime);
   }
 
   get currentProgramDateTime(): number | undefined {
