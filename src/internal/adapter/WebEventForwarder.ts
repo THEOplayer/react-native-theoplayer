@@ -360,12 +360,12 @@ export class WebEventForwarder {
   };
 
   private readonly onAdEvent = (event: NativeEvent) => {
-    const castedEvent = event as NativeAdEvent<any>;
+    const castedEvent = event as NativeAdEvent<string>;
     this._facade.dispatchEvent(new DefaultAdEvent(event.type as AdEventType, castedEvent.ad));
   };
 
   private readonly onAdBreakEvent = (event: NativeEvent) => {
-    const castedEvent = event as NativeAdBreakEvent<any>;
+    const castedEvent = event as NativeAdBreakEvent<string>;
     this._facade.dispatchEvent(new DefaultAdEvent(event.type as AdEventType, castedEvent.adBreak));
   };
 
