@@ -173,6 +173,7 @@ export class WebEventForwarder {
     this._player.cast?.airplay?.removeEventListener('statechange', this.onAirplayStateChange);
 
     this._player.ads?.removeEventListener(FORWARDED_AD_EVENTS, this.onAdEvent);
+    this._player.ads?.removeEventListener(FORWARDED_ADBREAK_EVENTS, this.onAdBreakEvent);
     this._player.theoads?.removeEventListener(FORWARDED_THEOADS_EVENTS, this.onTheoAdsEvent);
     this._player.theoLive?.removeEventListener(FORWARDED_THEOLIVE_EVENTS, this.onTheoLiveEvent);
   }
