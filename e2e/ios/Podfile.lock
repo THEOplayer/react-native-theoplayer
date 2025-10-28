@@ -7,9 +7,9 @@ PODS:
   - fmt (11.0.2)
   - glog (0.3.5)
   - google-cast-sdk-dynamic-xcframework (4.8.3)
-  - GoogleAds-IMA-iOS-SDK (3.26.1)
-  - GoogleAds-IMA-tvOS-SDK (4.15.1)
-  - MillicastSDK (2.4.1)
+  - GoogleAds-IMA-iOS-SDK (3.27.4)
+  - GoogleAds-IMA-tvOS-SDK (4.16.0)
+  - MillicastSDK (2.5.2)
   - PromisesObjC (2.4.0)
   - RCT-Folly (2024.11.18.00):
     - boost
@@ -1274,15 +1274,15 @@ PODS:
   - react-native-google-cast/RNGoogleCast (4.6.2):
     - PromisesObjC
     - React
-  - react-native-theoplayer (9.3.0):
+  - react-native-theoplayer (10.3.0):
     - React-Core
-    - THEOplayer-Connector-SideloadedSubtitle (~> 9.3)
-    - THEOplayer-Integration-GoogleCast (~> 9.3)
-    - THEOplayer-Integration-GoogleIMA (~> 9.3)
-    - THEOplayer-Integration-Millicast (~> 9.3)
-    - THEOplayer-Integration-THEOads (~> 9.3)
-    - THEOplayer-Integration-THEOlive (~> 9.3)
-    - THEOplayerSDK-core (~> 9.3)
+    - THEOplayer-Connector-SideloadedSubtitle (~> 10.2)
+    - THEOplayer-Integration-GoogleCast (~> 10.2)
+    - THEOplayer-Integration-GoogleIMA (~> 10.2)
+    - THEOplayer-Integration-Millicast (~> 10.2)
+    - THEOplayer-Integration-THEOads (~> 10.2)
+    - THEOplayer-Integration-THEOlive (~> 10.2)
+    - THEOplayerSDK-core (~> 10.2)
   - React-NativeModulesApple (0.79.0-0):
     - glog
     - React-callinvoker
@@ -1632,40 +1632,40 @@ PODS:
   - SwiftSubtitles (0.9.1):
     - DSFRegex (~> 3.3.1)
     - TinyCSV (~> 0.6.1)
-  - THEOplayer-Connector-SideloadedSubtitle (9.5.0):
+  - THEOplayer-Connector-SideloadedSubtitle (10.3.0):
     - Swifter (= 1.5.0)
     - SwiftSubtitles (= 0.9.1)
-    - THEOplayerSDK-core (~> 9)
-  - THEOplayer-Integration-GoogleCast (9.5.0):
-    - THEOplayer-Integration-GoogleCast/Base (= 9.5.0)
-    - THEOplayer-Integration-GoogleCast/Dependencies (= 9.5.0)
-  - THEOplayer-Integration-GoogleCast/Base (9.5.0)
-  - THEOplayer-Integration-GoogleCast/Dependencies (9.5.0):
+    - THEOplayerSDK-core (~> 10)
+  - THEOplayer-Integration-GoogleCast (10.3.0):
+    - THEOplayer-Integration-GoogleCast/Base (= 10.3.0)
+    - THEOplayer-Integration-GoogleCast/Dependencies (= 10.3.0)
+  - THEOplayer-Integration-GoogleCast/Base (10.3.0)
+  - THEOplayer-Integration-GoogleCast/Dependencies (10.3.0):
     - google-cast-sdk-dynamic-xcframework (~> 4.8)
-  - THEOplayer-Integration-GoogleIMA (9.5.0):
-    - THEOplayer-Integration-GoogleIMA/Base (= 9.5.0)
-    - THEOplayer-Integration-GoogleIMA/Dependencies (= 9.5.0)
-  - THEOplayer-Integration-GoogleIMA/Base (9.5.0)
-  - THEOplayer-Integration-GoogleIMA/Dependencies (9.5.0):
+  - THEOplayer-Integration-GoogleIMA (10.3.0):
+    - THEOplayer-Integration-GoogleIMA/Base (= 10.3.0)
+    - THEOplayer-Integration-GoogleIMA/Dependencies (= 10.3.0)
+  - THEOplayer-Integration-GoogleIMA/Base (10.3.0)
+  - THEOplayer-Integration-GoogleIMA/Dependencies (10.3.0):
     - GoogleAds-IMA-iOS-SDK (~> 3.18)
     - GoogleAds-IMA-tvOS-SDK (~> 4.8)
-  - THEOplayer-Integration-Millicast (9.5.0):
-    - THEOplayer-Integration-Millicast/Base (= 9.5.0)
-    - THEOplayer-Integration-Millicast/Dependencies (= 9.5.0)
-  - THEOplayer-Integration-Millicast/Base (9.5.0)
-  - THEOplayer-Integration-Millicast/Dependencies (9.5.0):
-    - MillicastSDK (= 2.4.1)
-  - THEOplayer-Integration-THEOads (9.5.0):
-    - THEOplayer-Integration-THEOads/Base (= 9.5.0)
-    - THEOplayer-Integration-THEOads/Dependencies (= 9.5.0)
-  - THEOplayer-Integration-THEOads/Base (9.5.0)
-  - THEOplayer-Integration-THEOads/Dependencies (9.5.0):
+  - THEOplayer-Integration-Millicast (10.3.0):
+    - THEOplayer-Integration-Millicast/Base (= 10.3.0)
+    - THEOplayer-Integration-Millicast/Dependencies (= 10.3.0)
+  - THEOplayer-Integration-Millicast/Base (10.3.0)
+  - THEOplayer-Integration-Millicast/Dependencies (10.3.0):
+    - MillicastSDK (= 2.5.2)
+  - THEOplayer-Integration-THEOads (10.3.0):
+    - THEOplayer-Integration-THEOads/Base (= 10.3.0)
+    - THEOplayer-Integration-THEOads/Dependencies (= 10.3.0)
+  - THEOplayer-Integration-THEOads/Base (10.3.0)
+  - THEOplayer-Integration-THEOads/Dependencies (10.3.0):
     - GoogleAds-IMA-iOS-SDK (~> 3.18)
     - GoogleAds-IMA-tvOS-SDK (~> 4.8)
-  - THEOplayer-Integration-THEOlive (9.5.0):
-    - THEOplayer-Integration-THEOlive/Base (= 9.5.0)
-  - THEOplayer-Integration-THEOlive/Base (9.5.0)
-  - THEOplayerSDK-core (9.5.0)
+  - THEOplayer-Integration-THEOlive (10.3.0):
+    - THEOplayer-Integration-THEOlive/Base (= 10.3.0)
+  - THEOplayer-Integration-THEOlive/Base (10.3.0)
+  - THEOplayerSDK-core (10.3.0)
   - TinyCSV (0.6.1)
   - Yoga (0.0.0)
 
@@ -1927,9 +1927,9 @@ SPEC CHECKSUMS:
   fmt: c358e29b79c2957a8958c4169de5ad5cdd458216
   glog: 2777ae82f2611bf0a9ed50bcd30b0eea7e7b7f05
   google-cast-sdk-dynamic-xcframework: d4dd8d548462f2a4874515fee68c17805d44be42
-  GoogleAds-IMA-iOS-SDK: 10b8f194e7cd2714d4de9a0587c46c8aaf06c620
-  GoogleAds-IMA-tvOS-SDK: 24968955747d50fc2d7bd2e622d832b8372c2223
-  MillicastSDK: 505939ab461bbd1922c0afdf959b017e236e49de
+  GoogleAds-IMA-iOS-SDK: 1c696013d47bc3cafa48b7de9c8196941bd3105b
+  GoogleAds-IMA-tvOS-SDK: ddbb7e717e90fecb7384066d11d7b10f002ca765
+  MillicastSDK: 24cd1d1f574f125b9d562c5f568c39023697131d
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   RCT-Folly: 7fcb7677cc9c6a6e51b4ebcc986aecac5e1431de
   RCTDeprecation: 9a202661465eaba44f75328fab01bfe286785e42
@@ -1963,7 +1963,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: 0da7084396ee66a1f0f2d22d8d8171df305d520d
   React-microtasksnativemodule: 43ee48f78becfcf482526314d03716a9485d6e6e
   react-native-google-cast: 872b05bf12f7db32c2f66818fdd5406474af25f1
-  react-native-theoplayer: 8ea4c9040152066eef9d5166c0f428337e0fe8a3
+  react-native-theoplayer: d11998639ae3696ef9d62fc14b819f936f07b7de
   React-NativeModulesApple: 3eadbfd59638503272db810155ac80151b09fc15
   React-oscompat: 7a8843b653d2dfbcd543163245005262195d4b6e
   React-perflogger: bc67f4a2dac836a6c79a134ccdff8c79910566f1
@@ -1999,16 +1999,16 @@ SPEC CHECKSUMS:
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Swifter: e71dd674404923d7f03ebb03f3f222d1c570bc8e
   SwiftSubtitles: c659af19d710a2946779015464c0577d07fe4666
-  THEOplayer-Connector-SideloadedSubtitle: 4e03b39ac277d590fe8fcbe174a00c98635f2a9c
-  THEOplayer-Integration-GoogleCast: 05e141d974a3c77e9fe977154354e3d2f51fe012
-  THEOplayer-Integration-GoogleIMA: 90010535d28e0de15bb4c1c68977ade2f613a46c
-  THEOplayer-Integration-Millicast: aa82a10af3750f795f7a3609d2ace9ed5b8b67be
-  THEOplayer-Integration-THEOads: f7b68fbea9344a63b89118495d28f2febce99ece
-  THEOplayer-Integration-THEOlive: 10256a337e2a249f5cac066fbe6097af5a33c70d
-  THEOplayerSDK-core: 86b39a98dbcab0dd5e8ce02a4d741dbdb49551d5
+  THEOplayer-Connector-SideloadedSubtitle: 68d594bb56cf9399e6e7c7dcf4bcb7429afeebd5
+  THEOplayer-Integration-GoogleCast: 6958414ca1fba7c0563a66becef08ecdc671d53f
+  THEOplayer-Integration-GoogleIMA: 4af6f5df2346755c64ab23446e9769bbc99721ec
+  THEOplayer-Integration-Millicast: 41fb245c65ffaf86ff10a9bf447c218ab943d996
+  THEOplayer-Integration-THEOads: ef98f53bfea10998ab3c2e0401f8caa565f55478
+  THEOplayer-Integration-THEOlive: 641f460f20a7647acc8a847eb363e9268c0b3acd
+  THEOplayerSDK-core: 016b6d611def0728abe37156e755af8441fb796b
   TinyCSV: fd6228edbcf1c07466ac34b76dac5e052143eaba
   Yoga: 44eb79ba9d06b97656a8ea5e77321aae80608ae3
 
-PODFILE CHECKSUM: 101034438abf580fe3ace9c30acb438b7c0bf3ec
+PODFILE CHECKSUM: 4bbccd7c12aeb6476fbfb9e2caa4fe665002339f
 
 COCOAPODS: 1.16.2
