@@ -17,11 +17,20 @@ export default function (spec: TestScope) {
           const player = await getTestPlayer();
           const playEventsPromise = waitForPlayerEventTypes(player, [PlayerEventType.SOURCE_CHANGE, PlayerEventType.PLAY, PlayerEventType.PLAYING]);
 
-          const adEventsPromise = waitForPlayerEvents(player, [
-            { type: PlayerEventType.AD_EVENT, subType: AdEventType.AD_LOADED } as AdEvent,
-            { type: PlayerEventType.AD_EVENT, subType: AdEventType.AD_BREAK_BEGIN } as AdEvent,
-            { type: PlayerEventType.AD_EVENT, subType: AdEventType.AD_BEGIN } as AdEvent,
-          ]);
+          const adEventsPromise = waitForPlayerEvents(
+            player,
+            [
+              { type: PlayerEventType.AD_EVENT, subType: AdEventType.AD_LOADED } as AdEvent,
+              { type: PlayerEventType.AD_EVENT, subType: AdEventType.AD_BREAK_BEGIN } as AdEvent,
+              { type: PlayerEventType.AD_EVENT, subType: AdEventType.AD_BEGIN } as AdEvent,
+              { type: PlayerEventType.AD_EVENT, subType: AdEventType.AD_FIRST_QUARTILE } as AdEvent,
+              { type: PlayerEventType.AD_EVENT, subType: AdEventType.AD_MIDPOINT } as AdEvent,
+              { type: PlayerEventType.AD_EVENT, subType: AdEventType.AD_THIRD_QUARTILE } as AdEvent,
+              { type: PlayerEventType.AD_EVENT, subType: AdEventType.AD_END } as AdEvent,
+              { type: PlayerEventType.AD_EVENT, subType: AdEventType.AD_BREAK_END } as AdEvent,
+            ],
+            false,
+          );
 
           // Start autoplay
           player.autoplay = true;
