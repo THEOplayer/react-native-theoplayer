@@ -103,9 +103,9 @@ export const waitForPlayerEvents = async <EType extends Event<PlayerEventType>>(
       const onEvent = (receivedEvent: Event<PlayerEventType>) => {
         receivedEvents.push(receivedEvent);
         eventTimestamps.set(receivedEvent.type, Date.now());
-        Log.debug(TAG, `Added timestamp for ${receivedEvent.type} event.`);
-        logDelayFromPreviousEvent(eventTimestamps, TAG);
         Log.debug(TAG, `Handling received event ${JSON.stringify(receivedEvent)}`);
+        logDelayFromPreviousEvent(eventTimestamps, TAG);
+        Log.debug(TAG, `Added timestamp for ${receivedEvent.type} event.`);
         if (inOrder && unReceivedEvents.length) {
           const expectedEvent = unReceivedEvents[0];
           Log.debug(TAG, `Was waiting for ${JSON.stringify(expectedEvent)}`);
