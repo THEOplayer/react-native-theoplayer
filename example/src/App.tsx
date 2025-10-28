@@ -10,6 +10,7 @@ import {
   ControlBar,
   DEFAULT_THEOPLAYER_THEME,
   FullscreenButton,
+  GoToLiveButton,
   LanguageMenuButton,
   MuteButton,
   PipButton,
@@ -193,6 +194,7 @@ export default function App() {
                     }
                     <ControlBar>
                       <MuteButton />
+                      <GoToLiveButton />
                       <TimeLabel showDuration={true} />
                       <Spacer />
                       <PipButton />
