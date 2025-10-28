@@ -78,6 +78,7 @@ export const waitForPlayerEvents = async <EType extends Event<PlayerEventType>>(
   options = defaultTestOptions,
 ): Promise<Event<PlayerEventType>[]> => {
   const receivedEvents: Event<PlayerEventType>[] = [];
+  const eventTimestamps = new Map<string, number>();
   const eventsPromise = new Promise<Event<PlayerEventType>[]>((resolve, reject) => {
     const onError = (err: ErrorEvent) => {
       console.error('[waitForPlayerEvents]', err);
@@ -100,7 +101,10 @@ export const waitForPlayerEvents = async <EType extends Event<PlayerEventType>>(
     uniqueEventTypes.forEach((eventType) => {
       const onEvent = (receivedEvent: Event<PlayerEventType>) => {
         receivedEvents.push(receivedEvent);
-        console.debug(TAG, `Handling received event ${JSON.stringify(receivedEvent)}`);
+        eventTimestamps.set(receivedEvent.type, Date.now());
+        Log.debug(TAG, `Added timestamp for ${receivedEvent.type} event.`);
+        logDelayFromPreviousEvent(eventTimestamps, TAG);
+        Log.debug(TAG, `Handling received event ${JSON.stringify(receivedEvent)}`);
         if (inOrder && unReceivedEvents.length) {
           const expectedEvent = unReceivedEvents[0];
           console.debug(TAG, `Was waiting for ${JSON.stringify(expectedEvent)}`);
@@ -285,4 +289,14 @@ export function expect(actual: any, desc?: string) {
 
 function propsMatch(obj1: any, obj2: any): boolean {
   return Object.keys(obj1).every((key) => obj1[key] === obj2[key]);
+}
+
+function logDelayFromPreviousEvent(eventTimestamps: Map<string, number>, tag: string) {
+  const entries = Array.from(eventTimestamps.entries()).sort((a, b) => b[1] - a[1]); // sort descending by timestamp
+  if (entries.length >= 2) {
+    const [lastType, lastTime] = entries[0];
+    const [secondLastType, secondLastTime] = entries[1];
+    const diffSeconds = ((lastTime - secondLastTime) / 1000).toFixed(2);
+    Log.debug(tag, `Time between ${lastType} and ${secondLastType} is ${diffSeconds} seconds`);
+  }
 }
