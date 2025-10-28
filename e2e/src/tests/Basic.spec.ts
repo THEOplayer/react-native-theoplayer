@@ -2,6 +2,7 @@ import { TestScope } from 'cavy';
 import { PlayerEventType } from 'react-native-theoplayer';
 import { expect, preparePlayerWithSource, waitForPlayerEventType, waitForPlayerEventTypes } from '../utils/Actions';
 import { TestSourceDescription, TestSources } from '../utils/SourceUtils';
+import { Log } from '../utils/Log';
 
 const SEEK_THRESHOLD = 500;
 
@@ -9,24 +10,33 @@ export default function (spec: TestScope) {
   TestSources()
     .withPlain()
     .forEach((testSource: TestSourceDescription) => {
-      spec.describe(`Set ${testSource.description} and auto-play`, function () {
-        spec.it(`dispatches sourcechange event on setting the source without autoplay`, async function () {
+      const specDescription = `Set ${testSource.description} and auto-play`;
+      spec.describe(specDescription, function () {
+        const it1Description = 'dispatches sourcechange event on setting the source without autoplay';
+        spec.it(it1Description, async function () {
+          Log.debug(`### START TEST ###: ${specDescription} - ${it1Description}`);
           // Set source and wait for playback
           const player = await preparePlayerWithSource(testSource.source, false);
 
           // Still playing
           expect(player.paused).toBeTruthy();
+          Log.debug(`### END TEST ###: ${specDescription} - ${it1Description}`);
         });
 
-        spec.it(`dispatches sourcechange, play and playing events in order on setting the source with autoplay`, async function () {
+        const it2Description = `dispatches sourcechange, play and playing events in order on setting the source with autoplay`;
+        spec.it(it2Description, async function () {
+          Log.debug(`### START TEST ###: ${specDescription} - ${it2Description}`);
           // Set source and wait for playback
           const player = await preparePlayerWithSource(testSource.source);
 
           // Still playing
           expect(player.paused).toBeFalsy();
+          Log.debug(`### END TEST ###: ${specDescription} - ${it2Description}`);
         });
 
-        spec.it('dispatches a seeked event after seeking', async function () {
+        const it3Description = 'dispatches a seeked event after seeking';
+        spec.it(it3Description, async function () {
+          Log.debug(`### START TEST ###: ${specDescription} - ${it3Description}`);
           // Set source and wait for playback
           const player = await preparePlayerWithSource(testSource.source);
 
@@ -40,9 +50,12 @@ export default function (spec: TestScope) {
 
           // Expect currentTime to be updated.
           expect(player.currentTime).toBeSmallerThanOrEqual(seekTime + SEEK_THRESHOLD);
+          Log.debug(`### END TEST ###: ${specDescription} - ${it3Description}`);
         });
 
-        spec.it(`dispatches paused, play and playing events after pausing & resuming playback of the source`, async function () {
+        const it4Description = `dispatches paused, play and playing events after pausing & resuming playback of the source`;
+        spec.it(it4Description, async function () {
+          Log.debug(`### START TEST ###: ${specDescription} - ${it4Description}`);
           // Set source and wait for playback
           const player = await preparePlayerWithSource(testSource.source);
 
@@ -59,6 +72,7 @@ export default function (spec: TestScope) {
 
           // Wait for 'play' and 'playing' events.
           await playPromises;
+          Log.debug(`### END TEST ###: ${specDescription} - ${it4Description}`);
         });
       });
     });

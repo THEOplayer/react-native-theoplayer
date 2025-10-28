@@ -1,6 +1,7 @@
 import { useCavy } from 'cavy';
 import { THEOplayer, THEOplayerView, THEOplayerViewProps } from 'react-native-theoplayer';
 import React, { useCallback } from 'react';
+import { Log } from '../utils/Log';
 
 let testPlayer: THEOplayer | undefined = undefined;
 let testPlayerId: number = 0;
@@ -18,15 +19,15 @@ export const getTestPlayer = async (timeout = 20_000, poll = 1_000): Promise<THE
       setTimeout(() => {
         if (testPlayer) {
           // Player is ready.
-          console.debug(`[checkPlayer] Success: player ${testPlayerId} ready.`);
+          Log.debug(`[checkPlayer] Success: player ${testPlayerId} ready.`);
           resolve(testPlayer);
         } else if (Date.now() - start > timeout) {
           // Too late.
-          console.debug(`[checkPlayer] Failed: timeout reached for ${testPlayerId}.`);
+          Log.debug(`[checkPlayer] Failed: timeout reached for ${testPlayerId}.`);
           reject('Player not ready');
         } else {
           // Wait & try again.
-          console.debug(`[checkPlayer] Player ${testPlayerId} not ready yet. Retrying...`);
+          Log.debug(`[checkPlayer] Player ${testPlayerId} not ready yet. Retrying...`);
           checkPlayer();
         }
       }, poll);
@@ -41,14 +42,14 @@ export const TestableTHEOplayerView = ({ onPlayerReady, ...props }: THEOplayerVi
     (player: THEOplayer) => {
       testPlayerId++;
       testPlayer = player;
-      console.debug(`[onPlayerReady] id: ${testPlayerId}`);
+      Log.debug(`[onPlayerReady] id: ${testPlayerId}`);
       onPlayerReady?.(player);
     },
     [onPlayerReady],
   );
 
   const onPlayerDestroy = useCallback(() => {
-    console.debug(`[onPlayerDestroy] id: ${testPlayerId}`);
+    Log.debug(`[onPlayerDestroy] id: ${testPlayerId}`);
     testPlayer = undefined;
   }, []);
 
