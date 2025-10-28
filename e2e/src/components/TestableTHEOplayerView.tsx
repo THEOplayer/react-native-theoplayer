@@ -36,29 +36,32 @@ export const getTestPlayer = async (timeout = 20_000, poll = 1_000): Promise<THE
   });
 };
 
-export const TestableTHEOplayerView = ({ onPlayerReady, ...props }: THEOplayerViewProps) => {
+export const TestableTHEOplayerView = ({ onPlayerReady, onPlayerDestroy, ...props }: THEOplayerViewProps) => {
   const generateTestHook = useCavy();
   const onPlayerReadyCallback = useCallback(
     (player: THEOplayer) => {
       testPlayerId++;
       testPlayer = player;
-      Log.debug(`[onPlayerReady] id: ${testPlayerId}`);
-      onPlayerReady?.(player);
+      Log.debug(`[TestableTHEOplayerView] onPlayerReady id: ${testPlayerId}`);
+      onPlayerReady?.(testPlayer);
     },
     [onPlayerReady],
   );
 
-  const onPlayerDestroy = useCallback(() => {
-    Log.debug(`[onPlayerDestroy] id: ${testPlayerId}`);
+  const onPlayerDestroyCallback = useCallback(() => {
+    Log.debug(`[TestableTHEOplayerView] onPlayerDestroy id: ${testPlayerId}`);
+    if (testPlayer !== undefined) {
+      onPlayerDestroy?.(testPlayer);
+    }
     testPlayer = undefined;
-  }, []);
+  }, [onPlayerDestroy]);
 
   return (
     <THEOplayerView
       ref={generateTestHook('Scene.THEOplayerView')}
       {...props}
       onPlayerReady={onPlayerReadyCallback}
-      onPlayerDestroy={onPlayerDestroy}
+      onPlayerDestroy={onPlayerDestroyCallback}
     />
   );
 };
