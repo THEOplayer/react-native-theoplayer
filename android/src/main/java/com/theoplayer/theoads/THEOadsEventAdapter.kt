@@ -18,8 +18,7 @@ private val FORWARDED_EVENTS = listOf(
   TheoAdsEventTypes.INTERSTITIAL_BEGIN,
   TheoAdsEventTypes.INTERSTITIAL_END,
   TheoAdsEventTypes.INTERSTITIAL_UPDATE,
-  TheoAdsEventTypes.INTERSTITIAL_ERROR,
-  TheoAdsEventTypes.THEOADS_ERROR
+  TheoAdsEventTypes.INTERSTITIAL_ERROR
 )
 
 class THEOadsEventAdapter(private val api: TheoAdsIntegration, private val emitter: Emitter) {
