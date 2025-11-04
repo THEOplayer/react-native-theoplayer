@@ -5,11 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- Fixed an issue on Android, where the app could crash when a `THEOads` error event was dispatched.
+
 ## [10.3.0] - 25-10-27
 
 ### Fixed
 
-- Fixed an issue on web, where adbreak related AdEvents did no longer contain the adBreak info.
+- Fixed an issue on Web, where adbreak related AdEvents did no longer contain the adBreak info.
 
 ### Changed
 
