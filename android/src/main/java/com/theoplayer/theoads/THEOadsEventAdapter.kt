@@ -5,7 +5,6 @@ import com.facebook.react.bridge.WritableMap
 import com.theoplayer.android.api.ads.theoads.TheoAdsIntegration
 import com.theoplayer.android.api.ads.theoads.event.InterstitialErrorEvent
 import com.theoplayer.android.api.ads.theoads.event.InterstitialEvent
-import com.theoplayer.android.api.ads.theoads.event.TheoAdsErrorEvent
 import com.theoplayer.android.api.ads.theoads.event.TheoAdsEvent
 import com.theoplayer.android.api.ads.theoads.event.TheoAdsEventTypes
 import com.theoplayer.android.api.event.EventListener
@@ -43,9 +42,6 @@ class THEOadsEventAdapter(private val api: TheoAdsIntegration, private val emitt
       putString(EVENT_PROP_TYPE, event.type.name)
       (event as? InterstitialEvent)?.let {
         putMap(EVENT_PROP_INTERSTITIAL, THEOadsAdapter.fromInterstitial(event.interstitial))
-      }
-      (event as? TheoAdsErrorEvent)?.let {
-        putString(EVENT_PROP_MESSAGE, event.message)
       }
       (event as? InterstitialErrorEvent)?.let {
         putString(EVENT_PROP_MESSAGE, event.message)
