@@ -21,8 +21,8 @@ export interface NativeTheoAdsEvent {
 }
 
 export function fromNativeTheoAdsEvent(node: number, event: NativeSyntheticEvent<NativeTheoAdsEvent>): TheoAdsEvent | undefined {
-  const { nativeEvent } = event;
-  switch (event.type) {
+  const { type, nativeEvent } = event;
+  switch (type) {
     case TheoAdsEventType.INTERSTITIAL_ERROR:
       return new DefaultTheoAdsErrorEvent(
         TheoAdsEventType.INTERSTITIAL_ERROR,
@@ -33,7 +33,7 @@ export function fromNativeTheoAdsEvent(node: number, event: NativeSyntheticEvent
     case TheoAdsEventType.INTERSTITIAL_BEGIN:
     case TheoAdsEventType.INTERSTITIAL_END:
     case TheoAdsEventType.INTERSTITIAL_UPDATE:
-      return new DefaultTheoAdsEvent(event.type as TheoAdsEventType, createNativeInterstitial(node, nativeEvent.interstitial));
+      return new DefaultTheoAdsEvent(type, createNativeInterstitial(node, nativeEvent.interstitial));
     default:
       return undefined;
   }
