@@ -13,6 +13,7 @@ import {
 } from 'react-native-theoplayer';
 import { getTestPlayer } from '../components/TestableTHEOplayerView';
 import { logPlayerBuffer } from './PlayerUtils';
+import { Log } from './Log';
 
 export interface TestOptions {
   timeout: number;
@@ -78,16 +79,17 @@ export const waitForPlayerEvents = async <EType extends Event<PlayerEventType>>(
   options = defaultTestOptions,
 ): Promise<Event<PlayerEventType>[]> => {
   const receivedEvents: Event<PlayerEventType>[] = [];
+  const eventTimestamps = new Map<string, number>();
   const eventsPromise = new Promise<Event<PlayerEventType>[]>((resolve, reject) => {
     const onError = (err: ErrorEvent) => {
-      console.error('[waitForPlayerEvents]', err);
+      Log.error('[waitForPlayerEvents]', err);
       player.removeEventListener(PlayerEventType.ERROR, onError);
       reject(err);
     };
     const onAdError = (e: AdEvent) => {
       if (e.subType === AdEventType.AD_ERROR) {
         const err = 'Ad error';
-        console.error('[waitForPlayerEvents]', err);
+        Log.error('[waitForPlayerEvents]', err);
         player.removeEventListener(PlayerEventType.AD_EVENT, onAdError);
         reject(err);
       }
@@ -100,48 +102,51 @@ export const waitForPlayerEvents = async <EType extends Event<PlayerEventType>>(
     uniqueEventTypes.forEach((eventType) => {
       const onEvent = (receivedEvent: Event<PlayerEventType>) => {
         receivedEvents.push(receivedEvent);
-        console.debug(TAG, `Handling received event ${JSON.stringify(receivedEvent)}`);
+        eventTimestamps.set((receivedEvent as AdEvent).subType ?? receivedEvent.type, Date.now());
+        Log.debug(TAG, `Handling received event ${JSON.stringify(receivedEvent)}`);
+        logDelayFromPreviousEvent(eventTimestamps, TAG);
+        Log.debug(TAG, `Added timestamp for ${receivedEvent.type} event.`);
         if (inOrder && unReceivedEvents.length) {
           const expectedEvent = unReceivedEvents[0];
-          console.debug(TAG, `Was waiting for ${JSON.stringify(expectedEvent)}`);
+          Log.debug(TAG, `Was waiting for ${JSON.stringify(expectedEvent)}`);
 
           // Received events must either not be in the expected, or be the first
           const index = unReceivedEvents.findIndex((e) => propsMatch(e, receivedEvent));
           if (index > 0) {
             const err = `Expected '${expectedEvent.type}' event but received '${receivedEvent.type} event'`;
-            console.error(TAG, err);
+            Log.error(TAG, err);
             reject(err);
           } else {
-            console.debug(TAG, `Received ${receivedEvent.type} event is allowed.`);
+            Log.debug(TAG, `Received ${receivedEvent.type} event was expected.`);
           }
         }
 
         unReceivedEvents = unReceivedEvents.filter((event) => {
           // When found, remove the listener
           if (propsMatch(event, receivedEvent)) {
-            console.debug(TAG, `   -> removing: ${JSON.stringify(event)}`);
+            Log.debug(TAG, `   -> removing: ${JSON.stringify(event)}`);
             return false;
           }
           // Only keep the unreceived events
-          console.debug(TAG, `   -> keeping: ${JSON.stringify(event)}`);
+          Log.debug(TAG, `   -> keeping: ${JSON.stringify(event)}`);
           return true;
         });
 
         // remove listener if no other unreceived events require it.
         if (!unReceivedEvents.find((event) => event.type === receivedEvent.type)) {
-          console.debug(TAG, `Removing listener for ${receivedEvent.type} from player`);
+          Log.debug(TAG, `Removing listener for ${receivedEvent.type} from player`);
           player.removeEventListener(receivedEvent.type, onEvent);
         }
 
         if (!unReceivedEvents.length) {
           // Finished
-          console.debug(TAG, `Resolving promise on received events.`);
+          Log.debug(TAG, `Resolving promise on received events.`);
           resolve(receivedEvents);
         }
       };
 
       player.addEventListener(eventType as PlayerEventType, onEvent);
-      console.debug(TAG, `Added listener for ${eventType} to the player`);
+      Log.debug(TAG, `Added listener for ${eventType} to the player`);
     });
     player.addEventListener(PlayerEventType.ERROR, onError);
     player.addEventListener(PlayerEventType.AD_EVENT, onAdError);
@@ -194,7 +199,7 @@ const withPlayerStateLogOnError = async (player: THEOplayer, promise: Promise<an
 export function expect(actual: any, desc?: string) {
   const descPrefix = desc ? `${desc}: ` : '';
 
-  const logPass = (msg: string) => console.log(`${descPrefix}${msg} ✅`);
+  const logPass = (msg: string) => Log.log(`${descPrefix}${msg} ✅`);
   const throwErr = (msg: string) => {
     throw new Error(`${descPrefix}${msg} ❌`);
   };
@@ -204,7 +209,7 @@ export function expect(actual: any, desc?: string) {
       if (actual === expected) logPass(`${actual} == ${expected}`);
       else {
         const errorMessage = `Expected ${actual} to be ${expected}`;
-        console.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
+        Log.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
         throwErr(errorMessage);
       }
     },
@@ -213,7 +218,7 @@ export function expect(actual: any, desc?: string) {
       if (actual !== expected) logPass(`${actual} != ${expected}`);
       else {
         const errorMessage = `Expected ${actual} not to be ${expected}`;
-        console.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
+        Log.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
         throwErr(errorMessage);
       }
     },
@@ -222,7 +227,7 @@ export function expect(actual: any, desc?: string) {
       if (JSON.stringify(actual) === JSON.stringify(expected)) logPass(`Expected ${actual} to equal ${expected}`);
       else {
         const errorMessage = `Expected ${actual} to equal ${expected}`;
-        console.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
+        Log.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
         throwErr(errorMessage);
       }
     },
@@ -231,7 +236,7 @@ export function expect(actual: any, desc?: string) {
       if (actual > expected) logPass(`${actual} > ${expected}`);
       else {
         const errorMessage = `Expected ${actual} to be greater than ${expected}`;
-        console.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
+        Log.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
         throwErr(errorMessage);
       }
     },
@@ -240,7 +245,7 @@ export function expect(actual: any, desc?: string) {
       if (actual >= expected) logPass(`${actual} >= ${expected}`);
       else {
         const errorMessage = `Expected ${actual} to be greater than or equal to ${expected}`;
-        console.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
+        Log.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
         throwErr(errorMessage);
       }
     },
@@ -249,7 +254,7 @@ export function expect(actual: any, desc?: string) {
       if (actual < expected) logPass(`${actual} < ${expected}`);
       else {
         const errorMessage = `Expected ${actual} to be smaller than ${expected}`;
-        console.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
+        Log.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
         throwErr(errorMessage);
       }
     },
@@ -258,7 +263,7 @@ export function expect(actual: any, desc?: string) {
       if (actual <= expected) logPass(`${actual} <= ${expected}`);
       else {
         const errorMessage = `Expected ${actual} to be smaller than or equal to ${expected}`;
-        console.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
+        Log.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
         throwErr(errorMessage);
       }
     },
@@ -267,7 +272,7 @@ export function expect(actual: any, desc?: string) {
       if (actual) logPass(`${actual} is truthy`);
       else {
         const errorMessage = `Expected ${actual} to be truthy`;
-        console.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
+        Log.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
         throwErr(errorMessage);
       }
     },
@@ -276,7 +281,7 @@ export function expect(actual: any, desc?: string) {
       if (!actual) logPass(`${actual} is falsy`);
       else {
         const errorMessage = `Expected ${actual} to be falsy`;
-        console.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
+        Log.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
         throwErr(errorMessage);
       }
     },
@@ -285,4 +290,14 @@ export function expect(actual: any, desc?: string) {
 
 function propsMatch(obj1: any, obj2: any): boolean {
   return Object.keys(obj1).every((key) => obj1[key] === obj2[key]);
+}
+
+function logDelayFromPreviousEvent(eventTimestamps: Map<string, number>, tag: string) {
+  const entries = Array.from(eventTimestamps.entries()).sort((a, b) => b[1] - a[1]); // sort descending by timestamp
+  if (entries.length >= 2) {
+    const [lastType, lastTime] = entries[0];
+    const [secondLastType, secondLastTime] = entries[1];
+    const diffSeconds = ((lastTime - secondLastTime) / 1000).toFixed(2);
+    Log.debug(tag, `Time between ${lastType} and ${secondLastType} is ${diffSeconds} seconds`);
+  }
 }
