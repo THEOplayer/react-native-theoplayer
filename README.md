@@ -73,8 +73,8 @@ please reach out to us for support.
 <tbody>
 <tr>
 <td><strong>Streaming</strong></td>
-<td colspan="2">MPEG-DASH (fmp4, CMAF), HLS (TS, CMAF), Progressive MP4, MP3</td>
-<td>HLS (TS, CMAF), Progressive MP4, MP3</td>
+<td colspan="2">MPEG-DASH (fmp4, CMAF), HLS (TS, CMAF), Progressive MP4, MP3, M4A</td>
+<td>HLS (TS, CMAF), Progressive MP4, MP3, M4A</td>
 </tr>
 <tr>
 <td><strong>Content Protection</strong></td>
