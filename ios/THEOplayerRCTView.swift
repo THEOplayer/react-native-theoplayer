@@ -182,15 +182,37 @@ public class THEOplayerRCTView: UIView {
     }
     
     private func notifyNativePlayerReady() {
+        var payload: [String: Any] = [:]
+        
+        if let player = self.player {
+            // Get existing tracks info from the player
+            let metadataTracksInfo = mainEventHandler.loadedMetadataAndChapterTracksInfo
+            let metadata = THEOplayerRCTTrackMetadataAggregator.aggregateTrackMetadata(player: player, metadataTracksInfo: metadataTracksInfo)
+            // General player state + source payload
+            payload["state"] = THEOplayerRCTPayloadBuilder()
+                .source(player.source)
+                .currentTime(player.currentTime)
+                .currentProgramDateTime(player.currentProgramDateTime)
+                .paused(player.paused)
+                .playbackRate(player.playbackRate)
+                .duration(player.duration)
+                .volume(player.volume, muted: player.muted)
+                .seekable(player.seekable)
+                .buffered(player.buffered)
+                .metadataTracksInfo(metadata)
+                .build()
+        }
+        
+        // Add version info
+        let versionString = THEOplayer.version
+        payload["version"] = [
+            "version": versionString,
+            "playerSuiteVersion": versionString
+        ]
+        
         DispatchQueue.main.async {
-            let versionString = THEOplayer.version
             if let forwardedNativeReady = self.onNativePlayerReady {
-                forwardedNativeReady([
-                    "version":  [
-                        "version" : versionString,
-                        "playerSuiteVersion": versionString
-                    ],
-                ])
+                forwardedNativeReady(payload)
             }
         }
     }
