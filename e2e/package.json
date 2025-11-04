@@ -14,30 +14,30 @@
     "update-dependencies": "npx ncu '/@theoplayer\\/.*/' -u"
   },
   "dependencies": {
-    "@theoplayer/react-native-ui": "^0.13.0",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
-    "react-native": "npm:react-native-tvos@^0.79.0-0",
+    "@theoplayer/react-native-ui": "^0.21.1",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "react-native": "npm:react-native-tvos@^0.82.0-0",
     "react-native-device-info": "^10.14.0",
     "react-native-status-bar-height": "^2.6.0",
-    "react-native-svg": "^15.11.2",
-    "react-native-web": "^0.20.0",
+    "react-native-svg": "^15.12.1",
+    "react-native-web": "^0.21.1",
     "react-native-web-image-loader": "^0.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.9",
     "@babel/preset-env": "^7.25.9",
     "@babel/runtime": "^7.26.10",
-    "@react-native-community/cli": "18.0.0",
-    "@react-native-community/cli-platform-android": "18.0.0",
-    "@react-native-community/cli-platform-ios": "18.0.0",
-    "@react-native/babel-preset": "0.79.0",
-    "@react-native/eslint-config": "0.79.0",
-    "@react-native/metro-config": "0.79.0",
-    "@react-native/typescript-config": "0.79.0",
+    "@react-native-community/cli": "20.0.0",
+    "@react-native-community/cli-platform-android": "20.0.0",
+    "@react-native-community/cli-platform-ios": "20.0.0",
+    "@react-native/babel-preset": "0.82.0",
+    "@react-native/eslint-config": "0.82.0",
+    "@react-native/metro-config": "0.82.0",
+    "@react-native/typescript-config": "0.82.0",
     "@types/cavy": "^3.2.9",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
     "babel-loader": "^8.4.1",
     "babel-plugin-module-resolver": "^5.0.2",
     "babel-plugin-react-native-web": "^0.17.7",
@@ -48,7 +48,7 @@
     "html-webpack-plugin": "^5.6.3",
     "npm-check-updates": "^17.1.13",
     "react-native-svg-web": "^1.0.9",
-    "typescript": "5.1.6",
+    "typescript": "5.8.3",
     "webpack": "^5.99.5",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.1"
@@ -61,11 +61,11 @@
       "react-native": "$react-native"
     },
     "cavy": {
-      "react": "19.0.0",
+      "react": "$react",
       "react-native": "$react-native"
     }
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   }
 }
