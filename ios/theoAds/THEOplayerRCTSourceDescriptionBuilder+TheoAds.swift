@@ -47,6 +47,7 @@ extension THEOplayerRCTSourceDescriptionBuilder {
         }
         let adTagParameters = adsData[SD_PROP_AD_TAG_PARAMETERS] as? [String:String]
         let useId3 = adsData[SD_PROP_USE_ID3] as? Bool
+        let streamActivityMonitorId = adsData[SD_PROP_STREAM_ACTIVITY_MONITOR_ID_THEOADS] as? String
         let retrievePodIdURI = adsData[SD_PROP_RETRIEVE_POD_ID_URI] as? String
         let initializationDelay = adsData[SD_PROP_INITIALIZATION_DELAY] as? Double
         
@@ -58,6 +59,7 @@ extension THEOplayerRCTSourceDescriptionBuilder {
                                  overrideAdSrc: overrideAdSrc,
                                  adTagParameters: adTagParameters,
                                  useId3: useId3,
+                                 streamActivityMonitorId: streamActivityMonitorId,
                                  sseEndpoint: sseEndpoint,
                                  retrievePodIdURI: retrievePodIdURI,
                                  initializationDelay: initializationDelay)
