@@ -1,4 +1,9 @@
 {
   "name": "ReactNativeTHEOplayer",
-  "displayName": "ReactNativeTHEOplayer"
+  "displayName": "ReactNativeTHEOplayer",
+  "expo": {
+    "experiments": {
+      "reactCompiler": true
+    }
+  }
 }

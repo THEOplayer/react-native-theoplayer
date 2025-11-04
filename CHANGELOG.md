@@ -36,6 +36,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [10.2.0] - 25-10-20
 
+### Added
+
+- React Native THEOplayer now supports [React Compiler](https://react.dev/learn/react-compiler).
+  - For Expo users: refer to the [Expo docs](https://docs.expo.dev/guides/react-compiler/) to set up React Compiler in your app.
+
 ### Fixed
 
 - Fixed an issue on iOS where the player crashed when it was destroyed while in fullscreen.
