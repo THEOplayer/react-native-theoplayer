@@ -392,7 +392,12 @@ export class WebEventForwarder {
       this._facade.dispatchEvent(new DefaultTheoLiveEndpointLoadedEvent(event.type as TheoLiveEventType, endpoint));
     } else if (event.type === TheoLiveEventType.INTENT_TO_FALLBACK) {
       const { reason } = event;
-      this._facade.dispatchEvent(new DefaultTheoLiveIntentToFallbackEvent(event.type as TheoLiveEventType, reason));
+      this._facade.dispatchEvent(
+        new DefaultTheoLiveIntentToFallbackEvent(event.type as TheoLiveEventType, {
+          errorCode: reason?.code?.toString() ?? '',
+          errorMessage: reason?.message ?? '',
+        }),
+      );
     } else {
       this._facade.dispatchEvent(new DefaultTheoLiveEvent((event as NativeEvent).type as TheoLiveEventType));
     }
