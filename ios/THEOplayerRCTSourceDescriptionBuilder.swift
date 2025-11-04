@@ -66,10 +66,12 @@ let SD_PROP_CMCD: String = "cmcd"
 let EXTENSION_HLS: String = ".m3u8"
 let EXTENSION_MP4: String = ".mp4"
 let EXTENSION_MP3: String = ".mp3"
+let EXTENSION_M4A: String = ".m4a"
 
 let MIMETYPE_HLS = "application/x-mpegurl"
 let MIMETYPE_MP4 = "video/mp4"
 let MIMETYPE_MP3 = "audio/mpeg"
+let MIMETYPE_M4A = "audio/mp4"
 
 let DRM_INTEGRATION_ID_EZDRM = "ezdrm"
 let DRM_INTEGRATION_ID_KEYOS = "keyos"
@@ -419,6 +421,8 @@ class THEOplayerRCTSourceDescriptionBuilder {
             return MIMETYPE_MP4
         } else if src.suffix(4) == EXTENSION_MP3 {
             return MIMETYPE_MP3
+        } else if src.suffix(4) == EXTENSION_M4A {
+            return MIMETYPE_M4A
         }
         return MIMETYPE_HLS
     }
