@@ -20,7 +20,7 @@ export interface NativeTheoAdsEvent {
   message: string | undefined;
 }
 
-export function fromNativeTheoAdsEvent(node: number, event: NativeSyntheticEvent<NativeTheoAdsEvent>): TheoAdsEvent {
+export function fromNativeTheoAdsEvent(node: number, event: NativeSyntheticEvent<NativeTheoAdsEvent>): TheoAdsEvent | undefined {
   const { nativeEvent } = event;
   switch (event.type) {
     case TheoAdsEventType.INTERSTITIAL_ERROR:
@@ -29,7 +29,12 @@ export function fromNativeTheoAdsEvent(node: number, event: NativeSyntheticEvent
         createNativeInterstitial(node, nativeEvent.interstitial),
         nativeEvent.message,
       );
-    default:
+    case TheoAdsEventType.ADD_INTERSTITIAL:
+    case TheoAdsEventType.INTERSTITIAL_BEGIN:
+    case TheoAdsEventType.INTERSTITIAL_END:
+    case TheoAdsEventType.INTERSTITIAL_UPDATE:
       return new DefaultTheoAdsEvent(event.type as TheoAdsEventType, createNativeInterstitial(node, nativeEvent.interstitial));
+    default:
+      return undefined;
   }
 }
