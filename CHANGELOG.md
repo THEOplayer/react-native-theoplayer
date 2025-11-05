@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed an issue on Android, where the app could crash when a `THEOads` error event was dispatched.
 
+### Changed
+
+- Upgraded example app to React-Native v0.82.
+
 ## [10.3.0] - 25-10-27
 
 ### Fixed
