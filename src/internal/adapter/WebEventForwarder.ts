@@ -1,8 +1,12 @@
-import type { AdsEventMap as NativeAdsEventMap, ChromelessPlayer } from 'theoplayer';
 import type {
+  AdBreakEvent as NativeAdBreakEvent,
   AddTrackEvent,
+  AdEvent as NativeAdEvent,
+  AdsEventMap as NativeAdsEventMap,
   CastStateChangeEvent,
   ChromecastErrorEvent,
+  ChromelessPlayer,
+  DimensionChangeEvent as NativeDimensionChangeEvent,
   DurationChangeEvent as NativeDurationChangeEvent,
   ErrorEvent as NativeErrorEvent,
   Event as NativeEvent,
@@ -10,33 +14,33 @@ import type {
   RateChangeEvent as NativeRateChangeEvent,
   ReadyStateChangeEvent as NativeReadyStateChangeEvent,
   RemoveTrackEvent,
-  SeekingEvent as NativeSeekingEvent,
   SeekedEvent as NativeSeekedEvent,
+  SeekingEvent as NativeSeekingEvent,
   TextTrack as NativeTextTrack,
-  TextTrackCue as NativeTextTrackCue,
+  TextTrackAddCueEvent as NativeTextTrackAddCueEvent,
+  TextTrackEnterCueEvent as NativeTextTrackEnterCueEvent,
+  TextTrackExitCueEvent as NativeTextTrackExitCueEvent,
+  TextTrackRemoveCueEvent as NativeTextTrackRemoveCueEvent,
+  TheoAdsEventsMap as NativeTheoAdsEventsMap,
+  TheoLiveApiEventMap as NativeTheoLiveApiEventMap,
   TimeUpdateEvent as NativeTimeUpdateEvent,
   TrackChangeEvent,
   VolumeChangeEvent as NativeVolumeChangeEvent,
-  DimensionChangeEvent as NativeDimensionChangeEvent,
-  TheoAdsEventsMap as NativeTheoAdsEventMap,
-  TheoLiveApiEventMap as NativeTheoLiveEventMap,
-  InterstitialEvent,
-  AdEvent as NativeAdEvent,
-  AdBreakEvent as NativeAdBreakEvent,
 } from 'theoplayer';
-import { MediaTrack, PlayerError, TheoLiveEndpoint, TimeRange } from 'react-native-theoplayer';
 import {
   AdEventType,
   CastState,
+  MediaTrack,
   MediaTrackEventType,
   MediaTrackType,
   PlayerEventType,
   TextTrackEventType,
   TextTrackKind,
   TextTrackMode,
-  TrackListEventType,
   TheoAdsEventType,
   TheoLiveEventType,
+  TimeRange,
+  TrackListEventType,
 } from 'react-native-theoplayer';
 import type { THEOplayerWebAdapter } from './THEOplayerWebAdapter';
 import { BaseEvent } from './event/BaseEvent';
@@ -360,17 +364,17 @@ export class WebEventForwarder {
     this._facade.dispatchEvent(new DefaultAirplayStateChangeEvent(event.state as CastState));
   };
 
-  private readonly onAdEvent = (event: NativeEvent) => {
+  private readonly onAdEvent = (event: ForwardedAdEvent) => {
     const castedEvent = event as NativeAdEvent<string>;
     this._facade.dispatchEvent(new DefaultAdEvent(event.type as AdEventType, castedEvent.ad));
   };
 
-  private readonly onAdBreakEvent = (event: NativeEvent) => {
+  private readonly onAdBreakEvent = (event: ForwardedAdBreakEvent) => {
     const castedEvent = event as NativeAdBreakEvent<string>;
     this._facade.dispatchEvent(new DefaultAdEvent(event.type as AdEventType, castedEvent.adBreak));
   };
 
-  private readonly onTheoAdsEvent = (event: InterstitialEvent<any>) => {
+  private readonly onTheoAdsEvent = (event: ForwardedTheoAdsEvent) => {
     if (event.type === TheoAdsEventType.INTERSTITIAL_ERROR) {
       const { message } = event as unknown as { message: string | undefined };
       this._facade.dispatchEvent(new DefaultTheoAdsErrorEvent(event.type as TheoAdsEventType, event.interstitial, message));
@@ -379,44 +383,49 @@ export class WebEventForwarder {
     }
   };
 
-  private readonly onTheoLiveEvent = (event: NativeEvent) => {
+  private readonly onTheoLiveEvent = (event: ForwardedTheoLiveEvent) => {
     if (event.type === TheoLiveEventType.DISTRIBUTION_LOAD_START || event.type === TheoLiveEventType.DISTRIBUTION_OFFLINE) {
-      const { distributionId } = event as unknown as { distributionId: string };
+      const { distributionId } = event;
       this._facade.dispatchEvent(new DefaultTheoLiveDistributionEvent(event.type as TheoLiveEventType, distributionId));
     } else if (event.type === TheoLiveEventType.ENDPOINT_LOADED) {
-      const { endpoint } = event as unknown as { endpoint: TheoLiveEndpoint };
+      const { endpoint } = event;
       this._facade.dispatchEvent(new DefaultTheoLiveEndpointLoadedEvent(event.type as TheoLiveEventType, endpoint));
     } else if (event.type === TheoLiveEventType.INTENT_TO_FALLBACK) {
-      const { reason } = event as unknown as { reason: PlayerError };
-      this._facade.dispatchEvent(new DefaultTheoLiveIntentToFallbackEvent(event.type as TheoLiveEventType, reason));
+      const { reason } = event;
+      this._facade.dispatchEvent(
+        new DefaultTheoLiveIntentToFallbackEvent(event.type as TheoLiveEventType, {
+          errorCode: reason?.code?.toString() ?? '',
+          errorMessage: reason?.message ?? '',
+        }),
+      );
     } else {
-      this._facade.dispatchEvent(new DefaultTheoLiveEvent(event.type as TheoLiveEventType));
+      this._facade.dispatchEvent(new DefaultTheoLiveEvent((event as NativeEvent).type as TheoLiveEventType));
     }
   };
 
-  private readonly onAddTextTrackCue = (track: NativeTextTrack) => (event: NativeEvent<'addcue'>) => {
-    const { cue } = event as unknown as { cue: NativeTextTrackCue };
+  private readonly onAddTextTrackCue = (track: NativeTextTrack) => (event: NativeTextTrackAddCueEvent) => {
+    const { cue } = event;
     if (cue) {
       this._facade.dispatchEvent(new DefaultTextTrackEvent(TextTrackEventType.ADD_CUE, track.uid, fromNativeCue(cue)));
     }
   };
 
-  private readonly onRemoveTextTrackCue = (track: NativeTextTrack) => (event: NativeEvent<'removecue'>) => {
-    const { cue } = event as unknown as { cue: NativeTextTrackCue };
+  private readonly onRemoveTextTrackCue = (track: NativeTextTrack) => (event: NativeTextTrackRemoveCueEvent) => {
+    const { cue } = event;
     if (cue) {
       this._facade.dispatchEvent(new DefaultTextTrackEvent(TextTrackEventType.REMOVE_CUE, track.uid, fromNativeCue(cue)));
     }
   };
 
-  private readonly onEnterTextTrackCue = (track: NativeTextTrack) => (event: NativeEvent<'entercue'>) => {
-    const { cue } = event as unknown as { cue: NativeTextTrackCue };
+  private readonly onEnterTextTrackCue = (track: NativeTextTrack) => (event: NativeTextTrackEnterCueEvent) => {
+    const { cue } = event;
     if (cue) {
       this._facade.dispatchEvent(new DefaultTextTrackEvent(TextTrackEventType.ENTER_CUE, track.uid, fromNativeCue(cue)));
     }
   };
 
-  private readonly onExitTextTrackCue = (track: NativeTextTrack) => (event: NativeEvent<'exitcue'>) => {
-    const { cue } = event as unknown as { cue: NativeTextTrackCue };
+  private readonly onExitTextTrackCue = (track: NativeTextTrack) => (event: NativeTextTrackExitCueEvent) => {
+    const { cue } = event;
     if (cue) {
       this._facade.dispatchEvent(new DefaultTextTrackEvent(TextTrackEventType.EXIT_CUE, track.uid, fromNativeCue(cue)));
     }
@@ -444,7 +453,8 @@ const FORWARDED_AD_EVENTS = [
   AdEventType.AD_ERROR,
   AdEventType.AD_METADATA,
   AdEventType.AD_BUFFERING,
-] as (keyof NativeAdsEventMap)[];
+] as const;
+type ForwardedAdEvent = NativeAdsEventMap[(typeof FORWARDED_AD_EVENTS)[number]];
 
 const FORWARDED_ADBREAK_EVENTS = [
   AdEventType.ADD_AD_BREAK,
@@ -453,7 +463,8 @@ const FORWARDED_ADBREAK_EVENTS = [
   AdEventType.AD_BREAK_END,
   AdEventType.AD_BREAK_CHANGE,
   AdEventType.UPDATE_AD_BREAK,
-] as (keyof NativeAdsEventMap)[];
+] as const;
+type ForwardedAdBreakEvent = NativeAdsEventMap[(typeof FORWARDED_ADBREAK_EVENTS)[number]];
 
 const FORWARDED_THEOADS_EVENTS = [
   TheoAdsEventType.ADD_INTERSTITIAL,
@@ -461,14 +472,16 @@ const FORWARDED_THEOADS_EVENTS = [
   TheoAdsEventType.INTERSTITIAL_END,
   TheoAdsEventType.INTERSTITIAL_UPDATE,
   TheoAdsEventType.INTERSTITIAL_ERROR,
-] as (keyof NativeTheoAdsEventMap)[];
+] as const;
+type ForwardedTheoAdsEvent = NativeTheoAdsEventsMap[(typeof FORWARDED_THEOADS_EVENTS)[number]];
 
 const FORWARDED_THEOLIVE_EVENTS = [
   TheoLiveEventType.DISTRIBUTION_LOAD_START,
   TheoLiveEventType.DISTRIBUTION_OFFLINE,
   TheoLiveEventType.ENDPOINT_LOADED,
   TheoLiveEventType.INTENT_TO_FALLBACK,
-] as (keyof NativeTheoLiveEventMap)[];
+] as const;
+type ForwardedTheoLiveEvent = NativeTheoLiveApiEventMap[(typeof FORWARDED_THEOLIVE_EVENTS)[number]];
 
 function fromTimeRanges(timeRanges: TimeRanges): TimeRange[] {
   const result: TimeRange[] = [];
