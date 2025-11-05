@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Parsing and storing streamActivityMonitorId for THEOAdDescription on iOS.
 
+### Changed
+
+- Upgraded example app to React-Native v0.82.
+
 ## [10.3.0] - 25-10-27
 
 ### Fixed
@@ -54,6 +58,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 - Added `THEOplayer.theoLive` and deprecated `THEOplayer.theolive`, to be consistent with the THEOplayer SDKs for other platforms.
+
+### Changed
+
+- Moved the `hlsDateRange` property from `SourceConfiguration` to its correct location in `TypedSource`.
 
 ## [10.1.0] - 25-10-06
 
