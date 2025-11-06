@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed an issue on Android, where the app could crash when a `THEOads` error event was dispatched.
 - Fixed an issue on Web, where the contents of the `reason` property of the THEOads `intenttofallback` event did not conform to its declared `PlayerError` type.
 
+### Added
+
+- Parsing and storing streamActivityMonitorId for THEOAdDescription on iOS.
+
 ### Changed
 
 - Upgraded example app to React-Native v0.82.
