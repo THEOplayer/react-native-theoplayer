@@ -272,6 +272,7 @@ class SourceAdapter {
           fileName.endsWith(".m3u8") -> return SourceType.HLSX
           fileName.endsWith(".mp4") -> return SourceType.MP4
           fileName.endsWith(".mp3") -> return SourceType.MP3
+          fileName.endsWith(".m4a") -> return SourceType.M4A
         }
       }
     }
