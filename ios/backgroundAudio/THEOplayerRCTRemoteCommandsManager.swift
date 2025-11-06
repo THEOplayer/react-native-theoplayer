@@ -81,25 +81,25 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     func updateRemoteCommands() {
         let commandCenter = MPRemoteCommandCenter.shared()
         
-        let controlsEnabled = self.hasSource && !self.inAd && (!self.isLive || mediaControlConfig.enableControlsForLive)
+        let skipControlsEnabled = self.hasSource && !self.inAd && !self.isLive
+        let playPauseControlsEnabled = self.hasSource && !self.inAd && (!self.isLive || mediaControlConfig.allowLivePlayPause)
         
         // update the enabled state to have correct visual representation in the lockscreen
-        commandCenter.pauseCommand.isEnabled =  controlsEnabled
-        commandCenter.playCommand.isEnabled = controlsEnabled
-        commandCenter.togglePlayPauseCommand.isEnabled =  controlsEnabled
-        commandCenter.stopCommand.isEnabled =  controlsEnabled
-        commandCenter.changePlaybackPositionCommand.isEnabled =  controlsEnabled
-        commandCenter.skipForwardCommand.isEnabled =  controlsEnabled
-        commandCenter.skipBackwardCommand.isEnabled =  controlsEnabled
-        commandCenter.nextTrackCommand.isEnabled = controlsEnabled
-        commandCenter.previousTrackCommand.isEnabled = controlsEnabled
+        commandCenter.pauseCommand.isEnabled =  playPauseControlsEnabled
+        commandCenter.playCommand.isEnabled = playPauseControlsEnabled
+        commandCenter.togglePlayPauseCommand.isEnabled =  playPauseControlsEnabled
+        commandCenter.stopCommand.isEnabled =  playPauseControlsEnabled
+        commandCenter.changePlaybackPositionCommand.isEnabled =  skipControlsEnabled
+        commandCenter.skipForwardCommand.isEnabled =  skipControlsEnabled
+        commandCenter.skipBackwardCommand.isEnabled =  skipControlsEnabled
+        commandCenter.nextTrackCommand.isEnabled = skipControlsEnabled
+        commandCenter.previousTrackCommand.isEnabled = skipControlsEnabled
         
         // set configured skip forward/backward intervals
         commandCenter.skipForwardCommand.preferredIntervals = [NSNumber(value: self.mediaControlConfig.skipForwardInterval)]
         commandCenter.skipBackwardCommand.preferredIntervals = [NSNumber(value: self.mediaControlConfig.skipBackwardInterval)]
         
-        if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Remote commands updated for \(self.isLive ? "LIVE" : "VOD") (ENABLECONTROLSFORLIVE: \(mediaControlConfig.enableControlsForLive)) (\(self.inAd ? "AD IS PLAYING" : "NO AD PLAYING")).") }
-        if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Remote commands are now \(controlsEnabled ? "enabled": "disabled").") }
+        if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Remote commands updated for \(self.isLive ? "LIVE" : "VOD") (ALLOWLIVEPLAYPAUSE: \(mediaControlConfig.allowLivePlayPause)) (\(self.inAd ? "AD IS PLAYING" : "NO AD PLAYING")).") }
     }
     
     @objc private func onPlayCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
