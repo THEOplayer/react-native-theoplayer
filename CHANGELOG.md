@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Parsing and storing streamActivityMonitorId for THEOAdDescription on iOS.
+- Pass `streamActivityMonitorId` property for `THEOAdDescription` on iOS and Android.
 
 ### Changed
 
