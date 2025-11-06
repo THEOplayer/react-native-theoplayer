@@ -50,7 +50,7 @@ export interface MediaControlConfiguration {
   /**
    * A flag that indicates whether play/pause controls for live streams are enabled.
    *
-   * @defaultValue iOS: `false`, Android: `true`
+   * @defaultValue iOS: `true`, Android: `false`
    *
    * @platform ios,android
    */
