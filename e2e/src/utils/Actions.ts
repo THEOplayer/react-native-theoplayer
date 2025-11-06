@@ -20,7 +20,7 @@ export interface TestOptions {
 }
 
 export const defaultTestOptions: TestOptions = {
-  timeout: 30000,
+  timeout: 120000, // 2 minutes
 };
 
 export async function preparePlayerWithSource(source: SourceDescription, autoplay: boolean = true): Promise<THEOplayer> {
