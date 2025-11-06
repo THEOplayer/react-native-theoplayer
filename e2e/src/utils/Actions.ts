@@ -297,7 +297,10 @@ function logDelayFromPreviousEvent(eventTimestamps: Map<string, number>, tag: st
   if (entries.length >= 2) {
     const [lastType, lastTime] = entries[0];
     const [secondLastType, secondLastTime] = entries[1];
-    const diffSeconds = ((lastTime - secondLastTime) / 1000).toFixed(2);
-    Log.debug(tag, `Time between ${lastType} and ${secondLastType} is ${diffSeconds} seconds`);
+    const diffSeconds = (lastTime - secondLastTime) / 1000;
+    Log.debug(tag, `Time between ${lastType} and ${secondLastType} is ${diffSeconds.toFixed(2)} seconds`);
+    if (diffSeconds > 10) {
+      Log.warn(tag, `Long delay of ${diffSeconds.toFixed(2)} seconds between ${lastType} and ${secondLastType} events`);
+    }
   }
 }
