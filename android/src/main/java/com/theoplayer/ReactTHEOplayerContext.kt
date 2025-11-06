@@ -51,6 +51,11 @@ private const val ALLOWED_PLAYBACK_ACTIONS = (
     PlaybackStateCompat.ACTION_REWIND or
     PlaybackStateCompat.ACTION_SET_PLAYBACK_SPEED)
 
+private const val ALLOWED_PLAY_PAUSE_ACTIONS = (
+  PlaybackStateCompat.ACTION_PLAY_PAUSE or
+    PlaybackStateCompat.ACTION_PLAY or
+    PlaybackStateCompat.ACTION_PAUSE)
+
 class ReactTHEOplayerContext private constructor(
   private val reactContext: ThemedReactContext,
   private val configAdapter: PlayerConfigAdapter
@@ -180,9 +185,7 @@ class ReactTHEOplayerContext private constructor(
     val isInAd = player.ads.isPlaying
     mediaSessionConnector?.enabledPlaybackActions = when {
       // Allow trick-play for live events if configured
-      isLive && mediaSessionConfig.allowLivePlayPause -> ALLOWED_PLAYBACK_ACTIONS xor
-        PlaybackStateCompat.ACTION_FAST_FORWARD xor
-        PlaybackStateCompat.ACTION_REWIND
+      isLive && mediaSessionConfig.allowLivePlayPause -> ALLOWED_PLAY_PAUSE_ACTIONS
       isLive && !mediaSessionConfig.allowLivePlayPause -> 0
       // Do not allow playback actions during ad play-out
       isInAd -> 0
