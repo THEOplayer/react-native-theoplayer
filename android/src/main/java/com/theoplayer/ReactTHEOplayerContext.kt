@@ -88,7 +88,7 @@ class ReactTHEOplayerContext private constructor(
     get() = playerView.player
 
   private val uiModeManager by lazy {
-      reactContext.getSystemService(Context.UI_MODE_SERVICE) as? UiModeManager
+    reactContext.getSystemService(Context.UI_MODE_SERVICE) as? UiModeManager
   }
 
   var daiIntegration: GoogleDaiIntegration? = null
@@ -140,6 +140,7 @@ class ReactTHEOplayerContext private constructor(
     override fun onStop() {
       binder?.stopForegroundService()
     }
+
     override fun onPlay() {
       // Optionally seek to live, if configured.
       if (mediaSessionConfig.seekToLiveOnResume && player.duration.isInfinite()) {
@@ -282,7 +283,10 @@ class ReactTHEOplayerContext private constructor(
     }
   }
 
-  private fun applyMediaSessionConfig(connector: MediaSessionConnector?, config: MediaSessionConfig) {
+  private fun applyMediaSessionConfig(
+    connector: MediaSessionConnector?,
+    config: MediaSessionConfig
+  ) {
     connector?.apply {
       debug = BuildConfig.LOG_MEDIASESSION_EVENTS
       removeListener(mediaSessionListener)
@@ -364,8 +368,8 @@ class ReactTHEOplayerContext private constructor(
       if (BuildConfig.EXTENSION_MILLICAST) {
         millicastIntegration = MillicastIntegrationFactory.createMillicastIntegration()
           .also {
-          playerView.player.addIntegration(it)
-        }
+            playerView.player.addIntegration(it)
+          }
       }
     } catch (e: Exception) {
       Log.w(TAG, "Failed to configure Millicast integration ${e.message}")
