@@ -71,6 +71,7 @@ private const val PROP_INITIALIZATION_DELAY = "initializationDelay"
 private const val PROP_SSE_ENDPOINT = "sseEndpoint"
 private const val PROP_STREAM_ACTIVITY_MONITOR_ID = "streamActivityMonitorId"
 private const val PROP_LATENCY_CONFIGURATION = "latencyConfiguration"
+private const val PROP_PROFILE = "profile"
 
 private const val ERROR_IMA_NOT_ENABLED = "Google IMA support not enabled."
 private const val ERROR_THEOADS_NOT_ENABLED = "THEOads support not enabled."
@@ -178,7 +179,8 @@ class SourceAdapter {
       },
       latencyConfiguration=jsonTypedSource.optJSONObject(PROP_LATENCY_CONFIGURATION)?.let {
         parseLatencyConfiguration(it)
-      }
+      },
+      profileId=jsonTypedSource.optString(PROP_PROFILE)
     )
   }
 
