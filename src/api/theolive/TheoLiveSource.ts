@@ -5,8 +5,20 @@ import { SourceIntegrationId, TypedSource } from 'react-native-theoplayer';
  *
  * @category Source
  * @public
- * @deprecated use {@link TypedSource.type} instead.
  */
 export interface TheoLiveSource extends TypedSource {
+    /**
+     * @deprecated use {@link TypedSource.type} instead.
+     */
     integration: SourceIntegrationId.THEO_LIVE;
+
+    /**
+     * The content type.
+     */
+    type: 'theolive';
+
+    /**
+     * The profile identifier is included as a query parameter in the discovery request to obtain a response specific to that profile.
+     */
+    profile?: string;
 }
