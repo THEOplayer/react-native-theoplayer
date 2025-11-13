@@ -52,12 +52,7 @@
     "webpack-dev-server": "^5.2.1"
   },
   "overrides": {
-    "react-native-google-cast": {
-      "react-native": "$react-native"
-    },
-    "@miblanchard/react-native-slider": {
-      "react-native": "$react-native"
-    }
+    "react-native": "$react-native"
   },
   "engines": {
     "node": ">= 20"
