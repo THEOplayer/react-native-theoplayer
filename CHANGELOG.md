@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Pass `streamActivityMonitorId` property for `THEOAdDescription` on iOS and Android.
+- Added `allowLivePlayPause` and `seekToLiveOnResume` properties to `PlayerConfiguration.mediaControl` to control pausing and resuming behavior on live streams from the lockscreen controls.
 
 ### Changed
 
