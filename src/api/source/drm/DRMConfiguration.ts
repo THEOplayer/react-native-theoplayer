@@ -260,6 +260,15 @@ export interface DRMConfiguration {
    * Default value is ['widevine', 'playready', 'fairplay'].
    */
   preferredKeySystems?: Array<KeySystemId | string>;
+
+  /**
+   * Record of default query parameters for the license acquisition request.
+   * Each entry contains a query parameter name with associated value.
+   *
+   * @remarks These parameters will be merged with any query parameters specified in
+   * the individual key system configurations, with the latter taking precedence.
+   */
+  queryParameters?: { [key: string]: any };
 }
 
 /**
