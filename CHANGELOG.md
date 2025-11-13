@@ -5,11 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [10.4.0] - 25-11-13
+
+### Fixed
+
+- Fixed an issue on Android, where the app could crash when a `THEOads` error event was dispatched.
+- Fixed an issue on Web, where the contents of the `reason` property of the THEOads `intenttofallback` event did not conform to its declared `PlayerError` type.
+
+### Added
+
+- Pass `streamActivityMonitorId` property for `THEOAdDescription` on iOS and Android.
+
+### Changed
+
+- Upgraded example app to React-Native v0.82.
+
 ## [10.3.0] - 25-10-27
 
 ### Fixed
 
-- Fixed an issue on web, where adbreak related AdEvents did no longer contain the adBreak info.
+- Fixed an issue on Web, where adbreak related AdEvents did no longer contain the adBreak info.
 
 ### Changed
 
@@ -30,6 +45,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [10.2.0] - 25-10-20
 
+### Added
+
+- React Native THEOplayer now supports [React Compiler](https://react.dev/learn/react-compiler).
+  - For Expo users: refer to the [Expo docs](https://docs.expo.dev/guides/react-compiler/) to set up React Compiler in your app.
+
 ### Fixed
 
 - Fixed an issue on iOS where the player crashed when it was destroyed while in fullscreen.
@@ -39,6 +59,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 - Added `THEOplayer.theoLive` and deprecated `THEOplayer.theolive`, to be consistent with the THEOplayer SDKs for other platforms.
+
+### Changed
+
+- Moved the `hlsDateRange` property from `SourceConfiguration` to its correct location in `TypedSource`.
 
 ## [10.1.0] - 25-10-06
 

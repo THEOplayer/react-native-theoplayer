@@ -152,7 +152,7 @@ dependencies {
     }
 
     //noinspection GradleDynamicVersion
-    implementation("com.facebook.react:react-native:+")
+    implementation("com.facebook.react:react-android:+")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
     implementation("androidx.appcompat:appcompat:$appcompatVersion")
     implementation("androidx.core:core-ktx:$corektxVersion")

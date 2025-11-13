@@ -4,14 +4,18 @@ import { expect, preparePlayerWithSource, waitForPlayerEvent, waitForPlayerEvent
 import { sleep } from '../utils/TimeUtils';
 import { Platform } from 'react-native';
 import { TestSourceDescription, TestSources } from '../utils/SourceUtils';
+import { Log } from '../utils/Log';
 
 export default function (spec: TestScope) {
   TestSources()
     .withPlain()
     .withAdsIf(Platform.OS !== 'ios')
     .forEach((testSource: TestSourceDescription) => {
-      spec.describe(`Switch between presentation modes during play-out of a ${testSource.description}`, function () {
-        spec.it('dispatches presentationmodechange events between inline and fullscreen.', async function () {
+      const specDescription = `Switch between presentation modes during play-out of a ${testSource.description}`;
+      spec.describe(specDescription, function () {
+        const itDescription = 'dispatches presentationmodechange events between inline and fullscreen.';
+        spec.it(itDescription, async function () {
+          Log.debug(`### START TEST ###: ${specDescription} - ${itDescription}`);
           const player = await preparePlayerWithSource(testSource.source);
 
           // Switch to fullscreen.
@@ -42,16 +46,21 @@ export default function (spec: TestScope) {
 
           // Play-out should not pause.
           expect(player.paused).toBeFalsy();
+          Log.debug(`### END TEST ###: ${specDescription} - ${itDescription}`);
         });
       });
 
       if (Platform.OS === 'android') {
-        spec.describe(`Switch between rendering targets during play-out of a ${testSource.description}`, function () {
-          spec.it('continues play-out.', async function () {
+        const specDescription = `Switch between rendering targets during play-out of a ${testSource.description}`;
+        spec.describe(specDescription, function () {
+          const itDescription = 'continues play-out.';
+          spec.it(itDescription, async function () {
+            Log.debug(`### START TEST ###: ${specDescription} - ${itDescription}`);
             const player = await preparePlayerWithSource(testSource.source);
 
             await switchRenderingTarget(player, RenderingTarget.TEXTURE_VIEW);
             await switchRenderingTarget(player, RenderingTarget.SURFACE_VIEW);
+            Log.debug(`### END TEST ###: ${specDescription} - ${itDescription}`);
           });
         });
       }
@@ -59,7 +68,7 @@ export default function (spec: TestScope) {
 }
 
 async function switchRenderingTarget(player: THEOplayer, renderingTarget: RenderingTarget, sleepTime: number = 500) {
-  console.debug(`Switching to ${renderingTarget}`);
+  Log.debug(`Switching to ${renderingTarget}`);
   await sleep(sleepTime);
   player.renderingTarget = renderingTarget;
   await waitForPlayerEventType(player, PlayerEventType.TIME_UPDATE);

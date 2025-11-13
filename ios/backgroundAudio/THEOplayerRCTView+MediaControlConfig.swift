@@ -7,6 +7,8 @@ struct MediaControlConfig {
     var skipForwardInterval: Int = 15
     var skipBackwardInterval: Int = 15
     var convertSkipToSeek: Bool = false
+    var allowLivePlayPause: Bool = true
+    var seekToLiveOnResume: Bool = false
 }
 
 extension THEOplayerRCTView {
@@ -21,6 +23,12 @@ extension THEOplayerRCTView {
             }
             if let convertSkipToSeek = mediaControlConfig["convertSkipToSeek"] as? Bool {
                 self.mediaControlConfig.convertSkipToSeek = convertSkipToSeek
+            }
+            if let allowLivePlayPause = mediaControlConfig["allowLivePlayPause"] as? Bool {
+                self.mediaControlConfig.allowLivePlayPause = allowLivePlayPause
+            }
+            if let seekToLiveOnResume = mediaControlConfig["seekToLiveOnResume"] as? Bool {
+                self.mediaControlConfig.seekToLiveOnResume = seekToLiveOnResume
             }
         }
     }

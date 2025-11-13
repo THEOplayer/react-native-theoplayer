@@ -31,6 +31,7 @@ import com.theoplayer.android.api.millicast.MillicastIntegrationFactory
 import com.theoplayer.android.api.player.Player
 import com.theoplayer.android.api.player.RenderingTarget
 import com.theoplayer.android.connector.mediasession.MediaSessionConnector
+import com.theoplayer.android.connector.mediasession.MediaSessionListener
 import com.theoplayer.audio.AudioBecomingNoisyManager
 import com.theoplayer.audio.AudioFocusManager
 import com.theoplayer.audio.BackgroundAudioConfig
@@ -49,6 +50,11 @@ private const val ALLOWED_PLAYBACK_ACTIONS = (
     PlaybackStateCompat.ACTION_FAST_FORWARD or
     PlaybackStateCompat.ACTION_REWIND or
     PlaybackStateCompat.ACTION_SET_PLAYBACK_SPEED)
+
+private const val ALLOWED_PLAY_PAUSE_ACTIONS = (
+  PlaybackStateCompat.ACTION_PLAY_PAUSE or
+    PlaybackStateCompat.ACTION_PLAY or
+    PlaybackStateCompat.ACTION_PAUSE)
 
 class ReactTHEOplayerContext private constructor(
   private val reactContext: ThemedReactContext,
@@ -82,14 +88,13 @@ class ReactTHEOplayerContext private constructor(
     get() = playerView.player
 
   private val uiModeManager by lazy {
-      reactContext.getSystemService(Context.UI_MODE_SERVICE) as? UiModeManager
+    reactContext.getSystemService(Context.UI_MODE_SERVICE) as? UiModeManager
   }
 
   var daiIntegration: GoogleDaiIntegration? = null
   var imaIntegration: GoogleImaIntegration? = null
   private var theoAdsIntegration: TheoAdsIntegration? = null
   var castIntegration: CastIntegration? = null
-  @Suppress("UnstableApiUsage")
   var wasPlayingOnHostPause: Boolean = false
   private var isHostPaused: Boolean = false
   private var millicastIntegration: MillicastIntegration? = null
@@ -131,6 +136,19 @@ class ReactTHEOplayerContext private constructor(
     }
   }
 
+  private val mediaSessionListener = object : MediaSessionListener() {
+    override fun onStop() {
+      binder?.stopForegroundService()
+    }
+
+    override fun onPlay() {
+      // Optionally seek to live, if configured.
+      if (mediaSessionConfig.seekToLiveOnResume && player.duration.isInfinite()) {
+        player.currentTime = Double.POSITIVE_INFINITY
+      }
+    }
+  }
+
   private fun applyBackgroundPlaybackConfig(
     config: BackgroundAudioConfig,
     prevConfig: BackgroundAudioConfig?
@@ -167,10 +185,12 @@ class ReactTHEOplayerContext private constructor(
     val isLive = player.duration.isInfinite()
     val isInAd = player.ads.isPlaying
     mediaSessionConnector?.enabledPlaybackActions = when {
-      isInAd || isLive && !isTV -> 0
-      isLive && isTV -> ALLOWED_PLAYBACK_ACTIONS xor
-        PlaybackStateCompat.ACTION_FAST_FORWARD xor
-        PlaybackStateCompat.ACTION_REWIND
+      // Allow trick-play for live events if configured
+      isLive && mediaSessionConfig.allowLivePlayPause -> ALLOWED_PLAY_PAUSE_ACTIONS
+      isLive && !mediaSessionConfig.allowLivePlayPause -> 0
+      // Do not allow playback actions during ad play-out
+      isInAd -> 0
+
       else -> ALLOWED_PLAYBACK_ACTIONS
     }
   }
@@ -263,9 +283,13 @@ class ReactTHEOplayerContext private constructor(
     }
   }
 
-  private fun applyMediaSessionConfig(connector: MediaSessionConnector?, config: MediaSessionConfig) {
+  private fun applyMediaSessionConfig(
+    connector: MediaSessionConnector?,
+    config: MediaSessionConfig
+  ) {
     connector?.apply {
       debug = BuildConfig.LOG_MEDIASESSION_EVENTS
+      removeListener(mediaSessionListener)
 
       player = this@ReactTHEOplayerContext.player
 
@@ -279,10 +303,15 @@ class ReactTHEOplayerContext private constructor(
       // Pass metadata from source description
       setMediaSessionMetadata(player?.source)
 
+      // Do not let MediaButtons restart the player when media session is not active.
+      // https://developer.android.com/media/legacy/media-buttons#restarting-inactive-mediasessions
+      this.mediaSession.setMediaButtonReceiver(null)
+
       // Install a queue navigator, but only if we want to handle skip buttons.
       if (mediaSessionConfig.convertSkipToSeek) {
         queueNavigator = MediaQueueNavigator(mediaSessionConfig)
       }
+      addListener(mediaSessionListener)
     }
   }
 
@@ -339,8 +368,8 @@ class ReactTHEOplayerContext private constructor(
       if (BuildConfig.EXTENSION_MILLICAST) {
         millicastIntegration = MillicastIntegrationFactory.createMillicastIntegration()
           .also {
-          playerView.player.addIntegration(it)
-        }
+            playerView.player.addIntegration(it)
+          }
       }
     } catch (e: Exception) {
       Log.w(TAG, "Failed to configure Millicast integration ${e.message}")

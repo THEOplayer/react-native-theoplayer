@@ -10,6 +10,7 @@ import {
   ControlBar,
   DEFAULT_THEOPLAYER_THEME,
   FullscreenButton,
+  GoToLiveButton,
   LanguageMenuButton,
   MuteButton,
   PipButton,
@@ -65,6 +66,8 @@ const playerConfig: PlayerConfiguration = {
     skipForwardInterval: 30,
     skipBackwardInterval: 10,
     convertSkipToSeek: true,
+    allowLivePlayPause: true,
+    seekToLiveOnResume: true,
   },
   ads: {
     theoads: true,
@@ -193,6 +196,7 @@ export default function App() {
                     }
                     <ControlBar>
                       <MuteButton />
+                      <GoToLiveButton />
                       <TimeLabel showDuration={true} />
                       <Spacer />
                       <PipButton />

@@ -69,6 +69,7 @@ private const val PROP_USE_ID3 = "useId3"
 private const val PROP_RETRIEVE_POD_ID_URI = "retrievePodIdURI"
 private const val PROP_INITIALIZATION_DELAY = "initializationDelay"
 private const val PROP_SSE_ENDPOINT = "sseEndpoint"
+private const val PROP_STREAM_ACTIVITY_MONITOR_ID = "streamActivityMonitorId"
 private const val PROP_LATENCY_CONFIGURATION = "latencyConfiguration"
 
 private const val ERROR_IMA_NOT_ENABLED = "Google IMA support not enabled."
@@ -272,6 +273,7 @@ class SourceAdapter {
           fileName.endsWith(".m3u8") -> return SourceType.HLSX
           fileName.endsWith(".mp4") -> return SourceType.MP4
           fileName.endsWith(".mp3") -> return SourceType.MP3
+          fileName.endsWith(".m4a") -> return SourceType.M4A
         }
       }
     }
@@ -334,6 +336,7 @@ class SourceAdapter {
       retrievePodIdURI = jsonAdDescription.optString(PROP_RETRIEVE_POD_ID_URI).takeIf { it.isNotEmpty() },
       initializationDelay = jsonAdDescription.optDouble(PROP_INITIALIZATION_DELAY).takeIf { it.isFinite() },
       sseEndpoint = jsonAdDescription.optString(PROP_SSE_ENDPOINT).takeIf { it.isNotEmpty() },
+      streamActivityMonitorId = jsonAdDescription.optString(PROP_STREAM_ACTIVITY_MONITOR_ID).takeIf { it.isNotEmpty() },
     )
   }
 

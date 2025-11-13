@@ -13,11 +13,9 @@ import android.util.Log
 import androidx.core.app.ServiceCompat
 import androidx.core.content.ContextCompat
 import androidx.media.session.MediaButtonReceiver
-import com.theoplayer.BuildConfig
 import com.theoplayer.ReactTHEOplayerContext
 import com.theoplayer.android.api.player.Player
 import com.theoplayer.android.connector.mediasession.MediaSessionConnector
-import com.theoplayer.android.connector.mediasession.MediaSessionListener
 
 private const val STOP_SERVICE_IF_APP_REMOVED = true
 
@@ -39,7 +37,7 @@ class MediaPlaybackService : Service() {
 
   private lateinit var mediaSessionConnector: MediaSessionConnector
   private val mediaSession: MediaSessionCompat
-    get() =  mediaSessionConnector.mediaSession
+    get() = mediaSessionConnector.mediaSession
 
   inner class MediaPlaybackBinder : Binder() {
     private val service: MediaPlaybackService
@@ -119,7 +117,6 @@ class MediaPlaybackService : Service() {
 
   override fun onDestroy() {
     super.onDestroy()
-    removeListeners()
     mediaSessionConnector.destroy()
     playerContext = null
   }
@@ -147,16 +144,7 @@ class MediaPlaybackService : Service() {
     }
 
     // Create a MediaSessionConnector.
-    mediaSessionConnector = MediaSessionConnector(mediaSession).apply {
-      debug = BuildConfig.LOG_MEDIASESSION_EVENTS
-
-      // Set mediaSession active
-      setActive(BuildConfig.EXTENSION_MEDIASESSION)
-
-      // Do not let MediaButtons restart the player when media session is not active.
-      // https://developer.android.com/media/legacy/media-buttons#restarting-inactive-mediasessions
-      mediaSession.setMediaButtonReceiver(null)
-    }
+    mediaSessionConnector = MediaSessionConnector(mediaSession)
   }
 
   private fun stopForegroundService() {
@@ -165,26 +153,8 @@ class MediaPlaybackService : Service() {
   }
 
   private fun connectPlayerContext(playerContext: ReactTHEOplayerContext) {
-    if (this.playerContext != null) {
-      removeListeners()
-    }
     this.playerContext = playerContext
-    addListeners()
     updateNotification()
-  }
-
-  private val mediaSessionListener = object : MediaSessionListener() {
-    override fun onStop() {
-      stopForegroundService()
-    }
-  }
-
-  private fun addListeners() {
-    mediaSessionConnector.addListener(mediaSessionListener)
-  }
-
-  private fun removeListeners() {
-    mediaSessionConnector.removeListener(mediaSessionListener)
   }
 
   private fun updateNotification() {
@@ -204,9 +174,17 @@ class MediaPlaybackService : Service() {
       PlaybackStateCompat.STATE_PAUSED -> {
         // Fetch large icon asynchronously
         fetchImageFromMetadata(player?.source) { largeIcon ->
-          notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build(playbackState, largeIcon, mediaSessionConfig.mediaSessionEnabled))
+          notificationManager.notify(
+            NOTIFICATION_ID,
+            notificationBuilder.build(
+              playbackState,
+              largeIcon,
+              mediaSessionConfig.mediaSessionEnabled
+            )
+          )
         }
       }
+
       PlaybackStateCompat.STATE_PLAYING -> {
         // When a service runs in the foreground, it must display a notification, ideally
         // with one or more transport controls. The notification should also include useful
@@ -220,6 +198,7 @@ class MediaPlaybackService : Service() {
           startForegroundWithPlaybackState(playbackState, largeIcon)
         }
       }
+
       PlaybackStateCompat.STATE_STOPPED -> {
         // Remove this service from foreground state, allowing it to be killed if more memory is
         // needed. This does not stop the service from running (for that you use stopSelf()
@@ -227,13 +206,17 @@ class MediaPlaybackService : Service() {
         // Also remove the notification.
         ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE)
       }
+
       else -> {
         // Ignore
       }
     }
   }
 
-  private fun startForegroundWithPlaybackState(@PlaybackStateCompat.State playbackState: Int, largeIcon: Bitmap? = null) {
+  private fun startForegroundWithPlaybackState(
+    @PlaybackStateCompat.State playbackState: Int,
+    largeIcon: Bitmap? = null
+  ) {
     try {
       ServiceCompat.startForeground(
         this,

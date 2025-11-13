@@ -7,7 +7,6 @@ require_relative './PodConfig'
 
 source 'https://github.com/react-native-tvos/react-native-tvos-podspecs.git'
 source 'https://cdn.cocoapods.org/'
-nielsen_source
 
 prepare_react_native_project!
 config = use_native_modules!
@@ -49,5 +48,4 @@ post_install do |installer|
     :mac_catalyst_enabled => false,
     # :ccache_enabled => true
   )
-  nielsen_post_install(installer, "Pods-ReactNativeTHEOplayer-tvOS")
 end
