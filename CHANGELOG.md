@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added `stopOnBackground` property to `BackgroundAudioConfiguration` to control whether playback should stop when the app goes to the background.
 - Added `millicastSrc` to `TheoLiveEndpoint` for Web and Android.
+- Added support for configuring query parameters that are common to multiple key
+  system configurations. The parameters defined in
+  `contentProtection.queryParameters` will be merged with any query parameters
+  that are explicitly defined on a key system configuration, whereby the latter
+  takes precedence.
 
 ### Changed
 
