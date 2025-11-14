@@ -63,6 +63,7 @@ let SD_PROP_RETRIEVE_POD_ID_URI: String = "retrievePodIdURI"
 let SD_PROP_INITIALIZATION_DELAY: String = "initializationDelay"
 let SD_PROP_HLS_DATE_RANGE: String = "hlsDateRange"
 let SD_PROP_CMCD: String = "cmcd"
+let SD_PROP_QUERY_PARAMETERS = "queryParameters"
 
 let EXTENSION_HLS: String = ".m3u8"
 let EXTENSION_MP4: String = ".mp4"
@@ -394,6 +395,16 @@ class THEOplayerRCTSourceDescriptionBuilder {
                 sanitisedWidevineData[SD_PROP_LICENSE_TYPE] = licenseType
             }
             sanitisedContentProtectionData[SD_PROP_WIDEVINE] = sanitisedWidevineData
+        }
+        // query parameters
+        if let queryParameters = contentProtectionData[SD_PROP_QUERY_PARAMETERS] as? [String:Any] {
+          var sanitisedQueryParameters: Dictionary<String, String> = [:]
+          for (key, value) in queryParameters {
+            if let stringValue = value as? String {
+              sanitisedQueryParameters[key] = stringValue
+            }
+          }
+          sanitisedContentProtectionData[SD_PROP_QUERY_PARAMETERS] = sanitisedQueryParameters
         }
         return sanitisedContentProtectionData
     }
