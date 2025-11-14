@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Added support for configuring query parameters that are common to multiple key
+  system configurations. The parameters defined in
+  `contentProtection.queryParameters` will be merged with any query parameters
+  that are explicitly defined on a key system configuration, whereby the latter
+  takes precedence.
+
 ## [10.4.0] - 25-11-13
 
 ### Fixed
