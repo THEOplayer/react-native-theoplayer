@@ -28,6 +28,15 @@ export interface BackgroundAudioConfiguration {
    * @platform ios
    */
   readonly audioSessionMode?: AudioSessionMode;
+
+  /**
+   * Whether the player should stop play-out when the app goes to background.
+   * This differs from `enabled` which allows play-out to either continue in background, or be paused.
+   * Note that when the app comes back to foreground, a new source would have to be set.
+   *
+   * @defaultValue `false`
+   */
+  readonly stopOnBackground?: boolean;
 }
 
 export enum AudioSessionMode {

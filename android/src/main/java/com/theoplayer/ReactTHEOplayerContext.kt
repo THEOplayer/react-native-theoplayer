@@ -458,6 +458,11 @@ class ReactTHEOplayerContext private constructor(
       // The player pauses and goes to the background, we can abandon audio focus.
       audioFocusManager?.abandonAudioFocus()
     }
+
+    // Optionally stop play-out if configured.
+    if (backgroundAudioConfig.stopOnBackground) {
+      player.stop()
+    }
   }
 
   /**
