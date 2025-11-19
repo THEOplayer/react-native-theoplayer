@@ -2,14 +2,7 @@
 
 import Foundation
 import THEOplayerSDK
-import AVFAudio
 import AVKit
-
-struct BackgroundAudioConfig {
-    var enabled: Bool = false
-    var shouldResumeAfterInterruption: Bool = false
-    var audioSessionMode: AVAudioSession.Mode = .moviePlayback
-}
 
 class THEOplayerRCTBackgroundAudioManager: NSObject, BackgroundPlaybackDelegate {
     // MARK: Members

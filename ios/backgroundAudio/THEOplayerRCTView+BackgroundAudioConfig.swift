@@ -2,6 +2,13 @@
 
 import Foundation
 import THEOplayerSDK
+import AVFAudio
+
+struct BackgroundAudioConfig {
+    var enabled: Bool = false
+    var shouldResumeAfterInterruption: Bool = false
+    var audioSessionMode: AVAudioSession.Mode = .moviePlayback
+}
 
 extension THEOplayerRCTView {
     func initBackgroundAudio() {
