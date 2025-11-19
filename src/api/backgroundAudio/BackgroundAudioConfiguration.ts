@@ -6,6 +6,7 @@
 export interface BackgroundAudioConfiguration {
   /**
    * Whether background audio should be enabled when transitioning to background.
+   * @remarks When 'stopOnBackground' is true, 'enabled' is assumed to be false and background audio will not play.
    *
    * @defaultValue `false`
    */
