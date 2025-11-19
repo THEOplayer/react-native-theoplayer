@@ -24,6 +24,18 @@ class THEOplayerRCTPipManager: NSObject, AVPictureInPictureControllerDelegate {
           view.pipControlsManager.willStartPip()
       }
   }
+
+    func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        if let view = self.view {
+            let pipClosed = view.presentationModeManager.presentationModeContext.pipContext == .PIP_CLOSED
+            let appInBackground = view.isApplicationInBackground
+            let stopOnBackground = view.backgroundAudioConfig.stopOnBackground
+            if pipClosed && appInBackground && stopOnBackground {
+                print("[NATIVE] Pip closed while app in background and stopOnBackground is enabled => stopping playback")
+                view.player?.stop()
+            }
+        }
+    }
   
   @available(tvOS 14.0, *)
   public func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
