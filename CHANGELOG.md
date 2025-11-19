@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added `stopOnBackground` property to `BackgroundAudioConfiguration` to control whether playback should stop when the app goes to the background.
 
+### Changed
+
+- Updated the active quality info extraction on iOS to use the activeQualityChange event data instead of player API.
+
 ## [10.4.0] - 25-11-13
 
 ### Fixed
