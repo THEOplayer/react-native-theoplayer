@@ -6,6 +6,7 @@
 export interface BackgroundAudioConfiguration {
   /**
    * Whether background audio should be enabled when transitioning to background.
+   * @remarks When 'stopOnBackground' is true, 'enabled' is assumed to be false and background audio will not play.
    *
    * @defaultValue `false`
    */
@@ -28,6 +29,15 @@ export interface BackgroundAudioConfiguration {
    * @platform ios
    */
   readonly audioSessionMode?: AudioSessionMode;
+
+  /**
+   * Whether the player should stop play-out when the app goes to background.
+   * This differs from `enabled` which allows play-out to either continue in background, or be paused.
+   * Note that when the app comes back to foreground, a new source would have to be set.
+   *
+   * @defaultValue `false`
+   */
+  readonly stopOnBackground?: boolean;
 }
 
 export enum AudioSessionMode {

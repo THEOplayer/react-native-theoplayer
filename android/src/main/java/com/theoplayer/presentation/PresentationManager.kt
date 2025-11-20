@@ -319,14 +319,18 @@ class PresentationManager(
     currentPresentationModeChangeContext = context
     eventEmitter.emitPresentationModeChange(presentationMode, prevPresentationMode, context)
 
-    // Resume playing when going to PiP and player was playing
+    // Resume play-out when going to PiP and player was playing
     if (presentationMode == PresentationMode.PICTURE_IN_PICTURE && viewCtx.wasPlayingOnHostPause) {
       viewCtx.player.play()
     }
 
-    // Apply background audio config when closing PiP window
-    if (context?.pip == PresentationModeChangePipContext.CLOSED && !viewCtx.backgroundAudioConfig.enabled) {
-      viewCtx.player.pause()
+    // When closing PiP window
+    if (context?.pip == PresentationModeChangePipContext.CLOSED) {
+      // Pause if background audio is not enabled
+      if (!viewCtx.backgroundAudioConfig.enabled) viewCtx.player.pause()
+
+      // Optionally fully stop play-out
+      if (viewCtx.backgroundAudioConfig.stopOnBackground) viewCtx.player.stop()
     }
   }
 }

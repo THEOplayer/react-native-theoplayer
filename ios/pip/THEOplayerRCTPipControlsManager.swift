@@ -62,7 +62,7 @@ class THEOplayerRCTPipControlsManager: NSObject {
             if DEBUG_PIPCONTROLS { PrintUtils.printLog(logText: "retainPresentationModeOnSourceChange = \(self.pipConfig.retainPresentationModeOnSourceChange)") }
         }
     }
-        
+    
     func newPipConfiguration() -> PiPConfiguration {
         let builder = PiPConfigurationBuilder()
         builder.retainPresentationModeOnSourceChange = false
