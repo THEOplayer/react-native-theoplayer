@@ -21,6 +21,8 @@ import THEOplayerMillicastIntegration
 import THEOplayerTHEOliveIntegration
 #endif
 
+let SAFE_AREA_INSET_OFFSET: CGFloat = 47.0
+
 public class THEOplayerRCTView: UIView {
     // MARK: Members
     public private(set) var player: THEOplayer?
@@ -152,6 +154,8 @@ public class THEOplayerRCTView: UIView {
         if DEBUG_THEOPLAYER_INTERACTION { PrintUtils.printLog(logText: "[NATIVE] THEOplayer instance destroyed.") }
     }
     
+    // MARK: - View Layout
+    
     override public func layoutSubviews() {
         super.layoutSubviews()
         if let player = self.player {
@@ -160,6 +164,24 @@ public class THEOplayerRCTView: UIView {
             
             self.presentationModeManager.validateLayout()
         }
+    }
+    
+    override public var safeAreaInsets: UIEdgeInsets {
+        // When in fullscreen mode, we need to provide some insets
+        // to avoid content being obscured by notches or home indicators.
+        if self.presentationModeManager.presentationMode == .fullscreen {
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+                let orientation = windowScene.interfaceOrientation
+                let isPortrait = orientation.rawValue <= 2
+                return UIEdgeInsets.init(top: isPortrait ? SAFE_AREA_INSET_OFFSET: 0.0,
+                                                  left: isPortrait ? 0.0: SAFE_AREA_INSET_OFFSET,
+                                                  bottom: isPortrait ? SAFE_AREA_INSET_OFFSET: 0.0,
+                                                  right: isPortrait ? 0.0: SAFE_AREA_INSET_OFFSET)
+                }
+        }
+        // When inline, the THEOplayerView itself should be possitioned correctly by the customer,
+        // taking into account their app's safe areas, so no explicit safe area insets needed.
+        return .zero
     }
     
     // MARK: - Create Player
