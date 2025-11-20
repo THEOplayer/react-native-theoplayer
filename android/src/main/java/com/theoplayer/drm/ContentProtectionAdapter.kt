@@ -104,6 +104,7 @@ object ContentProtectionAdapter {
       if (jsonConfig.has(PROP_INTEGRATION_PARAMETERS)) {
         integrationParameters(fromJSONObjectToMap(jsonConfig.getJSONObject(PROP_INTEGRATION_PARAMETERS)))
       }
+      queryParameters(fromJSONObjectToMap(jsonConfig.optJSONObject(PROP_QUERY_PARAMETERS)))
     }.build()
   }
 

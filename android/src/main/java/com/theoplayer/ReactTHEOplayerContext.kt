@@ -458,6 +458,12 @@ class ReactTHEOplayerContext private constructor(
       // The player pauses and goes to the background, we can abandon audio focus.
       audioFocusManager?.abandonAudioFocus()
     }
+
+    // Optionally fully stop play-out, unless PiP mode is active.
+    if (backgroundAudioConfig.stopOnBackground
+      && reactContext.currentActivity?.isInPictureInPictureMode != true) {
+      player.stop()
+    }
   }
 
   /**

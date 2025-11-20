@@ -22,7 +22,7 @@ class THEOplayerRCTNowPlayingManager {
     func destroy() {
         // dettach listeners
         self.detachListeners()
-
+        
         // update elapsed time on close
         if let player = self.player {
             updateCurrentTime(player.currentTime)
@@ -105,7 +105,7 @@ class THEOplayerRCTNowPlayingManager {
             self.clearNowPlayingOnInfoCenter()
         }
     }
-
+    
     private func clearNowPlayingOnInfoCenter() {
         Task { @MainActor in
             MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
@@ -271,7 +271,7 @@ class THEOplayerRCTNowPlayingManager {
                 welf.processNowPlayingToInfoCenter()
             }
         }
-                                          
+        
         
         // RATE_CHANGE
         self.rateChangeListener = player.addEventListener(type: PlayerEventTypes.RATE_CHANGE) { [weak self, weak player] event in

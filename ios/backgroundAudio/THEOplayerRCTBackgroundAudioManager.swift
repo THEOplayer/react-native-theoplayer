@@ -2,20 +2,13 @@
 
 import Foundation
 import THEOplayerSDK
-import AVFAudio
 import AVKit
-
-struct BackgroundAudioConfig {
-    var enabled: Bool = false
-    var shouldResumeAfterInterruption: Bool = false
-    var audioSessionMode: AVAudioSession.Mode = .moviePlayback
-}
 
 class THEOplayerRCTBackgroundAudioManager: NSObject, BackgroundPlaybackDelegate {
     // MARK: Members
     private weak var player: THEOplayer?
     private weak var view: THEOplayerRCTView?
-  
+    
     // MARK: - player setup / breakdown
     func setPlayer(_ player: THEOplayer, view: THEOplayerRCTView?) {
         self.player = player
@@ -26,25 +19,34 @@ class THEOplayerRCTBackgroundAudioManager: NSObject, BackgroundPlaybackDelegate 
     func destroy() {
         self.cancelInterruptionNotifications()
     }
-  
+    
     // MARK: - logic
     func shouldContinueAudioPlaybackInBackground() -> Bool {
-        if let view = self.view {
+        if let view = self.view, let player = self.player {
+            let stopOnBackground = view.backgroundAudioConfig.stopOnBackground
+            let inPip = view.presentationModeManager.presentationMode == .pictureInPicture
+            
+            if stopOnBackground && !inPip {
+                if true || DEBUG_THEOPLAYER_INTERACTION { PrintUtils.printLog(logText: "[NATIVE] Moved to background, not in pip and stopOnBackground is enabled => stopping playback") }
+                player.stop()
+                return false
+            }
+            
             view.nowPlayingManager.updateNowPlaying()
             return view.backgroundAudioConfig.enabled
         }
         return false
     }
-  
+    
     func cancelInterruptionNotifications() {
         NotificationCenter.default.removeObserver(self,
                                                   name: AVAudioSession.interruptionNotification,
                                                   object: AVAudioSession.sharedInstance())
     }
-  
+    
     func updateInterruptionNotifications() {
         guard let view = self.view else { return }
-      
+        
         // Get the default notification center instance.
         if view.backgroundAudioConfig.shouldResumeAfterInterruption {
             NotificationCenter.default.addObserver(self,
@@ -57,10 +59,10 @@ class THEOplayerRCTBackgroundAudioManager: NSObject, BackgroundPlaybackDelegate 
                                                       object: AVAudioSession.sharedInstance())
         }
     }
-  
+    
     func updateAVAudioSessionMode() {
         guard let view = self.view else { return }
-      
+        
         do {
             THEOplayer.automaticallyManageAudioSession = (view.backgroundAudioConfig.audioSessionMode == .moviePlayback)
             try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback, mode: view.backgroundAudioConfig.audioSessionMode)
@@ -71,14 +73,14 @@ class THEOplayerRCTBackgroundAudioManager: NSObject, BackgroundPlaybackDelegate 
             if DEBUG_INTERRUPTIONS { PrintUtils.printLog(logText: "[NATIVE] Unable to update AVAudioSession mode to \(view.backgroundAudioConfig.audioSessionMode.rawValue): \(error)") }
         }
     }
-  
+    
     @objc func handleInterruption(notification: Notification) {
         guard let userInfo = notification.userInfo,
               let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
               let type = AVAudioSession.InterruptionType(rawValue: typeValue) else {
             return
         }
-      
+        
         // Switch over the interruption type.
         switch type {
         case .began:

@@ -40,6 +40,7 @@ public class THEOplayerRCTView: UIView {
     var remoteCommandsManager: THEOplayerRCTRemoteCommandsManager
     var pipManager: THEOplayerRCTPipManager
     var pipControlsManager: THEOplayerRCTPipControlsManager
+    var isApplicationInBackground: Bool = (UIApplication.shared.applicationState == .background)
     
     var adsConfig = AdsConfig()
     var castConfig = CastConfig()
@@ -108,8 +109,9 @@ public class THEOplayerRCTView: UIView {
         self.remoteCommandsManager = THEOplayerRCTRemoteCommandsManager()
         self.pipManager = THEOplayerRCTPipManager()
         self.pipControlsManager = THEOplayerRCTPipControlsManager()
-        
         super.init(frame: .zero)
+        
+        self.setupAppStateObservers()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -126,6 +128,8 @@ public class THEOplayerRCTView: UIView {
     }
   
     deinit {
+        self.clearAppStateObservers()
+        
         self.mainEventHandler.destroy()
         self.textTrackEventHandler.destroy()
         self.mediaTrackEventHandler.destroy()
@@ -144,6 +148,7 @@ public class THEOplayerRCTView: UIView {
         self.destroyBackgroundAudio()
         self.player?.removeAllIntegrations()
         self.player = nil
+        
         if DEBUG_THEOPLAYER_INTERACTION { PrintUtils.printLog(logText: "[NATIVE] THEOplayer instance destroyed.") }
     }
     

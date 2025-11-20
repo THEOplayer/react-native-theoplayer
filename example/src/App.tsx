@@ -121,6 +121,7 @@ export default function App() {
     player.backgroundAudioConfiguration = {
       enabled: true,
       shouldResumeAfterInterruption: true,
+      stopOnBackground: false,
     };
     player.pipConfiguration = {
       startsAutomatically: true,

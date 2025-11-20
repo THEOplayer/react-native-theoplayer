@@ -9,6 +9,7 @@ import THEOplayerTHEOliveIntegration
 
 let PROP_ENDPOINT_HESP_SRC: String = "hespSrc"
 let PROP_ENDPOINT_HLS_SRC: String = "hlsSrc"
+let PROP_ENDPOINT_MILLICAST_SRC: String = "millicastSrc"
 let PROP_ENDPOINT_CDN: String = "cdn"
 let PROP_ENDPOINT_AD_SRC: String = "adSrc"
 let PROP_ENDPOINT_WEIGHT: String = "weight"
@@ -32,6 +33,9 @@ class THEOplayerRCTTHEOliveEventAdapter {
         }
         if let hlsSrc = endpoint.hlsSrc {
             endpointData[PROP_ENDPOINT_HLS_SRC] = hlsSrc
+        }
+        if let millicastSrc = endpoint.millicastSrc {
+            endpointData[PROP_ENDPOINT_MILLICAST_SRC] = millicastSrc.toJSONEncodableDictionary()
         }
         if let cdn = endpoint.cdn {
             endpointData[PROP_ENDPOINT_CDN] = cdn
