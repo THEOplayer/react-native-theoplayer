@@ -167,6 +167,7 @@ public class THEOplayerRCTView: UIView {
     }
     
     override public var safeAreaInsets: UIEdgeInsets {
+#if os(iOS)
         // When in fullscreen mode, we need to provide some insets
         // to avoid content being obscured by notches or home indicators.
         if self.presentationModeManager.presentationMode == .fullscreen {
@@ -179,8 +180,10 @@ public class THEOplayerRCTView: UIView {
                                                   right: isPortrait ? 0.0: SAFE_AREA_INSET_OFFSET)
                 }
         }
+#endif
         // When inline, the THEOplayerView itself should be possitioned correctly by the customer,
         // taking into account their app's safe areas, so no explicit safe area insets needed.
+        // On tvOS no insets required.
         return .zero
     }
     
