@@ -170,15 +170,13 @@ public class THEOplayerRCTView: UIView {
 #if os(iOS)
         // When in fullscreen mode, we need to provide some insets
         // to avoid content being obscured by notches or home indicators.
-        if self.presentationModeManager.presentationMode == .fullscreen {
-            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
-                let orientation = windowScene.interfaceOrientation
-                let isPortrait = orientation.rawValue <= 2
-                return UIEdgeInsets.init(top: isPortrait ? SAFE_AREA_INSET_OFFSET: 0.0,
-                                                  left: isPortrait ? 0.0: SAFE_AREA_INSET_OFFSET,
-                                                  bottom: isPortrait ? SAFE_AREA_INSET_OFFSET: 0.0,
-                                                  right: isPortrait ? 0.0: SAFE_AREA_INSET_OFFSET)
-                }
+        if self.presentationModeManager.presentationMode == .fullscreen,
+           let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            let orientation = windowScene.interfaceOrientation
+            let isPortrait = orientation.rawValue <= 2
+            let verticalInset = isPortrait ? SAFE_AREA_INSET_OFFSET: 0.0
+            let horizontalInset = isPortrait ? 0.0: SAFE_AREA_INSET_OFFSET
+            return UIEdgeInsets.init(top: verticalInset, left: horizontalInset, bottom: verticalInset, right: horizontalInset)
         }
 #endif
         // When inline, the THEOplayerView itself should be possitioned correctly by the customer,
