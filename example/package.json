@@ -15,6 +15,7 @@
     "pod-update": "cd ios && RCT_NEW_ARCH_ENABLED=1 bundle exec pod update"
   },
   "dependencies": {
+    "@theoplayer/react-native-drm": "^1.10.0",
     "@theoplayer/react-native-ui": "^0.21.1",
     "react": "19.1.1",
     "react-dom": "19.1.1",
