@@ -274,14 +274,4 @@ class THEOplayerRCTMediaTrackEventHandler {
         }
         return nil;
     }
-    
-    private func labelFromBandWidth(_ bandWidth: Int) -> String {
-        if bandWidth > 1000000 {
-            return "\(Double(bandWidth / 1000) / 1000) Mbps"
-        } else if bandWidth > 1000 {
-            return "\(bandWidth / 1000) kbps"
-        } else {
-            return "No Label"
-        }
-    }
 }
