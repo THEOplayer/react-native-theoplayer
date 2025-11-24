@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 - Updated the active quality info extraction on iOS to use the activeQualityChange event data instead of player API.
+- On iOS, we now also pass all available qualities and the current active quality when bridging video- and audio track data.
 
 ## [10.4.0] - 25-11-13
 
