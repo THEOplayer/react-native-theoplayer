@@ -240,6 +240,43 @@ class THEOplayerRCTTrackMetadataAggregator {
         return 0
     }
     
+    class func labelFromBandWidth(_ bandWidth: Int) -> String {
+        if bandWidth > 1000000 {
+            return "\(Double(bandWidth / 1000) / 1000) Mbps"
+        } else if bandWidth > 1000 {
+            return "\(bandWidth / 1000) kbps"
+        } else {
+            return "No Label"
+        }
+    }
+    
+    class func aggregatedQualityInfo(quality: Quality) -> [String:Any] {
+        let identifier = String(quality.bandwidth)
+        let label = THEOplayerRCTTrackMetadataAggregator.labelFromBandWidth(quality.bandwidth)
+        
+        // common properties
+        var entry: [String:Any] = [
+            "bandwidth": quality.bandwidth,
+            "codecs": "",
+            "id": identifier,
+            "uid": identifier,
+            "name": label,
+            "label": label,
+            "available": true,
+        ]
+        if let averageBandwidth = quality.averageBandwidth {
+            entry["averageBandwidth"] = averageBandwidth
+        }
+ 
+        // videoQuality specific properties
+        if let videoQuality = quality as? VideoQuality {
+            entry["width"] = videoQuality.width
+            entry["height"] = videoQuality.height
+        }
+         
+        return entry
+    }
+    
     class func aggregatedMetadataAndChapterTrackInfo(trackDescriptions: [TextTrackDescription], completed: (([[String:Any]]) -> Void)? ) {
         var trackIndex = 0
         var tracksInfo: [[String:Any]] = []
