@@ -198,8 +198,7 @@ class THEOplayerRCTCacheAPI: RCTEventEmitter {
                 if DEBUG_CACHE_API { PrintUtils.printLog(logText: "[NATIVE] Renew license failed for task with id \(id): Unable to extract drm configuration data.") }
                 return
             }
-            let sanitisedContentProtectionData = THEOplayerRCTSourceDescriptionBuilder.sanitiseContentProtectionData(contentProtectionData)
-            if let contentProtectionConfig = THEOplayerRCTSourceDescriptionBuilder.buildContentProtection(sanitisedContentProtectionData) {
+            if let contentProtectionConfig = THEOplayerRCTSourceDescriptionBuilder.buildContentProtection(contentProtectionData) {
                 task.license.renew(contentProtectionConfig)
                 if DEBUG_CACHE_API { PrintUtils.printLog(logText: "[NATIVE] License renewed for task with id \(id).") }
             } else {

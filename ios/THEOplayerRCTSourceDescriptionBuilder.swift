@@ -231,8 +231,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
         guard let contentProtectionData = typedSourceData[SD_PROP_CONTENT_PROTECTION] as? [String:Any] else {
             return nil
         }
-        let sanitisedContentProtectionData = THEOplayerRCTSourceDescriptionBuilder.sanitiseContentProtectionData(contentProtectionData)
-        return THEOplayerRCTSourceDescriptionBuilder.buildContentProtection(sanitisedContentProtectionData)
+        return THEOplayerRCTSourceDescriptionBuilder.buildContentProtection(contentProtectionData)
     }
 
     /**
@@ -340,87 +339,65 @@ class THEOplayerRCTSourceDescriptionBuilder {
     }
 #endif
 
-      /**
-     Updates the contentProtectionData to a valid iOS SDK contentProtectionData, flattening out cross SDK differences
-     - returns: a THEOplayer valid contentProtection data map
-     */
-    static func sanitiseContentProtectionData(_ contentProtectionData: [String:Any]) -> [String:Any] {
-        var sanitisedContentProtectionData: [String:Any] = contentProtectionData
-        // fairplay update
-        if let fairplayData = contentProtectionData[SD_PROP_FAIRPLAY] as? [String:Any] {
-            var sanitisedFairplayData: [String:Any] = [:]
-            // certificateUrl
-            if let certificateUrl = fairplayData[SD_PROP_CERTIFICATE_URL] as? String {
-                sanitisedFairplayData[SD_PROP_CERTIFICATE_URL] = certificateUrl
-            }
-            // convert certificate into certificateUrl with marker prefix (also supported by THEOplayer Web SDK)
-            if let certificate = fairplayData[SD_PROP_CERTIFICATE] as? String {
-                sanitisedFairplayData[SD_PROP_CERTIFICATE_URL] = "\(CERTIFICATE_MARKER)\(certificate)"
-            }
-            // licenseAcquisitionURL
-            if let licenseAcquisitionURL = fairplayData[SD_PROP_LICENSE_URL] as? String {
-                sanitisedFairplayData[SD_PROP_LICENSE_URL] = licenseAcquisitionURL
-            }
-            // headers
-            if let headers = fairplayData[SD_PROP_HEADERS] as? [String:String] {
-                sanitisedFairplayData[SD_PROP_HEADERS] = headers
-            }
-            // licenseType
-            if let licenseType = fairplayData[SD_PROP_LICENSE_TYPE] as? String {
-                sanitisedFairplayData[SD_PROP_LICENSE_TYPE] = licenseType
-            }
-            sanitisedContentProtectionData[SD_PROP_FAIRPLAY] = sanitisedFairplayData
-        }
-        // widevine update
-        if let widevineData = contentProtectionData[SD_PROP_WIDEVINE] as? [String:Any] {
-            var sanitisedWidevineData: [String:Any] = [:]
-            // certificateUrl
-            if let certificateUrl = widevineData[SD_PROP_CERTIFICATE_URL] as? String {
-                sanitisedWidevineData[SD_PROP_CERTIFICATE_URL] = certificateUrl
-            }
-            // convert certificate into certificateUrl with marker prefix (also supported by THEOplayer Web SDK)
-            if let certificate = widevineData[SD_PROP_CERTIFICATE] as? String {
-                sanitisedWidevineData[SD_PROP_CERTIFICATE_URL] = "\(CERTIFICATE_MARKER)\(certificate)"
-            }
-            // licenseAcquisitionURL
-            if let licenseAcquisitionURL = widevineData[SD_PROP_LICENSE_URL] as? String {
-                sanitisedWidevineData[SD_PROP_LICENSE_URL] = licenseAcquisitionURL
-            }
-            // headers
-            if let headers = widevineData[SD_PROP_HEADERS] as? [String:String] {
-                sanitisedWidevineData[SD_PROP_HEADERS] = headers
-            }
-            // licenseType
-            if let licenseType = widevineData[SD_PROP_LICENSE_TYPE] as? String {
-                sanitisedWidevineData[SD_PROP_LICENSE_TYPE] = licenseType
-            }
-            sanitisedContentProtectionData[SD_PROP_WIDEVINE] = sanitisedWidevineData
-        }
-        // query parameters
-        if let queryParameters = contentProtectionData[SD_PROP_QUERY_PARAMETERS] as? [String:Any] {
-          var sanitisedQueryParameters: Dictionary<String, String> = [:]
-          for (key, value) in queryParameters {
-            if let stringValue = value as? String {
-              sanitisedQueryParameters[key] = stringValue
-            }
-          }
-          sanitisedContentProtectionData[SD_PROP_QUERY_PARAMETERS] = sanitisedQueryParameters
-        }
-        return sanitisedContentProtectionData
-    }
-
     /**
      Creates a THEOplayer DRMConfiguration. This requires a contentProtection property in the RN source description.
      - returns: a THEOplayer DRMConfiguration
      */
     static func buildContentProtection(_ contentProtectionData: [String:Any]) -> MultiplatformDRMConfiguration? {
-        do {
-            let data = try JSONSerialization.data(withJSONObject: contentProtectionData)
-            return try JSONDecoder().decode(MultiplatformDRMConfiguration.self, from: data)
-        } catch {
-            PrintUtils.printLog(logText: "[NATIVE] unsupported contentProtection data format")
+        guard let customIntegrationId = contentProtectionData[SD_PROP_INTEGRATION] as? String else { return nil }
+        
+        // fairplay
+        var fairplayKeySystem: THEOplayerSDK.KeySystemConfiguration? = nil
+        if let fairplayData = contentProtectionData[SD_PROP_FAIRPLAY] as? [String:Any] {
+            // certificateUrl
+            var certificateUrl = fairplayData[SD_PROP_CERTIFICATE_URL] as? String
+            if let certificate = fairplayData[SD_PROP_CERTIFICATE] as? String {
+                certificateUrl = "\(CERTIFICATE_MARKER)\(certificate)"
+            }
+            let licenseAcquisitionURL = fairplayData[SD_PROP_LICENSE_URL] as? String
+            let headers = fairplayData[SD_PROP_HEADERS] as? [String:String]
+            let licenseType = fairplayData[SD_PROP_LICENSE_TYPE] as? String
+            let queryParameters = fairplayData[SD_PROP_QUERY_PARAMETERS] as? [String:String]
+                
+            fairplayKeySystem = KeySystemConfiguration(
+                licenseAcquisitionURL: licenseAcquisitionURL,
+                certificateURL: certificateUrl,
+                licenseType: licenseType == "persistent" ? LicenseType.persistent : LicenseType.temporary,
+                headers: headers,
+                queryParameters: queryParameters
+            )
         }
-        return nil
+        
+        // widevine
+        var widevineKeySystem: THEOplayerSDK.KeySystemConfiguration? = nil
+        if let widevineData = contentProtectionData[SD_PROP_WIDEVINE] as? [String:Any] {
+            // certificateUrl
+            var certificateUrl = widevineData[SD_PROP_CERTIFICATE_URL] as? String
+            if let certificate = widevineData[SD_PROP_CERTIFICATE] as? String {
+                certificateUrl = "\(CERTIFICATE_MARKER)\(certificate)"
+            }
+            let licenseAcquisitionURL = widevineData[SD_PROP_LICENSE_URL] as? String
+            let headers = widevineData[SD_PROP_HEADERS] as? [String:String]
+            let licenseType = widevineData[SD_PROP_LICENSE_TYPE] as? String
+            let queryParameters = widevineData[SD_PROP_QUERY_PARAMETERS] as? [String:String]
+                
+            widevineKeySystem = KeySystemConfiguration(
+                licenseAcquisitionURL: licenseAcquisitionURL,
+                certificateURL: certificateUrl,
+                licenseType: licenseType == "persistent" ? LicenseType.persistent : LicenseType.temporary,
+                headers: headers,
+                queryParameters: queryParameters
+            )
+        }
+        
+        // global query parameters
+        let queryParameters = contentProtectionData[SD_PROP_QUERY_PARAMETERS] as? [String:String]
+        
+        return MultiplatformDRMConfiguration(
+            customIntegrationId: customIntegrationId,
+            keySystemConfigurations: KeySystemConfigurationCollection(fairplay: fairplayKeySystem, widevine: widevineKeySystem),
+            queryParameters: queryParameters
+        )
     }
 
 

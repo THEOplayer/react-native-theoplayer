@@ -25,6 +25,7 @@ import {
   UiContainer,
 } from '@theoplayer/react-native-ui';
 import {
+  ContentProtectionRegistry,
   PlayerConfiguration,
   PlayerEventType,
   PresentationMode,
@@ -45,6 +46,10 @@ import { RenderingTargetSubMenu } from './custom/RenderingTargetSubMenu';
 import { AutoPlaySubMenu } from './custom/AutoPlaySubMenu';
 import { SafeAreaProvider, SafeAreaView, Edges } from 'react-native-safe-area-context';
 import { usePresentationMode } from './hooks/usePresentationMode';
+import { EzdrmFairplayContentProtectionIntegrationFactory } from '@theoplayer/react-native-drm';
+
+// Register Ezdrm Fairplay integration
+ContentProtectionRegistry.registerContentProtectionIntegration('customEzdrm', 'fairplay', new EzdrmFairplayContentProtectionIntegrationFactory());
 
 const playerConfig: PlayerConfiguration = {
   // Get your THEOplayer license from https://portal.theoplayer.com/
