@@ -228,9 +228,17 @@ class THEOplayerRCTTrackMetadataAggregator {
         entry[PROP_LABEL] = videoTrack.label
         entry[PROP_UNLOCALIZED_LABEL] = videoTrack.unlocalizedLabel
         entry[PROP_ENABLED] = videoTrack.enabled
-        entry[PROP_QUALITIES] = []          // empty: qualities are not being exposed on iOS
-        //entry[PROP_ACTIVE_QUALITY] =      // undefined: qualities are not being exposed on iOS
-        //entry[PROP_TARGET_QUALITY] =      // undefined: qualities are not being exposed on iOS
+        
+        // add known qualities
+        entry[PROP_QUALITIES] = (0..<videoTrack.qualities.count).map { index in
+            return THEOplayerRCTTrackMetadataAggregator.aggregatedQualityInfo(quality: videoTrack.qualities.get(index))
+        }
+        
+        // add active quality
+        if let activeQuality = videoTrack.activeQuality {
+            entry[PROP_ACTIVE_QUALITY] = THEOplayerRCTTrackMetadataAggregator.aggregatedQualityInfo(quality: activeQuality)
+        }
+        
         return entry
     }
 
