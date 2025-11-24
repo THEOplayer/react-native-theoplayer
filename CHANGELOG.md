@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed an issue on iOS where the scrim of an IMA ad was in a wrong position due to incorrect safeAreaInsets.
+
 ### Added
 
 - Added `stopOnBackground` property to `BackgroundAudioConfiguration` to control whether playback should stop when the app goes to the background.
