@@ -267,7 +267,7 @@ class THEOplayerRCTMediaTrackEventHandler {
                 "trackUid" : track.uid,
                 "type" : MediaTrackEventType.ACTIVE_QUALITY_CHANGED.rawValue,
                 "trackType": MediaTrackType.VIDEO.rawValue,
-                "qualities": [quality]
+                "qualities": quality
             ])
         }
     }
@@ -299,7 +299,7 @@ class THEOplayerRCTMediaTrackEventHandler {
                 "trackUid" : track.uid,
                 "type" : MediaTrackEventType.ACTIVE_QUALITY_CHANGED.rawValue,
                 "trackType": MediaTrackType.AUDIO.rawValue,
-                "qualities": [quality]
+                "qualities": quality
             ])
         }
     }
