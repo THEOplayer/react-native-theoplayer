@@ -21,6 +21,8 @@ import THEOplayerMillicastIntegration
 import THEOplayerTHEOliveIntegration
 #endif
 
+let SAFE_AREA_INSET_OFFSET: CGFloat = 47.0
+
 public class THEOplayerRCTView: UIView {
     // MARK: Members
     public private(set) var player: THEOplayer?
@@ -40,6 +42,7 @@ public class THEOplayerRCTView: UIView {
     var remoteCommandsManager: THEOplayerRCTRemoteCommandsManager
     var pipManager: THEOplayerRCTPipManager
     var pipControlsManager: THEOplayerRCTPipControlsManager
+    var isApplicationInBackground: Bool = (UIApplication.shared.applicationState == .background)
     
     var adsConfig = AdsConfig()
     var castConfig = CastConfig()
@@ -108,8 +111,9 @@ public class THEOplayerRCTView: UIView {
         self.remoteCommandsManager = THEOplayerRCTRemoteCommandsManager()
         self.pipManager = THEOplayerRCTPipManager()
         self.pipControlsManager = THEOplayerRCTPipControlsManager()
-        
         super.init(frame: .zero)
+        
+        self.setupAppStateObservers()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -126,6 +130,8 @@ public class THEOplayerRCTView: UIView {
     }
   
     deinit {
+        self.clearAppStateObservers()
+        
         self.mainEventHandler.destroy()
         self.textTrackEventHandler.destroy()
         self.mediaTrackEventHandler.destroy()
@@ -144,8 +150,11 @@ public class THEOplayerRCTView: UIView {
         self.destroyBackgroundAudio()
         self.player?.removeAllIntegrations()
         self.player = nil
+        
         if DEBUG_THEOPLAYER_INTERACTION { PrintUtils.printLog(logText: "[NATIVE] THEOplayer instance destroyed.") }
     }
+    
+    // MARK: - View Layout
     
     override public func layoutSubviews() {
         super.layoutSubviews()
@@ -155,6 +164,25 @@ public class THEOplayerRCTView: UIView {
             
             self.presentationModeManager.validateLayout()
         }
+    }
+    
+    override public var safeAreaInsets: UIEdgeInsets {
+#if os(iOS)
+        // When in fullscreen mode, we need to provide some insets
+        // to avoid content being obscured by notches or home indicators.
+        if self.presentationModeManager.presentationMode == .fullscreen,
+           let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            let orientation = windowScene.interfaceOrientation
+            let isPortrait = orientation.rawValue <= 2
+            let verticalInset = isPortrait ? SAFE_AREA_INSET_OFFSET: 0.0
+            let horizontalInset = isPortrait ? 0.0: SAFE_AREA_INSET_OFFSET
+            return UIEdgeInsets.init(top: verticalInset, left: horizontalInset, bottom: verticalInset, right: horizontalInset)
+        }
+#endif
+        // When inline, the THEOplayerView itself should be possitioned correctly by the customer,
+        // taking into account their app's safe areas, so no explicit safe area insets needed.
+        // On tvOS no insets required.
+        return .zero
     }
     
     // MARK: - Create Player

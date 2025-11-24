@@ -15,7 +15,7 @@ let DEBUG_THEOPLAYER_INTERACTION = DEBUG && false
 // Debug flag to monitor contentProtection integration handling
 let DEBUG_CONTENT_PROTECTION_API = DEBUG && false
 
-// Debug flag to monitor all updates made  on bridged properties
+// Debug flag to monitor all updates made on bridged properties
 let DEBUG_VIEW = DEBUG && false
 
 // Debug flag to monitor correct SourceDescription buildup

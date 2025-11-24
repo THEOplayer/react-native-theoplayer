@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [10.5.0] - 25-11-24
+
+### Fixed
+
+- Fixed an issue on iOS where the scrim of an IMA ad was in a wrong position due to incorrect `safeAreaInsets`.
+
+### Added
+
+- Added `stopOnBackground` property to `BackgroundAudioConfiguration` to control whether playback should stop when the app goes to the background.
+- Added `millicastSrc` to `TheoLiveEndpoint` for Web and Android.
+- Added support for configuring query parameters that are common to multiple key system configurations. The parameters defined in `contentProtection.queryParameters` will be merged with any query parameters that are explicitly defined on a key system configuration, whereby the latter takes precedence.
+
+### Changed
+
+- Updated the active quality info extraction on iOS to use the activeQualityChange event data instead of player API.
+
 ## [10.4.0] - 25-11-13
 
 ### Fixed
@@ -15,6 +31,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Pass `streamActivityMonitorId` property for `THEOAdDescription` on iOS and Android.
+- Added `allowLivePlayPause` and `seekToLiveOnResume` properties to `PlayerConfiguration.mediaControl` to control pausing and resuming behavior on live streams from the lockscreen controls.
 
 ### Changed
 
@@ -138,11 +155,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Deprecated the `BaseSource.integration` property in favor of `TypedSource.type`.
 
-## Added
+### Added
 
 - Added support for `THEOlive` events.
 
-## Fixed
+### Fixed
 
 - Fixed an issue on Android where, depending on the project structure, the Maven repository list would be incorrect.
 

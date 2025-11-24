@@ -464,7 +464,7 @@
             "certificateURL": "https://fps.ezdrm.com/demo/video/eleisure.cer",
             "licenseAcquisitionURL": "https://fps.ezdrm.com/api/licenses/09cc0377-6dd4-40cb-b09d-b582236e70fe"
           },
-          "integration": "ezdrm"
+          "integration": "customEzdrm"
         }
       }
     }

@@ -404,9 +404,14 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
       return;
     }
     if (document.visibilityState !== 'visible') {
-      // Apply background configuration: by default, pause when going to background, unless in pip
-      if (this.presentationMode !== PresentationMode.pip && !this.backgroundAudioConfiguration.enabled) {
-        this._player.pause();
+      if (this.presentationMode !== PresentationMode.pip) {
+        // Apply background configuration: by default, pause when going to background, unless in pip
+        if (!this.backgroundAudioConfiguration.enabled) {
+          this._player.pause();
+        }
+        if (this.backgroundAudioConfiguration.stopOnBackground) {
+          this._player.stop();
+        }
       }
     }
     // Apply media session controls
