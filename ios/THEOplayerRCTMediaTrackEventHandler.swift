@@ -235,39 +235,12 @@ class THEOplayerRCTMediaTrackEventHandler {
            let player = self.player,
            let track = self.activeTrack(tracks: player.videoTracks) {
             if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received ACTIVE_QUALITY_CHANGED event for videoTrack") }
-            let activeQuality = event.quality
-            let identifier = String(activeQuality.bandwidth)
-            let label = self.labelFromBandWidth(activeQuality.bandwidth)
-    
-            var width = player.videoWidth
-            var height = player.videoHeight
-            if let activeVideoQuality = activeQuality as? VideoQuality {
-                width = activeVideoQuality.width
-                height = activeVideoQuality.height
-            }
-            
-            var quality: [String:Any] = [
-                "bandwidth": activeQuality.bandwidth,
-                "codecs": "",
-                "id": identifier,
-                "uid": identifier,
-                "name": label,
-                "label": label,
-                "available": true,
-                "width": width,
-                "height": height,
-                //"frameRate": 0, // not available on iOS SDK
-                //"firstFrame": 0 // not available on iOS SDK
-            ]
-            if let averageBandwidth = activeQuality.averageBandwidth {
-                quality["averageBandwidth"] = averageBandwidth
-            }
             
             forwardedMediaTrackEvent([
                 "trackUid" : track.uid,
                 "type" : MediaTrackEventType.ACTIVE_QUALITY_CHANGED.rawValue,
                 "trackType": MediaTrackType.VIDEO.rawValue,
-                "qualities": quality
+                "qualities": THEOplayerRCTTrackMetadataAggregator.aggregatedQualityInfo(quality: event.quality)
             ])
         }
     }
