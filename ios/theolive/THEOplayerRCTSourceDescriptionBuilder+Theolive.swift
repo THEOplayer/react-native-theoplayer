@@ -8,6 +8,8 @@ import UIKit
 import THEOplayerTHEOliveIntegration
 #endif
 
+let SD_PROP_PROFILE: String = "profile"
+
 extension THEOplayerRCTSourceDescriptionBuilder {
 
     /**
@@ -17,7 +19,8 @@ extension THEOplayerRCTSourceDescriptionBuilder {
     static func buildTHEOliveDescription(_ theoliveData: [String:Any], contentPotection: MultiplatformDRMConfiguration?) -> TypedSource? {
 #if canImport(THEOplayerTHEOliveIntegration)
       if let src = theoliveData[SD_PROP_SRC] as? String {
-          return TheoLiveSource(channelId: src, drm: contentPotection)
+          let profile = theoliveData[SD_PROP_PROFILE] as? String;
+          return TheoLiveSource(channelId: src, drm: contentPotection, profile: profile)
       }
 #endif
         return nil
