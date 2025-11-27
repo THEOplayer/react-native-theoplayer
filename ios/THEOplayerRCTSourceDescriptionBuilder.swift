@@ -344,7 +344,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
      - returns: a THEOplayer DRMConfiguration
      */
     static func buildContentProtection(_ contentProtectionData: [String:Any]) -> MultiplatformDRMConfiguration? {
-        guard let customIntegrationId = contentProtectionData[SD_PROP_INTEGRATION] as? String else { return nil }
+        let customIntegrationId = contentProtectionData[SD_PROP_INTEGRATION] as? String ?? "internal"
         
         // fairplay
         var fairplayKeySystem: THEOplayerSDK.KeySystemConfiguration? = nil
