@@ -178,6 +178,9 @@ class SourceAdapter {
       },
       latencyConfiguration=jsonTypedSource.optJSONObject(PROP_LATENCY_CONFIGURATION)?.let {
         parseLatencyConfiguration(it)
+      },
+      drm=jsonTypedSource.optJSONObject(PROP_CONTENT_PROTECTION)?.let {
+        ContentProtectionAdapter.drmConfigurationFromJson(it)
       }
     )
   }
