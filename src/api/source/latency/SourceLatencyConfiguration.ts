@@ -58,6 +58,8 @@ export interface SourceLatencyConfiguration {
      * The amount of seconds that target latency can be temporarily increased to counteract unstable
      * network conditions.
      *
+     * @platform web
+     *
      * @remarks
      * <br/> - This only works for HESP and THEOlive streams.
      */
