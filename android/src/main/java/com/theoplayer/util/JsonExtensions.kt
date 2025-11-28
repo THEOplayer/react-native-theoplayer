@@ -2,6 +2,9 @@ package com.theoplayer.util
 
 import org.json.JSONObject
 
-fun JSONObject.doubleOrNull(name: String): Double? {
+/**
+ * Returns the double value mapped by [name], or `null` if no such mapping exists.
+ */
+fun JSONObject.optDoubleOrNull(name: String): Double? {
   return if (has(name)) getDouble(name) else null
 }
