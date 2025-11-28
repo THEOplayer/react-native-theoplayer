@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [10.5.1] - 25-11-28
+
+### Added
+
+- Support for contentProtection query parameters on THEOlive sources.
+
 ## [10.5.0] - 25-11-24
 
 ### Fixed
@@ -20,6 +26,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 - Updated the active quality info extraction on iOS to use the activeQualityChange event data instead of player API.
+- On iOS, we now also pass all available qualities and the current active quality when bridging video- and audio track data.
 
 ## [10.4.0] - 25-11-13
 

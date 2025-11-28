@@ -196,7 +196,12 @@
       "sources": [
         {
           "src": "9lwkudxeyjwwm132pukwwhhtk",
-          "type": "theolive"
+          "type": "theolive",
+          "contentProtection": {
+            "queryParameters": {
+              "param1": "value1"
+            }
+          }
         }
       ],
       "metadata": {

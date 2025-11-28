@@ -58,7 +58,7 @@ export interface MediaControlConfiguration {
 
   /**
    * A flag that controls whether to seek to the live edge when resuming a paused live stream.
-   * Note that {@allowLivePlayPause} needs to be enabled for this property to have effect.
+   * Note that {@link allowLivePlayPause} needs to be enabled for this property to have effect.
    *
    * @defaultValue `false`
    *

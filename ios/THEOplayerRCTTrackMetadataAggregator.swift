@@ -179,9 +179,16 @@ class THEOplayerRCTTrackMetadataAggregator {
         entry[PROP_LABEL] = audioTrack.label
         entry[PROP_UNLOCALIZED_LABEL] = audioTrack.unlocalizedLabel
         entry[PROP_ENABLED] = audioTrack.enabled
-        entry[PROP_QUALITIES] = []          // empty: qualities are not being exposed on iOS
-        //entry[PROP_ACTIVE_QUALITY] =      // undefined: qualities are not being exposed on iOS
-        //entry[PROP_TARGET_QUALITY] =      // undefined: qualities are not being exposed on iOS
+        
+        // add known qualities
+        entry[PROP_QUALITIES] = (0..<audioTrack.qualities.count).map { index in
+            return THEOplayerRCTTrackMetadataAggregator.aggregatedQualityInfo(quality: audioTrack.qualities.get(index))
+        }
+        
+        // add active quality
+        if let activeQuality = audioTrack.activeQuality {
+            entry[PROP_ACTIVE_QUALITY] = THEOplayerRCTTrackMetadataAggregator.aggregatedQualityInfo(quality: activeQuality)
+        }
         return entry
     }
     
@@ -221,9 +228,17 @@ class THEOplayerRCTTrackMetadataAggregator {
         entry[PROP_LABEL] = videoTrack.label
         entry[PROP_UNLOCALIZED_LABEL] = videoTrack.unlocalizedLabel
         entry[PROP_ENABLED] = videoTrack.enabled
-        entry[PROP_QUALITIES] = []          // empty: qualities are not being exposed on iOS
-        //entry[PROP_ACTIVE_QUALITY] =      // undefined: qualities are not being exposed on iOS
-        //entry[PROP_TARGET_QUALITY] =      // undefined: qualities are not being exposed on iOS
+        
+        // add known qualities
+        entry[PROP_QUALITIES] = (0..<videoTrack.qualities.count).map { index in
+            return THEOplayerRCTTrackMetadataAggregator.aggregatedQualityInfo(quality: videoTrack.qualities.get(index))
+        }
+        
+        // add active quality
+        if let activeQuality = videoTrack.activeQuality {
+            entry[PROP_ACTIVE_QUALITY] = THEOplayerRCTTrackMetadataAggregator.aggregatedQualityInfo(quality: activeQuality)
+        }
+        
         return entry
     }
 
@@ -238,6 +253,43 @@ class THEOplayerRCTTrackMetadataAggregator {
             }
         }
         return 0
+    }
+    
+    class func labelFromBandWidth(_ bandWidth: Int) -> String {
+        if bandWidth > 1000000 {
+            return "\(Double(bandWidth / 1000) / 1000) Mbps"
+        } else if bandWidth > 1000 {
+            return "\(bandWidth / 1000) kbps"
+        } else {
+            return "No Label"
+        }
+    }
+    
+    class func aggregatedQualityInfo(quality: Quality) -> [String:Any] {
+        let identifier = String(quality.bandwidth)
+        let label = THEOplayerRCTTrackMetadataAggregator.labelFromBandWidth(quality.bandwidth)
+        
+        // common properties
+        var entry: [String:Any] = [
+            "bandwidth": quality.bandwidth,
+            "codecs": "",
+            "id": identifier,
+            "uid": identifier,
+            "name": label,
+            "label": label,
+            "available": true,
+        ]
+        if let averageBandwidth = quality.averageBandwidth {
+            entry["averageBandwidth"] = averageBandwidth
+        }
+ 
+        // videoQuality specific properties
+        if let videoQuality = quality as? VideoQuality {
+            entry["width"] = videoQuality.width
+            entry["height"] = videoQuality.height
+        }
+         
+        return entry
     }
     
     class func aggregatedMetadataAndChapterTrackInfo(trackDescriptions: [TextTrackDescription], completed: (([[String:Any]]) -> Void)? ) {
