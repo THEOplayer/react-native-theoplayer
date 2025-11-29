@@ -4,5 +4,6 @@ export * from './cmcd/barrel';
 export * from './drm/barrel';
 export * from './dash/barrel';
 export * from './hls/barrel';
+export * from './latency/barrel';
 export * from './metadata/barrel';
 export * from './SourceDescription';

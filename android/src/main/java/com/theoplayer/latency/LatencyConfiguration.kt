@@ -1,6 +1,7 @@
 package com.theoplayer.latency
 
 import com.theoplayer.android.api.latency.LatencyConfiguration
+import com.theoplayer.util.optDoubleOrNull
 import org.json.JSONObject
 
 private const val PROP_MINIMUM_OFFSET = "minimumOffset"
@@ -12,11 +13,11 @@ private const val PROP_MAXIMUM_PLAYBACK_RATE = "maximumPlaybackRate"
 
 fun parseLatencyConfiguration(jsonLatency: JSONObject): LatencyConfiguration {
   return LatencyConfiguration.Builder().apply {
-    setMinimumOffset(jsonLatency.optDouble(PROP_MINIMUM_OFFSET))
-    setMaximumOffset(jsonLatency.optDouble(PROP_MAXIMUM_OFFSET))
-    setTargetOffset(jsonLatency.optDouble(PROP_TARGET_OFFSET))
-    setForceSeekOffset(jsonLatency.optDouble(PROP_FORCE_SEEK_OFFSET))
-    setMinimumPlaybackRate(jsonLatency.optDouble(PROP_MINIMUM_PLAYBACK_RATE))
-    setMaximumPlaybackRate(jsonLatency.optDouble(PROP_MAXIMUM_PLAYBACK_RATE))
+    jsonLatency.optDoubleOrNull(PROP_MINIMUM_OFFSET)?.let { setMinimumOffset(it) }
+    jsonLatency.optDoubleOrNull(PROP_MAXIMUM_OFFSET)?.let { setMaximumOffset(it) }
+    jsonLatency.optDoubleOrNull(PROP_TARGET_OFFSET)?.let { setTargetOffset(it) }
+    jsonLatency.optDoubleOrNull(PROP_FORCE_SEEK_OFFSET)?.let { setForceSeekOffset(it) }
+    jsonLatency.optDoubleOrNull(PROP_MINIMUM_PLAYBACK_RATE)?.let { setMinimumPlaybackRate(it) }
+    jsonLatency.optDoubleOrNull(PROP_MAXIMUM_PLAYBACK_RATE)?.let { setMaximumPlaybackRate(it) }
   }.build()
 }

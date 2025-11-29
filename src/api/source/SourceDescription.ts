@@ -15,6 +15,7 @@ import type { MetadataDescription } from './metadata/MetadataDescription';
 import type { ServerSideAdInsertionConfiguration } from './ads/ssai/ServerSideAdInsertionConfiguration';
 import type { AnalyticsDescription } from './analytics/AnalyticsDescription';
 import { CmcdConfiguration } from './cmcd/CmcdConfiguration';
+import { SourceLatencyConfiguration } from './latency/SourceLatencyConfiguration';
 
 /**
  * A type alias for a {@link TypedSource} media resource.
@@ -306,6 +307,9 @@ export interface BaseSource {
    *
    * @platform web,android
    *
+   * @remarks
+   * <br/> - Will be overridden by {@link SourceLatencyConfiguration.targetOffset} if it is specified.
+   *
    * @defaultValue Three times the segment's target duration.
    */
   liveOffset?: number;
@@ -336,6 +340,16 @@ export interface BaseSource {
    * <br/> - This setting must be `true` when using Low-Latency CMAF with ABR.
    */
   lowLatency?: boolean;
+
+  /**
+   * The source's latency configuration.
+   *
+   * @platform web,android
+   *
+   * @remarks
+   * <br/> - Ignored for VOD playback.
+   */
+  latencyConfiguration?: SourceLatencyConfiguration;
 
   /**
    * The configuration for controlling playback of an MPEG-DASH stream.
