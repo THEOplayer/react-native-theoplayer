@@ -195,7 +195,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
         let type = typedSourceData[SD_PROP_TYPE] as? String
         
         if integration == "theolive" || type == "theolive" {
-            return THEOplayerRCTSourceDescriptionBuilder.buildTHEOliveDescription(typedSourceData, contentPotection: contentProtection)
+            return THEOplayerRCTSourceDescriptionBuilder.buildTHEOliveDescription(typedSourceData, contentProtection: contentProtection)
         }
 
         if type == "millicast" {
