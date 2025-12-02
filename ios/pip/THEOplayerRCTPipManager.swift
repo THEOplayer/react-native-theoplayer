@@ -32,7 +32,7 @@ class THEOplayerRCTPipManager: NSObject, AVPictureInPictureControllerDelegate {
             let appInBackground = view.isApplicationInBackground
             let stopOnBackground = view.backgroundAudioConfig.stopOnBackground
             if pipClosed && appInBackground && stopOnBackground {
-                print("[NATIVE] Pip closed while app in background and stopOnBackground is enabled => stopping playback")
+                if DEBUG_PIPCONTROLS { PrintUtils.printLog(logText: "[NATIVE] Pip closed while app in background and stopOnBackground is enabled => stopping playback") }
                 view.player?.stop()
             }
         }
