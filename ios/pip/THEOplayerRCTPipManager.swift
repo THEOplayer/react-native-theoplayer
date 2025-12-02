@@ -25,6 +25,7 @@ class THEOplayerRCTPipManager: NSObject, AVPictureInPictureControllerDelegate {
         }
     }
     
+    @available(tvOS 14.0, *)
     func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         if let view = self.view {
             let pipClosed = view.presentationModeManager.presentationModeContext.pipContext == .PIP_CLOSED
