@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Support for contentProtection query parameters on THEOlive sources.
 
+### Fixed
+
+- Fixed an issue on tvOS where unsupported pip logic was used on older tvOS target versions (< 14.0).
+
 ## [10.5.0] - 25-11-24
 
 ### Fixed
