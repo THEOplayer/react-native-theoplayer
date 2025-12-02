@@ -63,7 +63,7 @@ let SD_PROP_RETRIEVE_POD_ID_URI: String = "retrievePodIdURI"
 let SD_PROP_INITIALIZATION_DELAY: String = "initializationDelay"
 let SD_PROP_HLS_DATE_RANGE: String = "hlsDateRange"
 let SD_PROP_CMCD: String = "cmcd"
-let SD_PROP_QUERY_PARAMETERS = "queryParameters"
+let SD_PROP_QUERY_PARAMETERS: String = "queryParameters"
 
 let EXTENSION_HLS: String = ".m3u8"
 let EXTENSION_MP4: String = ".mp4"
@@ -195,7 +195,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
         let type = typedSourceData[SD_PROP_TYPE] as? String
         
         if integration == "theolive" || type == "theolive" {
-            return THEOplayerRCTSourceDescriptionBuilder.buildTHEOliveDescription(typedSourceData, contentPotection: contentProtection)
+            return THEOplayerRCTSourceDescriptionBuilder.buildTHEOliveDescription(typedSourceData, contentProtection: contentProtection)
         }
 
         if type == "millicast" {

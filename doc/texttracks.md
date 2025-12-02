@@ -84,7 +84,7 @@ player.addEventListener(PlayerEventType.TEXT_TRACK_LIST, (event: TextTrackListEv
 ```
 
 Similarly for text track cues, the `PlayerEventType.TEXT_TRACK` event provides knowledge on cues
-being added or removed.
+being added or removed. The cue contains a reference to the track it belongs too.
 
 ```typescript
 player.addEventListener(PlayerEventType.TEXT_TRACK, (event: TextTrackEvent) => {
@@ -110,6 +110,8 @@ player.selectedTextTrack = track.uid;
 
 Note that [THEOplayer React-Native UI](https://github.com/THEOplayer/react-native-theoplayer-ui) package
 provides a visual representation of the list of available text tracks, as well as the ability to enable/disable them.
+
+Metadata tracks are by default 'hidden', as they do not visually represent a textTrack but contain valuable data (e.g. id3 cues, HLS DataRange cues, ...). While 'hidden', these metadata tracks will actively 'enter' and 'exit' their cues.
 
 ## Preview thumbnails
 

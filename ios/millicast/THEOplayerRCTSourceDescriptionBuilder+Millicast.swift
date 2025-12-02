@@ -24,14 +24,14 @@ extension THEOplayerRCTSourceDescriptionBuilder {
       if let src = millicastData[SD_PROP_SRC] as? String,
          let accountID = millicastData[SD_PROP_ACCOUNTID] as? String {
         let subscriberToken = millicastData[SD_PROP_SUBSCRIBERTOKEN] as? String;
-        
+
         if millicastData[SD_PROP_CONNECTOPTIONS] == nil {
           return MillicastSource(src: src, streamAccountId: accountID, subscriberToken: subscriberToken)
         }
-        
+
         let dict = millicastData[SD_PROP_CONNECTOPTIONS] as? NSDictionary;
         let connectOptions = buildConnectOptions(dict)
-        return MillicastSource(src: src, streamAccountId: accountID, subscriberToken: nil, connectOptions: connectOptions)
+        return MillicastSource(src: src, streamAccountId: accountID, subscriberToken: subscriberToken, connectOptions: connectOptions)
       }
 #endif
       return nil

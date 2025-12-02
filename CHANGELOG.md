@@ -5,11 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [10.6.0] - 25-12-02
+
+### Added
+
+- Added support for personalized discovery call responses by configuring the `profile` property on an OptiView Live source.
+
 ## [10.5.1] - 25-11-28
 
 ### Added
 
 - Support for contentProtection query parameters on THEOlive sources.
+
+### Fixed
+
+- Fixed an issue on tvOS where unsupported pip logic was used on older tvOS target versions (< 14.0).
 
 ## [10.5.0] - 25-11-24
 
