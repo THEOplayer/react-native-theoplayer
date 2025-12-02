@@ -183,7 +183,7 @@ class SourceAdapter {
       drm=jsonTypedSource.optJSONObject(PROP_CONTENT_PROTECTION)?.let {
         ContentProtectionAdapter.drmConfigurationFromJson(it)
       },
-      profileId=jsonTypedSource.optString(PROP_PROFILE)
+      profile=jsonTypedSource.optString(PROP_PROFILE)
     )
   }
 
