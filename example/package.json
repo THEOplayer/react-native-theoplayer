@@ -23,6 +23,7 @@
     "react-native-safe-area-context": "^5.5.2",
     "react-native-status-bar-height": "^2.6.0",
     "react-native-svg": "^15.12.1",
+    "react-native-theoplayer": "..",
     "react-native-web": "^0.21.1",
     "react-native-web-image-loader": "^0.1.1"
   },
