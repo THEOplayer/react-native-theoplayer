@@ -16,7 +16,6 @@ class THEOplayerRCTNowPlayingManager {
     private var rateChangeListener: EventListener?
     private var seekedListener: EventListener?
     private var sourceChangeListener: EventListener?
-    private var appTerminationObserver: Any?
     
     // MARK: - destruction
     func destroy() {
@@ -219,25 +218,10 @@ class THEOplayerRCTNowPlayingManager {
         }
     }
     
-    @objc
-    private func appWillTerminate() {
-        if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] App will terminate notification received.") }
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
-        if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] nowPlayingInfo cleared for app termination.") }
-    }
-    
     private func attachListeners() {
         guard let player = self.player else {
             return
         }
-        
-        // When app terminates, clear the nowPlayingInfo.
-        self.appTerminationObserver = NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(appWillTerminate),
-            name: UIApplication.willTerminateNotification,
-            object: nil
-        )
         
         // DURATION_CHANGE
         self.durationChangeListener = player.addEventListener(type: PlayerEventTypes.DURATION_CHANGE) { [weak self, weak player] event in
@@ -305,15 +289,6 @@ class THEOplayerRCTNowPlayingManager {
     private func detachListeners() {
         guard let player = self.player else {
             return
-        }
-        
-        // When app terminates, clear the nowPlayingInfo.
-        if let appTerminationObserver = self.appTerminationObserver {
-            NotificationCenter.default.removeObserver(
-                appTerminationObserver,
-                name: UIApplication.willTerminateNotification,
-                object: nil)
-            self.appTerminationObserver = nil
         }
         
         // DURATION_CHANGE
