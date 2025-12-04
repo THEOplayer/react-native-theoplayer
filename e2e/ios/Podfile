@@ -26,7 +26,6 @@ target 'ReactNativeTHEOplayer' do
     :hermes_enabled => false,
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
-  pod 'react-native-theoplayer', :path => '../..'
   google_cast_redirect
 end
 
@@ -37,7 +36,6 @@ target 'ReactNativeTHEOplayer-tvOS' do
     :hermes_enabled => false,
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
-  pod 'react-native-theoplayer', :path => '../..'
 end
 
 post_install do |installer|
