@@ -1,6 +1,7 @@
 // THEOplayerRCTView+AppState.swift
 
 import Foundation
+import THEOplayerSDK
 import MediaPlayer
 
 extension THEOplayerRCTView {
@@ -32,6 +33,14 @@ extension THEOplayerRCTView {
     }
 
     @objc private func applicationDidEnterBackground() {
+        // When player was fullscreen, it will have go to PiP before applicationDidEnterBackground is called,
+        // because PiP always starts from fullscreen (startsAutomaticallyFromInline pipConfig only applies to inline setup)
+        // In any other case we push the player back to inline to prevent view index issues on app termination.
+        if self.presentationModeManager.presentationMode == .fullscreen {
+            if DEBUG_APPSTATE { PrintUtils.printLog(logText: "[NATIVE] presentationMode is fullscreen while backgrounding => back to inline.") }
+            self.setPresentationMode(newPresentationMode: PresentationMode.inline)
+        }
+        
         self.isApplicationInBackground = true
     }
 
