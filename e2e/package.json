@@ -21,6 +21,7 @@
     "react-native-device-info": "^10.14.0",
     "react-native-status-bar-height": "^2.6.0",
     "react-native-svg": "^15.12.1",
+	"react-native-theoplayer": "..",
     "react-native-web": "^0.21.1",
     "react-native-web-image-loader": "^0.1.1"
   },
@@ -54,15 +55,9 @@
     "webpack-dev-server": "^5.2.1"
   },
   "overrides": {
-    "react-native-google-cast": {
-      "react-native": "$react-native"
-    },
-    "@miblanchard/react-native-slider": {
-      "react-native": "$react-native"
-    },
+    "react-native": "$react-native",
     "cavy": {
-      "react": "$react",
-      "react-native": "$react-native"
+      "react": "$react"
     }
   },
   "engines": {

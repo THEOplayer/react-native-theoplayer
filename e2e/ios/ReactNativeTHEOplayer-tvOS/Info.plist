@@ -37,6 +37,8 @@
 	<string></string>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>Tracking video analytics for Conviva</string>
+	<key>RCTNewArchEnabled</key>
+	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>

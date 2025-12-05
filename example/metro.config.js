@@ -1,6 +1,6 @@
 const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
 const path = require('path');
-const blacklist = require('metro-config/private/defaults/exclusionList');
+const { default: blacklist } = require('metro-config/private/defaults/exclusionList');
 const escape = require('escape-string-regexp');
 const pak = require('../package.json');
 
@@ -24,10 +24,13 @@ const config = {
   resolver: {
     blacklistRE: blacklist(modules.map((m) => new RegExp(`^${escape(path.join(root, 'node_modules', m))}\\/.*$`))),
 
-    extraNodeModules: modules.reduce((acc, name) => {
-      acc[name] = path.join(__dirname, 'node_modules', name);
-      return acc;
-    }, {}),
+    extraNodeModules: {
+      ...modules.reduce((acc, name) => {
+        acc[name] = path.join(__dirname, 'node_modules', name);
+        return acc;
+      }, {}),
+      'react-native-theoplayer': root,
+    },
   },
 };
 
