@@ -218,6 +218,9 @@ class SourceAdapter {
       jsonTypedSource.optJSONObject(PROP_HEADERS)?.let { headersJson ->
         tsBuilder.headers(BridgeUtils.fromJSONObjectToMap(headersJson))
       }
+      jsonTypedSource.optJSONObject(PROP_LATENCY_CONFIGURATION)?.let {
+        tsBuilder.latencyConfiguration(parseLatencyConfiguration(it))
+      }
       if (jsonTypedSource.has(PROP_LIVE_OFFSET)) {
         tsBuilder.liveOffset(jsonTypedSource.getDouble(PROP_LIVE_OFFSET))
       }

@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Support for contentProtection query parameters on THEOlive sources.
+- Added `LatencyConfiguration` to `SourceDescription` for Android and Web.
 
 ### Fixed
 
