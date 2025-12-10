@@ -5,6 +5,7 @@ import THEOplayerSDK
 
 struct CastConfig {
     var castStrategyString: String = "manual"
+    var useExperimentalPipeline: Bool = false
 }
 
 extension THEOplayerRCTView {
