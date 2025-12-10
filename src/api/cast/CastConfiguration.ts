@@ -18,6 +18,13 @@ export interface CastConfiguration {
    * @defaultValue `'manual'`
    */
   strategy?: JoinStrategy;
+
+  /**
+   * A flag to enable experimental pipeline with latest features for Chromecast.
+   *
+   * @defaultValue `'false'`
+   */
+  useExperimentalPipeline?: boolean;
 }
 
 /**
