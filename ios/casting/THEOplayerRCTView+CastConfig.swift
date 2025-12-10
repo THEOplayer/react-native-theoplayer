@@ -23,7 +23,7 @@ extension THEOplayerRCTView {
     
 #if os(iOS)
     func playerCastConfiguration() -> CastConfiguration? {
-        return CastConfiguration(strategy: self.castStrategy())
+        return CastConfiguration(strategy: self.castStrategy(), enableExperimentalPipeline: self.castConfig.useExperimentalPipeline)
     }
     
     func isCasting() -> Bool {
