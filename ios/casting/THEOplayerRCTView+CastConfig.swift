@@ -15,6 +15,9 @@ extension THEOplayerRCTView {
             if let castStrategy = castConfig["strategy"] as? String {
                 self.castConfig.castStrategyString = castStrategy
             }
+            if let experimental = castConfig["useExperimentalPipeline"] as? Bool {
+                self.castConfig.useExperimentalPipeline = experimental
+            }
         }
     }
     
