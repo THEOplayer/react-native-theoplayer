@@ -20,6 +20,7 @@
     "react": "19.1.1",
     "react-dom": "19.1.1",
     "react-native": "npm:react-native-tvos@^0.82.0-0",
+    "react-native-orientation-locker": "^1.7.0",
     "react-native-safe-area-context": "^5.5.2",
     "react-native-status-bar-height": "^2.6.0",
     "react-native-svg": "^15.12.1",

@@ -1797,6 +1797,8 @@ PODS:
   - react-native-google-cast/RNGoogleCast (4.6.2):
     - PromisesObjC
     - React
+  - react-native-orientation-locker (1.7.0):
+    - React-Core
   - react-native-safe-area-context (5.6.2):
     - boost
     - DoubleConversion
@@ -1886,13 +1888,13 @@ PODS:
     - Yoga
   - react-native-theoplayer (10.6.0):
     - React-Core
-    - THEOplayer-Connector-SideloadedSubtitle (~> 10.5)
-    - THEOplayer-Integration-GoogleCast (~> 10.5)
-    - THEOplayer-Integration-GoogleIMA (~> 10.5)
-    - THEOplayer-Integration-Millicast (~> 10.5)
-    - THEOplayer-Integration-THEOads (~> 10.5)
-    - THEOplayer-Integration-THEOlive (~> 10.5)
-    - THEOplayerSDK-core (~> 10.5)
+    - THEOplayer-Connector-SideloadedSubtitle (~> 10.6)
+    - THEOplayer-Integration-GoogleCast (~> 10.6)
+    - THEOplayer-Integration-GoogleIMA (~> 10.6)
+    - THEOplayer-Integration-Millicast (~> 10.6)
+    - THEOplayer-Integration-THEOads (~> 10.6)
+    - THEOplayer-Integration-THEOlive (~> 10.6)
+    - THEOplayerSDK-core (~> 10.6)
   - React-NativeModulesApple (0.82.0-0rc5):
     - boost
     - DoubleConversion
@@ -2574,6 +2576,7 @@ DEPENDENCIES:
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
   - react-native-google-cast (from `https://github.com/Danesz/react-native-google-cast.git`, branch `feature/guestmode_apple_silicon`)
+  - react-native-orientation-locker (from `../node_modules/react-native-orientation-locker`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-theoplayer (from `../node_modules/react-native-theoplayer`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
@@ -2718,6 +2721,8 @@ EXTERNAL SOURCES:
   react-native-google-cast:
     :branch: feature/guestmode_apple_silicon
     :git: https://github.com/Danesz/react-native-google-cast.git
+  react-native-orientation-locker:
+    :path: "../node_modules/react-native-orientation-locker"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-theoplayer:
@@ -2844,8 +2849,9 @@ SPEC CHECKSUMS:
   React-Mapbuffer: 01c57ff06fbf80aeafb5ff23d5b8dfe4f4de4703
   React-microtasksnativemodule: 8817b35d585b2271cf9a7ab2b87f49f5c0b164c3
   react-native-google-cast: 872b05bf12f7db32c2f66818fdd5406474af25f1
+  react-native-orientation-locker: cc6f357b289a2e0dd2210fea0c52cb8e0727fdaa
   react-native-safe-area-context: c00143b4823773bba23f2f19f85663ae89ceb460
-  react-native-theoplayer: 765e2f801c839720b0645aa53a85026753700e44
+  react-native-theoplayer: fee84873edfd207690a9967ef066fafcb5ba0c18
   React-NativeModulesApple: 90a33b1ff89fe686f5971112f19efab8e0aa1b3f
   React-oscompat: b59c7cbe3bfe7aacc13f091cda49c1be8abe95a5
   React-perflogger: 49382acd1b53849f770e8dbfbfb392d13a1e557a

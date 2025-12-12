@@ -46,6 +46,7 @@ import { RenderingTargetSubMenu } from './custom/RenderingTargetSubMenu';
 import { AutoPlaySubMenu } from './custom/AutoPlaySubMenu';
 import { SafeAreaProvider, SafeAreaView, Edges } from 'react-native-safe-area-context';
 import { usePresentationMode } from './hooks/usePresentationMode';
+import { useDeviceOrientationChange } from 'react-native-orientation-locker';
 import { EzdrmFairplayContentProtectionIntegrationFactory } from '@theoplayer/react-native-drm';
 
 // Register Ezdrm Fairplay integration
@@ -98,6 +99,16 @@ export default function App() {
       event.interstitial.adTagParameters['CustomKey'] = 'CustomValue';
     }
   };
+
+  useDeviceOrientationChange((o) => {
+    if (player !== undefined) {
+      if (o === 'LANDSCAPE-LEFT' || o === 'LANDSCAPE-RIGHT') {
+        player.presentationMode = PresentationMode.fullscreen;
+      } else {
+        player.presentationMode = PresentationMode.inline;
+      }
+    }
+  });
 
   const onPlayerReady = useCallback((player: THEOplayer) => {
     setPlayer(player);
