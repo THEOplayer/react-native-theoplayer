@@ -22,9 +22,9 @@ export interface CastConfiguration {
   /**
    * A flag to enable experimental pipeline with latest features for Chromecast.
    *
-   * @defaultValue `'false'`
+   * @defaultValue `false`
    *
-   * @platform iOS
+   * @platform ios
    */
   useExperimentalPipeline?: boolean;
 }
