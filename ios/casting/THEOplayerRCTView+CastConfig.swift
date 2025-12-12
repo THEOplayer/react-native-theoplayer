@@ -5,6 +5,7 @@ import THEOplayerSDK
 
 struct CastConfig {
     var castStrategyString: String = "manual"
+    var useExperimentalPipeline: Bool = false
 }
 
 extension THEOplayerRCTView {
@@ -14,12 +15,15 @@ extension THEOplayerRCTView {
             if let castStrategy = castConfig["strategy"] as? String {
                 self.castConfig.castStrategyString = castStrategy
             }
+            if let experimental = castConfig["useExperimentalPipeline"] as? Bool {
+                self.castConfig.useExperimentalPipeline = experimental
+            }
         }
     }
     
 #if os(iOS)
     func playerCastConfiguration() -> CastConfiguration? {
-        return CastConfiguration(strategy: self.castStrategy())
+        return CastConfiguration(strategy: self.castStrategy(), enableExperimentalPipeline: self.castConfig.useExperimentalPipeline)
     }
     
     func isCasting() -> Bool {

@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- Added the 'useExperimentalPipeline' to the CastConfiguration for iOS, that controls the usage of an experimental, alternative implementation of the chromecast pipeline with a different feature set.
+
 ## [10.6.0] - 25-12-02
 
 ### Added
