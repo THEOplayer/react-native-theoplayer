@@ -17,10 +17,10 @@ let SD_PROP_PLAYOUT_DELAY_MAX: String = "maximum"
 extension THEOplayerRCTSourceDescriptionBuilder {
 
     private static func buildWebrtcOptions(_ theoliveData: [String: Any]) -> WebrtcOptions? {
-          let webrtc = theoliveData[SD_PROP_WEBRTC] as? [String: Any]
-          let playoutDelay = webrtc?[SD_PROP_PLAYOUT_DELAY] as? [String: Int]
-          let playoutDelayMin = playoutDelay?[SD_PROP_PLAYOUT_DELAY_MIN]
-          let playoutDelayMax = playoutDelay?[SD_PROP_PLAYOUT_DELAY_MAX]
+          let webrtc = theoliveData[SD_PROP_WEBRTC] as? NSDictionary
+          let playoutDelay = webrtc?[SD_PROP_PLAYOUT_DELAY] as? NSDictionary
+          let playoutDelayMin = playoutDelay?[SD_PROP_PLAYOUT_DELAY_MIN] as? Int
+          let playoutDelayMax = playoutDelay?[SD_PROP_PLAYOUT_DELAY_MAX] as? Int
           guard let playoutDelayMin, let playoutDelayMax else { return nil }
           return WebrtcOptions(playoutDelayMs: PlayoutDelay(minimum: playoutDelayMin, maximum: playoutDelayMax))
     }
