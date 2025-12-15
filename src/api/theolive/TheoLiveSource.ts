@@ -1,4 +1,5 @@
 import { SourceIntegrationId, TypedSource } from 'react-native-theoplayer';
+import { WebrtcOptions } from './WebrtcOptions';
 
 /**
  * Represents a source for the THEOlive integration.
@@ -25,5 +26,5 @@ export interface TheoLiveSource extends TypedSource {
     /**
      * WebRTC configuration for a THEOlive Millicast source.
      */
-    webrtc?: Record<string, any>;
+    webrtc?: WebrtcOptions;
 }
