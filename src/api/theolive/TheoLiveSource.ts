@@ -25,5 +25,5 @@ export interface TheoLiveSource extends TypedSource {
     /**
      * WebRTC configuration for a THEOlive Millicast source.
      */
-    webrtc?: Record<string, any>
+    webrtc?: Record<string, any>;
 }
