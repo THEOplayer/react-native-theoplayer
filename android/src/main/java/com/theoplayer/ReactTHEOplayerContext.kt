@@ -25,6 +25,8 @@ import com.theoplayer.android.api.ads.theoads.TheoAdsIntegrationFactory
 import com.theoplayer.android.api.cast.CastIntegration
 import com.theoplayer.android.api.cast.CastIntegrationFactory
 import com.theoplayer.android.api.event.EventListener
+import com.theoplayer.android.api.event.ads.AdClickedEvent
+import com.theoplayer.android.api.event.ads.AdsEventTypes
 import com.theoplayer.android.api.event.player.*
 import com.theoplayer.android.api.millicast.MillicastIntegration
 import com.theoplayer.android.api.millicast.MillicastIntegrationFactory
@@ -56,6 +58,7 @@ private const val ALLOWED_PLAY_PAUSE_ACTIONS = (
     PlaybackStateCompat.ACTION_PLAY or
     PlaybackStateCompat.ACTION_PAUSE)
 
+@Suppress("SimplifyBooleanWithConstants", "KotlinConstantConditions")
 class ReactTHEOplayerContext private constructor(
   private val reactContext: ThemedReactContext,
   private val configAdapter: PlayerConfigAdapter
@@ -418,6 +421,12 @@ class ReactTHEOplayerContext private constructor(
     }
   }
 
+  private val onTVAdClicked = EventListener<AdClickedEvent> {
+    // On TV devices, when an ad is clicked, we want do not want to pause the player. The player
+    // would get stuck in paused state as there is no way to resume playback from a remote control.
+    player.play()
+  }
+
   private fun addListeners() {
     player.apply {
       addEventListener(PlayerEventTypes.SOURCECHANGE, onSourceChange)
@@ -426,6 +435,9 @@ class ReactTHEOplayerContext private constructor(
       addEventListener(PlayerEventTypes.PLAY, onPlay)
       addEventListener(PlayerEventTypes.ENDED, onEnded)
       addEventListener(PlayerEventTypes.VOLUMECHANGE, onVolumeChange)
+    }
+    if (isTV) {
+      player.ads.addEventListener(AdsEventTypes.AD_CLICKED, onTVAdClicked)
     }
   }
 
@@ -437,6 +449,9 @@ class ReactTHEOplayerContext private constructor(
       removeEventListener(PlayerEventTypes.PLAY, onPlay)
       removeEventListener(PlayerEventTypes.ENDED, onEnded)
       removeEventListener(PlayerEventTypes.VOLUMECHANGE, onVolumeChange)
+    }
+    if (isTV) {
+      player.ads.removeEventListener(AdsEventTypes.AD_CLICKED, onTVAdClicked)
     }
   }
 
