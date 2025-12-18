@@ -279,10 +279,12 @@ class PresentationManager(
 
         // Re-parent the playerViewGroup to the root node
         parent.removeView(playerGroup)
-        rootView?.addView(playerGroup)
+        rootView?.let { root ->
+          root.addView(playerGroup)
 
-        // Attach an observer that overrides the react-native lay-out and forces fullscreen.
-        fullScreenLayoutObserver.attach(playerGroup)
+          // Attach an observer that overrides the react-native lay-out and forces fullscreen.
+          fullScreenLayoutObserver.attach(playerGroup, root)
+        }
       }
     }
   }

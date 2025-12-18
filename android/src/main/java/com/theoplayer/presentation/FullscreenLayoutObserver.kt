@@ -2,9 +2,8 @@ package com.theoplayer.presentation
 
 import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import androidx.core.view.children
+import com.facebook.react.ReactRootView
 import com.facebook.react.views.view.ReactViewGroup
 import com.theoplayer.ReactTHEOplayerView
 import com.theoplayer.util.applyOnViewTree
@@ -21,14 +20,13 @@ class FullScreenLayoutObserver {
   private var globalLayoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null
   private var attached: ReactViewGroup? = null
 
-  fun attach(viewGroup: ReactViewGroup?) {
+  fun attach(viewGroup: ReactViewGroup?, root: ReactRootView) {
     if (attached != null) {
       Log.w(TAG, "A previously attached ViewGroup was not properly detached.")
     }
 
     viewGroup?.let { reactPlayerGroup ->
       globalLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
-        val root = getRootViewFrom(reactPlayerGroup)
         reactPlayerGroup.post {
           applyOnViewTree(reactPlayerGroup) { view ->
             if (view == reactPlayerGroup || view is ReactTHEOplayerView) {
