@@ -10,7 +10,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewParent
 import androidx.activity.ComponentActivity
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -26,6 +25,8 @@ import com.theoplayer.ReactTHEOplayerView
 import com.theoplayer.android.api.error.ErrorCode
 import com.theoplayer.android.api.error.THEOplayerException
 import com.theoplayer.android.api.player.PresentationMode
+import com.theoplayer.util.findReactRootView
+import com.theoplayer.util.getClosestParentOfType
 
 const val IS_TRANSITION_INTO_PIP = "isTransitioningToPip"
 const val IS_IN_PIP_MODE = "isInPictureInPictureMode"
@@ -269,12 +270,7 @@ class PresentationManager(
     get() = viewCtx.playerView.getClosestParentOfType()
 
   private val rootView: ReactRootView?
-    get() {
-      val activity = reactContext.currentActivity ?: return null
-      // Try to search in parents and as a fallback option from root to bottom using depth-first order
-      return reactPlayerGroup?.getClosestParentOfType()
-        ?: (activity.window.decorView.rootView as? ViewGroup)?.getClosestParentOfType(false)
-    }
+    get() = findReactRootView( reactContext, reactPlayerGroup)
 
   private fun reparentPlayerToRoot() {
     reactPlayerGroup?.let { playerGroup ->
@@ -332,35 +328,6 @@ class PresentationManager(
       // Optionally fully stop play-out
       if (viewCtx.backgroundAudioConfig.stopOnBackground) viewCtx.player.stop()
     }
-  }
-}
-
-inline fun <reified T : View> ViewGroup.getClosestParentOfType(upward: Boolean = true): T? {
-  if (upward) {
-    // Search in the parent views of `this` view up to the root
-    var parent: ViewParent? = parent
-    while (parent != null && parent !is T) {
-      parent = parent.parent
-    }
-    return parent as? T
-  } else {
-    // Search in the children collection.
-    val viewStack = ArrayDeque(children.toList())
-    // Use Stack/LIFO instead of recursion
-    while (viewStack.isNotEmpty()) {
-      when (val view = viewStack.removeAt(0)) {
-        is T -> {
-          return view
-        }
-
-        is ViewGroup -> {
-          // Filling LIFO with all children of the ViewGroup: depth-first order
-          viewStack.addAll(0, view.children.toList())
-        }
-      }
-    }
-    // Found nothing
-    return null
   }
 }
 
