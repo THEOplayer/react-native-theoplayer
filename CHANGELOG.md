@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Fixed
+
+- Fixed an issue on AndroidTV and FireTV devices, where pressing the center D-pad button during play-out of an ad configured with a click-through URL would cause the player to pause, without the ability to resume playback.
+
 ### Added
 
 - Added the 'useExperimentalPipeline' to the CastConfiguration for iOS, that controls the usage of an experimental, alternative implementation of the chromecast pipeline with a different feature set.
