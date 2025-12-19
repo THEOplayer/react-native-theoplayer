@@ -1,8 +1,11 @@
+import { WebrtcOptions } from "./WebrtcOptions";
+
 export interface EndpointMillicastSource {
   name: string;
   accountId: string;
   subscriberToken?: string;
   directorUrl?: string;
+  webrtc?: WebrtcOptions
 }
 
 /**

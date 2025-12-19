@@ -24,7 +24,9 @@ import com.theoplayer.android.api.cmcd.CMCDTransmissionMode
 import com.theoplayer.android.api.error.ErrorCode
 import com.theoplayer.android.api.source.AdIntegration
 import com.theoplayer.android.api.source.dash.DashPlaybackConfiguration
+import com.theoplayer.android.api.theolive.PlayoutDelay
 import com.theoplayer.android.api.theolive.TheoLiveSource
+import com.theoplayer.android.api.theolive.WebRTCOptions
 import com.theoplayer.cmcd.CmcdTransmissionMode
 import com.theoplayer.drm.ContentProtectionAdapter
 import com.theoplayer.latency.parseLatencyConfiguration
@@ -72,6 +74,10 @@ private const val PROP_SSE_ENDPOINT = "sseEndpoint"
 private const val PROP_STREAM_ACTIVITY_MONITOR_ID = "streamActivityMonitorId"
 private const val PROP_LATENCY_CONFIGURATION = "latencyConfiguration"
 private const val PROP_PROFILE = "profile"
+private const val PROP_WEBRTC: String = "webrtc"
+private const val PROP_PLAYOUT_DELAY: String = "playoutDelayMs"
+private const val PROP_PLAYOUT_DELAY_MIN: String = "minimum"
+private const val PROP_PLAYOUT_DELAY_MAX: String = "maximum"
 
 private const val ERROR_IMA_NOT_ENABLED = "Google IMA support not enabled."
 private const val ERROR_THEOADS_NOT_ENABLED = "THEOads support not enabled."
@@ -183,8 +189,21 @@ class SourceAdapter {
       drm=jsonTypedSource.optJSONObject(PROP_CONTENT_PROTECTION)?.let {
         ContentProtectionAdapter.drmConfigurationFromJson(it)
       },
-      profile=jsonTypedSource.optString(PROP_PROFILE)
+      profile=jsonTypedSource.optString(PROP_PROFILE),
+      webrtc=parseWebRTCOptions(jsonTypedSource)
     )
+  }
+
+  @Throws(THEOplayerException::class)
+  private fun parseWebRTCOptions(jsonWebrtcOptions: JSONObject): WebRTCOptions? {
+    val webrtc = jsonWebrtcOptions.optJSONObject(PROP_WEBRTC)
+    val playoutDelay = webrtc?.optJSONObject(PROP_PLAYOUT_DELAY)
+    val playoutDelayMin = playoutDelay?.optInt(PROP_PLAYOUT_DELAY_MIN)
+    val playoutDelayMax = playoutDelay?.optInt(PROP_PLAYOUT_DELAY_MAX)
+
+    if (playoutDelayMin == null || playoutDelayMax == null) return null
+
+    return WebRTCOptions(playoutDelayMs = PlayoutDelay(playoutDelayMin, playoutDelayMax))
   }
 
   @Throws(THEOplayerException::class)
