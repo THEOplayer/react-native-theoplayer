@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Added `useExperimentalPipeline` to `CastConfiguration` for iOS, that controls the usage of an experimental, alternative implementation of the chromecast pipeline with a different feature set.
+- Added a webrtc configuration property `webrtc` in `TheoLiveSource`, to enable configuring the playout delay for Millicast streams consumed through OptiVew Live.
 
 ## [10.6.0] - 25-12-02
 

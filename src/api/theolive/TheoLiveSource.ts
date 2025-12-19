@@ -1,4 +1,5 @@
 import { SourceIntegrationId, TypedSource } from 'react-native-theoplayer';
+import { WebrtcOptions } from './WebrtcOptions';
 
 /**
  * Represents a source for the THEOlive integration.
@@ -21,4 +22,9 @@ export interface TheoLiveSource extends TypedSource {
      * The profile identifier is included as a query parameter in the discovery request to obtain a response specific to that profile.
      */
     profile?: string;
+
+    /**
+     * WebRTC configuration for a THEOlive Millicast source.
+     */
+    webrtc?: WebrtcOptions;
 }
