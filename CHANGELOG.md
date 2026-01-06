@@ -9,7 +9,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-- Fixed an issue on iOS where the integrationParameters from the contentProtection section of the source were not processed correctly, resulting failures for DRM connectors that depend on these.
+- Fixed an issue on iOS where the integrationParameters from the contentProtection section of the source were not processed correctly, resulting in failures for DRM connectors that depend on them.
+
+## [10.7.1] - 26-01-06
+
+### Added
+
+- Added a `multiSession` property to `DRMConfiguration` to enable multi-key content on Android platforms.
 
 ## [10.7.0] - 25-12-19
 

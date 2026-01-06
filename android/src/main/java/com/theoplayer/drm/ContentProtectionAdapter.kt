@@ -44,6 +44,7 @@ const val PROP_LICENSE_TYPE_TEMPORARY: String = "temporary"
 const val PROP_LICENSE_TYPE_PERSISTENT: String = "persistent"
 const val PROP_QUERY_PARAMETERS: String = "queryParameters"
 const val PROP_CERTIFICATE: String = "certificate"
+const val PROP_MULTISESSION: String = "multiSession"
 const val PROP_KEYS: String = "keys"
 const val PROP_ID: String = "id"
 const val PROP_VALUE: String = "value"
@@ -103,6 +104,9 @@ object ContentProtectionAdapter {
       }
       if (jsonConfig.has(PROP_INTEGRATION_PARAMETERS)) {
         integrationParameters(fromJSONObjectToMap(jsonConfig.getJSONObject(PROP_INTEGRATION_PARAMETERS)))
+      }
+      if (jsonConfig.has(PROP_MULTISESSION)) {
+        multiSession(jsonConfig.getBoolean(PROP_MULTISESSION))
       }
       queryParameters(fromJSONObjectToMap(jsonConfig.optJSONObject(PROP_QUERY_PARAMETERS)))
     }.build()
