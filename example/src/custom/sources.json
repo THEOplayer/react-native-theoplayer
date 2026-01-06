@@ -1,7 +1,7 @@
 [
   {
     "name": "HLS - Sideloaded Chapters",
-    "os": ["ios","android", "web"],
+    "os": ["ios", "android", "web"],
     "source": {
       "sources": [
         {
@@ -81,7 +81,7 @@
     }
   },
   {
-    "name": "DASH - VOD - Widevine",
+    "name": "DASH - VOD - ezDRM (Widevine)",
     "os": ["android", "web"],
     "source": {
       "sources": {
@@ -90,8 +90,26 @@
         "contentProtection": {
           "widevine": {
             "licenseAcquisitionURL": "https://widevine-dash.ezdrm.com/proxy?pX=62448C"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "DASH - VOD - keyOS (Widevine)",
+    "os": ["android", "web"],
+    "source": {
+      "sources": {
+        "src": "https://d2jl6e4h8300i8.cloudfront.net/netflix_meridian/4k-18.5!9/keyos-logo/g180-avc_a2.0-vbr-aac-128k/r30/dash-wv-pr/stream.mpd",
+        "type": "application/dash+xml",
+        "contentProtection": {
+          "integration": "keyos_buydrm",
+          "integrationParameters": {
+            "x-keyos-authorization": "PEtleU9TQXV0aGVudGljYXRpb25YTUw+PERhdGE+PEdlbmVyYXRpb25UaW1lPjIwMTYtMTEtMTkgMDk6MzQ6MDEuOTkyPC9HZW5lcmF0aW9uVGltZT48RXhwaXJhdGlvblRpbWU+MjAyNi0xMS0xOSAwOTozNDowMS45OTI8L0V4cGlyYXRpb25UaW1lPjxVbmlxdWVJZD4wZmZmMTk3YWQzMzQ0ZTMyOWU0MTA0OTIwMmQ5M2VlYzwvVW5pcXVlSWQ+PFJTQVB1YktleUlkPjdlMTE0MDBjN2RjY2QyOWQwMTc0YzY3NDM5N2Q5OWRkPC9SU0FQdWJLZXlJZD48V2lkZXZpbmVQb2xpY3kgZmxfQ2FuUGxheT0idHJ1ZSIgZmxfQ2FuUGVyc2lzdD0iZmFsc2UiIC8+PFdpZGV2aW5lQ29udGVudEtleVNwZWMgVHJhY2tUeXBlPSJIRCI+PFNlY3VyaXR5TGV2ZWw+MTwvU2VjdXJpdHlMZXZlbD48L1dpZGV2aW5lQ29udGVudEtleVNwZWM+PEZhaXJQbGF5UG9saWN5IC8+PExpY2Vuc2UgdHlwZT0ic2ltcGxlIiAvPjwvRGF0YT48U2lnbmF0dXJlPk1sNnhkcU5xc1VNalNuMDdicU8wME15bHhVZUZpeERXSHB5WjhLWElBYlAwOE9nN3dnRUFvMTlYK1c3MDJOdytRdmEzNFR0eDQydTlDUlJPU1NnREQzZTM4aXE1RHREcW9HelcwS2w2a0JLTWxHejhZZGRZOWhNWmpPTGJkNFVkRnJUbmxxU21raC9CWnNjSFljSmdaUm5DcUZIbGI1Y0p0cDU1QjN4QmtxMUREZUEydnJUNEVVcVJiM3YyV1NueUhGeVZqWDhCR3o0ZWFwZmVFeDlxSitKbWI3dUt3VjNqVXN2Y0Fab1ozSHh4QzU3WTlySzRqdk9Wc1I0QUd6UDlCc3pYSXhKd1ZSZEk3RXRoMjhZNXVEQUVZVi9hZXRxdWZiSXIrNVZOaE9yQ2JIVjhrR2praDhHRE43dC9nYWh6OWhVeUdOaXRqY2NCekJvZHRnaXdSUT09PC9TaWduYXR1cmU+PC9LZXlPU0F1dGhlbnRpY2F0aW9uWE1MPg=="
           },
-          "integration": "ezdrm"
+          "widevine": {
+            "licenseAcquisitionURL": "https://widevine.keyos.com/api/v4/getLicense"
+          }
         }
       }
     }
@@ -189,9 +207,7 @@
   },
   {
     "name": "THEOlive test",
-    "os": [
-      "web", "ios", "android"
-    ],
+    "os": ["web", "ios", "android"],
     "source": {
       "sources": [
         {
@@ -416,10 +432,7 @@
   },
   {
     "name": "HLS - SSAI - Google DAI - LIVE",
-    "os": [
-      "ios",
-      "web"
-    ],
+    "os": ["ios", "web"],
     "source": {
       "sources": {
         "ssai": {
@@ -459,17 +472,38 @@
     }
   },
   {
-    "name": "HLS - VOD - ezDRM - Drop",
+    "name": "HLS - VOD - ezDRM (FairPlay)",
     "os": ["ios", "web"],
     "source": {
       "sources": {
         "src": "https://fps.ezdrm.com/demo/video/ezdrm.m3u8",
+        "type": "application/x-mpegurl",
         "contentProtection": {
+          "integration": "customEzdrm",
           "fairplay": {
             "certificateURL": "https://fps.ezdrm.com/demo/video/eleisure.cer",
             "licenseAcquisitionURL": "https://fps.ezdrm.com/api/licenses/09cc0377-6dd4-40cb-b09d-b582236e70fe"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "HLS - VOD - keyOS (FairPlay)",
+    "os": ["ios", "web"],
+    "source": {
+      "sources": {
+        "src": "https://d2jl6e4h8300i8.cloudfront.net/netflix_meridian/4k-19.5!9/keyos-logo/g180-avc_a2.0-vbr-aac-128k/r30/hls-fp/master.m3u8",
+        "type": "application/x-mpegurl",
+        "contentProtection": {
+          "integration": "keyos_buydrm",
+          "integrationParameters": {
+            "x-keyos-authorization": "PEtleU9TQXV0aGVudGljYXRpb25YTUw+PERhdGE+PEdlbmVyYXRpb25UaW1lPjIwMTYtMTEtMTkgMDk6MzQ6MDEuOTkyPC9HZW5lcmF0aW9uVGltZT48RXhwaXJhdGlvblRpbWU+MjAyNi0xMS0xOSAwOTozNDowMS45OTI8L0V4cGlyYXRpb25UaW1lPjxVbmlxdWVJZD4wZmZmMTk3YWQzMzQ0ZTMyOWU0MTA0OTIwMmQ5M2VlYzwvVW5pcXVlSWQ+PFJTQVB1YktleUlkPjdlMTE0MDBjN2RjY2QyOWQwMTc0YzY3NDM5N2Q5OWRkPC9SU0FQdWJLZXlJZD48V2lkZXZpbmVQb2xpY3kgZmxfQ2FuUGxheT0idHJ1ZSIgZmxfQ2FuUGVyc2lzdD0iZmFsc2UiIC8+PFdpZGV2aW5lQ29udGVudEtleVNwZWMgVHJhY2tUeXBlPSJIRCI+PFNlY3VyaXR5TGV2ZWw+MTwvU2VjdXJpdHlMZXZlbD48L1dpZGV2aW5lQ29udGVudEtleVNwZWM+PEZhaXJQbGF5UG9saWN5IC8+PExpY2Vuc2UgdHlwZT0ic2ltcGxlIiAvPjwvRGF0YT48U2lnbmF0dXJlPk1sNnhkcU5xc1VNalNuMDdicU8wME15bHhVZUZpeERXSHB5WjhLWElBYlAwOE9nN3dnRUFvMTlYK1c3MDJOdytRdmEzNFR0eDQydTlDUlJPU1NnREQzZTM4aXE1RHREcW9HelcwS2w2a0JLTWxHejhZZGRZOWhNWmpPTGJkNFVkRnJUbmxxU21raC9CWnNjSFljSmdaUm5DcUZIbGI1Y0p0cDU1QjN4QmtxMUREZUEydnJUNEVVcVJiM3YyV1NueUhGeVZqWDhCR3o0ZWFwZmVFeDlxSitKbWI3dUt3VjNqVXN2Y0Fab1ozSHh4QzU3WTlySzRqdk9Wc1I0QUd6UDlCc3pYSXhKd1ZSZEk3RXRoMjhZNXVEQUVZVi9hZXRxdWZiSXIrNVZOaE9yQ2JIVjhrR2praDhHRE43dC9nYWh6OWhVeUdOaXRqY2NCekJvZHRnaXdSUT09PC9TaWduYXR1cmU+PC9LZXlPU0F1dGhlbnRpY2F0aW9uWE1MPg=="
           },
-          "integration": "customEzdrm"
+          "fairplay": {
+            "licenseAcquisitionURL": "https://fp-keyos.licensekeyserver.com/getkey/",
+            "certificateURL": "https://fp-keyos.licensekeyserver.com/cert/7e11400c7dccd29d0174c674397d99dd.der"
+          }
         }
       }
     }

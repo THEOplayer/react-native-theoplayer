@@ -392,9 +392,11 @@ class THEOplayerRCTSourceDescriptionBuilder {
         
         // global query parameters
         let queryParameters = contentProtectionData[SD_PROP_QUERY_PARAMETERS] as? [String:String]
+        let integrationParameters = contentProtectionData[SD_PROP_INTEGRATION_PARAMETERS] as? [String:Any] ?? [:]
         
         return MultiplatformDRMConfiguration(
             customIntegrationId: customIntegrationId,
+            integrationParameters: integrationParameters,
             keySystemConfigurations: KeySystemConfigurationCollection(fairplay: fairplayKeySystem, widevine: widevineKeySystem),
             queryParameters: queryParameters
         )
