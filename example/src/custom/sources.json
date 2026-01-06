@@ -88,7 +88,6 @@
         "src": "https://cdn.theoplayer.com/video/dash/tos-dash-widevine/tos_h264_main.mpd",
         "type": "application/dash+xml",
         "contentProtection": {
-          "integration": "ezdrm",
           "widevine": {
             "licenseAcquisitionURL": "https://widevine-dash.ezdrm.com/proxy?pX=62448C"
           }
