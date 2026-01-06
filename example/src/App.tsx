@@ -115,7 +115,6 @@ export default function App() {
     player.addEventListener(PlayerEventType.ENDED, console.log);
     player.addEventListener(PlayerEventType.ERROR, console.log);
     player.addEventListener(PlayerEventType.THEOLIVE_EVENT, console.log);
-    player.addEventListener(PlayerEventType.ERROR, console.log);
     player.addEventListener(PlayerEventType.THEOADS_EVENT, onTheoAdsEvent);
 
     sdkVersions().then((versions) => console.log(`[theoplayer] ${JSON.stringify(versions, null, 4)}`));
