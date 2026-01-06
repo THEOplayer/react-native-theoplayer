@@ -269,6 +269,14 @@ export interface DRMConfiguration {
    * the individual key system configurations, with the latter taking precedence.
    */
   queryParameters?: { [key: string]: any };
+
+  /**
+   * Sets whether multi-session is enabled for this DRM configuration.
+   *
+   * @defaultValue `false`
+   * @platform android
+   */
+  multiSession?: boolean;
 }
 
 /**
