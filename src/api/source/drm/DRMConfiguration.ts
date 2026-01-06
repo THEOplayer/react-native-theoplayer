@@ -271,7 +271,7 @@ export interface DRMConfiguration {
   queryParameters?: { [key: string]: any };
 
   /**
-   * Sets whether multi-session is enabled for this DRM configuration.
+   * Sets whether the player supports multi-key content when the license server doesn't respond with all keys at once.
    *
    * @defaultValue `false`
    * @platform android
