@@ -58,7 +58,7 @@
   "devDependencies": {
     "@eslint/js": "^9.13.0",
     "@expo/config-plugins": "^10.0.2",
-    "@react-native/eslint-config": "^0.83.0",
+    "@react-native/eslint-config": "^0.83.1",
     "@types/react": "^19.2.0",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.0",
@@ -68,7 +68,7 @@
     "pod-install": "^0.1.39",
     "prettier": "^3.5.3",
     "react": "^19.2.0",
-    "react-native": "^0.83.0",
+    "react-native": "^0.83.1",
     "react-native-builder-bob": "^0.39.1",
     "theoplayer": "^10",
     "typedoc": "^0.25.13",
