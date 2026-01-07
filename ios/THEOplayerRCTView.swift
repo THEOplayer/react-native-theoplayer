@@ -121,10 +121,11 @@ public class THEOplayerRCTView: UIView {
     }
     
     func willUnmount() {
+        if DEBUG_PRESENTATIONMODES {PrintUtils.printLog(logText: "[NATIVE] willUnmount with presentationMode: \(self.presentationModeManager.presentationMode._rawValue)")}
+        
         // before destruction, make sure the view reparenting is reset when player was put in fullscreen
         if self.presentationModeManager.presentationMode == .fullscreen {
-            if DEBUG_THEOPLAYER_INTERACTION {PrintUtils.printLog(logText: "[NATIVE] willUnmount with presentationMode: \(self.presentationModeManager.presentationMode._rawValue)")}
-            
+            if DEBUG_PRESENTATIONMODES { PrintUtils.printLog(logText: "[NATIVE] presentationMode is fullscreen => back to inline for player unmount.") }
             self.setPresentationMode(newPresentationMode: PresentationMode.inline)
         }
     }
