@@ -16,6 +16,8 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.children
 import androidx.lifecycle.Lifecycle
 import com.facebook.react.ReactRootView
+import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.ReactContext
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.views.view.ReactViewGroup
 import com.theoplayer.BuildConfig
@@ -72,6 +74,22 @@ class PresentationManager(
         }
       }
     }
+
+    // Emit dimension updates when layout changes
+    // This makes sure a dimension update is sent after fullscreen immersive animations complete.
+    rootView?.addOnLayoutChangeListener { view, _, _, _, _, _, _, _, _ ->
+      val density = reactContext.resources.displayMetrics.density.toDouble()
+      val params = Arguments.createMap().apply {
+        putMap("window", Arguments.createMap().apply {
+          putDouble("width", (view.width) / density)
+          putDouble("height", (view.height) / density)
+        })
+      }
+      reactContext
+        .getJSModule(ReactContext.RCTDeviceEventEmitter::class.java)
+        .emit("didUpdateDimensions", params)
+    }
+
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
       supportsPip =
         reactContext.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
