@@ -27,7 +27,8 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
   val broadcast = EventBroadcastAdapter(this)
   var presentationManager: PresentationManager? = null
   var playerContext: ReactTHEOplayerContext? = null
-  private var isInitialized: Boolean = false
+  var isInitialized: Boolean = false
+    private set
   private var config: PlayerConfigAdapter? = null
 
   val adsApi: AdsApiWrapper
