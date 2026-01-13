@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        api-level: [ 34 ]
+        api-level: [ 36 ]
         newArchEnabled: [ false, true ]
     name: Build for API Level ${{ matrix.api-level }} using ${{matrix.newArchEnabled  == true && 'New' || 'Old' }} Architecture
     steps:
