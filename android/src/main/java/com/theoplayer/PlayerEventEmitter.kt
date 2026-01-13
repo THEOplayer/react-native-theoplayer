@@ -291,7 +291,10 @@ class PlayerEventEmitter internal constructor(
 
   fun preparePlayer(player: Player) {
     attachListeners(player)
+    emitPlayerReady(player)
+  }
 
+  fun emitPlayerReady(player: Player) {
     val payload = Arguments.createMap()
     payload.putMap(
       EVENT_PROP_STATE,
