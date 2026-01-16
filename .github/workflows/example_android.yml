@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        api-level: [ 34 ]
+        api-level: [ 36 ]
     name: Build for API Level ${{ matrix.api-level }}
     steps:
       - name: Checkout repository
@@ -40,7 +40,7 @@ jobs:
 
       - name: Run npm install
         run: |
-          corepack enable
+          npm i -g corepack
           npm ci
           cd example
           npm ci

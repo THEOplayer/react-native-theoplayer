@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed an issue on iOS where the integrationParameters from the contentProtection section of the source were not processed correctly, resulting in failures for DRM connectors that depend on them.
 
+### Added
+
+- Added RNRepo support for Android to the example app. More info on the official [documentation](https://rnrepo.org/) page.
+
 ## [10.7.1] - 26-01-06
 
 ### Added

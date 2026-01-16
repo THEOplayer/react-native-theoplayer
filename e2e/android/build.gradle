@@ -13,19 +13,20 @@ buildscript {
     castFrameworkVersion = "22.0.0"
     kotlinVersion = "2.2.10"
     agpVersion = "8.12.3"
+    rnrepoVersion = "0.2.1"
   }
   repositories {
     google()
     mavenCentral()
+    maven { url "https://packages.rnrepo.org/releases" }
   }
   dependencies {
     classpath("com.android.tools.build:gradle:$agpVersion")
     classpath("com.facebook.react:react-native-gradle-plugin")
     classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+    classpath("org.rnrepo.tools:prebuilds-plugin:$rnrepoVersion")
   }
 }
-
-apply plugin: "com.facebook.react.rootproject"
 
 allprojects {
   repositories {
@@ -35,5 +36,8 @@ allprojects {
     maven { url "https://maven.theoplayer.com/releases" }
     google()
     mavenCentral()
+    maven { url "https://packages.rnrepo.org/releases" }
   }
 }
+
+apply plugin: "com.facebook.react.rootproject"
