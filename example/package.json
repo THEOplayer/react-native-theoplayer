@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@theoplayer/react-native-drm": "^1.10.0",
-    "@theoplayer/react-native-ui": "^0.21.1",
+    "@theoplayer/react-native-ui": "github:THEOplayer/react-native-theoplayer-ui#bugfix/touchable-workaround",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "react-native": "npm:react-native-tvos@^0.83.1-0",
