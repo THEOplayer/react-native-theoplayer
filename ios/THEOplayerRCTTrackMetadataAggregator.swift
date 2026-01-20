@@ -38,7 +38,7 @@ let PROP_END_ON_NEXT: String = "endOnNext"
 
 class THEOplayerRCTTrackMetadataAggregator {
 
-    class func aggregateTrackMetadata(player: THEOplayer, metadataTracksInfo: [[String:Any]]) -> [String:Any] {
+    class func aggregateTrackInfo(player: THEOplayer, metadataTracksInfo: [[String:Any]]) -> [String:Any] {
         let textTracks: TextTrackList = player.textTracks
         let audioTracks: AudioTrackList = player.audioTracks
         let videoTracks: VideoTrackList = player.videoTracks

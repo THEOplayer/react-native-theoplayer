@@ -276,7 +276,7 @@ public class THEOplayerRCTMainEventHandler {
             if let wplayer = player,
                let welf = self,
                let forwardedLoadedMetadataEvent = self?.onNativeLoadedMetadata {
-              let metadata = THEOplayerRCTTrackMetadataAggregator.aggregateTrackMetadata(player: wplayer, metadataTracksInfo: welf.loadedMetadataAndChapterTracksInfo)
+              let metadata = THEOplayerRCTTrackMetadataAggregator.aggregateTrackInfo(player: wplayer, metadataTracksInfo: welf.loadedMetadataAndChapterTracksInfo)
                 forwardedLoadedMetadataEvent(metadata)
             }
         }
