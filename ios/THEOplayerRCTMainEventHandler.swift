@@ -7,7 +7,7 @@ public class THEOplayerRCTMainEventHandler {
     // MARK: Members
     private weak var player: THEOplayer?
     private weak var presentationModeContext: THEOplayerRCTPresentationModeContext?
-    private var loadedMetadataAndChapterTracksInfo: [[String:Any]] = []
+    private(set) var loadedMetadataAndChapterTracksInfo: [[String:Any]] = []
         
     // MARK: Events
     var onNativePlay: RCTDirectEventBlock?
