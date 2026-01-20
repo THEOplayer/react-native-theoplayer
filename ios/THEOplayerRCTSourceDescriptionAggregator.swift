@@ -4,7 +4,6 @@ import Foundation
 import THEOplayerSDK
 import UIKit
 
-#if os(iOS)
 class THEOplayerRCTSourceDescriptionAggregator {
     class func aggregateSourceDescription(sourceDescription: SourceDescription) -> [String:Any]? {
         do {
@@ -60,4 +59,3 @@ class THEOplayerRCTSourceDescriptionAggregator {
         return output
     }
 }
-#endif
