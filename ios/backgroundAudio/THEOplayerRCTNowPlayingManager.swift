@@ -16,7 +16,6 @@ class THEOplayerRCTNowPlayingManager {
     private var rateChangeListener: EventListener?
     private var seekedListener: EventListener?
     private var sourceChangeListener: EventListener?
-    private var appTerminationObserver: Any?
     
     // MARK: - destruction
     func destroy() {
@@ -33,7 +32,7 @@ class THEOplayerRCTNowPlayingManager {
         self.nowPlayingInfo = [:]
         self.clearNowPlayingOnInfoCenter()
         
-        if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] Destroy, nowPlayingInfo cleared on infoCenter.") }
+        if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] Destroy, nowPlayingInfo cleared on infoCenter.") }
     }
     
     // MARK: - player setup / breakdown
@@ -47,16 +46,16 @@ class THEOplayerRCTNowPlayingManager {
     func printCurrentNowPlayingInfo() {
         Task { @MainActor [weak self] in
             if let info = MPNowPlayingInfoCenter.default().nowPlayingInfo {
-                PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO CURRENT INFO] MPNowPlayingInfoCenter.default().nowPlayingInfo = ")
+                PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO CURRENT INFO] MPNowPlayingInfoCenter.default().nowPlayingInfo = ")
                 info.forEach { (key: String, value: Any) in
-                    PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO CURRENT INFO]   -> \(key): \(value)")
+                    PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO CURRENT INFO]   -> \(key): \(value)")
                 }
                 if let player = self?.player {
-                    PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO CURRENT INFO] playerInfo = ")
-                    PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO CURRENT INFO]   -> currentTime: \(player.currentTime)")
-                    PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO CURRENT INFO]   -> playbackRate: \(player.playbackRate)")
-                    PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO CURRENT INFO]   -> paused: \(player.paused)")
-                    PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO CURRENT INFO]   -> duration: \(player.duration ?? -1)")
+                    PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO CURRENT INFO] playerInfo = ")
+                    PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO CURRENT INFO]   -> currentTime: \(player.currentTime)")
+                    PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO CURRENT INFO]   -> playbackRate: \(player.playbackRate)")
+                    PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO CURRENT INFO]   -> paused: \(player.paused)")
+                    PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO CURRENT INFO]   -> duration: \(player.duration ?? -1)")
                 }
             }
         }
@@ -95,7 +94,7 @@ class THEOplayerRCTNowPlayingManager {
         if !nowPlayingInfo.isEmpty {
             Task { @MainActor in
                 MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
-                if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] nowPlayingInfo processed to infoCenter.") }
+                if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] nowPlayingInfo processed to infoCenter.") }
                 
                 if DEBUG_NOWINFO {
                     self.printCurrentNowPlayingInfo()
@@ -109,7 +108,7 @@ class THEOplayerRCTNowPlayingManager {
     private func clearNowPlayingOnInfoCenter() {
         Task { @MainActor in
             MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
-            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] clearing nowPlayingInfo (to nil) on infoCenter.") }
+            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] clearing nowPlayingInfo (to nil) on infoCenter.") }
             
             if DEBUG_NOWINFO {
                 self.printCurrentNowPlayingInfo()
@@ -132,48 +131,48 @@ class THEOplayerRCTNowPlayingManager {
     private func updateTitle(_ metadataTitle: String?) {
         if let title = metadataTitle {
             self.nowPlayingInfo[MPMediaItemPropertyTitle] = title
-            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] title [\(title)] stored in nowPlayingInfo.") }
+            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] title [\(title)] stored in nowPlayingInfo.") }
         }
     }
     
     private func updateArtist(_ metadataArtist: String?) {
         if let artist = metadataArtist {
             self.nowPlayingInfo[MPMediaItemPropertyArtist] = artist
-            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] artist [\(artist)] stored in nowPlayingInfo.") }
+            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] artist [\(artist)] stored in nowPlayingInfo.") }
         }
     }
     
     private func updateAlbum(_ metadataAlbum: String?) {
         if let album = metadataAlbum {
             self.nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = album
-            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] album [\(album)] stored in nowPlayingInfo.") }
+            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] album [\(album)] stored in nowPlayingInfo.") }
         }
     }
     
     private func updateSubtitle(_ metadataSubtitle: String?) {
         if let subtitle = metadataSubtitle {
             self.nowPlayingInfo[MPMediaItemPropertyArtist] = subtitle
-            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] subtitle [\(subtitle)] stored in nowPlayingInfo.") }
+            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] subtitle [\(subtitle)] stored in nowPlayingInfo.") }
         }
     }
     
     private func updateServiceIdentifier(_ serviceId: String?) {
         if let serviceId = serviceId {
             self.nowPlayingInfo[MPNowPlayingInfoPropertyServiceIdentifier] = serviceId
-            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] serviceId [\(serviceId)] stored in nowPlayingInfo.") }
+            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] serviceId [\(serviceId)] stored in nowPlayingInfo.") }
         }
     }
     
     private func updateContentIdentifier(_ contentId: String?) {
         if let contentId = contentId {
             self.nowPlayingInfo[MPNowPlayingInfoPropertyExternalContentIdentifier] = contentId
-            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] contentId [\(contentId)] stored in nowPlayingInfo.") }
+            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] contentId [\(contentId)] stored in nowPlayingInfo.") }
         }
     }
     
     private func updateMediaType() {
         self.nowPlayingInfo[MPNowPlayingInfoPropertyMediaType] = NSNumber(value: 2)
-        if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] mediaType [hardcoded 2, for video] stored in nowPlayingInfo.") }
+        if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] mediaType [hardcoded 2, for video] stored in nowPlayingInfo.") }
     }
     
     private func updateArtWork(_ urlString: String?, completion: (() -> Void)?) {
@@ -185,9 +184,9 @@ class THEOplayerRCTNowPlayingManager {
                     self?.nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: displayIcon.size) { size in
                         return displayIcon
                     }
-                    if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] Artwork stored in nowPlayingInfo.") }
+                    if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] Artwork stored in nowPlayingInfo.") }
                 } else {
-                    if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] Failed to store artwork in nowPlayingInfo.") }
+                    if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] Failed to store artwork in nowPlayingInfo.") }
                 }
                 completion?()
             }
@@ -199,31 +198,24 @@ class THEOplayerRCTNowPlayingManager {
     
     private func updatePlaybackRate(_ playerPlaybackRate: Double) {
         self.nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = NSNumber(value: playerPlaybackRate)
-        if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] playbackrate [\(playerPlaybackRate)] stored in nowPlayingInfo.") }
+        if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] playbackrate [\(playerPlaybackRate)] stored in nowPlayingInfo.") }
     }
     
     private func updateCurrentTime(_ currentTime: Double) {
         self.nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = NSNumber(value: currentTime)
-        if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] currentTime [\(currentTime)] stored in nowPlayingInfo.") }
+        if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] currentTime [\(currentTime)] stored in nowPlayingInfo.") }
     }
     
     private func updateDuration(_ duration: Double?) {
         if let duration = duration {
             let isLiveStream = duration.isInfinite
             self.nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = isLiveStream
-            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] isLiveStream [\(isLiveStream)] stored in nowPlayingInfo.") }
+            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] isLiveStream [\(isLiveStream)] stored in nowPlayingInfo.") }
             if !isLiveStream {
                 self.nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = NSNumber(value: duration)
-                if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] duration [\(duration)] stored in nowPlayingInfo.") }
+                if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] duration [\(duration)] stored in nowPlayingInfo.") }
             }
         }
-    }
-    
-    @objc
-    private func appWillTerminate() {
-        if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] App will terminate notification received.") }
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
-        if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO] nowPlayingInfo cleared for app termination.") }
     }
     
     private func attachListeners() {
@@ -231,17 +223,9 @@ class THEOplayerRCTNowPlayingManager {
             return
         }
         
-        // When app terminates, clear the nowPlayingInfo.
-        self.appTerminationObserver = NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(appWillTerminate),
-            name: UIApplication.willTerminateNotification,
-            object: nil
-        )
-        
         // DURATION_CHANGE
         self.durationChangeListener = player.addEventListener(type: PlayerEventTypes.DURATION_CHANGE) { [weak self, weak player] event in
-            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO-EVENT] DURATION_CHANGE") }
+            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO-EVENT] DURATION_CHANGE") }
             if let welf = self,
                let wplayer = player,
                let duration = wplayer.duration {
@@ -252,7 +236,7 @@ class THEOplayerRCTNowPlayingManager {
         
         // PLAYING
         self.playingListener = player.addEventListener(type: PlayerEventTypes.PLAYING) { [weak self, weak player] event in
-            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO-EVENT] PLAYING") }
+            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO-EVENT] PLAYING") }
             if let welf = self,
                let wplayer = player {
                 welf.updatePlaybackRate(wplayer.playbackRate)
@@ -263,7 +247,7 @@ class THEOplayerRCTNowPlayingManager {
         
         // PAUSE
         self.pauseListener = player.addEventListener(type: PlayerEventTypes.PAUSE) { [weak self, weak player] event in
-            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO-EVENT] PAUSE") }
+            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO-EVENT] PAUSE") }
             if let welf = self,
                let wplayer = player {
                 welf.updatePlaybackRate(0)
@@ -275,7 +259,7 @@ class THEOplayerRCTNowPlayingManager {
         
         // RATE_CHANGE
         self.rateChangeListener = player.addEventListener(type: PlayerEventTypes.RATE_CHANGE) { [weak self, weak player] event in
-            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO-EVENT] RATE_CHANGE") }
+            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO-EVENT] RATE_CHANGE") }
             if let welf = self,
                let wplayer = player {
                 welf.updatePlaybackRate(wplayer.playbackRate)
@@ -286,7 +270,7 @@ class THEOplayerRCTNowPlayingManager {
         
         // SEEKED
         self.seekedListener = player.addEventListener(type: PlayerEventTypes.SEEKED) { [weak self, weak player] event in
-            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO-EVENT] SEEKED") }
+            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO-EVENT] SEEKED") }
             if let welf = self,
                let wplayer = player {
                 welf.updatePlaybackRate(wplayer.playbackRate)
@@ -297,7 +281,7 @@ class THEOplayerRCTNowPlayingManager {
         
         // SOURCE_CHANGE
         self.sourceChangeListener = player.addEventListener(type: PlayerEventTypes.SOURCE_CHANGE) { [weak self] event in
-            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE-NOWPLAYINGINFO-EVENT] SOURCE_CHANGE \(event.source == nil ? "to nil" : "")") }
+            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO-EVENT] SOURCE_CHANGE \(event.source == nil ? "to nil" : "")") }
             self?.updateNowPlaying()
         }
     }
@@ -305,15 +289,6 @@ class THEOplayerRCTNowPlayingManager {
     private func detachListeners() {
         guard let player = self.player else {
             return
-        }
-        
-        // When app terminates, clear the nowPlayingInfo.
-        if let appTerminationObserver = self.appTerminationObserver {
-            NotificationCenter.default.removeObserver(
-                appTerminationObserver,
-                name: UIApplication.willTerminateNotification,
-                object: nil)
-            self.appTerminationObserver = nil
         }
         
         // DURATION_CHANGE
