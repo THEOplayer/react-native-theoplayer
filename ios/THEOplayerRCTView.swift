@@ -210,7 +210,7 @@ public class THEOplayerRCTView: UIView {
         }
     }
     
-    private func notifyNativePlayerReady() {
+    public func notifyNativePlayerReady() {
         DispatchQueue.main.async {
             let versionString = THEOplayer.version
             if let forwardedNativeReady = self.onNativePlayerReady {
