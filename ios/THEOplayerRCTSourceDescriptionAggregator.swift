@@ -6,18 +6,25 @@ import UIKit
 
 #if os(iOS)
 class THEOplayerRCTSourceDescriptionAggregator {
-    class func aggregateCacheTaskSourceDescription(sourceDescription: SourceDescription, cachingTaskId: String) -> [String:Any]? {
+    class func aggregateSourceDescription(sourceDescription: SourceDescription) -> [String:Any]? {
         do {
             let jsonEncoder = JSONEncoder()
             let data = try jsonEncoder.encode(sourceDescription)
             if let result = try? JSONSerialization.jsonObject(with: data, options: []) as? [String:Any] {
-                let srcDescription = THEOplayerRCTSourceDescriptionAggregator.sanitiseSourceDescriptionMetadata(input: result)
-                let extendedSrcDescription = THEOplayerRCTSourceDescriptionAggregator.addCachingTaskIdToMetadata(input: srcDescription, cachingTaskId: cachingTaskId)
-                return extendedSrcDescription
+                return THEOplayerRCTSourceDescriptionAggregator.sanitiseSourceDescriptionMetadata(input: result)
             }
         } catch {
-            if DEBUG { PrintUtils.printLog(logText: "[NATIVE] Could not aggregate sourceDescription for caching task: \(error.localizedDescription)")}
+            if DEBUG { PrintUtils.printLog(logText: "[NATIVE] Could not aggregate sourceDescription: \(error.localizedDescription)")}
             return nil
+        }
+        return nil
+    }
+    
+    class func aggregateCacheTaskSourceDescription(sourceDescription: SourceDescription, cachingTaskId: String) -> [String:Any]? {
+        if let result = THEOplayerRCTSourceDescriptionAggregator.aggregateSourceDescription(sourceDescription: sourceDescription) {
+            let srcDescription = THEOplayerRCTSourceDescriptionAggregator.sanitiseSourceDescriptionMetadata(input: result)
+            let extendedSrcDescription = THEOplayerRCTSourceDescriptionAggregator.addCachingTaskIdToMetadata(input: srcDescription, cachingTaskId: cachingTaskId)
+            return extendedSrcDescription
         }
         return nil
     }
