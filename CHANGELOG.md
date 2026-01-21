@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Added support on iOS to push the initial state of the player from the iOS bridge to the React native adapter.
+- Added functionality to sync the player state from the native, mobile players to the react native adapter.
 
 ### Fixed
 
