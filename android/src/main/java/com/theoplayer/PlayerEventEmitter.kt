@@ -53,6 +53,7 @@ import kotlin.math.floor
 private val TAG = PlayerEventEmitter::class.java.name
 
 private const val EVENT_PLAYER_READY = "onNativePlayerReady"
+private const val EVENT_PLAYER_STATE_SYNC = "onNativePlayerStateSync"
 private const val EVENT_SOURCECHANGE = "onNativeSourceChange"
 private const val EVENT_LOADSTART = "onNativeLoadStart"
 private const val EVENT_LOADEDMETADATA = "onNativeLoadedMetadata"
@@ -98,6 +99,7 @@ class PlayerEventEmitter internal constructor(
   @Retention(AnnotationRetention.SOURCE)
   @StringDef(
     EVENT_PLAYER_READY,
+    EVENT_PLAYER_STATE_SYNC,
     EVENT_SOURCECHANGE,
     EVENT_LOADSTART,
     EVENT_LOADEDMETADATA,
@@ -135,6 +137,7 @@ class PlayerEventEmitter internal constructor(
   companion object {
     val Events = arrayOf(
       EVENT_PLAYER_READY,
+      EVENT_PLAYER_STATE_SYNC,
       EVENT_SOURCECHANGE,
       EVENT_LOADSTART,
       EVENT_LOADEDMETADATA,
@@ -295,10 +298,29 @@ class PlayerEventEmitter internal constructor(
   }
 
   fun emitPlayerReady(player: Player) {
-    val payload = Arguments.createMap()
-    payload.putMap(
-      EVENT_PROP_STATE,
-      PayloadBuilder()
+    val payload = Arguments.createMap().apply {
+      putMap(EVENT_PROP_STATE, collectPlayerState())
+      putMap(EVENT_PROP_VERSION, WritableNativeMap().apply {
+        putString(EVENT_PROP_VERSION, THEOplayerGlobal.getVersion())
+        putString(EVENT_PROP_SUITE_VERSION, "")
+      })
+    }
+
+    // Notify the player is ready
+    receiveEvent(EVENT_PLAYER_READY, payload)
+  }
+
+  fun emitPlayerStateSync() {
+      val payload = Arguments.createMap().apply {
+        putMap(EVENT_PROP_STATE, collectPlayerState())
+      }
+      receiveEvent(EVENT_PLAYER_STATE_SYNC, payload)
+  }
+
+  private fun collectPlayerState(): WritableMap {
+    val player = playerView.player
+    if (player != null) {
+      return PayloadBuilder()
         .source(player.source)
         .currentTime(player.currentTime)
         .currentProgramDateTime(player.currentProgramDateTime)
@@ -315,14 +337,9 @@ class PlayerEventEmitter internal constructor(
         .selectedAudioTrack(getSelectedAudioTrack(player))
         .selectedVideoTrack(getSelectedVideoTrack(player))
         .build()
-    )
-    payload.putMap(EVENT_PROP_VERSION, WritableNativeMap().apply {
-      putString(EVENT_PROP_VERSION, THEOplayerGlobal.getVersion())
-      putString(EVENT_PROP_SUITE_VERSION, "")
-    })
+    }
 
-    // Notify the player is ready
-    receiveEvent(EVENT_PLAYER_READY, payload)
+    return Arguments.createMap()
   }
 
   private fun emitError(code: String, message: String?) {
