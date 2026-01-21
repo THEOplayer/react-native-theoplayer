@@ -529,6 +529,12 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     await this._castAdapter.init_();
   }
 
+  updateStateFromNativePlayer_(state: NativePlayerState | undefined) {
+    if (state) {
+      this._state.apply(state);
+    }
+  }
+
   get width(): number | undefined {
     return this._state.width;
   }
