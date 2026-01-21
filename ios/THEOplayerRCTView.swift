@@ -85,6 +85,7 @@ public class THEOplayerRCTView: UIView {
 
     // MARK: Events
     var onNativePlayerReady: RCTDirectEventBlock?
+    var onNativePlayerStateSync: RCTDirectEventBlock?
     
     // MARK: Bridged props
     private var license: String?
@@ -279,6 +280,12 @@ public class THEOplayerRCTView: UIView {
         }
     }
     
+    public func syncPlayerState() {
+        if let forwardedPlayerStateSync = self.onNativePlayerStateSync {
+            forwardedPlayerStateSync(["state": self.collectPlayerStatePayload()])
+        }
+    }
+    
     // MARK: - Property bridging (config)
     
     @objc(setConfig:)
@@ -302,12 +309,18 @@ public class THEOplayerRCTView: UIView {
         self.notifyNativePlayerReady()
     }
     
-    // MARK: - VIEW READY event bridging
+    // MARK: - VIEW event bridging
     
     @objc(setOnNativePlayerReady:)
     func setOnNativePlayerReady(nativePlayerReady: @escaping RCTDirectEventBlock) {
         self.onNativePlayerReady = nativePlayerReady
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativePlayerReady prop set.") }
+    }
+    
+    @objc(setOnNativePlayerStateSync:)
+    func setonNativePlayerStateSync(nativePlayerStateSync: @escaping RCTDirectEventBlock) {
+        self.onNativePlayerStateSync = nativePlayerStateSync
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativePlayerStateSync prop set.") }
     }
     
     // MARK: - Listener based MAIN event bridging
