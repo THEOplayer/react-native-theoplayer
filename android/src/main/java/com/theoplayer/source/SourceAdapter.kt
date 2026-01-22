@@ -68,6 +68,7 @@ private const val PROP_CUSTOM_ASSET_KEY = "customAssetKey"
 private const val PROP_OVERRIDE_LAYOUT = "overrideLayout"
 private const val PROP_NETWORK_CODE = "networkCode"
 private const val PROP_USE_ID3 = "useId3"
+private const val PROP_USE_EMSG = "useEMSG"
 private const val PROP_RETRIEVE_POD_ID_URI = "retrievePodIdURI"
 private const val PROP_INITIALIZATION_DELAY = "initializationDelay"
 private const val PROP_SSE_ENDPOINT = "sseEndpoint"
@@ -360,6 +361,7 @@ class SourceAdapter {
       networkCode = jsonAdDescription.optString(PROP_NETWORK_CODE).takeIf { it.isNotEmpty() },
       overrideLayout = parseOverrideLayout(jsonAdDescription.optString(PROP_OVERRIDE_LAYOUT)),
       useId3 = jsonAdDescription.optBoolean(PROP_USE_ID3, false),
+      useEMSG = jsonAdDescription.optBoolean(PROP_USE_EMSG, false),
       retrievePodIdURI = jsonAdDescription.optString(PROP_RETRIEVE_POD_ID_URI).takeIf { it.isNotEmpty() },
       initializationDelay = jsonAdDescription.optDouble(PROP_INITIALIZATION_DELAY).takeIf { it.isFinite() },
       sseEndpoint = jsonAdDescription.optString(PROP_SSE_ENDPOINT).takeIf { it.isNotEmpty() },
