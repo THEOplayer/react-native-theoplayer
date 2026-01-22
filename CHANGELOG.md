@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed an issue on iOS where the player could crash when terminating the app while the player is backgrounded in fullscreen.
 - Fixed an issue on Android where `player.ads.currentAds` would not return an array of ads due to a native error.
 - Fixed an issue on Android where the player would sometimes have wrong dimensions after transitioning to fullscreen presentation mode.
+- Fixed an issue on Android where the `useEMSG` property was not included when setting a TheoAds source description.
 
 ### Added
 
