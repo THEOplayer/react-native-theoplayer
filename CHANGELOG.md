@@ -14,8 +14,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed an issue on iOS where the integrationParameters from the contentProtection section of the source were not processed correctly, resulting in failures for DRM connectors that depend on them.
-- Fixed an issue on Android where `player.ads.currentAds` would not return an array of ads due to a native error.
 - Fixed an issue on iOS where the player could crash when terminating the app while the player is backgrounded in fullscreen.
+- Fixed an issue on Android where `player.ads.currentAds` would not return an array of ads due to a native error.
+- Fixed an issue on Android where the player would sometimes have wrong dimensions after transitioning to fullscreen presentation mode.
 
 ### Added
 

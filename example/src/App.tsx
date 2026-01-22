@@ -137,6 +137,7 @@ export default function App() {
     };
     player.pipConfiguration = {
       startsAutomatically: true,
+      reparentPip: true,
       retainPipOnSourceChange: true,
     };
 

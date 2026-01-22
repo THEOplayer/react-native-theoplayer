@@ -2,11 +2,11 @@ package com.theoplayer.presentation
 
 import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import androidx.core.view.children
+import com.facebook.react.ReactRootView
 import com.facebook.react.views.view.ReactViewGroup
 import com.theoplayer.ReactTHEOplayerView
+import com.theoplayer.util.applyOnViewTree
 
 private const val TAG = "FSLayoutObserver"
 
@@ -20,14 +20,13 @@ class FullScreenLayoutObserver {
   private var globalLayoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null
   private var attached: ReactViewGroup? = null
 
-  fun attach(viewGroup: ReactViewGroup?) {
+  fun attach(viewGroup: ReactViewGroup?, root: ReactRootView) {
     if (attached != null) {
       Log.w(TAG, "A previously attached ViewGroup was not properly detached.")
     }
 
     viewGroup?.let { reactPlayerGroup ->
       globalLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
-        val root = getRootViewFrom(reactPlayerGroup)
         reactPlayerGroup.post {
           applyOnViewTree(reactPlayerGroup) { view ->
             if (view == reactPlayerGroup || view is ReactTHEOplayerView) {
@@ -49,26 +48,5 @@ class FullScreenLayoutObserver {
     attached?.viewTreeObserver?.removeOnGlobalLayoutListener(globalLayoutListener)
     attached = null
     globalLayoutListener = null
-  }
-}
-
-/**
- * Find the view root, most likely the decorView
- */
-fun getRootViewFrom(view: View): View {
-  var current = view
-  while (current.parent is View) {
-    current = current.parent as View
-  }
-  return current
-}
-
-/**
- * Conditionally apply an operation on each view in a hierarchy.
- */
-fun applyOnViewTree(view: View, doOp: (View) -> Unit) {
-  doOp(view)
-  if (view is ViewGroup) {
-    view.children.forEach { ch -> applyOnViewTree(ch, doOp) }
   }
 }
