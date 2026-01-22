@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [10.8.0] - 26-01-22
+
+### Added
+
+- Added support on iOS to push the initial state of the player from the iOS bridge to the React native adapter.
+
+### Fixed
+
+- Fixed an issue on iOS where the integrationParameters from the contentProtection section of the source were not processed correctly, resulting in failures for DRM connectors that depend on them.
+- Fixed an issue on iOS where the player could crash when terminating the app while the player is backgrounded in fullscreen.
+- Fixed an issue on Android where `player.ads.currentAds` would not return an array of ads due to a native error.
+- Fixed an issue on Android where the player would sometimes have wrong dimensions after transitioning to fullscreen presentation mode.
+- Fixed an issue on Android where the `useEMSG` property was not included when setting a TheoAds source description.
+
+### Added
+
+- Added RNRepo support for Android to the example app. More info on the official [documentation](https://rnrepo.org/) page.
+
 ## [10.7.1] - 26-01-06
 
 ### Added

@@ -46,10 +46,18 @@ import { RenderingTargetSubMenu } from './custom/RenderingTargetSubMenu';
 import { AutoPlaySubMenu } from './custom/AutoPlaySubMenu';
 import { SafeAreaProvider, SafeAreaView, Edges } from 'react-native-safe-area-context';
 import { usePresentationMode } from './hooks/usePresentationMode';
-import { EzdrmFairplayContentProtectionIntegrationFactory } from '@theoplayer/react-native-drm';
+import {
+  EzdrmFairplayContentProtectionIntegrationFactory,
+  KeyOSDrmFairplayContentProtectionIntegrationFactory,
+  KeyOSDrmWidevineContentProtectionIntegrationFactory,
+} from '@theoplayer/react-native-drm';
 
 // Register Ezdrm Fairplay integration
 ContentProtectionRegistry.registerContentProtectionIntegration('customEzdrm', 'fairplay', new EzdrmFairplayContentProtectionIntegrationFactory());
+
+// Register keyOS integration
+ContentProtectionRegistry.registerContentProtectionIntegration('keyos_buydrm', 'fairplay', new KeyOSDrmFairplayContentProtectionIntegrationFactory());
+ContentProtectionRegistry.registerContentProtectionIntegration('keyos_buydrm', 'widevine', new KeyOSDrmWidevineContentProtectionIntegrationFactory());
 
 const playerConfig: PlayerConfiguration = {
   // Get your THEOplayer license from https://portal.theoplayer.com/
@@ -115,7 +123,6 @@ export default function App() {
     player.addEventListener(PlayerEventType.ENDED, console.log);
     player.addEventListener(PlayerEventType.ERROR, console.log);
     player.addEventListener(PlayerEventType.THEOLIVE_EVENT, console.log);
-    player.addEventListener(PlayerEventType.ERROR, console.log);
     player.addEventListener(PlayerEventType.THEOADS_EVENT, onTheoAdsEvent);
 
     sdkVersions().then((versions) => console.log(`[theoplayer] ${JSON.stringify(versions, null, 4)}`));
@@ -130,6 +137,7 @@ export default function App() {
     };
     player.pipConfiguration = {
       startsAutomatically: true,
+      reparentPip: true,
       retainPipOnSourceChange: true,
     };
 

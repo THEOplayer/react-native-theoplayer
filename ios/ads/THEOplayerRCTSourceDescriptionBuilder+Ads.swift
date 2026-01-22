@@ -23,7 +23,7 @@ extension THEOplayerRCTSourceDescriptionBuilder {
                     if let adDescription = THEOplayerRCTSourceDescriptionBuilder.buildSingleAdDescription(adsData) {
                         adsDescriptions?.append(adDescription)
                     } else {
-                        if DEBUG_SOURCE_DESCRIPTION_BUIDER {
+                        if DEBUG_SOURCE_DESCRIPTION_BUILDER {
                             PrintUtils.printLog(logText: "[NATIVE] Could not create THEOplayer GoogleImaAdDescription from adsData array")
                         }
                         return nil
@@ -35,7 +35,7 @@ extension THEOplayerRCTSourceDescriptionBuilder {
                 if let adDescription = THEOplayerRCTSourceDescriptionBuilder.buildSingleAdDescription(adsData) {
                     adsDescriptions?.append(adDescription)
                 } else {
-                    if DEBUG_SOURCE_DESCRIPTION_BUIDER {
+                    if DEBUG_SOURCE_DESCRIPTION_BUILDER {
                         PrintUtils.printLog(logText: "[NATIVE] Could not create THEOplayer GoogleImaAdDescription from adsData")
                     }
                     return nil
@@ -58,7 +58,7 @@ extension THEOplayerRCTSourceDescriptionBuilder {
             case "theoads":
                 return THEOplayerRCTSourceDescriptionBuilder.buildSingleTHEOadsDescription(adsData)
             default:
-                if DEBUG_SOURCE_DESCRIPTION_BUIDER  { PrintUtils.printLog(logText: "[NATIVE] We currently require and only support the 'google-ima' or 'sgai' integration in the 'ads' description.") }
+                if DEBUG_SOURCE_DESCRIPTION_BUILDER  { PrintUtils.printLog(logText: "[NATIVE] We currently require and only support the 'google-ima' or 'sgai' integration in the 'ads' description.") }
             }
         }
         return nil
@@ -81,7 +81,7 @@ extension THEOplayerRCTSourceDescriptionBuilder {
         if let src = srcString {
             return GoogleImaAdDescription(src: src, timeOffset: timeOffset)
         } else {
-            if DEBUG_SOURCE_DESCRIPTION_BUIDER  { PrintUtils.printLog(logText: "[NATIVE] AdDescription requires 'src' property in 'ads' description.") }
+            if DEBUG_SOURCE_DESCRIPTION_BUILDER  { PrintUtils.printLog(logText: "[NATIVE] AdDescription requires 'src' property in 'ads' description.") }
         }
 #endif
         return nil
@@ -120,7 +120,7 @@ extension THEOplayerRCTSourceDescriptionBuilder {
                                                                          adTagParameters: adTagParameters)
                         }
                     default:
-                        if DEBUG_SOURCE_DESCRIPTION_BUIDER {
+                        if DEBUG_SOURCE_DESCRIPTION_BUILDER {
                             PrintUtils.printLog(logText: "[NATIVE] THEOplayer ssai 'availabilityType' must be 'live' or 'vod'")
                         }
                         return nil

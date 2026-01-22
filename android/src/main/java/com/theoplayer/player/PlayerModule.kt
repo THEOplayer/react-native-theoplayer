@@ -1,6 +1,7 @@
 package com.theoplayer.player
 
 import android.os.Build
+import android.util.Log
 import com.facebook.react.bridge.*
 import com.facebook.react.module.annotations.ReactModule
 import com.facebook.react.module.model.ReactModuleInfo
@@ -18,6 +19,8 @@ import com.theoplayer.audio.BackgroundAudioConfigAdapter
 import com.theoplayer.presentation.PipConfigAdapter
 import com.theoplayer.track.TextTrackStyleAdapter
 import com.theoplayer.util.ViewResolver
+import com.theoplayer.util.findReactRootView
+import com.theoplayer.util.getClosestParentOfType
 
 @Suppress("unused")
 @ReactModule(name = PlayerModule.NAME)
@@ -287,13 +290,11 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
   @ReactMethod(isBlockingSynchronousMethod = true)
   fun getUsableScreenDimensions(): WritableMap {
     // Pass the dimensions of the top-most View in the view hierarchy.
-    val topView = reactApplicationContext.currentActivity?.window?.decorView?.rootView
-    reactApplicationContext.resources.displayMetrics.also {
-      val density = it.density
-      return Arguments.createMap().apply {
-        putDouble("width", (topView?.width ?: 0) / density.toDouble())
-        putDouble("height", (topView?.height ?: 0) / density.toDouble())
-      }
+    val topView = findReactRootView( reactApplicationContext)
+    val density = reactApplicationContext.resources.displayMetrics.density.toDouble()
+    return Arguments.createMap().apply {
+      putDouble("width", (topView?.width ?: 0) / density)
+      putDouble("height", (topView?.height ?: 0) / density)
     }
   }
 }

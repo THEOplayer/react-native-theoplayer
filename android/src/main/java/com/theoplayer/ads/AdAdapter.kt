@@ -56,10 +56,12 @@ object AdAdapter {
   /**
    * Convert a list of native Ads to a ReactNative Ads.
    */
-  fun fromAds(ads: List<Ad>): WritableArray {
+  fun fromAds(ads: List<Ad?>): WritableArray {
     val payload = Arguments.createArray()
     for (ad in ads) {
-      payload.pushMap(fromAd(ad, true))
+      if (ad !== null) {
+        payload.pushMap(fromAd(ad, true))
+      }
     }
     return payload
   }

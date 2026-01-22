@@ -11,12 +11,12 @@ public class THEOplayerRCTPresentationModeManager {
     var presentationModeContext = THEOplayerRCTPresentationModeContext()
     private(set) var presentationMode: THEOplayerSDK.PresentationMode = .inline
     private var rnInlineMode: THEOplayerSDK.PresentationMode = .inline // while native player is inline, RN player can be inline or fullsceen
-
-  
+    
+    
     private weak var containerView: UIView?                  // view containing the playerView and it's siblings (e.g. UI)
     private weak var inlineParentView: UIView?               // target view for inline representation
     private var inlineParentViewIndex: Int?
-        
+    
     // MARK: Events
     var onNativePresentationModeChange: RCTDirectEventBlock?
     
@@ -58,7 +58,7 @@ public class THEOplayerRCTPresentationModeManager {
         }
         return viewControllers
     }
-
+    
     /**
      * Moves a view to a new parent.
      * The view is inserted at the provided targetViewIndex or else at the front.
@@ -70,15 +70,30 @@ public class THEOplayerRCTPresentationModeManager {
             movedVC.removeFromParent()
         }
         
+        let parentView = movingView.superview
+        if DEBUG_PRESENTATIONMODES { PrintUtils.printLog(logText: "[NATIVE] Before moving:") }
+        if DEBUG_PRESENTATIONMODES { PrintUtils.printLog(logText: "[NATIVE] parentView:") }
+        self.logSubviews(of: parentView)
+        if DEBUG_PRESENTATIONMODES { PrintUtils.printLog(logText: "[NATIVE] targetView:") }
+        self.logSubviews(of: targetView)
+        
         // move the actual view
         movingView.removeFromSuperview()
         if let viewIndex = targetViewIndex {
             let safeIndex = min(viewIndex, targetView.subviews.count)
+            if DEBUG_PRESENTATIONMODES { PrintUtils.printLog(logText: "[NATIVE] moveView: insertSubview at safeIndex \(safeIndex) (for targetViewIndex \(targetViewIndex ?? -1)) on targetView with \(targetView.subviews.count) subviews.") }
             targetView.insertSubview(movingView, at: safeIndex)
         } else {
+            if DEBUG_PRESENTATIONMODES { PrintUtils.printLog(logText: "[NATIVE] moveView: addSubview on targetView with \(targetView.subviews.count) subviews.") }
             targetView.addSubview(movingView)
             targetView.bringSubviewToFront(movingView)
         }
+        
+        if DEBUG_PRESENTATIONMODES { PrintUtils.printLog(logText: "[NATIVE] After moving:") }
+        if DEBUG_PRESENTATIONMODES { PrintUtils.printLog(logText: "[NATIVE] updated parentView:") }
+        self.logSubviews(of: parentView)
+        if DEBUG_PRESENTATIONMODES { PrintUtils.printLog(logText: "[NATIVE] updated targetView:") }
+        self.logSubviews(of: targetView)
         
         // attach the moving viewControllers to their new parent
         if let targetViewController = targetView.findViewController() {
@@ -98,6 +113,7 @@ public class THEOplayerRCTPresentationModeManager {
            let inlineParentView = self.inlineParentView,
            let fullscreenParentView = self.view?.findParentViewOfType(["RCTRootContentView", "RCTRootComponentView"])  {
             self.inlineParentViewIndex = inlineParentView.subviews.firstIndex(of: containerView)
+            if DEBUG_PRESENTATIONMODES { PrintUtils.printLog(logText: "[NATIVE] storing inlineParentViewIndex = \(self.inlineParentViewIndex ?? -1) of \(inlineParentView.subviews.count) subviews.") }
             self.moveView(containerView, to: fullscreenParentView, targetViewIndex: nil)
             
             // start hiding home indicator
@@ -109,7 +125,7 @@ public class THEOplayerRCTPresentationModeManager {
     private func exitFullscreen() {
         // stop hiding home indicator
         setHomeIndicatorHidden(false)
-      
+        
         // move the player
         if let containerView = self.containerView,
            let inlineParentView = self.inlineParentView {
@@ -118,22 +134,24 @@ public class THEOplayerRCTPresentationModeManager {
         self.rnInlineMode = .inline
     }
     
-    /*private func logSubviews(of parent: UIView) {
-        for (index, subview) in parent.subviews.enumerated() {
-            print("Index \(index): \(type(of: subview)) - \(subview)")
+    private func logSubviews(of viewToLog: UIView?) {
+        if let parentView = viewToLog {
+            for (index, subview) in parentView.subviews.enumerated() {
+                if DEBUG_PRESENTATIONMODES { PrintUtils.printLog(logText: "[NATIVE] Index \(index): \(type(of: subview)) - \(subview)") }
+            }
         }
-    }*/
-
+    }
+    
     private func setHomeIndicatorHidden(_ hidden: Bool) {
 #if os(iOS)
         if let fullscreenParentView = self.view?.findParentViewOfType(["RCTRootContentView", "RCTRootComponentView"]),
            let customRootViewController = fullscreenParentView.findViewController() as? HomeIndicatorViewController {
-              customRootViewController.prefersAutoHidden = hidden
-              customRootViewController.setNeedsUpdateOfHomeIndicatorAutoHidden()
+            customRootViewController.prefersAutoHidden = hidden
+            customRootViewController.setNeedsUpdateOfHomeIndicatorAutoHidden()
         }
 #endif
     }
-  
+    
     func setPresentationModeFromRN(newPresentationMode: THEOplayerSDK.PresentationMode) {
         guard newPresentationMode != self.presentationMode else { return }
         
@@ -170,7 +188,7 @@ public class THEOplayerRCTPresentationModeManager {
             break;
         }
     }
-  
+    
     func setPresentationModeFromNative(newPresentationMode: THEOplayerSDK.PresentationMode) {
         // store old presentationMode
         let oldPresentationMode = self.presentationMode
@@ -180,16 +198,16 @@ public class THEOplayerRCTPresentationModeManager {
         if newPresentationMode == .inline {
             self.presentationMode = self.rnInlineMode
         }
-    
+        
         // notify the presentationMode change
         self.notifyPresentationModeChange(oldPresentationMode: oldPresentationMode, newPresentationMode: self.presentationMode)
     }
-  
+    
     private func setNativePresentationMode(_ presentationMode: THEOplayerSDK.PresentationMode) {
         guard let player = self.player else { return }
         player.presentationMode = presentationMode
     }
-  
+    
     private func notifyPresentationModeChange(oldPresentationMode: THEOplayerSDK.PresentationMode, newPresentationMode: THEOplayerSDK.PresentationMode) {
         // update the current presentationMode
         self.presentationMode = newPresentationMode
@@ -208,7 +226,7 @@ public class THEOplayerRCTPresentationModeManager {
         // PRESENTATION_MODE_CHANGE
         self.presentationModeChangeListener = player.addEventListener(type: PlayerEventTypes.PRESENTATION_MODE_CHANGE) { [weak self] event in
             if let welf = self {
-                if DEBUG_THEOPLAYER_EVENTS || true { PrintUtils.printLog(logText: "[NATIVE] Received PRESENTATION_MODE_CHANGE event from THEOplayer (to \(event.presentationMode._rawValue))") }
+                if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received PRESENTATION_MODE_CHANGE event from THEOplayer (to \(event.presentationMode._rawValue))") }
                 welf.setPresentationModeFromNative(newPresentationMode: event.presentationMode)
             }
         }

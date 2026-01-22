@@ -17,9 +17,8 @@ jobs:
     strategy:
       matrix:
         xcode_version: [ '16.1.0' ]
-        newArchEnabled: [ 0, 1 ]
         platform: [iOS, tvOS]
-    name: Build for ${{ matrix.platform }} using XCode version ${{ matrix.xcode_version }} and ${{matrix.newArchEnabled  == 1 && 'New' || 'Old' }} Architecture
+    name: Build for ${{ matrix.platform }} using XCode version ${{ matrix.xcode_version }}
 
     steps:
       - name: Checkout repository
@@ -48,7 +47,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: e2e/ios/Pods
-          key: pods-${{ runner.os }}-${{ hashFiles('Podfile.lock') }}-${{ matrix.newArchEnabled }}
+          key: pods-${{ runner.os }}-${{ hashFiles('Podfile.lock') }}
           restore-keys: |
             pods-${{ runner.os }}-
 
@@ -70,7 +69,7 @@ jobs:
       - name: Run pod install & update dependencies
         working-directory: e2e/ios
         run: |
-          RCT_NEW_ARCH_ENABLED=${{ matrix.newArchEnabled }} bundle exec pod update
+          bundle exec pod update
 
       - name: Start iOS simulator
         uses: futureware-tech/simulator-action@v4
@@ -96,12 +95,12 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: crash-logs-${{ matrix.platform }}-${{ matrix.newArchEnabled == true && 'new' || 'old' }}
+          name: crash-logs-${{ matrix.platform }}
           path: ~/crashlog.logarchive
 
       - name: Upload screenshots
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: e2e-screenshots-${{ matrix.platform }}-${{ matrix.newArchEnabled  == true && 'new' || 'old' }}
+          name: e2e-screenshots-${{ matrix.platform }}
           path: e2e/screenshots

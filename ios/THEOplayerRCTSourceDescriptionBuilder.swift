@@ -111,7 +111,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
                 if let typedSource = THEOplayerRCTSourceDescriptionBuilder.buildTypedSource(typedSourceData) {
                     typedSources.append(typedSource)
                 } else {
-                    if DEBUG_SOURCE_DESCRIPTION_BUIDER {
+                    if DEBUG_SOURCE_DESCRIPTION_BUILDER {
                         PrintUtils.printLog(logText: "[NATIVE] Could not create THEOplayer TypedSource from sourceData array")
                     }
                     return (nil, nil)
@@ -123,7 +123,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
             if let typedSource = THEOplayerRCTSourceDescriptionBuilder.buildTypedSource(typedSourceData) {
                 typedSources.append(typedSource)
             } else {
-                if DEBUG_SOURCE_DESCRIPTION_BUIDER {
+                if DEBUG_SOURCE_DESCRIPTION_BUILDER {
                     PrintUtils.printLog(logText: "[NATIVE] Could not create THEOplayer TypedSource from sourceData")
                 }
                 return (nil, nil)
@@ -147,7 +147,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
                         textTrackDescriptions?.append(textTrackDescription)
                     }
                 } else {
-                    if DEBUG_SOURCE_DESCRIPTION_BUIDER {
+                    if DEBUG_SOURCE_DESCRIPTION_BUILDER {
                         PrintUtils.printLog(logText: "[NATIVE] Could not create THEOplayer TextTrackDescription from textTrackData array")
                     }
                     return (nil, nil)
@@ -220,7 +220,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
             return daiSource
         }
 
-        if DEBUG_SOURCE_DESCRIPTION_BUIDER {
+        if DEBUG_SOURCE_DESCRIPTION_BUILDER {
             PrintUtils.printLog(logText: "[NATIVE] THEOplayer TypedSource requires 'src' property in 'sources' description")
         }
         return nil
@@ -392,9 +392,11 @@ class THEOplayerRCTSourceDescriptionBuilder {
         
         // global query parameters
         let queryParameters = contentProtectionData[SD_PROP_QUERY_PARAMETERS] as? [String:String]
+        let integrationParameters = contentProtectionData[SD_PROP_INTEGRATION_PARAMETERS] as? [String:Any] ?? [:]
         
         return MultiplatformDRMConfiguration(
             customIntegrationId: customIntegrationId,
+            integrationParameters: integrationParameters,
             keySystemConfigurations: KeySystemConfigurationCollection(fairplay: fairplayKeySystem, widevine: widevineKeySystem),
             queryParameters: queryParameters
         )

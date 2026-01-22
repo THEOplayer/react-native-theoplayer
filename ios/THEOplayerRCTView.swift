@@ -121,10 +121,11 @@ public class THEOplayerRCTView: UIView {
     }
     
     func willUnmount() {
+        if DEBUG_PRESENTATIONMODES {PrintUtils.printLog(logText: "[NATIVE] willUnmount with presentationMode: \(self.presentationModeManager.presentationMode._rawValue)")}
+        
         // before destruction, make sure the view reparenting is reset when player was put in fullscreen
         if self.presentationModeManager.presentationMode == .fullscreen {
-            if DEBUG_THEOPLAYER_INTERACTION {PrintUtils.printLog(logText: "[NATIVE] willUnmount with presentationMode: \(self.presentationModeManager.presentationMode._rawValue)")}
-            
+            if DEBUG_PRESENTATIONMODES { PrintUtils.printLog(logText: "[NATIVE] presentationMode is fullscreen => back to inline for player unmount.") }
             self.setPresentationMode(newPresentationMode: PresentationMode.inline)
         }
     }
@@ -209,16 +210,43 @@ public class THEOplayerRCTView: UIView {
         }
     }
     
-    private func notifyNativePlayerReady() {
+    public func notifyNativePlayerReady() {
         DispatchQueue.main.async {
             let versionString = THEOplayer.version
             if let forwardedNativeReady = self.onNativePlayerReady {
-                forwardedNativeReady([
-                    "version":  [
-                        "version" : versionString,
-                        "playerSuiteVersion": versionString
-                    ],
-                ])
+                var payload: [String: Any] = [:]
+                
+                // pass initial player state
+                if let player = self.player {
+                    // collect stored track metadata
+                    let trackInfo = THEOplayerRCTTrackMetadataAggregator.aggregateTrackInfo(
+                        player: player,
+                        metadataTracksInfo: self.mainEventHandler.loadedMetadataAndChapterTracksInfo
+                    )
+                    
+                    // build state
+                    payload["state"] = THEOplayerRCTPlayerStateBuilder()
+                        .source(player.source)
+                        .currentTime(player.currentTime)
+                        .currentProgramDateTime(player.currentProgramDateTime)
+                        .paused(player.paused)
+                        .playbackRate(player.playbackRate)
+                        .duration(player.duration)
+                        .volume(player.volume)
+                        .muted(player.muted)
+                        .seekable(player.seekable)
+                        .buffered(player.buffered)
+                        .trackInfo(trackInfo)
+                        .build()
+                }
+                
+                // pass version onfo
+                payload["version"] = [
+                    "version": versionString,
+                    "playerSuiteVersion": versionString
+                ]
+                
+                forwardedNativeReady(payload)
             }
         }
     }

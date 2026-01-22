@@ -19,7 +19,7 @@ let DEBUG_CONTENT_PROTECTION_API = DEBUG && false
 let DEBUG_VIEW = DEBUG && false
 
 // Debug flag to monitor correct SourceDescription buildup
-let DEBUG_SOURCE_DESCRIPTION_BUIDER = DEBUG && false
+let DEBUG_SOURCE_DESCRIPTION_BUILDER = DEBUG && false
 
 // Debug flag to monitor ads API usage
 let DEBUG_ADS_API = DEBUG && false
@@ -51,5 +51,12 @@ let DEBUG_THEOLIVE_API = DEBUG && false
 // Debug flag to monitor THEOAds API usage
 let DEBUG_THEOADS_API = DEBUG && false
 
-// Debug flag to monitor AudioSession interruptions (e.g. phone cll)
+// Debug flag to monitor AudioSession interruptions (e.g. phone call)
 let DEBUG_INTERRUPTIONS = DEBUG && false
+
+// Debug flag to monitor Presentationmode changes
+let DEBUG_PRESENTATIONMODES = DEBUG && false
+
+// Debug flag to monitor App state changes
+let DEBUG_APPSTATE = DEBUG && false
+
