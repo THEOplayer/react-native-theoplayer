@@ -20,12 +20,15 @@ private const val TAG = "ReactTHEOplayerView"
 class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
   FrameLayout(reactContext), LifecycleEventListener {
 
-  private val eventEmitter: PlayerEventEmitter =
+  // Set true to bypass ReactNative lifecycle, avoiding THEOplayerView being disposed by Fabric
+  var bypassDropInstanceOnReactLifecycle = false
+  val eventEmitter: PlayerEventEmitter =
     PlayerEventEmitter(reactContext.reactApplicationContext, this)
   val broadcast = EventBroadcastAdapter(this)
   var presentationManager: PresentationManager? = null
   var playerContext: ReactTHEOplayerContext? = null
-  private var isInitialized: Boolean = false
+  var isInitialized: Boolean = false
+    private set
   private var config: PlayerConfigAdapter? = null
 
   val adsApi: AdsApiWrapper

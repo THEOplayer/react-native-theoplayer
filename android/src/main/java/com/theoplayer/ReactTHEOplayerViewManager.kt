@@ -23,7 +23,9 @@ class ReactTHEOplayerViewManager : ViewGroupManager<ReactTHEOplayerView>() {
    * {@link ViewManager} subclass.
    */
   override fun onDropViewInstance(view: ReactTHEOplayerView) {
-    view.releasePlayer()
+    if (!view.bypassDropInstanceOnReactLifecycle) {
+      view.releasePlayer()
+    }
   }
 
   @ReactProp(name = PROP_CONFIG)
