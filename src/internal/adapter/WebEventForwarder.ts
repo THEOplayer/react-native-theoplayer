@@ -67,6 +67,7 @@ import {
   DefaultTheoAdsErrorEvent,
   DefaultTheoAdsEvent,
   DefaultTheoLiveDistributionEvent,
+  DefaultTheoLiveDistributionLoadedEvent,
   DefaultTheoLiveEndpointLoadedEvent,
   DefaultTheoLiveEvent,
   DefaultTheoLiveIntentToFallbackEvent,
@@ -387,6 +388,9 @@ export class WebEventForwarder {
     if (event.type === TheoLiveEventType.DISTRIBUTION_LOAD_START || event.type === TheoLiveEventType.DISTRIBUTION_OFFLINE) {
       const { distributionId } = event;
       this._facade.dispatchEvent(new DefaultTheoLiveDistributionEvent(event.type as TheoLiveEventType, distributionId));
+    } else if (event.type === TheoLiveEventType.DISTRIBUTION_LOADED) {
+      const { distribution } = event;
+      this._facade.dispatchEvent(new DefaultTheoLiveDistributionLoadedEvent(event.type as TheoLiveEventType, distribution));
     } else if (event.type === TheoLiveEventType.ENDPOINT_LOADED) {
       const { endpoint } = event;
       this._facade.dispatchEvent(new DefaultTheoLiveEndpointLoadedEvent(event.type as TheoLiveEventType, endpoint));
@@ -477,6 +481,7 @@ type ForwardedTheoAdsEvent = NativeTheoAdsEventsMap[(typeof FORWARDED_THEOADS_EV
 
 const FORWARDED_THEOLIVE_EVENTS = [
   TheoLiveEventType.DISTRIBUTION_LOAD_START,
+  TheoLiveEventType.DISTRIBUTION_LOADED,
   TheoLiveEventType.DISTRIBUTION_OFFLINE,
   TheoLiveEventType.ENDPOINT_LOADED,
   TheoLiveEventType.INTENT_TO_FALLBACK,
