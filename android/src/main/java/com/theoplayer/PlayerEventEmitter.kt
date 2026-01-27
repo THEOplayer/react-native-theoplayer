@@ -294,33 +294,29 @@ class PlayerEventEmitter internal constructor(
 
   fun preparePlayer(player: Player) {
     attachListeners(player)
-    emitPlayerReady(player)
+    emitPlayerReady()
   }
 
-  fun emitPlayerReady(player: Player) {
-    val payload = Arguments.createMap().apply {
+  fun emitPlayerReady() {
+    // Notify the player is ready
+    receiveEvent(EVENT_PLAYER_READY, Arguments.createMap().apply {
       putMap(EVENT_PROP_STATE, collectPlayerState())
       putMap(EVENT_PROP_VERSION, WritableNativeMap().apply {
         putString(EVENT_PROP_VERSION, THEOplayerGlobal.getVersion())
         putString(EVENT_PROP_SUITE_VERSION, "")
       })
-    }
-
-    // Notify the player is ready
-    receiveEvent(EVENT_PLAYER_READY, payload)
+    })
   }
 
   fun emitPlayerStateSync() {
-      val payload = Arguments.createMap().apply {
+      receiveEvent(EVENT_PLAYER_STATE_SYNC, Arguments.createMap().apply {
         putMap(EVENT_PROP_STATE, collectPlayerState())
-      }
-      receiveEvent(EVENT_PLAYER_STATE_SYNC, payload)
+      })
   }
 
   private fun collectPlayerState(): WritableMap {
-    val player = playerView.player
-    if (player != null) {
-      return PayloadBuilder()
+    return playerView.player?.let { player ->
+      PayloadBuilder()
         .source(player.source)
         .currentTime(player.currentTime)
         .currentProgramDateTime(player.currentProgramDateTime)
@@ -337,9 +333,7 @@ class PlayerEventEmitter internal constructor(
         .selectedAudioTrack(getSelectedAudioTrack(player))
         .selectedVideoTrack(getSelectedVideoTrack(player))
         .build()
-    }
-
-    return Arguments.createMap()
+    } ?: Arguments.createMap()
   }
 
   private fun emitError(code: String, message: String?) {
