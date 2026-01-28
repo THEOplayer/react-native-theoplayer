@@ -52,6 +52,7 @@ RCT_EXPORT_VIEW_PROPERTY(onNativeAdEvent, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeTHEOliveEvent, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeTHEOadsEvent, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeCastEvent, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativePlayerStateSync, RCTDirectEventBlock);
 
 @end
 

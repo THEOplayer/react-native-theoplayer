@@ -83,6 +83,7 @@ interface THEOplayerRCTViewProps {
   style?: StyleProp<ViewStyle>;
   config?: PlayerConfiguration;
   onNativePlayerReady: (event: NativeSyntheticEvent<NativePlayerStateEvent>) => void;
+  onNativePlayerStateSync: (event: NativeSyntheticEvent<NativePlayerStateEvent>) => void;
   onNativeSourceChange: () => void;
   onNativeLoadStart: () => void;
   onNativeLoadedData: () => void;
@@ -198,6 +199,11 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
     this._facade.initializeFromNativePlayer_(version, state).then(() => {
       this.props.onPlayerReady?.(this._facade);
     });
+  };
+
+  private _onNativePlayerStateSync = (event: NativeSyntheticEvent<NativePlayerStateEvent>) => {
+    const { state } = event.nativeEvent;
+    this._facade.updateStateFromNativePlayer_(state);
   };
 
   private _onSourceChange = () => {
@@ -439,6 +445,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
           style={StyleSheet.absoluteFill}
           config={config || {}}
           onNativePlayerReady={this._onNativePlayerReady}
+          onNativePlayerStateSync={this._onNativePlayerStateSync}
           onNativeSourceChange={this._onSourceChange}
           onNativeLoadStart={this._onLoadStart}
           onNativeLoadedData={this._onLoadedData}

@@ -85,6 +85,7 @@ public class THEOplayerRCTView: UIView {
 
     // MARK: Events
     var onNativePlayerReady: RCTDirectEventBlock?
+    var onNativePlayerStateSync: RCTDirectEventBlock?
     
     // MARK: Bridged props
     private var license: String?
@@ -210,47 +211,6 @@ public class THEOplayerRCTView: UIView {
         }
     }
     
-    public func notifyNativePlayerReady() {
-        DispatchQueue.main.async {
-            let versionString = THEOplayer.version
-            if let forwardedNativeReady = self.onNativePlayerReady {
-                var payload: [String: Any] = [:]
-                
-                // pass initial player state
-                if let player = self.player {
-                    // collect stored track metadata
-                    let trackInfo = THEOplayerRCTTrackMetadataAggregator.aggregateTrackInfo(
-                        player: player,
-                        metadataTracksInfo: self.mainEventHandler.loadedMetadataAndChapterTracksInfo
-                    )
-                    
-                    // build state
-                    payload["state"] = THEOplayerRCTPlayerStateBuilder()
-                        .source(player.source)
-                        .currentTime(player.currentTime)
-                        .currentProgramDateTime(player.currentProgramDateTime)
-                        .paused(player.paused)
-                        .playbackRate(player.playbackRate)
-                        .duration(player.duration)
-                        .volume(player.volume)
-                        .muted(player.muted)
-                        .seekable(player.seekable)
-                        .buffered(player.buffered)
-                        .trackInfo(trackInfo)
-                        .build()
-                }
-                
-                // pass version onfo
-                payload["version"] = [
-                    "version": versionString,
-                    "playerSuiteVersion": versionString
-                ]
-                
-                forwardedNativeReady(payload)
-            }
-        }
-    }
-    
     private func initPlayer() -> THEOplayer? {
         let config = THEOplayerConfigurationBuilder()
         config.pip = self.playerPipConfiguration()
@@ -269,10 +229,60 @@ public class THEOplayerRCTView: UIView {
         return self.player
     }
     
+    public func notifyNativePlayerReady() {
+        DispatchQueue.main.async {
+            let versionString = THEOplayer.version
+            if let forwardedNativeReady = self.onNativePlayerReady {
+                var payload: [String: Any] = [:]
+                
+                // pass initial player state
+                payload["state"] = self.collectPlayerStatePayload()
+                
+                // pass version onfo
+                payload["version"] = [
+                    "version": versionString,
+                    "playerSuiteVersion": versionString
+                ]
+                
+                forwardedNativeReady(payload)
+            }
+        }
+    }
+    
+    private func collectPlayerStatePayload() -> [String:Any] {
+        guard let player = self.player else { return [:] }
+        
+        // collect stored track metadata
+        let trackInfo = THEOplayerRCTTrackMetadataAggregator.aggregateTrackInfo(
+            player: player,
+            metadataTracksInfo: self.mainEventHandler.loadedMetadataAndChapterTracksInfo
+        )
+        
+        return THEOplayerRCTPlayerStateBuilder()
+            .source(player.source)
+            .currentTime(player.currentTime)
+            .currentProgramDateTime(player.currentProgramDateTime)
+            .paused(player.paused)
+            .playbackRate(player.playbackRate)
+            .duration(player.duration)
+            .volume(player.volume)
+            .muted(player.muted)
+            .seekable(player.seekable)
+            .buffered(player.buffered)
+            .trackInfo(trackInfo)
+            .build()
+    }
+    
     func processMetadataAndChapterTracks(trackDescriptions: [TextTrackDescription]?) {
       THEOplayerRCTSideloadedWebVTTProcessor.loadTrackInfoFromTrackDescriptions(trackDescriptions) { tracksInfo in
             self.mainEventHandler.setLoadedMetadataAndChapterTracksInfo(tracksInfo)
             self.metadataTrackEventHandler.setLoadedMetadataAndChapterTracksInfo(tracksInfo)
+        }
+    }
+    
+    public func syncPlayerState() {
+        if let forwardedPlayerStateSync = self.onNativePlayerStateSync {
+            forwardedPlayerStateSync(["state": self.collectPlayerStatePayload()])
         }
     }
     
@@ -299,12 +309,18 @@ public class THEOplayerRCTView: UIView {
         self.notifyNativePlayerReady()
     }
     
-    // MARK: - VIEW READY event bridging
+    // MARK: - VIEW event bridging
     
     @objc(setOnNativePlayerReady:)
     func setOnNativePlayerReady(nativePlayerReady: @escaping RCTDirectEventBlock) {
         self.onNativePlayerReady = nativePlayerReady
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativePlayerReady prop set.") }
+    }
+    
+    @objc(setOnNativePlayerStateSync:)
+    func setonNativePlayerStateSync(nativePlayerStateSync: @escaping RCTDirectEventBlock) {
+        self.onNativePlayerStateSync = nativePlayerStateSync
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativePlayerStateSync prop set.") }
     }
     
     // MARK: - Listener based MAIN event bridging
