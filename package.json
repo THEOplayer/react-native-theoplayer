@@ -49,9 +49,9 @@
     "type": "git",
     "url": "git@github.com:THEOplayer/react-native-theoplayer.git"
   },
-  "author": "THEO Technologies",
-  "license": "SEE LICENSE AT https://www.theoplayer.com/terms",
-  "homepage": "https://theoplayer.com/",
+  "author": "Dolby Laboratories, Inc.",
+  "license": "BSD-3-Clause-Clear",
+  "homepage": "https://optiview.dolby.com/",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
