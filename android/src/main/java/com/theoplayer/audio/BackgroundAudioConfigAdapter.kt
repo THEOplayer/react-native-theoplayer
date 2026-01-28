@@ -10,15 +10,11 @@ object BackgroundAudioConfigAdapter {
   private const val DEFAULT_STOP_ON_BACKGROUND = false
 
   fun fromProps(props: ReadableMap?): BackgroundAudioConfig {
-    val enabled = props?.hasKey(PROP_ENABLED)?.let {
-      props.getBoolean(PROP_ENABLED)
-    } ?: DEFAULT_ENABLED
-    val destroy = props?.hasKey(PROP_STOP_ON_BACKGROUND)?.let {
-      props.getBoolean(PROP_STOP_ON_BACKGROUND)
-    } ?: DEFAULT_STOP_ON_BACKGROUND
     return BackgroundAudioConfig(
-      enabled = enabled,
-      stopOnBackground = destroy
+      enabled = if (props?.hasKey(PROP_ENABLED) == true)
+        props.getBoolean(PROP_ENABLED) else DEFAULT_ENABLED,
+      stopOnBackground = if (props?.hasKey(PROP_STOP_ON_BACKGROUND) == true)
+        props.getBoolean(PROP_STOP_ON_BACKGROUND) else DEFAULT_STOP_ON_BACKGROUND
     )
   }
 }
