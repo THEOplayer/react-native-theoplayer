@@ -284,6 +284,11 @@ public class THEOplayerRCTView: UIView {
         if let forwardedPlayerStateSync = self.onNativePlayerStateSync {
             forwardedPlayerStateSync(["state": self.collectPlayerStatePayload()])
         }
+        
+        // trigger different feature managers to reflect the current state
+        self.nowPlayingManager.updateNowPlaying()
+        self.remoteCommandsManager.updateRemoteCommands()
+        self.pipControlsManager.updatePipControls()
     }
     
     // MARK: - Property bridging (config)

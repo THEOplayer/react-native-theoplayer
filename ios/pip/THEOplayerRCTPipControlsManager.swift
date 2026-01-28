@@ -52,7 +52,7 @@ class THEOplayerRCTPipControlsManager: NSObject {
         }
     }
     
-    private func updatePipControls() {
+    func updatePipControls() {
         if let player = self.player,
            let pip = player.pip {
             pip.configure(configuration: self.newPipConfiguration())
