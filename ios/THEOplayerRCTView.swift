@@ -49,6 +49,8 @@ public class THEOplayerRCTView: UIView {
     var uiConfig = UIConfig()
     var theoliveConfig = THEOliveConfig()
     
+    public var bypassDropInstanceOnReactLifecycle = false // controls superView detaching behaviour
+    
     // integrations
     #if canImport(THEOplayerTHEOadsIntegration)
     var THEOadsIntegration: THEOplayerTHEOadsIntegration.THEOadsIntegration?
@@ -166,6 +168,19 @@ public class THEOplayerRCTView: UIView {
             
             self.presentationModeManager.validateLayout()
         }
+    }
+    
+    public override func removeFromSuperview() {
+        if !bypassDropInstanceOnReactLifecycle {
+            super.removeFromSuperview()
+        }
+    }
+    
+    public override func willMove(toSuperview: UIView?) {
+        if bypassDropInstanceOnReactLifecycle && toSuperview == nil {
+            return
+        }
+        super.willMove(toSuperview: toSuperview)
     }
     
     override public var safeAreaInsets: UIEdgeInsets {
