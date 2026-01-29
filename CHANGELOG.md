@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [10.9.0] - 26-01-29
+
+### Fixed
+
+- Fixed an issue on Android where the player could disrupt the layout by sending an unexpected dimension change event.
+- Fixed an issue on Android where the default properties of the player's `backgroundAudioConfiguration` would not be properly applied.
+
+### Added
+
+- Added functionality to synchronize the player state from the native mobile players to React Native.
+- Added a bypass property on iOS to control the THEOplayerView's ability to detach from its superView.
+- Trigger an update for the iOS control centers (nowPlayingInfo and remoteCommands) to reflect a player state sync.
+
+### Changed
+
+- Changed license to BSD 3-Cause Clear. See [LICENSE](./LICENSE) file for more information.
+
 ## [10.8.0] - 26-01-22
 
 ### Added

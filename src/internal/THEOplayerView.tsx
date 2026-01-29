@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import {
-  Dimensions,
   findNodeHandle,
   HostComponent,
   NativeSyntheticEvent,
@@ -75,6 +74,7 @@ import { fromNativeTheoAdsEvent, NativeTheoAdsEvent } from './adapter/event/nati
 import { THEOplayerAdapter } from './adapter/THEOplayerAdapter';
 import { getFullscreenSize } from './utils/Dimensions';
 import { Poster } from './poster/Poster';
+import { DeviceEventEmitter } from 'react-native';
 
 const INVALID_HANDLE = -1;
 
@@ -83,6 +83,7 @@ interface THEOplayerRCTViewProps {
   style?: StyleProp<ViewStyle>;
   config?: PlayerConfiguration;
   onNativePlayerReady: (event: NativeSyntheticEvent<NativePlayerStateEvent>) => void;
+  onNativePlayerStateSync: (event: NativeSyntheticEvent<NativePlayerStateEvent>) => void;
   onNativeSourceChange: () => void;
   onNativeLoadStart: () => void;
   onNativeLoadedData: () => void;
@@ -149,8 +150,10 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
 
   componentDidMount() {
     if (Platform.OS !== 'ios') {
-      // On iOS we use the native deviceOrientation event.
-      this._dimensionsHandler = Dimensions.addEventListener('change', this._onDimensionsChanged);
+      // On iOS we use the native deviceOrientation event, on Android a private `_didUpdateDimensions` event.
+      this._dimensionsHandler = DeviceEventEmitter.addListener('_didUpdateDimensions', () => {
+        this._onDimensionsChanged();
+      });
     }
   }
 
@@ -198,6 +201,11 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
     this._facade.initializeFromNativePlayer_(version, state).then(() => {
       this.props.onPlayerReady?.(this._facade);
     });
+  };
+
+  private _onNativePlayerStateSync = (event: NativeSyntheticEvent<NativePlayerStateEvent>) => {
+    const { state } = event.nativeEvent;
+    this._facade.updateStateFromNativePlayer_(state);
   };
 
   private _onSourceChange = () => {
@@ -439,6 +447,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
           style={StyleSheet.absoluteFill}
           config={config || {}}
           onNativePlayerReady={this._onNativePlayerReady}
+          onNativePlayerStateSync={this._onNativePlayerStateSync}
           onNativeSourceChange={this._onSourceChange}
           onNativeLoadStart={this._onLoadStart}
           onNativeLoadedData={this._onLoadedData}
