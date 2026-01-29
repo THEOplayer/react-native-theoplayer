@@ -1,6 +1,7 @@
 package com.theoplayer.audio
 
 import com.facebook.react.bridge.ReadableMap
+import com.theoplayer.util.getBooleanOrNull
 
 object BackgroundAudioConfigAdapter {
   private const val PROP_ENABLED = "enabled"
@@ -10,15 +11,10 @@ object BackgroundAudioConfigAdapter {
   private const val DEFAULT_STOP_ON_BACKGROUND = false
 
   fun fromProps(props: ReadableMap?): BackgroundAudioConfig {
-    val enabled = props?.hasKey(PROP_ENABLED)?.let {
-      props.getBoolean(PROP_ENABLED)
-    } ?: DEFAULT_ENABLED
-    val destroy = props?.hasKey(PROP_STOP_ON_BACKGROUND)?.let {
-      props.getBoolean(PROP_STOP_ON_BACKGROUND)
-    } ?: DEFAULT_STOP_ON_BACKGROUND
     return BackgroundAudioConfig(
-      enabled = enabled,
-      stopOnBackground = destroy
+      enabled = props?.getBooleanOrNull(PROP_ENABLED) ?: DEFAULT_ENABLED,
+      stopOnBackground = props?.getBooleanOrNull(PROP_STOP_ON_BACKGROUND)
+        ?: DEFAULT_STOP_ON_BACKGROUND,
     )
   }
 }
