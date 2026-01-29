@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Changed license to BSD 3-Cause Clear. See [LICENSE](./LICENSE) file for more information.
 
+### Fixed
+
+- Fixed an issue on Android where the player could disrupt the layout by sending an unexpected dimension change event.
+
 ## [10.8.0] - 26-01-22
 
 ### Added

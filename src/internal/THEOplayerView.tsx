@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import {
-  Dimensions,
   findNodeHandle,
   HostComponent,
   NativeSyntheticEvent,
@@ -75,6 +74,7 @@ import { fromNativeTheoAdsEvent, NativeTheoAdsEvent } from './adapter/event/nati
 import { THEOplayerAdapter } from './adapter/THEOplayerAdapter';
 import { getFullscreenSize } from './utils/Dimensions';
 import { Poster } from './poster/Poster';
+import { DeviceEventEmitter } from 'react-native';
 
 const INVALID_HANDLE = -1;
 
@@ -150,8 +150,10 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
 
   componentDidMount() {
     if (Platform.OS !== 'ios') {
-      // On iOS we use the native deviceOrientation event.
-      this._dimensionsHandler = Dimensions.addEventListener('change', this._onDimensionsChanged);
+      // On iOS we use the native deviceOrientation event, on Android a private `_didUpdateDimensions` event.
+      this._dimensionsHandler = DeviceEventEmitter.addListener('_didUpdateDimensions', () => {
+        this._onDimensionsChanged();
+      });
     }
   }
 

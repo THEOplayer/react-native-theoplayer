@@ -16,7 +16,6 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.children
 import androidx.lifecycle.Lifecycle
 import com.facebook.react.ReactRootView
-import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.views.view.ReactViewGroup
@@ -34,6 +33,7 @@ const val IS_TRANSITION_INTO_PIP = "isTransitioningToPip"
 const val IS_IN_PIP_MODE = "isInPictureInPictureMode"
 const val ON_USER_LEAVE_HINT = "onUserLeaveHint"
 const val ON_PIP_MODE_CHANGED = "onPictureInPictureModeChanged"
+const val ON_DID_UPDATE_DIMENSIONS = "_didUpdateDimensions"
 
 @Suppress("KotlinConstantConditions", "SimplifyBooleanWithConstants")
 @SuppressLint("UnspecifiedRegisterReceiverFlag")
@@ -55,6 +55,11 @@ class PresentationManager(
   private val playerGroupRestoreOptions by lazy {
     PlayerGroupRestoreOptions()
   }
+  private val layoutChangeListener = View.OnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+      reactContext
+          .getJSModule(ReactContext.RCTDeviceEventEmitter::class.java)
+          .emit(ON_DID_UPDATE_DIMENSIONS, null)
+  }
   var currentPresentationMode: PresentationMode = PresentationMode.INLINE
     private set
   var currentPresentationModeChangeContext: PresentationModeChangeContext? = null
@@ -75,20 +80,9 @@ class PresentationManager(
       }
     }
 
-    // Emit dimension updates when layout changes
+    // Emit a private dimension update event when layout changes
     // This makes sure a dimension update is sent after fullscreen immersive animations complete.
-    rootView?.addOnLayoutChangeListener { view, _, _, _, _, _, _, _, _ ->
-      val density = reactContext.resources.displayMetrics.density.toDouble()
-      val params = Arguments.createMap().apply {
-        putMap("window", Arguments.createMap().apply {
-          putDouble("width", (view.width) / density)
-          putDouble("height", (view.height) / density)
-        })
-      }
-      reactContext
-        .getJSModule(ReactContext.RCTDeviceEventEmitter::class.java)
-        .emit("didUpdateDimensions", params)
-    }
+    rootView?.addOnLayoutChangeListener(layoutChangeListener)
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
       supportsPip =
@@ -137,6 +131,7 @@ class PresentationManager(
       }
 
       fullScreenLayoutObserver.remove()
+      rootView?.removeOnLayoutChangeListener(layoutChangeListener)
       pipUtils.destroy()
     } catch (_: Exception) {
     }
