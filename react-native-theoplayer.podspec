@@ -43,37 +43,37 @@ Pod::Spec.new do |s|
 
   # THEOplayer Dependency
   puts "Adding THEOplayerSDK-core"
-  s.dependency "THEOplayerSDK-core", "~> 10.7"
+  s.dependency "THEOplayerSDK-core", "~> 10.10"
 
   # THEOlive Dependency
   puts "Adding THEOplayer-Integration-THEOlive"
-  s.dependency "THEOplayer-Integration-THEOlive", "~> 10.7"
+  s.dependency "THEOplayer-Integration-THEOlive", "~> 10.10"
 
   # Feature based integration dependencies
   if theofeatures.include?("GOOGLE_IMA")
 	puts "Adding THEOplayer-Integration-GoogleIMA"
-    s.dependency "THEOplayer-Integration-GoogleIMA", "~> 10.7"
+    s.dependency "THEOplayer-Integration-GoogleIMA", "~> 10.10"
   end
 
   if theofeatures.include?("CHROMECAST")
 	puts "Adding THEOplayer-Integration-GoogleCast"
-    s.ios.dependency "THEOplayer-Integration-GoogleCast", "~> 10.7"
+    s.ios.dependency "THEOplayer-Integration-GoogleCast", "~> 10.10"
   end
 
   if theofeatures.include?("THEO_ADS")
 	puts "Adding THEOplayer-Integration-THEOads"
-    s.dependency "THEOplayer-Integration-THEOads", "~> 10.7"
+    s.dependency "THEOplayer-Integration-THEOads", "~> 10.10"
   end
 
   if theofeatures.include?("MILLICAST")
   puts "Adding THEOplayer-Integration-Millicast"
-    s.dependency "THEOplayer-Integration-Millicast", "~> 10.7"
+    s.dependency "THEOplayer-Integration-Millicast", "~> 10.10"
   end
 
   # Feature based connector dependencies
   if theofeatures.include?("SIDELOADED_TEXTTRACKS")
 	puts "Adding THEOplayer-Connector-SideloadedSubtitle"
-    s.dependency "THEOplayer-Connector-SideloadedSubtitle", "~> 10.7"
+    s.dependency "THEOplayer-Connector-SideloadedSubtitle", "~> 10.10"
   end
 
 end
