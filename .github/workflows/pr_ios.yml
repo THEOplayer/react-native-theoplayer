@@ -13,11 +13,11 @@ on:
 
 jobs:
   build:
-    runs-on: macos-14
+    runs-on: macos-15
     strategy:
       fail-fast: false
       matrix:
-        xcode_version: [ '16.1.0' ]
+        xcode_version: [ '26.2.0' ]
         platform: [iOS, tvOS]
     name: Build for ${{ matrix.platform }} using XCode version ${{ matrix.xcode_version }}
 
@@ -75,9 +75,9 @@ jobs:
       - name: Start iOS simulator
         uses: futureware-tech/simulator-action@v4
         with:
-          model: ${{ matrix.platform == 'iOS' && 'iPhone 15' || 'Apple TV' }}
+          model: ${{ matrix.platform == 'iOS' && 'iPhone 17' || 'Apple TV' }}
           os: ${{ matrix.platform }}
-          os_version: '>=15.0'
+          os_version: '>=26.2'
 
       - name: Run e2e tests
         working-directory: e2e
