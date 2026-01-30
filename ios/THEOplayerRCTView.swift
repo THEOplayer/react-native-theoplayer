@@ -296,8 +296,10 @@ public class THEOplayerRCTView: UIView {
     }
     
     public func syncPlayerState() {
-        if let forwardedPlayerStateSync = self.onNativePlayerStateSync {
-            forwardedPlayerStateSync(["state": self.collectPlayerStatePayload()])
+        DispatchQueue.main.async {
+            if let forwardedPlayerStateSync = self.onNativePlayerStateSync {
+                forwardedPlayerStateSync(["state": self.collectPlayerStatePayload()])
+            }
         }
         
         // trigger different feature managers to reflect the current state
