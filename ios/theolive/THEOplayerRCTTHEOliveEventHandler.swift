@@ -8,12 +8,14 @@ import THEOplayerTHEOliveIntegration
 #endif
 
 let EVENT_TYPE_DISTRIBUTION_LOAD_START: String = "distributionloadstart"
+let EVENT_TYPE_DISTRIBUTION_LOADED: String = "distributionloaded"
 let EVENT_TYPE_DISTRIBUTION_OFFLINE: String = "distributionoffline"
 let EVENT_TYPE_ENDPOINT_LOADED: String = "endpointloaded"
 let EVENT_TYPE_INTENT_TO_FALLBACK: String = "intenttofallback"
 
 let THEOLIVE_EVENT_PROP_TYPE: String = "type"
 let THEOLIVE_EVENT_PROP_DISTRIBUTION_ID: String = "distributionId"
+let THEOLIVE_EVENT_PROP_DISTRIBUTION: String = "distribution"
 let THEOLIVE_EVENT_PROP_ENDPOINT: String = "endpoint"
 let THEOLIVE_EVENT_PROP_REASON: String = "reason"
 
@@ -26,6 +28,7 @@ class THEOplayerRCTTHEOliveEventHandler {
 
     // MARK: THEOlive Listeners
     private var distributionLoadStartListener: EventListener?
+    private var distributionLoadedListener: EventListener?
     private var distributionOfflineListener: EventListener?
     private var endPointLoadedListener: EventListener?
     private var intentToFallbackListener: EventListener?
@@ -62,8 +65,21 @@ class THEOplayerRCTTHEOliveEventHandler {
             }
         }
         if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] DistributionLoadStart listener attached to THEOplayer.theolive") }
-        
-        
+
+
+        // DISTRIBUTION_LOADED
+        self.distributionLoadedListener = player.theoLive?.addEventListener(type: THEOliveEventTypes.DISTRIBUTION_LOADED) { [weak self] event in
+            if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received DistributionLoaded event from THEOlive") }
+            if let forwardedTHEOliveEvent = self?.onNativeTHEOliveEvent {
+                forwardedTHEOliveEvent([
+                    THEOLIVE_EVENT_PROP_TYPE: EVENT_TYPE_DISTRIBUTION_LOADED,
+                    THEOLIVE_EVENT_PROP_DISTRIBUTION: THEOplayerRCTTHEOliveEventAdapter.fromDistribution(distribution: event.distribution)
+                ])
+            }
+        }
+        if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] DistributionOffline listener attached to THEOplayer.theolive") }
+
+
         // DISTRIBUTION_OFFLINE
         self.distributionOfflineListener = player.theoLive?.addEventListener(type: THEOliveEventTypes.DISTRIBUTION_OFFLINE) { [weak self] event in
             if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received DistributionOffline event from THEOlive") }
@@ -116,7 +132,16 @@ class THEOplayerRCTTHEOliveEventHandler {
             )
             if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] DistributionLoadStart listener detached from THEOplayer.theolive") }
         }
-        
+
+        // DISTRIBUTION_LOADED
+        if let distributionLoadedListener = self.distributionLoadedListener {
+            player.theoLive?.removeEventListener(
+                type: THEOliveEventTypes.DISTRIBUTION_LOADED,
+                listener: distributionLoadedListener
+            )
+            if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] DistributionLoaded listener detached from THEOplayer.theolive") }
+        }
+
         // DISTRIBUTION_OFFLINE
         if let distributionOfflineListener = self.distributionOfflineListener {
             player.theoLive?.removeEventListener(

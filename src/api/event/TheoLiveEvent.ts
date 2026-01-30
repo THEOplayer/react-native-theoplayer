@@ -1,4 +1,5 @@
 import { Event, PlayerError, PlayerEventType, TheoLiveEndpoint } from 'react-native-theoplayer';
+import { TheoLiveDistribution } from '../theolive/TheoLiveDistribution';
 
 /**
  * The THEOlive event dispatched by the {@link TheoLiveAPI THEOlive API}.
@@ -24,6 +25,18 @@ export interface TheoLiveDistributionEvent extends TheoLiveEvent {
    * The distribution identifier
    */
   distributionId: string;
+}
+
+/**
+ * Dispatched when a THEOlive distribution has been successfully loaded.
+ *
+ * @public
+ */
+export interface TheoLiveDistributionLoadedEvent extends TheoLiveEvent {
+  /**
+   * The distribution info.
+   */
+  distribution?: TheoLiveDistribution;
 }
 
 /**
@@ -66,6 +79,13 @@ export enum TheoLiveEventType {
    * @public
    */
   DISTRIBUTION_LOAD_START = 'distributionloadstart',
+
+  /**
+   * Dispatched when a THEOlive distribution has been successfully loaded.
+   *
+   * @public
+   */
+  DISTRIBUTION_LOADED = 'distributionloaded',
 
   /**
    * Dispatched when loading a THEOlive distribution that cannot be played, for example because the publication is
