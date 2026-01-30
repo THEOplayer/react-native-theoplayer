@@ -46,6 +46,16 @@ const source: MillicastSource = {
 };
 ```
 
+
+## Note on minification on Android
+
+When adding the Millicast integration into your android project, make sure to add the following keep rule in your `proguard-rules.pro` file:
+```
+-keep class kotlin.** { *; }
+```
+
+Otherwise, you will encounter a `ClassNotFoundException` when attempting to run the application.
+
 ## More information
 
 - [API references](https://theoplayer.github.io/react-native-theoplayer/api/interfaces/MillicastSource.html)
