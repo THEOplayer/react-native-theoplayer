@@ -21,7 +21,7 @@ export interface NativeTheoLiveEvent {
   distributionId: string | undefined;
 
   /**
-   * Description of the THEOlive distribution.
+   * Description of the THEOlive distribution for DISTRIBUTION_LOADED events.
    */
   distribution: TheoLiveDistribution | undefined;
 
