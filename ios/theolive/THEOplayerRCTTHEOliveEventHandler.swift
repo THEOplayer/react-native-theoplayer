@@ -73,7 +73,7 @@ class THEOplayerRCTTHEOliveEventHandler {
             if let forwardedTHEOliveEvent = self?.onNativeTHEOliveEvent {
                 forwardedTHEOliveEvent([
                     THEOLIVE_EVENT_PROP_TYPE: EVENT_TYPE_DISTRIBUTION_LOADED,
-                    THEOLIVE_EVENT_PROP_DISTRIBUTION: event.distribution
+                    THEOLIVE_EVENT_PROP_DISTRIBUTION: THEOplayerRCTTHEOliveEventAdapter.fromDistribution(distribution: event.distribution)
                 ])
             }
         }
