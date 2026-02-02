@@ -43,9 +43,9 @@ class THEOplayerRCTTHEOliveEventAdapter {
         if let adSrc = endpoint.adSrc {
             endpointData[PROP_ENDPOINT_AD_SRC] = adSrc
         }
-        //if let contentProtection = endpoint.contentProtection {
-            // TODO: not yet available on native iOS SDK.
-        //}
+        if let contentProtection = endpoint.channelContentProtection {
+            endpointData[PROP_ENDPOINT_CONTENT_PROTECTION] = contentProtection.toJSONEncodableDictionary()
+        }
         endpointData[PROP_ENDPOINT_WEIGHT] = endpoint.weight
         endpointData[PROP_ENDPOINT_PRIORITY] = endpoint.priority
         return endpointData
