@@ -19,10 +19,6 @@ let PROP_REASON_ERROR_CODE: String = "errorCode"
 let PROP_REASON_ERROR_MESSAGE: String = "errorMessage"
 let PROP_DISTRIBUTION_ID: String = "id"
 let PROP_DISTRIBUTION_NAME: String = "name"
-let PROP_DISTRIBUTION_TARGET_LATENCY: String = "targetLatency"
-let PROP_DISTRIBUTION_MAX_BITRATE: String = "maxBitrate"
-let PROP_DISTRIBUTION_ENDPOINTS: String = "endpoints"
-let PROP_DISTRIBUTION_DVR_WINDOW_SECONDS: String = "dvrWindowSeconds"
 
 class THEOplayerRCTTHEOliveEventAdapter {
 
@@ -76,22 +72,7 @@ class THEOplayerRCTTHEOliveEventAdapter {
         var distributionData: [String:Any] = [:]
         distributionData[PROP_DISTRIBUTION_ID] = distribution.id
         distributionData[PROP_DISTRIBUTION_NAME] = distribution.name
-        
-        if let targetLatency = distribution.targetLatency {
-            distributionData[PROP_DISTRIBUTION_TARGET_LATENCY] = targetLatency
-        }
-        if let maxBitrate = distribution.maxBitrate {
-            distributionData[PROP_DISTRIBUTION_MAX_BITRATE] = maxBitrate
-        }
-        if let dvrWindowSeconds = distribution.dvrWindowSeconds {
-            distributionData[PROP_DISTRIBUTION_DVR_WINDOW_SECONDS] = dvrWindowSeconds
-        }
-        var endpointsData: [[String:Any]] = []
-        for endpoint in distribution.endpoints {
-            endpointsData.append(THEOplayerRCTTHEOliveEventAdapter.fromEndpoint(endpoint: endpoint))
-        }
-        distributionData[PROP_DISTRIBUTION_ENDPOINTS] = endpointsData
-        
+
         return distributionData
     }
     
