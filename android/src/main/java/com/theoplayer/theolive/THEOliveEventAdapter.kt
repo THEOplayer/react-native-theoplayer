@@ -17,6 +17,8 @@ private const val EVENT_PROP_DISTRIBUTION_ID = "distributionId"
 private const val EVENT_PROP_DISTRIBUTION = "distribution"
 private const val EVENT_PROP_ENDPOINT = "endpoint"
 private const val EVENT_PROP_REASON = "reason"
+private const val EVENT_PROP_NAME = "name"
+private const val EVENT_PROP_ID = "id"
 
 class THEOliveEventAdapter(private val theoLiveApi: TheoLive, private val emitter: Emitter) {
 
@@ -64,7 +66,10 @@ class THEOliveEventAdapter(private val theoLiveApi: TheoLive, private val emitte
   private fun onDistributionLoaded(event: DistributionLoadedEvent) {
     emitter.emit(Arguments.createMap().apply {
       putString(EVENT_PROP_TYPE, "distributionloaded")
-      putString(EVENT_PROP_DISTRIBUTION, event.getDistribution())
+      putMap(EVENT_PROP_DISTRIBUTION, Arguments.createMap().apply {
+        putString(EVENT_PROP_ID, event.getDistribution().id)
+        putString(EVENT_PROP_NAME, event.getDistribution().name)
+      })
     })
   }
 
