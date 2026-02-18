@@ -10,6 +10,7 @@ import {
   ChromecastChangeEvent,
   ChromecastError,
   ChromecastErrorEvent,
+  DimensionChangeEvent,
   DurationChangeEvent,
   ErrorEvent,
   Interstitial,
@@ -37,22 +38,23 @@ import {
   TextTrackEvent,
   TextTrackEventType,
   TextTrackListEvent,
-  TheoAdsEvent,
   TheoAdsErrorEvent,
+  TheoAdsEvent,
   TheoAdsEventType,
-  TheoLiveEvent,
   TheoLiveDistributionEvent,
+  TheoLiveDistributionLoadedEvent,
+  TheoLiveEndpoint,
+  TheoLiveEndpointLoadedEvent,
+  TheoLiveEvent,
   TheoLiveEventType,
+  TheoLiveIntentToFallbackEvent,
   TimeRange,
   TimeUpdateEvent,
   TrackListEventType,
-  VolumeChangeEvent,
-  TheoLiveEndpoint,
-  TheoLiveEndpointLoadedEvent,
-  TheoLiveIntentToFallbackEvent,
-  DimensionChangeEvent,
   VideoResizeEvent,
+  VolumeChangeEvent,
 } from 'react-native-theoplayer';
+import { TheoLiveDistribution } from '../../../api/theolive/TheoLiveDistribution';
 
 export class DefaultLoadedMetadataEvent extends BaseEvent<PlayerEventType.LOADED_METADATA> implements LoadedMetadataEvent {
   constructor(
@@ -259,6 +261,15 @@ export class DefaultTheoLiveDistributionEvent extends BaseEvent<PlayerEventType.
   constructor(
     public subType: TheoLiveEventType,
     public distributionId: string,
+  ) {
+    super(PlayerEventType.THEOLIVE_EVENT);
+  }
+}
+
+export class DefaultTheoLiveDistributionLoadedEvent extends BaseEvent<PlayerEventType.THEOLIVE_EVENT> implements TheoLiveDistributionLoadedEvent {
+  constructor(
+    public subType: TheoLiveEventType,
+    public distribution?: TheoLiveDistribution,
   ) {
     super(PlayerEventType.THEOLIVE_EVENT);
   }

@@ -9,7 +9,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-- Fixed an issue on iOS where the onPlayerStateSync callback was not called from the main thread.
+- Fixed an issue on iOS where the `onPlayerStateSync` callback was not called from the main thread.
+
+### Added
+
+- Added the `DistributionLoaded` event for THEOlive.
 
 ## [10.9.0] - 26-01-29
 

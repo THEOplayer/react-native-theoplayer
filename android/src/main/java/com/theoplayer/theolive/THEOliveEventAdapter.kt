@@ -4,6 +4,7 @@ import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.WritableMap
 import com.theoplayer.android.api.event.EventListener
 import com.theoplayer.android.api.event.player.theolive.DistributionLoadStartEvent
+import com.theoplayer.android.api.event.player.theolive.DistributionLoadedEvent
 import com.theoplayer.android.api.event.player.theolive.DistributionOfflineEvent
 import com.theoplayer.android.api.event.player.theolive.EndpointLoadedEvent
 import com.theoplayer.android.api.event.player.theolive.IntentToFallbackEvent
@@ -13,8 +14,11 @@ import com.theoplayer.util.PayloadBuilder
 
 private const val EVENT_PROP_TYPE = "type"
 private const val EVENT_PROP_DISTRIBUTION_ID = "distributionId"
+private const val EVENT_PROP_DISTRIBUTION = "distribution"
 private const val EVENT_PROP_ENDPOINT = "endpoint"
 private const val EVENT_PROP_REASON = "reason"
+private const val EVENT_PROP_NAME = "name"
+private const val EVENT_PROP_ID = "id"
 
 class THEOliveEventAdapter(private val theoLiveApi: TheoLive, private val emitter: Emitter) {
 
@@ -24,6 +28,8 @@ class THEOliveEventAdapter(private val theoLiveApi: TheoLive, private val emitte
 
   private val onDistributionLoadStart =
     EventListener<DistributionLoadStartEvent> { onDistributionLoadStart(it) }
+  private val onDistributionLoaded =
+    EventListener<DistributionLoadedEvent> { onDistributionLoaded(it) }
   private val onDistributionOffline =
     EventListener<DistributionOfflineEvent> { onDistributionOffline(it) }
   private val onEndPointLoaded =
@@ -33,6 +39,7 @@ class THEOliveEventAdapter(private val theoLiveApi: TheoLive, private val emitte
 
   init {
     theoLiveApi.addEventListener(TheoLiveEventTypes.DISTRIBUTIONLOADSTART, onDistributionLoadStart)
+    theoLiveApi.addEventListener(TheoLiveEventTypes.DISTRIBUTIONLOADED, onDistributionLoaded)
     theoLiveApi.addEventListener(TheoLiveEventTypes.DISTRIBUTIONOFFLINE, onDistributionOffline)
     theoLiveApi.addEventListener(TheoLiveEventTypes.ENDPOINTLOADED, onEndPointLoaded)
     theoLiveApi.addEventListener(TheoLiveEventTypes.INTENTTOFALLBACK, onIntentOfFallback)
@@ -43,6 +50,7 @@ class THEOliveEventAdapter(private val theoLiveApi: TheoLive, private val emitte
       TheoLiveEventTypes.DISTRIBUTIONLOADSTART,
       onDistributionLoadStart
     )
+    theoLiveApi.removeEventListener(TheoLiveEventTypes.DISTRIBUTIONLOADED, onDistributionLoaded)
     theoLiveApi.removeEventListener(TheoLiveEventTypes.DISTRIBUTIONOFFLINE, onDistributionOffline)
     theoLiveApi.removeEventListener(TheoLiveEventTypes.ENDPOINTLOADED, onEndPointLoaded)
     theoLiveApi.removeEventListener(TheoLiveEventTypes.INTENTTOFALLBACK, onIntentOfFallback)
@@ -52,6 +60,16 @@ class THEOliveEventAdapter(private val theoLiveApi: TheoLive, private val emitte
     emitter.emit(Arguments.createMap().apply {
       putString(EVENT_PROP_TYPE, "distributionloadstart")
       putString(EVENT_PROP_DISTRIBUTION_ID, event.getDistributionId())
+    })
+  }
+
+  private fun onDistributionLoaded(event: DistributionLoadedEvent) {
+    emitter.emit(Arguments.createMap().apply {
+      putString(EVENT_PROP_TYPE, "distributionloaded")
+      putMap(EVENT_PROP_DISTRIBUTION, Arguments.createMap().apply {
+        putString(EVENT_PROP_ID, event.getDistribution().id)
+        putString(EVENT_PROP_NAME, event.getDistribution().name)
+      })
     })
   }
 

@@ -17,6 +17,8 @@ let PROP_ENDPOINT_PRIORITY: String = "priority"
 let PROP_ENDPOINT_CONTENT_PROTECTION: String = "contentProtection"
 let PROP_REASON_ERROR_CODE: String = "errorCode"
 let PROP_REASON_ERROR_MESSAGE: String = "errorMessage"
+let PROP_DISTRIBUTION_ID: String = "id"
+let PROP_DISTRIBUTION_NAME: String = "name"
 
 class THEOplayerRCTTHEOliveEventAdapter {
 
@@ -61,6 +63,20 @@ class THEOplayerRCTTHEOliveEventAdapter {
             PROP_REASON_ERROR_MESSAGE: reason.message
         ]
     }
+    
+    class func fromDistribution(distribution: (any THEOplayerTHEOliveIntegration.DistributionAPI)?) -> [String:Any] {
+        guard let distribution = distribution else {
+            return [:]
+        }
+        
+        var distributionData: [String:Any] = [:]
+        distributionData[PROP_DISTRIBUTION_ID] = distribution.id
+        distributionData[PROP_DISTRIBUTION_NAME] = distribution.name
+
+        return distributionData
+    }
+    
+    
 #endif
     
 }
