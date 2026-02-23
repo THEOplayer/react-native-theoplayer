@@ -98,6 +98,20 @@ export default function App() {
 
   // Ref for UiContainer root View (for OMID friendly obstruction)
   const uiContainerViewRef = React.useRef<View>(null);
+  // Register UiContainer as OMID friendly obstruction
+  useEffect(() => {
+    if (player && player.ads?.omid && uiContainerViewRef.current) {
+      const nodeHandle = findNodeHandle(uiContainerViewRef.current);
+      if (nodeHandle) {
+        player.ads.omid.addFriendlyObstruction({
+          viewNodeHandle: nodeHandle,
+          purpose: OmidFriendlyObstructionPurpose.VIDEO_CONTROLS,
+          reason: 'React Native Player UI',
+        });
+      }
+    }
+  }, [player, uiContainerViewRef.current]);
+  
   // In PiP presentation mode on NewArch Android, there is an issue where SafeAreayView does not update the edges in time,
   // so explicitly disable them here.
   const edges: Edges = useMemo(() => (presentationMode === PresentationMode.pip ? [] : ['left', 'top', 'right', 'bottom']), [presentationMode]);
