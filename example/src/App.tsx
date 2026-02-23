@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState, useEffect } from 'react';
 import {
   AirplayButton,
   AutoFocusGuide,
@@ -26,6 +26,7 @@ import {
 } from '@theoplayer/react-native-ui';
 import {
   ContentProtectionRegistry,
+  OmidFriendlyObstructionPurpose,
   PlayerConfiguration,
   PlayerEventType,
   PresentationMode,
@@ -35,7 +36,7 @@ import {
   THEOplayer,
   THEOplayerView,
 } from 'react-native-theoplayer';
-import { Platform, StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
+import { Platform, StatusBar, StyleSheet, useColorScheme, View, findNodeHandle } from 'react-native';
 import { SourceMenuButton, SOURCES } from './custom/SourceMenuButton';
 import { BackgroundAudioSubMenu } from './custom/BackgroundAudioSubMenu';
 import { PiPSubMenu } from './custom/PipSubMenu';
