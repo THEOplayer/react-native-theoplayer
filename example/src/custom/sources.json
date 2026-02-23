@@ -1,5 +1,20 @@
 [
   {
+    "name": "HLS - VOD - DAI Viewability",
+    "os": ["ios", "android", "web"],
+    "source": {
+      "sources": {
+        "type": "application/x-mpegurl",
+        "ssai": {
+          "integration": "google-dai",
+          "availabilityType": "vod",
+          "contentSourceID": "2556080",
+          "videoID": "tears-of-steel-omid"
+        }
+      }
+    }  
+  },
+  {
     "name": "HLS - Sideloaded Chapters",
     "os": ["ios", "android", "web"],
     "source": {
