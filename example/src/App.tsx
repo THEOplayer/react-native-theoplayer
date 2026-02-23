@@ -96,6 +96,8 @@ export default function App() {
   const presentationMode = usePresentationMode(player);
   const isDarkMode = useColorScheme() === 'dark';
 
+  // Ref for UiContainer root View (for OMID friendly obstruction)
+  const uiContainerViewRef = React.useRef<View>(null);
   // In PiP presentation mode on NewArch Android, there is an issue where SafeAreayView does not update the edges in time,
   // so explicitly disable them here.
   const edges: Edges = useMemo(() => (presentationMode === PresentationMode.pip ? [] : ['left', 'top', 'right', 'bottom']), [presentationMode]);
@@ -157,73 +159,75 @@ export default function App() {
         <View style={styles.container}>
           <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady}>
             {player !== undefined && (
-              <UiContainer
-                theme={{ ...DEFAULT_THEOPLAYER_THEME }}
-                player={player}
-                behind={<CenteredDelayedActivityIndicator size={50} />}
-                top={
-                  <AutoFocusGuide>
-                    <ControlBar>
-                      <Spacer />
-                      <MediaCacheMenuButton>
-                        <MediaCacheDownloadButton />
-                        <MediaCachingTaskListSubMenu />
-                      </MediaCacheMenuButton>
-                      {/*This is a custom menu for source selection.*/}
-                      <SourceMenuButton />
-                      {!Platform.isTV && (
-                        <>
-                          <AirplayButton />
-                          <ChromecastButton />
-                        </>
-                      )}
-                      <LanguageMenuButton />
-                      <SettingsMenuButton>
-                        {/*Note: quality selection is not available on iOS */}
-                        <QualitySubMenu />
-                        <PlaybackRateSubMenu />
-                        <BackgroundAudioSubMenu />
-                        <PiPSubMenu />
-                        <AutoPlaySubMenu />
-                        {Platform.OS === 'android' && <RenderingTargetSubMenu />}
-                      </SettingsMenuButton>
-                    </ControlBar>
-                  </AutoFocusGuide>
-                }
-                center={
-                  <AutoFocusGuide>
-                    <CenteredControlBar left={<SkipButton skip={-10} />} middle={<PlayButton />} right={<SkipButton skip={30} />} />
-                  </AutoFocusGuide>
-                }
-                bottom={
-                  <AutoFocusGuide>
-                    <ControlBar style={{ justifyContent: 'flex-start' }}>
-                      <CastMessage />
-                    </ControlBar>
-                    {
-                      /*Note: RNSlider is not available on tvOS */
-                      !(Platform.isTV && Platform.OS === 'ios') && (
-                        <ControlBar>
-                          <SeekBar />
-                        </ControlBar>
-                      )
-                    }
-                    <ControlBar>
-                      <MuteButton />
-                      <GoToLiveButton />
-                      <TimeLabel showDuration={true} />
-                      <Spacer />
-                      <PipButton />
-                      <FullscreenButton />
-                    </ControlBar>
-                  </AutoFocusGuide>
-                }
-                adCenter={
-                  <AutoFocusGuide>
-                    <CenteredControlBar middle={<PlayButton />} />
-                  </AutoFocusGuide>
-                }
-              />
+              <View ref={uiContainerViewRef} style={{ flex: 1 }}>
+                <UiContainer
+                  theme={{ ...DEFAULT_THEOPLAYER_THEME }}
+                  player={player}
+                  behind={<CenteredDelayedActivityIndicator size={50} />}
+                  top={
+                    <AutoFocusGuide>
+                      <ControlBar>
+                        <Spacer />
+                        <MediaCacheMenuButton>
+                          <MediaCacheDownloadButton />
+                          <MediaCachingTaskListSubMenu />
+                        </MediaCacheMenuButton>
+                        {/*This is a custom menu for source selection.*/}
+                        <SourceMenuButton />
+                        {!Platform.isTV && (
+                          <>
+                            <AirplayButton />
+                            <ChromecastButton />
+                          </>
+                        )}
+                        <LanguageMenuButton />
+                        <SettingsMenuButton>
+                          {/*Note: quality selection is not available on iOS */}
+                          <QualitySubMenu />
+                          <PlaybackRateSubMenu />
+                          <BackgroundAudioSubMenu />
+                          <PiPSubMenu />
+                          <AutoPlaySubMenu />
+                          {Platform.OS === 'android' && <RenderingTargetSubMenu />}
+                        </SettingsMenuButton>
+                      </ControlBar>
+                    </AutoFocusGuide>
+                  }
+                  center={
+                    <AutoFocusGuide>
+                      <CenteredControlBar left={<SkipButton skip={-10} />} middle={<PlayButton />} right={<SkipButton skip={30} />} />
+                    </AutoFocusGuide>
+                  }
+                  bottom={
+                    <AutoFocusGuide>
+                      <ControlBar style={{ justifyContent: 'flex-start' }}>
+                        <CastMessage />
+                      </ControlBar>
+                      {
+                        /*Note: RNSlider is not available on tvOS */
+                        !(Platform.isTV && Platform.OS === 'ios') && (
+                          <ControlBar>
+                            <SeekBar />
+                          </ControlBar>
+                        )
+                      }
+                      <ControlBar>
+                        <MuteButton />
+                        <GoToLiveButton />
+                        <TimeLabel showDuration={true} />
+                        <Spacer />
+                        <PipButton />
+                        <FullscreenButton />
+                      </ControlBar>
+                    </AutoFocusGuide>
+                  }
+                  adCenter={
+                    <AutoFocusGuide>
+                      <CenteredControlBar middle={<PlayButton />} />
+                    </AutoFocusGuide>
+                  }
+                />
+              </View>
             )}
           </THEOplayerView>
         </View>
