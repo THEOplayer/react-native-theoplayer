@@ -174,7 +174,7 @@ export default function App() {
         <View style={styles.container}>
           <THEOplayerView config={playerConfig} onPlayerReady={onPlayerReady}>
             {player !== undefined && (
-              <View ref={uiContainerViewRef} style={{ flex: 1 }}>
+              <View ref={uiContainerViewRef} style={{ flex: 1 }} collapsable={false}>
                 <UiContainer
                   theme={{ ...DEFAULT_THEOPLAYER_THEME }}
                   player={player}
