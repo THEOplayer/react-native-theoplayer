@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added the `DistributionLoaded` event for THEOlive.
 
+### Added
+
+- Added contentProtection extraction for THEOlive endpoints on iOS.
+
 ## [10.9.0] - 26-01-29
 
 ### Fixed
