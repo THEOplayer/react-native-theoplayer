@@ -18,6 +18,16 @@ let PROP_ENDPOINT_CONTENT_PROTECTION: String = "contentProtection"
 let PROP_REASON_ERROR_CODE: String = "errorCode"
 let PROP_REASON_ERROR_MESSAGE: String = "errorMessage"
 
+let PROP_CONTENTPROTECTION_INTEGRATION: String = "integration"
+let PROP_CONTENTPROTECTION_FAIRPLAY: String = "fairplay"
+let PROP_CONTENTPROTECTION_WIDEVINE: String = "widevine"
+let PROP_CONTENTPROTECTION_PLAYREADY: String = "playready"
+
+let PROP_LICENSE_CONFIG_LICENSE_URL: String = "licenseUrl"
+
+let PROP_KEY_SYSTEM_CONFIG_LICENSE_URL: String = "licenseUrl"
+let PROP_KEY_SYSTEM_CONFIG_CERTIFICATE_URL: String = "certificateUrl"
+
 class THEOplayerRCTTHEOliveEventAdapter {
 
 #if canImport(THEOplayerTHEOliveIntegration)
@@ -44,11 +54,52 @@ class THEOplayerRCTTHEOliveEventAdapter {
             endpointData[PROP_ENDPOINT_AD_SRC] = adSrc
         }
         if let contentProtection = endpoint.channelContentProtection {
-            endpointData[PROP_ENDPOINT_CONTENT_PROTECTION] = contentProtection.toJSONEncodableDictionary()
+            endpointData[PROP_ENDPOINT_CONTENT_PROTECTION] = THEOplayerRCTTHEOliveEventAdapter.fromContentProtection(contentProtection: contentProtection)
         }
         endpointData[PROP_ENDPOINT_WEIGHT] = endpoint.weight
         endpointData[PROP_ENDPOINT_PRIORITY] = endpoint.priority
         return endpointData
+    }
+    
+    class func fromContentProtection(contentProtection: (any THEOplayerTHEOliveIntegration.ChannelContentProtection)?) -> [String:Any] {
+        guard let contentProtection = contentProtection else {
+            return [:]
+        }
+        
+        var contentProtectionData: [String:Any] = [:]
+        contentProtectionData[PROP_CONTENTPROTECTION_INTEGRATION] = contentProtection.integration
+        if let keySystem = contentProtection.fairplay {
+            contentProtectionData[PROP_CONTENTPROTECTION_FAIRPLAY] = THEOplayerRCTTHEOliveEventAdapter.fromKeySystem(keySystem: keySystem)
+        }
+        if let licenseConfiguration = contentProtection.widevine {
+            contentProtectionData[PROP_CONTENTPROTECTION_WIDEVINE] = THEOplayerRCTTHEOliveEventAdapter.fromLicenseConfiguration(licenseConfiguration: licenseConfiguration)
+        }
+        if let licenseConfiguration = contentProtection.playready {
+            contentProtectionData[PROP_CONTENTPROTECTION_PLAYREADY] = THEOplayerRCTTHEOliveEventAdapter.fromLicenseConfiguration(licenseConfiguration: licenseConfiguration)
+        }
+        
+        return contentProtectionData
+    }
+    
+    class func fromKeySystem(keySystem: (any THEOplayerTHEOliveIntegration.KeySystemConfiguration)?) -> [String:Any] {
+        guard let keySystem = keySystem else {
+            return [:]
+        }
+        
+        var keySystemData: [String:Any] = [:]
+        keySystemData[PROP_KEY_SYSTEM_CONFIG_LICENSE_URL] = keySystem.licenseUrl
+        keySystemData[PROP_KEY_SYSTEM_CONFIG_CERTIFICATE_URL] = keySystem.certificateUrl
+        return keySystemData
+    }
+    
+    class func fromLicenseConfiguration(licenseConfiguration: (any THEOplayerTHEOliveIntegration.LicenseConfiguration)?) -> [String:Any] {
+        guard let licenseConfiguration = licenseConfiguration else {
+            return [:]
+        }
+        
+        var licenseConfigurationData: [String:Any] = [:]
+        licenseConfigurationData[PROP_LICENSE_CONFIG_LICENSE_URL] = licenseConfiguration.licenseUrl
+        return licenseConfigurationData
     }
     
     class func fromReason(reason: THEOplayerSDK.THEOError?) -> [String:Any] {
