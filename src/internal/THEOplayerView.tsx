@@ -151,11 +151,9 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
   componentDidMount() {
     this._facade.initialize();
 
+    // On iOS we use the native deviceOrientation event, on Android a private `_didUpdateDimensions` event.
     if (Platform.OS !== 'ios') {
-      // On iOS we use the native deviceOrientation event, on Android a private `_didUpdateDimensions` event.
-      this._dimensionsHandler = DeviceEventEmitter.addListener('_didUpdateDimensions', () => {
-        this._onDimensionsChanged();
-      });
+      this._dimensionsHandler = DeviceEventEmitter.addListener('_didUpdateDimensions', this._onDimensionsChanged);
     }
   }
 
@@ -164,10 +162,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
     this._facade.willUnmount();
 
     // Notify the player will be destroyed.
-    const { onPlayerDestroy } = this.props;
-    if (onPlayerDestroy) {
-      onPlayerDestroy(this._facade);
-    }
+    this.props.onPlayerDestroy?.(this._facade);
 
     this._facade.dispatchEvent(new BaseEvent(PlayerEventType.DESTROY));
     this._dimensionsHandler?.remove();
