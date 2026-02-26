@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed an issue on Android where transitioning from picture-in-picture presentation mode would fail when using Expo Router.
+- Fixed an issue where the player would remove all listeners when using `<StrictMode>` on mobile platforms.
 
 ## [10.10.0] - 26-02-17
 
