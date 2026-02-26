@@ -21,7 +21,15 @@ const PLAYER_CONTAINER_STYLE: ViewStyle = {
   backgroundColor: '#000000',
 };
 
-export class TestableApp extends Component {
+export function TestableApp() {
+  return (
+    <StrictMode>
+      <TestableApp />
+    </StrictMode>
+  );
+}
+
+class App extends Component {
   player: THEOplayer | undefined = undefined;
 
   onPlayerReady(player: THEOplayer) {
