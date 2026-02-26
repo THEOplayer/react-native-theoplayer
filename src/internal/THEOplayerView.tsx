@@ -149,6 +149,8 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
   }
 
   componentDidMount() {
+    this._facade.initialize();
+
     if (Platform.OS !== 'ios') {
       // On iOS we use the native deviceOrientation event, on Android a private `_didUpdateDimensions` event.
       this._dimensionsHandler = DeviceEventEmitter.addListener('_didUpdateDimensions', () => {
@@ -169,7 +171,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
 
     this._facade.dispatchEvent(new BaseEvent(PlayerEventType.DESTROY));
     this._dimensionsHandler?.remove();
-    this._facade.clearEventListeners();
+    this._facade.destroy();
   }
 
   public get nativeHandle(): number {

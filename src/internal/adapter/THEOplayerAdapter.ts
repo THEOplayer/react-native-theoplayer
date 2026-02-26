@@ -77,7 +77,9 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._abrAdapter = new AbrAdapter(this._view);
     this._textTrackStyleAdapter = new TextTrackStyleAdapter(this._view);
     this._theoliveAdapter = new TheoLiveNativeAdapter(this._view);
+  }
 
+  public initialize() {
     this.addEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
     this.addEventListener(PlayerEventType.PAUSE, this.onPause);
     this.addEventListener(PlayerEventType.PLAYING, this.onPlaying);
@@ -92,6 +94,10 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this.addEventListener(PlayerEventType.PRESENTATIONMODE_CHANGE, this.onPresentationModeChange);
     this.addEventListener(PlayerEventType.DIMENSION_CHANGE, this.onDimensionChange);
     this.addEventListener(PlayerEventType.VIDEO_RESIZE, this.onVideoResize);
+  }
+
+  public destroy() {
+    this.clearEventListeners();
   }
 
   private hasValidSource(): boolean {
