@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, StrictMode } from 'react';
 import { Tester, TestHookStore } from 'cavy';
 import { Platform, SafeAreaView, StyleSheet, View, ViewStyle } from 'react-native';
 import { TestableTHEOplayerView } from './components/TestableTHEOplayerView';
@@ -24,7 +24,7 @@ const PLAYER_CONTAINER_STYLE: ViewStyle = {
 export function TestableApp() {
   return (
     <StrictMode>
-      <TestableApp />
+      <App />
     </StrictMode>
   );
 }
