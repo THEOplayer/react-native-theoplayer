@@ -28,6 +28,16 @@ export interface AdBreak {
   ads: Ad[] | undefined;
 
   /**
+   * The identifier of the ad break.
+   *
+   * @remarks
+   * <br/> - For THEOads, this is the interstitial identifier.
+   * <br/> - For Google IMA & DAI, this is the pod index of the ad break.
+   * <br/> - For other integrations, this may be `undefined`.
+   */
+  id: string | undefined;
+
+  /**
    * The time offset at which content will be paused to play the ad break, in seconds.
    */
   timeOffset: number;

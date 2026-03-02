@@ -27,6 +27,7 @@ let PROP_GOOGLE_AD_ID_VALUE: String = "adIdValue"
 let PROP_GOOGLE_AD_WRAPPER_AD_IDS: String = "wrapperAdIds"
 let PROP_GOOGLE_AD_WRAPPER_AD_SYSTEMS: String = "wrapperAdSystems"
 let PROP_GOOGLE_AD_WRAPPER_CREATIVE_IDS: String = "wrapperCreativeIds"
+let PROP_ADBREAK_ID: String = "id"
 let PROP_ADBREAK_MAX_DURATION: String = "maxDuration"
 let PROP_ADBREAK_TIME_OFFSET: String = "timeOffset"
 let PROP_ADBREAK_MAX_REMAINING_DURATION: String = "maxRemainingDuration"
@@ -173,6 +174,7 @@ class THEOplayerRCTAdAdapter {
     
     class func fromAdBreak(adBreak: AdBreak) -> [String:Any] {
         var adBreakData: [String:Any] = [:]
+        adBreakData[PROP_ADBREAK_ID] = adBreak.id
         adBreakData[PROP_ADBREAK_MAX_DURATION] = adBreak.maxDuration
         adBreakData[PROP_ADBREAK_TIME_OFFSET] = adBreak.timeOffset
         adBreakData[PROP_ADBREAK_MAX_REMAINING_DURATION] = adBreak.maxRemainingDuration
@@ -204,6 +206,7 @@ class THEOplayerRCTAdAdapter {
         }
         
         return NativeAdBreak(ads: ads,
+                             id: adBreakData[PROP_ADBREAK_ID] as? String,
                              maxDuration: lround((adBreakData[PROP_ADBREAK_MAX_DURATION] as? Double) ?? 0),
                              maxRemainingDuration: (adBreakData[PROP_ADBREAK_MAX_REMAINING_DURATION] as? Double) ?? 0,
                              timeOffset: lround((adBreakData[PROP_ADBREAK_TIME_OFFSET] as? Double) ?? 0),
@@ -212,7 +215,7 @@ class THEOplayerRCTAdAdapter {
     }
     
     class func defaultAdBreak() -> NativeAdBreak {
-        return NativeAdBreak(ads: [], maxDuration: 0, maxRemainingDuration: 0, timeOffset: 0, integration: .custom)
+        return NativeAdBreak(ads: [], id: nil, maxDuration: 0, maxRemainingDuration: 0, timeOffset: 0, integration: .custom)
     }
     
     class private func fromCompanionAds(companionAds: [CompanionAd]) -> [[String:Any]] {
