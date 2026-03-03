@@ -3,6 +3,7 @@
  *
  * @remarks
  * <br/> - The player might change the latency configuration based on playback events like stalls.
+ * <br/> - This feature is not supported on iOS Safari, due to platform limitations.
  *
  * @category Source
  * @public
