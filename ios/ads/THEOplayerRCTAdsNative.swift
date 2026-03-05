@@ -128,14 +128,21 @@ class NativeAdBreak: THEOplayerSDK.AdBreak {
     var integration: THEOplayerSDK.AdIntegrationKind
     /**The type of custom ad integration.*/
     var customIntegration: String? = nil
+    /**
+       - For THEOads, this is the interstitial identifier.
+       - For Google IMA & DAI, this is the pod index of the ad break.
+       - For other integrations, this may be `nil`.
+    */
+   var id: String? = nil
     
-    init(ads: [Ad], maxDuration: Int, maxRemainingDuration: Double, timeOffset: Int, integration: THEOplayerSDK.AdIntegrationKind, customIntegration: String? = nil) {
+    init(ads: [Ad], maxDuration: Int, maxRemainingDuration: Double, timeOffset: Int, integration: THEOplayerSDK.AdIntegrationKind, customIntegration: String? = nil, id: String? = nil) {
         self.ads = ads
         self.maxDuration = maxDuration
         self.maxRemainingDuration = maxRemainingDuration
         self.timeOffset = timeOffset
         self.integration = integration
         self.customIntegration = customIntegration
+        self.id = id
     }
 }
 
