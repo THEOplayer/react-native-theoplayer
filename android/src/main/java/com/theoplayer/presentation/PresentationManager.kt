@@ -286,36 +286,43 @@ class PresentationManager(
     get() = findReactRootView( reactContext, reactPlayerGroup)
 
   private fun reparentPlayerToRoot() {
-    reactPlayerGroup?.let { playerGroup ->
-      playerGroupRestoreOptions.parentNode = (playerGroup.parent as? ViewGroup)?.also { parent ->
-        playerGroupRestoreOptions.childIndex = parent.indexOfChild(playerGroup)
+    val root = rootView ?: return
+    val playerGroup = reactPlayerGroup ?: return
+    val playerGroupParent = (playerGroup.parent as? ViewGroup) ?: return
 
-        // Re-parent the playerViewGroup to the root node
-        parent.removeView(playerGroup)
-        rootView?.let { root ->
-          root.addView(playerGroup)
-
-          // Attach an observer that overrides the react-native lay-out and forces fullscreen.
-          fullScreenLayoutObserver.attach(playerGroup, root)
-        }
-      }
+    // already reparented?
+    if (playerGroup.parent == root) {
+      return
     }
+
+    // Store the original parent and child index to be able to restore it later
+    playerGroupRestoreOptions.store(playerGroupParent, playerGroup)
+
+    // Re-parent the playerViewGroup to the root node
+    playerGroupParent.removeView(playerGroup)
+    root.addView(playerGroup)
+
+    // Attach an observer that overrides the react-native lay-out and forces fullscreen.
+    fullScreenLayoutObserver.attach(playerGroup, root)
   }
 
   private fun reparentPlayerToOriginal() {
-    rootView?.run {
-      reactPlayerGroup?.let { playerGroup ->
-        // Remove forced layout observer
-        fullScreenLayoutObserver.remove()
+    val root = rootView ?: return
+    val playerGroup = reactPlayerGroup ?: return
 
-        // Re-parent the playerViewGroup from the root node to its original parent
-        removeView(playerGroup)
-        playerGroupRestoreOptions.parentNode?.addView(
-          playerGroup, playerGroupRestoreOptions.childIndex ?: 0
-        )
-        playerGroupRestoreOptions.reset()
-      }
+    // Not re-parented?
+    if (!playerGroupRestoreOptions.isStored()) {
+      return
     }
+
+    // Remove forced layout observer
+    fullScreenLayoutObserver.remove()
+
+    // Remove the playerViewGroup the root node
+    root.removeView(playerGroup)
+
+    // Restore the original parent and child index
+    playerGroupRestoreOptions.restore()
   }
 // endregion
 
@@ -346,11 +353,31 @@ class PresentationManager(
   }
 }
 
+/**
+ * Helper class to store the original parent and child index of the playerViewGroup when re-parenting it
+ * to the root view for fullscreen or PiP presentation mode, and restore it when going back to inline mode.
+ */
 private class PlayerGroupRestoreOptions {
   var childIndex: Int? = null
+    private set
   var parentNode: ViewGroup? = null
+    private set
+  var childNode: ReactViewGroup? = null
+    private set
 
-  fun reset() {
+  fun isStored(): Boolean = parentNode != null && childNode != null
+
+  fun store(parent: ViewGroup, child: ReactViewGroup) {
+    parentNode = parent
+    childNode = child
+    childIndex = parent.indexOfChild(child)
+  }
+
+  fun restore() {
+    childNode?.let { child ->
+      parentNode?.addView(child, childIndex ?: 0)
+    }
+    childNode = null
     parentNode = null
     childIndex = null
   }
