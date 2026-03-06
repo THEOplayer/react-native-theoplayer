@@ -13,12 +13,12 @@ export class THEOplayerWebAdsAdapter implements AdsAPI {
 
   currentAdBreak(): Promise<AdBreak> {
     const adBreak = this._player.ads?.currentAdBreak;
-    return adBreak ? Promise.resolve(adBreak) : Promise.reject<AdBreak>();
+    return adBreak ? Promise.resolve(adBreak as AdBreak) : Promise.reject<AdBreak>();
   }
 
   currentAds(): Promise<Ad[]> {
     const ads = this._player.ads?.currentAds;
-    return ads ? Promise.resolve(ads) : Promise.reject<Ad[]>();
+    return ads ? Promise.resolve(ads as Ad[]) : Promise.reject<Ad[]>();
   }
 
   playing(): Promise<boolean> {
@@ -31,7 +31,7 @@ export class THEOplayerWebAdsAdapter implements AdsAPI {
 
   scheduledAdBreaks(): Promise<AdBreak[]> {
     const adBreaks = this._player.ads?.scheduledAdBreaks;
-    return adBreaks ? Promise.resolve(adBreaks) : Promise.reject<AdBreak[]>();
+    return adBreaks ? Promise.resolve(adBreaks as AdBreak[]) : Promise.reject<AdBreak[]>();
   }
 
   skip(): void {

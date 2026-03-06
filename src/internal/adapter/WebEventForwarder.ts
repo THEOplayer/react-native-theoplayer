@@ -43,6 +43,8 @@ import {
   TimeRange,
   TrackListEventType,
 } from 'react-native-theoplayer';
+import type { Ad } from '../../api/ads/Ad';
+import type { AdBreak } from '../../api/ads/AdBreak';
 import type { THEOplayerWebAdapter } from './THEOplayerWebAdapter';
 import { BaseEvent } from './event/BaseEvent';
 import {
@@ -375,12 +377,12 @@ export class WebEventForwarder {
 
   private readonly onAdEvent = (event: ForwardedAdEvent) => {
     const castedEvent = event as NativeAdEvent<string>;
-    this._facade.dispatchEvent(new DefaultAdEvent(event.type as AdEventType, castedEvent.ad));
+    this._facade.dispatchEvent(new DefaultAdEvent(event.type as AdEventType, castedEvent.ad as Ad));
   };
 
   private readonly onAdBreakEvent = (event: ForwardedAdBreakEvent) => {
     const castedEvent = event as NativeAdBreakEvent<string>;
-    this._facade.dispatchEvent(new DefaultAdEvent(event.type as AdEventType, castedEvent.adBreak));
+    this._facade.dispatchEvent(new DefaultAdEvent(event.type as AdEventType, castedEvent.adBreak as AdBreak));
   };
 
   private readonly onTheoAdsEvent = (event: ForwardedTheoAdsEvent) => {
