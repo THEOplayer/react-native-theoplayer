@@ -135,7 +135,7 @@ class NativeAdBreak: THEOplayerSDK.AdBreak {
     */
    var id: String? = nil
 
-    init(ads: [Ad], id: String? = nil, maxDuration: Int, maxRemainingDuration: Double, timeOffset: Int, integration: THEOplayerSDK.AdIntegrationKind, customIntegration: String? = nil, id: String? = nil) {
+    init(ads: [Ad], id: String? = nil, maxDuration: Int, maxRemainingDuration: Double, timeOffset: Int, integration: THEOplayerSDK.AdIntegrationKind, customIntegration: String? = nil) {
         self.ads = ads
         self.maxDuration = maxDuration
         self.maxRemainingDuration = maxRemainingDuration
