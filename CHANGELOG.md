@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed an issue on Android where transitioning from picture-in-picture presentation mode would fail when using Expo Router.
 
+### Changed
+
+- Updated NativeAdBreak to prevent iOS build failure caused by changed AdBreak PRotocol.
+
 ## [10.10.0] - 26-02-17
 
 ### Fixed
