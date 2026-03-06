@@ -1,5 +1,6 @@
 import type { Event } from '../event/Event';
 import type {
+  CurrentSourceChangeEvent,
   DimensionChangeEvent,
   DurationChangeEvent,
   ErrorEvent,
@@ -34,6 +35,7 @@ export enum PlayerEventType {
   CANPLAY = 'canplay',
   PLAYING = 'playing',
   SOURCE_CHANGE = 'sourcechange',
+  CURRENT_SOURCE_CHANGE = 'currentsourcechange',
   LOAD_START = 'loadstart',
   LOADED_METADATA = 'loadedmetadata',
   LOADED_DATA = 'loadeddata',
@@ -100,6 +102,11 @@ export interface PlayerEventMap {
    * Dispatched when the player's source changes.
    */
   [PlayerEventType.SOURCE_CHANGE]: Event<PlayerEventType.SOURCE_CHANGE>;
+
+  /**
+   * Dispatched when the current source, which is chosen from the source description's sources, changes.
+   */
+  [PlayerEventType.CURRENT_SOURCE_CHANGE]: CurrentSourceChangeEvent;
 
   /**
    * Dispatched when the player starts loading the manifest.

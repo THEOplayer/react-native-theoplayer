@@ -135,6 +135,16 @@ export interface NativeVideoResizeEvent {
   readonly videoHeight: number;
 }
 
+export interface NativeCurrentSourceChangeEvent {
+  /**
+   * The player's current source as a serialized TypedSource.
+   */
+  readonly currentSource?: {
+    readonly src: string;
+    readonly type?: string;
+  };
+}
+
 export interface NativeSegmentNotFoundEvent {
   /**
    * Start time of the segment.

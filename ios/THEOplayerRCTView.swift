@@ -364,7 +364,13 @@ public class THEOplayerRCTView: UIView {
         self.mainEventHandler.onNativeSourceChange = nativeSourceChange
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeSourceChange prop set.") }
     }
-    
+
+    @objc(setOnNativeCurrentSourceChange:)
+    func setOnNativeCurrentSourceChange(nativeCurrentSourceChange: @escaping RCTDirectEventBlock) {
+        self.mainEventHandler.onNativeCurrentSourceChange = nativeCurrentSourceChange
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeCurrentSourceChange prop set.") }
+    }
+
     @objc(setOnNativeLoadStart:)
     func setOnNativeLoadStart(nativeLoadStart: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeLoadStart = nativeLoadStart

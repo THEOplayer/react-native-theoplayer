@@ -23,6 +23,7 @@ import {
   DefaultAirplayStateChangeEvent,
   DefaultChromecastChangeEvent,
   DefaultChromecastErrorEvent,
+  DefaultCurrentSourceChangeEvent,
   DefaultDimensionChangeEvent,
   DefaultDurationChangeEvent,
   DefaultErrorEvent,
@@ -52,6 +53,7 @@ import type {
 } from './adapter/event/native/NativeTrackEvent';
 import { toMediaTrackType, toMediaTrackTypeEventType, toTextTrackEventType, toTrackListEventType } from './adapter/event/native/NativeTrackEvent';
 import {
+  NativeCurrentSourceChangeEvent,
   NativeDurationChangeEvent,
   NativeErrorEvent,
   NativeLoadedMetadataEvent,
@@ -85,6 +87,7 @@ interface THEOplayerRCTViewProps {
   onNativePlayerReady: (event: NativeSyntheticEvent<NativePlayerStateEvent>) => void;
   onNativePlayerStateSync: (event: NativeSyntheticEvent<NativePlayerStateEvent>) => void;
   onNativeSourceChange: () => void;
+  onNativeCurrentSourceChange: (event: NativeSyntheticEvent<NativeCurrentSourceChangeEvent>) => void;
   onNativeLoadStart: () => void;
   onNativeLoadedData: () => void;
   onNativeLoadedMetadata: (event: NativeSyntheticEvent<NativeLoadedMetadataEvent>) => void;
@@ -215,6 +218,11 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
     if (!this._facade.autoplay) {
       this._showPoster();
     }
+  };
+
+  private _onCurrentSourceChange = (event: NativeSyntheticEvent<NativeCurrentSourceChangeEvent>) => {
+    const nativeEvent = event.nativeEvent;
+    this._facade.dispatchEvent(new DefaultCurrentSourceChangeEvent(nativeEvent.currentSource as any));
   };
 
   private _onLoadStart = () => {
@@ -449,6 +457,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
           onNativePlayerReady={this._onNativePlayerReady}
           onNativePlayerStateSync={this._onNativePlayerStateSync}
           onNativeSourceChange={this._onSourceChange}
+          onNativeCurrentSourceChange={this._onCurrentSourceChange}
           onNativeLoadStart={this._onLoadStart}
           onNativeLoadedData={this._onLoadedData}
           onNativeLoadedMetadata={this._onLoadedMetadata}

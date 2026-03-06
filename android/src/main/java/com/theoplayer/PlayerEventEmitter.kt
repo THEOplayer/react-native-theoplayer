@@ -55,6 +55,7 @@ private val TAG = PlayerEventEmitter::class.java.name
 private const val EVENT_PLAYER_READY = "onNativePlayerReady"
 private const val EVENT_PLAYER_STATE_SYNC = "onNativePlayerStateSync"
 private const val EVENT_SOURCECHANGE = "onNativeSourceChange"
+private const val EVENT_CURRENTSOURCECHANGE = "onNativeCurrentSourceChange"
 private const val EVENT_LOADSTART = "onNativeLoadStart"
 private const val EVENT_LOADEDMETADATA = "onNativeLoadedMetadata"
 private const val EVENT_LOADEDDATA = "onNativeLoadedData"
@@ -101,6 +102,7 @@ class PlayerEventEmitter internal constructor(
     EVENT_PLAYER_READY,
     EVENT_PLAYER_STATE_SYNC,
     EVENT_SOURCECHANGE,
+    EVENT_CURRENTSOURCECHANGE,
     EVENT_LOADSTART,
     EVENT_LOADEDMETADATA,
     EVENT_LOADEDDATA,
@@ -139,6 +141,7 @@ class PlayerEventEmitter internal constructor(
       EVENT_PLAYER_READY,
       EVENT_PLAYER_STATE_SYNC,
       EVENT_SOURCECHANGE,
+      EVENT_CURRENTSOURCECHANGE,
       EVENT_LOADSTART,
       EVENT_LOADEDMETADATA,
       EVENT_LOADEDDATA,
@@ -195,6 +198,8 @@ class PlayerEventEmitter internal constructor(
     playerListeners[PlayerEventTypes.SOURCECHANGE] = EventListener<PlayerEvent<*>> {
       receiveEvent(EVENT_SOURCECHANGE, null)
     }
+    playerListeners[PlayerEventTypes.CURRENTSOURCECHANGE] =
+      EventListener { event: CurrentSourceChangeEvent -> onCurrentSourceChange(event) }
     playerListeners[PlayerEventTypes.LOADSTART] = EventListener<PlayerEvent<*>> {
       receiveEvent(EVENT_LOADSTART, null)
     }
@@ -338,6 +343,18 @@ class PlayerEventEmitter internal constructor(
 
   private fun emitError(code: String, message: String?) {
     receiveEvent(EVENT_ERROR, PayloadBuilder().error(code, message).build())
+  }
+
+  private fun onCurrentSourceChange(event: CurrentSourceChangeEvent) {
+    val payload = Arguments.createMap()
+    val currentSource = event.currentSource
+    if (currentSource != null) {
+      val sourceMap = Arguments.createMap()
+      sourceMap.putString("src", currentSource.src)
+      currentSource.type?.let { sourceMap.putString("type", it.mimeType) }
+      payload.putMap("currentSource", sourceMap)
+    }
+    receiveEvent(EVENT_CURRENTSOURCECHANGE, payload)
   }
 
   private fun onLoadedMetadata() {
