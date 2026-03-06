@@ -111,6 +111,7 @@ export default function App() {
     setPlayer(player);
     // optional debug logs
     player.addEventListener(PlayerEventType.SOURCE_CHANGE, console.log);
+    player.addEventListener(PlayerEventType.CURRENT_SOURCE_CHANGE, console.log);
     player.addEventListener(PlayerEventType.LOADED_DATA, console.log);
     player.addEventListener(PlayerEventType.LOADED_METADATA, console.log);
     player.addEventListener(PlayerEventType.READYSTATE_CHANGE, console.log);
