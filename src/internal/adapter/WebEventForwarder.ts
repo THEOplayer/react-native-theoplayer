@@ -377,12 +377,12 @@ export class WebEventForwarder {
 
   private readonly onAdEvent = (event: ForwardedAdEvent) => {
     const castedEvent = event as NativeAdEvent<string>;
-    this._facade.dispatchEvent(new DefaultAdEvent(event.type as AdEventType, castedEvent.ad as Ad));
+    this._facade.dispatchEvent(new DefaultAdEvent(event.type as AdEventType, castedEvent.ad as unknown as Ad));
   };
 
   private readonly onAdBreakEvent = (event: ForwardedAdBreakEvent) => {
     const castedEvent = event as NativeAdBreakEvent<string>;
-    this._facade.dispatchEvent(new DefaultAdEvent(event.type as AdEventType, castedEvent.adBreak as AdBreak));
+    this._facade.dispatchEvent(new DefaultAdEvent(event.type as AdEventType, castedEvent.adBreak as unknown as AdBreak));
   };
 
   private readonly onTheoAdsEvent = (event: ForwardedTheoAdsEvent) => {
