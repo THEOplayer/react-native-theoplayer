@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Updated NativeAdBreak to prevent iOS build failure caused by changed AdBreak PRotocol.
 
+### Added
+
+- Added `currentsourcechange` event to the player API, which is dispatched when the current source, chosen from the source description's sources, changes.
+
 ## [10.10.0] - 26-02-17
 
 ### Fixed
