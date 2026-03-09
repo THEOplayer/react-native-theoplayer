@@ -292,13 +292,6 @@ export interface SeekingEvent extends Event<PlayerEventType.SEEKING> {
 }
 
 /**
- * Dispatched when the player has finished seeking to a new position.
- *
- * @category Events
- * @category Player
- * @public
- */
-/**
  * Dispatched when the current source, which is chosen from the source description's sources, changes.
  *
  * @category Events
@@ -312,6 +305,13 @@ export interface CurrentSourceChangeEvent extends Event<PlayerEventType.CURRENT_
   readonly currentSource: TypedSource | undefined;
 }
 
+/**
+ * Dispatched when the player has finished seeking to a new position.
+ *
+ * @category Events
+ * @category Player
+ * @public
+ */
 export interface SeekedEvent extends Event<PlayerEventType.SEEKED> {
   /**
    * The player's current time.
