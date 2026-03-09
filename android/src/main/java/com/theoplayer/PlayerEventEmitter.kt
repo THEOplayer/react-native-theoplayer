@@ -346,15 +346,14 @@ class PlayerEventEmitter internal constructor(
   }
 
   private fun onCurrentSourceChange(event: CurrentSourceChangeEvent) {
-    val payload = Arguments.createMap()
-    val currentSource = event.currentSource
-    if (currentSource != null) {
-      val sourceMap = Arguments.createMap()
-      sourceMap.putString("src", currentSource.src)
-      currentSource.type?.let { sourceMap.putString("type", it.mimeType) }
-      payload.putMap("currentSource", sourceMap)
+    event.currentSource?.let { currentSource ->
+      receiveEvent(EVENT_CURRENTSOURCECHANGE, Arguments.createMap().apply {
+        putMap("currentSource", Arguments.createMap().apply {
+          putString("src", currentSource.src)
+          currentSource.type?.let { putString("type", it.mimeType) }
+        })
+      })
     }
-    receiveEvent(EVENT_CURRENTSOURCECHANGE, payload)
   }
 
   private fun onLoadedMetadata() {
