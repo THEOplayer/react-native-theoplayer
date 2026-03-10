@@ -114,16 +114,13 @@ public class THEOplayerRCTMainEventHandler {
         self.currentSourceChangeListener = player.addEventListener(type: PlayerEventTypes.CURRENT_SOURCE_CHANGE) { [weak self] event in
             if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received CURRENT_SOURCE_CHANGE event from THEOplayer") }
             if let forwardedCurrentSourceChangeEvent = self?.onNativeCurrentSourceChange {
-                var payload: [String: Any] = [:]
+                var typedSource: [String:Any]? = nil
                 if let currentSource = event.currentSource {
-                    var sourceMap: [String: Any] = [:]
-                    sourceMap["src"] = currentSource.src.absoluteString
-                    if let type = currentSource.type {
-                        sourceMap["type"] = type
-                    }
-                    payload["currentSource"] = sourceMap
+                    typedSource = THEOplayerRCTSourceDescriptionAggregator.aggregateTypedSource(typedSource: currentSource)
                 }
-                forwardedCurrentSourceChangeEvent(payload)
+                forwardedCurrentSourceChangeEvent(
+                    ["currentSource": typedSource ?? [:]]
+                )
             }
         }
         if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] CurrentSourceChange listener attached to THEOplayer") }
