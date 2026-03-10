@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [10.10.0] - 26-02-17
+## [Unreleased]
 
 ### Fixed
 
@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- Updated NativeAdBreak to prevent iOS build failure caused by changed AdBreak PRotocol.
+- Updated `NativeAdBreak` to prevent iOS build failure caused by changed `AdBreak` protocol.
 
 ## [10.10.0] - 26-02-17
 
