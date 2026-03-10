@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, StrictMode } from 'react';
 import { Tester, TestHookStore } from 'cavy';
 import { Platform, SafeAreaView, StyleSheet, View, ViewStyle } from 'react-native';
 import { TestableTHEOplayerView } from './components/TestableTHEOplayerView';
@@ -21,7 +21,15 @@ const PLAYER_CONTAINER_STYLE: ViewStyle = {
   backgroundColor: '#000000',
 };
 
-export class TestableApp extends Component {
+export function TestableApp() {
+  return (
+    <StrictMode>
+      <App />
+    </StrictMode>
+  );
+}
+
+class App extends Component {
   player: THEOplayer | undefined = undefined;
 
   onPlayerReady(player: THEOplayer) {

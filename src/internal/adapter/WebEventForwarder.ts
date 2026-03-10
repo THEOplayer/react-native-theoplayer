@@ -67,6 +67,7 @@ import {
   DefaultTheoAdsErrorEvent,
   DefaultTheoAdsEvent,
   DefaultTheoLiveDistributionEvent,
+  DefaultTheoLiveDistributionLoadedEvent,
   DefaultTheoLiveEndpointLoadedEvent,
   DefaultTheoLiveEvent,
   DefaultTheoLiveIntentToFallbackEvent,
@@ -384,22 +385,28 @@ export class WebEventForwarder {
   };
 
   private readonly onTheoLiveEvent = (event: ForwardedTheoLiveEvent) => {
-    if (event.type === TheoLiveEventType.DISTRIBUTION_LOAD_START || event.type === TheoLiveEventType.DISTRIBUTION_OFFLINE) {
-      const { distributionId } = event;
-      this._facade.dispatchEvent(new DefaultTheoLiveDistributionEvent(event.type as TheoLiveEventType, distributionId));
-    } else if (event.type === TheoLiveEventType.ENDPOINT_LOADED) {
-      const { endpoint } = event;
-      this._facade.dispatchEvent(new DefaultTheoLiveEndpointLoadedEvent(event.type as TheoLiveEventType, endpoint));
-    } else if (event.type === TheoLiveEventType.INTENT_TO_FALLBACK) {
-      const { reason } = event;
-      this._facade.dispatchEvent(
-        new DefaultTheoLiveIntentToFallbackEvent(event.type as TheoLiveEventType, {
-          errorCode: reason?.code?.toString() ?? '',
-          errorMessage: reason?.message ?? '',
-        }),
-      );
-    } else {
-      this._facade.dispatchEvent(new DefaultTheoLiveEvent((event as NativeEvent).type as TheoLiveEventType));
+    switch (event.type) {
+      case TheoLiveEventType.DISTRIBUTION_LOAD_START:
+      case TheoLiveEventType.DISTRIBUTION_OFFLINE:
+        this._facade.dispatchEvent(new DefaultTheoLiveDistributionEvent(event.type as TheoLiveEventType, event.distributionId));
+        break;
+      case TheoLiveEventType.DISTRIBUTION_LOADED:
+        this._facade.dispatchEvent(new DefaultTheoLiveDistributionLoadedEvent(event.type as TheoLiveEventType, event.distribution));
+        break;
+      case TheoLiveEventType.ENDPOINT_LOADED:
+        this._facade.dispatchEvent(new DefaultTheoLiveEndpointLoadedEvent(event.type as TheoLiveEventType, event.endpoint));
+        break;
+      case TheoLiveEventType.INTENT_TO_FALLBACK:
+        this._facade.dispatchEvent(
+          new DefaultTheoLiveIntentToFallbackEvent(event.type as TheoLiveEventType, {
+            errorCode: event.reason?.code?.toString() ?? '',
+            errorMessage: event.reason?.message ?? '',
+          }),
+        );
+        break;
+      default:
+        this._facade.dispatchEvent(new DefaultTheoLiveEvent(event.type as TheoLiveEventType));
+        return;
     }
   };
 
@@ -477,6 +484,7 @@ type ForwardedTheoAdsEvent = NativeTheoAdsEventsMap[(typeof FORWARDED_THEOADS_EV
 
 const FORWARDED_THEOLIVE_EVENTS = [
   TheoLiveEventType.DISTRIBUTION_LOAD_START,
+  TheoLiveEventType.DISTRIBUTION_LOADED,
   TheoLiveEventType.DISTRIBUTION_OFFLINE,
   TheoLiveEventType.ENDPOINT_LOADED,
   TheoLiveEventType.INTENT_TO_FALLBACK,

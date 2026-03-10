@@ -1,4 +1,4 @@
-import { WebrtcOptions } from "./WebrtcOptions";
+import { WebrtcOptions } from './WebrtcOptions';
 
 export interface EndpointMillicastSource {
   name: string;

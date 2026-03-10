@@ -2,10 +2,12 @@ import { PlayerError, TheoLiveEndpoint, TheoLiveEvent, TheoLiveEventType } from 
 import { NativeSyntheticEvent } from 'react-native';
 import {
   DefaultTheoLiveDistributionEvent,
+  DefaultTheoLiveDistributionLoadedEvent,
   DefaultTheoLiveEndpointLoadedEvent,
-  DefaultTheoLiveIntentToFallbackEvent,
   DefaultTheoLiveEvent,
+  DefaultTheoLiveIntentToFallbackEvent,
 } from '../PlayerEvents';
+import { TheoLiveDistribution } from '../../../../api/theolive/TheoLiveDistribution';
 
 export interface NativeTheoLiveEvent {
   /**
@@ -17,6 +19,11 @@ export interface NativeTheoLiveEvent {
    * The distribution identifier for DISTRIBUTION_LOAD_START or DISTRIBUTION_OFFLINE events
    */
   distributionId: string | undefined;
+
+  /**
+   * Description of the THEOlive distribution for DISTRIBUTION_LOADED events.
+   */
+  distribution: TheoLiveDistribution | undefined;
 
   /**
    * Description of the THEOlive endpoint.
@@ -34,6 +41,8 @@ export function fromNativeTheoLiveEvent(event: NativeSyntheticEvent<NativeTheoLi
   switch (event.type) {
     case TheoLiveEventType.DISTRIBUTION_LOAD_START:
       return new DefaultTheoLiveDistributionEvent(TheoLiveEventType.DISTRIBUTION_LOAD_START, nativeEvent.distributionId ?? '');
+    case TheoLiveEventType.DISTRIBUTION_LOADED:
+      return new DefaultTheoLiveDistributionLoadedEvent(TheoLiveEventType.DISTRIBUTION_LOADED, nativeEvent.distribution ?? undefined);
     case TheoLiveEventType.DISTRIBUTION_OFFLINE:
       return new DefaultTheoLiveDistributionEvent(TheoLiveEventType.DISTRIBUTION_OFFLINE, nativeEvent.distributionId ?? '');
     case TheoLiveEventType.ENDPOINT_LOADED:

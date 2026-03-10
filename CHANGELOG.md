@@ -5,11 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [10.11.0] - 26-03-10
+
+### Fixed
+
+- Fixed an issue on Android where transitioning from picture-in-picture presentation mode would fail when using Expo Router.
+- Fixed an issue where the player would remove all listeners when using `<StrictMode>` on mobile platforms.
+
+### Changed
+
+- Updated `NativeAdBreak` to prevent iOS build failure caused by changed `AdBreak` protocol.
+
 ## [10.10.0] - 26-02-17
 
 ### Fixed
 
-- Fixed an issue on iOS where the onPlayerStateSync callback was not called from the main thread.
+- Fixed an issue on iOS where the `onPlayerStateSync` callback was not called from the main thread.
+
+### Added
+
+- Added the `DistributionLoaded` event for THEOlive.
+
+### Added
+
+- Added contentProtection extraction for THEOlive endpoints on iOS.
 
 ## [10.9.0] - 26-01-29
 
