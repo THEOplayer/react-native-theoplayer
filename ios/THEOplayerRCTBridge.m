@@ -19,6 +19,7 @@ RCT_EXPORT_VIEW_PROPERTY(config, NSDictionary);
 RCT_EXPORT_VIEW_PROPERTY(onNativePause, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativePlay, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeSourceChange, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeCurrentSourceChange, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeLoadStart, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeReadyStateChange, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeDurationChange, RCTDirectEventBlock);

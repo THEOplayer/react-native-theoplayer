@@ -19,6 +19,20 @@ class THEOplayerRCTSourceDescriptionAggregator {
         return nil
     }
     
+    class func aggregateTypedSource(typedSource: TypedSource) -> [String:Any]? {
+        do {
+            let jsonEncoder = JSONEncoder()
+            let data = try jsonEncoder.encode(typedSource)
+            if let result = try? JSONSerialization.jsonObject(with: data, options: []) as? [String:Any] {
+                return result
+            }
+        } catch {
+            if DEBUG { PrintUtils.printLog(logText: "[NATIVE] Could not aggregate typedSource: \(error.localizedDescription)")}
+            return nil
+        }
+        return nil
+    }
+    
     class func aggregateCacheTaskSourceDescription(sourceDescription: SourceDescription, cachingTaskId: String) -> [String:Any]? {
         if let result = THEOplayerRCTSourceDescriptionAggregator.aggregateSourceDescription(sourceDescription: sourceDescription) {
             let srcDescription = THEOplayerRCTSourceDescriptionAggregator.sanitiseSourceDescriptionMetadata(input: result)

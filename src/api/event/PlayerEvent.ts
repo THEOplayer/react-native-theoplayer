@@ -1,4 +1,4 @@
-import type { MediaTrack, PlayerError, PlayerEventType, PresentationMode, TextTrack } from 'react-native-theoplayer';
+import type { MediaTrack, PlayerError, PlayerEventType, PresentationMode, TextTrack, TypedSource } from 'react-native-theoplayer';
 import type { TimeRange } from '../timeranges/TimeRange';
 import type { Event } from './Event';
 
@@ -289,6 +289,20 @@ export interface SeekingEvent extends Event<PlayerEventType.SEEKING> {
    * The player's current time.
    */
   readonly currentTime: number;
+}
+
+/**
+ * Dispatched when the current source, which is chosen from the source description's sources, changes.
+ *
+ * @category Events
+ * @category Player
+ * @public
+ */
+export interface CurrentSourceChangeEvent extends Event<PlayerEventType.CURRENT_SOURCE_CHANGE> {
+  /**
+   * The player's new current source.
+   */
+  readonly currentSource: TypedSource | undefined;
 }
 
 /**
