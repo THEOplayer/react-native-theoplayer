@@ -456,6 +456,10 @@ class SourceAdapter {
     return BridgeUtils.fromJSONObjectToBridge(json)
   }
 
+  fun fromTypedSource(typedSource: TypedSource): WritableMap {
+    return BridgeUtils.fromJSONObjectToBridge(JSONObject(gson.toJson(typedSource)))
+  }
+
   private fun parseCmcdTransmissionMode(cmcdConfiguration : JSONObject) : CMCDTransmissionMode {
     try {
       val transmissionMode = cmcdConfiguration.optInt(CMCD_TRANSMISSION_MODE)

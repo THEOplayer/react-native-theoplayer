@@ -44,6 +44,7 @@ import com.theoplayer.android.api.player.track.texttrack.TextTrackKind
 import com.theoplayer.android.api.player.track.texttrack.TextTrackMode
 import com.theoplayer.cast.CastEventAdapter
 import com.theoplayer.presentation.PresentationModeChangeContext
+import com.theoplayer.source.SourceAdapter
 import com.theoplayer.theoads.THEOadsEventAdapter
 import com.theoplayer.theolive.THEOliveEventAdapter
 import com.theoplayer.track.*
@@ -184,6 +185,7 @@ class PlayerEventEmitter internal constructor(
   private var castEventAdapter: CastEventAdapter? = null
   private var theoLiveEventAdapter: THEOliveEventAdapter? = null
   private var theoAdsEventAdapter: THEOadsEventAdapter? = null
+  private val sourceAdapter: SourceAdapter = SourceAdapter()
   private var lastTimeUpdate: Long = 0
   private var lastCurrentTime = 0.0
   private var dimensionChangeListener = View.OnLayoutChangeListener { v, _, _, _, _, oldLeft, oldTop, oldRight, oldBottom ->
@@ -348,10 +350,7 @@ class PlayerEventEmitter internal constructor(
   private fun onCurrentSourceChange(event: CurrentSourceChangeEvent) {
     event.currentSource?.let { currentSource ->
       receiveEvent(EVENT_CURRENTSOURCECHANGE, Arguments.createMap().apply {
-        putMap("currentSource", Arguments.createMap().apply {
-          putString("src", currentSource.src)
-          currentSource.type?.let { putString("type", it.mimeType) }
-        })
+        putMap("currentSource", sourceAdapter.fromTypedSource(currentSource))
       })
     }
   }
