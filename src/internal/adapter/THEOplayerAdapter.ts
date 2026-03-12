@@ -77,9 +77,10 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._abrAdapter = new AbrAdapter(this._view);
     this._textTrackStyleAdapter = new TextTrackStyleAdapter(this._view);
     this._theoliveAdapter = new TheoLiveNativeAdapter(this._view);
+    this.addEventListeners();
   }
 
-  public initialize() {
+  private addEventListeners() {
     this.addEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
     this.addEventListener(PlayerEventType.PAUSE, this.onPause);
     this.addEventListener(PlayerEventType.PLAYING, this.onPlaying);
