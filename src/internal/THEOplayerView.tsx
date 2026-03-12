@@ -223,7 +223,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
 
   private _onCurrentSourceChange = (event: NativeSyntheticEvent<NativeCurrentSourceChangeEvent>) => {
     const nativeEvent = event.nativeEvent;
-    this._facade.dispatchEvent(new DefaultCurrentSourceChangeEvent(nativeEvent.currentSource as any));
+    this._facade?.dispatchEvent(new DefaultCurrentSourceChangeEvent(nativeEvent.currentSource as any));
   };
 
   private _onLoadStart = () => {
