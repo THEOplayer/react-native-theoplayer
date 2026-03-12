@@ -118,6 +118,18 @@ export interface PlayerConfiguration {
    * <br/> - When set to false, the player will always use java.net.HttpURLConnection.
    */
   useHttpEngine?: boolean;
+
+  /**
+   * Whether debug logs from the underlying Android SDK should be enabled.
+   *
+   * @defaultValue false
+   *
+   * @platform android
+   *
+   * @remarks
+   * <br/> - When set to true, all debug log tags from the native Android SDK will be enabled.
+   */
+  debugLogsEnabled?: boolean;
 }
 
 /**

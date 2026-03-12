@@ -30,7 +30,7 @@ class NativeAd: THEOplayerSDK.Ad {
     var clickThrough: String? = nil
     /**The type of custom ad integration.*/
     var customIntegration: String? = nil
-    
+
     init(adBreak: AdBreak, companions: [THEOplayerSDK.CompanionAd], type: String, id: String? = nil, skipOffset: Int? = nil, resourceURI: String? = nil, width: Int? = nil, height: Int? = nil, isSlate: Bool = false, integration: THEOplayerSDK.AdIntegrationKind, duration: Int? = 0, clickThrough: String?, customIntegration: String?) {
         self.adBreak = adBreak
         self.companions = companions
@@ -51,11 +51,11 @@ class NativeAd: THEOplayerSDK.Ad {
 class NativeLinearAd: NativeAd, THEOplayerSDK.LinearAd {
     /** An array of mediafiles, which provides some meta data retrieved from the VAST file.*/
     var mediaFiles: [THEOplayerSDK.MediaFile] = []
-    
+
     init(adBreak: AdBreak, companions: [THEOplayerSDK.CompanionAd], type: String, id: String? = nil, skipOffset: Int? = nil, resourceURI: String? = nil, width: Int? = nil, height: Int? = nil, integration: THEOplayerSDK.AdIntegrationKind, duration: Int? = 0, clickThrough: String? = nil, customIntegration: String? = nil, mediaFiles: [THEOplayerSDK.MediaFile] = []) {
-        
+
         self.mediaFiles = mediaFiles
-        
+
         super.init(adBreak:adBreak,
                    companions: companions,
                    type: type,
@@ -88,7 +88,7 @@ class NativeLinearGoogleImaAd: NativeLinearAd, THEOplayerSDK.GoogleImaAd {
     var universalAdIds: [UniversalAdId] = []
     /** The String representing custom trafficking parameters from the VAST response.*/
     var traffickingParameters: String = ""
-    
+
     init(adBreak: AdBreak, companions: [THEOplayerSDK.CompanionAd], type: String, id: String? = nil, skipOffset: Int? = nil, resourceURI: String? = nil, width: Int? = nil, height: Int? = nil, integration: THEOplayerSDK.AdIntegrationKind, duration: Int? = 0, clickThrough: String? = nil, customIntegration: String? = nil, mediaFiles: [THEOplayerSDK.MediaFile] = [], adSystem: String? = nil, creativeId: String? = nil, wrapperAdIds: [String], wrapperAdSystems: [String], wrapperCreativeIds: [String], vastMediaBitrate: Int, universalAdIds: [UniversalAdId], traffickingParameters: String) {
         self.adSystem = adSystem
         self.creativeId = creativeId
@@ -98,7 +98,7 @@ class NativeLinearGoogleImaAd: NativeLinearAd, THEOplayerSDK.GoogleImaAd {
         self.vastMediaBitrate = vastMediaBitrate
         self.universalAdIds = universalAdIds
         self.traffickingParameters = traffickingParameters
-        
+
         super.init(adBreak: adBreak,
                    companions: companions,
                    type: type,
@@ -134,8 +134,8 @@ class NativeAdBreak: THEOplayerSDK.AdBreak {
        - For other integrations, this may be `nil`.
     */
    var id: String? = nil
-    
-    init(ads: [Ad], maxDuration: Int, maxRemainingDuration: Double, timeOffset: Int, integration: THEOplayerSDK.AdIntegrationKind, customIntegration: String? = nil, id: String? = nil) {
+
+    init(ads: [Ad], id: String? = nil, maxDuration: Int, maxRemainingDuration: Double, timeOffset: Int, integration: THEOplayerSDK.AdIntegrationKind, customIntegration: String? = nil) {
         self.ads = ads
         self.maxDuration = maxDuration
         self.maxRemainingDuration = maxRemainingDuration
@@ -161,7 +161,7 @@ class NativeCompanionAd: THEOplayerSDK.CompanionAd {
     var width: Int
     /** The type of the companion ad.*/
     var type: String = ""
-    
+
     init(adSlotId: String? = nil, altText: String? = nil, clickThrough: String? = nil, height: Int, resourceURI: String? = nil, width: Int, type: String) {
         self.adSlotId = adSlotId
         self.altText = altText
@@ -178,7 +178,7 @@ class NativeUniversalAdId: THEOplayerSDK.UniversalAdId {
     var adIdValue: String = ""
     /** The registry associated with cataloging the UniversalAdId of the selected creative for the ad.*/
     var adIdRegistry: String = ""
-    
+
     init(adIdValue: String, adIdRegistry: String) {
         self.adIdValue = adIdValue
         self.adIdRegistry = adIdRegistry

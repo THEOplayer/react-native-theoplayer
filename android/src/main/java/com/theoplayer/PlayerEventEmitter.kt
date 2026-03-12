@@ -44,6 +44,7 @@ import com.theoplayer.android.api.player.track.texttrack.TextTrackKind
 import com.theoplayer.android.api.player.track.texttrack.TextTrackMode
 import com.theoplayer.cast.CastEventAdapter
 import com.theoplayer.presentation.PresentationModeChangeContext
+import com.theoplayer.source.SourceAdapter
 import com.theoplayer.theoads.THEOadsEventAdapter
 import com.theoplayer.theolive.THEOliveEventAdapter
 import com.theoplayer.track.*
@@ -55,6 +56,7 @@ private val TAG = PlayerEventEmitter::class.java.name
 private const val EVENT_PLAYER_READY = "onNativePlayerReady"
 private const val EVENT_PLAYER_STATE_SYNC = "onNativePlayerStateSync"
 private const val EVENT_SOURCECHANGE = "onNativeSourceChange"
+private const val EVENT_CURRENTSOURCECHANGE = "onNativeCurrentSourceChange"
 private const val EVENT_LOADSTART = "onNativeLoadStart"
 private const val EVENT_LOADEDMETADATA = "onNativeLoadedMetadata"
 private const val EVENT_LOADEDDATA = "onNativeLoadedData"
@@ -101,6 +103,7 @@ class PlayerEventEmitter internal constructor(
     EVENT_PLAYER_READY,
     EVENT_PLAYER_STATE_SYNC,
     EVENT_SOURCECHANGE,
+    EVENT_CURRENTSOURCECHANGE,
     EVENT_LOADSTART,
     EVENT_LOADEDMETADATA,
     EVENT_LOADEDDATA,
@@ -139,6 +142,7 @@ class PlayerEventEmitter internal constructor(
       EVENT_PLAYER_READY,
       EVENT_PLAYER_STATE_SYNC,
       EVENT_SOURCECHANGE,
+      EVENT_CURRENTSOURCECHANGE,
       EVENT_LOADSTART,
       EVENT_LOADEDMETADATA,
       EVENT_LOADEDDATA,
@@ -181,6 +185,7 @@ class PlayerEventEmitter internal constructor(
   private var castEventAdapter: CastEventAdapter? = null
   private var theoLiveEventAdapter: THEOliveEventAdapter? = null
   private var theoAdsEventAdapter: THEOadsEventAdapter? = null
+  private val sourceAdapter: SourceAdapter = SourceAdapter()
   private var lastTimeUpdate: Long = 0
   private var lastCurrentTime = 0.0
   private var dimensionChangeListener = View.OnLayoutChangeListener { v, _, _, _, _, oldLeft, oldTop, oldRight, oldBottom ->
@@ -195,6 +200,8 @@ class PlayerEventEmitter internal constructor(
     playerListeners[PlayerEventTypes.SOURCECHANGE] = EventListener<PlayerEvent<*>> {
       receiveEvent(EVENT_SOURCECHANGE, null)
     }
+    playerListeners[PlayerEventTypes.CURRENTSOURCECHANGE] =
+      EventListener { event: CurrentSourceChangeEvent -> onCurrentSourceChange(event) }
     playerListeners[PlayerEventTypes.LOADSTART] = EventListener<PlayerEvent<*>> {
       receiveEvent(EVENT_LOADSTART, null)
     }
@@ -338,6 +345,14 @@ class PlayerEventEmitter internal constructor(
 
   private fun emitError(code: String, message: String?) {
     receiveEvent(EVENT_ERROR, PayloadBuilder().error(code, message).build())
+  }
+
+  private fun onCurrentSourceChange(event: CurrentSourceChangeEvent) {
+    event.currentSource?.let { currentSource ->
+      receiveEvent(EVENT_CURRENTSOURCECHANGE, Arguments.createMap().apply {
+        putMap("currentSource", sourceAdapter.fromTypedSource(currentSource))
+      })
+    }
   }
 
   private fun onLoadedMetadata() {

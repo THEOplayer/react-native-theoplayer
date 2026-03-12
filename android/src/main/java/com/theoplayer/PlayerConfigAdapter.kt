@@ -43,8 +43,18 @@ private const val PROP_THEOLIVE_EXTERNAL_SESSION_ID = "externalSessionId"
 private const val PROP_THEOLIVE_ANALYTICS_DISABLED = "analyticsDisabled"
 private const val PROP_THEOLIVE_DISCOVERY_URL = "discoveryUrl"
 private const val PROP_MULTIMEDIA_TUNNELING_ENABLED = "tunnelingEnabled"
+private const val PROP_DEBUG_LOGS_ENABLED = "debugLogsEnabled"
 
 class PlayerConfigAdapter(private val configProps: ReadableMap?) {
+
+  /**
+   * Whether debug logs from the native SDK should be enabled.
+   */
+  fun debugLogsEnabled(): Boolean {
+    return configProps?.let {
+      if (it.hasKey(PROP_DEBUG_LOGS_ENABLED)) it.getBoolean(PROP_DEBUG_LOGS_ENABLED) else false
+    } ?: false
+  }
 
   /**
    * Get general THEOplayerConfig object; these properties apply:
@@ -62,12 +72,12 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
           licenseUrl(licenseUrl)
         }
         if (hasKey(PROP_RETRY_CONFIG) || hasKey(PROP_USE_HTTPENGINE)) {
-          networkConfiguration(networkConfig())
+          network(networkConfig())
         }
         if (hasKey(PROP_THEOLIVE_CONFIG)) {
-          theoLiveConfiguration(theoLiveConfig())
+          theoLive(theoLiveConfig())
         }
-        pipConfiguration(PipConfiguration.Builder().build())
+        pip(PipConfiguration.Builder().build())
         // Opt-out for auto-integrations for now
         autoIntegrations(false)
         if (hasKey(PROP_MULTIMEDIA_TUNNELING_ENABLED)) {

@@ -13,6 +13,7 @@ public class THEOplayerRCTMainEventHandler {
     var onNativePlay: RCTDirectEventBlock?
     var onNativePause: RCTDirectEventBlock?
     var onNativeSourceChange: RCTDirectEventBlock?
+    var onNativeCurrentSourceChange: RCTDirectEventBlock?
     var onNativeLoadStart: RCTDirectEventBlock?
     var onNativeReadyStateChange: RCTDirectEventBlock?
     var onNativeDurationChange: RCTDirectEventBlock?
@@ -36,6 +37,7 @@ public class THEOplayerRCTMainEventHandler {
     private var playListener: EventListener?
     private var pauseListener: EventListener?
     private var sourceChangeListener: EventListener?
+    private var currentSourceChangeListener: EventListener?
     private var loadStartListener: EventListener?
     private var readyStateChangeListener: EventListener?
     private var durationChangeListener: EventListener?
@@ -107,7 +109,22 @@ public class THEOplayerRCTMainEventHandler {
             }
         }
         if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] SourceChange listener attached to THEOplayer") }
-        
+
+        // CURRENT_SOURCE_CHANGE
+        self.currentSourceChangeListener = player.addEventListener(type: PlayerEventTypes.CURRENT_SOURCE_CHANGE) { [weak self] event in
+            if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received CURRENT_SOURCE_CHANGE event from THEOplayer") }
+            if let forwardedCurrentSourceChangeEvent = self?.onNativeCurrentSourceChange {
+                var typedSource: [String:Any]? = nil
+                if let currentSource = event.currentSource {
+                    typedSource = THEOplayerRCTSourceDescriptionAggregator.aggregateTypedSource(typedSource: currentSource)
+                }
+                forwardedCurrentSourceChangeEvent(
+                    ["currentSource": typedSource ?? [:]]
+                )
+            }
+        }
+        if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] CurrentSourceChange listener attached to THEOplayer") }
+
         // LOAD_START
         self.loadStartListener = player.addEventListener(type: PlayerEventTypes.LOAD_START) { [weak self] event in
             if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received LOAD_START event from THEOplayer") }
@@ -361,7 +378,13 @@ public class THEOplayerRCTMainEventHandler {
             player.removeEventListener(type: PlayerEventTypes.SOURCE_CHANGE, listener: sourceChangeListener)
             if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] SourceChange listener dettached from THEOplayer") }
         }
-        
+
+        // CURRENT_SOURCE_CHANGE
+        if let currentSourceChangeListener = self.currentSourceChangeListener {
+            player.removeEventListener(type: PlayerEventTypes.CURRENT_SOURCE_CHANGE, listener: currentSourceChangeListener)
+            if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] CurrentSourceChange listener dettached from THEOplayer") }
+        }
+
         // LOAD_START
         if let loadStartListener = self.loadStartListener {
             player.removeEventListener(type: PlayerEventTypes.LOAD_START, listener: loadStartListener)

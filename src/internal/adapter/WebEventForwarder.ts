@@ -6,6 +6,7 @@ import type {
   CastStateChangeEvent,
   ChromecastErrorEvent,
   ChromelessPlayer,
+  CurrentSourceChangeEvent as NativeCurrentSourceChangeEvent,
   DimensionChangeEvent as NativeDimensionChangeEvent,
   DurationChangeEvent as NativeDurationChangeEvent,
   ErrorEvent as NativeErrorEvent,
@@ -42,6 +43,8 @@ import {
   TimeRange,
   TrackListEventType,
 } from 'react-native-theoplayer';
+import type { Ad } from '../../api/ads/Ad';
+import type { AdBreak } from '../../api/ads/AdBreak';
 import type { THEOplayerWebAdapter } from './THEOplayerWebAdapter';
 import { BaseEvent } from './event/BaseEvent';
 import {
@@ -49,6 +52,7 @@ import {
   DefaultAirplayStateChangeEvent,
   DefaultChromecastChangeEvent,
   DefaultChromecastErrorEvent,
+  DefaultCurrentSourceChangeEvent,
   DefaultDimensionChangeEvent,
   DefaultDurationChangeEvent,
   DefaultErrorEvent,
@@ -89,6 +93,7 @@ export class WebEventForwarder {
 
   private addEventListeners() {
     this._player.addEventListener('sourcechange', this.onSourceChange);
+    this._player.addEventListener('currentsourcechange', this.onCurrentSourceChange);
     this._player.addEventListener('loadstart', this.onLoadStart);
     this._player.addEventListener('loadeddata', this.onLoadedData);
     this._player.addEventListener('loadedmetadata', this.onLoadedMetadata);
@@ -139,6 +144,7 @@ export class WebEventForwarder {
 
   private removeEventListeners() {
     this._player.removeEventListener('sourcechange', this.onSourceChange);
+    this._player.removeEventListener('currentsourcechange', this.onCurrentSourceChange);
     this._player.removeEventListener('loadstart', this.onLoadStart);
     this._player.removeEventListener('loadeddata', this.onLoadedData);
     this._player.removeEventListener('loadedmetadata', this.onLoadedMetadata);
@@ -185,6 +191,10 @@ export class WebEventForwarder {
 
   private readonly onSourceChange = () => {
     this._facade.dispatchEvent(new BaseEvent(PlayerEventType.SOURCE_CHANGE));
+  };
+
+  private readonly onCurrentSourceChange = (event: NativeCurrentSourceChangeEvent) => {
+    this._facade.dispatchEvent(new DefaultCurrentSourceChangeEvent(event.currentSource as any));
   };
 
   private readonly onLoadStart = () => {
@@ -367,12 +377,12 @@ export class WebEventForwarder {
 
   private readonly onAdEvent = (event: ForwardedAdEvent) => {
     const castedEvent = event as NativeAdEvent<string>;
-    this._facade.dispatchEvent(new DefaultAdEvent(event.type as AdEventType, castedEvent.ad));
+    this._facade.dispatchEvent(new DefaultAdEvent(event.type as AdEventType, castedEvent.ad as unknown as Ad));
   };
 
   private readonly onAdBreakEvent = (event: ForwardedAdBreakEvent) => {
     const castedEvent = event as NativeAdBreakEvent<string>;
-    this._facade.dispatchEvent(new DefaultAdEvent(event.type as AdEventType, castedEvent.adBreak));
+    this._facade.dispatchEvent(new DefaultAdEvent(event.type as AdEventType, castedEvent.adBreak as unknown as AdBreak));
   };
 
   private readonly onTheoAdsEvent = (event: ForwardedTheoAdsEvent) => {

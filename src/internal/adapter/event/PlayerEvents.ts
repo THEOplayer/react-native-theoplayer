@@ -10,6 +10,7 @@ import {
   ChromecastChangeEvent,
   ChromecastError,
   ChromecastErrorEvent,
+  CurrentSourceChangeEvent,
   DimensionChangeEvent,
   DurationChangeEvent,
   ErrorEvent,
@@ -51,10 +52,17 @@ import {
   TimeRange,
   TimeUpdateEvent,
   TrackListEventType,
+  TypedSource,
   VideoResizeEvent,
   VolumeChangeEvent,
 } from 'react-native-theoplayer';
 import { TheoLiveDistribution } from '../../../api/theolive/TheoLiveDistribution';
+
+export class DefaultCurrentSourceChangeEvent extends BaseEvent<PlayerEventType.CURRENT_SOURCE_CHANGE> implements CurrentSourceChangeEvent {
+  constructor(public readonly currentSource: TypedSource | undefined) {
+    super(PlayerEventType.CURRENT_SOURCE_CHANGE);
+  }
+}
 
 export class DefaultLoadedMetadataEvent extends BaseEvent<PlayerEventType.LOADED_METADATA> implements LoadedMetadataEvent {
   constructor(

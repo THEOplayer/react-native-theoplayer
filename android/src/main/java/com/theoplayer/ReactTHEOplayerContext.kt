@@ -14,6 +14,7 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import com.facebook.react.uimanager.ThemedReactContext
+import com.theoplayer.android.api.THEOplayerGlobal
 import com.theoplayer.android.api.THEOplayerView
 import com.theoplayer.android.api.ads.dai.GoogleDaiIntegration
 import com.theoplayer.android.api.ads.dai.GoogleDaiIntegrationFactory
@@ -229,6 +230,11 @@ class ReactTHEOplayerContext private constructor(
   }
 
   private fun initializePlayerView() {
+    // Enable all debug logs from the underlying Android SDK if configured.
+    if (configAdapter.debugLogsEnabled()) {
+      THEOplayerGlobal.getSharedInstance(reactContext).logger.enableAllTags()
+    }
+
     playerView = object : THEOplayerView(reactContext, configAdapter.playerConfig()) {
       private fun measureAndLayout() {
         measure(

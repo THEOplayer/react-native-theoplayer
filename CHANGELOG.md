@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [10.12.0] - 26-03-12
+
+### Added
+
+- Added `currentsourcechange` event to the player API, which is dispatched when the current source, chosen from the source description's sources, changes.
+- Added `debugLogsEnabled` flag to `PlayerConfiguration` to allow enabling all debug logs from the underlying Android SDK.
+- Added the `id` property to `AdBreak`, representing the identifier of the ad break.
+
+### Fixed
+
+- Fixed an issue on Android where the build process would pick up version from the snapshot repository instead of the release repository, causing build failures.
+- Fixed an issue on iOS & Android where, when using `<StrictMode>`, the player's list of text tracks would be empty.
+
 ## [10.11.0] - 26-03-10
 
 ### Fixed
