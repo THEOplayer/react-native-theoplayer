@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added `currentsourcechange` event to the player API, which is dispatched when the current source, chosen from the source description's sources, changes.
 
+### Fixed
+
+- Fixed an issue on Android where the build process would pick up version from the snapshot repository instead of the release repository, causing build failures.
+
 ## [10.11.0] - 26-03-10
 
 ### Fixed
