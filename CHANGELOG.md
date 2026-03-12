@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added `currentsourcechange` event to the player API, which is dispatched when the current source, chosen from the source description's sources, changes.
 - Added `debugLogsEnabled` flag to `PlayerConfiguration` to allow enabling all debug logs from the underlying Android SDK.
+- Added the `id` property to `AdBreak`, representing the identifier of the ad break.
 
 ### Fixed
 

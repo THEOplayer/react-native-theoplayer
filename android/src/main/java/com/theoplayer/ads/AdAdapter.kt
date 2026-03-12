@@ -39,6 +39,7 @@ private const val PROP_ADBREAK_INTEGRATION = "integration"
 private const val PROP_ADBREAK_MAXDURATION = "maxDuration"
 private const val PROP_ADBREAK_TIMEOFFSET = "timeOffset"
 private const val PROP_ADBREAK_MAXREMAININGDURATION = "maxRemainingDuration"
+private const val PROP_ADBREAK_ID = "id"
 private const val PROP_ADBREAK_ADS = "ads"
 private const val PROP_COMPANION_ADSLOTID = "adSlotId"
 private const val PROP_COMPANION_ALTTEXT = "altText"
@@ -141,6 +142,7 @@ object AdAdapter {
       return adbreakPayload
     }
     adbreakPayload.putString(PROP_ADBREAK_INTEGRATION, adbreak.integration.type)
+    adbreakPayload.putString(PROP_ADBREAK_ID, adbreak.idAsString)
     adbreakPayload.putInt(PROP_ADBREAK_MAXDURATION,adbreak.maxDuration)
     adbreakPayload.putInt(PROP_ADBREAK_TIMEOFFSET, adbreak.timeOffset)
     adbreakPayload.putDouble(PROP_ADBREAK_MAXREMAININGDURATION, adbreak.maxRemainingDuration)
@@ -284,6 +286,10 @@ object AdAdapter {
 
       override fun getCustomIntegration(): String? {
         return adBreak.getString(PROP_AD_CUSTOM_INTEGRATION)
+      }
+
+      override fun getIdAsString(): String? {
+        return if (adBreak.hasKey(PROP_ADBREAK_ID)) adBreak.getString(PROP_ADBREAK_ID) else null
       }
 
       override fun getCustomData(): Any? {
