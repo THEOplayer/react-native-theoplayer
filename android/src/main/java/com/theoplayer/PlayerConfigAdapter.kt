@@ -62,12 +62,12 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
           licenseUrl(licenseUrl)
         }
         if (hasKey(PROP_RETRY_CONFIG) || hasKey(PROP_USE_HTTPENGINE)) {
-          networkConfiguration(networkConfig())
+          network(networkConfig())
         }
         if (hasKey(PROP_THEOLIVE_CONFIG)) {
-          theoLiveConfiguration(theoLiveConfig())
+          theoLive(theoLiveConfig())
         }
-        pipConfiguration(PipConfiguration.Builder().build())
+        pip(PipConfiguration.Builder().build())
         // Opt-out for auto-integrations for now
         autoIntegrations(false)
         if (hasKey(PROP_MULTIMEDIA_TUNNELING_ENABLED)) {
