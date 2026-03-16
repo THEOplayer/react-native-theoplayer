@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed an issue on Android where the build process would pick up version from the snapshot repository instead of the release repository, causing build failures.
 - Fixed an issue on iOS & Android where, when using `<StrictMode>`, the player's list of text tracks would be empty.
 
+### Changed
+
+- Upgraded example app to React-Native v0.84.1.
+
 ## [10.11.0] - 26-03-10
 
 ### Fixed
