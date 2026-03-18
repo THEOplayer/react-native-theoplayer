@@ -98,7 +98,7 @@ export default function App() {
 
   // In PiP presentation mode on NewArch Android, there is an issue where SafeAreayView does not update the edges in time,
   // so explicitly disable them here.
-  const edges: Edges = useMemo(() => (presentationMode === PresentationMode.pip ? [] : ['left', 'top', 'right', 'bottom']), [presentationMode]);
+  const edges: Edges = presentationMode === PresentationMode.pip ? [] : ['left', 'top', 'right', 'bottom'];
 
   const onTheoAdsEvent = (event: TheoAdsEvent) => {
     console.log(event);
@@ -107,7 +107,7 @@ export default function App() {
     }
   };
 
-  const onPlayerReady = useCallback((player: THEOplayer) => {
+  const onPlayerReady = (player: THEOplayer) => {
     setPlayer(player);
     // optional debug logs
     player.addEventListener(PlayerEventType.SOURCE_CHANGE, console.log);
@@ -143,7 +143,7 @@ export default function App() {
     };
 
     console.log('THEOplayer is ready');
-  }, []);
+  };
 
   return (
     /**
