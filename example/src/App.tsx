@@ -25,18 +25,21 @@ import {
   UiContainer,
 } from '@theoplayer/react-native-ui';
 import {
+  AdIntegrationKind,
   ContentProtectionRegistry,
   PlayerConfiguration,
   PlayerEventType,
   PresentationMode,
   sdkVersions,
+  TheoAdDescription,
   TheoAdsEvent,
   TheoAdsEventType,
   THEOplayer,
   THEOplayerView,
+  TypedSource,
 } from 'react-native-theoplayer';
 import { Platform, StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
-import { SourceMenuButton, SOURCES } from './custom/SourceMenuButton';
+import { SourceMenuButton } from './custom/SourceMenuButton';
 import { BackgroundAudioSubMenu } from './custom/BackgroundAudioSubMenu';
 import { PiPSubMenu } from './custom/PipSubMenu';
 import { MediaCacheDownloadButton } from './custom/MediaCacheDownloadButton';
@@ -127,9 +130,26 @@ export default function App() {
     player.addEventListener(PlayerEventType.THEOADS_EVENT, onTheoAdsEvent);
 
     sdkVersions().then((versions) => console.log(`[theoplayer] ${JSON.stringify(versions, null, 4)}`));
-
     player.autoplay = true;
-    player.source = SOURCES[0].source;
+    player.source = {
+      sources: [
+        {
+          type: 'application/x-mpegurl',
+          src: `https://fastly.cdn.anywhere.theo.live/v2/gw-oci-eu/tla-oci-production-e2e/e2c4220c-3cf4-4499-ab3a-ea5e904d0406/da8001d5-3788-40b4-8a08-63c382c6b58f/35fb97f9-a545-4ccf-b5ed-ac22bd4f1a18/hls/main.m3u8`,
+        } as TypedSource,
+      ],
+      ads: [
+        {
+          integration: AdIntegrationKind.theoads,
+          networkCode: '23285652104',
+          customAssetKey: 'assetkey_google',
+          sseEndpoint: 'https://theoads-perf-setup.prudentgiraffe.com/sse-ads-client/adbreaks/stream?streamId=adaa91ff-61e2-4193-91f1-dbde8f3e02c0',
+          adTagParameters: {
+            test: 'value',
+          },
+        } as TheoAdDescription,
+      ],
+    };
 
     player.backgroundAudioConfiguration = {
       enabled: true,
