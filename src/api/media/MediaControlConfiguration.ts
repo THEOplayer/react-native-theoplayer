@@ -44,6 +44,8 @@ export interface MediaControlConfiguration {
    * @defaultValue `false`
    *
    * @platform ios,android
+   *
+   * @deprecated Use {@link MediaControlAPI} to handle `skipToPrevious` and `skipToNext` actions instead.
    */
   readonly convertSkipToSeek?: boolean;
 
@@ -63,6 +65,8 @@ export interface MediaControlConfiguration {
    * @defaultValue `false`
    *
    * @platform ios,android
+   *
+   * @deprecated Use {@link MediaControlAPI} to handle `play` action and seek to the live edge instead.
    */
   readonly seekToLiveOnResume?: boolean;
 }
