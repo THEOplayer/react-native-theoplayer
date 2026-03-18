@@ -15,6 +15,7 @@ import type { PlayerVersion } from './PlayerVersion';
 import type { EventBroadcastAPI } from '../broadcast/EventBroadcastAPI';
 import { TheoAdsAPI } from '../theoads/TheoAdsAPI';
 import { TheoLiveAPI } from '../theolive/TheoLiveAPI';
+import { MediaControlAPI } from '../media/MediaControlAPI';
 
 export type PreloadType = 'none' | 'metadata' | 'auto' | '';
 
@@ -294,4 +295,9 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
    * @deprecated use {@link THEOplayer.theoLive} instead.
    */
   readonly theolive: TheoLiveAPI;
+
+  /**
+   * The API for media controls.
+   */
+  readonly mediaControl?: MediaControlAPI;
 }
