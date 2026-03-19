@@ -248,10 +248,10 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    // on iOS we cannot stretch an inline playerView to cover the whole screen, otherwise it assumes fullscreen presentationMode.
-    marginHorizontal: Platform.select({ ios: 2, default: 0 }),
-    alignItems: 'center',
-    justifyContent: 'center',
+    position: 'absolute',
+    top: isPhone ? '20%' : '10%',
+    left: isPhone ? '2%' : '10%',
+    right: isPhone ? '2%' : '10%',
+    aspectRatio: 16.0 / 9.0,
   },
 });
