@@ -1,7 +1,7 @@
 import { PlayerContext } from '@theoplayer/react-native-ui';
 import React, { useCallback, useContext } from 'react';
 import { MediaCache } from 'react-native-theoplayer';
-import { MenuRadioButton } from '@theoplayer/react-native-ui/src/ui/components/menu/common/MenuRadioButton';
+import { MenuRadioButton } from '@theoplayer/react-native-ui';
 
 export const MediaCacheDownloadButton = () => {
   const { player } = useContext(PlayerContext);
@@ -9,7 +9,7 @@ export const MediaCacheDownloadButton = () => {
   const onPress = useCallback(() => {
     const currentSource = player?.source;
     if (currentSource) {
-      MediaCache.createTask(currentSource, {
+      void MediaCache.createTask(currentSource, {
         amount: '100%',
         expirationDate: new Date(Date.now() + 24 * 60 * 60 * 1000),
         allowsCellularAccess: true,
