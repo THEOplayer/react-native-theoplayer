@@ -46,11 +46,13 @@ import { RenderingTargetSubMenu } from './custom/RenderingTargetSubMenu';
 import { AutoPlaySubMenu } from './custom/AutoPlaySubMenu';
 import { SafeAreaProvider, SafeAreaView, Edges } from 'react-native-safe-area-context';
 import { usePresentationMode } from './hooks/usePresentationMode';
+import { useDeviceOrientationChange } from 'react-native-orientation-locker';
 import {
   EzdrmFairplayContentProtectionIntegrationFactory,
   KeyOSDrmFairplayContentProtectionIntegrationFactory,
   KeyOSDrmWidevineContentProtectionIntegrationFactory,
 } from '@theoplayer/react-native-drm';
+import DeviceInfo from 'react-native-device-info';
 
 // Register Ezdrm Fairplay integration
 ContentProtectionRegistry.registerContentProtectionIntegration('customEzdrm', 'fairplay', new EzdrmFairplayContentProtectionIntegrationFactory());
@@ -59,6 +61,7 @@ ContentProtectionRegistry.registerContentProtectionIntegration('customEzdrm', 'f
 ContentProtectionRegistry.registerContentProtectionIntegration('keyos_buydrm', 'fairplay', new KeyOSDrmFairplayContentProtectionIntegrationFactory());
 ContentProtectionRegistry.registerContentProtectionIntegration('keyos_buydrm', 'widevine', new KeyOSDrmWidevineContentProtectionIntegrationFactory());
 
+const isPhone = DeviceInfo.getDeviceType() === 'Handset';
 const playerConfig: PlayerConfiguration = {
   // Get your THEOplayer license from https://portal.theoplayer.com/
   // Without a license, only demo sources hosted on '*.theoplayer.com' domains can be played.
@@ -106,6 +109,16 @@ export default function App() {
       event.interstitial.adTagParameters['CustomKey'] = 'CustomValue';
     }
   };
+
+  useDeviceOrientationChange((o) => {
+    if (player !== undefined && isPhone) {
+      if (o === 'LANDSCAPE-LEFT' || o === 'LANDSCAPE-RIGHT') {
+        player.presentationMode = PresentationMode.fullscreen;
+      } else {
+        player.presentationMode = PresentationMode.inline;
+      }
+    }
+  });
 
   const onPlayerReady = useCallback((player: THEOplayer) => {
     setPlayer(player);
