@@ -110,12 +110,14 @@ export default function App() {
     }
   };
 
-  useDeviceOrientationChange((o) => {
+  useDeviceOrientationChange((orientationType) => {
     if (player !== undefined && isPhone) {
-      if (o === 'LANDSCAPE-LEFT' || o === 'LANDSCAPE-RIGHT') {
+      if (orientationType.startsWith('LANDSCAPE')) {
         player.presentationMode = PresentationMode.fullscreen;
-      } else {
+      } else if (orientationType.startsWith('PORTRAIT')) {
         player.presentationMode = PresentationMode.inline;
+      } else {
+        // keep current presentationMode in other orientations (face up, face down, ...)
       }
     }
   });
