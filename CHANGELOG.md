@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Added demonstration code to the example application for automatic fullscreen presentationMode on orientation changes into 'landscape', for handset (phone) devices.
+
 ### Fixed
 
 - Fixed an issue on Android where play-out of a Google DAI stream would crash the app.
