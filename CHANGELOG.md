@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [10.12.1] - 26-03-19
+
+### Fixed
+
+- Fixed an issue on Android where play-out of a Google DAI stream would crash the app.
+
 ## [10.12.0] - 26-03-12
 
 ### Added
@@ -38,9 +44,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Added the `DistributionLoaded` event for THEOlive.
-
-### Added
-
 - Added contentProtection extraction for THEOlive endpoints on iOS.
 
 ## [10.9.0] - 26-01-29
@@ -65,6 +68,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Added support on iOS to push the initial state of the player from the iOS bridge to the React native adapter.
+- Added RNRepo support for Android to the example app. More info on the official [documentation](https://rnrepo.org/) page.
 
 ### Fixed
 
@@ -73,10 +77,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed an issue on Android where `player.ads.currentAds` would not return an array of ads due to a native error.
 - Fixed an issue on Android where the player would sometimes have wrong dimensions after transitioning to fullscreen presentation mode.
 - Fixed an issue on Android where the `useEMSG` property was not included when setting a TheoAds source description.
-
-### Added
-
-- Added RNRepo support for Android to the example app. More info on the official [documentation](https://rnrepo.org/) page.
 
 ## [10.7.1] - 26-01-06
 
@@ -189,9 +189,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 - Added `THEOplayer.theoLive` and deprecated `THEOplayer.theolive`, to be consistent with the THEOplayer SDKs for other platforms.
-
-### Changed
-
 - Moved the `hlsDateRange` property from `SourceConfiguration` to its correct location in `TypedSource`.
 
 ## [10.1.0] - 25-10-06
