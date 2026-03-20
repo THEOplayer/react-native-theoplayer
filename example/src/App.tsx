@@ -90,6 +90,14 @@ const playerConfig: PlayerConfiguration = {
   },
 };
 
+function updatePresentationModeOnOrientationChange(player: THEOplayer, orientationType: string) {
+  if (orientationType.startsWith('LANDSCAPE')) {
+    player.presentationMode = PresentationMode.fullscreen;
+  } else if (orientationType.startsWith('PORTRAIT')) {
+    player.presentationMode = PresentationMode.inline;
+  }
+}
+
 /**
  * The example app demonstrates the use of the THEOplayerView with a custom UI using the provided UI components.
  * If you don't want to create a custom UI, you can just use the THEOplayerDefaultUi component instead.
@@ -112,13 +120,7 @@ export default function App() {
 
   useDeviceOrientationChange((orientationType) => {
     if (player !== undefined && isPhone) {
-      if (orientationType.startsWith('LANDSCAPE')) {
-        player.presentationMode = PresentationMode.fullscreen;
-      } else if (orientationType.startsWith('PORTRAIT')) {
-        player.presentationMode = PresentationMode.inline;
-      } else {
-        // keep current presentationMode in other orientations (face up, face down, ...)
-      }
+      updatePresentationModeOnOrientationChange(player, orientationType);
     }
   });
 
