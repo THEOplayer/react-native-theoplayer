@@ -46,11 +46,13 @@ import { RenderingTargetSubMenu } from './custom/RenderingTargetSubMenu';
 import { AutoPlaySubMenu } from './custom/AutoPlaySubMenu';
 import { SafeAreaProvider, SafeAreaView, Edges } from 'react-native-safe-area-context';
 import { usePresentationMode } from './hooks/usePresentationMode';
+import { useDeviceOrientationChange } from 'react-native-orientation-locker';
 import {
   EzdrmFairplayContentProtectionIntegrationFactory,
   KeyOSDrmFairplayContentProtectionIntegrationFactory,
   KeyOSDrmWidevineContentProtectionIntegrationFactory,
 } from '@theoplayer/react-native-drm';
+import DeviceInfo from 'react-native-device-info';
 
 // Register Ezdrm Fairplay integration
 ContentProtectionRegistry.registerContentProtectionIntegration('customEzdrm', 'fairplay', new EzdrmFairplayContentProtectionIntegrationFactory());
@@ -59,6 +61,7 @@ ContentProtectionRegistry.registerContentProtectionIntegration('customEzdrm', 'f
 ContentProtectionRegistry.registerContentProtectionIntegration('keyos_buydrm', 'fairplay', new KeyOSDrmFairplayContentProtectionIntegrationFactory());
 ContentProtectionRegistry.registerContentProtectionIntegration('keyos_buydrm', 'widevine', new KeyOSDrmWidevineContentProtectionIntegrationFactory());
 
+const isPhone = DeviceInfo.getDeviceType() === 'Handset';
 const playerConfig: PlayerConfiguration = {
   // Get your THEOplayer license from https://portal.theoplayer.com/
   // Without a license, only demo sources hosted on '*.theoplayer.com' domains can be played.
@@ -87,6 +90,14 @@ const playerConfig: PlayerConfiguration = {
   },
 };
 
+function updatePresentationModeOnOrientationChange(player: THEOplayer, orientationType: string) {
+  if (orientationType.startsWith('LANDSCAPE')) {
+    player.presentationMode = PresentationMode.fullscreen;
+  } else if (orientationType.startsWith('PORTRAIT')) {
+    player.presentationMode = PresentationMode.inline;
+  }
+}
+
 /**
  * The example app demonstrates the use of the THEOplayerView with a custom UI using the provided UI components.
  * If you don't want to create a custom UI, you can just use the THEOplayerDefaultUi component instead.
@@ -106,6 +117,12 @@ export default function App() {
       event.interstitial.adTagParameters['CustomKey'] = 'CustomValue';
     }
   };
+
+  useDeviceOrientationChange((orientationType) => {
+    if (player !== undefined && isPhone) {
+      updatePresentationModeOnOrientationChange(player, orientationType);
+    }
+  });
 
   const onPlayerReady = useCallback((player: THEOplayer) => {
     setPlayer(player);
@@ -235,10 +252,10 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    // on iOS we cannot stretch an inline playerView to cover the whole screen, otherwise it assumes fullscreen presentationMode.
-    marginHorizontal: Platform.select({ ios: 2, default: 0 }),
-    alignItems: 'center',
-    justifyContent: 'center',
+    position: 'absolute',
+    top: isPhone ? '20%' : '10%',
+    left: isPhone ? '2%' : '10%',
+    right: isPhone ? '2%' : '10%',
+    aspectRatio: 16.0 / 9.0,
   },
 });

@@ -44,6 +44,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     return true
   }
+  
+  func application( application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+    return Orientation.getOrientation()
+  }
 }
 
 class ReactNativeDelegate: RCTDefaultReactNativeFactoryDelegate {
