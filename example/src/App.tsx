@@ -51,6 +51,7 @@ import {
   KeyOSDrmFairplayContentProtectionIntegrationFactory,
   KeyOSDrmWidevineContentProtectionIntegrationFactory,
 } from '@theoplayer/react-native-drm';
+import { ExtensionMenuButton } from './custom/ExtensionMenuButton';
 
 // Register Ezdrm Fairplay integration
 ContentProtectionRegistry.registerContentProtectionIntegration('customEzdrm', 'fairplay', new EzdrmFairplayContentProtectionIntegrationFactory());
@@ -166,6 +167,7 @@ export default function App() {
                   <AutoFocusGuide>
                     <ControlBar>
                       <Spacer />
+                      <ExtensionMenuButton>{/*<ExtensionButton label={'Custom action'} onPress={() => {}} />*/}</ExtensionMenuButton>
                       <MediaCacheMenuButton>
                         <MediaCacheDownloadButton />
                         <MediaCachingTaskListSubMenu />
