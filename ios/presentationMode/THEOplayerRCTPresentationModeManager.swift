@@ -39,9 +39,10 @@ public class THEOplayerRCTPresentationModeManager {
     }
     
     func validateLayout() {
-        if self.presentationMode == .fullscreen,
+        if self.presentationMode == .fullscreen || (self.presentationMode == .pictureInPicture && self.rnInlineMode == .fullscreen),
            let containerView = self.containerView {
-            // When in fullscreen, assure the moved view has a (0, 0) origin.
+            // When in fullscreen or when in Pip, coming from fullscreen (i.e playerView should remain in fullscreen),
+            // assure the moved view has a (0, 0) origin.
             containerView.frame = CGRect(x: 0, y: 0, width: containerView.frame.width, height: containerView.frame.height)
         }
     }
