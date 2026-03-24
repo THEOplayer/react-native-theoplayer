@@ -245,5 +245,7 @@ const styles = StyleSheet.create({
     marginHorizontal: Platform.select({ ios: 2, default: 0 }),
     alignItems: 'center',
     justifyContent: 'center',
+    borderColor: '#333',
+    borderWidth: 1,
   },
 });
