@@ -124,7 +124,8 @@ interface THEOplayerRCTViewProps {
 interface THEOplayerRCTViewState {
   error?: PlayerError;
   presentationMode?: PresentationMode | undefined;
-  screenSize: ScaledSize;
+  previousPresentationMode?: PresentationMode | undefined;
+  fullscreenSizeOverride: ScaledSize;
   posterActive: boolean;
   poster: string | undefined;
 }
@@ -139,7 +140,8 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
   private static initialState: THEOplayerRCTViewState = {
     error: undefined,
     presentationMode: PresentationMode.inline,
-    screenSize: getFullscreenSize(),
+    previousPresentationMode: undefined,
+    fullscreenSizeOverride: getFullscreenSize(),
     posterActive: false,
     poster: undefined,
   };
@@ -186,7 +188,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
   }
 
   private _onDimensionsChanged = () => {
-    this.setState({ screenSize: getFullscreenSize() });
+    this.setState({ fullscreenSizeOverride: getFullscreenSize() });
   };
 
   private _onDeviceOrientationChanged = () => {
@@ -399,10 +401,11 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
 
   private _onPresentationModeChange = (event: NativeSyntheticEvent<NativePresentationModeChangeEvent>) => {
     const presentationMode = event.nativeEvent.presentationMode;
-    this.setState({ presentationMode }, () => {
+    const previousPresentationMode = event.nativeEvent.previousPresentationMode;
+    this.setState({ presentationMode, previousPresentationMode }, () => {
       // Re-measure screen size after transitioning to fullscreen.
       if (presentationMode === PresentationMode.fullscreen) {
-        this.setState({ screenSize: getFullscreenSize() });
+        this.setState({ fullscreenSizeOverride: getFullscreenSize() });
       }
     });
     this._facade?.dispatchEvent(
@@ -438,11 +441,25 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
   };
 
   private styleOverride() {
-    const { presentationMode, screenSize: fullscreenSize } = this.state;
-    return presentationMode === PresentationMode.fullscreen ||
-      (Platform.OS === 'android' && presentationMode === PresentationMode.pip && this._facade?.pipConfiguration?.reparentPip == true)
-      ? fullscreenSize
-      : {};
+    const { presentationMode, previousPresentationMode, fullscreenSizeOverride: fullscreenOverride } = this.state;
+
+    // When in fullscreen, we need to apply an override to make sure the player fills the entire screen
+    if (presentationMode === PresentationMode.fullscreen) {
+      return fullscreenOverride;
+    }
+
+    // When in PiP, we need to apply the same override if the PiP configuration specifies reparenting, or when coming from fullscreen.
+    if (presentationMode === PresentationMode.pip) {
+      if (
+        (Platform.OS === 'android' && this._facade?.pipConfiguration?.reparentPip === true) ||
+        previousPresentationMode === PresentationMode.fullscreen
+      ) {
+        return fullscreenOverride;
+      }
+    }
+
+    // otherwise, no override is needed
+    return {};
   }
 
   public render(): React.JSX.Element {
