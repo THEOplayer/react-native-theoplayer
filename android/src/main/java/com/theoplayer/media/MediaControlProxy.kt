@@ -16,6 +16,12 @@ const val AVAILABLE_QUEUE_ACTIONS = (PlaybackStateCompat.ACTION_SKIP_TO_QUEUE_IT
   PlaybackStateCompat.ACTION_SKIP_TO_NEXT or
   PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS)
 
+/**
+ * MediaControlProxy serves as a proxy for media control actions sent by the MediaSession. It allows
+ * external code to register handlers for specific media control actions, which will be invoked when the
+ * corresponding action is received from the MediaSession. If no handler is registered for a given action,
+ * the proxy will fall back to default behavior (e.g. calling player.play() for a PLAY action).
+ */
 @Suppress("unused")
 @ReactModule(name = MediaControlModule.NAME)
 class MediaControlProxy : PlaybackCallback, QueueNavigator {
@@ -73,12 +79,22 @@ class MediaControlProxy : PlaybackCallback, QueueNavigator {
     return handlers.containsKey(action)
   }
 
+  val queueActionsEnabled: Boolean
+    get() = hasHandler(MediaControlAction.SKIP_TO_NEXT) ||
+      hasHandler(MediaControlAction.SKIP_TO_PREVIOUS) || config?.convertSkipToSeek == true
+
+  val trickPlayEnabled: Boolean
+    get() = !isInAd() && !isLive()
+
+  val playPauseEnabled: Boolean
+    get() = !isInAd() && (!isLive() || config?.allowLivePlayPause == true)
+
   override fun onPlay() {
     // Make sure the session is currently active and ready to receive commands.
     connector?.setActive(true)
 
     // Don't allow play actions during ads, or on live streams if not configured to allow it.
-    if (isInAd() || (isLive() && config?.allowLivePlayPause != true)) return
+    if (!playPauseEnabled) return
 
     // Check if an external handler is registered for the PLAY keycode, and invoke it if so
     if (invokeHandler(MediaControlAction.PLAY)) return
@@ -93,7 +109,7 @@ class MediaControlProxy : PlaybackCallback, QueueNavigator {
 
   override fun onPause() {
     // Don't allow pause actions during ads, or on live streams if not configured to allow it.
-    if (isInAd() || (isLive() && config?.allowLivePlayPause != true)) return
+    if (!playPauseEnabled) return
 
     // Check if an external handler is registered for the PAUSE keycode, and invoke it if so
     if (invokeHandler(MediaControlAction.PAUSE)) return
@@ -107,14 +123,14 @@ class MediaControlProxy : PlaybackCallback, QueueNavigator {
 
   override fun onFastForward() {
     // Don't allow skip actions during ads, or on live streams.
-    if (isInAd() || isLive()) return
+    if (!trickPlayEnabled) return
 
     skip(connector?.skipForwardInterval ?: 0.0)
   }
 
   override fun onRewind() {
     // Don't allow skip actions during ads, or on live streams.
-    if (isInAd() || isLive()) return
+    if (!trickPlayEnabled) return
 
     skip(-(connector?.skipBackwardsInterval ?: 0.0))
   }
@@ -125,7 +141,7 @@ class MediaControlProxy : PlaybackCallback, QueueNavigator {
 
   override fun onSeekTo(positionMs: Long) {
     // Don't allow seek actions during ads, or on live streams.
-    if (isInAd() || isLive()) return
+    if (!trickPlayEnabled) return
 
     player?.currentTime = 1e-03 * positionMs
   }
@@ -155,9 +171,7 @@ class MediaControlProxy : PlaybackCallback, QueueNavigator {
   }
 
   override fun getSupportedQueueNavigatorActions(player: Player): Long {
-    val canQueue = hasHandler(MediaControlAction.SKIP_TO_NEXT) ||
-      hasHandler(MediaControlAction.SKIP_TO_PREVIOUS) || config?.convertSkipToSeek == true
-    return if (canQueue) {
+    return if (queueActionsEnabled) {
       AVAILABLE_QUEUE_ACTIONS
     } else {
       0L
