@@ -21,6 +21,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added RCTBridgeModule extension on iOS, with helper methods to resolve the view and native player APIs.
 
+### Added
+
+- Added the `MediaControl` API for controlling the media session and lock screen controls with custom handlers.
+
 ### Fixed
 
 - Fixed an issue on iOS where sideloaded texttracks were not stored for cached playout.
