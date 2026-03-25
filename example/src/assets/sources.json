@@ -1,6 +1,6 @@
 [
   {
-    "name": "Sintel • HLS • Sideloaded Chapters",
+    "name": "Sintel • HLS • Side-loaded Chapters",
     "os": ["ios", "android", "web"],
     "needsLicense": false,
     "source": {
@@ -10,13 +10,13 @@
           "type": "application/x-mpegurl"
         }
       ],
-      "poster": "https://cdn.theoplayer.com/video/sintel/poster.jpg",
+      "poster": "https://cdn.theoplayer.com/video/posters/sintel.jpg",
       "metadata": {
-        "title": "Sintel",
-        "subtitle": "HLS • Sideloaded Chapters",
+        "title": "Sintel with Side-loaded Chapters",
+        "subtitle": "HLS • Side-loaded Chapters",
         "album": "OptiView React-Native demos",
         "mediaUri": "https://optiview.dolby.com",
-        "displayIconUri": "https://cdn.theoplayer.com/video/sintel/poster.jpg",
+        "displayIconUri": "https://cdn.theoplayer.com/video/posters/sintel.jpg",
         "artist": "Dolby"
       },
       "textTracks": [
@@ -42,13 +42,13 @@
           "type": "application/dash+xml"
         }
       ],
-      "poster": "https://cdn.theoplayer.com/video/big_buck_bunny/poster.jpg",
+      "poster": "https://cdn.theoplayer.com/video/posters/big_buck_bunny.jpg",
       "metadata": {
-        "title": "Big Buck Bunny",
+        "title": "Big Buck Bunny with Thumbnails",
         "subtitle": "DASH • Thumbnails",
         "album": "OptiView React Native demos",
         "mediaUri": "https://optiview.dolby.com",
-        "displayIconUri": "https://cdn.theoplayer.com/video/big_buck_bunny/poster.jpg",
+        "displayIconUri": "https://cdn.theoplayer.com/video/posters/big_buck_bunny.jpg",
         "artist": "Dolby"
       }
     }
@@ -64,13 +64,13 @@
           "type": "application/dash+xml"
         }
       ],
-      "poster": "https://cdn.theoplayer.com/video/big_buck_bunny/poster.jpg",
+      "poster": "https://cdn.theoplayer.com/video/posters/big_buck_bunny.jpg",
       "metadata": {
-        "title": "Big Buck Bunny",
+        "title": "Big Buck Bunny with Side-loaded Thumbnails",
         "subtitle": "DASH • Side-loaded Thumbnails",
         "album": "OptiView React Native demos",
         "mediaUri": "https://optiview.dolby.com",
-        "displayIconUri": "https://cdn.theoplayer.com/video/big_buck_bunny/poster.jpg",
+        "displayIconUri": "https://cdn.theoplayer.com/video/posters/big_buck_bunny.jpg",
         "artist": "Dolby"
       },
       "textTracks": [
@@ -94,13 +94,13 @@
           "type": "application/dash+xml"
         }
       ],
-      "poster": "https://cdn.theoplayer.com/video/sintel/poster.jpg",
+      "poster": "https://cdn.theoplayer.com/video/posters/sintel.jpg",
       "metadata": {
-        "title": "Sintel",
+        "title": "Sintel DASH",
         "subtitle": "DASH • Clear",
         "album": "OptiView React-Native demos",
         "mediaUri": "https://optiview.dolby.com",
-        "displayIconUri": "https://cdn.theoplayer.com/video/sintel/poster.jpg",
+        "displayIconUri": "https://cdn.theoplayer.com/video/posters/sintel.jpg",
         "artist": "Dolby"
       }
     }
@@ -119,13 +119,13 @@
           }
         }
       },
-      "poster": "https://cdn.theoplayer.com/video/dash/tos-dash-widevine/poster.png",
+      "poster": "https://cdn.theoplayer.com/video/posters/tears_of_steel.jpg",
       "metadata": {
-        "title": "Tears of Steel",
+        "title": "Tears of Steel ezDRM",
         "subtitle": "DASH • ezDRM (Widevine)",
         "album": "OptiView React-Native demos",
         "mediaUri": "https://optiview.dolby.com",
-        "displayIconUri": "https://cdn.theoplayer.com/video/dash/tos-dash-widevine/poster.png",
+        "displayIconUri": "https://cdn.theoplayer.com/video/posters/tears_of_steel.jpg",
         "artist": "Dolby"
       }
     }
@@ -148,13 +148,13 @@
           }
         }
       },
-      "poster": "https://cdn.theoplayer.com/video/meridian_poster.jpg",
+      "poster": "https://cdn.theoplayer.com/video/posters/meridian.jpg",
       "metadata": {
         "title": "Meridian",
         "subtitle": "DASH • KeyOS (Widevine)",
         "album": "OptiView React-Native demos",
         "mediaUri": "https://optiview.dolby.com",
-        "displayIconUri": "https://cdn.theoplayer.com/video/meridian_poster.jpg",
+        "displayIconUri": "https://cdn.theoplayer.com/video/posters/meridian.jpg",
         "artist": "Dolby"
       }
     }
@@ -167,13 +167,13 @@
       "sources": {
         "src": "https://livesim.dashif.org/livesim/chunkdur_1/ato_7/testpic4_8s/Manifest.mpd"
       },
-      "poster": "https://cdn.theoplayer.com/video/dash/test_video/poster.png",
+      "poster": "https://cdn.theoplayer.com/video/posters/livesim.jpg",
       "metadata": {
         "title": "LiveSim",
         "subtitle": "DASH",
         "album": "OptiView React-Native demos",
         "mediaUri": "https://optiview.dolby.com",
-        "displayIconUri": "https://cdn.theoplayer.com/video/dash/test_video/poster.png",
+        "displayIconUri": "https://cdn.theoplayer.com/video/posters/livesim.jpg",
         "artist": "Dolby"
       }
     }
@@ -197,13 +197,13 @@
           }
         }
       ],
-      "poster": "https://cdn.theoplayer.com/video/sintel/poster.jpg",
+      "poster": "https://cdn.theoplayer.com/video/posters/sintel.jpg",
       "metadata": {
-        "title": "Sintel",
+        "title": "Sintel with pre-roll",
         "subtitle": "CSAI • Google IMA pre-roll",
         "album": "OptiView React-Native demos",
         "mediaUri": "https://optiview.dolby.com",
-        "displayIconUri": "https://cdn.theoplayer.com/video/sintel/poster.jpg",
+        "displayIconUri": "https://cdn.theoplayer.com/video/posters/sintel.jpg",
         "artist": "Dolby"
       }
     }
@@ -228,13 +228,13 @@
           "timeOffset": 10
         }
       ],
-      "poster": "https://cdn.theoplayer.com/video/sintel/poster.jpg",
+      "poster": "https://cdn.theoplayer.com/video/posters/sintel.jpg",
       "metadata": {
-        "title": "Sintel",
+        "title": "Sintel with mid-roll VAST",
         "subtitle": "CSAI • Google IMA mid-roll VAST",
         "album": "OptiView React-Native demos",
         "mediaUri": "https://optiview.dolby.com",
-        "displayIconUri": "https://cdn.theoplayer.com/video/sintel/poster.jpg",
+        "displayIconUri": "https://cdn.theoplayer.com/video/posters/sintel.jpg",
         "artist": "Dolby"
       }
     }
@@ -258,13 +258,13 @@
           }
         }
       ],
-      "poster": "https://cdn.theoplayer.com/video/sintel/poster.jpg",
+      "poster": "https://cdn.theoplayer.com/video/posters/sintel.jpg",
       "metadata": {
-        "title": "Sintel",
+        "title": "Sintel with mid-roll VMAP",
         "subtitle": "CSAI • Google IMA mid-roll VMAP",
         "album": "OptiView React-Native demos",
         "mediaUri": "https://optiview.dolby.com",
-        "displayIconUri": "https://cdn.theoplayer.com/video/sintel/poster.jpg",
+        "displayIconUri": "https://cdn.theoplayer.com/video/posters/sintel.jpg",
         "artist": "Dolby"
       }
     }
@@ -278,12 +278,12 @@
         "src": "https://cdn.theoplayer.com/video/adultswim/clip.m3u8",
         "type": "application/x-mpegurl"
       },
-      "poster": "https://cdn.theoplayer.com/video/adultswim/poster.png",
+      "poster": "https://cdn.theoplayer.com/video/posters/adultswim.jpg",
       "metadata": {
         "title": "The Venture Bros",
         "subtitle": "Adult Swim",
         "album": "OptiView React Native demos",
-        "displayIconUri": "https://cdn.theoplayer.com/video/dolby_optiview.jpg",
+        "displayIconUri": "https://cdn.theoplayer.com/video/posters/dolby_optiview.jpg",
         "artist": "Dolby",
         "type": "tv-show",
         "releaseDate": "november 29th",
@@ -307,9 +307,12 @@
           }
         }
       ],
+      "poster": "https://cdn.theoplayer.com/video/posters/dolby_optiview.jpg",
       "metadata": {
         "title": "THEOlive • demo",
+        "displayIconUri": "https://cdn.theoplayer.com/video/posters/dolby_optiview.jpg",
         "mediaUri": "https://optiview.dolby.com",
+        "album": "OptiView React Native demos",
         "artist": "Dolby"
       }
     }
@@ -323,11 +326,11 @@
         "src": "https://cdn.theoplayer.com/video/star_wars_episode_vii-the_force_awakens_official_comic-con_2015_reel_(2015)/index-daterange.m3u8",
         "type": "application/x-mpegurl"
       },
-      "poster": "https://cdn.theoplayer.com/video/dolby_optiview.jpg",
+      "poster": "https://cdn.theoplayer.com/video/posters/dolby_optiview.jpg",
       "metadata": {
         "title": "Star Wars Episode VII • The Force Awakens Official Comic-Con 2015 Reel",
         "subtitle": "Clear • DateRange Metadata",
-        "displayIconUri": "https://cdn.theoplayer.com/video/dolby_optiview.jpg",
+        "displayIconUri": "https://cdn.theoplayer.com/video/posters/dolby_optiview.jpg",
         "album": "OptiView React Native demos",
         "artist": "Dolby"
       }
@@ -342,12 +345,12 @@
         "src": "https://ireplay.tv/test/blender.m3u8",
         "type": "application/x-mpegurl"
       },
-      "poster": "https://cdn.theoplayer.com/video/dolby_optiview.jpg",
+      "poster": "https://cdn.theoplayer.com/video/posters/dolby_optiview.jpg",
       "metadata": {
-        "title": "Tears of Steel",
+        "title": "Tears of Steel Live",
         "subtitle": "HLS • Live",
-        "album": "React-Native demos",
-        "displayIconUri": "https://cdn.theoplayer.com/video/dolby_optiview.jpg",
+        "album": "OptiView React Native demos",
+        "displayIconUri": "https://cdn.theoplayer.com/video/posters/dolby_optiview.jpg",
         "artist": "Dolby",
         "type": "tv-show",
         "releaseDate": "november 30th",
@@ -364,12 +367,13 @@
         "src": "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8",
         "type": "application/x-mpegurl"
       },
-      "poster": "https://cdn.theoplayer.com/video/dolby_optiview.jpg",
+      "poster": "https://cdn.theoplayer.com/video/posters/dolby_optiview.jpg",
       "metadata": {
         "title": "Bipbop",
-        "album": "Bipbop Album",
-        "displayIconUri": "https://cdn.theoplayer.com/video/dolby_optiview.jpg",
-        "artist": "Apple"
+        "subtitle": "HLS • Live",
+        "album": "OptiView React Native demos",
+        "displayIconUri": "https://cdn.theoplayer.com/video/posters/dolby_optiview.jpg",
+        "artist": "Dolby"
       }
     }
   },
@@ -382,13 +386,13 @@
         "src": "https://cdn.theoplayer.com/video/elephants-dream/playlist-single-audio.m3u8",
         "type": "application/x-mpegurl"
       },
-      "poster": "https://cdn.theoplayer.com/video/elephants-dream.png",
+      "poster": "https://cdn.theoplayer.com/video/posters/elephants_dream.jpg",
       "metadata": {
-        "title": "Elephants Dream",
-        "subtitle": "Elephants Dream Subtitle",
-        "album": "Elephants Dream Album",
-        "displayIconUri": "https://cdn.theoplayer.com/video/elephants-dream.png",
-        "artist": "The elephant"
+        "title": "Elephants Dream HLS",
+        "subtitle": "HLS • Clear",
+        "album": "OptiView React Native demos",
+        "displayIconUri": "https://cdn.theoplayer.com/video/posters/elephants_dream.jpg",
+        "artist": "Dolby"
       }
     }
   },
@@ -409,39 +413,18 @@
           "sources": "https://cdn.theoplayer.com/demos/ads/vast/dfp-preroll-no-skip.xml"
         }
       ],
-      "poster": "https://cdn.theoplayer.com/video/elephants-dream.png",
+      "poster": "https://cdn.theoplayer.com/video/posters/elephants_dream.jpg",
       "metadata": {
-        "title": "Elephants Dream with Preroll",
-        "subtitle": "Elephants Dream with Preroll Subtitle",
-        "album": "Elephants Album",
-        "displayIconUri": "https://cdn.theoplayer.com/video/elephants-dream.png",
-        "artist": "The Dream"
+        "title": "Elephants Dream with pre-roll",
+        "subtitle": "HLS • CSAI • Google IMA pre-roll",
+        "album": "OptiView React Native demos",
+        "displayIconUri": "https://cdn.theoplayer.com/video/posters/elephants_dream.jpg",
+        "artist": "Dolby"
       }
     }
   },
   {
-    "name": "HLS - SGAI (THEOads)",
-    "os": ["web"],
-    "needsLicense": true,
-    "source": {
-      "sources": {
-        "src": "https://cluster.dev.theostream.live/nfl-unified-channel/hls/k8s/live/scte35.isml/.m3u8",
-        "type": "application/x-mpegurl",
-        "hlsDateRange": true
-      },
-      "ads": [
-        {
-          "integration": "theoads",
-          "networkCode": "51636543",
-          "customAssetKey": "nfl-sgai-demo",
-          "backdropDoubleBox": "https://demo.theoads.live/img/THEOads_double_box.svg",
-          "backdropLShape": "https://demo.theoads.live/img/THEOads_L_Shape.svg"
-        }
-      ]
-    }
-  },
-  {
-    "name": "HLS - CSAI - Google IMA mid-roll VAST",
+    "name": "Elephants Dream • HLS • CSAI • Google IMA mid-roll",
     "os": ["ios", "web"],
     "needsLicense": false,
     "source": {
@@ -460,18 +443,18 @@
           "timeOffset": 10
         }
       ],
-      "poster": "https://cdn.theoplayer.com/video/dolby_optiview.jpg",
+      "poster": "https://cdn.theoplayer.com/video/posters/elephants_dream.jpg",
       "metadata": {
-        "title": "Elephants Dream with Midroll",
-        "subtitle": "Elephants Dream with Midroll Subtitle",
-        "album": "Ellies Album",
-        "displayIconUri": "https://cdn.theoplayer.com/video/dolby_optiview.jpg",
-        "artist": "Ellie"
+        "title": "Elephants Dream with mid-roll",
+        "subtitle": "HLS • CSAI • Google IMA mid-roll",
+        "album": "OptiView React Native demos",
+        "displayIconUri": "https://cdn.theoplayer.com/video/posters/elephants_dream.jpg",
+        "artist": "Dolby"
       }
     }
   },
   {
-    "name": "HLS - CSAI - Google IMA VMAP",
+    "name": "Elephants Dream • HLS • CSAI • Google IMA VMAP",
     "needsLicense": false,
     "os": ["ios", "web"],
     "source": {
@@ -489,35 +472,19 @@
           }
         }
       ],
-      "poster": "https://cdn.theoplayer.com/video/dolby_optiview.jpg",
+      "poster": "https://cdn.theoplayer.com/video/posters/elephants_dream.jpg",
       "metadata": {
         "title": "Elephants Dream with VMAP",
         "subtitle": "Elephants Dream with VMAP Subtitle",
-        "album": "Ellies Album",
-        "displayIconUri": "https://cdn.theoplayer.com/video/dolby_optiview.jpg",
-        "artist": "Ellie"
+        "album": "OptiView React Native demos",
+        "displayIconUri": "https://cdn.theoplayer.com/video/posters/elephants_dream.jpg",
+        "artist": "Dolby"
       }
     }
   },
   {
-    "name": "DASH - SSAI - Google DAI",
-    "os": ["android", "web"],
-    "needsLicense": true,
-    "source": {
-      "sources": {
-        "type": "application/dash+xml",
-        "ssai": {
-          "integration": "google-dai",
-          "availabilityType": "vod",
-          "contentSourceID": "2474148",
-          "videoID": "bbb-clear"
-        }
-      }
-    }
-  },
-  {
-    "name": "HLS - SSAI - Google DAI - VOD",
-    "os": ["ios", "web"],
+    "name": "Tears of Steel • HLS • Google DAI",
+    "os": ["ios", "web", "android"],
     "needsLicense": true,
     "source": {
       "sources": {
@@ -527,12 +494,21 @@
           "contentSourceID": "2548831",
           "videoID": "tears-of-steel"
         }
+      },
+      "poster": "https://cdn.theoplayer.com/video/posters/tears_of_steel.jpg",
+      "metadata": {
+        "title": "Tears of Steel with DAI",
+        "subtitle": "HLS • Google DAI",
+        "album": "OptiView React Native demos",
+        "mediaUri": "https://optiview.dolby.com",
+        "displayIconUri": "https://cdn.theoplayer.com/video/posters/tears_of_steel.jpg",
+        "artist": "Dolby"
       }
     }
   },
   {
-    "name": "HLS - SSAI - Google DAI - LIVE",
-    "os": ["ios", "web"],
+    "name": "Big Buck Bunny • HLS • Google DAI • LIVE",
+    "os": ["ios", "web", "android"],
     "needsLicense": true,
     "source": {
       "sources": {
@@ -541,11 +517,20 @@
           "availabilityType": "live",
           "assetKey": "sN_IYUG8STe1ZzhIIE_ksA"
         }
+      },
+      "poster": "https://cdn.theoplayer.com/video/posters/big_buck_bunny.jpg",
+      "metadata": {
+        "title": "Big Buck Bunny with DAI",
+        "subtitle": "HLS • Google DAI • LIVE",
+        "album": "OptiView React Native demos",
+        "mediaUri": "https://optiview.dolby.com",
+        "displayIconUri": "https://cdn.theoplayer.com/video/posters/big_buck_bunny.jpg",
+        "artist": "Dolby"
       }
     }
   },
   {
-    "name": "HLS - VOD/Thumbnails - Clear - Big Buck Bunny",
+    "name": "Big Buck Bunny • HLS • Thumbnails • Clear",
     "os": ["ios", "web"],
     "needsLicense": false,
     "source": {
@@ -553,13 +538,13 @@
         "src": "https://cdn.theoplayer.com/video/big_buck_bunny/big_buck_bunny.m3u8",
         "type": "application/x-mpegurl"
       },
-      "poster": "https://cdn.theoplayer.com/video/big_buck_bunny/poster.jpg",
+      "poster": "https://cdn.theoplayer.com/video/posters/big_buck_bunny.jpg",
       "metadata": {
-        "title": "The Title",
-        "subtitle": "The Subtitle",
-        "album": "Album",
-        "displayIconUri": "https://cdn.theoplayer.com/video/big_buck_bunny/poster.jpg",
-        "artist": "Artist"
+        "title": "Big Buck Bunny with Thumbnails",
+        "subtitle": "HLS • Thumbnails • Clear",
+        "album": "OptiView React Native demos",
+        "displayIconUri": "https://cdn.theoplayer.com/video/posters/big_buck_bunny.jpg",
+        "artist": "Dolby"
       },
       "textTracks": [
         {
@@ -574,7 +559,7 @@
     }
   },
   {
-    "name": "HLS - VOD - ezDRM (FairPlay)",
+    "name": "HLS • VOD • ezDRM (FairPlay)",
     "os": ["ios", "web"],
     "needsLicense": true,
     "source": {
@@ -588,11 +573,19 @@
             "licenseAcquisitionURL": "https://fps.ezdrm.com/api/licenses/09cc0377-6dd4-40cb-b09d-b582236e70fe"
           }
         }
+      },
+      "poster": "https://cdn.theoplayer.com/video/posters/dolby_optiview.jpg",
+      "metadata": {
+        "title": "ezDRM (FairPlay)",
+        "subtitle": "HLS • VOD • ezDRM (FairPlay)",
+        "album": "OptiView React Native demos",
+        "displayIconUri": "https://cdn.theoplayer.com/video/posters/dolby_optiview.jpg",
+        "artist": "Dolby"
       }
     }
   },
   {
-    "name": "HLS - VOD - keyOS (FairPlay)",
+    "name": "HLS • VOD • keyOS (FairPlay)",
     "os": ["ios", "web"],
     "needsLicense": true,
     "source": {
@@ -609,52 +602,54 @@
             "certificateURL": "https://fp-keyos.licensekeyserver.com/cert/7e11400c7dccd29d0174c674397d99dd.der"
           }
         }
+      },
+      "poster": "https://cdn.theoplayer.com/video/posters/dolby_optiview.jpg",
+      "metadata": {
+        "title": "keyOS (FairPlay)",
+        "subtitle": "HLS • VOD • keyOS (FairPlay)",
+        "album": "OptiView React Native demos",
+        "displayIconUri": "https://cdn.theoplayer.com/video/posters/dolby_optiview.jpg",
+        "artist": "Dolby"
       }
     }
   },
   {
-    "name": "MP4 - Elephants Dream",
+    "name": "Elephants Dream • MP4",
     "os": ["ios", "web", "android"],
     "needsLicense": false,
     "source": {
       "sources": {
         "src": "https://cdn.theoplayer.com/video/elephants-dream.mp4"
+      },
+      "poster": "https://cdn.theoplayer.com/video/posters/elephants_dream.jpg",
+      "metadata": {
+        "title": "Elephants Dream MP4",
+        "album": "OptiView React Native demos",
+        "displayIconUri": "https://cdn.theoplayer.com/video/posters/elephants_dream.jpg",
+        "artist": "Dolby"
       }
     }
   },
   {
-    "name": "MP3 - SoundHelix Song1",
+    "name": "SoundHelix Song1 • MP3",
     "os": ["ios", "web", "android"],
     "needsLicense": true,
     "source": {
       "sources": {
         "src": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+      },
+      "poster": "https://cdn.theoplayer.com/video/posters/dolby_optiview.jpg",
+      "metadata": {
+        "title": "SoundHelix Song 1",
+        "album": "OptiView React Native demos",
+        "mediaUri": "https://optiview.dolby.com",
+        "displayIconUri": "https://cdn.theoplayer.com/video/posters/dolby_optiview.jpg",
+        "artist": "Dolby"
       }
     }
   },
   {
-    "name": "HLS - THEOads",
-    "os": ["ios", "web", "android"],
-    "needsLicense": true,
-    "source": {
-      "sources": {
-        "src": "https://cluster.dev.theostream.live/nfl-unified-channel/hls/k8s/live/scte35.isml/.m3u8",
-        "type": "application/x-mpegurl",
-        "hlsDateRange": true
-      },
-      "ads": [
-        {
-          "integration": "theoads",
-          "networkCode": "51636543",
-          "customAssetKey": "nfl-sgai-demo",
-          "backdropDoubleBox": "https://demo.theoads.live/img/THEOads_double_box.svg",
-          "backdropLShape": "https://demo.theoads.live/img/THEOads_L_Shape.svg"
-        }
-      ]
-    }
-  },
-  {
-    "name": "Millicast",
+    "name": "Millicast Demo",
     "os": ["ios", "web"],
     "needsLicense": false,
     "source": {
@@ -665,17 +660,19 @@
           "streamAccountId": "k9Mwad"
         }
       ],
+      "poster": "https://cdn.theoplayer.com/video/posters/dolby_optiview.jpg",
       "metadata": {
         "title": "Millicast",
         "subtitle": "Millicast demo",
         "album": "OptiView React Native demos",
         "mediaUri": "https://optiview.dolby.com",
+        "displayIconUri": "https://cdn.theoplayer.com/video/posters/big_buck_bunny.jpg",
         "artist": "Dolby"
       }
     }
   },
   {
-    "name": "Millicast",
+    "name": "Millicast Demo",
     "os": ["android"],
     "needsLicense": false,
     "source": {
@@ -687,11 +684,13 @@
           "apiUrl": "https://director.millicast.com/api/director/subscribe"
         }
       ],
+      "poster": "https://cdn.theoplayer.com/video/posters/dolby_optiview.jpg",
       "metadata": {
         "title": "Millicast",
         "subtitle": "Millicast demo",
         "album": "OptiView React Native demos",
         "mediaUri": "https://optiview.dolby.com",
+        "displayIconUri": "https://cdn.theoplayer.com/video/posters/big_buck_bunny.jpg",
         "artist": "Dolby"
       }
     }
