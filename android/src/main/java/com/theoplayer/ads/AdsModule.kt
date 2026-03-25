@@ -16,6 +16,8 @@ private const val PROP_OMID_VIEW = "view"
 private const val PROP_OMID_PURPOSE = "purpose"
 private const val PROP_OMID_REASON = "reason"
 
+private const val ERR_SCHEDULE_AD = "Error scheduling ad"
+
 @Suppress("unused")
 @ReactModule(name = AdsModule.NAME)
 class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(context) {
@@ -42,12 +44,10 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
   @ReactMethod
   fun schedule(tag: Int, ad: ReadableMap) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      if (view != null) {
-        try {
-          view.adsApi.schedule(sourceHelper.parseAdFromJS(ad))
-        } catch (exception: THEOplayerException) {
-          Log.e(NAME, exception.message!!)
-        }
+      try {
+        view?.adsApi?.schedule(sourceHelper.parseAdFromJS(ad))
+      } catch (exception: THEOplayerException) {
+        Log.e(NAME, exception.message ?: ERR_SCHEDULE_AD)
       }
     }
   }
@@ -56,11 +56,7 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
   @ReactMethod
   fun currentAdBreak(tag: Int, promise: Promise) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      if (view == null) {
-        promise.resolve(Arguments.createMap())
-      } else {
-        promise.resolve(AdAdapter.fromAdBreak(view.adsApi.currentAdBreak))
-      }
+      promise.resolve(if (view == null) Arguments.createMap() else AdAdapter.fromAdBreak(view.adsApi.currentAdBreak))
     }
   }
 
@@ -84,16 +80,12 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
   @ReactMethod
   fun playing(tag: Int, promise: Promise) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      if (view == null) {
-        promise.resolve(false)
-      } else {
-        promise.resolve(view.adsApi.isPlaying)
-      }
+      promise.resolve(view?.adsApi?.isPlaying ?: false)
     }
   }
 
   // Skip the current linear ad.
-  // NOTE: This will have no effect when the current linear ad is (not yet) skippable.
+  // NOTE: This will have no effect when the current linear ad is not (yet) skippable.
   @ReactMethod
   fun skip(tag: Int) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? -> view?.adsApi?.skip() }
@@ -102,21 +94,15 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
   @ReactMethod
   fun daiSnapback(tag: Int, promise: Promise) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      val daiIntegration = view?.playerContext?.daiIntegration
-      if (daiIntegration == null) {
-        promise.resolve(false)
-      } else {
-        promise.resolve(daiIntegration.enableSnapback)
-      }
+      promise.resolve(view?.playerContext?.daiIntegration?.enableSnapback ?: false)
     }
   }
 
   @ReactMethod
   fun daiSetSnapback(tag: Int, enabled: Boolean?) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      val daiIntegration = view?.playerContext?.daiIntegration
-      if (daiIntegration != null) {
-        daiIntegration.enableSnapback = enabled!!
+      view?.playerContext?.daiIntegration?.let { integration ->
+        integration.enableSnapback = enabled ?: false
       }
     }
   }
@@ -124,24 +110,20 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
   @ReactMethod
   fun daiContentTimeForStreamTime(tag: Int, time: Int, promise: Promise) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      val daiIntegration = view?.playerContext?.daiIntegration
-      if (daiIntegration == null) {
-        promise.resolve(time)
-      } else {
-        promise.resolve((1e03 * daiIntegration.contentTimeForStreamTime(1e-03 * time)).toInt())
-      }
+      val contentTime = view?.playerContext?.daiIntegration?.let { integration ->
+        (1e03 * integration.contentTimeForStreamTime(1e-03 * time)).toInt()
+      } ?: time
+      promise.resolve(contentTime)
     }
   }
 
   @ReactMethod
   fun daiStreamTimeForContentTime(tag: Int, time: Int, promise: Promise) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      val daiIntegration = view?.playerContext?.daiIntegration
-      if (daiIntegration == null) {
-        promise.resolve(time)
-      } else {
-        promise.resolve((1e03 * daiIntegration.streamTimeForContentTime(1e-03 * time)).toInt())
-      }
+      val streamTime = view?.playerContext?.daiIntegration?.let { integration ->
+        (1e03 * integration.streamTimeForContentTime(1e-03 * time)).toInt()
+      } ?: time
+      promise.resolve(streamTime)
     }
   }
 
@@ -173,9 +155,7 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
     purpose: OmidFriendlyObstructionPurpose?,
     reason: String?
   ) {
-    if (obsView == null || purpose == null) {
-      return
-    }
+    if (obsView == null || purpose == null) return
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       view?.player?.ads?.omid?.addFriendlyObstruction(
         OmidFriendlyObstruction(obsView, purpose, reason)
