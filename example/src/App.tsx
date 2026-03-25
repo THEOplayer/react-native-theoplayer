@@ -82,9 +82,7 @@ const playerConfig: PlayerConfiguration = {
     mediaSessionEnabled: true,
     skipForwardInterval: 30,
     skipBackwardInterval: 10,
-    convertSkipToSeek: true,
-    allowLivePlayPause: true,
-    seekToLiveOnResume: true,
+    allowLivePlayPause: false,
   },
   ads: {
     theoads: true,
