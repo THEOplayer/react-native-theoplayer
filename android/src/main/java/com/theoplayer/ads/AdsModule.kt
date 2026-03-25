@@ -68,11 +68,7 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
   @ReactMethod
   fun currentAds(tag: Int, promise: Promise) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      if (view == null) {
-        promise.resolve(Arguments.createMap())
-      } else {
-        promise.resolve(AdAdapter.fromAds(view.adsApi.currentAds))
-      }
+      promise.resolve(if (view == null) Arguments.createArray() else AdAdapter.fromAds(view.adsApi.currentAds))
     }
   }
 
@@ -80,11 +76,7 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
   @ReactMethod
   fun scheduledAdBreaks(tag: Int, promise: Promise) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      if (view == null) {
-        promise.resolve(Arguments.createMap())
-      } else {
-        promise.resolve(AdAdapter.fromAdBreaks(view.adsApi.scheduledAdBreaks))
-      }
+      promise.resolve(if (view == null) Arguments.createArray() else AdAdapter.fromAdBreaks(view.adsApi.scheduledAdBreaks))
     }
   }
 
