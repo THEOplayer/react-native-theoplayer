@@ -60,3 +60,6 @@ let DEBUG_PRESENTATIONMODES = DEBUG && false
 // Debug flag to monitor App state changes
 let DEBUG_APPSTATE = DEBUG && false
 
+// Debug flag to monitor mediacontrol API usage
+let DEBUG_MEDIA_CONTROL_API = DEBUG && false
+
