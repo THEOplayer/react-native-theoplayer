@@ -22,4 +22,8 @@ class THEOplayerRCTMediaControlAPI: RCTEventEmitter {
     override func supportedEvents() -> [String]! {
         return ["MediaControlEvent"]
     }
+
+    @objc(setHandler:action:)
+    func setHandler(_ node: NSNumber, action: String) -> Void {
+    }
 }
