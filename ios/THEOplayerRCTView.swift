@@ -76,7 +76,7 @@ public class THEOplayerRCTView: UIView {
     }
     var pipConfig = PipConfig() {
         didSet {
-            self.pipControlsManager.setPipConfig(pipConfig)
+            self.pipControlsManager.updatePipControls()
         }
     }
     var backgroundAudioConfig = BackgroundAudioConfig() {
@@ -219,8 +219,8 @@ public class THEOplayerRCTView: UIView {
             self.theoadsEventHandler.setPlayer(player)
             self.castEventHandler.setPlayer(player)
             self.nowPlayingManager.setPlayer(player)
-            self.remoteCommandsManager.setPlayer(player)
-            self.pipControlsManager.setPlayer(player)
+            self.remoteCommandsManager.setPlayer(player, view: self)
+            self.pipControlsManager.setPlayer(player, view: self)
             self.presentationModeManager.setPlayer(player, view: self)
             self.backgroundAudioManager.setPlayer(player, view: self)
             self.pipManager.setView(view: self)
