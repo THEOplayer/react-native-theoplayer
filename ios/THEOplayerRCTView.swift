@@ -42,6 +42,7 @@ public class THEOplayerRCTView: UIView {
     var remoteCommandsManager: THEOplayerRCTRemoteCommandsManager
     var pipManager: THEOplayerRCTPipManager
     var pipControlsManager: THEOplayerRCTPipControlsManager
+    var mediaControlManager: THEOplayerRCTMediaControlManager
     var isApplicationInBackground: Bool = (UIApplication.shared.applicationState == .background)
     
     var adsConfig = AdsConfig()
@@ -115,6 +116,7 @@ public class THEOplayerRCTView: UIView {
         self.remoteCommandsManager = THEOplayerRCTRemoteCommandsManager()
         self.pipManager = THEOplayerRCTPipManager()
         self.pipControlsManager = THEOplayerRCTPipControlsManager()
+        self.mediaControlManager = THEOplayerRCTMediaControlManager()
         super.init(frame: .zero)
         
         self.setupAppStateObservers()
@@ -151,6 +153,7 @@ public class THEOplayerRCTView: UIView {
         self.pipControlsManager.destroy()
         self.presentationModeManager.destroy()
         self.backgroundAudioManager.destroy()
+        self.mediaControlManager.destroy()
       
         self.destroyBackgroundAudio()
         self.player?.removeAllIntegrations()
