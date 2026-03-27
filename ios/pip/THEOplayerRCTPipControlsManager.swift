@@ -8,9 +8,9 @@ import MediaPlayer
 class THEOplayerRCTPipControlsManager: NSObject {
     // MARK: Members
     private weak var player: THEOplayer?
+    private weak var view: THEOplayerRCTView?
     private var isLive: Bool = false
     private var inAd: Bool = false
-    private var pipConfig = PipConfig()
     
     // MARK: player Listeners
     private var durationChangeListener: EventListener?
@@ -25,18 +25,14 @@ class THEOplayerRCTPipControlsManager: NSObject {
     }
     
     // MARK: - player en controller setup / breakdown
-    func setPlayer(_ player: THEOplayer) {
+    func setPlayer(_ player: THEOplayer, view: THEOplayerRCTView?) {
         self.player = player;
+        self.view = view;
         self.isLive = false
         self.inAd = false
         
         // attach listeners
         self.attachListeners()
-    }
-    
-    func setPipConfig(_ newPipConfig: PipConfig) {
-        self.pipConfig = newPipConfig
-        self.updatePipControls()
     }
     
     func willStartPip() {
@@ -54,12 +50,13 @@ class THEOplayerRCTPipControlsManager: NSObject {
     
     func updatePipControls() {
         if let player = self.player,
-           let pip = player.pip {
+           let pip = player.pip,
+           let pipConfig = self.view?.pipConfig {
             pip.configure(configuration: self.newPipConfiguration())
             if DEBUG_PIPCONTROLS { PrintUtils.printLog(logText: "[NATIVE] Pip controls updated for \(self.isLive ? "LIVE" : "VOD"), \(self.inAd ? "AD IS PLAYING" : "NO AD PLAYING")") }
             if DEBUG_PIPCONTROLS { PrintUtils.printLog(logText: "requiresLinearPlayback = \(self.isLive || self.inAd)") }
-            if DEBUG_PIPCONTROLS { PrintUtils.printLog(logText: "canStartPictureInPictureAutomaticallyFromInline = \(self.pipConfig.canStartPictureInPictureAutomaticallyFromInline)") }
-            if DEBUG_PIPCONTROLS { PrintUtils.printLog(logText: "retainPresentationModeOnSourceChange = \(self.pipConfig.retainPresentationModeOnSourceChange)") }
+            if DEBUG_PIPCONTROLS { PrintUtils.printLog(logText: "canStartPictureInPictureAutomaticallyFromInline = \(pipConfig.canStartPictureInPictureAutomaticallyFromInline)") }
+            if DEBUG_PIPCONTROLS { PrintUtils.printLog(logText: "retainPresentationModeOnSourceChange = \(pipConfig.retainPresentationModeOnSourceChange)") }
         }
     }
     
@@ -69,8 +66,8 @@ class THEOplayerRCTPipControlsManager: NSObject {
         builder.requiresLinearPlayback = self.isLive || self.inAd
 #if os(iOS)
         builder.nativePictureInPicture = true
-        builder.canStartPictureInPictureAutomaticallyFromInline = self.pipConfig.canStartPictureInPictureAutomaticallyFromInline
-        builder.retainPresentationModeOnSourceChange = self.pipConfig.retainPresentationModeOnSourceChange
+        builder.canStartPictureInPictureAutomaticallyFromInline = self.view?.pipConfig.canStartPictureInPictureAutomaticallyFromInline ?? false
+        builder.retainPresentationModeOnSourceChange = self.view?.pipConfig.retainPresentationModeOnSourceChange ?? false
 #endif
         return builder.build()
     }
