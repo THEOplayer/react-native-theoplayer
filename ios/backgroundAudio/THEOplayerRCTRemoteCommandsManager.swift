@@ -91,22 +91,32 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Remote commands initialised.") }
     }
     
+    private func hasActionHandler(for action: MediaControlAction) -> Bool {
+        return self.view?.mediaControlManager.hasMediaControlActionHandler(for: action) ?? false
+    }
+    
+    private func executeAction(for action: MediaControlAction) -> Bool {
+        return self.view?.mediaControlManager.executeMediaControlAction(action: action) ?? false
+    }
+    
     func updateRemoteCommands() {
         let commandCenter = MPRemoteCommandCenter.shared()
         
-        let skipControlsEnabled = self.hasSource && !self.inAd && !self.isLive
         let playPauseControlsEnabled = self.hasSource && !self.inAd && (!self.isLive || self.allowLivePlayPause)
+        let positionControlEnabled = self.hasSource && !self.inAd && !self.isLive
+        let seekControlEnabled = self.hasSource && !self.inAd && !self.isLive && !self.hasActionHandler(for: .SKIP_TO_NEXT) && !self.hasActionHandler(for: .SKIP_TO_PREVIOUS)
+        let trackControlEnabled = self.hasSource && !self.inAd && !self.isLive && self.hasActionHandler(for: .SKIP_TO_NEXT) && self.hasActionHandler(for: .SKIP_TO_PREVIOUS)
         
         // update the enabled state to have correct visual representation in the lockscreen
         commandCenter.pauseCommand.isEnabled =  playPauseControlsEnabled
         commandCenter.playCommand.isEnabled = playPauseControlsEnabled
         commandCenter.togglePlayPauseCommand.isEnabled =  playPauseControlsEnabled
         commandCenter.stopCommand.isEnabled =  playPauseControlsEnabled
-        commandCenter.changePlaybackPositionCommand.isEnabled =  skipControlsEnabled
-        commandCenter.skipForwardCommand.isEnabled =  skipControlsEnabled
-        commandCenter.skipBackwardCommand.isEnabled =  skipControlsEnabled
-        commandCenter.nextTrackCommand.isEnabled = skipControlsEnabled
-        commandCenter.previousTrackCommand.isEnabled = skipControlsEnabled
+        commandCenter.changePlaybackPositionCommand.isEnabled =  positionControlEnabled
+        commandCenter.skipForwardCommand.isEnabled = seekControlEnabled
+        commandCenter.skipBackwardCommand.isEnabled = seekControlEnabled
+        commandCenter.nextTrackCommand.isEnabled = trackControlEnabled
+        commandCenter.previousTrackCommand.isEnabled = trackControlEnabled
         
         // set configured skip forward/backward intervals
         commandCenter.skipForwardCommand.preferredIntervals = [self.skipForwardInterval]
@@ -122,7 +132,10 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
                 if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Seek to live.") }
                 player.currentTime = .infinity
             }
-            player.play()
+            if !self.executeAction(for: .PLAY) {
+                if DEBUG_MEDIA_CONTROL_API { PrintUtils.printLog(logText: "[NATIVE] Executing default Play action.") }
+                player.play()
+            }
             if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Play command handled.") }
         } else {
             if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Play command not handled.") }
@@ -133,7 +146,10 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     @objc private func onPauseCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
         if let player = self.player,
            !self.inAd {
-            player.pause()
+            if !self.executeAction(for: .PAUSE) {
+                if DEBUG_MEDIA_CONTROL_API { PrintUtils.printLog(logText: "[NATIVE] Executing default Pause action.") }
+                player.pause()
+            }
             if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Pause command handled.") }
         } else {
             if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Pause command not handled.") }
@@ -144,17 +160,23 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     @objc private func onTogglePlayPauseCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
         if let player = self.player,
            !self.inAd {
-            if player.paused {
-                if self.isLive && self.seekToLiveOnResume {
-                    if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Seek to live.") }
-                    player.currentTime = .infinity
+                if player.paused {
+                    if !self.executeAction(for: .PLAY) {
+                        if DEBUG_MEDIA_CONTROL_API { PrintUtils.printLog(logText: "[NATIVE] Executing default Toogle play action.") }
+                        if self.isLive && self.seekToLiveOnResume {
+                            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Seek to live.") }
+                            player.currentTime = .infinity
+                        }
+                        player.play()
+                    }
+                    if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Toggled to playing.") }
+                } else {
+                    if !self.executeAction(for: .PAUSE) {
+                        if DEBUG_MEDIA_CONTROL_API { PrintUtils.printLog(logText: "[NATIVE] Executing default Toogle pause action.") }
+                        player.pause()
+                    }
+                    if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Toggled to paused.") }
                 }
-                if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Toggled to playing.") }
-                player.play()
-            } else {
-                if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Toggled to paused.") }
-                player.pause()
-            }
             if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Toggle play/pause command handled.") }
         } else {
             if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Toggle play/pause command not handled.") }
@@ -166,7 +188,10 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         if let player = self.player,
            !self.inAd {
             if !player.paused {
-                player.pause()
+                if !self.executeAction(for: .PAUSE) {
+                    if DEBUG_MEDIA_CONTROL_API { PrintUtils.printLog(logText: "[NATIVE] Executing default Pause action.") }
+                    player.pause()
+                }
             }
             if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Stop command handled.") }
         } else {
@@ -213,10 +238,14 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     
     @objc private func onPreviousTrackCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
         if let player = self.player,
-           self.convertSkipToSeek,
            !self.isLive,
            !self.inAd {
-            player.currentTime = player.currentTime - Double(truncating: self.skipBackwardInterval)
+            if !self.executeAction(for: .SKIP_TO_PREVIOUS) {
+                if DEBUG_MEDIA_CONTROL_API { PrintUtils.printLog(logText: "[NATIVE] Executing default Skip to previous action.") }
+                if self.convertSkipToSeek {
+                    player.currentTime = player.currentTime - Double(truncating: self.skipBackwardInterval)
+                }
+            }
             if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] previous track command handled as skip backward command.") }
         } else {
             if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] previous track command not handled.") }
@@ -226,10 +255,14 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     
     @objc private func onNextTrackCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
         if let player = self.player,
-           self.convertSkipToSeek,
            !self.isLive,
            !self.inAd {
-            player.currentTime = player.currentTime + Double(truncating: self.skipForwardInterval)
+            if !self.executeAction(for: .SKIP_TO_NEXT) {
+                if DEBUG_MEDIA_CONTROL_API { PrintUtils.printLog(logText: "[NATIVE] Executing default Skip to next action.") }
+                if self.convertSkipToSeek {
+                    player.currentTime = player.currentTime + Double(truncating: self.skipForwardInterval)
+                }
+            }
             if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] next track command handled as skip forward command.") }
         } else {
             if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] next track command not handled.") }
