@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed an issue on Android where the Ads API would sometimes return an empty map instead of an array when querying the list of current ads or scheduled ad breaks.
+- Fixed an issue on iOS where the transition from PiP to fullscreen was not smooth.
 
 ## [10.12.1] - 26-03-19
 
