@@ -98,6 +98,36 @@ class THEOplayerRCTTypeUtils {
         }
     }
     
+    class func mediaControlActionFromString(_ action: String) -> MediaControlAction {
+        switch action {
+        case "play":
+            return MediaControlAction.PLAY
+        case "pause":
+            return MediaControlAction.PAUSE
+        case "skipToPrevious":
+            return MediaControlAction.SKIP_TO_PREVIOUS
+        case "skipToNext":
+            return MediaControlAction.SKIP_TO_NEXT
+        default:
+            return MediaControlAction.PLAY
+        }
+    }
+    
+    class func mediaControlActionToString(_ action: MediaControlAction) -> String {
+        switch action {
+        case MediaControlAction.PLAY:
+            return "play"
+        case MediaControlAction.PAUSE:
+            return "pause"
+        case MediaControlAction.SKIP_TO_PREVIOUS:
+            return "skipToPrevious"
+        case MediaControlAction.SKIP_TO_NEXT:
+            return "skipToNext"
+        default:
+            return "play"
+        }
+    }
+    
     class func textTrackEdgeStyleStringFromString(_ style: String) -> String {
         switch style {
         case "dropshadow":
