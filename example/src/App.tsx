@@ -51,6 +51,7 @@ import {
   KeyOSDrmFairplayContentProtectionIntegrationFactory,
   KeyOSDrmWidevineContentProtectionIntegrationFactory,
 } from '@theoplayer/react-native-drm';
+import { ExtensionMenuButton } from './custom/ExtensionMenuButton';
 
 // Register Ezdrm Fairplay integration
 ContentProtectionRegistry.registerContentProtectionIntegration('customEzdrm', 'fairplay', new EzdrmFairplayContentProtectionIntegrationFactory());
@@ -98,7 +99,10 @@ export default function App() {
 
   // In PiP presentation mode on NewArch Android, there is an issue where SafeAreayView does not update the edges in time,
   // so explicitly disable them here.
-  const edges: Edges = useMemo(() => (presentationMode === PresentationMode.pip ? [] : ['left', 'top', 'right', 'bottom']), [presentationMode]);
+  const edges: Edges = useMemo(
+    () => (Platform.OS === 'android' && presentationMode === PresentationMode.pip ? [] : ['left', 'top', 'right', 'bottom']),
+    [presentationMode],
+  );
 
   const onTheoAdsEvent = (event: TheoAdsEvent) => {
     console.log(event);
@@ -166,6 +170,7 @@ export default function App() {
                   <AutoFocusGuide>
                     <ControlBar>
                       <Spacer />
+                      <ExtensionMenuButton>{/*<ExtensionButton label={'Custom action'} onPress={() => {}} />*/}</ExtensionMenuButton>
                       <MediaCacheMenuButton>
                         <MediaCacheDownloadButton />
                         <MediaCachingTaskListSubMenu />
@@ -240,5 +245,7 @@ const styles = StyleSheet.create({
     marginHorizontal: Platform.select({ ios: 2, default: 0 }),
     alignItems: 'center',
     justifyContent: 'center',
+    borderColor: '#333',
+    borderWidth: 1,
   },
 });

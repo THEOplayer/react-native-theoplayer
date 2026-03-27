@@ -202,6 +202,22 @@ const streamTimeForContentTime = (contentTime: number): Promise<number> | undefi
 };
 ```
 
+### Manually scheduling a client-side ad
+
+The Ad API allows you to manually schedule an ad break at runtime:
+
+```tsx
+player.ads.schedule({
+  integration: AdIntegrationKind.google_ima,
+  timeOffset: 1e-3 * (player?.currentTime ?? 0) + 3, // in 3 seconds from now
+  // timeOffset: 10,    // at 10 seconds in the content
+  // timeOffset: '50%', // at 50% of the content duration
+  sources: {
+    src: 'https://cdn.theoplayer.com/demos/ads/vast/dfp-preroll-no-skip.xml',
+  },
+});
+```
+
 ## Subscribing to ad events
 
 [THEOplayer](../src/api/player/THEOplayer.ts) allows you to subscribe to ad events:
