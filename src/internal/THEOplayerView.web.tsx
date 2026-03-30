@@ -2,16 +2,18 @@ import React, { useEffect, useRef } from 'react';
 import type { THEOplayerViewProps } from 'react-native-theoplayer';
 import { ChromelessPlayer } from 'theoplayer';
 import { THEOplayerWebAdapter } from './adapter/THEOplayerWebAdapter';
+import { useIsAttached } from './hooks/useIsAttached';
 
 export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProps>) {
   const { config, children, onPlayerReady, onPlayerDestroy } = props;
   const player = useRef<ChromelessPlayer | null>(null);
   const adapter = useRef<THEOplayerWebAdapter | null>(null);
-  const container = useRef<null | HTMLDivElement>(null);
+  const container = useRef<HTMLDivElement | null>(null);
+  const attachedToDocument = useIsAttached(container);
 
   useEffect(() => {
-    // Create player inside container.
-    if (container.current) {
+    // Create player inside container once it is attached to the document.
+    if (container.current && attachedToDocument) {
       const ads = {
         ...config?.ads,
         googleIma: {
@@ -51,7 +53,7 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
     };
     // TODO: Follow the rules of react hooks, to be fixed in next major because it's a breaking change for some customers.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [container]);
+  }, [container, attachedToDocument]);
 
   return (
     // Note: `display: contents` causes an element's children to appear as if they were direct children of the element's parent,
