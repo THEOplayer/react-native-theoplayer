@@ -25,8 +25,6 @@ The [MediaControlAction](../src/api/media/MediaControlAPI.ts) enum defines all a
 
 - `PLAY`: Triggered when the user presses play.
 - `PAUSE`: Triggered when the user presses pause.
-- `SEEK_FORWARD`: Triggered when the user requests to seek forward by a preset interval.
-- `SEEK_BACKWARD`: Triggered when the user requests to seek backward by a preset interval.
 - `SKIP_TO_NEXT`: Triggered when the user requests to go to the next track or playlist item.
 - `SKIP_TO_PREVIOUS`: Triggered when the user requests to go to the previous track or playlist item.
 
@@ -42,7 +40,7 @@ On iOS, when you set handlers for `SKIP_TO_NEXT` or `SKIP_TO_PREVIOUS`, these ha
   - System controls (e.g., lock screen) will display and trigger your handlers for track navigation.
   - Seeking forward/backward via next/previous is not shown as seperate controls. (Platform limitation)
 - **If you do not provide next/previous handlers:**
-  - The system will display and use the default or configured seek forward/backward functionality.
+  - The system will display and use the seek forward/backward functionality with the configured or default intervals.
 
 This allows you to customize whether system controls are used for playlist navigation or for seeking within the current track.
 
