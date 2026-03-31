@@ -105,7 +105,7 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         let playPauseControlsEnabled = self.hasSource && !self.inAd && (!self.isLive || self.allowLivePlayPause)
         let positionControlEnabled = self.hasSource && !self.inAd && !self.isLive
         let seekControlEnabled = self.hasSource && !self.inAd && !self.isLive && !self.hasActionHandler(for: .SKIP_TO_NEXT) && !self.hasActionHandler(for: .SKIP_TO_PREVIOUS)
-        let trackControlEnabled = self.hasSource && !self.inAd && !self.isLive && self.hasActionHandler(for: .SKIP_TO_NEXT) && self.hasActionHandler(for: .SKIP_TO_PREVIOUS)
+        let trackControlEnabled = self.hasActionHandler(for: .SKIP_TO_NEXT) && self.hasActionHandler(for: .SKIP_TO_PREVIOUS)
         
         // update the enabled state to have correct visual representation in the lockscreen
         commandCenter.pauseCommand.isEnabled =  playPauseControlsEnabled
