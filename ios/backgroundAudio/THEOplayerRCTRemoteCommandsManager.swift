@@ -237,9 +237,7 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     }
     
     @objc private func onPreviousTrackCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
-        if let player = self.player,
-           !self.isLive,
-           !self.inAd {
+        if let player = self.player {
             if !self.executeAction(for: .SKIP_TO_PREVIOUS) {
                 if DEBUG_MEDIA_CONTROL_API { PrintUtils.printLog(logText: "[NATIVE] Executing default Skip to previous action.") }
                 if self.convertSkipToSeek {
@@ -254,9 +252,7 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     }
     
     @objc private func onNextTrackCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
-        if let player = self.player,
-           !self.isLive,
-           !self.inAd {
+        if let player = self.player {
             if !self.executeAction(for: .SKIP_TO_NEXT) {
                 if DEBUG_MEDIA_CONTROL_API { PrintUtils.printLog(logText: "[NATIVE] Executing default Skip to next action.") }
                 if self.convertSkipToSeek {
