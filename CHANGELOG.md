@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Upgraded example app to React-Native v0.84.1.
 
+### Fixed
+
+- Fixed an issue on Web where Google IMA could fail to initialize when used with `react-reverse-portal` due to the player container not being attached to the document yet.
+
 ## [10.13.0] - 26-03-27
 
 ### Fixed
