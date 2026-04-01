@@ -5,7 +5,7 @@ import THEOplayerSDK
 
 class NativeAd: THEOplayerSDK.Ad {
     /** A reference to the `AdBreak` of which the ad is a part of.*/
-    var adBreak: AdBreak
+    var adBreak: AdBreak?
     /** An array of `CompanionAd`s associated to the ad, if available within the same Creatives element.*/
     var companions: [THEOplayerSDK.CompanionAd] = []
     /** Either 'linear' or 'nonlinear', depending on the concrete implementer.*/
