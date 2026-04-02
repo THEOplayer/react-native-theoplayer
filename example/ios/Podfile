@@ -24,7 +24,7 @@ target 'ReactNativeTHEOplayer' do
     :path => config[:reactNativePath],
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
-  pod 'react-native-google-cast', :git => 'https://github.com/Danesz/react-native-google-cast.git', branch: 'feature/guestmode_apple_silicon'
+  pod 'react-native-google-cast', path: '../node_modules/react-native-google-cast/' #link react-native-google-cast only for iOS
 end
 
 target 'ReactNativeTHEOplayer-tvOS' do
