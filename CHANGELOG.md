@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 - Upgraded example app to React-Native v0.84.1.
+- Changed the minimum supported iOS/tvOS version to 15.0, dropping support for iOS/tvOS 13 and 14.
 
 ### Fixed
 
