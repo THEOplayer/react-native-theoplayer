@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Added support for player SDK v11. More info on the [migration documentation](./doc/migrating-to-react-native-theoplayer-11.md) page.
+- Enabled core library desugaring for Android to support version 3.39.0 of the Google IMA SDK.
+
 ### Changed
 
 - Upgraded example app to React-Native v0.84.1.
@@ -14,6 +19,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed an issue on Web where Google IMA could fail to initialize when used with `react-reverse-portal` due to the player container not being attached to the document yet.
+
+### Removed
+
+- Removed deprecated `ResizeEvent` in favor of `DimensionChangeEvent`.
+- Removed deprecated `player.theolive` property in favor of `player.theoLive`.
+- Removed deprecated `source.integration` property in favor of `source.type`.
 
 ## [10.13.0] - 26-03-27
 
