@@ -12,7 +12,6 @@ import type {
   TimeUpdateEvent,
   PresentationModeChangeEvent,
   VolumeChangeEvent,
-  ResizeEvent,
   SeekedEvent,
   SeekingEvent,
   VideoResizeEvent,
@@ -62,10 +61,6 @@ export enum PlayerEventType {
   WAITING = 'waiting',
   PRESENTATIONMODE_CHANGE = 'presentationmodechange',
   DESTROY = 'destroy',
-  /**
-   * @deprecated Use {@link PlayerEventType.DIMENSION_CHANGE} instead. This event is set for removal in version 11.
-   */
-  RESIZE = 'resize',
   DIMENSION_CHANGE = 'dimensionchange',
   VIDEO_RESIZE = 'videoresize',
 }
@@ -237,13 +232,6 @@ export interface PlayerEventMap {
    * Dispatched when the player will be destroyed.
    */
   [PlayerEventType.DESTROY]: Event<PlayerEventType.DESTROY>;
-
-  /**
-   * Dispatched when the player size changes.
-   *
-   * @deprecated Use {@link dimensionchange} instead. This event is set for removal in version 11.
-   */
-  [PlayerEventType.RESIZE]: ResizeEvent;
 
   /**
    * Dispatched when the player size changes.

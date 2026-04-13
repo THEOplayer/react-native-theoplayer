@@ -70,27 +70,6 @@ export interface DimensionChangeEvent extends Event<PlayerEventType.DIMENSION_CH
 }
 
 /**
- * Dispatched when player is resized.
- *
- * @category Events
- * @category Player
- * @public
- *
- * @deprecated use {@link DimensionChangeEvent} instead. This event is set for removal in version 11.
- */
-export interface ResizeEvent extends Event<PlayerEventType.RESIZE> {
-  /**
-   * The player's current width.
-   */
-  readonly width: number;
-
-  /**
-   * The player's current height.
-   */
-  readonly height: number;
-}
-
-/**
  * Dispatched when video is resized.
  *
  * @category Events

@@ -62,7 +62,6 @@ import {
   DefaultProgressEvent,
   DefaultRateChangeEvent,
   DefaultReadyStateChangeEvent,
-  DefaultResizeEvent,
   DefaultSeekedEvent,
   DefaultSeekingEvent,
   DefaultSegmentNotFoundEvent,
@@ -289,7 +288,6 @@ export class WebEventForwarder {
   };
 
   private readonly onDimensionChange = (event: NativeDimensionChangeEvent) => {
-    this._facade.dispatchEvent(new DefaultResizeEvent(event.width, event.height));
     this._facade.dispatchEvent(new DefaultDimensionChangeEvent(event.width, event.height));
   };
 

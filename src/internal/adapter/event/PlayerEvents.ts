@@ -30,7 +30,6 @@ import {
   Quality,
   RateChangeEvent,
   ReadyStateChangeEvent,
-  ResizeEvent,
   SeekedEvent,
   SeekingEvent,
   SegmentNotFoundEvent,
@@ -100,18 +99,6 @@ export class DefaultVolumeChangeEvent extends BaseEvent<PlayerEventType.VOLUME_C
     public muted: boolean,
   ) {
     super(PlayerEventType.VOLUME_CHANGE);
-  }
-}
-
-/**
- * @deprecated Use {@link DefaultDimensionChangeEvent} instead. This event is set for removal in version 11.
- */
-export class DefaultResizeEvent extends BaseEvent<PlayerEventType.RESIZE> implements ResizeEvent {
-  constructor(
-    public width: number,
-    public height: number,
-  ) {
-    super(PlayerEventType.RESIZE);
   }
 }
 
