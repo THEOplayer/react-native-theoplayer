@@ -100,7 +100,7 @@ object AdAdapter {
         adPayload.putDouble(PROP_AD_HEIGHT, ad.imaAd.vastMediaHeight.toDouble())
         adPayload.putString(PROP_AD_CONTENT_TYPE, ad.imaAd.contentType)
         adPayload.putString(PROP_AD_DESCRIPTION, ad.imaAd.description)
-      } catch (ignore: Exception) {
+      } catch (_: Exception) {
         // googleImaAd.getImaAd() is not known yet
       }
       val universalAdIdsPayload = Arguments.createArray()
@@ -142,7 +142,7 @@ object AdAdapter {
       return adbreakPayload
     }
     adbreakPayload.putString(PROP_ADBREAK_INTEGRATION, adbreak.integration.type)
-    adbreakPayload.putString(PROP_ADBREAK_ID, adbreak.idAsString)
+    adbreakPayload.putString(PROP_ADBREAK_ID, adbreak.id)
     adbreakPayload.putInt(PROP_ADBREAK_MAXDURATION,adbreak.maxDuration)
     adbreakPayload.putInt(PROP_ADBREAK_TIMEOFFSET, adbreak.timeOffset)
     adbreakPayload.putDouble(PROP_ADBREAK_MAXREMAININGDURATION, adbreak.maxRemainingDuration)
@@ -288,7 +288,12 @@ object AdAdapter {
         return adBreak.getString(PROP_AD_CUSTOM_INTEGRATION)
       }
 
+      @Deprecated("Deprecated in favor of getIdAsString()")
       override fun getIdAsString(): String? {
+        return if (adBreak.hasKey(PROP_ADBREAK_ID)) adBreak.getString(PROP_ADBREAK_ID) else null
+      }
+
+      override fun getId(): String? {
         return if (adBreak.hasKey(PROP_ADBREAK_ID)) adBreak.getString(PROP_ADBREAK_ID) else null
       }
 
@@ -413,16 +418,6 @@ object AdAdapter {
 
       override fun getTraffickingParameters(): String {
         return ad?.getString(PROP_AD_TRAFFICKING_PARAMETERS) ?: ""
-      }
-
-      @Deprecated("Deprecated in Java")
-      override fun getUniversalAdIdRegistry(): String {
-        return ""
-      }
-
-      @Deprecated("Deprecated in Java")
-      override fun getUniversalAdIdValue(): String {
-        return ad?.getString(PROP_UNIVERSAL_AD_ID_VALUE) ?: ""
       }
 
       override fun getCompanionAds(): List<com.google.ads.interactivemedia.v3.api.CompanionAd> {
