@@ -122,10 +122,10 @@ repositories {
     mavenLocal()
 }
 
-// The minimum supported THEOplayer version is 10.12.0
-def theoVersion = safeExtGet('THEOplayer_sdk', '[10.12.0, 11.0.0)')
-def theoMediaSessionVersion = safeExtGet('THEOplayer_mediasession', '[8.0.0, 11.0.0)')
-def theoAdsWrapperVersion = "10.12.0"
+// The minimum supported THEOplayer version is 11.0.0
+def theoVersion = safeExtGet('THEOplayer_sdk', '[11.0.0, 12.0.0)')
+def theoMediaSessionVersion = safeExtGet('THEOplayer_mediasession', '[11.0.0, 12.0.0)')
+def theoAdsWrapperVersion = "11.0.0"
 def coroutinesVersion = safeExtGet('coroutinesVersion', '1.10.2')
 def appcompatVersion = safeExtGet('appcompatVersion', '1.7.1')
 def corektxVersion = safeExtGet('corektxVersion', '1.16.0')
