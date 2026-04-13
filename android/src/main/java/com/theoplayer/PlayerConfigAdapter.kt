@@ -133,24 +133,24 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
           getMap(PROP_FEATURE_FLAGS)?.toHashMap()?.forEach { (key, value) ->
             convertedMap[key] = value as String
           }
-          featureFlags = convertedMap
+          setFeatureFlags(convertedMap)
         }
         // The maximum number of VAST redirects.
         if (hasKey(PROP_MAX_REDIRECTS)) {
           maxRedirects = getInt(PROP_MAX_REDIRECTS)
         }
         // The partner provided player type.
-        playerType = "THEOplayer"
+        setPlayerType("THEOplayer")
         // The partner provided player version.
-        playerVersion = THEOplayerGlobal.getVersion()
+        setPlayerVersion(THEOplayerGlobal.getVersion())
         // The Publisher Provided Identification (PPID) sent with ads request.
         if (hasKey(PROP_PPID)) {
-          ppid = getString(PROP_PPID) ?: ""
+          setPpid(getString(PROP_PPID) ?: "")
         }
         // The session ID to identify a single user session. This should be a UUID. It
         // is used exclusively for frequency capping across the user session.
         if (hasKey(PROP_SESSION_ID)) {
-          sessionId = getString(PROP_PPID) ?: ""
+          setSessionId(getString(PROP_PPID) ?: "")
         }
         // Toggles debug mode which will output detailed log information to the console.
         if (hasKey(PROP_ENABLE_DEBUG_MODE)) {
@@ -177,11 +177,11 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
           enablePreloading = preloadTypeString !== "none"
         }
         if (hasKey(PROP_ALLOWED_MIMETYPES)) {
-          mimeTypes = ArrayList<String>().apply {
+          setMimeTypes(ArrayList<String>().apply {
             getArray(PROP_ALLOWED_MIMETYPES)?.toArrayList()?.forEach {
               add(it as String)
             }
-          }
+          })
         }
       }
       // bitrate and timeout are configured under the ima config
