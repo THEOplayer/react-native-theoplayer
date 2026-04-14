@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added support for player SDK v11. More info on the [migration documentation](./doc/migrating-to-react-native-theoplayer-11.md) page.
 - Enabled core library desugaring for Android to support version 3.39.0 of the Google IMA SDK.
+- Added `TextTrack.captionChannel` to retrieve the CEA-608 channel and/or CEA-708 service numbers of closed caption text tracks.
 
 ### Changed
 
