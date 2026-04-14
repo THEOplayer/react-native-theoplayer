@@ -26,6 +26,7 @@ private const val PROP_NAME = "name"
 private const val PROP_ENABLED = "enabled"
 private const val PROP_SRC = "src"
 private const val PROP_FORCED = "forced"
+private const val PROP_CAPTION_CHANNEL = "captionChannel"
 private const val PROP_AUDIO_SAMPLING_RATE = "audioSamplingRate"
 private const val PROP_BANDWIDTH = "bandwidth"
 private const val PROP_QUALITIES = "qualities"
@@ -68,6 +69,9 @@ object TrackListAdapter {
     // THEOplayer v3.5+
     textTrackPayload.putString(PROP_SRC, textTrack.source)
     textTrackPayload.putBoolean(PROP_FORCED, textTrack.isForced)
+
+    // THEOplayer v10.13+
+    textTrack.captionChannel?.let { textTrackPayload.putInt(PROP_CAPTION_CHANNEL, it) }
 
     // Optionally pass cue list.
     val cueList = textTrack.cues
