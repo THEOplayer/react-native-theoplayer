@@ -153,11 +153,12 @@ export interface TextTrack extends Track {
   /**
    * The closed caption service number of the text track.
    *
+   * @platform web,android
+   *
    * @remarks
    * <br/> - For CEA-608 caption tracks, this holds the channel number.
    * <br/> - For CEA-708 caption tracks, this holds the service number.
    * <br/> - Otherwise, this is `undefined`.
-   * <br/> - Not yet supported on iOS.
    */
   readonly captionChannel?: number;
 }
