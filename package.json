@@ -70,7 +70,7 @@
     "react": "^19.2.3",
     "react-native": "^0.84.1",
     "react-native-builder-bob": "^0.39.1",
-    "theoplayer": "^10.11.0",
+    "theoplayer": "^11.0.0",
     "typedoc": "^0.25.13",
     "typedoc-plugin-external-resolver": "^1.0.3",
     "typedoc-plugin-mdn-links": "^3.3.4",
