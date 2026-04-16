@@ -15,7 +15,7 @@ cd ios
 echo clearing pods ...
 pod deintegrate
 echo pod update ...
-pod update --no-repo-update
+pod update
 cd ..
 
 echo "##### prep index.ts #####"
