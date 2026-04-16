@@ -77,14 +77,14 @@ export class TextTrackStyleAdapter implements TextTrackStyle {
   }
 
   get fontPath(): string | undefined {
-    return this._fontPath
+    return this._fontPath;
   }
 
   set fontPath(path: string) {
-    this._fontPath = path
+    this._fontPath = path;
     NativePlayerModule.setTextTrackStyle(this._view.nativeHandle, {
-      fontPath: path
-    })
+      fontPath: path,
+    });
   }
 
   get fontSize(): string | undefined {

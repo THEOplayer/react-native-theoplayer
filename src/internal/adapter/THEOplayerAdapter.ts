@@ -243,10 +243,6 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     return this._theoliveAdapter;
   }
 
-  get theolive(): TheoLiveAPI {
-    return this._theoliveAdapter;
-  }
-
   set autoplay(autoplay: boolean) {
     this._state.autoplay = autoplay;
     NativePlayerModule.setAutoplay(this._view.nativeHandle, autoplay);

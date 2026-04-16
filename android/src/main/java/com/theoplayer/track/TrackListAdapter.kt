@@ -26,6 +26,7 @@ private const val PROP_NAME = "name"
 private const val PROP_ENABLED = "enabled"
 private const val PROP_SRC = "src"
 private const val PROP_FORCED = "forced"
+private const val PROP_CAPTION_CHANNEL = "captionChannel"
 private const val PROP_AUDIO_SAMPLING_RATE = "audioSamplingRate"
 private const val PROP_BANDWIDTH = "bandwidth"
 private const val PROP_QUALITIES = "qualities"
@@ -43,9 +44,6 @@ private const val PROP_ENDDATE = "endDate"
 private const val PROP_DURATION = "duration"
 private const val PROP_PLANNED_DURATION = "plannedDuration"
 private const val PROP_END_ON_NEXT = "endOnNext"
-private const val PROP_SCTE35CMD = "scte35Cmd"
-private const val PROP_SCTE35OUT = "scte35Out"
-private const val PROP_SCTE35IN = "scte35In"
 private const val PROP_CUSTOM_ATTRIBUTES = "customAttributes"
 
 object TrackListAdapter {
@@ -71,6 +69,9 @@ object TrackListAdapter {
     // THEOplayer v3.5+
     textTrackPayload.putString(PROP_SRC, textTrack.source)
     textTrackPayload.putBoolean(PROP_FORCED, textTrack.isForced)
+
+    // THEOplayer v10.13+
+    textTrack.captionChannel?.let { textTrackPayload.putInt(PROP_CAPTION_CHANNEL, it) }
 
     // Optionally pass cue list.
     val cueList = textTrack.cues
@@ -167,13 +168,12 @@ object TrackListAdapter {
     audioTrackPayload.putString(PROP_LABEL, audioTrack.label)
     audioTrackPayload.putString(PROP_LANGUAGE, audioTrack.language)
     audioTrackPayload.putBoolean(PROP_ENABLED, audioTrack.isEnabled)
-    val qualityList = audioTrack.qualities
     val qualities = Arguments.createArray()
     try {
-      qualityList?.forEach { quality ->
+      audioTrack.qualities.forEach { quality ->
         qualities.pushMap(fromAudioQuality(quality))
       }
-    } catch (ignore: NullPointerException) {
+    } catch (_: NullPointerException) {
     }
     audioTrackPayload.putArray(PROP_QUALITIES, qualities)
     val activeQuality = audioTrack.activeQuality
@@ -214,18 +214,15 @@ object TrackListAdapter {
     videoTrackPayload.putBoolean(PROP_ENABLED, videoTrack.isEnabled)
     val qualities = Arguments.createArray()
     try {
-      val qualityList = videoTrack.qualities
-      if (qualityList != null) {
-        // Sort qualities according to (height, bandwidth)
-        val sortedQualityList = QualityListAdapter(qualityList)
-        sortedQualityList.sort { o: VideoQuality, t1: VideoQuality ->
-          if (o.height == t1.height) t1.bandwidth.compareTo(o.bandwidth) else t1.height.compareTo(o.height)
-        }
-        for (quality in sortedQualityList) {
-          qualities.pushMap(fromVideoQuality(quality as VideoQuality))
-        }
+      // Sort qualities according to (height, bandwidth)
+      val sortedQualityList = QualityListAdapter(videoTrack.qualities)
+      sortedQualityList.sort { o: VideoQuality, t1: VideoQuality ->
+        if (o.height == t1.height) t1.bandwidth.compareTo(o.bandwidth) else t1.height.compareTo(o.height)
       }
-    } catch (ignore: java.lang.NullPointerException) {
+      for (quality in sortedQualityList) {
+        qualities.pushMap(fromVideoQuality(quality as VideoQuality))
+      }
+    } catch (_: java.lang.NullPointerException) {
     }
     videoTrackPayload.putArray(PROP_QUALITIES, qualities)
     val activeQuality = videoTrack.activeQuality

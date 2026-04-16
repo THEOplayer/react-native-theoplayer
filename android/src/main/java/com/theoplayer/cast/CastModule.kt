@@ -59,7 +59,6 @@ class CastModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(
       PlayerCastState.AVAILABLE -> "available"
       PlayerCastState.CONNECTED -> "connected"
       PlayerCastState.CONNECTING -> "connecting"
-      PlayerCastState.UNAVAILABLE -> "unavailable"
       else -> "unavailable"
     }
   }

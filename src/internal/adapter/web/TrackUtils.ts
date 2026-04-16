@@ -41,7 +41,7 @@ export function fromNativeTextTrackList(tracks: NativeTextTrackList): TextTrack[
 }
 
 export function fromNativeTextTrack(track: NativeTextTrack): TextTrack {
-  const { id, uid, kind, label, language, mode, type, src, forced } = track;
+  const { id, uid, kind, label, language, mode, type, src, forced, captionChannel } = track;
 
   return {
     id,
@@ -53,6 +53,7 @@ export function fromNativeTextTrack(track: NativeTextTrack): TextTrack {
     type,
     src,
     forced,
+    captionChannel,
     cues: track.cues ? track.cues.map((cue) => fromNativeCue(cue)) : [],
   } as TextTrack;
 }

@@ -374,10 +374,6 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     return this._theoliveAdapter;
   }
 
-  public get theolive(): TheoLiveAPI {
-    return this._theoliveAdapter;
-  }
-
   public get version(): PlayerVersion {
     return {
       version: nativeVersion,

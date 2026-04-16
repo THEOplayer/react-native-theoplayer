@@ -62,8 +62,8 @@ class THEOplayerRCTAdAdapter {
         if let skipOffset = ad.skipOffset {
             adData[PROP_AD_SKIP_OFFSET] = (skipOffset == -1) ? skipOffset : skipOffset
         }
-        if processAdBreak {
-           adData[PROP_AD_BREAK] = THEOplayerRCTAdAdapter.fromAdBreak(adBreak: ad.adBreak)
+        if processAdBreak, let adBreak = ad.adBreak {
+           adData[PROP_AD_BREAK] = THEOplayerRCTAdAdapter.fromAdBreak(adBreak: adBreak)
         }
         
 #if os(iOS)

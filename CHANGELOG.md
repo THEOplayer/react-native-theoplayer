@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [11.0.0] - 26-04-16
+
+### Added
+
+- Added support for player SDK v11. More info on the [migration documentation](./doc/migrating-to-react-native-theoplayer-11.md) page.
+- Enabled core library desugaring for Android to support version 3.39.0 of the Google IMA SDK.
+- Added `TextTrack.captionChannel` to retrieve the CEA-608 channel and/or CEA-708 service numbers of closed caption text tracks.
+
+### Changed
+
+- Upgraded example app to React-Native v0.84.1.
+- Changed the minimum supported iOS/tvOS version to 15.0, dropping support for iOS/tvOS 13 and 14.
+
+### Fixed
+
+- Fixed an issue on Web where Google IMA could fail to initialize when used with `react-reverse-portal` due to the player container not being attached to the document yet.
+
+### Removed
+
+- Removed deprecated `ResizeEvent` in favor of `DimensionChangeEvent`.
+- Removed deprecated `player.theolive` property in favor of `player.theoLive`.
+- Removed deprecated `source.integration` property in favor of `source.type`.
+
 ## [10.13.0] - 26-03-27
 
 ### Fixed

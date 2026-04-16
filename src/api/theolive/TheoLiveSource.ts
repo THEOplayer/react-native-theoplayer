@@ -1,4 +1,4 @@
-import { SourceIntegrationId, TypedSource } from 'react-native-theoplayer';
+import { TypedSource } from 'react-native-theoplayer';
 import { WebrtcOptions } from './WebrtcOptions';
 
 /**
@@ -9,9 +9,9 @@ import { WebrtcOptions } from './WebrtcOptions';
  */
 export interface TheoLiveSource extends TypedSource {
     /**
-     * @deprecated use {@link TypedSource.type} instead.
+     * The source URL of the media resource.
      */
-    integration: SourceIntegrationId.THEO_LIVE;
+    src: string;
 
     /**
      * The content type.
