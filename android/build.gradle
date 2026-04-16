@@ -92,6 +92,9 @@ android {
             minifyEnabled false
         }
     }
+    buildFeatures {
+        buildConfig true
+    }
     lint {
         disable 'GradleCompatible'
     }

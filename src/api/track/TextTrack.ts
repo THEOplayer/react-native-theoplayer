@@ -149,6 +149,18 @@ export interface TextTrack extends Track {
    * <br/> - For HLS: the corresponding #EXT-X-MEDIA tag contains the attributes TYPE=SUBTITLES and FORCED=YES (not supported yet)
    */
   readonly forced: boolean;
+
+  /**
+   * The closed caption service number of the text track.
+   *
+   * @platform web,android
+   *
+   * @remarks
+   * <br/> - For CEA-608 caption tracks, this holds the channel number.
+   * <br/> - For CEA-708 caption tracks, this holds the service number.
+   * <br/> - Otherwise, this is `undefined`.
+   */
+  readonly captionChannel?: number;
 }
 
 /**
