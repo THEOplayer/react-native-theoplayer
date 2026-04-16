@@ -9,7 +9,7 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:${safeExtGet('gradlePluginVersion', '8.12.3')}"
+        classpath "com.android.tools.build:gradle:${safeExtGet('gradlePluginVersion', '8.13.0')}"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${safeExtGet('kotlinVersion', '2.2.10')}"
     }
 }
@@ -98,6 +98,7 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+        coreLibraryDesugaringEnabled true
     }
     packagingOptions {
         exclude 'META-INF/kotlin-stdlib.kotlin_module'
@@ -122,15 +123,16 @@ repositories {
     mavenLocal()
 }
 
-// The minimum supported THEOplayer version is 10.12.0
-def theoVersion = safeExtGet('THEOplayer_sdk', '[10.12.0, 11.0.0)')
-def theoMediaSessionVersion = safeExtGet('THEOplayer_mediasession', '[8.0.0, 11.0.0)')
-def theoAdsWrapperVersion = "10.12.0"
+// The minimum supported THEOplayer version is 11.0.0
+def theoVersion = safeExtGet('THEOplayer_sdk', '[11.0.0, 12.0.0)')
+def theoMediaSessionVersion = safeExtGet('THEOplayer_mediasession', '[11.0.0, 12.0.0)')
+def theoAdsWrapperVersion = "11.0.0"
 def coroutinesVersion = safeExtGet('coroutinesVersion', '1.10.2')
 def appcompatVersion = safeExtGet('appcompatVersion', '1.7.1')
-def corektxVersion = safeExtGet('corektxVersion', '1.16.0')
-def gsonVersion = safeExtGet('gsonVersion', '2.13.1')
+def corektxVersion = safeExtGet('corektxVersion', '1.17.0')
+def gsonVersion = safeExtGet('gsonVersion', '2.13.2')
 def activityktxVersion = safeExtGet('activityktxVersion', '1.10.1')
+def coreLibraryDesugaringVersion = safeExtGet('coreLibraryDesugaringVersion', '2.1.5')
 
 dependencies {
     def addOptiViewIntegration = { enabled, notation, additional = null ->
@@ -156,6 +158,7 @@ dependencies {
     implementation("androidx.core:core-ktx:$corektxVersion")
     implementation("androidx.activity:activity-ktx:$activityktxVersion")
     implementation("com.google.code.gson:gson:$gsonVersion")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:$coreLibraryDesugaringVersion")
 
     println("Using THEOplayer (${versionString(theoVersion)})")
     implementation("com.theoplayer.theoplayer-sdk-android:core:$theoVersion")

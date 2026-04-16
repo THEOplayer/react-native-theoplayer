@@ -39,7 +39,6 @@ import {
   DefaultTextTrackListEvent,
   DefaultVolumeChangeEvent,
   DefaultTimeupdateEvent,
-  DefaultResizeEvent,
   DefaultSeekingEvent,
   DefaultSeekedEvent,
   DefaultVideoResizeEvent,
@@ -420,7 +419,6 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
   private _onDimensionChange = (event: NativeSyntheticEvent<NativeDimensionChangeEvent>) => {
     const width = event.nativeEvent.width;
     const height = event.nativeEvent.height;
-    this._facade?.dispatchEvent(new DefaultResizeEvent(width, height));
     this._facade?.dispatchEvent(new DefaultDimensionChangeEvent(width, height));
   };
 

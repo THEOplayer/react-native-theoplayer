@@ -94,6 +94,9 @@ android {
             keyPassword 'android'
         }
     }
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+    }
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
@@ -120,6 +123,7 @@ dependencies {
     implementation("com.facebook.react:react-android")
 
     implementation("androidx.activity:activity-ktx:1.9.3")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
