@@ -92,3 +92,4 @@ example/dist
 example/ios/.xcode.env.local
 e2e/screenshots
 e2e/ios/.xcode.env.local
+e2e/scripts/ios_output.txt
