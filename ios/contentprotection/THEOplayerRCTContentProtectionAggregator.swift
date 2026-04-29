@@ -17,6 +17,7 @@ let DRM_PROP_WIDEVINE: String = "widevine"
 let DRM_PROP_LICENSE_URL: String = "licenseAcquisitionURL"
 let DRM_PROP_CERTIFICATE_URL: String = "certificateURL"
 let DRM_PROP_BASE64_BODY: String = "base64body"
+let DRM_PROP_QUERY_PARAMETERS: String = "queryParameters"
 let DRM_PROP_FAIRPLAY_SKD_URL: String = "fairplaySkdUrl"
 let DRM_PROP_STATUS: String = "status"
 let DRM_PROP_STATUS_TEXT: String = "statusText"
@@ -32,6 +33,9 @@ class THEOplayerRCTContentProtectionAggregator {
         var aggregatedDrmConfig: [String:Any] = [:]
         aggregatedDrmConfig[DRM_PROP_INTEGRATION] = drmConfig.customIntegrationId ?? "unknown"
         aggregatedDrmConfig[DRM_PROP_INTEGRATION_PARAMS] = drmConfig.integrationParameters
+        if let queryParameters = drmConfig.queryParameters {
+            aggregatedDrmConfig[DRM_PROP_QUERY_PARAMETERS] = queryParameters
+        }
         if let multiDrmConfigCollection = drmConfig as? THEOplayerSDK.MultiplatformDRMConfiguration {
             let keySystemConfigurations: THEOplayerSDK.KeySystemConfigurationCollection = multiDrmConfigCollection.keySystemConfigurations
             if let fairplayConfig: THEOplayerSDK.KeySystemConfiguration = keySystemConfigurations.fairplay {
@@ -113,6 +117,9 @@ class THEOplayerRCTContentProtectionAggregator {
         }
         if let certificateURL = keySystemConfig.certificateURL?.absoluteString {
             aggregatedKeySystem[DRM_PROP_CERTIFICATE_URL] = certificateURL
+        }
+        if let queryParameters = keySystemConfig.queryParameters {
+            aggregatedKeySystem[DRM_PROP_QUERY_PARAMETERS] = queryParameters
         }
         return aggregatedKeySystem
     }
