@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added `useSystemCaptionStyle` flag to `PlayerConfiguration` on Android. When set to `true`, the player will apply the caption styles as configured in the system settings.
 
+### Fixed
+
+- Fixed an issue where on iOS the contentProtection queryParameters were not converted to string values, resulting in missing parameters in the urls.
+
 ## [11.0.0] - 26-04-16
 
 ### Added
