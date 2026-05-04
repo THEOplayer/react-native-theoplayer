@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Added `useSystemCaptionStyle` flag to `PlayerConfiguration` on Android. When set to `true`, the player will apply the caption styles as configured in the system settings.
+- Added the `MediaControl` API for controlling the media session and lock screen controls with custom handlers.
 
 ## [11.0.0] - 26-04-16
 

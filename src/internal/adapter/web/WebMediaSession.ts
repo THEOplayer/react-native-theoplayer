@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import type { ChromelessPlayer } from 'theoplayer';
 import type { THEOplayerWebAdapter } from '../THEOplayerWebAdapter';
-import { MediaControlConfiguration } from 'react-native-theoplayer';
+import { MediaControlAction, MediaControlConfiguration } from 'react-native-theoplayer';
+import { MediaControlWebAdapter } from '../media/MediaControlWebAdapter';
 
 const DEFAULT_SKIP_FORWARD_INTERVAL = 5;
 const DEFAULT_SKIP_BACKWARD_INTERVAL = 5;
@@ -30,19 +31,23 @@ const mediaSession = (function () {
  * @link https://w3c.github.io/mediasession
  */
 export class WebMediaSession {
-  private readonly _config: MediaControlConfiguration;
-  private readonly _player: ChromelessPlayer;
-  private readonly _webAdapter: THEOplayerWebAdapter;
+  private readonly _mediaControlAdapter: MediaControlWebAdapter;
 
-  constructor(adapter: THEOplayerWebAdapter, player: ChromelessPlayer, config: MediaControlConfiguration = defaultMediaControlConfiguration) {
-    this._player = player;
-    this._webAdapter = adapter;
-    this._config = config;
+  constructor(
+    private readonly _webAdapter: THEOplayerWebAdapter,
+    private readonly _player: ChromelessPlayer,
+    private readonly _config: MediaControlConfiguration = defaultMediaControlConfiguration,
+  ) {
     this._player.addEventListener('sourcechange', this.onSourceChange);
+    this._mediaControlAdapter = new MediaControlWebAdapter(this);
+  }
+
+  get mediaControlAdapter() {
+    return this._mediaControlAdapter;
   }
 
   updateMediaSession() {
-    // update trickplay capabilities
+    // Update trick-play capabilities
     if (this.isTrickPlayEnabled()) {
       mediaSession.setActionHandler('seekbackward', (event) => {
         const skipTime = event.seekOffset || this._config.skipBackwardInterval || DEFAULT_SKIP_BACKWARD_INTERVAL;
@@ -67,7 +72,7 @@ export class WebMediaSession {
       mediaSession.setActionHandler('seekto', NoOp);
     }
 
-    // update play/pause capabilities
+    // Update play/pause capabilities
     if (this.isPlayPauseEnabled()) {
       mediaSession.setActionHandler('play', () => {
         this._player?.play();
@@ -80,10 +85,18 @@ export class WebMediaSession {
       mediaSession.setActionHandler('pause', NoOp);
     }
 
-    // update playbackState
+    // Update queue actions
+    if (this.mediaControlAdapter.hasHandler(MediaControlAction.SKIP_TO_PREVIOUS)) {
+      mediaSession.setActionHandler('previoustrack', this.mediaControlAdapter.getHandler(MediaControlAction.SKIP_TO_PREVIOUS) as () => void);
+    }
+    if (this.mediaControlAdapter.hasHandler(MediaControlAction.SKIP_TO_NEXT)) {
+      mediaSession.setActionHandler('nexttrack', this.mediaControlAdapter.getHandler(MediaControlAction.SKIP_TO_NEXT) as () => void);
+    }
+
+    // Update playbackState
     mediaSession.playbackState = this._player.paused ? 'paused' : 'playing';
 
-    // update position
+    // Update position
     this.updatePositionState();
   }
 

@@ -31,8 +31,9 @@ private const val ACTION_PLAY = 0
 private const val ACTION_PAUSE = ACTION_PLAY + 1
 private const val ACTION_RWD = ACTION_PLAY + 2
 private const val ACTION_FFD = ACTION_PLAY + 3
+private const val ACTION_SKIP_TO_PREV = ACTION_PLAY + 4
+private const val ACTION_SKIP_TO_NEXT = ACTION_PLAY + 5
 private const val ACTION_IGNORE = ACTION_PLAY + 999
-private const val SKIP_TIME = 15
 private const val NO_ICON = -1
 
 private val PIP_ASPECT_RATIO_DEFAULT = Rational(16, 9)
@@ -118,12 +119,23 @@ class PipUtils(
   fun buildPipActions(
     paused: Boolean,
     enablePlayPause: Boolean,
+    enableQueueActions: Boolean,
     enableTrickPlay: Boolean
   ): List<RemoteAction> {
     return mutableListOf<RemoteAction>().apply {
 
-      // Trick-play: Rewind
-      if (enableTrickPlay) {
+      if (enableQueueActions) {
+        // Queue controls: Skip to Previous
+        add(
+          buildRemoteAction(
+            ACTION_SKIP_TO_PREV,
+            R.drawable.ic_prev,
+            R.string.skip_to_previous,
+            R.string.skip_to_previous_description
+          )
+        )
+      } else if (enableTrickPlay) {
+        // Trick-play: Rewind
         add(
           buildRemoteAction(
             ACTION_RWD,
@@ -157,8 +169,18 @@ class PipUtils(
         }
       )
 
-      // Trick-play: Fast Forward
-      if (enableTrickPlay) {
+      if (enableQueueActions) {
+        // Queue controls: Skip to Next
+        add(
+          buildRemoteAction(
+            ACTION_SKIP_TO_NEXT,
+            R.drawable.ic_next,
+            R.string.skip_to_next,
+            R.string.skip_to_previous_description
+          )
+        )
+      } else if (enableTrickPlay) {
+        // Trick-play: Fast Forward
         add(
           buildRemoteAction(
             ACTION_FFD,
@@ -198,20 +220,19 @@ class PipUtils(
 
   @RequiresApi(Build.VERSION_CODES.O)
   fun getPipParams(): PictureInPictureParams {
-    val view = viewCtx.playerView
-    val player = view.player
-    val visibleRect = getContentViewRect(view)
-    val isAd = player.ads.isPlaying
-    val isLive = player.duration.isInfinite()
-    val enablePlayPause = !isAd
-    val enableTrickPlay = !isAd && !isLive
+    val mediaControlProxy = viewCtx.mediaControlProxy
+    val visibleRect = getContentViewRect(viewCtx.playerView)
 
     return PictureInPictureParams.Builder()
       .setSourceRectHint(visibleRect)
       // Must be between 2.39:1 and 1:2.39 (inclusive)
-      .setAspectRatio(getSafeAspectRatio(view.player.videoWidth, view.player.videoHeight))
+      .setAspectRatio(getSafeAspectRatio(player.videoWidth, player.videoHeight))
       .setActions(
-        buildPipActions(player.isPaused, enablePlayPause, enableTrickPlay)
+        buildPipActions(
+          player.isPaused,
+          mediaControlProxy.playPauseEnabled,
+          mediaControlProxy.queueActionsEnabled,
+          mediaControlProxy.trickPlayEnabled)
       )
       .build()
   }
@@ -227,11 +248,15 @@ class PipUtils(
       @RequiresApi(Build.VERSION_CODES.O)
       override fun onReceive(context: Context?, intent: Intent?) {
         intent?.getIntExtra(EXTRA_ACTION, -1)?.let { action ->
-          when (action) {
-            ACTION_PLAY -> player.play()
-            ACTION_PAUSE -> player.pause()
-            ACTION_FFD -> player.currentTime += SKIP_TIME
-            ACTION_RWD -> player.currentTime -= SKIP_TIME
+          viewCtx.mediaControlProxy.apply {
+            when (action) {
+              ACTION_PLAY -> onPlay()
+              ACTION_PAUSE -> onPause()
+              ACTION_FFD -> onFastForward()
+              ACTION_RWD -> onRewind()
+              ACTION_SKIP_TO_NEXT -> onSkipToNext(player)
+              ACTION_SKIP_TO_PREV -> onSkipToPrevious(player)
+            }
           }
           reactContext.currentActivity?.setPictureInPictureParams(getPipParams())
         }
@@ -260,6 +285,7 @@ class PipUtils(
         // the NO_ICON causes a System UI crash.
         Build.VERSION.SDK_INT in Build.VERSION_CODES.O..Build.VERSION_CODES.R ->
           android.R.drawable.screen_background_light_transparent
+
         else -> NO_ICON
       }
     )

@@ -8,6 +8,10 @@
   <string name="fast_forward_description">Fast Forward video</string>
   <string name="rewind">Rewind</string>
   <string name="rewind_description">Rewind video</string>
+  <string name="skip_to_previous">Skip to Previous</string>
+  <string name="skip_to_previous_description">Skip to previous playlist item</string>
+  <string name="skip_to_next">Skip to Next</string>
+  <string name="skip_to_next_description">Skip to next playlist item</string>
 
   <string name="background_playback_service_description">THEOplayer service providing background playback.</string>
   <string name="notification_channel_id">theoplayer_default_channel</string>

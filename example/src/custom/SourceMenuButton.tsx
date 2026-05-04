@@ -1,38 +1,37 @@
-import React, { useContext, useState } from 'react';
-import { Platform } from 'react-native';
+import React, { useContext } from 'react';
 import { ListSvg, MenuButton, MenuRadioButton, MenuView, PlayerContext, ScrollableMenu } from '@theoplayer/react-native-ui';
 import type { Source } from './Source';
-import ALL_SOURCES from './sources.json';
+import { usePlaylist } from '../hooks/usePlaylist';
 
-export const SOURCES = ALL_SOURCES.filter((source) => source.os.indexOf(Platform.OS) >= 0) as Source[];
+export interface SourceMenuButtonProps {
+  sources: Source[];
 
-export const SourceMenuButton = () => {
-  if (!(SOURCES && SOURCES.length > 0)) {
-    return <></>;
-  }
+  includeWithLicense?: boolean | undefined;
+}
+
+export const SourceMenuButton = (props: SourceMenuButtonProps) => {
   const createMenu = () => {
-    return <SourceMenuView />;
+    return <SourceMenuView sources={props.sources} includeWithLicense />;
   };
   return <MenuButton svg={<ListSvg />} menuConstructor={createMenu} />;
 };
 
-export const SourceMenuView = () => {
-  const { player } = useContext(PlayerContext);
-  const selectedSource = SOURCES.find((source) => source.source === player.source);
-  const [localSourceId, setLocalSourceId] = useState<number | undefined>(selectedSource ? SOURCES.indexOf(selectedSource) : undefined);
+export const SourceMenuView = ({ sources, includeWithLicense }: { sources: Source[]; includeWithLicense: boolean | undefined }) => {
+  const { player, ui } = useContext(PlayerContext);
+  const initialIndex = sources.findIndex((source) => source.source === player?.source);
+  const { sources: filteredSources, currentIndex, setSourceByIndex } = usePlaylist(player, sources, initialIndex, includeWithLicense);
 
   const selectSource = (id: number | undefined) => {
-    setLocalSourceId(id);
-    // eslint-disable-next-line react-hooks/immutability
-    player.source = id !== undefined ? SOURCES[id].source : undefined;
+    setSourceByIndex(id);
+    ui.closeCurrentMenu_();
   };
   return (
     <MenuView
       menu={
         <ScrollableMenu
           title={'Source'}
-          items={SOURCES.map((source, id) => (
-            <MenuRadioButton key={id} label={source.name} uid={id} onSelect={selectSource} selected={id === localSourceId}></MenuRadioButton>
+          items={filteredSources.map((source, id) => (
+            <MenuRadioButton key={id} label={source.name} uid={id} onSelect={selectSource} selected={id === currentIndex}></MenuRadioButton>
           ))}
         />
       }
