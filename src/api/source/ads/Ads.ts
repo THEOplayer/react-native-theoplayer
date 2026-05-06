@@ -54,10 +54,11 @@ export interface AdDescription {
    *
    * @remarks
    * <br/> - When the ad ends, the content will resume at the ad break's offset plus its duration.
+   * <br/> - Available for `theoads` since v11.2.0.
    *
    * @defaultValue
-   * <br/> - `true` for live content,
-   * <br/> - `false` for VOD content
+   * <br/> - `true` for live content and `theoads` VOD content.
+   * <br/> - `false` for VOD content.
    */
   replaceContent?: boolean;
 
