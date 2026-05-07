@@ -50,6 +50,21 @@ class PlayerModule(context: ReactApplicationContext) : ReactContextBaseJavaModul
   }
 
   @ReactMethod
+  fun setNativePlatformLogsEnabled(enabled: Boolean, promise: Promise) {
+    try {
+      val logger = THEOplayerGlobal.getSharedInstance(reactApplicationContext).logger
+      if (enabled) {
+        logger.enableAllTags()
+      } else {
+        logger.disableAllTags()
+      }
+      promise.resolve(null)
+    } catch (exception: Exception) {
+      promise.reject("E_NATIVE_PLATFORM_LOGS", exception)
+    }
+  }
+
+  @ReactMethod
   fun setABRConfig(tag: Int, config: ReadableMap?) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       ABRConfigurationAdapter.applyABRConfigurationFromProps(view?.player, config)

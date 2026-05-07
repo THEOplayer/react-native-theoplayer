@@ -65,6 +65,10 @@ RCT_EXPORT_VIEW_PROPERTY(onNativePlayerStateSync, RCTDirectEventBlock);
 RCT_EXTERN_METHOD(version:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(setNativePlatformLogsEnabled:(BOOL)enabled
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN_METHOD(setPaused:(nonnull NSNumber *)node
                   paused:(BOOL)paused)
 

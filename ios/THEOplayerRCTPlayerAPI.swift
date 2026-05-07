@@ -6,6 +6,10 @@ import Foundation
 import UIKit
 import THEOplayerSDK
 
+#if canImport(THEOplayerTHEOliveIntegration)
+@_spi(Debug) import THEOplayerTHEOliveIntegration
+#endif
+
 #if canImport(THEOplayerConnectorSideloadedSubtitle)
 import THEOplayerConnectorSideloadedSubtitle
 #endif
@@ -40,6 +44,18 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
     func version(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         let versionString = THEOplayer.version
         resolve(versionString)
+    }
+
+    @objc(setNativePlatformLogsEnabled:resolver:rejecter:)
+    func setNativePlatformLogsEnabled(_ enabled: Bool, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+#if canImport(THEOplayerTHEOliveIntegration)
+        if enabled {
+            DebugConfig.enableAll()
+        } else {
+            DebugConfig.disableAll()
+        }
+#endif
+        resolve(nil)
     }
 
     @objc(setPaused:paused:)

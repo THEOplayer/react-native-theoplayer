@@ -4,6 +4,7 @@ export * from './backgroundAudio/barrel';
 export * from './broadcast/barrel';
 export * from './cache/barrel';
 export * from './cast/barrel';
+export * from './debug/barrel';
 export * from './pip/barrel';
 export * from './config/barrel';
 export * from './error/barrel';
