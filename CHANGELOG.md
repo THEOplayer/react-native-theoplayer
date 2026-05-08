@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Added `useSystemCaptionStyle` flag to `PlayerConfiguration` on Android. When set to `true`, the player will apply the caption styles as configured in the system settings.
+- Added support on iOS for controlling the targetQualities on THEOlive streams.
 
 ### Fixed
 

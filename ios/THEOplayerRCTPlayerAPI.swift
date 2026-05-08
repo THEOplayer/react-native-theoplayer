@@ -10,8 +10,6 @@ import THEOplayerSDK
 import THEOplayerConnectorSideloadedSubtitle
 #endif
 
-let ERROR_MESSAGE_PLAYER_QUALITY_UNSUPPORTED_FEATURE: String = "Setting a target video quality is not supported on iOS/tvOS."
-
 let TTS_PROP_BACKGROUND_COLOR = "backgroundColor"
 let TTS_PROP_EDGE_STYLE = "edgeStyle"
 let TTS_PROP_FONT_COLOR = "fontColor"
@@ -337,10 +335,32 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
         }
     }
 
-    @objc(setTargetVideoQuality:uid:)
-    func setTargetVideoQuality(_ node: NSNumber, uid: [NSNumber]) -> Void {
-        if DEBUG_PLAYER_API { print(ERROR_MESSAGE_PLAYER_QUALITY_UNSUPPORTED_FEATURE) }
-        return
+    @objc(setTargetVideoQuality:uids:)
+    func setTargetVideoQuality(_ node: NSNumber, uids: [NSNumber]) -> Void {
+        DispatchQueue.main.async {
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
+               let player = theView.player {
+                let videoTracks: VideoTrackList = player.videoTracks
+                guard videoTracks.count > 0 else {
+                    return
+                }
+                var activeVideoTrack: VideoTrack?
+                for i in 0...videoTracks.count-1 {
+                    let videoTrack: MediaTrack = videoTracks.get(i)
+                    if videoTrack.enabled {
+                        activeVideoTrack = videoTrack as? VideoTrack
+                    }
+                }
+                if let foundTrack = activeVideoTrack {
+                    let matchingQualities = (0..<foundTrack.qualities.count).compactMap { index in
+                        let quality = foundTrack.qualities.get(index)
+                        return uids.contains { $0.intValue == quality.bandwidth } ? quality : nil
+                    }
+                    foundTrack.targetQualities = matchingQualities
+                    if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] targetQualities: \(uids) set on active videotrack.") }
+                }
+            }
+        }
     }
 
     @objc(setPreload:type:)
