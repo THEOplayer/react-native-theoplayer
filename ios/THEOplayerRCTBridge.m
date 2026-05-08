@@ -113,7 +113,7 @@ RCT_EXTERN_METHOD(setSelectedVideoTrack:(nonnull NSNumber *)node
                   uid:(nonnull NSNumber *)uid)
 
 RCT_EXTERN_METHOD(setTargetVideoQuality:(nonnull NSNumber *)node
-                  uid:(nonnull NSNumber *)uid)
+                  uids:(nonnull NSArray<NSNumber *> *)uids)
 
 RCT_EXTERN_METHOD(setPreload:(nonnull NSNumber *)node
                   type:(nonnull NSString *)type)
