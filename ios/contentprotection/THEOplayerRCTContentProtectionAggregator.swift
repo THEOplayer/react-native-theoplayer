@@ -118,6 +118,9 @@ class THEOplayerRCTContentProtectionAggregator {
         if let certificateURL = keySystemConfig.certificateURL?.absoluteString {
             aggregatedKeySystem[DRM_PROP_CERTIFICATE_URL] = certificateURL
         }
+        if let headers = keySystemConfig.headers {
+            aggregatedKeySystem[DRM_PROP_HEADERS] = headers
+        }
         if let queryParameters = keySystemConfig.queryParameters {
             aggregatedKeySystem[DRM_PROP_QUERY_PARAMETERS] = queryParameters
         }
