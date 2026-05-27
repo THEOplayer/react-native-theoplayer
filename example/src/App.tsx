@@ -86,6 +86,8 @@ const playerConfig: PlayerConfiguration = {
   ads: {
     theoads: true,
   },
+  debugLogsEnabled: false, // Android only.
+  useSystemCaptionStyle: false, // Android only.
 };
 
 /**

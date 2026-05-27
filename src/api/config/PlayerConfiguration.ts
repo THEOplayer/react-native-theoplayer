@@ -130,6 +130,18 @@ export interface PlayerConfiguration {
    * <br/> - When set to true, all debug log tags from the native Android SDK will be enabled.
    */
   debugLogsEnabled?: boolean;
+
+  /**
+   * Sets whether captions should automatically apply a system-defined style.
+   *
+   * @defaultValue false
+   *
+   * @platform android
+   *
+   * @remarks
+   * <br/> - Any user-defined overrides are still respected.
+   */
+  useSystemCaptionStyle?: boolean;
 }
 
 /**

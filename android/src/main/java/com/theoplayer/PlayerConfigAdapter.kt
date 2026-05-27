@@ -44,6 +44,8 @@ private const val PROP_THEOLIVE_ANALYTICS_DISABLED = "analyticsDisabled"
 private const val PROP_THEOLIVE_DISCOVERY_URL = "discoveryUrl"
 private const val PROP_MULTIMEDIA_TUNNELING_ENABLED = "tunnelingEnabled"
 private const val PROP_DEBUG_LOGS_ENABLED = "debugLogsEnabled"
+private const val PROP_SYSTEM_CAPTION_STYLE = "useSystemCaptionStyle"
+
 
 class PlayerConfigAdapter(private val configProps: ReadableMap?) {
 
@@ -82,6 +84,9 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
         autoIntegrations(false)
         if (hasKey(PROP_MULTIMEDIA_TUNNELING_ENABLED)) {
           tunnelingEnabled(getBoolean(PROP_MULTIMEDIA_TUNNELING_ENABLED))
+        }
+        if (hasKey(PROP_SYSTEM_CAPTION_STYLE)) {
+          useSystemCaptionStyle(getBoolean(PROP_SYSTEM_CAPTION_STYLE))
         }
       }
     }.build()

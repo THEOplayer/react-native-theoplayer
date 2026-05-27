@@ -357,7 +357,12 @@ class THEOplayerRCTSourceDescriptionBuilder {
             let licenseAcquisitionURL = fairplayData[SD_PROP_LICENSE_URL] as? String
             let headers = fairplayData[SD_PROP_HEADERS] as? [String:String]
             let licenseType = fairplayData[SD_PROP_LICENSE_TYPE] as? String
-            let queryParameters = fairplayData[SD_PROP_QUERY_PARAMETERS] as? [String:String]
+            var queryParameters: [String: String] = [:]
+            if let allQueryParams = fairplayData[SD_PROP_QUERY_PARAMETERS] as? [String:Any] {
+                for (key, value) in allQueryParams {
+                    queryParameters[key] = "\(value)"
+                }
+            }
                 
             fairplayKeySystem = KeySystemConfiguration(
                 licenseAcquisitionURL: licenseAcquisitionURL,
@@ -379,7 +384,12 @@ class THEOplayerRCTSourceDescriptionBuilder {
             let licenseAcquisitionURL = widevineData[SD_PROP_LICENSE_URL] as? String
             let headers = widevineData[SD_PROP_HEADERS] as? [String:String]
             let licenseType = widevineData[SD_PROP_LICENSE_TYPE] as? String
-            let queryParameters = widevineData[SD_PROP_QUERY_PARAMETERS] as? [String:String]
+            var queryParameters: [String: String] = [:]
+            if let allQueryParams = widevineData[SD_PROP_QUERY_PARAMETERS] as? [String:Any] {
+                for (key, value) in allQueryParams {
+                    queryParameters[key] = "\(value)"
+                }
+            }
                 
             widevineKeySystem = KeySystemConfiguration(
                 licenseAcquisitionURL: licenseAcquisitionURL,
@@ -391,7 +401,12 @@ class THEOplayerRCTSourceDescriptionBuilder {
         }
         
         // global query parameters
-        let queryParameters = contentProtectionData[SD_PROP_QUERY_PARAMETERS] as? [String:String]
+        var queryParameters: [String: String] = [:]
+        if let allQueryParams = contentProtectionData[SD_PROP_QUERY_PARAMETERS] as? [String:Any] {
+            for (key, value) in allQueryParams {
+                queryParameters[key] = "\(value)"
+            }
+        }
         let integrationParameters = contentProtectionData[SD_PROP_INTEGRATION_PARAMETERS] as? [String:Any] ?? [:]
         
         return MultiplatformDRMConfiguration(
