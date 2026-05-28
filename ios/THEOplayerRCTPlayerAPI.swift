@@ -356,8 +356,14 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                         let quality = foundTrack.qualities.get(index)
                         return uids.contains { $0.intValue == quality.bandwidth } ? quality : nil
                     }
-                    foundTrack.targetQualities = matchingQualities
-                    if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] targetQualities: \(uids) set on active videotrack.") }
+                    foundTrack.targetQualities = matchingQualities.count > 0 ? matchingQualities : nil
+                    if DEBUG_PLAYER_API {
+                        if matchingQualities.count > 0 {
+                            if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] targetQualities: \(uids) set on active videotrack. (matching: \(matchingQualities.map(\.bandwidth)))") }
+                        } else {
+                            if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] targetQualities: \(uids) set on active videotrack. (no match or empty) => no quality restriction.") }
+                        }
+                    }
                 }
             }
         }
