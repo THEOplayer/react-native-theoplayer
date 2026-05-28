@@ -5,6 +5,7 @@
  * @public
  */
 import type { Ad } from './Ad';
+import { AdIntegrationKind, CustomAdIntegrationKind } from '../source/ads/Ads';
 
 /**
  * Represents an ad break in the VMAP specification or an ad pod in the VAST specification.
@@ -14,13 +15,10 @@ import type { Ad } from './Ad';
  */
 export interface AdBreak {
   /**
-   * The integration of the ad break, represented by a value from the following list:
-   * <br/> - `'theo'`
-   * <br/> - `'google-ima'`
-   * <br/> - `'google-dai'`
-   * <br/> - `'freewheel'`
+   * The integration of the ad break, represented by a value from {@link AdIntegrationKind}
+   * or {@link CustomAdIntegrationKind | the identifier of a custom integration}.
    */
-  integration: string | undefined;
+  integration: AdIntegrationKind | CustomAdIntegrationKind | undefined;
 
   /**
    * List of ads which will be played sequentially at the ad break's time offset.
