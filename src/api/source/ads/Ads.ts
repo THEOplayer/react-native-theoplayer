@@ -44,8 +44,6 @@ export interface AdSource {
 export interface AdDescription {
   /**
    * The integration of the ad break.
-   *
-   * @defaultValue `'csai'`
    */
   integration?: AdIntegrationKind | CustomAdIntegrationKind;
 
