@@ -6,6 +6,17 @@ import UIKit
 
 let SD_PROP_ADS: String = "ads"
 
+public class CustomAdDescription: AdDescription {
+    public let integration: THEOplayerSDK.AdIntegration? = AdIntegration.none
+    public let customIntegrationId: String
+    public let integrationData: [String: Any]
+  
+    public init(customIntegrationId: String, integrationData: [String: Any] = [:]) {
+        self.customIntegrationId = customIntegrationId
+        self.integrationData = integrationData
+    }
+}
+
 extension THEOplayerRCTSourceDescriptionBuilder {
 
     /**
@@ -58,8 +69,19 @@ extension THEOplayerRCTSourceDescriptionBuilder {
             case "theoads":
                 return THEOplayerRCTSourceDescriptionBuilder.buildSingleTHEOadsDescription(adsData)
             default:
-                if DEBUG_SOURCE_DESCRIPTION_BUILDER  { PrintUtils.printLog(logText: "[NATIVE] We currently require and only support the 'google-ima' or 'sgai' integration in the 'ads' description.") }
+                return THEOplayerRCTSourceDescriptionBuilder.buildSingleCustomAdsDescription(adsData)
             }
+        }
+        return nil
+    }
+  
+     /**
+      Creates a THEOplayer AdDescription, containing all passed properties.
+      - returns: a THEOplayer AdDescription
+     */
+    static func buildSingleCustomAdsDescription(_ adsData: [String:Any]) -> AdDescription? {
+        if let integration = adsData[SD_PROP_INTEGRATION] as? String {
+            return CustomAdDescription(customIntegrationId: integration, integrationData: adsData)
         }
         return nil
     }
