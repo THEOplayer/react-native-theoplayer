@@ -107,6 +107,14 @@ export interface TheoAdDescription extends AdDescription {
    * The amount of seconds we wait to initialize THEOads.
    */
   initializationDelay?: number;
+
+  /**
+   * The URL of the break manifest.
+   *
+   * @remarks
+   * <br/> - The break manifest describes the upcoming ad breaks in the stream.
+   */
+  breakManifestUrl?: string;
 }
 
 /**

@@ -74,6 +74,7 @@ private const val PROP_RETRIEVE_POD_ID_URI = "retrievePodIdURI"
 private const val PROP_INITIALIZATION_DELAY = "initializationDelay"
 private const val PROP_SSE_ENDPOINT = "sseEndpoint"
 private const val PROP_STREAM_ACTIVITY_MONITOR_ID = "streamActivityMonitorId"
+private const val PROP_BREAK_MANIFEST_URL = "breakManifestUrl"
 private const val PROP_LATENCY_CONFIGURATION = "latencyConfiguration"
 private const val PROP_PROFILE = "profile"
 private const val PROP_WEBRTC: String = "webrtc"
@@ -368,6 +369,7 @@ class SourceAdapter {
       initializationDelay = jsonAdDescription.optDouble(PROP_INITIALIZATION_DELAY).takeIf { it.isFinite() },
       sseEndpoint = jsonAdDescription.optString(PROP_SSE_ENDPOINT).takeIf { it.isNotEmpty() },
       streamActivityMonitorId = jsonAdDescription.optString(PROP_STREAM_ACTIVITY_MONITOR_ID).takeIf { it.isNotEmpty() },
+      breakManifestUrl = jsonAdDescription.optString(PROP_BREAK_MANIFEST_URL).takeIf { it.isNotEmpty() },
     )
   }
 
