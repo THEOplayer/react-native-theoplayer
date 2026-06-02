@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Added support for `CustomAdIntegrationKind`, allowing custom ad integrations on top of the player API.
+- Added support for `breakManifestUrl` for OptiView Ads streams.
 
 ## [11.1.0] - 26-05-27
 
