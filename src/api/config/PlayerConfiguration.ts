@@ -4,6 +4,7 @@ import type { MediaControlConfiguration } from '../media/MediaControlConfigurati
 import type { RetryConfiguration } from '../utils/RetryConfiguration';
 import type { UIConfiguration } from '../ui/UIConfiguration';
 import { TheoLiveConfiguration } from '../theolive/TheoLiveConfiguration';
+import type { CmcdPlayerConfiguration } from '../source/cmcd/CmcdConfiguration';
 
 /**
  * Describes a player's configuration.
@@ -142,6 +143,16 @@ export interface PlayerConfiguration {
    * <br/> - Any user-defined overrides are still respected.
    */
   useSystemCaptionStyle?: boolean;
+
+  /**
+   * The CMCD configuration for the player.
+   *
+   * @remarks
+   * <br/> - Available since v11.4.0.
+   * <br/> - Configures event mode reporting for Common Media Client Data (CTA-5004).
+   * <br/> - Source-level configuration can override player-level values. See {@link CmcdSourceConfiguration}.
+   */
+  cmcd?: CmcdPlayerConfiguration;
 }
 
 /**

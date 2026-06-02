@@ -1,11 +1,78 @@
 /**
+ * Configuration for a CMCD endpoint.
+ *
+ * @remarks
+ * <br/> - Available since v11.4.0.
+ *
+ * @category CMCD
+ * @public
+ */
+export interface CmcdEndpointConfiguration {
+  /**
+   * The URL of the CMCD endpoint.
+   */
+  url: string;
+}
+
+/**
+ * Describes the CMCD (Common Media Client Data) configuration for event mode reporting at the player level.
+ *
+ * @remarks
+ * <br/> - Available since v11.4.0.
+ * <br/> - This configuration is set at the player level. For source-level configuration, see {@link CmcdSourceConfiguration}.
+ *
+ * @category CMCD
+ * @public
+ */
+export interface CmcdPlayerConfiguration {
+  /**
+   * An external session ID that can be used to identify the current playback session.
+   */
+  externalSessionId?: string;
+
+  /**
+   * A user ID that can be used to identify the user.
+   */
+  userId?: string;
+
+  /**
+   * A list of CMCD endpoints to which events should be sent.
+   */
+  eventEndpoints?: CmcdEndpointConfiguration[];
+}
+
+/**
+ * Describes the CMCD (Common Media Client Data) configuration for event mode reporting at the source level.
+ *
+ * @remarks
+ * <br/> - Available since v11.4.0.
+ * <br/> - This extends the player-level {@link CmcdPlayerConfiguration} by additionally allowing a session ID to be specified
+ *  per source. Source-level values take precedence over player-level values for overlapping fields,
+ *  except for `eventEndpoints` which are merged (both player and source endpoints receive events).
+ *
+ * @category CMCD
+ * @public
+ */
+export interface CmcdSourceConfiguration extends CmcdPlayerConfiguration {
+  /**
+   * A GUID identifying the current playback session.
+   *
+   * @remarks
+   * A playback session typically consists of the playback of a single media
+   * asset along with accompanying content such as advertisements. The maximum length is 64 characters.
+   * It is RECOMMENDED to conform to the UUID specification (https://tools.ietf.org/html/rfc4122).
+   */
+  sessionId?: string;
+}
+
+/**
  * The configuration for transmitting information to Content Delivery Networks (CDNs)
  * through Common Media Client Data (CMCD) (CTA-5004)
  *
  * @category Source
  * @public
  */
-export interface CmcdConfiguration {
+export interface CmcdConfiguration extends CmcdSourceConfiguration {
   /**
    * The content ID parameter which should be passed as a CMCD value. If left empty, no content ID will be sent.
    *
