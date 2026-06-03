@@ -4,7 +4,7 @@ import type { MediaControlConfiguration } from '../media/MediaControlConfigurati
 import type { RetryConfiguration } from '../utils/RetryConfiguration';
 import type { UIConfiguration } from '../ui/UIConfiguration';
 import { TheoLiveConfiguration } from '../theolive/TheoLiveConfiguration';
-import type { CmcdPlayerConfiguration } from '../source/cmcd/CmcdConfiguration';
+import type { CmcdPlayerConfiguration } from '../cmcd/CmcdConfiguration';
 
 /**
  * Describes a player's configuration.

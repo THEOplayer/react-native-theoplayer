@@ -14,7 +14,7 @@ import type { AdDescription } from './ads/Ads';
 import type { MetadataDescription } from './metadata/MetadataDescription';
 import type { ServerSideAdInsertionConfiguration } from './ads/ssai/ServerSideAdInsertionConfiguration';
 import type { AnalyticsDescription } from './analytics/AnalyticsDescription';
-import { CmcdConfiguration } from './cmcd/CmcdConfiguration';
+import { CmcdConfiguration } from '../cmcd/CmcdConfiguration';
 import { SourceLatencyConfiguration } from './latency/SourceLatencyConfiguration';
 
 /**
