@@ -118,9 +118,14 @@ export interface CmcdSourceConfiguration extends CmcdPlayerConfiguration {
   /**
    * The data transmission mode as defined in section 2 of the specification.
    *
-   * @remarks Request mode only
+   * @remarks
+   * <ul>
+   *   <li>Starting from version 11.4.0, this property is now optional. By providing a value, request mode will be
+   *   enabled as it was before. If left undefined, the SDK will not use request mode.</li>
+   *   <li>Request mode only</li>
+   * </ul>
    */
-  transmissionMode: CmcdTransmissionMode
+  transmissionMode?: CmcdTransmissionMode
 }
 
 /**

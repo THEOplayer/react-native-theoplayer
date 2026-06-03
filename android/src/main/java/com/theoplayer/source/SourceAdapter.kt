@@ -476,7 +476,10 @@ class SourceAdapter {
     return BridgeUtils.fromJSONObjectToBridge(JSONObject(gson.toJson(typedSource)))
   }
 
-  private fun parseCmcdTransmissionMode(cmcdConfiguration : JSONObject) : CMCDTransmissionMode {
+  private fun parseCmcdTransmissionMode(cmcdConfiguration : JSONObject) : CMCDTransmissionMode? {
+    if (!cmcdConfiguration.has(CMCD_TRANSMISSION_MODE)) {
+      return null
+    }
     try {
       val transmissionMode = cmcdConfiguration.optInt(CMCD_TRANSMISSION_MODE)
       if (transmissionMode == CmcdTransmissionMode.QUERY_ARGUMENT.ordinal) {

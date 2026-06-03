@@ -64,6 +64,7 @@ let SD_PROP_INITIALIZATION_DELAY: String = "initializationDelay"
 let SD_PROP_HLS_DATE_RANGE: String = "hlsDateRange"
 let SD_PROP_BREAK_MANIFEST_URL: String = "breakManifestUrl"
 let SD_PROP_CMCD: String = "cmcd"
+let SD_PROP_TRANSMISSION_MODE: String = "transmissionMode"
 let SD_PROP_QUERY_PARAMETERS: String = "queryParameters"
 
 let EXTENSION_HLS: String = ".m3u8"
@@ -168,12 +169,14 @@ class THEOplayerRCTSourceDescriptionBuilder {
 
         // 6. configure CMCD
         var cmcdSourceConfig: CMCDSourceConfiguration? = nil
-        let cmcd = sourceData[SD_PROP_CMCD] as? [String:Any]
-        if cmcd != nil {
-          typedSources.forEach { typedSource in
-            typedSource.cmcd = true;
+        if let cmcd = sourceData[SD_PROP_CMCD] as? [String:Any] {
+          let requestModeEnabled = cmcd[SD_PROP_TRANSMISSION_MODE] != nil
+          if requestModeEnabled {
+            typedSources.forEach { typedSource in
+              typedSource.cmcd = true
+            }
           }
-          cmcdSourceConfig = THEOplayerRCTSourceDescriptionBuilder.buildCmcdSourceConfiguration(cmcd!)
+          cmcdSourceConfig = THEOplayerRCTSourceDescriptionBuilder.buildCmcdSourceConfiguration(cmcd)
         }
 
         // 7. construct the SourceDescription
