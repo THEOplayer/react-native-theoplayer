@@ -151,6 +151,11 @@ export interface TextTrack extends Track {
   readonly forced: boolean;
 
   /**
+   * The in-band metadata track dispatch type of the text track.
+   */
+  readonly inBandMetadataTrackDispatchType: string;
+
+  /**
    * The closed caption service number of the text track.
    *
    * @platform web,android
