@@ -35,10 +35,15 @@ extension THEOplayerRCTSourceDescriptionBuilder {
                         adsDescriptions?.append(adDescription)
                     } else {
                         if DEBUG_SOURCE_DESCRIPTION_BUILDER {
-                            PrintUtils.printLog(logText: "[NATIVE] Could not create THEOplayer GoogleImaAdDescription from adsData array")
+                            PrintUtils.printLog(logText: "[NATIVE] Could not create AdDescription from adsData")
                         }
-                        return nil
                     }
+                }
+                if adsDescriptions?.isEmpty == true {
+                    if DEBUG_SOURCE_DESCRIPTION_BUILDER {
+                        PrintUtils.printLog(logText: "[NATIVE] Could not create any AdDescription from adsData array")
+                    }
+                    return nil
                 }
             }
             // case: single ads object
@@ -47,7 +52,7 @@ extension THEOplayerRCTSourceDescriptionBuilder {
                     adsDescriptions?.append(adDescription)
                 } else {
                     if DEBUG_SOURCE_DESCRIPTION_BUILDER {
-                        PrintUtils.printLog(logText: "[NATIVE] Could not create THEOplayer GoogleImaAdDescription from adsData")
+                        PrintUtils.printLog(logText: "[NATIVE] Could not create AdDescription from adsData")
                     }
                     return nil
                 }
