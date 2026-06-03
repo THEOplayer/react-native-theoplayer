@@ -22,6 +22,7 @@ export interface CmcdEndpointConfiguration {
  * <br/> - This configuration is set at the player level. For source-level configuration, see {@link CmcdSourceConfiguration}.
  *
  * @category CMCD
+ * @category Player
  * @public
  */
 export interface CmcdPlayerConfiguration {
@@ -42,48 +43,42 @@ export interface CmcdPlayerConfiguration {
 }
 
 /**
- * Describes the CMCD (Common Media Client Data) configuration for event mode reporting at the source level.
+ * Describes the CMCD (Common Media Client Data) configuration at the source level.
  *
  * @remarks
- * <br/> - Available since v11.4.0.
- * <br/> - This extends the player-level {@link CmcdPlayerConfiguration} by additionally allowing a session ID to be specified
+ * <ul>
+ *   <li>Event mode reporting available since v11.4.0.</li>
+ *   <li>
+ *     This extends the player-level {@link CmcdPlayerConfiguration} by additionally allowing a session ID to be specified
  *  per source. Source-level values take precedence over player-level values for overlapping fields,
  *  except for `eventEndpoints` which are merged (both player and source endpoints receive events).
+ *  </li>
+ * </ul>
  *
  * @category CMCD
+ * @category Source
  * @public
  */
 export interface CmcdSourceConfiguration extends CmcdPlayerConfiguration {
   /**
-   * A GUID identifying the current playback session.
-   *
-   * @remarks
-   * A playback session typically consists of the playback of a single media
-   * asset along with accompanying content such as advertisements. The maximum length is 64 characters.
-   * It is RECOMMENDED to conform to the UUID specification (https://tools.ietf.org/html/rfc4122).
-   */
-  sessionId?: string;
-}
-
-/**
- * The configuration for transmitting information to Content Delivery Networks (CDNs)
- * through Common Media Client Data (CMCD) (CTA-5004)
- *
- * @category Source
- * @public
- */
-export interface CmcdConfiguration extends CmcdSourceConfiguration {
-  /**
    * The content ID parameter which should be passed as a CMCD value. If left empty, no content ID will be sent.
    *
    * @platform web
+   *
+   * @remarks Request mode only
    */
   contentID?: string;
-
   /**
-   * The session ID parameter which should be passed as a CMCD value. If left empty, a UUIDv4 will be generated when applying the configuration.
+   * A GUID identifying the current playback session. If left empty, a UUIDv4 will be generated when applying the configuration.
    *
-   * @platform web
+   * @remarks
+   * <ul>
+   *   <li>A playback session typically consists of the playback of a single media
+   * asset along with accompanying content such as advertisements. The maximum length is 64 characters.
+   * It is RECOMMENDED to conform to the UUID specification (https://tools.ietf.org/html/rfc4122).
+   * </li>
+   * <li>Event mode only for iOS and Android</li>
+   * </ul>
    */
   sessionID?: string;
 
@@ -119,6 +114,18 @@ export interface CmcdConfiguration extends CmcdSourceConfiguration {
    */
   transmissionMode: CmcdTransmissionMode
 }
+
+/**
+ * The configuration for transmitting information to Content Delivery Networks (CDNs)
+ * through Common Media Client Data (CMCD) (CTA-5004)
+ *
+ * @category CMCD
+ * @category Source
+ * @public
+ *
+ * @deprecated Use {@link CmcdSourceConfiguration} instead.
+ */
+export type CmcdConfiguration = CmcdSourceConfiguration;
 
 /**
  * The CMCD transmission mode.
