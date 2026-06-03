@@ -87,6 +87,8 @@ export interface CmcdSourceConfiguration extends CmcdPlayerConfiguration {
    * When set to a truthy value, a UUIDv4 will be sent as a request id (`rid`) with every request to allow for request tracing.
    *
    * @platform web
+   *
+   * @remarks Request mode only
    */
   sendRequestID?: boolean;
 
@@ -95,6 +97,8 @@ export interface CmcdSourceConfiguration extends CmcdPlayerConfiguration {
    * to {@link CmcdTransmissionMode.JSON_OBJECT}.
    *
    * @platform web
+   *
+   * @remarks Request mode only
    */
   jsonObjectTargetURI?: string;
 
@@ -104,6 +108,8 @@ export interface CmcdSourceConfiguration extends CmcdPlayerConfiguration {
    * revisions to the specification. Clients SHOULD use a reverse-DNS syntax when defining their own prefix.
    *
    * @platform web
+   *
+   * @remarks Request mode only
    */
   customKeys?: {
     [key: string]: string | number | boolean;
@@ -111,6 +117,8 @@ export interface CmcdSourceConfiguration extends CmcdPlayerConfiguration {
 
   /**
    * The data transmission mode as defined in section 2 of the specification.
+   *
+   * @remarks Request mode only
    */
   transmissionMode: CmcdTransmissionMode
 }
