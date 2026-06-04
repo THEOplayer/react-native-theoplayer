@@ -23,6 +23,7 @@ import com.theoplayer.android.api.ads.theoads.TheoAdsLayoutOverride
 import com.theoplayer.android.api.cmcd.CMCDTransmissionMode
 import com.theoplayer.android.api.error.ErrorCode
 import com.theoplayer.android.api.source.AdIntegration
+import com.theoplayer.android.api.source.addescription.CustomAdDescriptionRegistry
 import com.theoplayer.android.api.source.dash.DashPlaybackConfiguration
 import com.theoplayer.android.api.theolive.PlayoutDelay
 import com.theoplayer.android.api.theolive.TheoLiveSource
@@ -73,6 +74,7 @@ private const val PROP_RETRIEVE_POD_ID_URI = "retrievePodIdURI"
 private const val PROP_INITIALIZATION_DELAY = "initializationDelay"
 private const val PROP_SSE_ENDPOINT = "sseEndpoint"
 private const val PROP_STREAM_ACTIVITY_MONITOR_ID = "streamActivityMonitorId"
+private const val PROP_BREAK_MANIFEST_URL = "breakManifestUrl"
 private const val PROP_LATENCY_CONFIGURATION = "latencyConfiguration"
 private const val PROP_PROFILE = "profile"
 private const val PROP_WEBRTC: String = "webrtc"
@@ -82,8 +84,8 @@ private const val PROP_PLAYOUT_DELAY_MAX: String = "maximum"
 
 private const val ERROR_IMA_NOT_ENABLED = "Google IMA support not enabled."
 private const val ERROR_THEOADS_NOT_ENABLED = "THEOads support not enabled."
-private const val ERROR_UNSUPPORTED_CSAI_INTEGRATION = "Unsupported CSAI integration"
-private const val ERROR_MISSING_CSAI_INTEGRATION = "Missing CSAI integration"
+private const val ERROR_UNSUPPORTED_AD_INTEGRATION = "Unsupported Ad integration"
+private const val ERROR_MISSING_AD_INTEGRATION = "Missing Ad integration"
 
 private const val PROP_SSAI_INTEGRATION_GOOGLE_DAI = "google-dai"
 
@@ -151,7 +153,9 @@ class SourceAdapter {
           val jsonAdDescription = jsonAds[i] as JSONObject
 
           // Currently only ima-ads are supported.
-          ads.add(parseAdFromJS(jsonAdDescription))
+          parseAdDescriptionFromJS(jsonAdDescription)?.let {
+            ads.add(it)
+          }
         }
       }
 
@@ -278,16 +282,6 @@ class SourceAdapter {
     }
   }
 
-  @Throws(THEOplayerException::class)
-  fun parseAdFromJS(map: ReadableMap): AdDescription? {
-    return try {
-      parseAdFromJS(JSONObject(gson.toJson(map.toHashMap())))
-    } catch (e: JSONException) {
-      e.printStackTrace()
-      null
-    }
-  }
-
   private fun parseSourceType(jsonTypedSource: JSONObject): SourceType? {
     val type = jsonTypedSource.optString(PROP_TYPE)
     if (type.isNotEmpty()) {
@@ -308,30 +302,39 @@ class SourceAdapter {
     return null
   }
 
+  @Throws(THEOplayerException::class)
+  fun parseAdDescriptionFromJS(map: ReadableMap): AdDescription? {
+    return try {
+      parseAdDescriptionFromJS(JSONObject(gson.toJson(map.toHashMap())))
+    } catch (e: JSONException) {
+      e.printStackTrace()
+      null
+    }
+  }
+
   @Throws(JSONException::class, THEOplayerException::class)
-  fun parseAdFromJS(jsonAdDescription: JSONObject): AdDescription {
+  fun parseAdDescriptionFromJS(jsonAdDescription: JSONObject): AdDescription? {
     val integrationStr = jsonAdDescription.optString(PROP_INTEGRATION)
     return if (!TextUtils.isEmpty(integrationStr)) {
       when (integrationStr) {
-        AdIntegration.GOOGLE_IMA.adIntegration -> parseImaAdFromJS(jsonAdDescription)
-        AdIntegration.THEO_ADS.adIntegration -> parseTheoAdFromJS(jsonAdDescription)
-        else -> {
-          throw THEOplayerException(
+        AdIntegration.GOOGLE_IMA.adIntegration -> parseImaAdDescriptionFromJS(jsonAdDescription)
+        AdIntegration.THEO_ADS.adIntegration -> parseTheoAdDescriptionFromJS(jsonAdDescription)
+        else ->
+          CustomAdDescriptionRegistry.deserialize(integrationStr, jsonAdDescription.toString()) ?: throw THEOplayerException(
             ErrorCode.AD_ERROR,
-            "$ERROR_UNSUPPORTED_CSAI_INTEGRATION: $integrationStr"
+            "$ERROR_UNSUPPORTED_AD_INTEGRATION: $integrationStr"
           )
-        }
       }
     } else {
       throw THEOplayerException(
         ErrorCode.AD_ERROR,
-        "$ERROR_MISSING_CSAI_INTEGRATION: $integrationStr"
+        "$ERROR_MISSING_AD_INTEGRATION: $integrationStr"
       )
     }
   }
 
   @Throws(THEOplayerException::class)
-  private fun parseImaAdFromJS(jsonAdDescription: JSONObject): GoogleImaAdDescription {
+  private fun parseImaAdDescriptionFromJS(jsonAdDescription: JSONObject): GoogleImaAdDescription {
     if (!BuildConfig.EXTENSION_GOOGLE_IMA) {
       throw THEOplayerException(ErrorCode.AD_ERROR, ERROR_IMA_NOT_ENABLED)
     }
@@ -349,7 +352,7 @@ class SourceAdapter {
   }
 
   @Throws(JSONException::class)
-  private fun parseTheoAdFromJS(jsonAdDescription: JSONObject): TheoAdDescription {
+  private fun parseTheoAdDescriptionFromJS(jsonAdDescription: JSONObject): TheoAdDescription {
     if (!BuildConfig.EXTENSION_THEOADS) {
       throw THEOplayerException(ErrorCode.AD_ERROR, ERROR_THEOADS_NOT_ENABLED)
     }
@@ -366,6 +369,7 @@ class SourceAdapter {
       initializationDelay = jsonAdDescription.optDouble(PROP_INITIALIZATION_DELAY).takeIf { it.isFinite() },
       sseEndpoint = jsonAdDescription.optString(PROP_SSE_ENDPOINT).takeIf { it.isNotEmpty() },
       streamActivityMonitorId = jsonAdDescription.optString(PROP_STREAM_ACTIVITY_MONITOR_ID).takeIf { it.isNotEmpty() },
+      breakManifestUrl = jsonAdDescription.optString(PROP_BREAK_MANIFEST_URL).takeIf { it.isNotEmpty() },
     )
   }
 
@@ -376,9 +380,9 @@ class SourceAdapter {
 
   private fun parseOverrideLayout(override: String?): TheoAdsLayoutOverride? {
     return when (override) {
-      "single", "single-if-mobile" -> return TheoAdsLayoutOverride.SINGLE
-      "l-shape" -> return TheoAdsLayoutOverride.LSHAPE
-      "double" -> return TheoAdsLayoutOverride.DOUBLE
+      "single", "single-if-mobile" -> TheoAdsLayoutOverride.SINGLE
+      "l-shape" -> TheoAdsLayoutOverride.LSHAPE
+      "double" -> TheoAdsLayoutOverride.DOUBLE
       else -> null
     }
   }
@@ -395,11 +399,11 @@ class SourceAdapter {
 
   private fun parseTextTrackKind(kind: String?): TextTrackKind? {
     return when (kind) {
-      "subtitles" -> return TextTrackKind.SUBTITLES
-      "metadata" -> return TextTrackKind.METADATA
-      "captions" -> return TextTrackKind.CAPTIONS
-      "chapters" -> return TextTrackKind.CHAPTERS
-      "descriptions" -> return TextTrackKind.DESCRIPTIONS
+      "subtitles" -> TextTrackKind.SUBTITLES
+      "metadata" -> TextTrackKind.METADATA
+      "captions" -> TextTrackKind.CAPTIONS
+      "chapters" -> TextTrackKind.CHAPTERS
+      "descriptions" -> TextTrackKind.DESCRIPTIONS
       else -> null
     }
   }

@@ -62,6 +62,7 @@ let SD_PROP_USE_ID3: String = "useId3"
 let SD_PROP_RETRIEVE_POD_ID_URI: String = "retrievePodIdURI"
 let SD_PROP_INITIALIZATION_DELAY: String = "initializationDelay"
 let SD_PROP_HLS_DATE_RANGE: String = "hlsDateRange"
+let SD_PROP_BREAK_MANIFEST_URL: String = "breakManifestUrl"
 let SD_PROP_CMCD: String = "cmcd"
 let SD_PROP_QUERY_PARAMETERS: String = "queryParameters"
 
@@ -90,7 +91,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
         guard let sourcesData = sourceData[SD_PROP_SOURCES] else {
             return (nil, nil)
         }
-        
+
 #if os(iOS)
         if let metadataData = sourceData[SD_PROP_METADATA] as? [String:Any],
            let cachingTaskId = metadataData[SD_PROP_METADATA_CACHINGTASK_ID] as? String {
@@ -164,7 +165,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
         if let metadataData = sourceData[SD_PROP_METADATA] as? [String:Any] {
             metadataDescription = THEOplayerRCTSourceDescriptionBuilder.buildMetaDataDescription(metadataData)
         }
-      
+
         // 6. configure CMCD
         let cmcd = sourceData[SD_PROP_CMCD] as? [String:Any]
         if cmcd != nil {
@@ -179,7 +180,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
                                  ads: adsDescriptions,
                                  poster: poster,
                                  metadata: metadataDescription)
-        
+
         return (sourceDescription, metadataAndChapterTrackDescriptions)
     }
 
@@ -193,7 +194,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
         let contentProtection = extractDrmConfiguration(from: typedSourceData)
         let integration = typedSourceData[SD_PROP_INTEGRATION] as? String
         let type = typedSourceData[SD_PROP_TYPE] as? String
-        
+
         if integration == "theolive" || type == "theolive" {
             return THEOplayerRCTSourceDescriptionBuilder.buildTHEOliveDescription(typedSourceData, contentProtection: contentProtection)
         }
@@ -247,7 +248,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
             let textTrackFormat = THEOplayerRCTSourceDescriptionBuilder.extractTextTrackFormat(textTracksData[SD_PROP_FORMAT] as? String)
             let textTrackPTS = textTracksData[SD_PROP_PTS] as? String
             let textTrackLocalTime = textTracksData[SD_PROP_LOCALTIME] as? String ?? "00:00:00.000"
-            
+
 #if canImport(THEOplayerConnectorSideloadedSubtitle)
             let ttDescription = SSTextTrackDescription(src: textTrackSrc,
                                                        srclang: textTrackSrcLang,
@@ -345,7 +346,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
      */
     static func buildContentProtection(_ contentProtectionData: [String:Any]) -> MultiplatformDRMConfiguration? {
         let customIntegrationId = contentProtectionData[SD_PROP_INTEGRATION] as? String ?? "internal"
-        
+
         // fairplay
         var fairplayKeySystem: THEOplayerSDK.KeySystemConfiguration? = nil
         if let fairplayData = contentProtectionData[SD_PROP_FAIRPLAY] as? [String:Any] {
@@ -363,7 +364,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
                     queryParameters[key] = "\(value)"
                 }
             }
-                
+
             fairplayKeySystem = KeySystemConfiguration(
                 licenseAcquisitionURL: licenseAcquisitionURL,
                 certificateURL: certificateUrl,
@@ -372,7 +373,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
                 queryParameters: queryParameters
             )
         }
-        
+
         // widevine
         var widevineKeySystem: THEOplayerSDK.KeySystemConfiguration? = nil
         if let widevineData = contentProtectionData[SD_PROP_WIDEVINE] as? [String:Any] {
@@ -390,7 +391,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
                     queryParameters[key] = "\(value)"
                 }
             }
-                
+
             widevineKeySystem = KeySystemConfiguration(
                 licenseAcquisitionURL: licenseAcquisitionURL,
                 certificateURL: certificateUrl,
@@ -399,7 +400,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
                 queryParameters: queryParameters
             )
         }
-        
+
         // global query parameters
         var queryParameters: [String: String] = [:]
         if let allQueryParams = contentProtectionData[SD_PROP_QUERY_PARAMETERS] as? [String:Any] {
@@ -408,7 +409,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
             }
         }
         let integrationParameters = contentProtectionData[SD_PROP_INTEGRATION_PARAMETERS] as? [String:Any] ?? [:]
-        
+
         return MultiplatformDRMConfiguration(
             customIntegrationId: customIntegrationId,
             integrationParameters: integrationParameters,

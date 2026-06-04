@@ -10,17 +10,8 @@ export class TheoLiveWebAdapter implements TheoLiveAPI {
   }
 
   get latencies(): Promise<HespLatencies> {
-    const webLatencies = this._player.hesp?.latencies;
-    if (webLatencies) {
-      return Promise.resolve({
-        engineLatency: webLatencies?.engine,
-        distributionLatency: webLatencies?.distribution,
-        playerLatency: webLatencies?.player,
-        theoliveLatency: webLatencies?.theolive,
-      });
-    } else {
-      return Promise.reject<HespLatencies>('latencies not available');
-    }
+    console.warn('The THEOlive latencies metrics are not available');
+    return Promise.resolve({});
   }
 
   set authToken(token: string) {

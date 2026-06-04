@@ -1,5 +1,6 @@
 import type { AdBreak } from './AdBreak';
 import type { CompanionAd } from 'theoplayer';
+import { AdIntegrationKind, CustomAdIntegrationKind } from '../source/ads/Ads';
 
 /**
  * Represents a VAST creative. It is either a linear or non-linear ad.
@@ -17,15 +18,12 @@ export interface Ad {
   adSystem: string | undefined;
 
   /**
-   * The integration of the ad, represented by a value from the following list:
-   * <br/> - `'theo'`
-   * <br/> - `'google-ima'`
-   * <br/> - `'google-dai'`
-   * <br/> - `'freewheel'`
+   * The integration of the ad, represented by a value from {@link AdIntegrationKind}
+   * or {@link CustomAdIntegrationKind | the identifier of a custom integration}.
    *
-   * @defaultValue `'theo'`
+   * @defaultValue `'csai'`
    */
-  integration?: string;
+  integration?: AdIntegrationKind | CustomAdIntegrationKind;
 
   /**
    * The type of the ad, represented by a value from the following list:
