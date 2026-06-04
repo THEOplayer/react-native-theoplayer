@@ -44,10 +44,8 @@ export interface AdSource {
 export interface AdDescription {
   /**
    * The integration of the ad break.
-   *
-   * @defaultValue `'csai'`
    */
-  integration?: AdIntegrationKind;
+  integration?: AdIntegrationKind | CustomAdIntegrationKind;
 
   /**
    * Whether the ad replaces playback of the content.
@@ -116,3 +114,10 @@ export enum AdIntegrationKind {
   csai = 'csai',
   theoads = 'theoads',
 }
+
+/**
+ * The identifier of a custom ad integration.
+ *
+ * @category Ads
+ */
+export type CustomAdIntegrationKind = string & {};

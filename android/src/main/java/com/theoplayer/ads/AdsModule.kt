@@ -45,7 +45,7 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
   fun schedule(tag: Int, ad: ReadableMap) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       try {
-        view?.adsApi?.schedule(sourceHelper.parseAdFromJS(ad))
+        view?.adsApi?.schedule(sourceHelper.parseAdDescriptionFromJS(ad))
       } catch (exception: THEOplayerException) {
         Log.e(NAME, exception.message ?: ERR_SCHEDULE_AD)
       }
