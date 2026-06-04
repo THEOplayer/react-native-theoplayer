@@ -50,7 +50,11 @@ extension THEOplayerRCTSourceDescriptionBuilder {
         let streamActivityMonitorId = adsData[SD_PROP_STREAM_ACTIVITY_MONITOR_ID_THEOADS] as? String
         let retrievePodIdURI = adsData[SD_PROP_RETRIEVE_POD_ID_URI] as? String
         let initializationDelay = adsData[SD_PROP_INITIALIZATION_DELAY] as? Double
-        
+        var breakManifestUrl: URL?
+        if let breakManifestUrlString = adsData[SD_PROP_BREAK_MANIFEST_URL] as? String {
+            breakManifestUrl = URL(string: breakManifestUrlString)
+        }
+
         return THEOAdDescription(networkCode: networkCode,
                                  customAssetKey: customAssetKey,
                                  backdropDoubleBox: backdropDoubleBox,
@@ -62,7 +66,8 @@ extension THEOplayerRCTSourceDescriptionBuilder {
                                  streamActivityMonitorId: streamActivityMonitorId,
                                  sseEndpoint: sseEndpoint,
                                  retrievePodIdURI: retrievePodIdURI,
-                                 initializationDelay: initializationDelay)
+                                 initializationDelay: initializationDelay,
+                                 breakManifestUrl: breakManifestUrl)
 #else
         return nil
 #endif
