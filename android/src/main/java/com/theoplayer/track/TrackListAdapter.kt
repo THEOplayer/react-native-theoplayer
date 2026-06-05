@@ -72,7 +72,7 @@ object TrackListAdapter {
     textTrackPayload.putBoolean(PROP_FORCED, textTrack.isForced)
 
     // THEOplayer v10.13+
-    textTrack.inBandMetadataTrackDispatchType?.let { textTrackPayload.putString(PROP_IN_BAND_METADATA_TRACK_DISPATCH_TYPE, it) }
+    textTrackPayload.putString(PROP_IN_BAND_METADATA_TRACK_DISPATCH_TYPE, textTrack.inBandMetadataTrackDispatchType ?: "")
     textTrack.captionChannel?.let { textTrackPayload.putInt(PROP_CAPTION_CHANNEL, it) }
 
     // Optionally pass cue list.
