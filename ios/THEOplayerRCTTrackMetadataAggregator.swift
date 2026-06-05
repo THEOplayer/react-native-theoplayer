@@ -313,6 +313,7 @@ class THEOplayerRCTTrackMetadataAggregator {
                     track[PROP_LABEL] = trackDescription.label ?? "no label"
                     track[PROP_TYPE] = "webvtt"
                     track[PROP_SRC] = trackDescription.src.absoluteString
+                    track[PROP_IN_BAND_METADATA_TRACK_DISPATCH_TYPE] = ""
                     var cueList: [[String:Any]] = []
                     var cueIndex = 0
                     for c in cues {
