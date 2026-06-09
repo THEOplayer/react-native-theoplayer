@@ -56,10 +56,12 @@ class THEOplayerRCTTrackMetadataAggregator {
     // MARK: TEXTTRACKS
     class func aggregatedTextTrackListInfo(textTracks: TextTrackList, metadataTracks: [[String:Any]], player: THEOplayer) -> [[String:Any]] {
         var trackEntries:[[String:Any]] = metadataTracks
-        guard textTracks.count > 0 else {
+        let textTrackCount = textTracks.count
+        guard textTrackCount > 0 else {
             return trackEntries
         }
-        for i in 0...textTracks.count-1 {
+        for i in 0..<textTrackCount {
+            guard i < textTracks.count else { break }
             let textTrack: TextTrack = textTracks.get(i)
             trackEntries.append(THEOplayerRCTTrackMetadataAggregator.aggregatedTextTrackInfo(textTrack: textTrack, player: player))
         }
@@ -90,10 +92,12 @@ class THEOplayerRCTTrackMetadataAggregator {
     }
     
     private class func selectedTextTrack(textTracks: TextTrackList) -> Int {
-        guard textTracks.count > 0 else {
+        let textTrackCount = textTracks.count
+        guard textTrackCount > 0 else {
             return 0
         }
-        for i in 0...textTracks.count-1 {
+        for i in 0..<textTrackCount {
+            guard i < textTracks.count else { break }
             let textTrack: TextTrack = textTracks.get(i)
             if textTrack.mode == TextTrackMode.showing {
                 return textTrack.uid
@@ -160,10 +164,12 @@ class THEOplayerRCTTrackMetadataAggregator {
     // MARK: AUDIOTRACKS
     private class func aggregatedAudioTrackListInfo(audioTracks: AudioTrackList) -> [[String:Any]] {
         var audioTrackEntries:[[String:Any]] = []
-        guard audioTracks.count > 0 else {
+        let audioTrackCount = audioTracks.count
+        guard audioTrackCount > 0 else {
             return audioTrackEntries
         }
-        for i in 0...audioTracks.count-1 {
+        for i in 0..<audioTrackCount {
+            guard i < audioTracks.count else { break }
             let audioTrack: MediaTrack = audioTracks.get(i) // should be casted to AudioTrack
             audioTrackEntries.append(THEOplayerRCTTrackMetadataAggregator.aggregatedAudioTrackInfo(audioTrack: audioTrack))
         }
@@ -181,7 +187,9 @@ class THEOplayerRCTTrackMetadataAggregator {
         entry[PROP_ENABLED] = audioTrack.enabled
         
         // add known qualities
-        entry[PROP_QUALITIES] = (0..<audioTrack.qualities.count).map { index in
+        let audioQualityCount = audioTrack.qualities.count
+        entry[PROP_QUALITIES] = (0..<audioQualityCount).compactMap { index -> [String:Any]? in
+            guard index < audioTrack.qualities.count else { return nil }
             return THEOplayerRCTTrackMetadataAggregator.aggregatedQualityInfo(quality: audioTrack.qualities.get(index))
         }
         
@@ -193,10 +201,12 @@ class THEOplayerRCTTrackMetadataAggregator {
     }
     
     private class func selectedAudioTrack(audioTracks: AudioTrackList) -> Int {
-        guard audioTracks.count > 0 else {
+        let audioTrackCount = audioTracks.count
+        guard audioTrackCount > 0 else {
             return 0
         }
-        for i in 0...audioTracks.count-1 {
+        for i in 0..<audioTrackCount {
+            guard i < audioTracks.count else { break }
             let audioTrack: MediaTrack = audioTracks.get(i)
             if audioTrack.enabled {
                 return audioTrack.uid
@@ -208,10 +218,12 @@ class THEOplayerRCTTrackMetadataAggregator {
     // MARK: VIDEOTRACKS
     private class func aggregatedVideoTrackListInfo(videoTracks: VideoTrackList) -> [[String:Any]] {
         var videoTrackEntries:[[String:Any]] = []
-        guard videoTracks.count > 0 else {
+        let videoTrackCount = videoTracks.count
+        guard videoTrackCount > 0 else {
             return videoTrackEntries
         }
-        for i in 0...videoTracks.count-1 {
+        for i in 0..<videoTrackCount {
+            guard i < videoTracks.count else { break }
             if let videoTrack: VideoTrack = videoTracks.get(i) as? VideoTrack {
                 videoTrackEntries.append(THEOplayerRCTTrackMetadataAggregator.aggregatedVideoTrackInfo(videoTrack: videoTrack))
             }
@@ -230,7 +242,9 @@ class THEOplayerRCTTrackMetadataAggregator {
         entry[PROP_ENABLED] = videoTrack.enabled
         
         // add known qualities
-        entry[PROP_QUALITIES] = (0..<videoTrack.qualities.count).map { index in
+        let videoQualityCount = videoTrack.qualities.count
+        entry[PROP_QUALITIES] = (0..<videoQualityCount).compactMap { index -> [String:Any]? in
+            guard index < videoTrack.qualities.count else { return nil }
             return THEOplayerRCTTrackMetadataAggregator.aggregatedQualityInfo(quality: videoTrack.qualities.get(index))
         }
         
@@ -243,12 +257,14 @@ class THEOplayerRCTTrackMetadataAggregator {
     }
 
     private class func selectedVideoTrack(videoTracks: VideoTrackList) -> Int {
-        guard videoTracks.count > 0 else {
+        let videoTrackCount = videoTracks.count
+        guard videoTrackCount > 0 else {
             return 0
         }
-        for i in 0...videoTracks.count-1 {
+        for i in 0..<videoTrackCount {
+            guard i < videoTracks.count else { break }
             let videoTrack: MediaTrack = videoTracks.get(i)
-            if videoTracks.get(i).enabled {
+            if videoTrack.enabled {
                 return videoTrack.uid
             }
         }

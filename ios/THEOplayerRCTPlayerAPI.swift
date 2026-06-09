@@ -281,11 +281,13 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                let player = theView.player {
                 let uidValue = uid.intValue
                 let textTracks: TextTrackList = player.textTracks
-                guard textTracks.count > 0 else {
+                let textTrackCount = textTracks.count
+                guard textTrackCount > 0 else {
                     return
                 }
                 if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Showing textTrack \(uidValue) on TheoPlayer") }
-                for i in 0...textTracks.count-1 {
+                for i in 0..<textTrackCount {
+                    guard i < textTracks.count else { break }
                     let textTrack: TextTrack = textTracks.get(i)
                     if textTrack.uid == uidValue {
                         textTrack.mode = TextTrackMode.showing
@@ -304,11 +306,13 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                let player = theView.player {
                 let uidValue = uid.intValue
                 let audioTracks: AudioTrackList = player.audioTracks
-                guard audioTracks.count > 0 else {
+                let audioTrackCount = audioTracks.count
+                guard audioTrackCount > 0 else {
                     return
                 }
                 if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Enabling audioTrack \(uidValue) on TheoPlayer") }
-                for i in 0...audioTracks.count-1 {
+                for i in 0..<audioTrackCount {
+                    guard i < audioTracks.count else { break }
                     let audioTrack: MediaTrack = audioTracks.get(i)
                     audioTrack.enabled = (audioTrack.uid == uidValue)
                 }
@@ -323,11 +327,13 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                let player = theView.player {
                 let uidValue = uid.intValue
                 let videoTracks: VideoTrackList = player.videoTracks
-                guard videoTracks.count > 0 else {
+                let videoTrackCount = videoTracks.count
+                guard videoTrackCount > 0 else {
                     return
                 }
                 if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Enabling videoTrack \(uidValue) on TheoPlayer") }
-                for i in 0...videoTracks.count-1 {
+                for i in 0..<videoTrackCount {
+                    guard i < videoTracks.count else { break }
                     let videoTrack: MediaTrack = videoTracks.get(i)
                     videoTrack.enabled = (videoTrack.uid == uidValue)
                 }
