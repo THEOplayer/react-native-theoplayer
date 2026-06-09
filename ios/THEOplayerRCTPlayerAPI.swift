@@ -360,6 +360,12 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                     }
                 }
                 if let foundTrack = activeVideoTrack {
+                    let requestedBandwidths = Set(uids.map { $0.intValue })
+                    let currentBandwidths = Set(foundTrack.targetQualities?.map { $0.bandwidth } ?? [])
+                    guard requestedBandwidths != currentBandwidths else {
+                        if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] targetQualities: \(uids) already set on active videotrack. Skipping update.") }
+                        return
+                    }
                     let qualityCount = foundTrack.qualities.count
                     let matchingQualities = (0..<qualityCount).compactMap { index -> Quality? in
                         guard index < foundTrack.qualities.count else { return nil }
