@@ -369,9 +369,9 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                     foundTrack.targetQualities = matchingQualities.isEmpty ? nil : matchingQualities
                     if DEBUG_PLAYER_API {
                         if matchingQualities.count > 0 {
-                            if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] targetQualities: \(uids) set on active videotrack. (matching: \(matchingQualities.map(\.bandwidth)))") }
+                            PrintUtils.printLog(logText: "[NATIVE] targetQualities: \(uids) set on active videotrack. (matching: \(matchingQualities.map(\.bandwidth)))")
                         } else {
-                            if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] targetQualities: \(uids) set on active videotrack. (no match or empty) => no quality restriction.") }
+                            PrintUtils.printLog(logText: "[NATIVE] targetQualities: \(uids) set on active videotrack. (no match or empty) => no quality restriction.")
                         }
                     }
                 }
