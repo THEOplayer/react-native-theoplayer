@@ -281,11 +281,13 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                let player = theView.player {
                 let uidValue = uid.intValue
                 let textTracks: TextTrackList = player.textTracks
-                guard textTracks.count > 0 else {
+                let textTrackCount = textTracks.count
+                guard textTrackCount > 0 else {
                     return
                 }
                 if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Showing textTrack \(uidValue) on TheoPlayer") }
-                for i in 0...textTracks.count-1 {
+                for i in 0..<textTrackCount {
+                    guard i < textTracks.count else { break }
                     let textTrack: TextTrack = textTracks.get(i)
                     if textTrack.uid == uidValue {
                         textTrack.mode = TextTrackMode.showing
@@ -304,11 +306,13 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                let player = theView.player {
                 let uidValue = uid.intValue
                 let audioTracks: AudioTrackList = player.audioTracks
-                guard audioTracks.count > 0 else {
+                let audioTrackCount = audioTracks.count
+                guard audioTrackCount > 0 else {
                     return
                 }
                 if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Enabling audioTrack \(uidValue) on TheoPlayer") }
-                for i in 0...audioTracks.count-1 {
+                for i in 0..<audioTrackCount {
+                    guard i < audioTracks.count else { break }
                     let audioTrack: MediaTrack = audioTracks.get(i)
                     audioTrack.enabled = (audioTrack.uid == uidValue)
                 }
@@ -323,11 +327,13 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                let player = theView.player {
                 let uidValue = uid.intValue
                 let videoTracks: VideoTrackList = player.videoTracks
-                guard videoTracks.count > 0 else {
+                let videoTrackCount = videoTracks.count
+                guard videoTrackCount > 0 else {
                     return
                 }
                 if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Enabling videoTrack \(uidValue) on TheoPlayer") }
-                for i in 0...videoTracks.count-1 {
+                for i in 0..<videoTrackCount {
+                    guard i < videoTracks.count else { break }
                     let videoTrack: MediaTrack = videoTracks.get(i)
                     videoTrack.enabled = (videoTrack.uid == uidValue)
                 }
@@ -341,27 +347,37 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
             if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
                let player = theView.player {
                 let videoTracks: VideoTrackList = player.videoTracks
-                guard videoTracks.count > 0 else {
+                let videoTrackCount = videoTracks.count
+                guard videoTrackCount > 0 else {
                     return
                 }
                 var activeVideoTrack: VideoTrack?
-                for i in 0...videoTracks.count-1 {
+                for i in 0..<videoTrackCount {
+                    guard i < videoTracks.count else { break }
                     let videoTrack: MediaTrack = videoTracks.get(i)
                     if videoTrack.enabled {
                         activeVideoTrack = videoTrack as? VideoTrack
                     }
                 }
                 if let foundTrack = activeVideoTrack {
-                    let matchingQualities = (0..<foundTrack.qualities.count).compactMap { index in
-                        let quality = foundTrack.qualities.get(index)
-                        return uids.contains { $0.intValue == quality.bandwidth } ? quality : nil
+                    let requestedBandwidths = Set(uids.map { $0.intValue })
+                    let currentBandwidths = Set(foundTrack.targetQualities?.map { $0.bandwidth } ?? [])
+                    guard requestedBandwidths != currentBandwidths else {
+                        if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] targetQualities: \(uids) already set on active videotrack. Skipping update.") }
+                        return
                     }
-                    foundTrack.targetQualities = matchingQualities.count > 0 ? matchingQualities : nil
+                    let qualityCount = foundTrack.qualities.count
+                    let matchingQualities = (0..<qualityCount).compactMap { index -> Quality? in
+                        guard index < foundTrack.qualities.count else { return nil }
+                        let quality = foundTrack.qualities.get(index)
+                        return uids.contains(where: { $0.intValue == quality.bandwidth }) ? quality : nil
+                    }
+                    foundTrack.targetQualities = matchingQualities.isEmpty ? nil : matchingQualities
                     if DEBUG_PLAYER_API {
                         if matchingQualities.count > 0 {
-                            if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] targetQualities: \(uids) set on active videotrack. (matching: \(matchingQualities.map(\.bandwidth)))") }
+                            PrintUtils.printLog(logText: "[NATIVE] targetQualities: \(uids) set on active videotrack. (matching: \(matchingQualities.map(\.bandwidth)))")
                         } else {
-                            if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] targetQualities: \(uids) set on active videotrack. (no match or empty) => no quality restriction.") }
+                            PrintUtils.printLog(logText: "[NATIVE] targetQualities: \(uids) set on active videotrack. (no match or empty) => no quality restriction.")
                         }
                     }
                 }
