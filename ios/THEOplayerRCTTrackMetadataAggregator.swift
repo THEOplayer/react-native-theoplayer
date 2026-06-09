@@ -290,7 +290,7 @@ class THEOplayerRCTTrackMetadataAggregator {
             "bandwidth": quality.bandwidth,
             "codecs": "",
             "id": identifier,
-            "uid": identifier,
+            "uid": quality.bandwidth,
             "name": label,
             "label": label,
             "available": true,
