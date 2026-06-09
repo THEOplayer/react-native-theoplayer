@@ -341,22 +341,26 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
             if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
                let player = theView.player {
                 let videoTracks: VideoTrackList = player.videoTracks
-                guard videoTracks.count > 0 else {
+                let videoTrackCount = videoTracks.count
+                guard videoTrackCount > 0 else {
                     return
                 }
                 var activeVideoTrack: VideoTrack?
-                for i in 0...videoTracks.count-1 {
+                for i in 0..<videoTrackCount {
+                    guard i < videoTracks.count else { break }
                     let videoTrack: MediaTrack = videoTracks.get(i)
                     if videoTrack.enabled {
                         activeVideoTrack = videoTrack as? VideoTrack
                     }
                 }
                 if let foundTrack = activeVideoTrack {
-                    let matchingQualities = (0..<foundTrack.qualities.count).compactMap { index in
+                    let qualityCount = foundTrack.qualities.count
+                    let matchingQualities = (0..<qualityCount).compactMap { index -> Quality? in
+                        guard index < foundTrack.qualities.count else { return nil }
                         let quality = foundTrack.qualities.get(index)
-                        return uids.contains { $0.intValue == quality.bandwidth } ? quality : nil
+                        return uids.contains(where: { $0.intValue == quality.bandwidth }) ? quality : nil
                     }
-                    foundTrack.targetQualities = matchingQualities.count > 0 ? matchingQualities : nil
+                    foundTrack.targetQualities = matchingQualities.isEmpty ? nil : matchingQualities
                     if DEBUG_PLAYER_API {
                         if matchingQualities.count > 0 {
                             if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] targetQualities: \(uids) set on active videotrack. (matching: \(matchingQualities.map(\.bandwidth)))") }
