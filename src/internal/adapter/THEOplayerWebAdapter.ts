@@ -385,6 +385,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     this.dispatchEvent(new BaseEvent(PlayerEventType.DESTROY));
     this._eventForwarder?.unload();
     this._mediaSession?.destroy();
+    this._presentationModeManager?.destroy();
     document.removeEventListener('visibilitychange', this.onVisibilityChange);
     this._eventForwarder = undefined;
     this._mediaSession = undefined;
@@ -393,6 +394,12 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     this._player?.removeEventListener('dimensionchange', this.onPlayerDimensionChange);
     this._player?.destroy();
     this._player = undefined;
+
+    // @ts-ignore
+    if (typeof window !== 'undefined' && window.__onGCastApiAvailable) {
+      // @ts-ignore
+      window.__onGCastApiAvailable = undefined;
+    }
   }
 
   private readonly onVisibilityChange = () => {
