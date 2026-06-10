@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-- Fixed a copy-paste bug on Android where `setSessionId` in `PlayerConfigAdapter` was incorrectly reading the PPID value instead of the session ID.
+- Fixed an issue on Android where `GoogleImaConfiguration.sessionId` was not properly passed.
 
 ## [11.2.1] - 26-06-09
 
