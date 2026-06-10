@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Added basic support for CMCD event mode reporting of DRM and ad events.
+- Added bridging of the `hlsDateRange` property from `PlayerConfiguration` to Android's `THEOplayerConfig`.
 
 ### Fixed
 
