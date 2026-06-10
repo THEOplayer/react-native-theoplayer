@@ -155,7 +155,7 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
         // The session ID to identify a single user session. This should be a UUID. It
         // is used exclusively for frequency capping across the user session.
         if (hasKey(PROP_SESSION_ID)) {
-          setSessionId(getString(PROP_PPID) ?: "")
+          setSessionId(getString(PROP_SESSION_ID) ?: "")
         }
         // Toggles debug mode which will output detailed log information to the console.
         if (hasKey(PROP_ENABLE_DEBUG_MODE)) {
