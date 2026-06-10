@@ -44,6 +44,7 @@ private const val PROP_THEOLIVE_CONFIG = "theoLive"
 private const val PROP_THEOLIVE_EXTERNAL_SESSION_ID = "externalSessionId"
 private const val PROP_THEOLIVE_ANALYTICS_DISABLED = "analyticsDisabled"
 private const val PROP_THEOLIVE_DISCOVERY_URL = "discoveryUrl"
+private const val PROP_HLS_DATERANGE = "hlsDateRange"
 private const val PROP_MULTIMEDIA_TUNNELING_ENABLED = "tunnelingEnabled"
 private const val PROP_DEBUG_LOGS_ENABLED = "debugLogsEnabled"
 private const val PROP_SYSTEM_CAPTION_STYLE = "useSystemCaptionStyle"
@@ -89,6 +90,9 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
         pip(PipConfiguration.Builder().build())
         // Opt-out for auto-integrations for now
         autoIntegrations(false)
+        if (hasKey(PROP_HLS_DATERANGE)) {
+          hlsDateRange(getBoolean(PROP_HLS_DATERANGE))
+        }
         if (hasKey(PROP_MULTIMEDIA_TUNNELING_ENABLED)) {
           tunnelingEnabled(getBoolean(PROP_MULTIMEDIA_TUNNELING_ENABLED))
         }
