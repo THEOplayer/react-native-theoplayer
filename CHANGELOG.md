@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Added Android support for `ABRConfiguration.preferredMaximumResolution`, mirroring the existing iOS behaviour. Set to `(0,0)` to remove the cap.
+
 ## [11.2.1] - 26-06-09
 
 ### Fixed

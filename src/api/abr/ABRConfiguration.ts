@@ -126,9 +126,9 @@ export interface ABRConfiguration {
    * A preferred upper limit on the resolution of the video to be downloaded (or otherwise transferred) and rendered by the player.
    *
    * The default value is (0,0), which indicates that the client enforces no limit on video resolution. Other values indicate a preferred maximum video resolution.
-   * It only applies to HTTP Live Streaming asset.
+   * It only applies to Live Streaming asset.
    *
-   * @platform ios
+   * @platform ios,android
    */
   preferredMaximumResolution?: Resolution;
 }

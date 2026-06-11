@@ -39,6 +39,7 @@ on the chosen strategy, as well as various parameters of the playback buffer.
 | `targetBuffer`         | The amount that the player should buffer ahead of the current playback position, in seconds. Default is **20**s.                                                | Android & Web       |
 | `bufferLookbackWindow` | The amount of data which the player should keep in its buffer before the current playback position, in seconds. Default is **30**s.                             | Web                 |
 | `maxBufferLength`      | The maximum length of the player's buffer, in seconds.                                                                                                          | Web                 |                 |
+| `preferredMaximumResolution` | A preferred upper limit on the resolution of the video to be downloaded. `(0,0)` (the default) removes the cap.                                           | Android & iOS       |
 
 When specifying the strategy, apart from the values `'performance'`, `'quality'`, `'bandwidth'`,
 an `ABRStrategyConfiguration`
@@ -52,6 +53,13 @@ const strategyConfig: ABRStrategyConfiguration = {
   }
 }
 player.abr.strategy = strategyConfig;
+```
+
+To cap the resolution of the variant the player downloads, set `preferredMaximumResolution` to a `Resolution` (`{width, height}`).
+Pass `(0, 0)` to remove the cap.
+
+```typescript
+player.abr.preferredMaximumResolution = { width: 1280, height: 720 };
 ```
 
 ## Setting Target Video Quality
