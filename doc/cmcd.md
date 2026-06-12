@@ -83,7 +83,7 @@ player.source = {
   /* ... */
   cmcd: {
     externalSessionId: 'YOUR-EXTERNAL-SESSION-ID', // optional
-    sessionId: 'YOUR-SESSION-ID', // optional
+    sessionID: 'YOUR-SESSION-ID', // optional
     userId: 'YOUR-USER-ID', // optional
     eventEndpoints: [{ url: 'https://example.com/cmcd-event-other-endpoint' }],
   },
