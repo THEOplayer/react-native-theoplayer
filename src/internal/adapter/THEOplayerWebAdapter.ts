@@ -102,6 +102,8 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
       if (requestModeEnabled) {
         this._cmcdConnector ??= createCMCDConnector(this._player);
         this._cmcdConnector?.reconfigure(this.toWebCmcdConfiguration(source?.cmcd));
+      } else {
+        this._cmcdConnector?.reconfigure(undefined);
       }
     }
   }
