@@ -95,7 +95,9 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   set source(source: SourceDescription | undefined) {
     this._targetVideoQuality = undefined;
     if (this._player) {
-      this._player.source = source as NativeSourceDescription;
+      this._player.source = (
+        source?.cmcd ? { ...source, cmcd: { ...source.cmcd, sessionId: source.cmcd.sessionID } } : source
+      ) as NativeSourceDescription;
       const requestModeEnabled = source?.cmcd?.transmissionMode !== undefined;
       if (requestModeEnabled) {
         this._cmcdConnector ??= createCMCDConnector(this._player);

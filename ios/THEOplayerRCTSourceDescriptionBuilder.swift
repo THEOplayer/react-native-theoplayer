@@ -193,7 +193,7 @@ class THEOplayerRCTSourceDescriptionBuilder {
     // MARK: Private build methods
 
     private static func buildCmcdSourceConfiguration(_ cmcdData: [String:Any]) -> CMCDSourceConfiguration? {
-        let sessionId = cmcdData["sessionId"] as? String
+        let sessionId = cmcdData["sessionID"] as? String
         let externalSessionId = cmcdData["externalSessionId"] as? String
         let userId = cmcdData["userId"] as? String
         let endpoints: [CMCDEndpointConfiguration]? = (cmcdData["eventEndpoints"] as? [[String: Any]])?.compactMap { dict in

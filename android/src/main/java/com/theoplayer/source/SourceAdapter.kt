@@ -96,7 +96,7 @@ private const val TYPE_MILLICAST = "millicast"
 
 private const val PROP_CMCD = "cmcd"
 private const val CMCD_TRANSMISSION_MODE = "transmissionMode"
-private const val CMCD_SESSION_ID = "sessionId"
+private const val CMCD_SESSION_ID = "sessionID"
 private const val CMCD_EXTERNAL_SESSION_ID = "externalSessionId"
 private const val CMCD_USER_ID = "userId"
 private const val CMCD_EVENT_ENDPOINTS = "eventEndpoints"
