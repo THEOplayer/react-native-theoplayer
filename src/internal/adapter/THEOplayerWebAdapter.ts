@@ -395,6 +395,9 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     this._player?.destroy();
     this._player = undefined;
 
+    // We clear this global always. If there are two players on the same page,
+    // this can also clear the callback of the other player. This is fine,
+    // because using Cast with multiple players on web is not supported.
     // @ts-ignore
     if (typeof window !== 'undefined' && window.__onGCastApiAvailable) {
       // @ts-ignore
