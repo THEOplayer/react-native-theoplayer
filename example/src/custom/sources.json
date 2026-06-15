@@ -325,6 +325,35 @@
     }
   },
   {
+    "name": "HLS - CSAI - Google IMA - two pre-rolls (PiP repro)",
+    "os": ["ios", "web"],
+    "source": {
+      "sources": [
+        {
+          "src": "https://cdn.theoplayer.com/video/elephants-dream/playlistCorrectionENG.m3u8",
+          "type": "application/x-mpegurl"
+        }
+      ],
+      "ads": [
+        {
+          "integration": "google-ima",
+          "sources": "https://cdn.theoplayer.com/demos/ads/vast/dfp-preroll-no-skip.xml",
+          "timeOffset": "start"
+        },
+        {
+          "integration": "google-ima",
+          "sources": "https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_ad_samples&sz=640x480&cust_params=sample_ct%3Dlinear&ciu_szs=300x250&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator=",
+          "timeOffset": "start"
+        }
+      ],
+      "poster": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-1200x675.png",
+      "metadata": {
+        "title": "Elephants Dream with two prerolls",
+        "artist": "THEOplayer"
+      }
+    }
+  },
+  {
     "name": "HLS - SGAI (THEOads)",
     "os": ["web"],
     "source": {
