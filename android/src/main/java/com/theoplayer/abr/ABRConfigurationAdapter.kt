@@ -1,5 +1,6 @@
 package com.theoplayer.abr
 
+import android.util.Size
 import com.facebook.react.bridge.ReadableMap
 import com.theoplayer.android.api.abr.AbrStrategyConfiguration
 import com.theoplayer.android.api.abr.AbrStrategyMetadata
@@ -12,6 +13,9 @@ object ABRConfigurationAdapter {
   private const val PROP_METADATA = "metadata"
   private const val PROP_TYPE = "type"
   private const val PROP_BITRATE = "bitrate"
+  private const val PROP_PREFERRED_MAXIMUM_RESOLUTION = "preferredMaximumResolution"
+  private const val PROP_WIDTH = "width"
+  private const val PROP_HEIGHT = "height"
 
   fun applyABRConfigurationFromProps(player: Player?, abrProps: ReadableMap?) {
     if (abrProps == null || player == null) {
@@ -19,6 +23,11 @@ object ABRConfigurationAdapter {
     }
     if (abrProps.hasKey(PROP_TARGET_BUFFER)) {
       player.abr.targetBuffer = abrProps.getInt(PROP_TARGET_BUFFER)
+    }
+    // (0,0) is the documented sentinel for "no cap" and maps to a null Size on the native SDK.
+    val preferredMaximumResolutionProps = abrProps.getMap(PROP_PREFERRED_MAXIMUM_RESOLUTION)
+    if (preferredMaximumResolutionProps != null) {
+      player.abr.preferredMaximumResolution = preferredMaximumResolutionFromProps(preferredMaximumResolutionProps)
     }
     // Strategy can be either a string or an object
     try {
@@ -48,6 +57,18 @@ object ABRConfigurationAdapter {
       }
     } catch (_: Exception) {
     }
+  }
+
+  private fun preferredMaximumResolutionFromProps(props: ReadableMap?): Size? {
+    if (props == null || !props.hasKey(PROP_WIDTH) || !props.hasKey(PROP_HEIGHT)) {
+      return null
+    }
+    val width = props.getDouble(PROP_WIDTH).toInt()
+    val height = props.getDouble(PROP_HEIGHT).toInt()
+    if (width <= 0 || height <= 0) {
+      return null
+    }
+    return Size(width, height)
   }
 
   private fun abrMetadataFromProps(props: ReadableMap?): AbrStrategyMetadata? {

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+- Added Android support for `ABRConfiguration.preferredMaximumResolution`, mirroring the existing iOS behaviour. Set to `(0,0)` to remove the cap.
 - Added basic support for CMCD event mode reporting of DRM and ad events.
 - Added bridging of the `hlsDateRange` property from `PlayerConfiguration` to Android's `THEOplayerConfig`.
 
