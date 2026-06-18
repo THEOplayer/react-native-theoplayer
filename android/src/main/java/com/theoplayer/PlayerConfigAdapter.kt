@@ -44,6 +44,7 @@ private const val PROP_THEOLIVE_CONFIG = "theoLive"
 private const val PROP_THEOLIVE_EXTERNAL_SESSION_ID = "externalSessionId"
 private const val PROP_THEOLIVE_ANALYTICS_DISABLED = "analyticsDisabled"
 private const val PROP_THEOLIVE_DISCOVERY_URL = "discoveryUrl"
+private const val PROP_HLS_DATERANGE = "hlsDateRange"
 private const val PROP_MULTIMEDIA_TUNNELING_ENABLED = "tunnelingEnabled"
 private const val PROP_DEBUG_LOGS_ENABLED = "debugLogsEnabled"
 private const val PROP_SYSTEM_CAPTION_STYLE = "useSystemCaptionStyle"
@@ -89,6 +90,9 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
         pip(PipConfiguration.Builder().build())
         // Opt-out for auto-integrations for now
         autoIntegrations(false)
+        if (hasKey(PROP_HLS_DATERANGE)) {
+          hlsDateRange(getBoolean(PROP_HLS_DATERANGE))
+        }
         if (hasKey(PROP_MULTIMEDIA_TUNNELING_ENABLED)) {
           tunnelingEnabled(getBoolean(PROP_MULTIMEDIA_TUNNELING_ENABLED))
         }
@@ -165,7 +169,7 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
         // The session ID to identify a single user session. This should be a UUID. It
         // is used exclusively for frequency capping across the user session.
         if (hasKey(PROP_SESSION_ID)) {
-          setSessionId(getString(PROP_SESSION_ID) ?: "")
+          setSessionId(getString(PROP_PPID) ?: "")
         }
         // Toggles debug mode which will output detailed log information to the console.
         if (hasKey(PROP_ENABLE_DEBUG_MODE)) {
