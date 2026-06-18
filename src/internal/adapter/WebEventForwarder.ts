@@ -43,11 +43,10 @@ import {
   TimeRange,
   TrackListEventType,
 } from 'react-native-theoplayer';
-import type { Ad } from '../../api/ads/Ad';
-import type { AdBreak } from '../../api/ads/AdBreak';
 import type { THEOplayerWebAdapter } from './THEOplayerWebAdapter';
 import { BaseEvent } from './event/BaseEvent';
 import {
+  DefaultAdErrorEvent,
   DefaultAdEvent,
   DefaultAirplayStateChangeEvent,
   DefaultChromecastChangeEvent,
@@ -374,13 +373,18 @@ export class WebEventForwarder {
   };
 
   private readonly onAdEvent = (event: ForwardedAdEvent) => {
-    const castedEvent = event as NativeAdEvent<string>;
-    this._facade.dispatchEvent(new DefaultAdEvent(event.type as AdEventType, castedEvent.ad as unknown as Ad));
+    const ad = (event as NativeAdEvent<string>).ad;
+    if (event.type === AdEventType.AD_ERROR) {
+      const { message } = event as unknown as { message: string | undefined };
+      this._facade.dispatchEvent(new DefaultAdErrorEvent(ad, message));
+    } else {
+      this._facade.dispatchEvent(new DefaultAdEvent(event.type as AdEventType, ad));
+    }
   };
 
   private readonly onAdBreakEvent = (event: ForwardedAdBreakEvent) => {
     const castedEvent = event as NativeAdBreakEvent<string>;
-    this._facade.dispatchEvent(new DefaultAdEvent(event.type as AdEventType, castedEvent.adBreak as unknown as AdBreak));
+    this._facade.dispatchEvent(new DefaultAdEvent(event.type as AdEventType, castedEvent.adBreak));
   };
 
   private readonly onTheoAdsEvent = (event: ForwardedTheoAdsEvent) => {

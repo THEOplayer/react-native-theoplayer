@@ -2,6 +2,7 @@ import { BaseEvent } from './BaseEvent';
 import {
   Ad,
   AdBreak,
+  AdErrorEvent,
   AdEvent,
   AdEventType,
   AirplayStateChangeEvent,
@@ -41,6 +42,7 @@ import {
   TheoAdsErrorEvent,
   TheoAdsEvent,
   TheoAdsEventType,
+  TheoLiveDistribution,
   TheoLiveDistributionEvent,
   TheoLiveDistributionLoadedEvent,
   TheoLiveEndpoint,
@@ -55,7 +57,6 @@ import {
   VideoResizeEvent,
   VolumeChangeEvent,
 } from 'react-native-theoplayer';
-import { TheoLiveDistribution } from '../../../api/theolive/TheoLiveDistribution';
 
 export class DefaultCurrentSourceChangeEvent extends BaseEvent<PlayerEventType.CURRENT_SOURCE_CHANGE> implements CurrentSourceChangeEvent {
   constructor(public readonly currentSource: TypedSource | undefined) {
@@ -222,6 +223,16 @@ export class DefaultAdEvent extends BaseEvent<PlayerEventType.AD_EVENT> implemen
   constructor(
     public subType: AdEventType,
     public ad: Ad | AdBreak,
+  ) {
+    super(PlayerEventType.AD_EVENT);
+  }
+}
+
+export class DefaultAdErrorEvent extends BaseEvent<PlayerEventType.AD_EVENT> implements AdErrorEvent {
+  public subType: AdEventType = AdEventType.AD_ERROR;
+  constructor(
+    public ad: Ad | AdBreak,
+    public message: string | undefined,
   ) {
     super(PlayerEventType.AD_EVENT);
   }
