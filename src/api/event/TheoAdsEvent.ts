@@ -29,7 +29,7 @@ export interface TheoAdsEvent extends Event<PlayerEventType.THEOADS_EVENT> {
  */
 export interface TheoAdsErrorEvent extends TheoAdsEvent {
   /**
-   * Type of THEOads event.
+   * Error message.
    */
   message: string | undefined;
 }

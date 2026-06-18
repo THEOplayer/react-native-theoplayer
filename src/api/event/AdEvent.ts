@@ -21,6 +21,20 @@ export interface AdEvent extends Event<PlayerEventType.AD_EVENT> {
 }
 
 /**
+ * The event dispatched when an ad error occurs.
+ *
+ * @category Ads
+ * @category Events
+ * @public
+ */
+export interface AdErrorEvent extends AdEvent {
+  /**
+   * Error message.
+   */
+  message: string | undefined;
+}
+
+/**
  * The event types dispatched by the {@link AdsAPI | Ads API}.
  *
  * @category Ads
