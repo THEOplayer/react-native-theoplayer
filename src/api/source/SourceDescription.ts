@@ -14,7 +14,7 @@ import type { AdDescription } from './ads/Ads';
 import type { MetadataDescription } from './metadata/MetadataDescription';
 import type { ServerSideAdInsertionConfiguration } from './ads/ssai/ServerSideAdInsertionConfiguration';
 import type { AnalyticsDescription } from './analytics/AnalyticsDescription';
-import { CmcdConfiguration } from './cmcd/CmcdConfiguration';
+import { CmcdSourceConfiguration } from '../cmcd/CmcdConfiguration';
 import { SourceLatencyConfiguration } from './latency/SourceLatencyConfiguration';
 
 /**
@@ -109,7 +109,7 @@ export interface SourceConfiguration {
    * The configuration for transmitting information to Content Delivery Networks (CDNs)
    * through Common Media Client Data (CMCD) (CTA-5004)
    */
-  cmcd?: CmcdConfiguration;
+  cmcd?: CmcdSourceConfiguration;
 }
 
 /**

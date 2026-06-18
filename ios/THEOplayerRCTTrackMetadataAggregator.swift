@@ -29,6 +29,7 @@ let PROP_CUE_CONTENT: String = "content"
 let PROP_CUE_CUSTOM_ATTRIBUTES: String = "customAttributes"
 let PROP_SRC: String = "src"
 let PROP_FORCED: String = "forced"
+let PROP_IN_BAND_METADATA_TRACK_DISPATCH_TYPE: String = "inBandMetadataTrackDispatchType"
 let PROP_START_DATE: String = "startDate"
 let PROP_END_DATE: String = "endDate"
 let PROP_ATTRIBUTE_CLASS: String = "class"
@@ -80,6 +81,7 @@ class THEOplayerRCTTrackMetadataAggregator {
         entry[PROP_TYPE] = textTrack.type
         entry[PROP_SRC] = textTrack.src
         entry[PROP_FORCED] = textTrack.forced
+        entry[PROP_IN_BAND_METADATA_TRACK_DISPATCH_TYPE] = textTrack.inBandMetadataTrackDispatchType
         // process cues when texttrack contains them
         if !textTrack.cues.isEmpty {
             var cueList: [[String:Any]] = []
@@ -327,6 +329,7 @@ class THEOplayerRCTTrackMetadataAggregator {
                     track[PROP_LABEL] = trackDescription.label ?? "no label"
                     track[PROP_TYPE] = "webvtt"
                     track[PROP_SRC] = trackDescription.src.absoluteString
+                    track[PROP_IN_BAND_METADATA_TRACK_DISPATCH_TYPE] = ""
                     var cueList: [[String:Any]] = []
                     var cueIndex = 0
                     for c in cues {

@@ -20,6 +20,8 @@ import com.theoplayer.android.api.player.track.texttrack.TextTrackKind
 import com.theoplayer.android.api.source.metadata.ChromecastMetadataImage
 import com.theoplayer.BuildConfig
 import com.theoplayer.android.api.ads.theoads.TheoAdsLayoutOverride
+import com.theoplayer.android.api.cmcd.CMCDEndpointConfiguration
+import com.theoplayer.android.api.cmcd.CMCDSourceConfiguration
 import com.theoplayer.android.api.cmcd.CMCDTransmissionMode
 import com.theoplayer.android.api.error.ErrorCode
 import com.theoplayer.android.api.source.AdIntegration
@@ -94,6 +96,11 @@ private const val TYPE_MILLICAST = "millicast"
 
 private const val PROP_CMCD = "cmcd"
 private const val CMCD_TRANSMISSION_MODE = "transmissionMode"
+private const val CMCD_SESSION_ID = "sessionID"
+private const val CMCD_EXTERNAL_SESSION_ID = "externalSessionId"
+private const val CMCD_USER_ID = "userId"
+private const val CMCD_EVENT_ENDPOINTS = "eventEndpoints"
+private const val CMCD_ENDPOINT_URL = "url"
 
 class SourceAdapter {
   private val gson = Gson()
@@ -174,6 +181,11 @@ class SourceAdapter {
         .textTracks(*sideLoadedTextTracks.toTypedArray())
       if (metadataDescription != null) {
         builder.metadata(metadataDescription)
+      }
+      if (jsonSourceObject.has(PROP_CMCD)) {
+        parseCmcdSourceConfiguration(jsonSourceObject.getJSONObject(PROP_CMCD))?.let {
+          builder.cmcd(it)
+        }
       }
       return builder.build()
     } catch (e: JSONException) {
@@ -464,7 +476,10 @@ class SourceAdapter {
     return BridgeUtils.fromJSONObjectToBridge(JSONObject(gson.toJson(typedSource)))
   }
 
-  private fun parseCmcdTransmissionMode(cmcdConfiguration : JSONObject) : CMCDTransmissionMode {
+  private fun parseCmcdTransmissionMode(cmcdConfiguration : JSONObject) : CMCDTransmissionMode? {
+    if (!cmcdConfiguration.has(CMCD_TRANSMISSION_MODE)) {
+      return null
+    }
     try {
       val transmissionMode = cmcdConfiguration.optInt(CMCD_TRANSMISSION_MODE)
       if (transmissionMode == CmcdTransmissionMode.QUERY_ARGUMENT.ordinal) {
@@ -475,5 +490,27 @@ class SourceAdapter {
       e.printStackTrace()
       return CMCDTransmissionMode.HTTP_HEADER
     }
+  }
+
+  private fun parseCmcdSourceConfiguration(cmcdJson: JSONObject): CMCDSourceConfiguration? {
+    val sessionId = cmcdJson.optString(CMCD_SESSION_ID, null)
+    val externalSessionId = cmcdJson.optString(CMCD_EXTERNAL_SESSION_ID, null)
+    val userId = cmcdJson.optString(CMCD_USER_ID, null)
+    val endpoints = cmcdJson.optJSONArray(CMCD_EVENT_ENDPOINTS)?.let { arr ->
+      (0 until arr.length()).mapNotNull { i ->
+        arr.optJSONObject(i)?.optString(CMCD_ENDPOINT_URL)?.let { url ->
+          CMCDEndpointConfiguration(url = url)
+        }
+      }
+    }
+    if (sessionId == null && externalSessionId == null && userId == null && endpoints == null) {
+      return null
+    }
+    return CMCDSourceConfiguration(
+      sessionId = sessionId,
+      externalSessionId = externalSessionId,
+      userId = userId,
+      eventEndpoints = endpoints
+    )
   }
 }

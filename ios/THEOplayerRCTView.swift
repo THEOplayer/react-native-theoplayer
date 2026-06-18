@@ -48,6 +48,7 @@ public class THEOplayerRCTView: UIView {
     var castConfig = CastConfig()
     var uiConfig = UIConfig()
     var theoliveConfig = THEOliveConfig()
+    var cmcdConfig = CmcdConfig()
     
     public var bypassDropInstanceOnReactLifecycle = false // controls superView detaching behaviour
     
@@ -232,6 +233,7 @@ public class THEOplayerRCTView: UIView {
         config.hlsDateRange = self.hlsDateRange
         config.license = self.license
         config.licenseUrl = self.licenseUrl
+        config.cmcd = self.playerCmcdConfiguration()
         self.player = THEOplayer(configuration: config.build())
         
         self.initAdsIntegration()
@@ -322,6 +324,7 @@ public class THEOplayerRCTView: UIView {
         self.parseUIConfig(configDict: configDict)
         self.parseMediaControlConfig(configDict: configDict)
         self.parseTHEOliveConfig(configDict: configDict)
+        self.parseCmcdConfig(configDict: configDict)
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] config prop updated.") }
         
         // Given the bridged config, create the initial THEOplayer instance
