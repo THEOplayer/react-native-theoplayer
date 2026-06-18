@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Added basic support for CMCD event mode reporting of DRM and ad events.
+
 ### Fixed
 
 - Fixed an issue on Android where `GoogleImaConfiguration.sessionId` was not properly passed.

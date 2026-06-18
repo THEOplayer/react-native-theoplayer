@@ -1,12 +1,17 @@
 # Getting started with CMCD on React Native
 
 Media player clients can transmit useful information to Content Delivery Networks (CDNs) with each object request.
-This implementation supports Common Media Client Data (CMCD) as defined in
-[CTA-5004](https://cdn.cta.tech/cta/media/media/resources/standards/pdfs/cta-5004-final.pdf), published in September 2020.
+This implementation is planned to fully support Common Media Client Data (CMCD) as defined in
+[CTA-5004-B](https://cta-wave.github.io/Resources/common-media-client-data--cta-5004-b.html), published in April 2026.
 
-## Usage
+CMCD supports two modes of transmission:
 
-To enable CMCD, developers can set the `cmcd` parameter inside a SourceDescription.
+- **Request mode**: CMCD data is sent as HTTP headers or query parameters on manifest and media segment requests.
+- **Event mode** (available since v11.4.0): CMCD events are POSTed to configured HTTP endpoints.
+
+## Request mode
+
+To enable CMCD request mode, developers need to explicitly set the `transmissionMode` parameter inside a SourceDescription.
 
 ```tsx
 const source = {
@@ -42,11 +47,55 @@ player.source = source;
 
 On Web, there are additional configuration options. For more details, visit the API references.
 
-## Remarks
+### Remarks
 
-- Note that CMCD is only supported on iOS 18.0+.
-- Note that CMCD is only supported with the [Media3 integration](./media3.md) on Android.
+- Note that CMCD request mode is only supported on iOS 18.0+.
 - Note that using a custom HTTP header from a web browser user-agent will trigger a preflight OPTIONS request before
   each unique media object request. This will lead to an increased request rate against the server. As a result, for
   CMCD transmissions from web browser user-agents that require CORS-preflighting per URL, the preferred mode of use is
   query arguments.
+
+## Event mode
+
+Event mode allows posting CMCD events to configured HTTP endpoints.
+
+:::info
+Event mode is supported starting from version 11.4.0.
+:::
+
+### Player-level configuration
+
+```javascript
+const player = new THEOplayer.Player(element, {
+  cmcd: {
+    externalSessionId: 'YOUR-EXTERNAL-SESSION-ID', // optional
+    userId: 'YOUR-USER-ID', // optional
+    eventEndpoints: [{ url: 'https://example.com/cmcd-event-endpoint' }],
+  },
+});
+```
+
+### Source-level configuration
+
+```javascript
+player.source = {
+  sources: [ /* ... */ ],
+  /* ... */
+  cmcd: {
+    externalSessionId: 'YOUR-EXTERNAL-SESSION-ID', // optional
+    sessionID: 'YOUR-SESSION-ID', // optional
+    userId: 'YOUR-USER-ID', // optional
+    eventEndpoints: [{ url: 'https://example.com/cmcd-event-other-endpoint' }],
+  },
+};
+```
+
+### Merging behavior
+
+- Source-level values take precedence for `externalSessionId` and `userId`.
+- `eventEndpoints` from both levels are **merged** (both player and source endpoints receive events).
+
+:::warning
+Event mode reporting currently only supports DRM and ad events.
+:::
+

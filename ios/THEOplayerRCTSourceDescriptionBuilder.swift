@@ -64,6 +64,7 @@ let SD_PROP_INITIALIZATION_DELAY: String = "initializationDelay"
 let SD_PROP_HLS_DATE_RANGE: String = "hlsDateRange"
 let SD_PROP_BREAK_MANIFEST_URL: String = "breakManifestUrl"
 let SD_PROP_CMCD: String = "cmcd"
+let SD_PROP_TRANSMISSION_MODE: String = "transmissionMode"
 let SD_PROP_QUERY_PARAMETERS: String = "queryParameters"
 
 let EXTENSION_HLS: String = ".m3u8"
@@ -167,11 +168,15 @@ class THEOplayerRCTSourceDescriptionBuilder {
         }
 
         // 6. configure CMCD
-        let cmcd = sourceData[SD_PROP_CMCD] as? [String:Any]
-        if cmcd != nil {
-          typedSources.forEach { typedSource in
-            typedSource.cmcd = true;
+        var cmcdSourceConfig: CMCDSourceConfiguration? = nil
+        if let cmcd = sourceData[SD_PROP_CMCD] as? [String:Any] {
+          let requestModeEnabled = cmcd[SD_PROP_TRANSMISSION_MODE] != nil
+          if requestModeEnabled {
+            typedSources.forEach { typedSource in
+              typedSource.cmcd = true
+            }
           }
+          cmcdSourceConfig = THEOplayerRCTSourceDescriptionBuilder.buildCmcdSourceConfiguration(cmcd)
         }
 
         // 7. construct the SourceDescription
@@ -179,12 +184,32 @@ class THEOplayerRCTSourceDescriptionBuilder {
                                  textTracks: textTrackDescriptions,
                                  ads: adsDescriptions,
                                  poster: poster,
-                                 metadata: metadataDescription)
-
+                                 metadata: metadataDescription,
+                                 cmcdConfiguration: cmcdSourceConfig)
+        
         return (sourceDescription, metadataAndChapterTrackDescriptions)
     }
 
     // MARK: Private build methods
+
+    private static func buildCmcdSourceConfiguration(_ cmcdData: [String:Any]) -> CMCDSourceConfiguration? {
+        let sessionId = cmcdData["sessionID"] as? String
+        let externalSessionId = cmcdData["externalSessionId"] as? String
+        let userId = cmcdData["userId"] as? String
+        let endpoints: [CMCDEndpointConfiguration]? = (cmcdData["eventEndpoints"] as? [[String: Any]])?.compactMap { dict in
+            guard let url = dict["url"] as? String else { return nil }
+            return CMCDEndpointConfiguration(url: url)
+        }
+        if sessionId == nil && externalSessionId == nil && userId == nil && endpoints == nil {
+            return nil
+        }
+        return CMCDSourceConfiguration(
+            sessionId: sessionId,
+            externalSessionId: externalSessionId,
+            userId: userId,
+            eventEndpoints: endpoints
+        )
+    }
 
     /**
      Creates a THEOplayer TypedSource. This requires a source property for non SSAI strreams (either as a string or as an object contiaining a src property). For SSAI streams the TypeSource can be created from the ssai property.

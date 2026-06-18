@@ -8,6 +8,8 @@ import com.theoplayer.android.api.THEOplayerConfig
 import com.theoplayer.android.api.THEOplayerGlobal
 import com.theoplayer.android.api.cast.CastStrategy
 import com.theoplayer.android.api.cast.CastConfiguration
+import com.theoplayer.android.api.cmcd.CMCDConfiguration
+import com.theoplayer.android.api.cmcd.CMCDEndpointConfiguration
 import com.theoplayer.android.api.pip.PipConfiguration
 import com.theoplayer.android.api.player.NetworkConfiguration
 import com.theoplayer.android.api.theolive.THEOLiveConfig
@@ -45,6 +47,11 @@ private const val PROP_THEOLIVE_DISCOVERY_URL = "discoveryUrl"
 private const val PROP_MULTIMEDIA_TUNNELING_ENABLED = "tunnelingEnabled"
 private const val PROP_DEBUG_LOGS_ENABLED = "debugLogsEnabled"
 private const val PROP_SYSTEM_CAPTION_STYLE = "useSystemCaptionStyle"
+private const val PROP_CMCD = "cmcd"
+private const val PROP_CMCD_EXTERNAL_SESSION_ID = "externalSessionId"
+private const val PROP_CMCD_USER_ID = "userId"
+private const val PROP_CMCD_EVENT_ENDPOINTS = "eventEndpoints"
+private const val PROP_CMCD_ENDPOINT_URL = "url"
 
 
 class PlayerConfigAdapter(private val configProps: ReadableMap?) {
@@ -87,6 +94,9 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
         }
         if (hasKey(PROP_SYSTEM_CAPTION_STYLE)) {
           useSystemCaptionStyle(getBoolean(PROP_SYSTEM_CAPTION_STYLE))
+        }
+        if (hasKey(PROP_CMCD)) {
+          cmcd(cmcdConfig())
         }
       }
     }.build()
@@ -239,6 +249,22 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
    */
   fun mediaSessionConfig(): MediaSessionConfig {
     return MediaSessionConfigAdapter.fromProps(configProps?.getMap(PROP_MEDIA_CONTROL))
+  }
+
+  private fun cmcdConfig(): CMCDConfiguration {
+    val config = configProps?.getMap(PROP_CMCD)
+    val endpoints = config?.getArray(PROP_CMCD_EVENT_ENDPOINTS)?.let { arr ->
+      (0 until arr.size()).mapNotNull { i ->
+        arr.getMap(i)?.getString(PROP_CMCD_ENDPOINT_URL)?.let { url ->
+          CMCDEndpointConfiguration(url = url)
+        }
+      }
+    }
+    return CMCDConfiguration(
+      externalSessionId = config?.getString(PROP_CMCD_EXTERNAL_SESSION_ID),
+      userId = config?.getString(PROP_CMCD_USER_ID),
+      eventEndpoints = endpoints
+    )
   }
 
   private fun theoLiveConfig (): THEOLiveConfig {
