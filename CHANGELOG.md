@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [11.3.0] - 26-06-18
+
 ### Added
 
 - Added Android support for `ABRConfiguration.preferredMaximumResolution`, mirroring the existing iOS behaviour. Set to `(0,0)` to remove the cap.
