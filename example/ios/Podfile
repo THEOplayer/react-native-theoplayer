@@ -9,6 +9,13 @@ source 'https://cdn.cocoapods.org/'
 # source 'https://github.com/THEOplayer/cocoapods-specs'
 
 prepare_react_native_project!
+
+# The react-native-theoplayer.json feature config only resolves correctly when the package
+# is installed from npm. With the local ".." path the podspec resolves __dir__ to the repo
+# root and the config file is never found. Set THEO_FEATURES here so the podspec picks up
+# the required integrations via its env-var path instead.
+ENV["THEO_FEATURES"] = "GOOGLE_IMA,THEO_ADS,SIDELOADED_TEXTTRACKS,MILLICAST"
+
 config = use_native_modules!
 
 linkage = ENV['USE_FRAMEWORKS']
