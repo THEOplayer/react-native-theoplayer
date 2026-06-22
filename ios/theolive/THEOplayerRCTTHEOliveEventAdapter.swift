@@ -9,9 +9,11 @@ import THEOplayerTHEOliveIntegration
 
 let PROP_ENDPOINT_HESP_SRC: String = "hespSrc"
 let PROP_ENDPOINT_HLS_SRC: String = "hlsSrc"
+let PROP_ENDPOINT_HLS_MPEG_TS_SRC: String = "hlsMpegTsSrc"
 let PROP_ENDPOINT_MILLICAST_SRC: String = "millicastSrc"
 let PROP_ENDPOINT_CDN: String = "cdn"
 let PROP_ENDPOINT_AD_SRC: String = "adSrc"
+let PROP_ENDPOINT_DAI_ASSET_KEY: String = "daiAssetKey"
 let PROP_ENDPOINT_WEIGHT: String = "weight"
 let PROP_ENDPOINT_PRIORITY: String = "priority"
 let PROP_ENDPOINT_CONTENT_PROTECTION: String = "contentProtection"
@@ -46,6 +48,9 @@ class THEOplayerRCTTHEOliveEventAdapter {
         if let hlsSrc = endpoint.hlsSrc {
             endpointData[PROP_ENDPOINT_HLS_SRC] = hlsSrc
         }
+        if let hlsMpegTsSrc = endpoint.hlsMpegTsSrc {
+            endpointData[PROP_ENDPOINT_HLS_MPEG_TS_SRC] = hlsMpegTsSrc
+        }
         if let millicastSrc = endpoint.millicastSrc {
             endpointData[PROP_ENDPOINT_MILLICAST_SRC] = millicastSrc.toJSONEncodableDictionary()
         }
@@ -54,6 +59,9 @@ class THEOplayerRCTTHEOliveEventAdapter {
         }
         if let adSrc = endpoint.adSrc {
             endpointData[PROP_ENDPOINT_AD_SRC] = adSrc
+        }
+        if let daiAssetKey = endpoint.daiAssetKey {
+            endpointData[PROP_ENDPOINT_DAI_ASSET_KEY] = daiAssetKey
         }
         if let contentProtection = endpoint.channelContentProtection {
             endpointData[PROP_ENDPOINT_CONTENT_PROTECTION] = THEOplayerRCTTHEOliveEventAdapter.fromContentProtection(contentProtection: contentProtection)
