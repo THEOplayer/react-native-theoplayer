@@ -547,6 +547,26 @@
     }
   },
   {
+    "name": "REPRO: theoads:true + IMA CSAI preroll (iOS stall)",
+    "os": ["ios"],
+    "source": {
+      "sources": [
+        {
+          "src": "https://v-theo.hudl.com/signaling-service/api/v1/510c4287-512a-4359-964f-7f67bf82cf36/hls/video.m3u8",
+          "type": "application/x-mpegurl",
+          "hlsDateRange": true
+        }
+      ],
+      "ads": [
+        {
+          "integration": "google-ima",
+          "sources": "https://cdn.theoplayer.com/demos/ads/vast/dfp-preroll-no-skip.xml",
+          "timeOffset": "start"
+        }
+      ]
+    }
+  },
+  {
     "name": "Millicast",
     "os": ["ios", "web"],
     "source": {
