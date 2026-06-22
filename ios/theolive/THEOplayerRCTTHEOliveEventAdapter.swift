@@ -20,6 +20,7 @@ let PROP_ENDPOINT_CONTENT_PROTECTION: String = "contentProtection"
 let PROP_REASON_ERROR_CODE: String = "errorCode"
 let PROP_REASON_ERROR_MESSAGE: String = "errorMessage"
 let PROP_DISTRIBUTION_ID: String = "id"
+let PROP_DISTRIBUTION_EXTERNAL_ID: String = "externalId"
 let PROP_DISTRIBUTION_NAME: String = "name"
 
 let PROP_CONTENTPROTECTION_INTEGRATION: String = "integration"
@@ -130,6 +131,9 @@ class THEOplayerRCTTHEOliveEventAdapter {
         
         var distributionData: [String:Any] = [:]
         distributionData[PROP_DISTRIBUTION_ID] = distribution.id
+        if let externalId = distribution.externalId {
+            distributionData[PROP_DISTRIBUTION_EXTERNAL_ID] = externalId
+        }
         distributionData[PROP_DISTRIBUTION_NAME] = distribution.name
 
         return distributionData
