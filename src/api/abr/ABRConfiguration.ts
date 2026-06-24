@@ -70,7 +70,9 @@ export interface ABRConfiguration {
    *
    * @defaultValue `'bandwidth'`
    *
-   * @platform web,android
+   * @remarks
+   * <br/> - On native iOS/tvOS, this configuration will only work with THEOlive and Millicast streams and will not have any effect for other types of streams.
+   * <br/> - On native iOS/tvOS with Millicast streams, this only applies once during connection establishment; make sure to set it before you start playback.
    */
   strategy?: ABRStrategy;
 
@@ -80,8 +82,6 @@ export interface ABRConfiguration {
    * @defaultValue `20`
    *
    * @remarks
-   * <br/> - Before v4.3.0: This duration has a maximum of 60 seconds.
-   * <br/> - After v4.3.0: This duration has no maximum.
    * <br/> - The player might reduce or ignore the configured amount because of device or performance constraints.
    */
   targetBuffer?: number;
@@ -119,6 +119,9 @@ export interface ABRConfiguration {
    * If network bandwidth consumption cannot be lowered to meet the preferredPeakBitRate, it will be reduced as much as possible while continuing to play the item.
    *
    * @platform ios
+   * 
+   * @remarks
+   * <br/> - On native iOS/tvOS with Millicast streams, this only applies once during connection establishment; make sure to set it before you start playback.
    */
   preferredPeakBitRate?: number;
 
