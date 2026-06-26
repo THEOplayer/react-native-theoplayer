@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Added `contentprotectionerror` player event on Web, Android, and iOS platforms.
+
 ## [11.4.0] - 26-07-06
 
 ### Fixed

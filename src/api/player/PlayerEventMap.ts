@@ -1,5 +1,6 @@
 import type { Event } from '../event/Event';
 import type {
+  ContentProtectionErrorEvent,
   CurrentSourceChangeEvent,
   DimensionChangeEvent,
   DurationChangeEvent,
@@ -63,6 +64,7 @@ export enum PlayerEventType {
   DESTROY = 'destroy',
   DIMENSION_CHANGE = 'dimensionchange',
   VIDEO_RESIZE = 'videoresize',
+  CONTENT_PROTECTION_ERROR = 'contentprotectionerror',
 }
 
 /**
@@ -242,4 +244,9 @@ export interface PlayerEventMap {
    * Dispatched when the video size changes.
    */
   [PlayerEventType.VIDEO_RESIZE]: VideoResizeEvent;
+
+  /**
+   * Dispatched when an error related to content protection occurs.
+   */
+  [PlayerEventType.CONTENT_PROTECTION_ERROR]: ContentProtectionErrorEvent;
 }

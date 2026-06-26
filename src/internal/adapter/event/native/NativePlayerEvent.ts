@@ -1,4 +1,5 @@
 import type {
+  ContentProtectionErrorObject,
   MediaTrack,
   PlayerError,
   PlayerVersion,
@@ -160,6 +161,10 @@ export interface NativeSegmentNotFoundEvent {
    * Number of times the segment was retried.
    */
   readonly retryCount: number;
+}
+
+export interface NativeContentProtectionErrorEvent {
+  error: ContentProtectionErrorObject;
 }
 
 export interface NativePlayerStateEvent {

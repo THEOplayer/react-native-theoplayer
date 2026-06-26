@@ -6,6 +6,7 @@ import type {
   CastStateChangeEvent,
   ChromecastErrorEvent,
   ChromelessPlayer,
+  ContentProtectionErrorEvent as NativeContentProtectionErrorEvent,
   CurrentSourceChangeEvent as NativeCurrentSourceChangeEvent,
   DimensionChangeEvent as NativeDimensionChangeEvent,
   DurationChangeEvent as NativeDurationChangeEvent,
@@ -52,6 +53,7 @@ import {
   DefaultAirplayStateChangeEvent,
   DefaultChromecastChangeEvent,
   DefaultChromecastErrorEvent,
+  DefaultContentProtectionErrorEvent,
   DefaultCurrentSourceChangeEvent,
   DefaultDimensionChangeEvent,
   DefaultDurationChangeEvent,
@@ -112,6 +114,7 @@ export class WebEventForwarder {
     this._player.addEventListener('ratechange', this.onPlaybackRateChange);
     this._player.addEventListener('segmentnotfound', this.onSegmentNotFound);
     this._player.addEventListener('volumechange', this.onVolumeChangeEvent);
+    this._player.addEventListener('contentprotectionerror', this.onContentProtectionError);
     this._player.addEventListener('dimensionchange', this.onDimensionChange);
     this._player.addEventListener('resize', this.onVideoResize);
 
@@ -163,6 +166,7 @@ export class WebEventForwarder {
     this._player.removeEventListener('ratechange', this.onPlaybackRateChange);
     this._player.removeEventListener('segmentnotfound', this.onSegmentNotFound);
     this._player.removeEventListener('volumechange', this.onVolumeChangeEvent);
+    this._player.removeEventListener('contentprotectionerror', this.onContentProtectionError);
     this._player.removeEventListener('dimensionchange', this.onDimensionChange);
     this._player.removeEventListener('resize', this.onVideoResize);
 
@@ -223,6 +227,20 @@ export class WebEventForwarder {
       new DefaultErrorEvent({
         errorCode: event.errorObject.code.toString(),
         errorMessage: event.errorObject.message,
+      }),
+    );
+  };
+
+  private readonly onContentProtectionError = (event: NativeContentProtectionErrorEvent) => {
+    this._facade.dispatchEvent(
+      new DefaultContentProtectionErrorEvent({
+        errorCode: event.errorObject.code.toString(),
+        errorMessage: event.errorObject.message,
+        url: event.errorObject.url,
+        status: event.errorObject.status,
+        statusText: event.errorObject.statusText,
+        response: event.errorObject.response,
+        systemCode: event.errorObject.systemCode,
       }),
     );
   };

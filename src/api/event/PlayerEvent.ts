@@ -1,4 +1,4 @@
-import type { MediaTrack, PlayerError, PlayerEventType, PresentationMode, TextTrack, TypedSource } from 'react-native-theoplayer';
+import type { MediaTrack, PlayerError, PlayerEventType, PresentationMode, TextTrack, TypedSource, ContentProtectionErrorObject } from 'react-native-theoplayer';
 import type { TimeRange } from '../timeranges/TimeRange';
 import type { Event } from './Event';
 
@@ -296,4 +296,19 @@ export interface SeekedEvent extends Event<PlayerEventType.SEEKED> {
    * The player's current time.
    */
   readonly currentTime: number;
+}
+
+/**
+ * Dispatched when an error related to content protection occurs.
+ *
+ * @category Events
+ * @category Player
+ * @category Content Protection
+ * @public
+ */
+export interface ContentProtectionErrorEvent extends Event<PlayerEventType.CONTENT_PROTECTION_ERROR> {
+  /**
+   * An error object containing additional information about the content protection error.
+   */
+  readonly error: ContentProtectionErrorObject;
 }
