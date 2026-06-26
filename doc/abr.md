@@ -33,13 +33,17 @@ on the chosen strategy, as well as various parameters of the playback buffer.
 />
 ```
 
-| Property               | Description                                                                                                                                                     | Supported Platforms |
-|------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------|
-| `strategy`             | The adaptive bitrate strategy. Possible values are `'performance'`, `'quality'`, `'bandwidth'` or a `ABRStrategyConfiguration` object. Default is **bandwidth** | Android & Web       |
-| `targetBuffer`         | The amount that the player should buffer ahead of the current playback position, in seconds. Default is **20**s.                                                | Android & Web       |
-| `bufferLookbackWindow` | The amount of data which the player should keep in its buffer before the current playback position, in seconds. Default is **30**s.                             | Web                 |
-| `maxBufferLength`      | The maximum length of the player's buffer, in seconds.                                                                                                          | Web                 |                 |
-| `preferredMaximumResolution` | A preferred upper limit on the resolution of the video to be downloaded. `(0,0)` (the default) removes the cap.                                           | Android & iOS       |
+| Property                     | Description                                                                                                                                                      | Supported Platforms |
+|------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------|
+| `strategy`                   | The adaptive bitrate strategy. Possible values are `'performance'`, `'quality'`, `'bandwidth'` or a `ABRStrategyConfiguration` object. Default is **bandwidth**. | Android/Web/iOS*    |
+| `targetBuffer`               | The amount that the player should buffer ahead of the current playback position, in seconds. Default is **20**s.                                                 | Android/Web/iOS     |
+| `bufferLookbackWindow`       | The amount of data which the player should keep in its buffer before the current playback position, in seconds. Default is **30**s.                              | Web                 |
+| `maxBufferLength`            | The maximum length of the player's buffer, in seconds.                                                                                                           | Web                 |
+| `preferredPeakBitRate`       | A preferred upper limit on the bandwidth of the video to be downloaded, in bits per second. Defaults to `0`, which indicates there is no limit.                  | iOS                 |
+| `preferredMaximumResolution` | A preferred upper limit on the resolution of the video to be downloaded. `(0,0)` (the default) removes the cap.                                                  | Android & iOS       |
+
+\* On native iOS/tvOS, `strategy` will only work with THEOlive and Millicast streams, and will
+not have any effect for other types of streams.
 
 When specifying the strategy, apart from the values `'performance'`, `'quality'`, `'bandwidth'`,
 an `ABRStrategyConfiguration`
