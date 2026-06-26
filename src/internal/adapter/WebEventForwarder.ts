@@ -6,6 +6,7 @@ import type {
   CastStateChangeEvent,
   ChromecastErrorEvent,
   ChromelessPlayer,
+  ContentProtectionErrorEvent as NativeContentProtectionErrorEvent,
   CurrentSourceChangeEvent as NativeCurrentSourceChangeEvent,
   DimensionChangeEvent as NativeDimensionChangeEvent,
   DurationChangeEvent as NativeDurationChangeEvent,
@@ -97,6 +98,7 @@ export class WebEventForwarder {
     this._player.addEventListener('loadeddata', this.onLoadedData);
     this._player.addEventListener('loadedmetadata', this.onLoadedMetadata);
     this._player.addEventListener('error', this.onError);
+    this._player.addEventListener('contentprotectionerror', this.onContentProtectionError);
     this._player.addEventListener('progress', this.onProgress);
     this._player.addEventListener('play', this.onPlay);
     this._player.addEventListener('canplay', this.onCanPlay);
@@ -148,6 +150,7 @@ export class WebEventForwarder {
     this._player.removeEventListener('loadeddata', this.onLoadedData);
     this._player.removeEventListener('loadedmetadata', this.onLoadedMetadata);
     this._player.removeEventListener('error', this.onError);
+    this._player.removeEventListener('contentprotectionerror', this.onContentProtectionError);
     this._player.removeEventListener('progress', this.onProgress);
     this._player.removeEventListener('canplay', this.onCanPlay);
     this._player.removeEventListener('play', this.onPlay);
@@ -219,6 +222,15 @@ export class WebEventForwarder {
   };
 
   private readonly onError = (event: NativeErrorEvent) => {
+    this._facade.dispatchEvent(
+      new DefaultErrorEvent({
+        errorCode: event.errorObject.code.toString(),
+        errorMessage: event.errorObject.message,
+      }),
+    );
+  };
+
+  private readonly onContentProtectionError = (event: NativeContentProtectionErrorEvent) => {
     this._facade.dispatchEvent(
       new DefaultErrorEvent({
         errorCode: event.errorObject.code.toString(),
