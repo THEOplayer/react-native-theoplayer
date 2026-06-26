@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed an issue on Web where `contentprotectionerror` events were not dispatched.
+
 ## [11.3.0] - 26-06-18
 
 ### Added
