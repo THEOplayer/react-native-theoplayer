@@ -36,40 +36,17 @@ export interface TheoLiveEndpoint {
   srcType?: string;
 
   /**
-   * The provider of this endpoint (e.g. 'optiview', 'mediakind').
+   * The provider of this endpoint (e.g. 'optiview').
    *
    * @platform web
    */
   provider?: string;
 
-  /**
-   * @deprecated Use {@link src} with {@link srcType} `'millicast'` instead. Only populated for V1/V2 distributions.
-   */
   millicastSrc?: EndpointMillicastSource;
-
-  /**
-   * @deprecated Use {@link src} with {@link srcType} `'hesp'` instead. Only populated for V1/V2 distributions.
-   */
   hespSrc?: string;
-
-  /**
-   * @deprecated Use {@link src} with {@link srcType} `'hls'` instead. Only populated for V1/V2 distributions.
-   */
   hlsSrc?: string;
-
-  /**
-   * @deprecated Use {@link src} with {@link srcType} `'hlsMpegTs'` instead. Only populated for V1/V2 distributions.
-   */
   hlsMpegTsSrc?: string;
-
-  /**
-   * @deprecated Only populated for V1/V2 distributions.
-   */
   adSrc?: string;
-
-  /**
-   * @deprecated Only populated for V1/V2 distributions.
-   */
   daiAssetKey?: string;
 
   cdn?: string;
