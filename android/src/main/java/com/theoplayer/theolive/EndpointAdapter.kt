@@ -15,7 +15,9 @@ private const val PROP_MILLICAST_SUBSCRIBER_TOKEN ="subscriberToken"
 private const val PROP_MILLICAST_DIRECTOR_URL = "directorUrl"
 private const val PROP_HESP_SRC = "hespSrc"
 private const val PROP_HLS_SRC = "hlsSrc"
+private const val PROP_HLS_MPEG_TS_SRC = "hlsMpegTsSrc"
 private const val PROP_AD_SRC = "adSrc"
+private const val PROP_DAI_ASSET_KEY = "daiAssetKey"
 private const val PROP_CDN = "cdn"
 private const val PROP_TARGET_LATENCY = "targetLatency"
 private const val PROP_WEIGHT = "weight"
@@ -44,7 +46,9 @@ object EndpointAdapter {
       endPoint.millicastSrc?.let { putMap(PROP_MILLICAST_SRC, fromEndPointMillicastSource(it)) }
       endPoint.hespSrc?.let { putString(PROP_HESP_SRC, it) }
       endPoint.hlsSrc?.let { putString(PROP_HLS_SRC, it) }
+      endPoint.hlsMpegTsSrc?.let { putString(PROP_HLS_MPEG_TS_SRC, it) }
       endPoint.adSrc?.let { putString(PROP_AD_SRC, it) }
+      endPoint.daiAssetKey?.let { putString(PROP_DAI_ASSET_KEY, it) }
       endPoint.cdn?.let { putString(PROP_CDN, it) }
       endPoint.targetLatency?.let { putDouble(PROP_TARGET_LATENCY, it) }
       putInt(PROP_WEIGHT, endPoint.weight)
