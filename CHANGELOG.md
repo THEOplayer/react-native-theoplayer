@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [11.4.0] - 26-07-06
+
 ### Fixed
 
 - Fixed an issue on iOS where the `volumeChange` listener was not correctly removed on player desctruction.
