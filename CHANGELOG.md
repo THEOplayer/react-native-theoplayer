@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Added `externalId` property to `TheoLiveDistribution` on Android and iOS.
+- Added `hlsMpegTsSrc` and `daiAssetKey` properties to `TheoLiveEndpoint` on Android and iOS.
+- Added `targetLatency` property to `TheoLiveEndpoint` on Android.
+- Added V3 discovery response properties (`src`, `srcType`, `provider`, `distribution`) to `TheoLiveEndpoint` on Web.
 
 ## [11.3.0] - 26-06-18
 
