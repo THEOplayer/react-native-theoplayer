@@ -13,7 +13,7 @@ export interface EndpointMillicastSource {
  * Description of a THEOlive Endpoint.
  *
  * @category THEOlive
- * @platform android,web
+ * @platform android,ios,web
  * @public
  */
 export interface TheoLiveEndpoint {
