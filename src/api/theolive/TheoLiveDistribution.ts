@@ -6,5 +6,6 @@
  */
 export interface TheoLiveDistribution {
   id: string;
+  externalId?: string;
   name: string;
 }

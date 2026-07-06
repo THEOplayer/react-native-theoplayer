@@ -9,7 +9,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-- Fixed an issue on iOS where the volumeChange listener was not correctly removed on player desctruction.
+- Fixed an issue on iOS where the `volumeChange` listener was not correctly removed on player desctruction.
+
+### Added
+
+- Added `externalId` property to `TheoLiveDistribution` on Android and iOS.
 
 ## [11.3.0] - 26-06-18
 
