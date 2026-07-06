@@ -403,6 +403,12 @@ public class THEOplayerRCTMainEventHandler {
             if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] DurationChange listener dettached from THEOplayer") }
         }
         
+        // VOLUME_CHANGE
+        if let volumeChangeListener = self.volumeChangeListener {
+            player.removeEventListener(type: PlayerEventTypes.VOLUME_CHANGE, listener: volumeChangeListener)
+            if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] VolumeChange listener dettached from THEOplayer") }
+        }
+        
         // PROGRESS
         if let progressListener = self.progressListener {
             player.removeEventListener(type: PlayerEventTypes.PROGRESS, listener: progressListener)
