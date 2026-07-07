@@ -9,7 +9,7 @@ extension RCTBridgeModule {
     /// If the view cannot be resolved, the optional onFailure callback is invoked instead.
     func withView(_ node: NSNumber, _ action: @escaping (THEOplayerRCTView) -> Void, onFailure: (() -> Void)? = nil) {
         DispatchQueue.main.async { [self] in
-            if let bridge = self.bridge,
+            if let bridge = self.bridge as? RCTBridge,
                let theView = bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView {
                 action(theView)
             } else {
