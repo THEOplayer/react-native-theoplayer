@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Added RCTBridgeModule extension on iOS, with helper methods to resolve the view and native player APIs.
+
 ## [11.4.0] - 26-07-06
 
 ### Fixed
