@@ -27,28 +27,27 @@ class THEOplayerRCTTHEOliveAPI: NSObject, RCTBridgeModule {
 #if canImport(THEOplayerTHEOliveIntegration)
     @objc(currentLatency:resolver:rejecter:)
     func currentLatency(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
-        DispatchQueue.main.async {
-            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
-               let player = theView.player,
-               let theolive = player.theoLive {
+        withViewAndPlayer(node) { _, player in
+            if let theolive = player.theoLive {
                 var foundLatency: Double = -1
                 if let currentLatency = theolive.currentLatency {
                     foundLatency = currentLatency
                 }
                 resolve(foundLatency)
             } else {
-                if DEBUG_THEOLIVE_API { PrintUtils.printLog(logText: "[NATIVE] Could not get currentLatency (THEOlive module unavailable).") }
                 reject(ERROR_CODE_THEOLIVE_ACCESS_FAILURE, ERROR_MESSAGE_THEOLIVE_ACCESS_FAILURE, nil)
+                if DEBUG_THEOLIVE_API { PrintUtils.printLog(logText: "[NATIVE] Could not get currentLatency (THEOlive module unavailable).") }
             }
+        } onFailure: {
+            reject(ERROR_CODE_THEOLIVE_ACCESS_FAILURE, ERROR_MESSAGE_THEOLIVE_ACCESS_FAILURE, nil)
+            if DEBUG_THEOLIVE_API { PrintUtils.printLog(logText: "[NATIVE] Could not get currentLatency (player unavailable).") }
         }
     }
     
     @objc(latencies:resolver:rejecter:)
     func latencies(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
-        DispatchQueue.main.async {
-            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
-               let player = theView.player,
-               let theolive = player.theoLive {
+        withViewAndPlayer(node) { _, player in
+            if let theolive = player.theoLive {
                 var foundLatencies: [String:Any] = [:]
                 if let latencies = theolive.latencies {
                     foundLatencies = [
@@ -60,18 +59,19 @@ class THEOplayerRCTTHEOliveAPI: NSObject, RCTBridgeModule {
                 }
                 resolve(foundLatencies)
             } else {
-                if DEBUG_THEOLIVE_API { PrintUtils.printLog(logText: "[NATIVE] Could not get latencies (THEOlive module unavailable).") }
                 reject(ERROR_CODE_THEOLIVE_ACCESS_FAILURE, ERROR_MESSAGE_THEOLIVE_ACCESS_FAILURE, nil)
+                if DEBUG_THEOLIVE_API { PrintUtils.printLog(logText: "[NATIVE] Could not get latencies (THEOlive module unavailable).") }
             }
+        } onFailure: {
+            reject(ERROR_CODE_THEOLIVE_ACCESS_FAILURE, ERROR_MESSAGE_THEOLIVE_ACCESS_FAILURE, nil)
+            if DEBUG_THEOLIVE_API { PrintUtils.printLog(logText: "[NATIVE] Could not get latencies (player unavailable).") }
         }
     }
     
     @objc(setAuthToken:token:)
     func setAuthToken(_ node: NSNumber, token: String) -> Void {
-        DispatchQueue.main.async {
-            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
-               let player = theView.player,
-               var theoLive = player.theoLive {
+        withViewAndPlayer(node) { _, player in
+            if var theoLive = player.theoLive {
                 theoLive.authToken = token
                 if DEBUG_THEOLIVE_API { PrintUtils.printLog(logText: "[NATIVE] THEOlive authToken updated: \(token).") }
             }
