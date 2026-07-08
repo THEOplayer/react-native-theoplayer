@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 - Added RCTBridgeModule extension on iOS, with helper methods to resolve the view and native player APIs.
-- 
+
 ### Fixed
 
 - Fixed an issue on iOS where sideloaded texttracks were not stored for cached playout.
