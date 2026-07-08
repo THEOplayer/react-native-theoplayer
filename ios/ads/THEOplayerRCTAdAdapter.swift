@@ -50,7 +50,7 @@ class THEOplayerRCTAdAdapter {
         if let customIntegration = ad.customIntegration {
             adData[PROP_AD_CUSTOM_INTEGRATION] = customIntegration
         }
-        if let customData = ad.customData {
+        if let customData = ad.customData as? [String: Any] {
             adData[PROP_CUSTOM_DATA] = customData
         }
         adData[PROP_AD_TYPE] = ad.type
