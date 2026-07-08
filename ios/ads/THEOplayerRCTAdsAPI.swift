@@ -106,6 +106,8 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
             if let adData = adDict as? [String:Any],
                let adDescription = THEOplayerRCTSourceDescriptionBuilder.buildSingleAdDescription(adData) {
                 ads.schedule(adDescription: adDescription)
+            } else {
+                if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not schedule new ad (invalid ad description).") }
             }
         } onFailure: {
             if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not schedule new ad.") }
