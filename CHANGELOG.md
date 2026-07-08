@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Added support for the customData property on the Ad and AdBreak types.
+
 ## [11.4.0] - 26-07-06
 
 ### Fixed
