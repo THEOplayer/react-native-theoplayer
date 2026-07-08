@@ -129,6 +129,14 @@ export interface Ad {
    * <br/> - Only supported for `'theo'` and `'google-ima'`.
    */
   universalAdIds: UniversalAdId[];
+
+  /**
+   * Additional integration-specific data associated with this ad.
+   *
+   * @remarks
+   * <br/> - The value depends on the ad integration. It may be `undefined` if the integration does not provide any custom data.
+   */
+  customData?: Record<string, unknown>;
 }
 
 /**
