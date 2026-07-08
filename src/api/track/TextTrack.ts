@@ -228,8 +228,11 @@ export function removeTextTrackCue(textTrack?: TextTrack, cue?: TextTrackCue) {
  * @internal
  */
 export function addTextTrackCue(textTrack?: TextTrack, cue?: TextTrackCue) {
-  if (textTrack && textTrack.cues && cue && !hasTextTrackCue(textTrack, cue)) {
-    textTrack.cues.push(cue);
+  if (textTrack && cue) {
+    textTrack.cues ??= [];
+    if (!hasTextTrackCue(textTrack, cue)) {
+      textTrack.cues.push(cue);
+    }
   }
 }
 
