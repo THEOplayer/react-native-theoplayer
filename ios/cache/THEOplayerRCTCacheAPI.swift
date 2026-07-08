@@ -9,6 +9,10 @@ import Foundation
 import UIKit
 import THEOplayerSDK
 
+#if canImport(THEOplayerConnectorSideloadedSubtitle)
+import THEOplayerConnectorSideloadedSubtitle
+#endif
+
 let CACHE_EVENT_PROP_STATUS: String = "status"
 let CACHE_EVENT_PROP_PROGRESS: String = "progress"
 let CACHE_EVENT_PROP_TASK: String = "task"
@@ -147,17 +151,25 @@ class THEOplayerRCTCacheAPI: RCTEventEmitter {
         if DEBUG_CACHE_API { PrintUtils.printLog(logText: "[NATIVE] createTask triggered on Cache API.") }
 		let params = THEOplayerRCTCachingParametersBuilder.buildCachingParameters(params)
 		let (sourceDescription, _) = THEOplayerRCTSourceDescriptionBuilder.buildSourceDescription(src)
-		if let srcDescription = sourceDescription,
-		   let newTask = THEOplayer.cache.createTask(source: srcDescription, parameters: params) {
-            if DEBUG_CACHE_API { PrintUtils.printLog(logText: "[NATIVE] New cache task created with id \(newTask.id)") }
-            resolve(THEOplayerRCTCacheAggregator.aggregateCacheTask(task: newTask))
-            // emit onAddCachingTaskEvent
-            self.sendEvent(withName: "onAddCachingTaskEvent", body: [
-                CACHE_EVENT_PROP_TASK: THEOplayerRCTCacheAggregator.aggregateCacheTask(task: newTask)
-            ])
+		if let srcDescription = sourceDescription {
+#if canImport(THEOplayerConnectorSideloadedSubtitle)
+            let newTask = THEOplayer.cache.createTaskWithSubtitles(source: srcDescription, parameters: params)
+#else
+            let newTask = THEOplayer.cache.createTask(source: srcDescription, parameters: params)
+#endif
+            if let createdTask = newTask {
+                if DEBUG_CACHE_API { PrintUtils.printLog(logText: "[NATIVE] New cache task created with id \(createdTask.id)") }
+                resolve(THEOplayerRCTCacheAggregator.aggregateCacheTask(task: createdTask))
+                // emit onAddCachingTaskEvent
+                self.sendEvent(withName: "onAddCachingTaskEvent", body: [
+                    CACHE_EVENT_PROP_TASK: THEOplayerRCTCacheAggregator.aggregateCacheTask(task: createdTask)
+                ])
 
-            // attach the state and progress listeners to the new task
-            self.attachTaskListenersToTask(newTask)
+                // attach the state and progress listeners to the new task
+                self.attachTaskListenersToTask(createdTask)
+            } else {
+                reject(ERROR_CODE_CREATE_CACHINGTASK_FAILED, ERROR_MESSAGE_CREATE_CACHINGTASK_FAILURE, nil)
+            }
         } else {
             reject(ERROR_CODE_CREATE_CACHINGTASK_FAILED, ERROR_MESSAGE_CREATE_CACHINGTASK_FAILURE, nil)
         }

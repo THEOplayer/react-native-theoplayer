@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added support for the customData property on the Ad and AdBreak types.
 
+### Fixed
+
+- Fixed an issue on iOS where sideloaded texttracks were not stored for cached playout.
+
 ## [11.4.0] - 26-07-06
 
 ### Fixed
