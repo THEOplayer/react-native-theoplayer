@@ -25,6 +25,7 @@ import {
   UiContainer,
 } from '@theoplayer/react-native-ui';
 import {
+  AdEventType,
   ContentProtectionRegistry,
   PlayerConfiguration,
   PlayerEventType,
@@ -131,6 +132,29 @@ export default function App() {
     player.addEventListener(PlayerEventType.ERROR, console.log);
     player.addEventListener(PlayerEventType.THEOLIVE_EVENT, console.log);
     player.addEventListener(PlayerEventType.THEOADS_EVENT, onTheoAdsEvent);
+
+    // Ad event logging for OptiView Ads (SGAI) repro.
+    // The RN wrapper delivers all ad events via a single AD_EVENT with an AdEventType subType.
+    player.addEventListener(PlayerEventType.AD_EVENT, (e) => {
+      switch (e.subType) {
+        case AdEventType.AD_BEGIN:
+          console.log('AD BEGIN:', e);
+          break;
+        case AdEventType.AD_END:
+          console.log('AD END:', e);
+          break;
+        case AdEventType.AD_BREAK_BEGIN:
+          console.log('AD BREAK BEGIN:', e);
+          break;
+        case AdEventType.AD_BREAK_END:
+          console.log('AD BREAK END:', e);
+          break;
+        case AdEventType.AD_ERROR:
+          console.log('AD ERROR:', e);
+          break;
+      }
+    });
+    player.addEventListener(PlayerEventType.ERROR, (e) => console.log('PLAYER ERROR:', e));
 
     sdkVersions().then((versions) => console.log(`[theoplayer] ${JSON.stringify(versions, null, 4)}`));
 
