@@ -50,7 +50,7 @@ class THEOplayerRCTAdAdapter {
         if let customIntegration = ad.customIntegration {
             adData[PROP_AD_CUSTOM_INTEGRATION] = customIntegration
         }
-        if let customData = ad.customData as? [String: Any] {
+        if let customData = ad.customData {
             adData[PROP_CUSTOM_DATA] = customData
         }
         adData[PROP_AD_TYPE] = ad.type
@@ -184,7 +184,7 @@ class THEOplayerRCTAdAdapter {
         adBreakData[PROP_ADBREAK_MAX_REMAINING_DURATION] = adBreak.maxRemainingDuration
         adBreakData[PROP_ADBREAK_INTEGRATION] = adBreak.integration
         adBreakData[PROP_ADBREAK_CUSTOM_INTEGRATION] = adBreak.customIntegration
-        if let customData = adBreak.customData as? [String: Any] {
+        if let customData = adBreak.customData {
             adBreakData[PROP_CUSTOM_DATA] = customData
         }
         // process adds when adbreak contains them
