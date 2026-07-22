@@ -116,7 +116,7 @@ class THEOplayerRCTTrackMetadataAggregator {
         entry[PROP_STARTTIME] = THEOplayerRCTTypeUtils.encodeInfNan(textTrackCue.startTime * 1000)
         entry[PROP_ENDTIME] = THEOplayerRCTTypeUtils.encodeInfNan(textTrackCue.endTime * 1000)
         if let content = textTrackCue.content {
-            entry[PROP_CUE_CONTENT] = content
+            entry[PROP_CUE_CONTENT] = THEOplayerRCTTypeUtils.bridgeSafe(content)
         } else if let contentString = textTrackCue.contentString {
             entry[PROP_CUE_CONTENT] = contentString
         }
@@ -150,7 +150,7 @@ class THEOplayerRCTTrackMetadataAggregator {
                         } catch {
                             do {
                                 // try reading as data
-                                attributesEntry[key] = try customAttributes.getBytes(for: key)
+                                attributesEntry[key] = THEOplayerRCTTypeUtils.bridgeSafe(try customAttributes.getBytes(for: key))
                             } catch {
                                 print("Unable to extract customAttribute from DateRange cue. Content is limited to String, Double or Data.")
                             }
