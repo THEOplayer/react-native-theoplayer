@@ -22,24 +22,28 @@ extension THEOplayerRCTView {
     
     func parseMediaControlConfig(configDict: NSDictionary) {
         if let mediaControlConfig = configDict["mediaControl"] as? NSDictionary {
+            // Build the config locally and assign it once, so the didSet observer (and its
+            // remoteCommands/nowPlaying refresh) only fires a single time per parse.
+            var newConfig = self.mediaControlConfig
             if let mediaSessionEnabled = mediaControlConfig["mediaSessionEnabled"] as? Bool {
-                self.mediaControlConfig.mediaSessionEnabled = mediaSessionEnabled
+                newConfig.mediaSessionEnabled = mediaSessionEnabled
             }
             if let skipForwardInterval = mediaControlConfig["skipForwardInterval"] as? Int {
-                self.mediaControlConfig.skipForwardInterval = skipForwardInterval
+                newConfig.skipForwardInterval = skipForwardInterval
             }
             if let skipBackwardInterval = mediaControlConfig["skipBackwardInterval"] as? Int {
-                self.mediaControlConfig.skipBackwardInterval = skipBackwardInterval
+                newConfig.skipBackwardInterval = skipBackwardInterval
             }
             if let convertSkipToSeek = mediaControlConfig["convertSkipToSeek"] as? Bool {
-                self.mediaControlConfig.convertSkipToSeek = convertSkipToSeek
+                newConfig.convertSkipToSeek = convertSkipToSeek
             }
             if let allowLivePlayPause = mediaControlConfig["allowLivePlayPause"] as? Bool {
-                self.mediaControlConfig.allowLivePlayPause = allowLivePlayPause
+                newConfig.allowLivePlayPause = allowLivePlayPause
             }
             if let seekToLiveOnResume = mediaControlConfig["seekToLiveOnResume"] as? Bool {
-                self.mediaControlConfig.seekToLiveOnResume = seekToLiveOnResume
+                newConfig.seekToLiveOnResume = seekToLiveOnResume
             }
+            self.mediaControlConfig = newConfig
         }
     }
 }
