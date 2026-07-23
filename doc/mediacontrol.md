@@ -70,7 +70,7 @@ where `isActive` is true for the player that should own the media session and fa
 
 ### iOS: lock screen and Control Center play/pause state with multiple playing players
 
-As a good practice, disable [background audio](./background.md) for any player that does not own the media session or make sure only one player is playing at any given time. This could be achieved by shifting the ownership when a player starts playing (PLAY or PLAYING event received) and accordingly pause other players.
+As a good practice, make sure only one player is actively playing at any given time, while shifting the ownership when a player starts playing (PLAY or PLAYING event received) and accordingly pausing the other players.
 
 ## Configuration
 
