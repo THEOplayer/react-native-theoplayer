@@ -19,6 +19,9 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     private var adBreakEndListener: EventListener?
     
     // MARK: computed
+    private var mediaSessionEnabled: Bool {
+        self.view?.mediaControlConfig.mediaSessionEnabled ?? DEFAULT_MEDIA_SESSION_ENABLED
+    }
     private var seekToLiveOnResume: Bool {
         self.view?.mediaControlConfig.seekToLiveOnResume ?? DEFAULT_SEEK_TO_LIVE_ON_RESUME
     }
@@ -102,10 +105,11 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     func updateRemoteCommands() {
         let commandCenter = MPRemoteCommandCenter.shared()
         
-        let playPauseControlsEnabled = self.hasSource && !self.inAd && (!self.isLive || self.allowLivePlayPause)
-        let positionControlEnabled = self.hasSource && !self.inAd && !self.isLive
-        let seekControlEnabled = self.hasSource && !self.inAd && !self.isLive && !self.hasActionHandler(for: .SKIP_TO_NEXT) && !self.hasActionHandler(for: .SKIP_TO_PREVIOUS)
-        let trackControlEnabled = self.hasActionHandler(for: .SKIP_TO_NEXT) && self.hasActionHandler(for: .SKIP_TO_PREVIOUS)
+        let sessionEnabled = self.mediaSessionEnabled
+        let playPauseControlsEnabled = sessionEnabled && self.hasSource && !self.inAd && (!self.isLive || self.allowLivePlayPause)
+        let positionControlEnabled = sessionEnabled && self.hasSource && !self.inAd && !self.isLive
+        let seekControlEnabled = sessionEnabled && self.hasSource && !self.inAd && !self.isLive && !self.hasActionHandler(for: .SKIP_TO_NEXT) && !self.hasActionHandler(for: .SKIP_TO_PREVIOUS)
+        let trackControlEnabled = sessionEnabled && self.hasActionHandler(for: .SKIP_TO_NEXT) && self.hasActionHandler(for: .SKIP_TO_PREVIOUS)
         
         // update the enabled state to have correct visual representation in the lockscreen
         commandCenter.pauseCommand.isEnabled =  playPauseControlsEnabled
@@ -126,6 +130,7 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     }
     
     @objc private func onPlayCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
+        guard self.mediaSessionEnabled else { return .commandFailed }
         if let player = self.player,
            !self.inAd {
             if self.isLive && self.seekToLiveOnResume {
@@ -144,6 +149,7 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     }
     
     @objc private func onPauseCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
+        guard self.mediaSessionEnabled else { return .commandFailed }
         if let player = self.player,
            !self.inAd {
             if !self.executeAction(for: .PAUSE) {
@@ -158,6 +164,7 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     }
     
     @objc private func onTogglePlayPauseCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
+        guard self.mediaSessionEnabled else { return .commandFailed }
         if let player = self.player,
            !self.inAd {
                 if player.paused {
@@ -185,6 +192,7 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     }
     
     @objc private func onStopCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
+        guard self.mediaSessionEnabled else { return .commandFailed }
         if let player = self.player,
            !self.inAd {
             if !player.paused {
@@ -201,6 +209,7 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     }
     
     @objc private func onScrubCommand(_ event: MPChangePlaybackPositionCommandEvent) -> MPRemoteCommandHandlerStatus {
+        guard self.mediaSessionEnabled else { return .commandFailed }
         if let player = self.player,
            !self.isLive,
            !self.inAd {
@@ -213,6 +222,7 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     }
     
     @objc private func onSkipForwardCommand(_ event: MPSkipIntervalCommandEvent) -> MPRemoteCommandHandlerStatus {
+        guard self.mediaSessionEnabled else { return .commandFailed }
         if let player = self.player,
            !self.isLive,
            !self.inAd {
@@ -225,6 +235,7 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     }
     
     @objc private func onSkipBackwardCommand(_ event: MPSkipIntervalCommandEvent) -> MPRemoteCommandHandlerStatus {
+        guard self.mediaSessionEnabled else { return .commandFailed }
         if let player = self.player,
            !self.isLive,
            !self.inAd {
@@ -237,6 +248,7 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     }
     
     @objc private func onPreviousTrackCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
+        guard self.mediaSessionEnabled else { return .commandFailed }
         if let player = self.player {
             if !self.executeAction(for: .SKIP_TO_PREVIOUS) {
                 if DEBUG_MEDIA_CONTROL_API { PrintUtils.printLog(logText: "[NATIVE] Executing default Skip to previous action.") }
@@ -252,6 +264,7 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     }
     
     @objc private func onNextTrackCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
+        guard self.mediaSessionEnabled else { return .commandFailed }
         if let player = self.player {
             if !self.executeAction(for: .SKIP_TO_NEXT) {
                 if DEBUG_MEDIA_CONTROL_API { PrintUtils.printLog(logText: "[NATIVE] Executing default Skip to next action.") }

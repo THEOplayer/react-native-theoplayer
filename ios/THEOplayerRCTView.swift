@@ -219,7 +219,7 @@ public class THEOplayerRCTView: UIView {
             self.theoliveEventHandler.setPlayer(player)
             self.theoadsEventHandler.setPlayer(player)
             self.castEventHandler.setPlayer(player)
-            self.nowPlayingManager.setPlayer(player)
+            self.nowPlayingManager.setPlayer(player, view: self)
             self.remoteCommandsManager.setPlayer(player, view: self)
             self.pipControlsManager.setPlayer(player, view: self)
             self.presentationModeManager.setPlayer(player, view: self)

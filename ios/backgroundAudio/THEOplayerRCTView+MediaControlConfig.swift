@@ -7,8 +7,10 @@ let DEFAULT_SKIP_INTERVAL = 15
 let DEFAULT_CONVERT_SKIP_TO_SEEK = false
 let DEFAULT_ALLOW_LIVE_PLAY_PAUSE = true
 let DEFAULT_SEEK_TO_LIVE_ON_RESUME = false
+let DEFAULT_MEDIA_SESSION_ENABLED = true
 
 struct MediaControlConfig {
+    var mediaSessionEnabled: Bool = DEFAULT_MEDIA_SESSION_ENABLED
     var skipForwardInterval: Int = DEFAULT_SKIP_INTERVAL
     var skipBackwardInterval: Int = DEFAULT_SKIP_INTERVAL
     var convertSkipToSeek: Bool = DEFAULT_CONVERT_SKIP_TO_SEEK
@@ -20,6 +22,9 @@ extension THEOplayerRCTView {
     
     func parseMediaControlConfig(configDict: NSDictionary) {
         if let mediaControlConfig = configDict["mediaControl"] as? NSDictionary {
+            if let mediaSessionEnabled = mediaControlConfig["mediaSessionEnabled"] as? Bool {
+                self.mediaControlConfig.mediaSessionEnabled = mediaSessionEnabled
+            }
             if let skipForwardInterval = mediaControlConfig["skipForwardInterval"] as? Int {
                 self.mediaControlConfig.skipForwardInterval = skipForwardInterval
             }

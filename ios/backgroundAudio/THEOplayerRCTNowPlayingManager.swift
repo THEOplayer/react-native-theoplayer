@@ -7,9 +7,15 @@ import MediaPlayer
 class THEOplayerRCTNowPlayingManager {
     // MARK: Members
     private weak var player: THEOplayer?
+    private weak var view: THEOplayerRCTView?
     private let nowPlayingQueue = DispatchQueue(label: "com.theoplayer.reactnative.nowplayinginfo")
     private var nowPlayingInfoStorage = [String : Any]()
     private var nowPlayingInfoGeneration: Int = 0
+    
+    // MARK: computed
+    private var mediaSessionEnabled: Bool {
+        self.view?.mediaControlConfig.mediaSessionEnabled ?? DEFAULT_MEDIA_SESSION_ENABLED
+    }
     
     // MARK: player Listeners
     private var durationChangeListener: EventListener?
@@ -38,8 +44,9 @@ class THEOplayerRCTNowPlayingManager {
     }
     
     // MARK: - player setup / breakdown
-    func setPlayer(_ player: THEOplayer) {
+    func setPlayer(_ player: THEOplayer, view: THEOplayerRCTView?) {
         self.player = player;
+        self.view = view
         
         // attach listeners
         self.attachListeners()
@@ -133,6 +140,7 @@ class THEOplayerRCTNowPlayingManager {
     }
     
     private func processNowPlayingInfoToInfoCenter() {
+        guard self.mediaSessionEnabled else { return }
         let nowPlayingInfo = self.getNowPlayingInfoStorage()
         if !nowPlayingInfo.isEmpty {
             Task { @MainActor in
@@ -149,6 +157,7 @@ class THEOplayerRCTNowPlayingManager {
     }
     
     private func clearNowPlayingInfoOnInfoCenter() {
+        guard self.mediaSessionEnabled else { return }
         Task { @MainActor in
             MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
             if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] clearing nowPlayingInfo (to nil) on infoCenter.") }
