@@ -20,4 +20,8 @@ export class MediaControlNativeAdapter implements MediaControlAPI {
     this.handlers.set(action, handler);
     NativeMediaControlModule.setHandler(this._player.nativeHandle || -1, action);
   }
+
+  setEnabled(enabled: boolean): void {
+    NativeMediaControlModule.setEnabled(this._player.nativeHandle || -1, enabled);
+  }
 }
