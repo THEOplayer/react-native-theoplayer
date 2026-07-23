@@ -11,6 +11,7 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     private var isLive: Bool = false
     private var inAd: Bool = false
     private var hasSource: Bool = false
+    private var commandsRegistered: Bool = false
     
     // MARK: player Listeners
     private var durationChangeListener: EventListener?
@@ -42,6 +43,8 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     func destroy() {
         // dettach listeners
         self.dettachListeners()
+        // remove our targets from the shared command center
+        self.removeCommandTargets()
     }
     
     // MARK: - player setup / breakdown
@@ -58,40 +61,66 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
         self.isLive = false
         self.inAd = false
         self.hasSource = false
+        // Register/deregister targets and apply the correct enabled state based on the current config.
+        // Note: MPRemoteCommandCenter is a process-wide singleton shared by all player instances, so we
+        // must not touch its state here for a player that doesn't own the media session.
+        self.updateRemoteCommands()
+        if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Remote commands initialised.") }
+    }
+
+    private func addCommandTargets() {
+        guard !self.commandsRegistered else { return }
         let commandCenter = MPRemoteCommandCenter.shared()
-        
-        commandCenter.playCommand.isEnabled = false
-        commandCenter.pauseCommand.isEnabled = false
-        commandCenter.togglePlayPauseCommand.isEnabled = false
-        commandCenter.stopCommand.isEnabled = false
-        commandCenter.changePlaybackPositionCommand.isEnabled = false
-        commandCenter.skipForwardCommand.isEnabled = false
-        commandCenter.skipBackwardCommand.isEnabled = false
-        commandCenter.previousTrackCommand.isEnabled = false
-        commandCenter.nextTrackCommand.isEnabled = false
-        
-        // PLAY
-        commandCenter.playCommand.addTarget(self, action: #selector(onPlayCommand(_:)))
-        // PAUSE
-        commandCenter.pauseCommand.addTarget(self, action: #selector(onPauseCommand(_:)))
-        // PLAY/PAUSE
-        commandCenter.togglePlayPauseCommand.addTarget(self, action: #selector(onTogglePlayPauseCommand(_:)))
+        // NOTE: play/pause/togglePlayPause are (re)registered separately via reclaimPlayPauseCommands(),
+        // because the THEOplayer SDK adds its own play/pause targets to every player instance and we must
+        // strip those to keep remote play/pause scoped to the active player only.
         // STOP
         commandCenter.stopCommand.addTarget(self, action: #selector(onStopCommand(_:)))
         // SCRUBBER
         commandCenter.changePlaybackPositionCommand.addTarget(self, action: #selector(onScrubCommand(_:)))
-        // ADD SEEK FORWARD
-        commandCenter.skipForwardCommand.preferredIntervals = [self.skipForwardInterval]
+        // SEEK FORWARD
         commandCenter.skipForwardCommand.addTarget(self, action: #selector(onSkipForwardCommand(_:)))
-        // ADD SEEK BACKWARD
-        commandCenter.skipBackwardCommand.preferredIntervals = [self.skipBackwardInterval]
+        // SEEK BACKWARD
         commandCenter.skipBackwardCommand.addTarget(self, action: #selector(onSkipBackwardCommand(_:)))
-        // ADD NEXT TRACK
+        // NEXT TRACK
         commandCenter.nextTrackCommand.addTarget(self, action: #selector(onNextTrackCommand(_:)))
-        // ADD PREVIOUS TRACK
+        // PREVIOUS TRACK
         commandCenter.previousTrackCommand.addTarget(self, action: #selector(onPreviousTrackCommand(_:)))
-        
-        if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Remote commands initialised.") }
+        self.commandsRegistered = true
+        if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Remote command targets added.") }
+    }
+
+    /// Take exclusive ownership of the play/pause/togglePlayPause remote commands.
+    ///
+    /// The THEOplayer SDK registers its own play/pause handlers on the shared MPRemoteCommandCenter for
+    /// EVERY player instance at creation (via initAudioSession -> setupRemoteTransportControls). With
+    /// multiple players this makes a single remote play/pause control all instances. We therefore remove
+    /// all targets (SDK's and any stale ones) and re-add only this active player's handlers.
+    private func reclaimPlayPauseCommands() {
+        let commandCenter = MPRemoteCommandCenter.shared()
+        commandCenter.playCommand.removeTarget(nil)
+        commandCenter.pauseCommand.removeTarget(nil)
+        commandCenter.togglePlayPauseCommand.removeTarget(nil)
+        commandCenter.playCommand.addTarget(self, action: #selector(onPlayCommand(_:)))
+        commandCenter.pauseCommand.addTarget(self, action: #selector(onPauseCommand(_:)))
+        commandCenter.togglePlayPauseCommand.addTarget(self, action: #selector(onTogglePlayPauseCommand(_:)))
+        if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Reclaimed play/pause commands from SDK for active player.") }
+    }
+
+    private func removeCommandTargets() {
+        guard self.commandsRegistered else { return }
+        let commandCenter = MPRemoteCommandCenter.shared()
+        commandCenter.playCommand.removeTarget(self)
+        commandCenter.pauseCommand.removeTarget(self)
+        commandCenter.togglePlayPauseCommand.removeTarget(self)
+        commandCenter.stopCommand.removeTarget(self)
+        commandCenter.changePlaybackPositionCommand.removeTarget(self)
+        commandCenter.skipForwardCommand.removeTarget(self)
+        commandCenter.skipBackwardCommand.removeTarget(self)
+        commandCenter.nextTrackCommand.removeTarget(self)
+        commandCenter.previousTrackCommand.removeTarget(self)
+        self.commandsRegistered = false
+        if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Remote command targets removed.") }
     }
     
     private func hasActionHandler(for action: MediaControlAction) -> Bool {
@@ -105,11 +134,25 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     func updateRemoteCommands() {
         let commandCenter = MPRemoteCommandCenter.shared()
         
-        let sessionEnabled = self.mediaSessionEnabled
-        let playPauseControlsEnabled = sessionEnabled && self.hasSource && !self.inAd && (!self.isLive || self.allowLivePlayPause)
-        let positionControlEnabled = sessionEnabled && self.hasSource && !self.inAd && !self.isLive
-        let seekControlEnabled = sessionEnabled && self.hasSource && !self.inAd && !self.isLive && !self.hasActionHandler(for: .SKIP_TO_NEXT) && !self.hasActionHandler(for: .SKIP_TO_PREVIOUS)
-        let trackControlEnabled = sessionEnabled && self.hasActionHandler(for: .SKIP_TO_NEXT) && self.hasActionHandler(for: .SKIP_TO_PREVIOUS)
+        // Only the player that owns the media session may participate. When disabled, withdraw this
+        // player's command handlers entirely and leave the shared command center untouched so we don't
+        // respond to remote commands nor clobber the active player's command state.
+        guard self.mediaSessionEnabled else {
+            self.removeCommandTargets()
+            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] Remote commands disabled: withdrew from shared command center.") }
+            return
+        }
+        
+        // Ensure this player's command handlers are registered on the shared command center.
+        self.addCommandTargets()
+        // Take play/pause ownership away from the SDK's per-instance handlers so remote play/pause only
+        // affects this (active) player.
+        self.reclaimPlayPauseCommands()
+        
+        let playPauseControlsEnabled = self.hasSource && !self.inAd && (!self.isLive || self.allowLivePlayPause)
+        let positionControlEnabled = self.hasSource && !self.inAd && !self.isLive
+        let seekControlEnabled = self.hasSource && !self.inAd && !self.isLive && !self.hasActionHandler(for: .SKIP_TO_NEXT) && !self.hasActionHandler(for: .SKIP_TO_PREVIOUS)
+        let trackControlEnabled = self.hasActionHandler(for: .SKIP_TO_NEXT) && self.hasActionHandler(for: .SKIP_TO_PREVIOUS)
         
         // update the enabled state to have correct visual representation in the lockscreen
         commandCenter.pauseCommand.isEnabled =  playPauseControlsEnabled

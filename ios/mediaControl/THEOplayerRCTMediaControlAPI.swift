@@ -32,6 +32,16 @@ class THEOplayerRCTMediaControlAPI: RCTEventEmitter {
             }
         }
     }
+
+    @objc(setEnabled:enabled:)
+    func setEnabled(_ node: NSNumber, enabled: Bool) -> Void {
+        DispatchQueue.main.async {
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView {
+                theView.mediaControlConfig.mediaSessionEnabled = enabled
+                if DEBUG_MEDIA_CONTROL_API { PrintUtils.printLog(logText: "[NATIVE] Media session \(enabled ? "enabled" : "disabled")") }
+            }
+        }
+    }
     
     private func handlerForAction(_ action: String, node: NSNumber) -> (() -> Void) {
         return { [weak self] in
