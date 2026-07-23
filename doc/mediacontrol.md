@@ -46,6 +46,32 @@ This allows you to customize whether system controls are used for playlist navig
 
 Note: In both cases, you can always use the system's time slider to adjust the playhead to seek to a location in the stream.
 
+## Multiple players: single media-session owner
+
+Each platform exposes a **single, process-wide** media session and set of remote controls (iOS `MPNowPlayingInfoCenter` / `MPRemoteCommandCenter`, Android `MediaSession` + notification,
+Web `navigator.mediaSession`). When your app renders **more than one** `THEOplayerView` at the same time, they all share this single system session.
+
+Because of that, **only one player should own the media session at any given time**. It is the **application's responsibility** to designate that single owner and to ensure no other player
+simultaneously publishes Now Playing info or handles remote commands. If multiple players are allowed to take control at once:
+
+- **Now Playing info** (title, artwork, position) from the different players will overwrite each other.
+- **Remote commands** (play/pause/seek/skip) become last‑writer‑wins: the most recent player to claim the controls keeps them, and control can flip between players as each one updates its state.
+
+### Recommended approach
+
+Keep a single "active" player and toggle ownership so that exactly one player has the media session enabled at a time. You can update ownership across players using:
+
+```typescript
+// Give this player exclusive ownership of the media session / remote commands.
+player.mediaControl?.setEnabled(isActive);
+```
+
+where `isActive` is true for the player that should own the media session and false for all other players. The owner will have it's state reflected on the media session widgets.
+
+### iOS: lock screen and Control Center play/pause state with multiple playing players
+
+As a good practice, disable [background audio](./background.md) for any player that does not own the media session or make sure only one player is playing at any given time. This could be achieved by shifting the ownership when a player starts playing (PLAY or PLAYING event received) and accordingly pause other players.
+
 ## Configuration
 
 You can add additional media control configuration using the [MediaControlConfiguration](../src/api/media/MediaControlConfiguration.ts) interface:
