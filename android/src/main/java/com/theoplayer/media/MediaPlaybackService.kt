@@ -50,6 +50,10 @@ class MediaPlaybackService : Service() {
       service.connectPlayerContext(playerContext)
     }
 
+    fun isActivePlayerContext(playerContext: ReactTHEOplayerContext): Boolean {
+      return service.isActivePlayerContext(playerContext)
+    }
+
     fun setEnablePlaybackControls(newConfig: MediaSessionConfig) {
       mediaSessionConfig = newConfig
       updateNotification()
@@ -155,6 +159,10 @@ class MediaPlaybackService : Service() {
   private fun connectPlayerContext(playerContext: ReactTHEOplayerContext) {
     this.playerContext = playerContext
     updateNotification()
+  }
+
+  private fun isActivePlayerContext(playerContext: ReactTHEOplayerContext): Boolean {
+    return this.playerContext === playerContext
   }
 
   private fun updateNotification() {

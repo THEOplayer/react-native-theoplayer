@@ -67,20 +67,39 @@ class ReactTHEOplayerContext private constructor(
   private var mediaSessionConnector: MediaSessionConnector? = null
 
   private var mediaSessionConfig: MediaSessionConfig = configAdapter.mediaSessionConfig()
-    set(value) {
-      applyMediaSessionConfig(mediaSessionConnector, value)
-      field = value
-    }
   var mediaControlProxy: MediaControlProxy = MediaControlProxy()
 
   /**
+   * Whether this player context currently owns the (potentially shared) media session.
+   *
+   * When multiple players run with background audio, they share a single [MediaPlaybackService]
+   * and its media session; only the player that most recently took ownership drives the lock-screen
+   * widget. Without a background service each player owns its own local session, so it always owns it.
+   */
+  private fun ownsMediaSession(): Boolean {
+    return binder?.isActivePlayerContext(this) ?: true
+  }
+
+  /**
    * Enable or disable the media session for this player instance at runtime.
-   * This re-applies the media session config (activating/deactivating the session) and
-   * updates the notification's controls accordingly.
+   *
+   * When enabling, this player takes over the (potentially shared) media session: it becomes the
+   * active source for Now Playing metadata, remote commands and the foreground notification.
+   * When disabling, the shared session is only torn down if this player still owns it, so a
+   * newly-activated player is never clobbered regardless of the order in which enable/disable run.
    */
   fun setMediaSessionEnabled(enabled: Boolean) {
     mediaSessionConfig = mediaSessionConfig.copy(mediaSessionEnabled = enabled)
-    binder?.setEnablePlaybackControls(mediaSessionConfig)
+    if (enabled) {
+      // Take over the (shared) foreground service/notification for this player.
+      binder?.setPlayerContext(this)
+      applyMediaSessionConfig(mediaSessionConnector, mediaSessionConfig)
+      binder?.setEnablePlaybackControls(mediaSessionConfig)
+    } else if (ownsMediaSession()) {
+      // Only tear down when we still own the session; otherwise another player already took over.
+      applyMediaSessionConfig(mediaSessionConnector, mediaSessionConfig)
+      binder?.setEnablePlaybackControls(mediaSessionConfig)
+    }
   }
 
   lateinit var playerView: THEOplayerView
