@@ -32,12 +32,14 @@ const mediaSession = (function () {
  */
 export class WebMediaSession {
   private readonly _mediaControlAdapter: MediaControlWebAdapter;
+  private _enabled: boolean;
 
   constructor(
     private readonly _webAdapter: THEOplayerWebAdapter,
     private readonly _player: ChromelessPlayer,
     private readonly _config: MediaControlConfiguration = defaultMediaControlConfiguration,
   ) {
+    this._enabled = this._config.mediaSessionEnabled !== false;
     this._player.addEventListener('sourcechange', this.onSourceChange);
     this._mediaControlAdapter = new MediaControlWebAdapter(this);
   }
@@ -46,7 +48,24 @@ export class WebMediaSession {
     return this._mediaControlAdapter;
   }
 
+  setEnabled(enabled: boolean) {
+    if (this._enabled === enabled) {
+      return;
+    }
+    this._enabled = enabled;
+    if (enabled) {
+      this.updateMetadata();
+      this.updateMediaSession();
+    } else {
+      this.clearMediaSession();
+    }
+  }
+
   updateMediaSession() {
+    if (!this._enabled) {
+      this.clearMediaSession();
+      return;
+    }
     // Update trick-play capabilities
     if (this.isTrickPlayEnabled()) {
       mediaSession.setActionHandler('seekbackward', (event) => {
@@ -104,11 +123,19 @@ export class WebMediaSession {
     this._player.removeEventListener(['play', 'playing'], this.onFirstPlaying);
     this._player.removeEventListener(['play', 'pause', 'loadedmetadata', 'durationchange', 'ratechange'], this.update);
     this._player.ads?.removeEventListener(['adbreakbegin', 'adbreakend'], this.update);
+    this.clearMediaSession();
+  }
+
+  private clearMediaSession() {
     mediaSession.setActionHandler('play', NoOp);
     mediaSession.setActionHandler('pause', NoOp);
     mediaSession.setActionHandler('seekbackward', NoOp);
     mediaSession.setActionHandler('seekforward', NoOp);
     mediaSession.setActionHandler('seekto', NoOp);
+    mediaSession.setActionHandler('previoustrack', NoOp);
+    mediaSession.setActionHandler('nexttrack', NoOp);
+    mediaSession.metadata = null;
+    mediaSession.playbackState = 'none';
   }
 
   private update = () => {
@@ -132,6 +159,9 @@ export class WebMediaSession {
   };
 
   private updateMetadata = () => {
+    if (!this._enabled) {
+      return;
+    }
     const source = this._player.source;
     const metadata = source?.metadata;
     const artwork = [metadata?.displayIconUri, source?.poster, ...(metadata?.images ? metadata.images : [])]

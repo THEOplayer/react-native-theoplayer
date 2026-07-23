@@ -78,10 +78,9 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     document.addEventListener('visibilitychange', this.onVisibilityChange);
     this._player.addEventListener('dimensionchange', this.onPlayerDimensionChange);
 
-    // Optionally create a media session connector
-    if (config?.mediaControl?.mediaSessionEnabled !== false) {
-      this._mediaSession = new WebMediaSession(this, player, config?.mediaControl);
-    }
+    // Always create a media session connector so it can be toggled at runtime via mediaControl.setEnabled().
+    // The initial enabled state is derived from config.mediaControl.mediaSessionEnabled.
+    this._mediaSession = new WebMediaSession(this, player, config?.mediaControl);
   }
 
   get mediaControl() {

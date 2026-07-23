@@ -18,4 +18,8 @@ export class MediaControlWebAdapter implements MediaControlAPI {
   getHandler(action: MediaControlAction): MediaControlHandler | undefined {
     return this.handlers.get(action);
   }
+
+  setEnabled(enabled: boolean): void {
+    this.mediaSession.setEnabled(enabled);
+  }
 }
