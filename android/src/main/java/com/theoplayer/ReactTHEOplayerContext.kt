@@ -73,6 +73,16 @@ class ReactTHEOplayerContext private constructor(
     }
   var mediaControlProxy: MediaControlProxy = MediaControlProxy()
 
+  /**
+   * Enable or disable the media session for this player instance at runtime.
+   * This re-applies the media session config (activating/deactivating the session) and
+   * updates the notification's controls accordingly.
+   */
+  fun setMediaSessionEnabled(enabled: Boolean) {
+    mediaSessionConfig = mediaSessionConfig.copy(mediaSessionEnabled = enabled)
+    binder?.setEnablePlaybackControls(mediaSessionConfig)
+  }
+
   lateinit var playerView: THEOplayerView
 
   val player: Player

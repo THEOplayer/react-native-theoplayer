@@ -71,6 +71,16 @@ class MediaControlModule(context: ReactApplicationContext) : ReactContextBaseJav
     }
   }
 
+  /**
+   * Enable or disable the media session for the player instance at runtime.
+   */
+  @ReactMethod
+  fun setEnabled(tag: Int, enabled: Boolean) {
+    viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
+      view?.playerContext?.setMediaSessionEnabled(enabled)
+    }
+  }
+
   private fun sendEvent(eventName: String, params: WritableMap?) {
     reactApplicationContext
       .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
