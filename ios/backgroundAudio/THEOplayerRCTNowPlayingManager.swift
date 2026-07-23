@@ -85,7 +85,7 @@ class THEOplayerRCTNowPlayingManager {
             self.updateAlbum(metadata.metadataKeys?["album"] as? String)
             self.updateDuration(player.duration)
             self.updateMediaType() // video
-            self.updatePlaybackRate(player.playbackRate)
+            self.updatePlaybackRate(player.paused ? 0 : player.playbackRate)
             self.updateServiceIdentifier(metadata.metadataKeys?["nowPlayingServiceIdentifier"] as? String)
             self.updateContentIdentifier(metadata.metadataKeys?["nowPlayingContentIdentifier"] as? String)
             self.updateCurrentTime(player.currentTime)
@@ -159,6 +159,8 @@ class THEOplayerRCTNowPlayingManager {
     private func clearNowPlayingInfoOnInfoCenter() {
         guard self.mediaSessionEnabled else { return }
         Task { @MainActor in
+            // Avoid redundant clears (and their log noise) when the info center is already empty.
+            guard MPNowPlayingInfoCenter.default().nowPlayingInfo?.isEmpty == false else { return }
             MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
             if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] clearing nowPlayingInfo (to nil) on infoCenter.") }
             
