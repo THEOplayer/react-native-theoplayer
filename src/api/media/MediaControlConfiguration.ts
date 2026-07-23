@@ -19,7 +19,7 @@ export interface MediaControlConfiguration {
    *
    * @defaultValue `true`
    *
-   * @platform web,android
+   * @platform web,android,ios
    */
   readonly mediaSessionEnabled?: boolean;
 
