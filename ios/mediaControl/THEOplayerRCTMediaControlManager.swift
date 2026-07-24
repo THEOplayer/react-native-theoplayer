@@ -3,8 +3,8 @@
 import Foundation
 
 enum MediaControlAction: String {
-    case PLAY = "closed"
-    case PAUSE = "restored"
+    case PLAY = "play"
+    case PAUSE = "pause"
     case SKIP_TO_PREVIOUS = "skipToPrevious"
     case SKIP_TO_NEXT = "skipToNext"
 }
