@@ -94,24 +94,28 @@ export class WebMediaSession {
     }
 
     // Update play/pause capabilities
+    // Prefer a user-registered PLAY/PAUSE handler (called with the THEOplayer instance), and fall back to
+    // the default player action when none is set, matching the iOS/Android behavior.
     if (this.isPlayPauseEnabled()) {
-      mediaSession.setActionHandler('play', () => {
-        this._player?.play();
-      });
-      mediaSession?.setActionHandler('pause', () => {
-        this._player?.pause();
-      });
+      const playHandler = this.mediaControlAdapter.getHandler(MediaControlAction.PLAY);
+      mediaSession.setActionHandler('play', () => (playHandler ? playHandler(this._webAdapter) : this._player?.play()));
+      const pauseHandler = this.mediaControlAdapter.getHandler(MediaControlAction.PAUSE);
+      mediaSession.setActionHandler('pause', () => (pauseHandler ? pauseHandler(this._webAdapter) : this._player?.pause()));
     } else {
       mediaSession.setActionHandler('play', NoOp);
       mediaSession.setActionHandler('pause', NoOp);
     }
 
     // Update queue actions
+    // Note: the browser invokes media session action handlers with a MediaSessionActionDetails argument.
+    // Wrap the user handler so it is called with the THEOplayer instance, matching the MediaControlHandler contract.
     if (this.mediaControlAdapter.hasHandler(MediaControlAction.SKIP_TO_PREVIOUS)) {
-      mediaSession.setActionHandler('previoustrack', this.mediaControlAdapter.getHandler(MediaControlAction.SKIP_TO_PREVIOUS) as () => void);
+      const handler = this.mediaControlAdapter.getHandler(MediaControlAction.SKIP_TO_PREVIOUS);
+      mediaSession.setActionHandler('previoustrack', () => handler?.(this._webAdapter));
     }
     if (this.mediaControlAdapter.hasHandler(MediaControlAction.SKIP_TO_NEXT)) {
-      mediaSession.setActionHandler('nexttrack', this.mediaControlAdapter.getHandler(MediaControlAction.SKIP_TO_NEXT) as () => void);
+      const handler = this.mediaControlAdapter.getHandler(MediaControlAction.SKIP_TO_NEXT);
+      mediaSession.setActionHandler('nexttrack', () => handler?.(this._webAdapter));
     }
 
     // Update playbackState
