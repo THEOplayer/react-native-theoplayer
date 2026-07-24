@@ -63,7 +63,9 @@ export class WebMediaSession {
 
   updateMediaSession() {
     if (!this._enabled) {
-      this.clearMediaSession();
+      // A disabled session must not touch the shared navigator.mediaSession on routine events, as this
+      // would clobber the state of another player that currently owns the session. Explicit clearing
+      // only happens on the setEnabled(false)/destroy() transitions.
       return;
     }
     // Update trick-play capabilities
@@ -153,8 +155,10 @@ export class WebMediaSession {
     this._player.removeEventListener(['play', 'playing'], this.onFirstPlaying);
     this._player.removeEventListener(['play', 'pause', 'loadedmetadata', 'durationchange', 'ratechange'], this.update);
     this._player.ads?.removeEventListener(['adbreakbegin', 'adbreakend'], this.update);
-    mediaSession.metadata = null;
-    mediaSession.playbackState = 'none';
+    if (this._enabled) {
+      mediaSession.metadata = null;
+      mediaSession.playbackState = 'none';
+    }
     this._player.addEventListener(['play', 'playing'], this.onFirstPlaying);
   };
 
