@@ -31,6 +31,10 @@ const mediaSession = (function () {
  * @link https://w3c.github.io/mediasession
  */
 export class WebMediaSession {
+  // The session that most recently published to the process-wide navigator.mediaSession.
+  // Used to scope clearing so a disabled/destroyed player only clears its own session and never
+  // clobbers another (newly-active) owner during a multi-player hand-off.
+  private static _currentOwner: WebMediaSession | undefined;
   private readonly _mediaControlAdapter: MediaControlWebAdapter;
   private _enabled: boolean;
 
@@ -68,6 +72,8 @@ export class WebMediaSession {
       // only happens on the setEnabled(false)/destroy() transitions.
       return;
     }
+    // This session is now publishing to the shared media session: claim ownership.
+    WebMediaSession._currentOwner = this;
     // Update trick-play capabilities
     if (this.isTrickPlayEnabled()) {
       mediaSession.setActionHandler('seekbackward', (event) => {
@@ -133,6 +139,12 @@ export class WebMediaSession {
   }
 
   private clearMediaSession() {
+    // Only clear the shared media session if this player owns it (or nobody does), so a disabled or
+    // destroyed player never wipes another (newly-active) owner's session during a hand-off.
+    if (WebMediaSession._currentOwner !== undefined && WebMediaSession._currentOwner !== this) {
+      return;
+    }
+    WebMediaSession._currentOwner = undefined;
     mediaSession.setActionHandler('play', NoOp);
     mediaSession.setActionHandler('pause', NoOp);
     mediaSession.setActionHandler('seekbackward', NoOp);
