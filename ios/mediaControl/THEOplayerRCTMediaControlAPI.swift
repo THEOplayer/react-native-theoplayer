@@ -28,6 +28,9 @@ class THEOplayerRCTMediaControlAPI: RCTEventEmitter {
                 let mediaControlManager = theView.mediaControlManager
                 let mediaControlAction = THEOplayerRCTTypeUtils.mediaControlActionFromString(action)
                 mediaControlManager.setMediaControlActionHandler(action: mediaControlAction, handler: self.handlerForAction(action, node: node))
+                // Refresh the shared command center so the enabled state of the previous/next track and
+                // seek commands reflects the newly registered handler immediately.
+                theView.remoteCommandsManager.updateRemoteCommands()
                 if DEBUG_MEDIA_CONTROL_API { PrintUtils.printLog(logText: "[NATIVE] Handler set for \(action) action") }
             }
         }
