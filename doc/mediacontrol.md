@@ -66,11 +66,11 @@ Keep a single "active" player and toggle ownership so that exactly one player ha
 player.mediaControl?.setEnabled(isActive);
 ```
 
-where `isActive` is true for the player that should own the media session and false for all other players. The owner will have it's state reflected on the media session widgets.
+where `isActive` is true for the player that should own the media session and false for all other players. The owner will have its state reflected on the media session widgets.
 
 ### iOS: lock screen and Control Center play/pause state with multiple playing players
 
-As a good practice, make sure only one player is actively playing at any given time, while shifting the ownership when a player starts playing (PLAY or PLAYING event received) and accordingly pausing the other players.
+As a good practice, make sure only one player is actively playing at any given time. Shift the media session ownership (as demonstrated above) whenever a player starts playing (e.g. on a `PLAY` or `PLAYING` event) and pause all other players. On iOS, Control Center reflects the application's overall audio session state, not that of a specific player, so if multiple players are playing at once its controls will act on all of them.
 
 ## Configuration
 
