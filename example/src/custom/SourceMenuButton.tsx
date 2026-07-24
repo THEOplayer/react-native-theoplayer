@@ -11,7 +11,7 @@ export interface SourceMenuButtonProps {
 
 export const SourceMenuButton = (props: SourceMenuButtonProps) => {
   const createMenu = () => {
-    return <SourceMenuView sources={props.sources} includeWithLicense />;
+    return <SourceMenuView sources={props.sources} includeWithLicense={props.includeWithLicense} />;
   };
   return <MenuButton svg={<ListSvg />} menuConstructor={createMenu} />;
 };
