@@ -101,6 +101,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   }
 
   public destroy() {
+    this._mediaControlAdapter.destroy();
     this.clearEventListeners();
   }
 
