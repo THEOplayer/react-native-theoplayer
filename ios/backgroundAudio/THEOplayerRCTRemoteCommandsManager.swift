@@ -35,9 +35,6 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     private var allowLivePlayPause: Bool {
         self.view?.mediaControlConfig.allowLivePlayPause ?? DEFAULT_ALLOW_LIVE_PLAY_PAUSE
     }
-    private var convertSkipToSeek: Bool {
-        self.view?.mediaControlConfig.convertSkipToSeek ?? DEFAULT_CONVERT_SKIP_TO_SEEK
-    }
     
     // MARK: - destruction
     func destroy() {
@@ -292,14 +289,8 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     
     @objc private func onPreviousTrackCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
         guard self.mediaSessionEnabled else { return .commandFailed }
-        if let player = self.player {
-            if !self.executeAction(for: .SKIP_TO_PREVIOUS) {
-                if DEBUG_MEDIA_CONTROL_API { PrintUtils.printLog(logText: "[NATIVE] Executing default Skip to previous action.") }
-                if self.convertSkipToSeek {
-                    player.currentTime = player.currentTime - Double(truncating: self.skipBackwardInterval)
-                }
-            }
-            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] previous track command handled as skip backward command.") }
+        if self.executeAction(for: .SKIP_TO_PREVIOUS) {
+            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] previous track command handled.") }
         } else {
             if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] previous track command not handled.") }
         }
@@ -308,14 +299,8 @@ class THEOplayerRCTRemoteCommandsManager: NSObject {
     
     @objc private func onNextTrackCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
         guard self.mediaSessionEnabled else { return .commandFailed }
-        if let player = self.player {
-            if !self.executeAction(for: .SKIP_TO_NEXT) {
-                if DEBUG_MEDIA_CONTROL_API { PrintUtils.printLog(logText: "[NATIVE] Executing default Skip to next action.") }
-                if self.convertSkipToSeek {
-                    player.currentTime = player.currentTime + Double(truncating: self.skipForwardInterval)
-                }
-            }
-            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] next track command handled as skip forward command.") }
+        if self.executeAction(for: .SKIP_TO_NEXT) {
+            if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] next track command handled.") }
         } else {
             if DEBUG_REMOTECOMMANDS { PrintUtils.printLog(logText: "[NATIVE] next track command not handled.") }
         }
