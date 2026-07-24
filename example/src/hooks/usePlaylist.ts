@@ -54,7 +54,12 @@ export const usePlaylist = (
       }),
     [sources, includeWithLicense],
   );
-  const initialValidIndex = initialIndex !== undefined && initialIndex < filteredSources.length ? initialIndex : 0;
+  // Determine the initially selected index against the filtered list. Prefer matching the player's
+  // current source, since an index into the unfiltered list would diverge once sources are filtered
+  // out (by platform or license). Fall back to the provided initialIndex, then to the first source.
+  const matchedIndex = player ? filteredSources.findIndex((source) => source.source === player.source) : -1;
+  const initialValidIndex =
+    matchedIndex >= 0 ? matchedIndex : initialIndex !== undefined && initialIndex >= 0 && initialIndex < filteredSources.length ? initialIndex : 0;
   const [currentIndex, setCurrentIndex] = useState<number>(initialValidIndex);
 
   useEffect(() => {

@@ -18,8 +18,9 @@ export const SourceMenuButton = (props: SourceMenuButtonProps) => {
 
 export const SourceMenuView = ({ sources, includeWithLicense }: { sources: Source[]; includeWithLicense: boolean | undefined }) => {
   const { player, ui } = useContext(PlayerContext);
-  const initialIndex = sources.findIndex((source) => source.source === player?.source);
-  const { sources: filteredSources, currentIndex, setSourceByIndex } = usePlaylist(player, sources, initialIndex, includeWithLicense);
+  // usePlaylist determines the initially selected source by matching the player's current source against
+  // its internally filtered list, so we must not compute an index against the unfiltered array here.
+  const { sources: filteredSources, currentIndex, setSourceByIndex } = usePlaylist(player, sources, undefined, includeWithLicense);
 
   const selectSource = (id: number | undefined) => {
     setSourceByIndex(id);
