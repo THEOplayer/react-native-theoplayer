@@ -176,7 +176,7 @@ class PipUtils(
             ACTION_SKIP_TO_NEXT,
             R.drawable.ic_next,
             R.string.skip_to_next,
-            R.string.skip_to_previous_description
+            R.string.skip_to_next_description
           )
         )
       } else if (enableTrickPlay) {
