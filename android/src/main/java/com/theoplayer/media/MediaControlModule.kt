@@ -72,6 +72,19 @@ class MediaControlModule(context: ReactApplicationContext) : ReactContextBaseJav
   }
 
   /**
+   * Remove a previously registered handler for a media control action, restoring the default behaviour.
+   */
+  @ReactMethod
+  fun removeHandler(tag: Int, action: String) {
+    val mediaControlAction = MediaControlAction.fromPropName(action)
+    if (mediaControlAction != null) {
+      viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
+        view?.playerContext?.mediaControlProxy?.removeHandler(mediaControlAction)
+      }
+    }
+  }
+
+  /**
    * Enable or disable the media session for the player instance at runtime.
    */
   @ReactMethod

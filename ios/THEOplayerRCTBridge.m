@@ -324,6 +324,9 @@ RCT_EXTERN_METHOD(setAdTagParameters:(nonnull NSNumber *)node
 RCT_EXTERN_METHOD(setHandler:(nonnull NSNumber *)node
                   action:(nonnull NSString *)action)
 
+RCT_EXTERN_METHOD(removeHandler:(nonnull NSNumber *)node
+                  action:(nonnull NSString *)action)
+
 RCT_EXTERN_METHOD(setEnabled:(nonnull NSNumber *)node
                   enabled:(BOOL)enabled)
 

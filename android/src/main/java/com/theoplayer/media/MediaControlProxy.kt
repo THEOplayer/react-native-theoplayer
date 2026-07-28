@@ -67,6 +67,13 @@ class MediaControlProxy : PlaybackCallback, QueueNavigator {
     connector?.invalidatePlaybackState()
   }
 
+  fun removeHandler(action: MediaControlAction) {
+    handlers.remove(action)
+
+    // Make sure the MediaSession known about the updated set of supported actions.
+    connector?.invalidatePlaybackState()
+  }
+
   fun invokeHandler(action: MediaControlAction): Boolean {
     if (!handlers.containsKey(action)) {
       return false

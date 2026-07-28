@@ -18,8 +18,10 @@ Our [Media Control API](../src/api/media/MediaControlAPI.ts) provides a unified 
 
 The [Media Control API](../src/api/media/MediaControlAPI.ts) allows you to override the default player's behaviour, by defining a handler for one of the MediaControl Actions:
 ```typescript
-setHandler(action: MediaControlAction, handler: MediaControlHandler): void;
+setHandler(action: MediaControlAction, handler: MediaControlHandler | undefined): void;
 ```
+
+Passing `undefined` as handler removes any previously set handler for that action, restoring the player's default behaviour.
 
 The [MediaControlAction](../src/api/media/MediaControlAPI.ts) enum defines all actions that can be controlled by the Media Control API:
 
@@ -87,7 +89,7 @@ export interface MediaControlConfiguration {
 
 ## Example Usage: Playlist Navigation
 
-The Media Control API can be used to handle playlist navigation via system controls. For example, in a custom React hook:
+The Media Control API can be used to handle playlist navigation via system controls. For example, in a component that owns the playlist:
 
 ```typescript
 import { MediaControlAction } from 'react-native-theoplayer';
@@ -101,6 +103,11 @@ useEffect(() => {
 
   player.mediaControl?.setHandler(MediaControlAction.SKIP_TO_NEXT, handleNext);
   player.mediaControl?.setHandler(MediaControlAction.SKIP_TO_PREVIOUS, handlePrevious);
+
+  return () => {
+    player.mediaControl?.setHandler(MediaControlAction.SKIP_TO_NEXT, undefined);
+    player.mediaControl?.setHandler(MediaControlAction.SKIP_TO_PREVIOUS, undefined);
+  };
 }, [player, filteredSources]);
 ```
 
@@ -108,4 +115,4 @@ This enables users to skip tracks using lock screen or Bluetooth controls. If yo
 
 ## Demo
 
-As a demonstration, see the the `usePlaylist` hook in our [example app](../example/).
+As a demonstration, see the the `PlaylistProvider` in our [example app](../example/).

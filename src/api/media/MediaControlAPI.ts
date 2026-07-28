@@ -15,8 +15,9 @@ export interface MediaControlAPI {
    *
    * @param action The media control action to set the handler for.
    * @param handler The handler function that will be called when the specified media control action is triggered. The handler receives the THEOplayer instance as an argument.
+   * Passing `undefined` removes any previously set handler for the action, restoring the player's default behaviour.
    */
-  setHandler(action: MediaControlAction, handler: MediaControlHandler): void;
+  setHandler(action: MediaControlAction, handler: MediaControlHandler | undefined): void;
 
   /**
    * Enables or disables the media session for this player instance at runtime.

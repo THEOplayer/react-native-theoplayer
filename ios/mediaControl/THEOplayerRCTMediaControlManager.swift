@@ -16,6 +16,10 @@ public class THEOplayerRCTMediaControlManager {
         self.actionHandlers[action] = handler
     }
     
+    func removeMediaControlActionHandler(action: MediaControlAction) {
+        self.actionHandlers.removeValue(forKey: action)
+    }
+    
     func hasMediaControlActionHandler(for action: MediaControlAction) -> Bool {
         return self.actionHandlers[action] != nil
     }

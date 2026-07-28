@@ -6,8 +6,12 @@ export class MediaControlWebAdapter implements MediaControlAPI {
 
   constructor(private readonly mediaSession: WebMediaSession) {}
 
-  setHandler(action: MediaControlAction, handler: MediaControlHandler): void {
-    this.handlers.set(action, handler);
+  setHandler(action: MediaControlAction, handler: MediaControlHandler | undefined): void {
+    if (handler === undefined) {
+      this.handlers.delete(action);
+    } else {
+      this.handlers.set(action, handler);
+    }
     this.mediaSession.updateMediaSession();
   }
 
