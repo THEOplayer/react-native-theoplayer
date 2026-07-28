@@ -15,10 +15,9 @@ export class MediaControlWebAdapter implements MediaControlAPI {
     this.mediaSession.updateMediaSession();
   }
 
-  hasHandler(action: MediaControlAction): boolean {
-    return this.handlers.has(action);
-  }
-
+  /**
+   * @internal Used by {@link WebMediaSession} to dispatch a media session action to the user's handler.
+   */
   getHandler(action: MediaControlAction): MediaControlHandler | undefined {
     return this.handlers.get(action);
   }

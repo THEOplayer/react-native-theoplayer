@@ -12,6 +12,7 @@ import {
   findMediaTrackByUid,
   isVideoQuality,
   LoadedMetadataEvent,
+  MediaControlAPI,
   MediaTrack,
   MediaTrackEvent,
   MediaTrackEventType,
@@ -247,7 +248,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     return this._theoliveAdapter;
   }
 
-  get mediaControl(): MediaControlNativeAdapter {
+  get mediaControl(): MediaControlAPI {
     return this._mediaControlAdapter;
   }
 

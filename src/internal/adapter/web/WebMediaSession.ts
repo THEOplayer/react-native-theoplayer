@@ -113,16 +113,14 @@ export class WebMediaSession {
     }
 
     // Update queue actions
+    // There is no default behaviour for these: reset the action handler when the user removed theirs, or
+    // the browser keeps presenting the button and dispatching to the removed handler.
     // Note: the browser invokes media session action handlers with a MediaSessionActionDetails argument.
     // Wrap the user handler so it is called with the THEOplayer instance, matching the MediaControlHandler contract.
-    if (this.mediaControlAdapter.hasHandler(MediaControlAction.SKIP_TO_PREVIOUS)) {
-      const handler = this.mediaControlAdapter.getHandler(MediaControlAction.SKIP_TO_PREVIOUS);
-      mediaSession.setActionHandler('previoustrack', () => handler?.(this._webAdapter));
-    }
-    if (this.mediaControlAdapter.hasHandler(MediaControlAction.SKIP_TO_NEXT)) {
-      const handler = this.mediaControlAdapter.getHandler(MediaControlAction.SKIP_TO_NEXT);
-      mediaSession.setActionHandler('nexttrack', () => handler?.(this._webAdapter));
-    }
+    const previousTrackHandler = this.mediaControlAdapter.getHandler(MediaControlAction.SKIP_TO_PREVIOUS);
+    mediaSession.setActionHandler('previoustrack', previousTrackHandler ? () => previousTrackHandler(this._webAdapter) : NoOp);
+    const nextTrackHandler = this.mediaControlAdapter.getHandler(MediaControlAction.SKIP_TO_NEXT);
+    mediaSession.setActionHandler('nexttrack', nextTrackHandler ? () => nextTrackHandler(this._webAdapter) : NoOp);
 
     // Update playbackState
     mediaSession.playbackState = this._player.paused ? 'paused' : 'playing';
@@ -136,6 +134,9 @@ export class WebMediaSession {
     this._player.removeEventListener(['play', 'pause', 'loadedmetadata', 'durationchange', 'ratechange'], this.update);
     this._player.ads?.removeEventListener(['adbreakbegin', 'adbreakend'], this.update);
     this.clearMediaSession();
+    // Make sure a late updateMediaSession() call, e.g. from a configuration setter, does not
+    // republish state for a destroyed player.
+    this._enabled = false;
   }
 
   private clearMediaSession() {
