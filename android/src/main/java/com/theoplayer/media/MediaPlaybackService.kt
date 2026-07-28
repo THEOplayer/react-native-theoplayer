@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.media.session.MediaButtonReceiver
 import com.theoplayer.ReactTHEOplayerContext
 import com.theoplayer.android.api.player.Player
+import com.theoplayer.android.api.source.SourceDescription
 import com.theoplayer.android.connector.mediasession.MediaSessionConnector
 
 private const val STOP_SERVICE_IF_APP_REMOVED = true
@@ -30,7 +31,11 @@ class MediaPlaybackService : Service() {
 
   private var playerContext: ReactTHEOplayerContext? = null
 
-  private var mediaSessionConfig: MediaSessionConfig = MediaSessionConfig()
+  // The artwork is cached per source: the notification is rebuilt on every state or available action
+  // change, and fetching it again each time would make the artwork flicker.
+  private var largeIconSource: SourceDescription? = null
+  private var largeIcon: Bitmap? = null
+  private val placeholderIcon: Bitmap? by lazy { loadPlaceHolderIcon(this) }
 
   private val player: Player?
     get() = playerContext?.player
@@ -52,11 +57,6 @@ class MediaPlaybackService : Service() {
 
     fun isActivePlayerContext(playerContext: ReactTHEOplayerContext): Boolean {
       return service.isActivePlayerContext(playerContext)
-    }
-
-    fun setEnablePlaybackControls(newConfig: MediaSessionConfig) {
-      mediaSessionConfig = newConfig
-      updateNotification()
     }
 
     fun updateNotification() {
@@ -180,16 +180,8 @@ class MediaPlaybackService : Service() {
     // not be killed if the system is low on memory.
     when (playbackState) {
       PlaybackStateCompat.STATE_PAUSED -> {
-        // Fetch large icon asynchronously
-        fetchImageFromMetadata(player?.source) { largeIcon ->
-          notificationManager.notify(
-            NOTIFICATION_ID,
-            notificationBuilder.build(
-              playbackState,
-              largeIcon,
-              mediaSessionConfig.mediaSessionEnabled
-            )
-          )
+        withLargeIcon { largeIcon ->
+          notificationManager.notify(NOTIFICATION_ID, buildNotification(playbackState, largeIcon))
         }
       }
 
@@ -198,11 +190,9 @@ class MediaPlaybackService : Service() {
         // with one or more transport controls. The notification should also include useful
         // information from the session's metadata.
 
-        // Get the foreground service started in time before fetching an icon.
-        startForegroundWithPlaybackState(playbackState, loadPlaceHolderIcon(this))
-
-        // Fetch the correct large icon asynchronously.
-        fetchImageFromMetadata(player?.source) { largeIcon ->
+        // Get the foreground service started in time, with a placeholder icon if the artwork for this
+        // source still has to be fetched.
+        withLargeIcon(showPlaceholderWhileFetching = true) { largeIcon ->
           startForegroundWithPlaybackState(playbackState, largeIcon)
         }
       }
@@ -221,6 +211,41 @@ class MediaPlaybackService : Service() {
     }
   }
 
+  /**
+   * Passes the artwork for the current source to [block], fetching it only once per source.
+   *
+   * When [showPlaceholderWhileFetching] is set, [block] is called synchronously with a placeholder
+   * first, so the foreground service can be started in time.
+   */
+  private fun withLargeIcon(
+    showPlaceholderWhileFetching: Boolean = false,
+    block: (Bitmap?) -> Unit
+  ) {
+    val source = player?.source
+    if (source != null && source == largeIconSource) {
+      block(largeIcon)
+      return
+    }
+    if (showPlaceholderWhileFetching) {
+      block(placeholderIcon)
+    }
+    fetchImageFromMetadata(source) { icon ->
+      largeIconSource = source
+      largeIcon = icon
+      block(icon)
+    }
+  }
+
+  /**
+   * Builds the media notification for the player context that currently owns the media session.
+   */
+  private fun buildNotification(
+    @PlaybackStateCompat.State playbackState: Int,
+    largeIcon: Bitmap? = null
+  ): Notification {
+    return notificationBuilder.build(playbackState, largeIcon, playerContext?.mediaControlProxy)
+  }
+
   private fun startForegroundWithPlaybackState(
     @PlaybackStateCompat.State playbackState: Int,
     largeIcon: Bitmap? = null
@@ -229,7 +254,7 @@ class MediaPlaybackService : Service() {
       ServiceCompat.startForeground(
         this,
         NOTIFICATION_ID,
-        notificationBuilder.build(playbackState, largeIcon, mediaSessionConfig.mediaSessionEnabled),
+        buildNotification(playbackState, largeIcon),
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
           ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
         else 0

@@ -15,15 +15,16 @@ import android.util.Rational
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import com.facebook.react.uimanager.ThemedReactContext
-import com.theoplayer.BuildConfig
 import com.theoplayer.R
 import com.theoplayer.ReactTHEOplayerContext
-import com.theoplayer.android.api.ads.ima.GoogleImaAdEvent
-import com.theoplayer.android.api.ads.ima.GoogleImaAdEventType
 import com.theoplayer.android.api.event.EventListener
 import com.theoplayer.android.api.event.player.PlayerEvent
 import com.theoplayer.android.api.event.player.PlayerEventTypes
 import com.theoplayer.android.api.player.Player
+import com.theoplayer.media.AvailableActionsListener
+import com.theoplayer.media.MediaControlProxy
+import com.theoplayer.media.MediaControlSlot
+import com.theoplayer.media.MediaControlSlots
 
 private const val EXTRA_ACTION = "EXTRA_ACTION"
 private const val ACTION_MEDIA_CONTROL = "pip_media_control"
@@ -46,38 +47,37 @@ class PipUtils(
 ) {
 
   private var enabled: Boolean = false
-  private var onPlayerAction: EventListener<PlayerEvent<*>>
-  private var onAdAction: EventListener<GoogleImaAdEvent>
+
+  // The play/pause button reflects the playback state.
+  private val onPlayerAction = EventListener<PlayerEvent<*>> { updatePipParams() }
   private val playerEvents = listOf(PlayerEventTypes.PLAY, PlayerEventTypes.PAUSE)
-  private var adEvents = listOf<GoogleImaAdEventType>()
+
+  // Which actions are available is decided by the MediaControlProxy, which notifies us whenever that
+  // changes, for example when switching between content and ads, or when the stream turns out to be live.
+  private val onAvailableActionsChanged = AvailableActionsListener { updatePipParams() }
+
   private val broadcastReceiver: BroadcastReceiver = buildBroadcastReceiver()
+
+  // The player the listeners are registered on, so they are removed from that same instance.
+  private var listeningPlayer: Player? = null
 
   private val player: Player
     get() = viewCtx.player
 
-  init {
-    onPlayerAction = EventListener {
-      updatePipParams()
-    }
-    onAdAction = EventListener {
-      updatePipParams()
-    }
-    if (BuildConfig.EXTENSION_GOOGLE_IMA) {
-      adEvents = listOf(GoogleImaAdEventType.STARTED, GoogleImaAdEventType.CONTENT_RESUME_REQUESTED)
-    }
-  }
+  private val mediaControlProxy: MediaControlProxy
+    get() = viewCtx.mediaControlProxy
 
   @SuppressLint("UnspecifiedRegisterReceiverFlag")
   fun enable() {
     if (enabled) {
       return
     }
-    playerEvents.forEach { action ->
-      player.addEventListener(action, onPlayerAction)
+    listeningPlayer = player.also { player ->
+      playerEvents.forEach { action ->
+        player.addEventListener(action, onPlayerAction)
+      }
     }
-    adEvents.forEach { action ->
-      player.ads.addEventListener(action, onAdAction)
-    }
+    mediaControlProxy.addAvailableActionsListener(onAvailableActionsChanged)
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
       reactContext.currentActivity?.registerReceiver(
@@ -98,12 +98,13 @@ class PipUtils(
     if (!enabled) {
       return
     }
-    playerEvents.forEach { action ->
-      player.removeEventListener(action, onPlayerAction)
+    listeningPlayer?.let { player ->
+      playerEvents.forEach { action ->
+        player.removeEventListener(action, onPlayerAction)
+      }
     }
-    adEvents.forEach { action ->
-      player.ads.removeEventListener(action, onAdAction)
-    }
+    listeningPlayer = null
+    mediaControlProxy.removeAvailableActionsListener(onAvailableActionsChanged)
     try {
       reactContext.currentActivity?.unregisterReceiver(broadcastReceiver)
     } catch (ignore: IllegalArgumentException) { /*ignore*/
@@ -115,81 +116,66 @@ class PipUtils(
     disable()
   }
 
+  /**
+   * Builds the PiP actions for the media controls that the proxy reports as available.
+   */
   @RequiresApi(Build.VERSION_CODES.O)
-  fun buildPipActions(
-    paused: Boolean,
-    enablePlayPause: Boolean,
-    enableQueueActions: Boolean,
-    enableTrickPlay: Boolean
-  ): List<RemoteAction> {
-    return mutableListOf<RemoteAction>().apply {
-
-      if (enableQueueActions) {
-        // Queue controls: Skip to Previous
-        add(
-          buildRemoteAction(
-            ACTION_SKIP_TO_PREV,
-            R.drawable.ic_prev,
-            R.string.skip_to_previous,
-            R.string.skip_to_previous_description
-          )
-        )
-      } else if (enableTrickPlay) {
-        // Trick-play: Rewind
-        add(
-          buildRemoteAction(
-            ACTION_RWD,
-            R.drawable.ic_rewind,
-            R.string.rewind,
-            R.string.rewind_description
-          )
-        )
-      }
-
-      // Play/pause
-      // Always add this button, but send an ACTION_IGNORE and make invisible if disabled.
+  private fun buildPipActions(paused: Boolean, slots: MediaControlSlots): List<RemoteAction> {
+    return listOfNotNull(
+      slots.leading?.let { remoteAction(it) },
+      // Always add the play/pause button, but send an ACTION_IGNORE and make it invisible if disabled.
       // If no RemoteActions are added, MediaSession takes over the UI.
-      add(
-        if (paused) {
-          buildRemoteAction(
-            ACTION_PLAY,
-            R.drawable.ic_play,
-            R.string.play,
-            R.string.play_description,
-            enablePlayPause
-          )
-        } else {
-          buildRemoteAction(
-            ACTION_PAUSE,
-            R.drawable.ic_pause,
-            R.string.play,
-            R.string.pause_description,
-            enablePlayPause
-          )
-        }
+      if (paused) {
+        buildRemoteAction(
+          ACTION_PLAY,
+          R.drawable.ic_play,
+          R.string.play,
+          R.string.play_description,
+          slots.playPauseEnabled
+        )
+      } else {
+        buildRemoteAction(
+          ACTION_PAUSE,
+          R.drawable.ic_pause,
+          R.string.play,
+          R.string.pause_description,
+          slots.playPauseEnabled
+        )
+      },
+      slots.trailing?.let { remoteAction(it) }
+    )
+  }
+
+  @RequiresApi(Build.VERSION_CODES.O)
+  private fun remoteAction(slot: MediaControlSlot): RemoteAction {
+    return when (slot) {
+      MediaControlSlot.SKIP_TO_PREVIOUS -> buildRemoteAction(
+        ACTION_SKIP_TO_PREV,
+        R.drawable.ic_prev,
+        R.string.skip_to_previous,
+        R.string.skip_to_previous_description
       )
 
-      if (enableQueueActions) {
-        // Queue controls: Skip to Next
-        add(
-          buildRemoteAction(
-            ACTION_SKIP_TO_NEXT,
-            R.drawable.ic_next,
-            R.string.skip_to_next,
-            R.string.skip_to_next_description
-          )
-        )
-      } else if (enableTrickPlay) {
-        // Trick-play: Fast Forward
-        add(
-          buildRemoteAction(
-            ACTION_FFD,
-            R.drawable.ic_fast_forward,
-            R.string.fast_forward,
-            R.string.fast_forward_description
-          )
-        )
-      }
+      MediaControlSlot.SKIP_TO_NEXT -> buildRemoteAction(
+        ACTION_SKIP_TO_NEXT,
+        R.drawable.ic_next,
+        R.string.skip_to_next,
+        R.string.skip_to_next_description
+      )
+
+      MediaControlSlot.REWIND -> buildRemoteAction(
+        ACTION_RWD,
+        R.drawable.ic_rewind,
+        R.string.rewind,
+        R.string.rewind_description
+      )
+
+      MediaControlSlot.FAST_FORWARD -> buildRemoteAction(
+        ACTION_FFD,
+        R.drawable.ic_fast_forward,
+        R.string.fast_forward,
+        R.string.fast_forward_description
+      )
     }
   }
 
@@ -220,20 +206,13 @@ class PipUtils(
 
   @RequiresApi(Build.VERSION_CODES.O)
   fun getPipParams(): PictureInPictureParams {
-    val mediaControlProxy = viewCtx.mediaControlProxy
     val visibleRect = getContentViewRect(viewCtx.playerView)
 
     return PictureInPictureParams.Builder()
       .setSourceRectHint(visibleRect)
       // Must be between 2.39:1 and 1:2.39 (inclusive)
       .setAspectRatio(getSafeAspectRatio(player.videoWidth, player.videoHeight))
-      .setActions(
-        buildPipActions(
-          player.isPaused,
-          mediaControlProxy.playPauseEnabled,
-          mediaControlProxy.queueActionsEnabled,
-          mediaControlProxy.trickPlayEnabled)
-      )
+      .setActions(buildPipActions(player.isPaused, mediaControlProxy.controlSlots))
       .build()
   }
 
