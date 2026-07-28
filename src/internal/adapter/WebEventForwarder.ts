@@ -232,15 +232,16 @@ export class WebEventForwarder {
   };
 
   private readonly onContentProtectionError = (event: NativeContentProtectionErrorEvent) => {
+    const { code, message: errorMessage, url, status, statusText, response, systemCode } = event.errorObject;
     this._facade.dispatchEvent(
       new DefaultContentProtectionErrorEvent({
-        errorCode: event.errorObject.code.toString(),
-        errorMessage: event.errorObject.message,
-        url: event.errorObject.url,
-        status: event.errorObject.status,
-        statusText: event.errorObject.statusText,
-        response: event.errorObject.response,
-        systemCode: event.errorObject.systemCode,
+        errorCode: code.toString(),
+        errorMessage,
+        url,
+        status,
+        statusText,
+        response,
+        systemCode,
       }),
     );
   };
