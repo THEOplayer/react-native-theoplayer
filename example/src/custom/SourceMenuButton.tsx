@@ -1,26 +1,19 @@
 import React, { useContext } from 'react';
 import { ListSvg, MenuButton, MenuRadioButton, MenuView, PlayerContext, ScrollableMenu } from '@theoplayer/react-native-ui';
-import type { Source } from './Source';
-import { usePlaylist } from '../hooks/usePlaylist';
+import { usePlaylist } from '../context/PlaylistContext';
 
-export interface SourceMenuButtonProps {
-  sources: Source[];
-
-  includeWithLicense?: boolean | undefined;
-}
-
-export const SourceMenuButton = (props: SourceMenuButtonProps) => {
+export const SourceMenuButton = () => {
   const createMenu = () => {
-    return <SourceMenuView sources={props.sources} includeWithLicense={props.includeWithLicense} />;
+    return <SourceMenuView />;
   };
   return <MenuButton svg={<ListSvg />} menuConstructor={createMenu} />;
 };
 
-export const SourceMenuView = ({ sources, includeWithLicense }: { sources: Source[]; includeWithLicense: boolean | undefined }) => {
-  const { player, ui } = useContext(PlayerContext);
-  // usePlaylist determines the initially selected source by matching the player's current source against
-  // its internally filtered list, so we must not compute an index against the unfiltered array here.
-  const { sources: filteredSources, currentIndex, setSourceByIndex } = usePlaylist(player, sources, undefined, includeWithLicense);
+export const SourceMenuView = () => {
+  const { ui } = useContext(PlayerContext);
+  // The playlist is owned by the app, so opening or closing this menu does not affect the player's
+  // media control handlers or the currently selected playlist index.
+  const { sources: filteredSources, currentIndex, setSourceByIndex } = usePlaylist();
 
   const selectSource = (id: number | undefined) => {
     setSourceByIndex(id);

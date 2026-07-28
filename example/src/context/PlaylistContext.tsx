@@ -1,9 +1,9 @@
-import type { Source } from '../custom/Source';
-import { useEffect, useMemo, useState } from 'react';
-import { MediaControlAction, THEOplayer } from 'react-native-theoplayer';
+import React, { createContext, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
 import { Platform } from 'react-native';
+import { MediaControlAction, THEOplayer } from 'react-native-theoplayer';
+import type { Source } from '../custom/Source';
 
-export interface PlaylistResult {
+export interface Playlist {
   /**
    * The list of sources in the playlist, filtered based on the `includeWithLicense` flag and platform support.
    */
@@ -26,23 +26,43 @@ export interface PlaylistResult {
   setSourceByIndex: (index: number | undefined) => void;
 }
 
+export interface PlaylistProviderProps {
+  /**
+   * The THEOplayer instance to control, or undefined while the player is not ready yet.
+   */
+  player: THEOplayer | undefined;
+
+  /**
+   * The list of sources to include in the playlist.
+   */
+  sources: Source[];
+
+  /**
+   * The index of the initially selected source in the playlist. If undefined, the first source is selected.
+   */
+  initialIndex?: number;
+
+  /**
+   * Whether to include sources that require a license in the playlist. Defaults to false.
+   */
+  includeWithLicense?: boolean;
+
+  children: ReactNode;
+}
+
+const PlaylistContext = createContext<Playlist | undefined>(undefined);
+
 /**
- * Custom hook to manage a playlist of sources for THEOplayer.
- * It filters the provided sources based on the `includeWithLicense` flag and sets up handlers for media control
- * actions to enable playlist navigation using the media session API (e.g. lock screen controls, bluetooth controls, etc.).
+ * Owns the playlist for the app and shares it with the UI through the {@link usePlaylist} hook.
  *
- * @param player The THEOplayer instance to control.
- * @param sources The list of sources to include in the playlist.
- * @param initialIndex The index of the initially selected source in the playlist. If undefined, the first source will be selected by default.
- * @param includeWithLicense Whether to include sources that require a license in the playlist. Defaults to false.
- * @return An array containing the current source and the list of filtered sources in the playlist.
+ * The provider filters the given sources, applies the selected source to the player and installs media
+ * control handlers so the playlist can be navigated using the media session API (e.g. lock screen
+ * controls, bluetooth controls, etc.).
+ *
+ * Mount it once, high up in the tree: short-lived components such as menus would otherwise duplicate the
+ * playlist state and remove the media control handlers again when they unmount.
  */
-export const usePlaylist = (
-  player: THEOplayer | undefined,
-  sources: Source[],
-  initialIndex: number | undefined = undefined,
-  includeWithLicense: boolean = false,
-): PlaylistResult => {
+export const PlaylistProvider = ({ player, sources, initialIndex, includeWithLicense = false, children }: PlaylistProviderProps) => {
   const filteredSources = useMemo(
     () =>
       sources.filter((source) => {
@@ -61,6 +81,14 @@ export const usePlaylist = (
   const initialValidIndex =
     matchedIndex >= 0 ? matchedIndex : initialIndex !== undefined && initialIndex >= 0 && initialIndex < filteredSources.length ? initialIndex : 0;
   const [currentIndex, setCurrentIndex] = useState<number>(initialValidIndex);
+  const currentSource = filteredSources[currentIndex];
+
+  // Apply the selected source to a player that doesn't have one yet.
+  useEffect(() => {
+    if (!player || player.source !== undefined) return;
+    // eslint-disable-next-line react-hooks/immutability
+    player.source = currentSource?.source;
+  }, [player, currentSource]);
 
   useEffect(() => {
     if (!player) return;
@@ -85,6 +113,12 @@ export const usePlaylist = (
     // screen controls, bluetooth controls, etc.)
     player.mediaControl?.setHandler(MediaControlAction.SKIP_TO_NEXT, handleNext);
     player.mediaControl?.setHandler(MediaControlAction.SKIP_TO_PREVIOUS, handlePrevious);
+
+    // Remove the handlers again, restoring the player's default behaviour.
+    return () => {
+      player.mediaControl?.setHandler(MediaControlAction.SKIP_TO_NEXT, undefined);
+      player.mediaControl?.setHandler(MediaControlAction.SKIP_TO_PREVIOUS, undefined);
+    };
   }, [player, filteredSources]);
 
   const setSourceByIndex = (index: number | undefined) => {
@@ -96,10 +130,23 @@ export const usePlaylist = (
     }
   };
 
-  return {
+  const playlist: Playlist = {
     sources: filteredSources,
-    currentSource: filteredSources[currentIndex],
+    currentSource,
     currentIndex,
     setSourceByIndex,
   };
+
+  return <PlaylistContext.Provider value={playlist}>{children}</PlaylistContext.Provider>;
+};
+
+/**
+ * Provides access to the playlist owned by the closest {@link PlaylistProvider}.
+ */
+export const usePlaylist = (): Playlist => {
+  const playlist = useContext(PlaylistContext);
+  if (playlist === undefined) {
+    throw new Error('usePlaylist must be used inside a PlaylistProvider');
+  }
+  return playlist;
 };
