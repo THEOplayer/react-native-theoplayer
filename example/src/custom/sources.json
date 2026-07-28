@@ -1,5 +1,22 @@
 [
   {
+    "name": "HLS - OptiView Ads (SGAI midrolls)",
+    "os": ["web", "ios"],
+    "source": {
+      "sources": {
+        "src": "https://v-theo.hudl.com/signaling-service/api/v1/6a4bfbf39a28cd413288ba79/hls/5ca5_thd.live.m3u8",
+        "type": "application/x-mpegurl",
+        "hlsDateRange": true
+      },
+      "ads": [
+        {
+          "integration": "theoads",
+          "networkCode": "29795821"
+        }
+      ]
+    }
+  },
+  {
     "name": "HLS - Sideloaded Chapters",
     "os": ["ios", "android", "web"],
     "source": {
