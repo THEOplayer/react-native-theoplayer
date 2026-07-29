@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed an issue on iOS where sideloaded texttracks were not stored for cached playout.
 
+### Added
+
+- Added `contentprotectionerror` player event on Web, Android, and iOS platforms.
+
 ## [11.4.0] - 26-07-06
 
 ### Fixed

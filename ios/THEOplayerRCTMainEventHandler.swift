@@ -30,6 +30,7 @@ public class THEOplayerRCTMainEventHandler {
     var onNativeRateChange: RCTDirectEventBlock?
     var onNativeWaiting: RCTDirectEventBlock?
     var onNativeCanPlay: RCTDirectEventBlock?
+    var onNativeContentProtectionError: RCTDirectEventBlock?
     var onNativeDimensionChange: RCTDirectEventBlock?
     var onNativeVideoResize: RCTDirectEventBlock?
     
