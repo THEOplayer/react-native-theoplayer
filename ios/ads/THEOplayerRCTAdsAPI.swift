@@ -38,90 +38,79 @@ class THEOplayerRCTAdsAPI: NSObject, RCTBridgeModule {
     @objc(skip:)
     func skip(_ node: NSNumber) -> Void {
 
-        DispatchQueue.main.async {
-            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
-               let ads = theView.ads() {
-                ads.skip()
-            } else {
-                if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not skip ad (ads module unavailable).") }
-            }
+        withViewAndAds(node) { _, ads in
+            ads.skip()
+        } onFailure: {
+            if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not skip ad (ads module unavailable).") }
         }
     }
 
     @objc(playing:resolver:rejecter:)
     func playing(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
-        DispatchQueue.main.async {
-            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
-               let ads = theView.ads() {
-                resolve(ads.playing)
-            } else {
-                reject(ERROR_CODE_ADS_ACCESS_FAILURE, ERROR_MESSAGE_ADS_ACCESS_FAILURE, nil)
-                if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not skip ad (ads module unavailable).") }
-            }
+        withViewAndAds(node) { _, ads in
+            resolve(ads.playing)
+        } onFailure: {
+            reject(ERROR_CODE_ADS_ACCESS_FAILURE, ERROR_MESSAGE_ADS_ACCESS_FAILURE, nil)
+            if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not skip ad (ads module unavailable).") }
         }
     }
 
     @objc(currentAdBreak:resolver:rejecter:)
     func currentAdBreak(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
-        DispatchQueue.main.async {
-            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
-               let ads = theView.ads(),
-               let currentAdBreak = ads.currentAdBreak {
+        withViewAndAds(node) { _, ads in
+            if let currentAdBreak = ads.currentAdBreak {
                 resolve(THEOplayerRCTAdAdapter.fromAdBreak(adBreak:currentAdBreak))
             } else {
-                reject(ERROR_CODE_ADS_ACCESS_FAILURE, ERROR_MESSAGE_ADS_ACCESS_FAILURE, nil)
-                if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not retrieve current adbreak (ads module unavailable).") }
+                reject(ERROR_CODE_ADS_GET_CURRENT_ADBREAK_UNDEFINED, ERROR_MESSAGE_ADS_GET_CURRENT_ADBREAK_UNDEFINED, nil)
+                if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not retrieve current adbreak (no current adbreak).") }
             }
+        } onFailure: {
+            reject(ERROR_CODE_ADS_ACCESS_FAILURE, ERROR_MESSAGE_ADS_ACCESS_FAILURE, nil)
+            if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not retrieve current adbreak (ads module unavailable).") }
         }
     }
 
     @objc(currentAds:resolver:rejecter:)
     func currentAds(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
-        DispatchQueue.main.async {
-            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
-               let ads = theView.ads() {
-                let currentAdsArray = ads.currentAds
-                var currentAds: [[String:Any]] = []
-                for ad in currentAdsArray {
-                    currentAds.append(THEOplayerRCTAdAdapter.fromAd(ad: ad))
-                }
-                resolve(currentAds)
-            } else {
-                reject(ERROR_CODE_ADS_ACCESS_FAILURE, ERROR_MESSAGE_ADS_ACCESS_FAILURE, nil)
-                if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not retrieve current ad (ads module unavailable).") }
+        withViewAndAds(node) { _, ads in
+            let currentAdsArray = ads.currentAds
+            var currentAds: [[String:Any]] = []
+            for ad in currentAdsArray {
+                currentAds.append(THEOplayerRCTAdAdapter.fromAd(ad: ad))
             }
+            resolve(currentAds)
+        } onFailure: {
+            reject(ERROR_CODE_ADS_ACCESS_FAILURE, ERROR_MESSAGE_ADS_ACCESS_FAILURE, nil)
+            if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not retrieve current ad (ads module unavailable).") }
         }
     }
 
     @objc(scheduledAdBreaks:resolver:rejecter:)
     func scheduledAdBreaks(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
-        DispatchQueue.main.async {
-            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
-               let ads = theView.ads() {
-                let currentAdBreaksArray = ads.scheduledAdBreaks
-                var currentAdBreaks: [[String:Any]] = []
-                for adbreak in currentAdBreaksArray {
-                    currentAdBreaks.append(THEOplayerRCTAdAdapter.fromAdBreak(adBreak: adbreak))
-                }
-                resolve(currentAdBreaks)
-            } else {
-                reject(ERROR_CODE_ADS_ACCESS_FAILURE, ERROR_MESSAGE_ADS_ACCESS_FAILURE, nil)
-                if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not retrieve current ad (ads module unavailable).") }
+        withViewAndAds(node) { _, ads in
+            let currentAdBreaksArray = ads.scheduledAdBreaks
+            var currentAdBreaks: [[String:Any]] = []
+            for adbreak in currentAdBreaksArray {
+                currentAdBreaks.append(THEOplayerRCTAdAdapter.fromAdBreak(adBreak: adbreak))
             }
+            resolve(currentAdBreaks)
+        } onFailure: {
+            reject(ERROR_CODE_ADS_ACCESS_FAILURE, ERROR_MESSAGE_ADS_ACCESS_FAILURE, nil)
+            if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not retrieve current ad (ads module unavailable).") }
         }
     }
 
     @objc(schedule:ad:)
     func schedule(_ node: NSNumber, adDict: NSDictionary) -> Void {
-        DispatchQueue.main.async {
-            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
-               let adData = adDict as? [String:Any],
-               let ads = theView.ads(),
+        withViewAndAds(node) { _, ads in
+            if let adData = adDict as? [String:Any],
                let adDescription = THEOplayerRCTSourceDescriptionBuilder.buildSingleAdDescription(adData) {
                 ads.schedule(adDescription: adDescription)
             } else {
-                if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not schedule new ad.") }
+                if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not schedule new ad (invalid ad description).") }
             }
+        } onFailure: {
+            if DEBUG_ADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not schedule new ad.") }
         }
     }
 

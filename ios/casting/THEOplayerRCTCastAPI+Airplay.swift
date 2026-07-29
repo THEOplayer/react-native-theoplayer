@@ -12,57 +12,55 @@ extension THEOplayerRCTCastAPI {
     
     @objc(airplayCasting:resolver:rejecter:)
     func airplayCasting(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
-        DispatchQueue.main.async {
-            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
-               let cast = theView.cast(),
-               let airplay = cast.airPlay {
+        withViewAndCast(node) { _, cast in
+            if let airplay = cast.airPlay {
                 resolve(airplay.casting)
             } else {
                 reject(ERROR_CODE_AIRPLAY_ACCESS_FAILURE, ERROR_MESSAGE_AIRPLAY_ACCESS_FAILURE, nil)
-                if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Could not retrieve current airplay casting status.") }
+                if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Could not retrieve current airplay casting status (airplay unavailable).") }
             }
+        } onFailure: {
+            reject(ERROR_CODE_CAST_ACCESS_FAILURE, ERROR_MESSAGE_CAST_ACCESS_FAILURE, nil)
+            if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Could not retrieve current airplay casting status (cast module unavailable).") }
         }
     }
     
     @objc(airplayState:resolver:rejecter:)
     func airplayState(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
-        DispatchQueue.main.async {
-            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
-               let cast = theView.cast(),
-               let airplay = cast.airPlay {
+        withViewAndCast(node) { _, cast in
+            if let airplay = cast.airPlay {
                 resolve(airplay.state._rawValue)
             } else {
                 reject(ERROR_CODE_AIRPLAY_ACCESS_FAILURE, ERROR_MESSAGE_AIRPLAY_ACCESS_FAILURE, nil)
-                if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Could not retrieve current airplay state.") }
+                if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Could not retrieve current airplay state (airplay unavailable).") }
             }
+        } onFailure: {
+            reject(ERROR_CODE_CAST_ACCESS_FAILURE, ERROR_MESSAGE_CAST_ACCESS_FAILURE, nil)
+            if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Could not retrieve current airplay state (cast module unavailable).") }
         }
     }
     
     @objc(airplayStart:)
     func airplayStart(_ node: NSNumber) -> Void {
-        DispatchQueue.main.async {
-            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
-               let cast = theView.cast(),
-               let airplay = cast.airPlay {
+        withViewAndCast(node) { _, cast in
+            if let airplay = cast.airPlay {
                 if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Starting airplay session.") }
                 airplay.start()
-            } else {
-                if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Could not start airplay session.") }
             }
+        } onFailure: {
+            if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Could not start airplay session.") }
         }
     }
     
     @objc(airplayStop:)
     func airplayStop(_ node: NSNumber) -> Void {
-        DispatchQueue.main.async {
-            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
-               let cast = theView.cast(),
-               let airplay = cast.airPlay {
+        withViewAndCast(node) { _, cast in
+            if let airplay = cast.airPlay {
                 if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Stopping airplay session.") }
                 airplay.stop()
-            } else {
-                if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Could not stop airplay session.") }
             }
+        } onFailure: {
+            if DEBUG_CAST_API { PrintUtils.printLog(logText: "[NATIVE] Could not stop airplay session.") }
         }
     }
     
