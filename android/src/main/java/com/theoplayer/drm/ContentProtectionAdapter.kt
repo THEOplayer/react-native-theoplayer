@@ -48,6 +48,7 @@ const val PROP_MULTISESSION: String = "multiSession"
 const val PROP_KEYS: String = "keys"
 const val PROP_ID: String = "id"
 const val PROP_VALUE: String = "value"
+const val PROP_PREFERRED_KEY_SYSTEMS: String = "preferredKeySystems"
 
 object ContentProtectionAdapter {
 
@@ -107,6 +108,12 @@ object ContentProtectionAdapter {
       }
       if (jsonConfig.has(PROP_MULTISESSION)) {
         multiSession(jsonConfig.getBoolean(PROP_MULTISESSION))
+      }
+      if (jsonConfig.has(PROP_PREFERRED_KEY_SYSTEMS)) {
+        val jsonKeySystems = jsonConfig.getJSONArray(PROP_PREFERRED_KEY_SYSTEMS)
+        preferredKeySystems((0 until jsonKeySystems.length()).mapNotNull {
+          KeySystemAdapter.fromString(jsonKeySystems.getString(it))
+        })
       }
       queryParameters(fromJSONObjectToMap(jsonConfig.optJSONObject(PROP_QUERY_PARAMETERS)))
     }.build()
