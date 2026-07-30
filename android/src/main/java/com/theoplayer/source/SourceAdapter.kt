@@ -8,6 +8,7 @@ import com.theoplayer.android.api.ads.theoads.TheoAdDescription
 import com.theoplayer.android.api.error.THEOplayerException
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableMap
+import com.theoplayer.android.api.source.SourceAbrConfiguration
 import com.theoplayer.android.api.source.SourceDescription
 import com.theoplayer.android.api.source.TypedSource
 import com.theoplayer.android.api.source.metadata.MetadataDescription
@@ -41,6 +42,9 @@ import java.util.ArrayList
 import java.util.HashMap
 
 private const val TAG = "SourceAdapter"
+private const val PROP_ABR = "abr"
+private const val PROP_PREFERRED_VIDEO_CODECS = "preferredVideoCodecs"
+private const val PROP_PREFERRED_AUDIO_CODECS = "preferredAudioCodecs"
 private const val PROP_CONTENT_PROTECTION = "contentProtection"
 private const val PROP_LIVE_OFFSET = "liveOffset"
 private const val PROP_HLS_DATERANGE = "hlsDateRange"
@@ -179,6 +183,9 @@ class SourceAdapter {
         .poster(poster)
         .ads(*ads.toTypedArray())
         .textTracks(*sideLoadedTextTracks.toTypedArray())
+      parseAbrConfigurationFromSources(jsonSources, jsonSourceObject.optJSONObject(PROP_SOURCES))?.let {
+        builder.abr(it)
+      }
       if (metadataDescription != null) {
         builder.metadata(metadataDescription)
       }
@@ -193,6 +200,22 @@ class SourceAdapter {
     }
     return null
   }
+
+  private fun parseAbrConfigurationFromSources(jsonSources: JSONArray?, jsonSource: JSONObject?): SourceAbrConfiguration? {
+    // The SDK applies the ABR configuration per source description: take it from the first typed source specifying one.
+    val jsonAbr = if (jsonSources != null) {
+      (0 until jsonSources.length()).firstNotNullOfOrNull { (jsonSources[it] as JSONObject).optJSONObject(PROP_ABR) }
+    } else {
+      jsonSource?.optJSONObject(PROP_ABR)
+    } ?: return null
+    return SourceAbrConfiguration(
+      maxBitrate = null,
+      preferredVideoCodecs = jsonAbr.optJSONArray(PROP_PREFERRED_VIDEO_CODECS)?.toStringList(),
+      preferredAudioCodecs = jsonAbr.optJSONArray(PROP_PREFERRED_AUDIO_CODECS)?.toStringList()
+    )
+  }
+
+  private fun JSONArray.toStringList(): List<String> = (0 until length()).map { getString(it) }
 
   private fun parseTheoLiveSource(jsonTypedSource: JSONObject): TheoLiveSource {
     return TheoLiveSource(
