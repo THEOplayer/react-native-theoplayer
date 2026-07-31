@@ -9,6 +9,7 @@ class THEOplayerRCTNowPlayingManager {
     private weak var player: THEOplayer?
     private let nowPlayingQueue = DispatchQueue(label: "com.theoplayer.reactnative.nowplayinginfo")
     private var nowPlayingInfoStorage = [String : Any]()
+    private var nowPlayingInfoGeneration: Int = 0
     
     // MARK: player Listeners
     private var durationChangeListener: EventListener?
@@ -63,8 +64,8 @@ class THEOplayerRCTNowPlayingManager {
     }
     
     func updateNowPlayingInfo() {
-        // Reset any existing playing info
-        self.clearNowPlayingInfoStorage()
+        // Reset any existing playing info; this invalidates any artwork fetch still in flight
+        let generation = self.clearNowPlayingInfoStorage()
         
         // Gather new playing info
         if let player = self.player,
@@ -81,7 +82,7 @@ class THEOplayerRCTNowPlayingManager {
             self.updateServiceIdentifier(metadata.metadataKeys?["nowPlayingServiceIdentifier"] as? String)
             self.updateContentIdentifier(metadata.metadataKeys?["nowPlayingContentIdentifier"] as? String)
             self.updateCurrentTime(player.currentTime)
-            self.updateArtWork(artWorkUrlString) { [weak self] in
+            self.updateArtWork(artWorkUrlString, generation: generation) { [weak self] in
                 self?.processNowPlayingInfoToInfoCenter()
             }
         } else {
@@ -94,16 +95,41 @@ class THEOplayerRCTNowPlayingManager {
     // updateNowPlayingInfo, destroy) and from the URLSession delegate queue (artwork fetch
     // completion). All access is serialized through nowPlayingQueue to avoid corrupting
     // the dictionary storage.
+    //
+    // nowPlayingInfoGeneration identifies the source the storage is currently describing.
+    // It is bumped on every clear, so an artwork fetch that completes after a source change
+    // (or after the info was cleared) can detect that it is stale and skip both its write
+    // and the publication to the info center.
     private func setNowPlayingInfoStorage(_ key: String, _ value: Any?) {
         self.nowPlayingQueue.sync { self.nowPlayingInfoStorage[key] = value }
+    }
+    
+    // Writes only when the generation is still current; returns false when stale.
+    private func setNowPlayingInfoStorage(_ key: String, _ value: Any?, ifGeneration generation: Int) -> Bool {
+        self.nowPlayingQueue.sync {
+            guard generation == self.nowPlayingInfoGeneration else {
+                return false
+            }
+            self.nowPlayingInfoStorage[key] = value
+            return true
+        }
+    }
+    
+    private func isCurrentNowPlayingInfoGeneration(_ generation: Int) -> Bool {
+        self.nowPlayingQueue.sync { generation == self.nowPlayingInfoGeneration }
     }
     
     private func getNowPlayingInfoStorage() -> [String : Any] {
         self.nowPlayingQueue.sync { self.nowPlayingInfoStorage }
     }
     
-    private func clearNowPlayingInfoStorage() {
-        self.nowPlayingQueue.sync { self.nowPlayingInfoStorage = [:] }
+    @discardableResult
+    private func clearNowPlayingInfoStorage() -> Int {
+        self.nowPlayingQueue.sync {
+            self.nowPlayingInfoStorage = [:]
+            self.nowPlayingInfoGeneration += 1
+            return self.nowPlayingInfoGeneration
+        }
     }
     
     private func processNowPlayingInfoToInfoCenter() {
@@ -192,17 +218,28 @@ class THEOplayerRCTNowPlayingManager {
         if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] mediaType [hardcoded 2, for video] stored in nowPlayingInfo.") }
     }
     
-    private func updateArtWork(_ urlString: String?, completion: (() -> Void)?) {
+    private func updateArtWork(_ urlString: String?, generation: Int, completion: (() -> Void)?) {
         if let artUrlString = urlString,
            let artUrl = URL(string: artUrlString) {
             let dataTask = URLSession.shared.dataTask(with: artUrl) { [weak self] (data, _, _) in
+                guard let welf = self else {
+                    return
+                }
                 if let displayIconData = data,
                    let displayIcon = UIImage(data: displayIconData) {
-                    self?.setNowPlayingInfoStorage(MPMediaItemPropertyArtwork, MPMediaItemArtwork(boundsSize: displayIcon.size) { size in
+                    let artWork = MPMediaItemArtwork(boundsSize: displayIcon.size) { size in
                         return displayIcon
-                    })
+                    }
+                    guard welf.setNowPlayingInfoStorage(MPMediaItemPropertyArtwork, artWork, ifGeneration: generation) else {
+                        if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] Artwork arrived for an outdated source, discarding it.") }
+                        return
+                    }
                     if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] Artwork stored in nowPlayingInfo.") }
                 } else {
+                    guard welf.isCurrentNowPlayingInfoGeneration(generation) else {
+                        if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] Artwork failed for an outdated source, discarding it.") }
+                        return
+                    }
                     if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] Failed to store artwork in nowPlayingInfo.") }
                 }
                 completion?()
