@@ -305,7 +305,7 @@ public class THEOplayerRCTView: UIView {
         }
         
         // trigger different feature managers to reflect the current state
-        self.nowPlayingManager.updateNowPlaying()
+        self.nowPlayingManager.updateNowPlayingInfo()
         self.remoteCommandsManager.updateRemoteCommands()
         self.pipControlsManager.updatePipControls()
     }

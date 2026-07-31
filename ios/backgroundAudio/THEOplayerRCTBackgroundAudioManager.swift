@@ -32,7 +32,7 @@ class THEOplayerRCTBackgroundAudioManager: NSObject, BackgroundPlaybackDelegate 
                 return false
             }
             
-            view.nowPlayingManager.updateNowPlaying()
+            view.nowPlayingManager.updateNowPlayingInfo()
             return view.backgroundAudioConfig.enabled
         }
         return false
