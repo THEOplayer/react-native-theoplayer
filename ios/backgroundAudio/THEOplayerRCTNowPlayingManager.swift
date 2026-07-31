@@ -73,9 +73,9 @@ class THEOplayerRCTNowPlayingManager {
            let metadata = sourceDescription.metadata {
             let artWorkUrlString = self.getArtWorkUrlStringFromSourceDescription(sourceDescription)
             self.updateTitle(metadata.title)
-            self.updateArtist(metadata.metadataKeys?["artist"] as? String)
+            self.updateSubtitleOrArtist(subtitle: metadata.metadataKeys?["subtitle"] as? String,
+                                        artist: metadata.metadataKeys?["artist"] as? String)
             self.updateAlbum(metadata.metadataKeys?["album"] as? String)
-            self.updateSubtitle(metadata.metadataKeys?["subtitle"] as? String)
             self.updateDuration(player.duration)
             self.updateMediaType() // video
             self.updatePlaybackRate(player.playbackRate)
@@ -178,10 +178,14 @@ class THEOplayerRCTNowPlayingManager {
         }
     }
     
-    private func updateArtist(_ metadataArtist: String?) {
-        if let artist = metadataArtist {
-            self.setNowPlayingInfoStorage(MPMediaItemPropertyArtist, artist)
-            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] artist [\(artist)] stored in nowPlayingInfo.") }
+    // MPMediaItemPropertyArtist holds the secondary line shown below the title. An audio
+    // stream typically describes it through an artist, while a video stream has no artist but
+    // can provide a subtitle (e.g. title "My Series" with subtitle "ep.8: My Episode Title").
+    // Only one of both can be displayed, so the subtitle takes precedence when both are set.
+    private func updateSubtitleOrArtist(subtitle metadataSubtitle: String?, artist metadataArtist: String?) {
+        if let subtitleOrArtist = metadataSubtitle ?? metadataArtist {
+            self.setNowPlayingInfoStorage(MPMediaItemPropertyArtist, subtitleOrArtist)
+            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] subtitle/artist [\(subtitleOrArtist)] stored in nowPlayingInfo.") }
         }
     }
     
@@ -189,13 +193,6 @@ class THEOplayerRCTNowPlayingManager {
         if let album = metadataAlbum {
             self.setNowPlayingInfoStorage(MPMediaItemPropertyAlbumTitle, album)
             if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] album [\(album)] stored in nowPlayingInfo.") }
-        }
-    }
-    
-    private func updateSubtitle(_ metadataSubtitle: String?) {
-        if let subtitle = metadataSubtitle {
-            self.setNowPlayingInfoStorage(MPMediaItemPropertyArtist, subtitle)
-            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] subtitle [\(subtitle)] stored in nowPlayingInfo.") }
         }
     }
     
