@@ -17,6 +17,22 @@ class THEOplayerRCTTypeUtils {
         }
         return value
     }
+
+    /// Converts a value into a bridge-safe representation: the RN bridge drops values it cannot
+    /// serialize to JSON (e.g. `Data`, which becomes `null`). Binary payloads are converted to
+    /// number arrays, matching the byte-array shape used by the Android bridge.
+    class func bridgeSafe(_ value: Any) -> Any {
+        switch value {
+        case let data as Data:
+            return data.map { Int($0) }
+        case let dictionary as [String: Any]:
+            return dictionary.mapValues { bridgeSafe($0) }
+        case let array as [Any]:
+            return array.map { bridgeSafe($0) }
+        default:
+            return value
+        }
+    }
     
     class func preloadTypeFromString(_ type: String) -> Preload {
         switch type {

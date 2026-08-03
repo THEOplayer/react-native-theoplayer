@@ -27,46 +27,46 @@ class THEOplayerRCTTHEOAdsAPI: NSObject, RCTBridgeModule {
 #if canImport(THEOplayerTHEOadsIntegration)
     @objc(currentInterstitials:resolver:rejecter:)
     func currentInterstitials(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
-        DispatchQueue.main.async {
-            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
-               let player = theView.player,
-               let theoAds = player.ads.theoAds {
+        withViewAndPlayer(node) { _, player in
+            if let theoAds = player.ads.theoAds {
                 var currentInterstitials: [[String:Any]] = []
                 for interstitial in theoAds.currentInterstitials {
                     currentInterstitials.append(THEOplayerRCTTHEOadsEventAdapter.fromInterstitial(interstitial))
                 }
                 resolve(currentInterstitials)
             } else {
-                if DEBUG_THEOADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not get currentInterstitials (THEOAds module unavailable).") }
                 reject(ERROR_CODE_THEOADS_ACCESS_FAILURE, ERROR_MESSAGE_THEOADS_ACCESS_FAILURE, nil)
+                if DEBUG_THEOADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not get currentInterstitials (THEOAds module unavailable).") }
             }
+        } onFailure: {
+            reject(ERROR_CODE_THEOADS_ACCESS_FAILURE, ERROR_MESSAGE_THEOADS_ACCESS_FAILURE, nil)
+            if DEBUG_THEOADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not get currentInterstitials (player unavailable).") }
         }
     }
     
     @objc(scheduledInterstitials:resolver:rejecter:)
     func scheduledInterstitials(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
-        DispatchQueue.main.async {
-            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
-               let player = theView.player,
-               let theoAds = player.ads.theoAds {
+        withViewAndPlayer(node) { _, player in
+            if let theoAds = player.ads.theoAds {
                 var scheduledInterstitials: [[String:Any]] = []
                 for interstitial in theoAds.scheduledInterstitials {
                     scheduledInterstitials.append(THEOplayerRCTTHEOadsEventAdapter.fromInterstitial(interstitial))
                 }
                 resolve(scheduledInterstitials)
             } else {
-                if DEBUG_THEOADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not get scheduledInterstitials (THEOAds module unavailable).") }
                 reject(ERROR_CODE_THEOADS_ACCESS_FAILURE, ERROR_MESSAGE_THEOADS_ACCESS_FAILURE, nil)
+                if DEBUG_THEOADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not get scheduledInterstitials (THEOAds module unavailable).") }
             }
+        } onFailure: {
+            reject(ERROR_CODE_THEOADS_ACCESS_FAILURE, ERROR_MESSAGE_THEOADS_ACCESS_FAILURE, nil)
+            if DEBUG_THEOADS_API { PrintUtils.printLog(logText: "[NATIVE] Could not get scheduledInterstitials (player unavailable).") }
         }
     }
     
     @objc(replaceAdTagParameters:adTagParameters:)
     func replaceAdTagParameters(_ node: NSNumber, adTagParameters: [String:Any]?) -> Void {
-        DispatchQueue.main.async {
-            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
-               let player = theView.player,
-               let theoAds = player.ads.theoAds {
+        withViewAndPlayer(node) { _, player in
+            if let theoAds = player.ads.theoAds {
                 if let newParams = adTagParameters as? [String: String] {
                     theoAds.replaceAdTagParams(params: newParams)
                     if DEBUG_THEOADS_API { PrintUtils.printLog(logText: "[NATIVE] THEOAds adTagParameters replaced.") }
@@ -79,10 +79,8 @@ class THEOplayerRCTTHEOAdsAPI: NSObject, RCTBridgeModule {
 
     @objc(setAdTagParameters:id:adTagParameters:)
     func setAdTagParameters(_ node: NSNumber, id: String, adTagParameters: [String:Any]?) -> Void {
-        DispatchQueue.main.async {
-            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView,
-               let player = theView.player,
-               let theoAds = player.ads.theoAds,
+        withViewAndPlayer(node) { _, player in
+            if let theoAds = player.ads.theoAds,
                let newParams = adTagParameters as? [String:String] {
               let allInterstitials = theoAds.currentInterstitials + theoAds.scheduledInterstitials
               var interstitial = allInterstitials.first(where: { $0.id == id })

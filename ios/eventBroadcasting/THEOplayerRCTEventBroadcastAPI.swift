@@ -24,10 +24,8 @@ class THEOplayerRCTBroadcastAPI: NSObject, RCTBridgeModule {
 
     @objc(broadcastEvent:event:)
     func broadcastEvent(_ node: NSNumber, event: NSDictionary) -> Void {
-        DispatchQueue.main.async {
-            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView {
-                theView.broadcastEventHandler.broadcastEvent(eventData: event)
-            }
+        withView(node) { theView in
+            theView.broadcastEventHandler.broadcastEvent(eventData: event)
         }
     }
 }

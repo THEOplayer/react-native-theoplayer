@@ -305,7 +305,7 @@ public class THEOplayerRCTView: UIView {
         }
         
         // trigger different feature managers to reflect the current state
-        self.nowPlayingManager.updateNowPlaying()
+        self.nowPlayingManager.updateNowPlayingInfo()
         self.remoteCommandsManager.updateRemoteCommands()
         self.pipControlsManager.updatePipControls()
     }
@@ -468,6 +468,12 @@ public class THEOplayerRCTView: UIView {
     func setOnNativeCanPlay(nativeCanPlay: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeCanPlay = nativeCanPlay
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeCanPlay prop set.") }
+    }
+    
+    @objc(setOnNativeContentProtectionError:)
+    func setOnNativeContentProtectionError(nativeContentProtectionError: @escaping RCTDirectEventBlock) {
+        self.mainEventHandler.onNativeContentProtectionError = nativeContentProtectionError
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeContentProtectionError prop set.") }
     }
     
     @objc(setOnNativeDimensionChange:)
