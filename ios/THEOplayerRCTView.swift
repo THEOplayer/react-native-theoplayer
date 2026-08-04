@@ -73,7 +73,7 @@ public class THEOplayerRCTView: UIView {
     var mediaControlConfig = MediaControlConfig() {
         didSet {
             self.remoteCommandsManager.updateRemoteCommands()
-            self.nowPlayingManager.updateNowPlaying()
+            self.nowPlayingManager.updateNowPlayingInfo()
         }
     }
     var pipConfig = PipConfig() {
