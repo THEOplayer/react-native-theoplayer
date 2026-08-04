@@ -32,6 +32,13 @@ A use case for enabling `stopOnBackground` could be a live stream that should no
 background, neither in paused nor playing state. The app should be designed to reload the source or the player page when coming back
 to the foreground.
 
+Picture-in-picture is an exception to `stopOnBackground`: when the player transitions to a PiP window while the app
+goes to the background, play-out is not stopped. Instead, the stop is postponed until the PiP window is closed while
+the app is still in the background. There is no need to modify the `backgroundAudioConfiguration` on
+`presentationmodechange` events to achieve this behaviour. In case play-out should stop when the PiP window is closed,
+but continue when the app is backgrounded without PiP, keep `stopOnBackground` disabled and clear the player's source
+from the `presentationmodechange` event instead, as described in [Picture-in-Picture](./pip.md).
+
 ### Android
 
 On Android, a [service](https://developer.android.com/guide/components/services) is used to
