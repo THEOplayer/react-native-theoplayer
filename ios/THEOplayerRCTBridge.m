@@ -47,6 +47,7 @@ RCT_EXPORT_VIEW_PROPERTY(onNativeMediaTrackEvent, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeDeviceOrientationChanged, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativePlayerReady, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativePresentationModeChange, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeContentProtectionError, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeDimensionChange, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeVideoResize, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeAdEvent, RCTDirectEventBlock);

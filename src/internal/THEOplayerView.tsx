@@ -23,6 +23,7 @@ import {
   DefaultAirplayStateChangeEvent,
   DefaultChromecastChangeEvent,
   DefaultChromecastErrorEvent,
+  DefaultContentProtectionErrorEvent,
   DefaultCurrentSourceChangeEvent,
   DefaultDimensionChangeEvent,
   DefaultDurationChangeEvent,
@@ -52,6 +53,7 @@ import type {
 } from './adapter/event/native/NativeTrackEvent';
 import { toMediaTrackType, toMediaTrackTypeEventType, toTextTrackEventType, toTrackListEventType } from './adapter/event/native/NativeTrackEvent';
 import {
+  NativeContentProtectionErrorEvent,
   NativeCurrentSourceChangeEvent,
   NativeDurationChangeEvent,
   NativeErrorEvent,
@@ -116,6 +118,7 @@ interface THEOplayerRCTViewProps {
   onNativeCastEvent: (event: NativeSyntheticEvent<NativeCastEvent>) => void;
   onNativePresentationModeChange: (event: NativeSyntheticEvent<NativePresentationModeChangeEvent>) => void;
   onNativeDeviceOrientationChanged: () => void;
+  onNativeContentProtectionError: (event: NativeSyntheticEvent<NativeContentProtectionErrorEvent>) => void;
   onNativeDimensionChange: (event: NativeSyntheticEvent<NativeDimensionChangeEvent>) => void;
   onNativeVideoResize: (event: NativeSyntheticEvent<NativeVideoResizeEvent>) => void;
 }
@@ -422,6 +425,10 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
     this._facade?.dispatchEvent(new DefaultDimensionChangeEvent(width, height));
   };
 
+  private _onContentProtectionError = (event: NativeSyntheticEvent<NativeContentProtectionErrorEvent>) => {
+    this._facade?.dispatchEvent(new DefaultContentProtectionErrorEvent(event.nativeEvent.error));
+  };
+
   private _onVideoResize = (event: NativeSyntheticEvent<NativeVideoResizeEvent>) => {
     this._facade?.dispatchEvent(new DefaultVideoResizeEvent(event.nativeEvent.videoWidth, event.nativeEvent.videoHeight));
   };
@@ -503,6 +510,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
           onNativeCastEvent={this._onCastEvent}
           onNativePresentationModeChange={this._onPresentationModeChange}
           onNativeDeviceOrientationChanged={this._onDeviceOrientationChanged}
+          onNativeContentProtectionError={this._onContentProtectionError}
           onNativeDimensionChange={this._onDimensionChange}
           onNativeVideoResize={this._onVideoResize}
         />

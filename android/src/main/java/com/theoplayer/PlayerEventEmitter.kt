@@ -85,6 +85,7 @@ private const val EVENT_THEOLIVE_EVENT = "onNativeTHEOliveEvent"
 private const val EVENT_THEOADS_EVENT = "onNativeTHEOadsEvent"
 private const val EVENT_PRESENTATIONMODECHANGE = "onNativePresentationModeChange"
 private const val EVENT_VOLUMECHANGE = "onNativeVolumeChange"
+private const val EVENT_CONTENTPROTECTIONERROR = "onNativeContentProtectionError"
 private const val EVENT_DIMENSIONCHANGE = "onNativeDimensionChange"
 private const val EVENT_VIDEORESIZE = "onNativeVideoResize"
 
@@ -132,6 +133,7 @@ class PlayerEventEmitter internal constructor(
     EVENT_THEOADS_EVENT,
     EVENT_PRESENTATIONMODECHANGE,
     EVENT_VOLUMECHANGE,
+    EVENT_CONTENTPROTECTIONERROR,
     EVENT_DIMENSIONCHANGE,
     EVENT_VIDEORESIZE
   )
@@ -171,6 +173,7 @@ class PlayerEventEmitter internal constructor(
       EVENT_THEOADS_EVENT,
       EVENT_PRESENTATIONMODECHANGE,
       EVENT_VOLUMECHANGE,
+      EVENT_CONTENTPROTECTIONERROR,
       EVENT_DIMENSIONCHANGE,
       EVENT_VIDEORESIZE
     )
@@ -246,6 +249,8 @@ class PlayerEventEmitter internal constructor(
       EventListener { event: PresentationModeChange -> onPresentationModeChange(event) }
     playerListeners[PlayerEventTypes.VOLUMECHANGE] =
       EventListener { event: VolumeChangeEvent -> onVolumeChange(event) }
+    playerListeners[PlayerEventTypes.CONTENTPROTECTIONERROR] =
+      EventListener { event: ContentProtectionErrorEvent -> onContentProtectionError(event) }
     playerListeners[PlayerEventTypes.RESIZE] =
       EventListener { event: ResizeEvent -> onResize(event) }
     textTrackListeners[TextTrackListEventTypes.ADDTRACK] =
@@ -476,6 +481,13 @@ class PlayerEventEmitter internal constructor(
     receiveEvent(
       EVENT_DIMENSIONCHANGE,
       PayloadBuilder().size(width, height).build()
+    )
+  }
+
+  private fun onContentProtectionError(event: ContentProtectionErrorEvent) {
+    receiveEvent(
+      EVENT_CONTENTPROTECTIONERROR,
+      PayloadBuilder().error(event.errorObject.code.id.toString(), event.errorObject.message).build()
     )
   }
 
