@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added `THEOplayer.allowsExternalPlayback` to enable or disable AirPlay playback on iOS.
 - Added `abr` property to `TypedSource`, supporting `preferredVideoCodecs` and `preferredAudioCodecs` on Android and Web.
+- Added `contentprotectionerror` event bridging on iOS.
 
 ### Fixed
 
