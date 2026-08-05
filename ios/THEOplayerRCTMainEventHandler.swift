@@ -58,6 +58,7 @@ public class THEOplayerRCTMainEventHandler {
     private var canPlayListener: EventListener?
     private var contentProtectionSuccessListener: EventListener?
     private var videoResizeListener: EventListener?
+    private var contentProtectionErrorListener: EventListener?
     
     // MARK: player observer
     private var dimensionChangeObserver: NSKeyValueObservation?
@@ -338,6 +339,25 @@ public class THEOplayerRCTMainEventHandler {
         }
         if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] CanPlay listener attached to THEOplayer") }
         
+        // CONTENT_PROTECTION_ERROR
+        self.contentProtectionErrorListener = player.addEventListener(type: PlayerEventTypes.CONTENT_PROTECTION_ERROR) { [weak self] event in
+            if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received CONTENT_PROTECTION_ERROR event from THEOplayer") }
+            if let forwardedContentProtectionErrorEvent = self?.onNativeContentProtectionError {
+                let errorObject = event.errorObject
+                let errorCodeString = String(errorObject.code.rawValue)
+                let errorCodeMessage = errorObject.message
+                forwardedContentProtectionErrorEvent(
+                    [
+                        "error": [
+                            "errorCode": errorCodeString,
+                            "errorMessage": errorCodeMessage
+                        ]
+                    ]
+                )
+            }
+        }
+        if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] ContentProtectionError listener attached to THEOplayer") }
+        
         // RESIZE
         self.videoResizeListener = player.addEventListener(type: PlayerEventTypes.RESIZE) { [weak self, weak player] event in
             if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received RESIZE event from THEOplayer") }
@@ -503,7 +523,13 @@ public class THEOplayerRCTMainEventHandler {
         if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] Invalidate dimensionChangeObserver from THEOplayer") }
         self.dimensionChangeObserver?.invalidate()
         self.dimensionChangeObserver = nil
-      
+        
+        // CONTENT_PROTECTION_ERROR
+        if let contentProtectionErrorListener = self.contentProtectionErrorListener {
+            player.removeEventListener(type: PlayerEventTypes.CONTENT_PROTECTION_ERROR, listener: contentProtectionErrorListener)
+            if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] ContentProtectionError listener dettached from THEOplayer") }
+        }
+        
         // RESIZE
         if let videoResizeListener = self.videoResizeListener {
           player.removeEventListener(type: PlayerEventTypes.RESIZE, listener: videoResizeListener)
