@@ -476,6 +476,12 @@ public class THEOplayerRCTView: UIView {
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeContentProtectionError prop set.") }
     }
     
+    @objc(setOnNativeContentProtectionSuccess:)
+    func setOnNativeContentProtectionSuccess(nativeContentProtectionSuccess: @escaping RCTDirectEventBlock) {
+        self.mainEventHandler.onNativeContentProtectionSuccess = nativeContentProtectionSuccess
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeContentProtectionSuccess prop set.") }
+    }
+    
     @objc(setOnNativeDimensionChange:)
     func setOnNativeDimensionChange(nativeDimensionChange: @escaping RCTDirectEventBlock) {
         self.mainEventHandler.onNativeDimensionChange = nativeDimensionChange
