@@ -32,12 +32,11 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
       // Adapt native player to react-native player.
       adapter.current = new THEOplayerWebAdapter(player.current, config);
 
-      // Expose players for easy access
+      // Expose players for easy access from the browser console.
       // @ts-ignore
       window.player = adapter.current;
-
       // @ts-ignore
-      window.nativePlayer = player;
+      window.nativePlayer = player.current;
 
       // Notify the player is ready
       onPlayerReady?.(adapter.current);
@@ -45,11 +44,26 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
 
     // Clean-up
     return () => {
-      // Notify the player will be destroyed.
-      if (adapter?.current && onPlayerDestroy) {
-        onPlayerDestroy(adapter?.current);
+      const adapterRef = adapter.current;
+      const playerRef = player.current;
+      if (adapterRef) {
+        onPlayerDestroy?.(adapterRef);
+        adapterRef.destroy();
+        adapter.current = null;
+      } else if (playerRef) {
+        // Adapter construction failed between `new ChromelessPlayer(...)`
+        // and `new THEOplayerWebAdapter(...)` — destroy the raw player ourselves.
+        playerRef.destroy();
       }
-      adapter?.current?.destroy();
+      player.current = null;
+      if (typeof window !== 'undefined') {
+        // Only clear globals if they still point to our instances — a second
+        // player may have mounted and overwritten them.
+        // @ts-ignore
+        if (window.player === adapterRef) window.player = undefined;
+        // @ts-ignore
+        if (window.nativePlayer === playerRef) window.nativePlayer = undefined;
+      }
     };
     // TODO: Follow the rules of react hooks, to be fixed in next major because it's a breaking change for some customers.
     // eslint-disable-next-line react-hooks/exhaustive-deps

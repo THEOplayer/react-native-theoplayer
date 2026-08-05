@@ -65,6 +65,14 @@ export class WebPresentationModeManager {
     }
   }
 
+  destroy(): void {
+    if (fullscreenAPI !== undefined) {
+      document.removeEventListener(fullscreenAPI.fullscreenchange_, this.updatePresentationMode);
+      document.removeEventListener(fullscreenAPI.fullscreenerror_, this.updatePresentationMode);
+    }
+    this._player?.presentation?.removeEventListener('presentationmodechange', this.updatePresentationMode);
+  }
+
   private updatePresentationMode = () => {
     // detect new presentation mode
     let newPresentationMode: PresentationMode = PresentationMode.inline;
