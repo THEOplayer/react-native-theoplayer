@@ -1,0 +1,3 @@
+[submodule "e2e/packages/react-native-cavynext"]
+	path = e2e/packages/react-native-cavynext
+	url = git@github.com:tvanlaerhoven/react-native-cavynext.git
