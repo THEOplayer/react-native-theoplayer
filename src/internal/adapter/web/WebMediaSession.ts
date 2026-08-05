@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import type { ChromelessPlayer } from 'theoplayer';
 import type { THEOplayerWebAdapter } from '../THEOplayerWebAdapter';
-import { MediaControlConfiguration } from 'react-native-theoplayer';
+import { MediaControlAction, MediaControlConfiguration } from 'react-native-theoplayer';
+import { MediaControlWebAdapter } from '../media/MediaControlWebAdapter';
 
 const DEFAULT_SKIP_FORWARD_INTERVAL = 5;
 const DEFAULT_SKIP_BACKWARD_INTERVAL = 5;
@@ -30,19 +31,50 @@ const mediaSession = (function () {
  * @link https://w3c.github.io/mediasession
  */
 export class WebMediaSession {
-  private readonly _config: MediaControlConfiguration;
-  private readonly _player: ChromelessPlayer;
-  private readonly _webAdapter: THEOplayerWebAdapter;
+  // The session that most recently published to the process-wide navigator.mediaSession.
+  // Used to scope clearing so a disabled/destroyed player only clears its own session and never
+  // clobbers another (newly-active) owner during a multi-player hand-off.
+  private static _currentOwner: WebMediaSession | undefined;
+  private readonly _mediaControlAdapter: MediaControlWebAdapter;
+  private _enabled: boolean;
 
-  constructor(adapter: THEOplayerWebAdapter, player: ChromelessPlayer, config: MediaControlConfiguration = defaultMediaControlConfiguration) {
-    this._player = player;
-    this._webAdapter = adapter;
-    this._config = config;
+  constructor(
+    private readonly _webAdapter: THEOplayerWebAdapter,
+    private readonly _player: ChromelessPlayer,
+    private readonly _config: MediaControlConfiguration = defaultMediaControlConfiguration,
+  ) {
+    this._enabled = this._config.mediaSessionEnabled !== false;
     this._player.addEventListener('sourcechange', this.onSourceChange);
+    this._mediaControlAdapter = new MediaControlWebAdapter(this);
+  }
+
+  get mediaControlAdapter() {
+    return this._mediaControlAdapter;
+  }
+
+  setEnabled(enabled: boolean) {
+    if (this._enabled === enabled) {
+      return;
+    }
+    this._enabled = enabled;
+    if (enabled) {
+      this.updateMetadata();
+      this.updateMediaSession();
+    } else {
+      this.clearMediaSession();
+    }
   }
 
   updateMediaSession() {
-    // update trickplay capabilities
+    if (!this._enabled) {
+      // A disabled session must not touch the shared navigator.mediaSession on routine events, as this
+      // would clobber the state of another player that currently owns the session. Explicit clearing
+      // only happens on the setEnabled(false)/destroy() transitions.
+      return;
+    }
+    // This session is now publishing to the shared media session: claim ownership.
+    WebMediaSession._currentOwner = this;
+    // Update trick-play capabilities
     if (this.isTrickPlayEnabled()) {
       mediaSession.setActionHandler('seekbackward', (event) => {
         const skipTime = event.seekOffset || this._config.skipBackwardInterval || DEFAULT_SKIP_BACKWARD_INTERVAL;
@@ -67,23 +99,33 @@ export class WebMediaSession {
       mediaSession.setActionHandler('seekto', NoOp);
     }
 
-    // update play/pause capabilities
+    // Update play/pause capabilities
+    // Prefer a user-registered PLAY/PAUSE handler (called with the THEOplayer instance), and fall back to
+    // the default player action when none is set, matching the iOS/Android behavior.
     if (this.isPlayPauseEnabled()) {
-      mediaSession.setActionHandler('play', () => {
-        this._player?.play();
-      });
-      mediaSession?.setActionHandler('pause', () => {
-        this._player?.pause();
-      });
+      const playHandler = this.mediaControlAdapter.getHandler(MediaControlAction.PLAY);
+      mediaSession.setActionHandler('play', () => (playHandler ? playHandler(this._webAdapter) : this._player?.play()));
+      const pauseHandler = this.mediaControlAdapter.getHandler(MediaControlAction.PAUSE);
+      mediaSession.setActionHandler('pause', () => (pauseHandler ? pauseHandler(this._webAdapter) : this._player?.pause()));
     } else {
       mediaSession.setActionHandler('play', NoOp);
       mediaSession.setActionHandler('pause', NoOp);
     }
 
-    // update playbackState
+    // Update queue actions
+    // There is no default behaviour for these: reset the action handler when the user removed theirs, or
+    // the browser keeps presenting the button and dispatching to the removed handler.
+    // Note: the browser invokes media session action handlers with a MediaSessionActionDetails argument.
+    // Wrap the user handler so it is called with the THEOplayer instance, matching the MediaControlHandler contract.
+    const previousTrackHandler = this.mediaControlAdapter.getHandler(MediaControlAction.SKIP_TO_PREVIOUS);
+    mediaSession.setActionHandler('previoustrack', previousTrackHandler ? () => previousTrackHandler(this._webAdapter) : NoOp);
+    const nextTrackHandler = this.mediaControlAdapter.getHandler(MediaControlAction.SKIP_TO_NEXT);
+    mediaSession.setActionHandler('nexttrack', nextTrackHandler ? () => nextTrackHandler(this._webAdapter) : NoOp);
+
+    // Update playbackState
     mediaSession.playbackState = this._player.paused ? 'paused' : 'playing';
 
-    // update position
+    // Update position
     this.updatePositionState();
   }
 
@@ -91,11 +133,28 @@ export class WebMediaSession {
     this._player.removeEventListener(['play', 'playing'], this.onFirstPlaying);
     this._player.removeEventListener(['play', 'pause', 'loadedmetadata', 'durationchange', 'ratechange'], this.update);
     this._player.ads?.removeEventListener(['adbreakbegin', 'adbreakend'], this.update);
+    this.clearMediaSession();
+    // Make sure a late updateMediaSession() call, e.g. from a configuration setter, does not
+    // republish state for a destroyed player.
+    this._enabled = false;
+  }
+
+  private clearMediaSession() {
+    // Only clear the shared media session if this player owns it (or nobody does), so a disabled or
+    // destroyed player never wipes another (newly-active) owner's session during a hand-off.
+    if (WebMediaSession._currentOwner !== undefined && WebMediaSession._currentOwner !== this) {
+      return;
+    }
+    WebMediaSession._currentOwner = undefined;
     mediaSession.setActionHandler('play', NoOp);
     mediaSession.setActionHandler('pause', NoOp);
     mediaSession.setActionHandler('seekbackward', NoOp);
     mediaSession.setActionHandler('seekforward', NoOp);
     mediaSession.setActionHandler('seekto', NoOp);
+    mediaSession.setActionHandler('previoustrack', NoOp);
+    mediaSession.setActionHandler('nexttrack', NoOp);
+    mediaSession.metadata = null;
+    mediaSession.playbackState = 'none';
   }
 
   private update = () => {
@@ -113,12 +172,17 @@ export class WebMediaSession {
     this._player.removeEventListener(['play', 'playing'], this.onFirstPlaying);
     this._player.removeEventListener(['play', 'pause', 'loadedmetadata', 'durationchange', 'ratechange'], this.update);
     this._player.ads?.removeEventListener(['adbreakbegin', 'adbreakend'], this.update);
-    mediaSession.metadata = null;
-    mediaSession.playbackState = 'none';
+    if (this._enabled) {
+      mediaSession.metadata = null;
+      mediaSession.playbackState = 'none';
+    }
     this._player.addEventListener(['play', 'playing'], this.onFirstPlaying);
   };
 
   private updateMetadata = () => {
+    if (!this._enabled) {
+      return;
+    }
     const source = this._player.source;
     const metadata = source?.metadata;
     const artwork = [metadata?.displayIconUri, source?.poster, ...(metadata?.images ? metadata.images : [])]

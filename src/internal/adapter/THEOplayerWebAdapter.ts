@@ -7,6 +7,7 @@ import {
   CmcdConfiguration,
   CmcdTransmissionMode,
   EventBroadcastAPI,
+  MediaControlAPI,
   MediaTrack,
   NativeHandleType,
   PlayerConfiguration,
@@ -56,7 +57,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   private readonly _theoliveAdapter: TheoLiveWebAdapter;
   private _player: NativeChromelessPlayer | undefined;
   private _eventForwarder: WebEventForwarder | undefined;
-  private _mediaSession: WebMediaSession | undefined = undefined;
+  private readonly _mediaSession: WebMediaSession;
   private _targetVideoQuality: number | number[] | undefined = undefined;
   private _backgroundAudioConfiguration: BackgroundAudioConfiguration = defaultBackgroundAudioConfiguration;
   private _pipConfiguration: PiPConfiguration = defaultPipConfiguration;
@@ -78,10 +79,13 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     document.addEventListener('visibilitychange', this.onVisibilityChange);
     this._player.addEventListener('dimensionchange', this.onPlayerDimensionChange);
 
-    // Optionally create a media session connector
-    if (config?.mediaControl?.mediaSessionEnabled !== false) {
-      this._mediaSession = new WebMediaSession(this, player, config?.mediaControl);
-    }
+    // Always create a media session connector so it can be toggled at runtime via mediaControl.setEnabled().
+    // The initial enabled state is derived from config.mediaControl.mediaSessionEnabled.
+    this._mediaSession = new WebMediaSession(this, player, config?.mediaControl);
+  }
+
+  get mediaControl(): MediaControlAPI {
+    return this._mediaSession.mediaControlAdapter;
   }
 
   get abr(): ABRConfiguration | undefined {
@@ -206,7 +210,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     this._backgroundAudioConfiguration = config;
 
     // Notify media session
-    this._mediaSession?.updateMediaSession();
+    this._mediaSession.updateMediaSession();
   }
 
   get volume(): number {
@@ -389,10 +393,9 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   destroy(): void {
     this.dispatchEvent(new BaseEvent(PlayerEventType.DESTROY));
     this._eventForwarder?.unload();
-    this._mediaSession?.destroy();
+    this._mediaSession.destroy();
     document.removeEventListener('visibilitychange', this.onVisibilityChange);
     this._eventForwarder = undefined;
-    this._mediaSession = undefined;
     this._cmcdConnector?.destroy();
     this._cmcdConnector = undefined;
     this._player?.removeEventListener('dimensionchange', this.onPlayerDimensionChange);
@@ -416,7 +419,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
       }
     }
     // Apply media session controls
-    this._mediaSession?.updateMediaSession();
+    this._mediaSession.updateMediaSession();
   };
 
   private readonly onPlayerDimensionChange = (event: DimensionChangeEvent) => {

@@ -42,6 +42,7 @@ public class THEOplayerRCTView: UIView {
     var remoteCommandsManager: THEOplayerRCTRemoteCommandsManager
     var pipManager: THEOplayerRCTPipManager
     var pipControlsManager: THEOplayerRCTPipControlsManager
+    var mediaControlManager: THEOplayerRCTMediaControlManager
     var isApplicationInBackground: Bool = (UIApplication.shared.applicationState == .background)
     
     var adsConfig = AdsConfig()
@@ -71,12 +72,13 @@ public class THEOplayerRCTView: UIView {
 
     var mediaControlConfig = MediaControlConfig() {
         didSet {
-            self.remoteCommandsManager.setMediaControlConfig(mediaControlConfig)
+            self.remoteCommandsManager.updateRemoteCommands()
+            self.nowPlayingManager.updateNowPlayingInfo()
         }
     }
     var pipConfig = PipConfig() {
         didSet {
-            self.pipControlsManager.setPipConfig(pipConfig)
+            self.pipControlsManager.updatePipControls()
         }
     }
     var backgroundAudioConfig = BackgroundAudioConfig() {
@@ -115,6 +117,7 @@ public class THEOplayerRCTView: UIView {
         self.remoteCommandsManager = THEOplayerRCTRemoteCommandsManager()
         self.pipManager = THEOplayerRCTPipManager()
         self.pipControlsManager = THEOplayerRCTPipControlsManager()
+        self.mediaControlManager = THEOplayerRCTMediaControlManager()
         super.init(frame: .zero)
         
         self.setupAppStateObservers()
@@ -151,6 +154,7 @@ public class THEOplayerRCTView: UIView {
         self.pipControlsManager.destroy()
         self.presentationModeManager.destroy()
         self.backgroundAudioManager.destroy()
+        self.mediaControlManager.destroy()
       
         self.destroyBackgroundAudio()
         self.player?.removeAllIntegrations()
@@ -216,9 +220,9 @@ public class THEOplayerRCTView: UIView {
             self.theoliveEventHandler.setPlayer(player)
             self.theoadsEventHandler.setPlayer(player)
             self.castEventHandler.setPlayer(player)
-            self.nowPlayingManager.setPlayer(player)
-            self.remoteCommandsManager.setPlayer(player)
-            self.pipControlsManager.setPlayer(player)
+            self.nowPlayingManager.setPlayer(player, view: self)
+            self.remoteCommandsManager.setPlayer(player, view: self)
+            self.pipControlsManager.setPlayer(player, view: self)
             self.presentationModeManager.setPlayer(player, view: self)
             self.backgroundAudioManager.setPlayer(player, view: self)
             self.pipManager.setView(view: self)
