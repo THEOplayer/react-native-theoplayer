@@ -86,6 +86,8 @@ src/manifest.json
 
 # E2E app
 e2e/cavynext_results.md
+e2e/cavynext_results.json
+e2e/dist
 
 # Example app
 example/dist

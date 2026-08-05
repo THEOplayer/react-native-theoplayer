@@ -4,10 +4,15 @@ import { Platform, SafeAreaView, StyleSheet, View, ViewStyle } from 'react-nativ
 import { TestableTHEOplayerView } from './components/TestableTHEOplayerView';
 import Specs from './tests';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
-import { PlayerEventType, THEOplayer } from 'react-native-theoplayer';
+import { PlayerConfiguration, PlayerEventType, THEOplayer } from 'react-native-theoplayer';
 import { Log } from './utils/Log';
 
 const testHookStore = new TestHookStore();
+
+const playerConfig: PlayerConfiguration = {
+  // On web, THEOplayer needs to know where the transmux workers were copied to.
+  libraryLocation: Platform.OS === 'web' ? 'theoplayer' : undefined,
+};
 
 const needsBorder = Platform.OS === 'ios';
 const PLAYER_CONTAINER_STYLE: ViewStyle = {
@@ -53,7 +58,7 @@ class App extends Component {
       <Tester specs={Specs} store={testHookStore}>
         <SafeAreaView style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}>
           <View style={PLAYER_CONTAINER_STYLE}>
-            <TestableTHEOplayerView onPlayerReady={this.onPlayerReady} onPlayerDestroy={this.onPlayerDestroy} />
+            <TestableTHEOplayerView config={playerConfig} onPlayerReady={this.onPlayerReady} onPlayerDestroy={this.onPlayerDestroy} />
           </View>
         </SafeAreaView>
       </Tester>

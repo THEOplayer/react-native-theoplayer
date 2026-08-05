@@ -1,21 +1,17 @@
-import { TestScope } from 'react-native-cavynext';
+import { expect, TestScope } from 'react-native-cavynext';
 import { PlayerEventType, PresentationMode, PresentationModeChangeEvent, RenderingTarget, THEOplayer } from 'react-native-theoplayer';
-import { expect, preparePlayerWithSource, waitForPlayerEvent, waitForPlayerEventType } from '../utils/Actions';
+import { preparePlayerWithSource, waitForPlayerEvent, waitForPlayerEventType } from '../utils/Actions';
 import { sleep } from '../utils/TimeUtils';
-import { Platform } from 'react-native';
 import { TestSourceDescription, TestSources } from '../utils/SourceUtils';
 import { Log } from '../utils/Log';
 
 export default function (spec: TestScope) {
   TestSources()
     .withPlain()
-    .withAdsIf(Platform.OS !== 'ios')
+    .withAdsIf(spec.platform() !== 'ios')
     .forEach((testSource: TestSourceDescription) => {
-      const specDescription = `Switch between presentation modes during play-out of a ${testSource.description}`;
-      spec.describe(specDescription, function () {
-        const itDescription = 'dispatches presentationmodechange events between inline and fullscreen.';
-        spec.it(itDescription, async function () {
-          Log.debug(`### START TEST ###: ${specDescription} - ${itDescription}`);
+      spec.describe(`Switch between presentation modes during play-out of a ${testSource.description}`, () => {
+        spec.it('dispatches presentationmodechange events between inline and fullscreen.', async () => {
           const player = await preparePlayerWithSource(testSource.source);
 
           // Switch to fullscreen.
@@ -26,8 +22,9 @@ export default function (spec: TestScope) {
           } as PresentationModeChangeEvent);
           player.presentationMode = PresentationMode.fullscreen;
 
-          //  Wait for 'presentationmodechange' event.
+          // Wait for 'presentationmodechange' event.
           await fullscreenPromise;
+          expect(player.presentationMode).toBe(PresentationMode.fullscreen);
 
           // Play-out should not pause.
           await sleep(500);
@@ -41,26 +38,22 @@ export default function (spec: TestScope) {
           } as PresentationModeChangeEvent);
           player.presentationMode = PresentationMode.inline;
 
-          //  Wait for 'presentationmodechange' event.
+          // Wait for 'presentationmodechange' event.
           await inlinePromise;
+          expect(player.presentationMode).toBe(PresentationMode.inline);
 
           // Play-out should not pause.
           expect(player.paused).toBeFalsy();
-          Log.debug(`### END TEST ###: ${specDescription} - ${itDescription}`);
         });
       });
 
-      if (Platform.OS === 'android') {
-        const specDescription = `Switch between rendering targets during play-out of a ${testSource.description}`;
-        spec.describe(specDescription, function () {
-          const itDescription = 'continues play-out.';
-          spec.it(itDescription, async function () {
-            Log.debug(`### START TEST ###: ${specDescription} - ${itDescription}`);
+      if (spec.platform() === 'android') {
+        spec.describe(`Switch between rendering targets during play-out of a ${testSource.description}`, () => {
+          spec.it('continues play-out.', async () => {
             const player = await preparePlayerWithSource(testSource.source);
 
             await switchRenderingTarget(player, RenderingTarget.TEXTURE_VIEW);
             await switchRenderingTarget(player, RenderingTarget.SURFACE_VIEW);
-            Log.debug(`### END TEST ###: ${specDescription} - ${itDescription}`);
           });
         });
       }

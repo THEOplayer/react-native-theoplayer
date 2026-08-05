@@ -1,33 +1,31 @@
-import { TestScope } from 'react-native-cavynext';
+import { expect, TestScope } from 'react-native-cavynext';
 import { AdEventType, PlayerEventType, AdEvent } from 'react-native-theoplayer';
 import { getTestPlayer } from '../components/TestableTHEOplayerView';
 import { waitForPlayerEvents, waitForPlayerEventTypes } from '../utils/Actions';
 import { TestSourceDescription, TestSources } from '../utils/SourceUtils';
-import { Log } from '../utils/Log';
+
+const adEvent = (subType: AdEventType): Partial<AdEvent> => ({ type: PlayerEventType.AD_EVENT, subType }) as Partial<AdEvent>;
 
 export default function (spec: TestScope) {
   TestSources()
     .withAds()
     .forEach((testSource: TestSourceDescription) => {
-      const specDescription = `Set ${testSource.description} and auto-play`;
-      spec.describe(specDescription, function () {
-        const itDescription = 'dispatches sourcechange, play, playing and ad events';
-        spec.it(itDescription, async function () {
-          Log.debug(`### START TEST ###: ${specDescription} - ${itDescription}`);
+      spec.describe(`Set ${testSource.description} and auto-play`, () => {
+        spec.it('dispatches sourcechange, play, playing and ad events', async () => {
           const player = await getTestPlayer();
           const playEventsPromise = waitForPlayerEventTypes(player, [PlayerEventType.SOURCE_CHANGE, PlayerEventType.PLAY, PlayerEventType.PLAYING]);
 
           const adEventsPromise = waitForPlayerEvents(
             player,
             [
-              { type: PlayerEventType.AD_EVENT, subType: AdEventType.AD_LOADED } as AdEvent,
-              { type: PlayerEventType.AD_EVENT, subType: AdEventType.AD_BREAK_BEGIN } as AdEvent,
-              { type: PlayerEventType.AD_EVENT, subType: AdEventType.AD_BEGIN } as AdEvent,
-              { type: PlayerEventType.AD_EVENT, subType: AdEventType.AD_FIRST_QUARTILE } as AdEvent,
-              { type: PlayerEventType.AD_EVENT, subType: AdEventType.AD_MIDPOINT } as AdEvent,
-              { type: PlayerEventType.AD_EVENT, subType: AdEventType.AD_THIRD_QUARTILE } as AdEvent,
-              { type: PlayerEventType.AD_EVENT, subType: AdEventType.AD_END } as AdEvent,
-              { type: PlayerEventType.AD_EVENT, subType: AdEventType.AD_BREAK_END } as AdEvent,
+              adEvent(AdEventType.AD_LOADED),
+              adEvent(AdEventType.AD_BREAK_BEGIN),
+              adEvent(AdEventType.AD_BEGIN),
+              adEvent(AdEventType.AD_FIRST_QUARTILE),
+              adEvent(AdEventType.AD_MIDPOINT),
+              adEvent(AdEventType.AD_THIRD_QUARTILE),
+              adEvent(AdEventType.AD_END),
+              adEvent(AdEventType.AD_BREAK_END),
             ],
             false,
           );
@@ -37,10 +35,10 @@ export default function (spec: TestScope) {
           player.source = testSource.source;
 
           // Expect events.
-          await playEventsPromise;
-          await adEventsPromise;
-
-          Log.debug(`### END TEST ###: ${specDescription} - ${itDescription}`);
+          const playEvents = await playEventsPromise;
+          const adEvents = await adEventsPromise;
+          expect(playEvents.length).toBeGreaterThanOrEqual(3);
+          expect(adEvents.length).toBeGreaterThanOrEqual(8);
         });
       });
     });
