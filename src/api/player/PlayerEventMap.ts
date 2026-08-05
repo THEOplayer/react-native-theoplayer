@@ -1,6 +1,7 @@
 import type { Event } from '../event/Event';
 import type {
   ContentProtectionErrorEvent,
+  ContentProtectionSuccessEvent,
   CurrentSourceChangeEvent,
   DimensionChangeEvent,
   DurationChangeEvent,
@@ -65,6 +66,7 @@ export enum PlayerEventType {
   DIMENSION_CHANGE = 'dimensionchange',
   VIDEO_RESIZE = 'videoresize',
   CONTENT_PROTECTION_ERROR = 'contentprotectionerror',
+  CONTENT_PROTECTION_SUCCESS = 'contentprotectionsuccess',
 }
 
 /**
@@ -249,4 +251,9 @@ export interface PlayerEventMap {
    * Dispatched when an error related to content protection occurs.
    */
   [PlayerEventType.CONTENT_PROTECTION_ERROR]: ContentProtectionErrorEvent;
+
+  /**
+   * Dispatched when content protection succeeds, i.e. when the key session for a media track was successfully set up.
+   */
+  [PlayerEventType.CONTENT_PROTECTION_SUCCESS]: ContentProtectionSuccessEvent;
 }
