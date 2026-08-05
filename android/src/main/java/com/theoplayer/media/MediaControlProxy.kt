@@ -255,8 +255,10 @@ class MediaControlProxy : PlaybackCallback, QueueNavigator {
     )
 
   override fun onPlay() {
-    // Make sure the session is currently active and ready to receive commands.
-    connector?.setActive(true)
+    // Make sure the session is currently active and ready to receive commands, but only if enabled.
+    if (mediaControlsEnabled) {
+      connector?.setActive(true)
+    }
 
     // Don't allow play actions during ads, or on live streams if not configured to allow it.
     if (!playPauseEnabled) return
