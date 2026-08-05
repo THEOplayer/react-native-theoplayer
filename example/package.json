@@ -20,6 +20,7 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-native": "npm:react-native-tvos@^0.84.1-0",
+    "react-native-google-cast": "^4.9.1",
     "react-native-safe-area-context": "^5.5.2",
     "react-native-status-bar-height": "^2.6.0",
     "react-native-svg": "^15.12.1",
