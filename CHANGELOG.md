@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Added `contentprotectionerror` event bridging on iOS.
+
 ### Fixed
 
 - Fixed an issue on Android where destroying the player during a pending `MediaPlaybackService` bind could cause a crash.
