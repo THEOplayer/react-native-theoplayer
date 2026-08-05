@@ -63,7 +63,8 @@ ContentProtectionRegistry.registerContentProtectionIntegration('keyos_buydrm', '
 const playerConfig: PlayerConfiguration = {
   // Get your THEOplayer license from https://portal.theoplayer.com/
   // Without a license, only demo sources hosted on '*.theoplayer.com' domains can be played.
-  license: undefined,
+  license:
+    'sZP7IYe6T6f_0LI13LCiTOztCKaZFSx13Se-TD0tIOzZ0lCzCo3g0SeoISa6FOPlUY3zWokgbgjNIOf9fKhL0l3KIS0tFD0_IlB-3QhoCZz_3lAeFS0iCSI10Q4l0oPlTOfVfK4_bQgZCYxNWoryIQXzImf90Sbr0u0L0uai0u5i0Oi6Io4pIYP1UQgqWgjeCYxgflEc3LaL3ue_TuCkTS5iFOPeWok1dDrLYtA1Ioh6TgV6v6fVfKcqCoXVdQjLUOfVfGxEIDjiWQXrIYfpCoj-fgzVfKxqWDXNWG3ybojkbK3gflNWf6E6FOPVWo31WQ1qbta6FOPzdQ4qbQc1sD4ZFK3qWmPUFOPLIQ-LflNWfK1zWDikf6i6CDrebKjNIOfVfKXpIwPqdDxzU6fVfKINbK4zU6fVfKgqbZfVfGxNsK4pf6i6UwIqbZfVfGUgCKjLfgzVfG3gWKxydDkibK4LbogqW6f9UwPkImi6IK41Uw4ZIY06TgV6UQ1gWoXebZPUya',
   hlsDateRange: true,
   libraryLocation: 'theoplayer',
   cast: {
@@ -131,6 +132,10 @@ export default function App() {
     player.addEventListener(PlayerEventType.ERROR, console.log);
     player.addEventListener(PlayerEventType.THEOLIVE_EVENT, console.log);
     player.addEventListener(PlayerEventType.THEOADS_EVENT, onTheoAdsEvent);
+
+    // Content protection events
+    player.addEventListener(PlayerEventType.CONTENT_PROTECTION_SUCCESS, console.log);
+    player.addEventListener(PlayerEventType.CONTENT_PROTECTION_ERROR, console.log);
 
     sdkVersions().then((versions) => console.log(`[theoplayer] ${JSON.stringify(versions, null, 4)}`));
 
