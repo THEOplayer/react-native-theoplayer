@@ -1,4 +1,4 @@
-import { TestScope } from 'cavy';
+import { TestScope } from 'react-native-cavynext';
 import hls from '../res/hls.json';
 import { getTestPlayer } from '../components/TestableTHEOplayerView';
 import { PlayerEventType, THEOplayer } from 'react-native-theoplayer';

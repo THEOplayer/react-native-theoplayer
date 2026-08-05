@@ -1,4 +1,4 @@
-import { TestScope } from 'cavy';
+import { TestScope } from 'react-native-cavynext';
 import { PlayerEventType } from 'react-native-theoplayer';
 import { expect, preparePlayerWithSource, waitForPlayerEventType, waitForPlayerEventTypes } from '../utils/Actions';
 import { TestSourceDescription, TestSources } from '../utils/SourceUtils';

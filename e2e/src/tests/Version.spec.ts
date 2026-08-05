@@ -1,4 +1,4 @@
-import { TestScope } from 'cavy';
+import { TestScope } from 'react-native-cavynext';
 import { sdkVersions } from 'react-native-theoplayer';
 import { expect } from '../utils/Actions';
 import { Log } from '../utils/Log';

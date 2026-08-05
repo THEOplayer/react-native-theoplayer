@@ -1,4 +1,4 @@
-import { useCavy } from 'cavy';
+import { useCavy } from 'react-native-cavynext';
 import { THEOplayer, THEOplayerView, THEOplayerViewProps } from 'react-native-theoplayer';
 import React, { useCallback } from 'react';
 import { Log } from '../utils/Log';

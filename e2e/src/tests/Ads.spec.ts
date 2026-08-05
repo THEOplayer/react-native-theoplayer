@@ -1,4 +1,4 @@
-import { TestScope } from 'cavy';
+import { TestScope } from 'react-native-cavynext';
 import { AdEventType, PlayerEventType, AdEvent } from 'react-native-theoplayer';
 import { getTestPlayer } from '../components/TestableTHEOplayerView';
 import { waitForPlayerEvents, waitForPlayerEventTypes } from '../utils/Actions';

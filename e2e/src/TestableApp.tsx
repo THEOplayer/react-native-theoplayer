@@ -1,5 +1,5 @@
 import React, { Component, StrictMode } from 'react';
-import { Tester, TestHookStore } from 'cavy';
+import { Tester, TestHookStore } from 'react-native-cavynext';
 import { Platform, SafeAreaView, StyleSheet, View, ViewStyle } from 'react-native';
 import { TestableTHEOplayerView } from './components/TestableTHEOplayerView';
 import Specs from './tests';
