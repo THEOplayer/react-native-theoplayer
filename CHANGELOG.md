@@ -33,6 +33,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Upgraded example app to support React Native v0.86.2.
 
+### Fixed
+
+- Fixed an issue on Web and iOS Safari where cues already present when a text track was added, including daterange cues, did not produce `addcue` player events.
+- Fixed an issue where text and media track event listeners were not actually removed when a track was removed.
 ## [11.5.0]
 
 ### Fixed
