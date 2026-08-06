@@ -18,6 +18,12 @@ else
   BROWSER_BIN="$(command -v google-chrome || command -v chromium-browser || command -v chromium)"
 fi
 
+# On CI there is no display; run Chrome headless.
+EXTRA_FLAGS=()
+if [[ -n "${CI:-}" ]]; then
+  EXTRA_FLAGS=(--headless=new --no-sandbox --disable-gpu --window-size=1280,720)
+fi
+
 # Give webpack time to come up, then open the browser. Runs alongside the dev
 # server; the browser is cleaned up when this script is terminated.
 (
@@ -31,6 +37,7 @@ fi
     --disable-backgrounding-occluded-windows \
     --disable-renderer-backgrounding \
     --autoplay-policy=no-user-gesture-required \
+    ${EXTRA_FLAGS[@]+"${EXTRA_FLAGS[@]}"} \
     "${APP_URL}" &
   BROWSER_PID=$!
   trap 'kill "${BROWSER_PID}" 2>/dev/null || true' EXIT
