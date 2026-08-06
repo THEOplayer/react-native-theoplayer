@@ -24,14 +24,22 @@ const CopyWebpackPluginConfig = new CopyWebpackPlugin({
     {
       // Copy transmuxer worker files.
       // THEOplayer will find them by setting `libraryLocation` in the playerConfiguration.
-      from: path.resolve(appDirectory, './node_modules/theoplayer/THEOplayer.transmux.*').replace(/\\/g, '/'),
+      // They must come from the same `theoplayer` package the bundle resolves
+      // (the project root's), as the SDK and worker versions have to match.
+      from: path.resolve(projectDirectory, './node_modules/theoplayer/THEOplayer.transmux.*').replace(/\\/g, '/'),
       to: `${libraryLocation}/[name][ext]`,
     },
     {
       // Copy service worker
       // THEOplayer will find them by setting `libraryLocation` in the playerConfiguration.
-      from: path.resolve(appDirectory, './node_modules/theoplayer/theoplayer.sw.js').replace(/\\/g, '/'),
+      from: path.resolve(projectDirectory, './node_modules/theoplayer/theoplayer.sw.js').replace(/\\/g, '/'),
       to: `${libraryLocation}/[name][ext]`,
+    },
+    {
+      // Copy THEOplayer CSS: it sizes the video element inside the player
+      // container; without it the player renders collapsed.
+      from: path.resolve(projectDirectory, './node_modules/theoplayer/ui.css').replace(/\\/g, '/'),
+      to: `[name][ext]`,
     },
   ],
 });
@@ -86,6 +94,10 @@ module.exports = {
       // Resolve react-native-theoplayer to its TypeScript source in the repo root.
       [pkg.name]: path.resolve(projectDirectory, pkg.source),
 
+      // Pin the THEOplayer web SDK to the project root's copy, matching the
+      // transmux worker files copied above.
+      theoplayer: path.resolve(projectDirectory, 'node_modules/theoplayer'),
+
       'react-native$': 'react-native-web',
       'react-native-web': path.resolve(appDirectory, 'node_modules/react-native-web'),
       'react-native-svg': path.resolve(appDirectory, 'node_modules/react-native-svg-web'),
@@ -96,15 +108,20 @@ module.exports = {
   },
   plugins: [HTMLWebpackPluginConfig, CopyWebpackPluginConfig],
   devServer: {
-    // Tells dev-server to open the browser after server had been started.
-    open: true,
+    // The browser is opened by scripts/run_web_e2e.sh in a dedicated Chrome
+    // instance with throttling disabled; webpack itself does not open one.
+    open: false,
     historyApiFallback: true,
     static: [
       {
         directory: path.join(appDirectory, 'web/public'),
       },
     ],
-    hot: true,
+    // No hot reload or live reload: stale browser tabs from a previous run
+    // would otherwise reload the new bundle, re-run the tests and pollute the
+    // report server with duplicate results.
+    hot: false,
+    liveReload: false,
     client: {
       overlay: {
         errors: true,

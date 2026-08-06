@@ -10,9 +10,11 @@ export default function (spec: TestScope) {
     .withPlain()
     .withAdsIf(spec.platform() !== 'ios')
     .forEach((testSource: TestSourceDescription) => {
-      spec.describe(`Switch between presentation modes during play-out of a ${testSource.description}`, () => {
+      // Browsers only allow entering fullscreen from a user gesture, so the
+      // presentation mode tests cannot run on web; report them as skipped.
+      spec.describeIf(spec.platform() !== 'web', `Switch between presentation modes during play-out of a ${testSource.description}`, () => {
         spec.it('dispatches presentationmodechange events between inline and fullscreen.', async () => {
-          const player = await preparePlayerWithSource(testSource.source);
+          const player = await preparePlayerWithSource(spec, testSource.source);
 
           // Switch to fullscreen.
           const fullscreenPromise = waitForPlayerEvent(player, {
@@ -47,16 +49,15 @@ export default function (spec: TestScope) {
         });
       });
 
-      if (spec.platform() === 'android') {
-        spec.describe(`Switch between rendering targets during play-out of a ${testSource.description}`, () => {
-          spec.it('continues play-out.', async () => {
-            const player = await preparePlayerWithSource(testSource.source);
+      // Rendering targets only exist on Android.
+      spec.describeIf(spec.platform() === 'android', `Switch between rendering targets during play-out of a ${testSource.description}`, () => {
+        spec.it('continues play-out.', async () => {
+          const player = await preparePlayerWithSource(spec, testSource.source);
 
-            await switchRenderingTarget(player, RenderingTarget.TEXTURE_VIEW);
-            await switchRenderingTarget(player, RenderingTarget.SURFACE_VIEW);
-          });
+          await switchRenderingTarget(player, RenderingTarget.TEXTURE_VIEW);
+          await switchRenderingTarget(player, RenderingTarget.SURFACE_VIEW);
         });
-      }
+      });
     });
 }
 

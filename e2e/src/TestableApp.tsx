@@ -12,6 +12,9 @@ const testHookStore = new TestHookStore();
 const playerConfig: PlayerConfiguration = {
   // On web, THEOplayer needs to know where the transmux workers were copied to.
   libraryLocation: Platform.OS === 'web' ? 'theoplayer' : undefined,
+  // Browsers block unmuted autoplay without a user gesture; fall back to
+  // muted autoplay so the autoplay tests can run.
+  mutedAutoplay: Platform.OS === 'web' ? 'all' : undefined,
 };
 
 const needsBorder = Platform.OS === 'ios';

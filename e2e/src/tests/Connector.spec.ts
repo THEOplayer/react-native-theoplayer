@@ -1,9 +1,8 @@
 import { TestScope } from 'react-native-cavynext';
 import hls from '../res/hls.json';
-import { getTestPlayer } from '../components/TestableTHEOplayerView';
 import { PlayerEventType, THEOplayer } from 'react-native-theoplayer';
 import { AdobeConnector } from '@theoplayer/react-native-analytics-adobe';
-import { waitForPlayerEventTypes } from '../utils/Actions';
+import { getTestPlayer, waitForPlayerEventTypes } from '../utils/Actions';
 import { ConvivaConnector } from '@theoplayer/react-native-analytics-conviva';
 import { NielsenConnector } from '@theoplayer/react-native-analytics-nielsen';
 import {
@@ -19,7 +18,7 @@ const NoOpPlayerFn: PlayerFn = (_player: THEOplayer) => {};
 
 function testConnector(spec: TestScope, onCreate: PlayerFn, onUseAPI: PlayerFn, onDestroy: PlayerFn) {
   spec.it('successfully creates the connector, connects to the player, uses API, and cleans up and destroys.', async function () {
-    const player = await getTestPlayer();
+    const player = await getTestPlayer(spec);
 
     // Create connector.
     await onCreate(player);

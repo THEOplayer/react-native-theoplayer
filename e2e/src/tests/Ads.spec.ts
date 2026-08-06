@@ -1,7 +1,6 @@
 import { expect, TestScope } from 'react-native-cavynext';
 import { AdEventType, PlayerEventType, AdEvent } from 'react-native-theoplayer';
-import { getTestPlayer } from '../components/TestableTHEOplayerView';
-import { waitForPlayerEvents, waitForPlayerEventTypes } from '../utils/Actions';
+import { getTestPlayer, waitForPlayerEvents, waitForPlayerEventTypes } from '../utils/Actions';
 import { TestSourceDescription, TestSources } from '../utils/SourceUtils';
 
 const adEvent = (subType: AdEventType): Partial<AdEvent> => ({ type: PlayerEventType.AD_EVENT, subType }) as Partial<AdEvent>;
@@ -12,7 +11,7 @@ export default function (spec: TestScope) {
     .forEach((testSource: TestSourceDescription) => {
       spec.describe(`Set ${testSource.description} and auto-play`, () => {
         spec.it('dispatches sourcechange, play, playing and ad events', async () => {
-          const player = await getTestPlayer();
+          const player = await getTestPlayer(spec);
           const playEventsPromise = waitForPlayerEventTypes(player, [PlayerEventType.SOURCE_CHANGE, PlayerEventType.PLAY, PlayerEventType.PLAYING]);
 
           const adEventsPromise = waitForPlayerEvents(
