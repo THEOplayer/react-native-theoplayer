@@ -5,11 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [11.6.0]
+## [Unreleased]
 
 ### Added
 
 - Added support for the customData property on the Ad and AdBreak types.
+
+## [11.6.0]
+
+### Added
+
 - Added the `MediaControl` API for controlling the media session and lock screen controls with custom handlers.
 - Added support for the `contentprotectionsuccess` event on all platforms
 
