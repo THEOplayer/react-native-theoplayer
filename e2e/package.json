@@ -20,7 +20,6 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-native": "npm:react-native-tvos@^0.86.2-0",
-    "react-native-device-info": "^14.1.1",
     "react-native-status-bar-height": "^2.6.0",
     "react-native-svg": "^15.15.5",
     "react-native-theoplayer": "..",
