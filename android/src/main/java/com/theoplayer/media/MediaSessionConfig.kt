@@ -4,30 +4,30 @@ data class MediaSessionConfig (
   /**
    * Whether or not the media session should be enabled.
    */
-  var mediaSessionEnabled: Boolean = true,
+  val mediaSessionEnabled: Boolean = true,
 
   /**
    * The amount of seconds the player will skip forward.
    */
-  var skipForwardInterval: Double = 5.0,
+  val skipForwardInterval: Double = 5.0,
 
   /**
    * The amount of seconds the player will skip backward.
    */
-  var skipBackwardInterval: Double = 5.0,
+  val skipBackwardInterval: Double = 5.0,
 
   /**
    * Whether "skip track" events should be handled the same as "fast-forward/rewind".
    */
-  var convertSkipToSeek: Boolean = false,
+  val convertSkipToSeek: Boolean = false,
 
   /**
    * Whether to allow play/pause of live assets.
    */
-  var allowLivePlayPause: Boolean = false,
+  val allowLivePlayPause: Boolean = false,
 
   /**
    * Whether to seek to live when resuming a live stream.
    */
-  var seekToLiveOnResume: Boolean = false,
+  val seekToLiveOnResume: Boolean = false,
 )

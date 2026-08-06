@@ -1,6 +1,6 @@
 {
   "name": "react-native-theoplayer",
-  "version": "11.5.0",
+  "version": "11.6.0",
   "description": "A THEOplayer video component for react-native.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -58,7 +58,7 @@
   "devDependencies": {
     "@eslint/js": "^9.13.0",
     "@expo/config-plugins": "^10.0.2",
-    "@react-native/eslint-config": "^0.84.1",
+    "@react-native/eslint-config": "^0.86.2",
     "@types/react": "^19.2.14",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.0",
@@ -68,7 +68,7 @@
     "pod-install": "^0.1.39",
     "prettier": "^3.5.3",
     "react": "^19.2.3",
-    "react-native": "^0.84.1",
+    "react-native": "^0.86.2",
     "react-native-builder-bob": "^0.39.1",
     "theoplayer": "^11.4.0",
     "typedoc": "^0.25.13",
