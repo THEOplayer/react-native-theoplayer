@@ -82,7 +82,7 @@ jobs:
 
       - name: Run e2e tests
         working-directory: e2e
-        run: npm run test:e2e:${{ matrix.platform == 'iOS' && 'ios' || 'tvos' }}
+        run: npm run test:e2e:${{ matrix.platform == 'iOS' && 'ios' || 'tvos' }} -- --markdown
 
       - name: Summarize results
         working-directory: e2e

@@ -91,7 +91,7 @@ jobs:
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           script: |
-            npm run test:e2e:android
+            npm run test:e2e:android -- --markdown
             cat cavynext_results.md >> $GITHUB_STEP_SUMMARY
           working-directory: e2e
       - name: Upload screenshots
