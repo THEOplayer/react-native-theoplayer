@@ -32,6 +32,13 @@ A use case for enabling `stopOnBackground` could be a live stream that should no
 background, neither in paused nor playing state. The app should be designed to reload the source or the player page when coming back
 to the foreground.
 
+Picture-in-picture is an exception to `stopOnBackground`: when the player transitions to a PiP window while the app
+goes to the background, play-out is not stopped. Instead, the stop is postponed until the PiP window is closed while
+the app is still in the background. There is no need to modify the `backgroundAudioConfiguration` on
+`presentationmodechange` events to achieve this behaviour. In case play-out should stop when the PiP window is closed,
+but continue when the app is backgrounded without PiP, keep `stopOnBackground` disabled and clear the player's source
+from the `presentationmodechange` event instead, as described in [Picture-in-Picture](./pip.md).
+
 ### Android
 
 On Android, a [service](https://developer.android.com/guide/components/services) is used to
@@ -86,11 +93,11 @@ The following fields allow additional configuration for the lockscreen behaviour
 The `mediaControl` property of `PlayerConfiguration` hosts properties that affect the notifications, media sessions and
 controls on each platform. The following table describes the available configuration options:
 
-| Field                  | Platform           | Purpose                                                                                                                                                                        | Default                         |
-|------------------------|--------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------|
-| `mediaSessionEnabled`  | Web & Android      | If disabled, no media session properties or actions will be set.                                                                                                               | `true`                          |
-| `skipForwardInterval`  | Web, iOS & Android | If disabled, no media session properties or actions will be set.                                                                                                               | `5` (Web & Android), `15` (iOS) |
-| `skipBackwardInterval` | Web, iOS & Android | If disabled, no media session properties or actions will be set.                                                                                                               | `5` (Web & Android), `15` (iOS) |
-| `convertSkipToSeek`    | iOS & Android      | A flag that allows next/previous track commands to be interpreted as skip forward/backward commands, according to the configured skip intervals.                               | `false`                         |
-| `allowLivePlayPause`   | iOS & Android      | A flag that indicates whether play/pause controls for live streams are enabled.                                                                                                | `true` (iOS), `false` (Android) |
-| `seekToLiveOnResume`   | iOS & Android      | A flag that controls whether to seek to the live edge when resuming a paused live stream. Note that `allowLivePlayPause` needs to be enabled for this property to have effect. | `false`                         |
+| Field                  | Platform           | Purpose                                                                                                                                                                         | Default                         |
+|------------------------|--------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------|
+| `mediaSessionEnabled`  | Web, iOS & Android | If disabled, no media session properties or actions will be set. On iOS this means no Now Playing info is published and no remote command (including custom action) is handled. | `true`                          |
+| `skipForwardInterval`  | Web, iOS & Android | The amount of seconds the player will skip forward.                                                                                                                             | `5` (Web & Android), `15` (iOS) |
+| `skipBackwardInterval` | Web, iOS & Android | The amount of seconds the player will skip backward.                                                                                                                            | `5` (Web & Android), `15` (iOS) |
+| `convertSkipToSeek`    | iOS & Android      | A flag that allows next/previous track commands to be interpreted as skip forward/backward commands, according to the configured skip intervals.                                  | `false`                         |
+| `allowLivePlayPause`   | iOS & Android      | A flag that indicates whether play/pause controls for live streams are enabled.                                                                                                  | `true` (iOS), `false` (Android) |
+| `seekToLiveOnResume`   | iOS & Android      | A flag that controls whether to seek to the live edge when resuming a paused live stream. Note that `allowLivePlayPause` needs to be enabled for this property to have effect.   | `false`                         |

@@ -7,9 +7,20 @@ import MediaPlayer
 class THEOplayerRCTNowPlayingManager {
     // MARK: Members
     private weak var player: THEOplayer?
+    private weak var view: THEOplayerRCTView?
     private let nowPlayingQueue = DispatchQueue(label: "com.theoplayer.reactnative.nowplayinginfo")
     private var nowPlayingInfoStorage = [String : Any]()
     private var nowPlayingInfoGeneration: Int = 0
+    
+    // The player that most recently published Now Playing info to the process-wide info center.
+    // Used to scope clearing so a disabled player only clears its own info and never clobbers
+    // another (newly-active) owner during a multi-player hand-off.
+    private static weak var currentOwner: THEOplayerRCTNowPlayingManager?
+    
+    // MARK: computed
+    private var mediaSessionEnabled: Bool {
+        self.view?.mediaControlConfig.mediaSessionEnabled ?? DEFAULT_MEDIA_SESSION_ENABLED
+    }
     
     // MARK: player Listeners
     private var durationChangeListener: EventListener?
@@ -32,14 +43,20 @@ class THEOplayerRCTNowPlayingManager {
         
         // clear nowPlayingInfo
         self.clearNowPlayingInfoStorage()
-        self.clearNowPlayingInfoOnInfoCenter()
+        if self.mediaSessionEnabled {
+            self.clearNowPlayingInfoOnInfoCenter()
+        } else {
+            // Disabled player being destroyed: still clean up, but only if it owns the shared info.
+            self.clearNowPlayingIfOwner()
+        }
         
         if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] Destroy, nowPlayingInfo cleared on infoCenter.") }
     }
     
     // MARK: - player setup / breakdown
-    func setPlayer(_ player: THEOplayer) {
+    func setPlayer(_ player: THEOplayer, view: THEOplayerRCTView?) {
         self.player = player;
+        self.view = view
         
         // attach listeners
         self.attachListeners()
@@ -67,6 +84,13 @@ class THEOplayerRCTNowPlayingManager {
         // Reset any existing playing info; this invalidates any artwork fetch still in flight
         let generation = self.clearNowPlayingInfoStorage()
         
+        // When the media session is disabled we must not publish, nor unconditionally clear (that would
+        // clobber another active owner). Only clear if this player currently owns the shared info.
+        guard self.mediaSessionEnabled else {
+            self.clearNowPlayingIfOwner()
+            return
+        }
+        
         // Gather new playing info
         if let player = self.player,
            let sourceDescription = player.source,
@@ -78,7 +102,7 @@ class THEOplayerRCTNowPlayingManager {
             self.updateAlbum(metadata.metadataKeys?["album"] as? String)
             self.updateDuration(player.duration)
             self.updateMediaType() // video
-            self.updatePlaybackRate(player.playbackRate)
+            self.updatePlaybackRate(player.paused ? 0 : player.playbackRate)
             self.updateServiceIdentifier(metadata.metadataKeys?["nowPlayingServiceIdentifier"] as? String)
             self.updateContentIdentifier(metadata.metadataKeys?["nowPlayingContentIdentifier"] as? String)
             self.updateCurrentTime(player.currentTime)
@@ -133,8 +157,11 @@ class THEOplayerRCTNowPlayingManager {
     }
     
     private func processNowPlayingInfoToInfoCenter() {
+        guard self.mediaSessionEnabled else { return }
         let nowPlayingInfo = self.getNowPlayingInfoStorage()
         if !nowPlayingInfo.isEmpty {
+            // This player is now publishing to the shared info center: claim ownership.
+            THEOplayerRCTNowPlayingManager.currentOwner = self
             Task { @MainActor in
                 MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
                 if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] nowPlayingInfo processed to infoCenter.") }
@@ -149,7 +176,26 @@ class THEOplayerRCTNowPlayingManager {
     }
     
     private func clearNowPlayingInfoOnInfoCenter() {
+        guard self.mediaSessionEnabled else { return }
+        if THEOplayerRCTNowPlayingManager.currentOwner === self {
+            THEOplayerRCTNowPlayingManager.currentOwner = nil
+        }
+        self.performClearOnInfoCenter()
+    }
+    
+    /// Clear the shared Now Playing info only if this player currently owns it. Bypasses the
+    /// mediaSessionEnabled guard so a player can clean up its own info at the moment it is disabled,
+    /// without clobbering another (newly-active) owner during a multi-player hand-off.
+    private func clearNowPlayingIfOwner() {
+        guard THEOplayerRCTNowPlayingManager.currentOwner === self else { return }
+        THEOplayerRCTNowPlayingManager.currentOwner = nil
+        self.performClearOnInfoCenter()
+    }
+    
+    private func performClearOnInfoCenter() {
         Task { @MainActor in
+            // Avoid redundant clears (and their log noise) when the info center is already empty.
+            guard MPNowPlayingInfoCenter.default().nowPlayingInfo?.isEmpty == false else { return }
             MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
             if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] clearing nowPlayingInfo (to nil) on infoCenter.") }
             

@@ -48,6 +48,7 @@ RCT_EXPORT_VIEW_PROPERTY(onNativeDeviceOrientationChanged, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativePlayerReady, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativePresentationModeChange, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeContentProtectionError, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeContentProtectionSuccess, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeDimensionChange, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeVideoResize, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeAdEvent, RCTDirectEventBlock);
@@ -316,3 +317,18 @@ RCT_EXTERN_METHOD(setAdTagParameters:(nonnull NSNumber *)node
 
 @end
 
+// ----------------------------------------------------------------------------
+// MediaControl Module
+// ----------------------------------------------------------------------------
+@interface RCT_EXTERN_REMAP_MODULE(THEORCTMediaControlModule, THEOplayerRCTMediaControlAPI, RCTEventEmitter)
+
+RCT_EXTERN_METHOD(setHandler:(nonnull NSNumber *)node
+                  action:(nonnull NSString *)action)
+
+RCT_EXTERN_METHOD(removeHandler:(nonnull NSNumber *)node
+                  action:(nonnull NSString *)action)
+
+RCT_EXTERN_METHOD(setEnabled:(nonnull NSNumber *)node
+                  enabled:(BOOL)enabled)
+
+@end

@@ -20,7 +20,6 @@ import com.theoplayer.presentation.PipConfigAdapter
 import com.theoplayer.track.TextTrackStyleAdapter
 import com.theoplayer.util.ViewResolver
 import com.theoplayer.util.findReactRootView
-import com.theoplayer.util.getClosestParentOfType
 
 @Suppress("unused")
 @ReactModule(name = PlayerModule.NAME)

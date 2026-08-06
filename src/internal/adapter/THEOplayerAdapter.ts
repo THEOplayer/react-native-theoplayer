@@ -12,6 +12,7 @@ import {
   findMediaTrackByUid,
   isVideoQuality,
   LoadedMetadataEvent,
+  MediaControlAPI,
   MediaTrack,
   MediaTrackEvent,
   MediaTrackEventType,
@@ -52,6 +53,7 @@ import { EventBroadcastAdapter } from './broadcast/EventBroadcastAdapter';
 import { DefaultNativePlayerState } from './DefaultNativePlayerState';
 import { THEOAdsNativeAdapter } from './theoads/THEOAdsNativeAdapter';
 import { TheoLiveNativeAdapter } from './theolive/TheoLiveNativeAdapter';
+import { MediaControlNativeAdapter } from './media/MediaControlNativeAdapter';
 
 const NativePlayerModule = NativeModules.THEORCTPlayerModule;
 
@@ -64,6 +66,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   private readonly _abrAdapter: AbrAdapter;
   private readonly _textTrackStyleAdapter: TextTrackStyleAdapter;
   private readonly _theoliveAdapter: TheoLiveNativeAdapter;
+  private readonly _mediaControlAdapter: MediaControlNativeAdapter;
   private _externalEventRouter: EventBroadcastAPI | undefined = undefined;
   private _playerVersion!: PlayerVersion;
 
@@ -77,6 +80,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._abrAdapter = new AbrAdapter(this._view);
     this._textTrackStyleAdapter = new TextTrackStyleAdapter(this._view);
     this._theoliveAdapter = new TheoLiveNativeAdapter(this._view);
+    this._mediaControlAdapter = new MediaControlNativeAdapter(this);
     this.addEventListeners();
   }
 
@@ -98,6 +102,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   }
 
   public destroy() {
+    this._mediaControlAdapter.destroy();
     this.clearEventListeners();
   }
 
@@ -241,6 +246,10 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   get theoLive(): TheoLiveAPI {
     return this._theoliveAdapter;
+  }
+
+  get mediaControl(): MediaControlAPI {
+    return this._mediaControlAdapter;
   }
 
   set autoplay(autoplay: boolean) {

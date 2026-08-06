@@ -1,6 +1,8 @@
 package com.theoplayer.media
 
 import com.facebook.react.bridge.ReadableMap
+import com.theoplayer.util.getBooleanOr
+import com.theoplayer.util.getDoubleOr
 
 object MediaSessionConfigAdapter {
   private const val PROP_ENABLED = "mediaSessionEnabled"
@@ -11,25 +13,26 @@ object MediaSessionConfigAdapter {
   private const val PROP_SEEK_TO_LIVE_RESUME = "seekToLiveOnResume"
 
   fun fromProps(props: ReadableMap?): MediaSessionConfig {
-    return MediaSessionConfig().apply {
-      if (props?.hasKey(PROP_ENABLED) == true) {
-        mediaSessionEnabled = props.getBoolean(PROP_ENABLED)
-      }
-      if (props?.hasKey(PROP_SKIP_FORWARD_INTERVAL) == true) {
-        skipForwardInterval = props.getDouble(PROP_SKIP_FORWARD_INTERVAL)
-      }
-      if (props?.hasKey(PROP_SKIP_BACKWARD_INTERVAL) == true) {
-        skipBackwardInterval = props.getDouble(PROP_SKIP_BACKWARD_INTERVAL)
-      }
-      if (props?.hasKey(PROP_CONVERT_SKIP) == true) {
-        convertSkipToSeek = props.getBoolean(PROP_CONVERT_SKIP)
-      }
-      if (props?.hasKey(PROP_ALLOW_LIVE_PLAY_PAUSE) == true) {
-        allowLivePlayPause = props.getBoolean(PROP_ALLOW_LIVE_PLAY_PAUSE)
-      }
-      if (props?.hasKey(PROP_SEEK_TO_LIVE_RESUME) == true) {
-        seekToLiveOnResume = props.getBoolean(PROP_SEEK_TO_LIVE_RESUME)
-      }
-    }
+    val defaults = MediaSessionConfig()
+    return MediaSessionConfig(
+      mediaSessionEnabled = props.getBooleanOr(PROP_ENABLED, defaults.mediaSessionEnabled),
+      skipForwardInterval = props.getDoubleOr(
+        PROP_SKIP_FORWARD_INTERVAL,
+        defaults.skipForwardInterval
+      ),
+      skipBackwardInterval = props.getDoubleOr(
+        PROP_SKIP_BACKWARD_INTERVAL,
+        defaults.skipBackwardInterval
+      ),
+      convertSkipToSeek = props.getBooleanOr(PROP_CONVERT_SKIP, defaults.convertSkipToSeek),
+      allowLivePlayPause = props.getBooleanOr(
+        PROP_ALLOW_LIVE_PLAY_PAUSE,
+        defaults.allowLivePlayPause
+      ),
+      seekToLiveOnResume = props.getBooleanOr(
+        PROP_SEEK_TO_LIVE_RESUME,
+        defaults.seekToLiveOnResume
+      )
+    )
   }
 }

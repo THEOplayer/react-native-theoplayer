@@ -10,10 +10,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Added support for the customData property on the Ad and AdBreak types.
+- Added support for the `contentprotectionsuccess` event on all platforms
+
+## [11.5.0]
 
 ### Fixed
 
-- Fixed an issue on iOS where fetching the artwork for the NowPlayingInfo could cause a crash due to unsafe thread usage.
+- Fixed an issue on iOS where fetching the artwork for the `NowPlayingInfo` could cause a crash due to unsafe thread usage.
+
+### Added
+
+- Added `contentprotectionerror` player event on Web and Android platforms.
 
 ## [11.4.1] - 26-07-22
 
@@ -21,13 +28,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added RCTBridgeModule extension on iOS, with helper methods to resolve the view and native player APIs.
 
+### Added
+
+- Added the `MediaControl` API for controlling the media session and lock screen controls with custom handlers.
+
 ### Fixed
 
 - Fixed an issue on iOS where sideloaded texttracks were not stored for cached playout.
-
-### Added
-
-- Added `contentprotectionerror` player event on Web, Android, and iOS platforms.
 
 ## [11.4.0] - 26-07-06
 
