@@ -255,7 +255,7 @@ class PlayerEventEmitter internal constructor(
     playerListeners[PlayerEventTypes.CONTENTPROTECTIONERROR] =
       EventListener { event: ContentProtectionErrorEvent -> onContentProtectionError(event) }
     playerListeners[PlayerEventTypes.CONTENTPROTECTIONSUCCESS] =
-      EventListener { onContentProtectionSuccess() }
+      EventListener<PlayerEvent<*>> { onContentProtectionSuccess() }
     playerListeners[PlayerEventTypes.RESIZE] =
       EventListener { event: ResizeEvent -> onResize(event) }
     textTrackListeners[TextTrackListEventTypes.ADDTRACK] =
