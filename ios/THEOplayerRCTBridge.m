@@ -184,6 +184,18 @@ RCT_EXTERN_METHOD(removeAllFriendlyObstructions:(nonnull NSNumber *)node)
 @end
 
 // ----------------------------------------------------------------------------
+// Metrics Module
+// ----------------------------------------------------------------------------
+
+@interface RCT_EXTERN_REMAP_MODULE(THEORCTMetricsModule, THEOplayerRCTMetricsAPI, NSObject)
+
+RCT_EXTERN_METHOD(currentBandwidthEstimate:(nonnull NSNumber *)node
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
+@end
+
+// ----------------------------------------------------------------------------
 // ContentProtection Module
 // ----------------------------------------------------------------------------
 @interface RCT_EXTERN_REMAP_MODULE(THEORCTContentProtectionModule, THEOplayerRCTContentProtectionAPI, RCTEventEmitter)

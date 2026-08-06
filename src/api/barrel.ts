@@ -10,6 +10,7 @@ export * from './config/barrel';
 export * from './error/barrel';
 export * from './event/barrel';
 export * from './media/barrel';
+export * from './metrics/barrel';
 export * from './millicast/barrel';
 export * from './drm/barrel';
 export * from './source/barrel';
