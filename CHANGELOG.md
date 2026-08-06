@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [11.6.0]
 
 ### Added
 
@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- Upgrade example app to support React Native v0.86.2.
+- Upgraded example app to support React Native v0.86.2.
 
 ## [11.5.0]
 
@@ -693,7 +693,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- Upgrade example app to support React Native v0.75.
+- Upgraded example app to support React Native v0.75.
 
 ## [8.5.0] - 24-10-21
 
