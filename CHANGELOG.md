@@ -7,9 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## Added
+### Added
 
-- Added support for `contentprotectionsucces` event on all platforms
+- Added support for the `contentprotectionsuccess` event on all platforms
 
 ## [11.5.0]
 
