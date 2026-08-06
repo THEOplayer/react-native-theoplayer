@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Added the `Metrics` API, accessible through `player.metrics`, with `currentBandwidthEstimate` returning the player's estimated available bandwidth in bits per second. On iOS/tvOS this value is only reported for THEOlive/HESP streams.
+
 ### Fixed
 
 - Fixed an issue on Android where destroying the player during a pending `MediaPlaybackService` bind could cause a crash.
