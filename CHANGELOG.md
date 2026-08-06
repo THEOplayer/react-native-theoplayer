@@ -9,7 +9,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+- Added the `MediaControl` API for controlling the media session and lock screen controls with custom handlers.
 - Added support for the `contentprotectionsuccess` event on all platforms
+
+### Changed
+
+- Upgrade example app to support React Native v0.86.2.
 
 ## [11.5.0]
 
@@ -26,10 +31,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 - Added RCTBridgeModule extension on iOS, with helper methods to resolve the view and native player APIs.
-
-### Added
-
-- Added the `MediaControl` API for controlling the media session and lock screen controls with custom handlers.
 
 ### Fixed
 
