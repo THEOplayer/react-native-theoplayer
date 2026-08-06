@@ -5,9 +5,6 @@
 import Foundation
 import UIKit
 
-let ERROR_CODE_METRICS_ACCESS_FAILURE = "metrics_access_failure"
-let ERROR_MESSAGE_METRICS_ACCESS_FAILURE = "Could not access THEOplayer Metrics"
-
 @objc(THEOplayerRCTMetricsAPI)
 class THEOplayerRCTMetricsAPI: NSObject, RCTBridgeModule {
     @objc var bridge: RCTBridge!
@@ -25,7 +22,10 @@ class THEOplayerRCTMetricsAPI: NSObject, RCTBridgeModule {
         withViewAndPlayer(node) { _, player in
             resolve(player.metrics.currentBandwidthEstimate)
         } onFailure: {
-            reject(ERROR_CODE_METRICS_ACCESS_FAILURE, ERROR_MESSAGE_METRICS_ACCESS_FAILURE, nil)
+            // Resolve 0 (rather than rejecting) when the view/player cannot be resolved,
+            // so callers polling on an interval do not receive unhandled rejections.
+            // This matches the documented contract and the Android/Web behaviour.
+            resolve(0.0)
         }
     }
 }
