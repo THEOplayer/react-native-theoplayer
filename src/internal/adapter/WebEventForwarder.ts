@@ -519,10 +519,9 @@ export class WebEventForwarder {
 
   private readonly onEnterTextTrackCue = (track: NativeTextTrack) => (event: NativeTextTrackEnterCueEvent) => {
     const { cue } = event;
-    if (!cue) {
-      return;
+    if (cue) {
+      this._facade.dispatchEvent(new DefaultTextTrackEvent(TextTrackEventType.ENTER_CUE, track.uid, fromNativeCue(cue)));
     }
-    this._facade.dispatchEvent(new DefaultTextTrackEvent(TextTrackEventType.ENTER_CUE, track.uid, fromNativeCue(cue)));
   };
 
   private readonly onExitTextTrackCue = (track: NativeTextTrack) => (event: NativeTextTrackExitCueEvent) => {
