@@ -130,6 +130,10 @@ export default function App() {
     player.addEventListener(PlayerEventType.THEOLIVE_EVENT, console.log);
     player.addEventListener(PlayerEventType.THEOADS_EVENT, onTheoAdsEvent);
 
+    // Content protection events
+    player.addEventListener(PlayerEventType.CONTENT_PROTECTION_SUCCESS, console.log);
+    player.addEventListener(PlayerEventType.CONTENT_PROTECTION_ERROR, console.log);
+
     sdkVersions().then((versions) => console.log(`[theoplayer] ${JSON.stringify(versions, null, 4)}`));
 
     player.autoplay = true;

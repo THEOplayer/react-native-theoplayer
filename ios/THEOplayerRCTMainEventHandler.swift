@@ -31,6 +31,7 @@ public class THEOplayerRCTMainEventHandler {
     var onNativeWaiting: RCTDirectEventBlock?
     var onNativeCanPlay: RCTDirectEventBlock?
     var onNativeContentProtectionError: RCTDirectEventBlock?
+    var onNativeContentProtectionSuccess: RCTDirectEventBlock?
     var onNativeDimensionChange: RCTDirectEventBlock?
     var onNativeVideoResize: RCTDirectEventBlock?
     
@@ -55,6 +56,7 @@ public class THEOplayerRCTMainEventHandler {
     private var rateChangeListener: EventListener?
     private var waitingListener: EventListener?
     private var canPlayListener: EventListener?
+    private var contentProtectionSuccessListener: EventListener?
     private var videoResizeListener: EventListener?
     
     // MARK: player observer
@@ -279,6 +281,15 @@ public class THEOplayerRCTMainEventHandler {
         }
         if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] Error listener attached to THEOplayer") }
         
+        // CONTENT_PROTECTION_SUCCESS
+        self.contentProtectionSuccessListener = player.addEventListener(type: PlayerEventTypes.CONTENT_PROTECTION_SUCCESS) { [weak self] event in
+            if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received CONTENT_PROTECTION_SUCCESS event from THEOplayer") }
+            if let forwardedContentProtectionSuccessEvent = self?.onNativeContentProtectionSuccess {
+                forwardedContentProtectionSuccessEvent([:])
+            }
+        }
+        if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] ContentProtectionSuccess listener attached to THEOplayer") }
+        
         // LOADED_DATA
         self.loadedDataListener = player.addEventListener(type: PlayerEventTypes.LOADED_DATA) { [weak self] event in
             if DEBUG_THEOPLAYER_EVENTS { PrintUtils.printLog(logText: "[NATIVE] Received LOADED_DATA event from THEOplayer") }
@@ -450,6 +461,12 @@ public class THEOplayerRCTMainEventHandler {
         if let errorListener = self.errorListener {
             player.removeEventListener(type: PlayerEventTypes.ERROR, listener: errorListener)
             if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] Error listener dettached from THEOplayer") }
+        }
+        
+        // CONTENT_PROTECTION_SUCCESS
+        if let contentProtectionSuccessListener = self.contentProtectionSuccessListener {
+            player.removeEventListener(type: PlayerEventTypes.CONTENT_PROTECTION_SUCCESS, listener: contentProtectionSuccessListener)
+            if DEBUG_EVENTHANDLER { PrintUtils.printLog(logText: "[NATIVE] ContentProtectionSuccess listener dettached from THEOplayer") }
         }
         
         // LOADED_DATA

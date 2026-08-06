@@ -312,3 +312,13 @@ export interface ContentProtectionErrorEvent extends Event<PlayerEventType.CONTE
    */
   readonly error: ContentProtectionErrorObject;
 }
+
+/**
+ * Dispatched when content protection succeeds, i.e. when the key session for a media track was successfully set up.
+ *
+ * @category Events
+ * @category Player
+ * @category Content Protection
+ * @public
+ */
+export type ContentProtectionSuccessEvent = Event<PlayerEventType.CONTENT_PROTECTION_SUCCESS>;

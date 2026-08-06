@@ -54,6 +54,7 @@ import {
   DefaultChromecastChangeEvent,
   DefaultChromecastErrorEvent,
   DefaultContentProtectionErrorEvent,
+  DefaultContentProtectionSuccessEvent,
   DefaultCurrentSourceChangeEvent,
   DefaultDimensionChangeEvent,
   DefaultDurationChangeEvent,
@@ -115,6 +116,7 @@ export class WebEventForwarder {
     this._player.addEventListener('segmentnotfound', this.onSegmentNotFound);
     this._player.addEventListener('volumechange', this.onVolumeChangeEvent);
     this._player.addEventListener('contentprotectionerror', this.onContentProtectionError);
+    this._player.addEventListener('contentprotectionsuccess', this.onContentProtectionSuccess);
     this._player.addEventListener('dimensionchange', this.onDimensionChange);
     this._player.addEventListener('resize', this.onVideoResize);
 
@@ -167,6 +169,7 @@ export class WebEventForwarder {
     this._player.removeEventListener('segmentnotfound', this.onSegmentNotFound);
     this._player.removeEventListener('volumechange', this.onVolumeChangeEvent);
     this._player.removeEventListener('contentprotectionerror', this.onContentProtectionError);
+    this._player.removeEventListener('contentprotectionsuccess', this.onContentProtectionSuccess);
     this._player.removeEventListener('dimensionchange', this.onDimensionChange);
     this._player.removeEventListener('resize', this.onVideoResize);
 
@@ -244,6 +247,10 @@ export class WebEventForwarder {
         systemCode,
       }),
     );
+  };
+
+  private readonly onContentProtectionSuccess = () => {
+    this._facade.dispatchEvent(new DefaultContentProtectionSuccessEvent());
   };
 
   private readonly onProgress = () => {
