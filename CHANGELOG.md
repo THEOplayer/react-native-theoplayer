@@ -5,12 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [11.6.0]
 
 ### Added
 
 - Added support for the customData property on the Ad and AdBreak types.
+- Added the `MediaControl` API for controlling the media session and lock screen controls with custom handlers.
 - Added support for the `contentprotectionsuccess` event on all platforms
+
+### Changed
+
+- Upgraded example app to support React Native v0.86.2.
 
 ## [11.5.0]
 
@@ -27,10 +32,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 - Added RCTBridgeModule extension on iOS, with helper methods to resolve the view and native player APIs.
-
-### Added
-
-- Added the `MediaControl` API for controlling the media session and lock screen controls with custom handlers.
 
 ### Fixed
 
@@ -693,7 +694,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- Upgrade example app to support React Native v0.75.
+- Upgraded example app to support React Native v0.75.
 
 ## [8.5.0] - 24-10-21
 
