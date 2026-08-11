@@ -8,6 +8,8 @@ import { PlayerConfiguration, PlayerEventType, THEOplayer } from 'react-native-t
 import { Log } from './utils/Log';
 
 const testHookStore = new TestHookStore();
+// Debug simulators need extra time for cold-start native player creation.
+const TESTER_WAIT_TIME = 30_000;
 
 const playerConfig: PlayerConfiguration = {
   // On web, THEOplayer needs to know where the transmux workers were copied to.
@@ -58,7 +60,7 @@ class App extends Component {
 
   render() {
     return (
-      <Tester specs={Specs} store={testHookStore}>
+      <Tester specs={Specs} store={testHookStore} waitTime={TESTER_WAIT_TIME}>
         <SafeAreaView style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}>
           <View style={PLAYER_CONTAINER_STYLE}>
             <TestableTHEOplayerView config={playerConfig} onPlayerReady={this.onPlayerReady} onPlayerDestroy={this.onPlayerDestroy} />
