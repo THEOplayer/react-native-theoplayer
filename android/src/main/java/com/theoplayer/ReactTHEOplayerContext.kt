@@ -51,6 +51,7 @@ class ReactTHEOplayerContext private constructor(
   private val mainHandler = Handler(Looper.getMainLooper())
   private var isBound = AtomicBoolean()
   private var binder: MediaPlaybackService.MediaPlaybackBinder? = null
+  private var isDestroyed = false
 
   private var audioBecomingNoisyManager = AudioBecomingNoisyManager(reactContext) {
     // Audio is about to become 'noisy' due to a change in audio outputs: pause the player
@@ -135,6 +136,17 @@ class ReactTHEOplayerContext private constructor(
 
   private val connection = object : ServiceConnection {
     override fun onServiceConnected(className: ComponentName, service: IBinder) {
+      // The context may have been destroyed while the bind was still pending.
+      // Do not attach the destroyed player/context to the service.
+      if (isDestroyed) {
+        try {
+          reactContext.unbindService(this)
+        } catch (e: IllegalArgumentException) {
+          // Connection was not registered or already unbound; ignore.
+        }
+        return
+      }
+
       binder = service as MediaPlaybackService.MediaPlaybackBinder
 
       // Get media session connector from service
@@ -202,11 +214,13 @@ class ReactTHEOplayerContext private constructor(
   }
 
   private fun unbindMediaPlaybackService() {
-    // This client is done interacting with the service: unbind.
-    // When there are no clients bound to the service, the system destroys the service.
-    if (binder?.isBinderAlive == true) {
-      if (isBound.getAndSet(false)) {
+    // Always unbind when isBound, regardless of whether the binder is alive yet: a pending
+    // bind must still be cancelled so a late callback cannot resurrect this.
+    if (isBound.getAndSet(false)) {
+      try {
         reactContext.unbindService(connection)
+      } catch (e: IllegalArgumentException) {
+        // Service was not registered or already unbound; ignore.
       }
     }
     binder = null
@@ -472,6 +486,7 @@ class ReactTHEOplayerContext private constructor(
   }
 
   fun destroy() {
+    isDestroyed = true
     removeListeners()
 
     if (BuildConfig.USE_PLAYBACK_SERVICE) {
@@ -482,6 +497,7 @@ class ReactTHEOplayerContext private constructor(
       unbindMediaPlaybackService()
     }
     audioFocusManager?.abandonAudioFocus()
+    mediaSessionConnector?.player = null
     mediaControlProxy.destroy()
     mediaSessionConnector?.destroy()
     playerView.onDestroy()
