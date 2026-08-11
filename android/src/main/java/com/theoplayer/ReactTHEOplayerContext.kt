@@ -489,6 +489,10 @@ class ReactTHEOplayerContext private constructor(
     isDestroyed = true
     removeListeners()
 
+    // The media session can be shared with other player contexts through the playback service.
+    // Determine ownership before unbinding, as that clears the binder needed to check it.
+    val ownedMediaSession = ownsMediaSession()
+
     if (BuildConfig.USE_PLAYBACK_SERVICE) {
       // Remove service from foreground
       binder?.stopForegroundService()
@@ -497,9 +501,13 @@ class ReactTHEOplayerContext private constructor(
       unbindMediaPlaybackService()
     }
     audioFocusManager?.abandonAudioFocus()
-    mediaSessionConnector?.player = null
     mediaControlProxy.destroy()
-    mediaSessionConnector?.destroy()
+    if (ownedMediaSession) {
+      // Only tear down the session when another player did not take it over: a queued callback
+      // must never reach this destroyed player, but a newly-activated player must keep working.
+      mediaSessionConnector?.player = null
+      mediaSessionConnector?.destroy()
+    }
     playerView.onDestroy()
   }
 }
