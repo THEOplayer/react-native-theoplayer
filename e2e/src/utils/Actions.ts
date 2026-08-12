@@ -19,6 +19,9 @@ import { Log } from './Log';
 // the cavynext TestHookStore.
 export const PLAYER_HOOK_ID = 'Scene.player';
 
+// Time given to a freshly created native player before a test uses it.
+const PLAYER_SETTLE_TIME = 1000;
+
 export interface TestOptions {
   timeout: number;
 }
@@ -42,9 +45,15 @@ export class PlayerEventTimeoutError extends Error {
  * The player is registered by TestableTHEOplayerView when it is ready and
  * removed when it is destroyed, so this waits (up to the Tester's `waitTime`)
  * for the current player instance.
+ *
+ * The runner re-mounts the view before every test, so the player handed out
+ * here is often only milliseconds old while its predecessor is still being
+ * released natively. Setting a source that early makes the iOS/tvOS players
+ * fail with a MEDIA_AVPLAYER_ERROR, hence the settle time.
  */
 export async function getTestPlayer(spec: TestScope): Promise<THEOplayer> {
   const player = await spec.findComponent(PLAYER_HOOK_ID);
+  await new Promise((resolve) => setTimeout(resolve, PLAYER_SETTLE_TIME));
   return player as unknown as THEOplayer;
 }
 
