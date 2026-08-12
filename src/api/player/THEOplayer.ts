@@ -200,6 +200,21 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
   aspectRatio: AspectRatio;
 
   /**
+   * Whether the player manages the display criteria of the TV to match the content.
+   *
+   * @defaultValue `false`
+   *
+   * @platform ios
+   *
+   * @remarks
+   * <br/> - Only supported on tvOS.
+   * <br/> - When enabled, and while the player is presented fullscreen, the player sets the display's preferred frame rate and dynamic range to match the content before playback starts.
+   * <br/> - The display only follows these criteria when the viewer enabled content matching on tvOS in "Settings" > "Video and Audio" > "Match Content".
+   * <br/> - A display mode switch can briefly blank the screen, so only enable this on a single, fullscreen-presented player.
+   */
+  manageContentMatching: boolean;
+
+  /**
    * Specifies where the player is displaying the video.
    *
    * @defaultValue `SURFACE_VIEW`

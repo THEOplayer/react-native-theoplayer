@@ -99,6 +99,9 @@ RCT_EXTERN_METHOD(setPresentationMode:(nonnull NSNumber *)node
 RCT_EXTERN_METHOD(setAspectRatio:(nonnull NSNumber *)node
                   ratio:(nonnull NSString *)ratio)
 
+RCT_EXTERN_METHOD(setManageContentMatching:(nonnull NSNumber *)node
+                  enable:(BOOL)enable)
+
 RCT_EXTERN_METHOD(setPipConfig:(nonnull NSNumber *)node
                   pipConfig:(NSDictionary)pipConfig)
 

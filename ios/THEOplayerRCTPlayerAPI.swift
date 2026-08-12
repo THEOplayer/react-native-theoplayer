@@ -203,6 +203,18 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
             }
         }
 
+    @objc(setManageContentMatching:enable:)
+    func setManageContentMatching(_ node: NSNumber, enable: Bool) -> Void {
+#if os(tvOS)
+        withViewAndPlayer(node) { _, player in
+            if player.manageContentMatching != enable {
+                if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Changing TheoPlayer's manageContentMatching to \(enable)") }
+                player.manageContentMatching = enable
+            }
+        }
+#endif
+    }
+
     @objc(setPipConfig:pipConfig:)
     func setPipConfig(_ node: NSNumber, pipConfig: NSDictionary) -> Void {
         withView(node) { theView in
