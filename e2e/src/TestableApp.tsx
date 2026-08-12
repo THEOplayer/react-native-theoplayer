@@ -63,7 +63,11 @@ class App extends Component {
       <Tester specs={Specs} store={testHookStore} waitTime={TESTER_WAIT_TIME}>
         <SafeAreaView style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}>
           <View style={PLAYER_CONTAINER_STYLE}>
-            <TestableTHEOplayerView config={playerConfig} onPlayerReady={this.onPlayerReady} onPlayerDestroy={this.onPlayerDestroy} />
+            <TestableTHEOplayerView
+              config={playerConfig}
+              onPlayerReady={(player) => this.onPlayerReady(player)}
+              onPlayerDestroy={(player) => this.onPlayerDestroy(player)}
+            />
           </View>
         </SafeAreaView>
       </Tester>
