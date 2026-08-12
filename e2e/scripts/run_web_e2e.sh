@@ -55,12 +55,18 @@ npx webpack serve --mode development --config web/webpack.config.js &
 WEBPACK_PID=$!
 
 # Wait until webpack's dev server accepts connections, then open the browser.
+SERVER_UP=0
 for _ in $(seq 1 60); do
   if curl -sf -o /dev/null "${APP_URL}"; then
+    SERVER_UP=1
     break
   fi
   sleep 1
 done
+if [[ "${SERVER_UP}" -ne 1 ]]; then
+  echo "The dev server did not accept connections on ${APP_URL} within 60s." >&2
+  exit 1
+fi
 rm -rf "${USER_DATA_DIR}"
 "${BROWSER_BIN}" \
   --user-data-dir="${USER_DATA_DIR}" \
