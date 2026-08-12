@@ -54,8 +54,13 @@ trap cleanup EXIT INT TERM
 npx webpack serve --mode development --config web/webpack.config.js &
 WEBPACK_PID=$!
 
-# Give webpack time to come up, then open the browser alongside it.
-sleep 8
+# Wait until webpack's dev server accepts connections, then open the browser.
+for _ in $(seq 1 60); do
+  if curl -sf -o /dev/null "${APP_URL}"; then
+    break
+  fi
+  sleep 1
+done
 rm -rf "${USER_DATA_DIR}"
 "${BROWSER_BIN}" \
   --user-data-dir="${USER_DATA_DIR}" \
