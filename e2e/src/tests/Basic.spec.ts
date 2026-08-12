@@ -25,7 +25,7 @@ export default function (spec: TestScope) {
       const player = await preparePlayerWithSource(spec, testSource.source);
 
       // Seek and wait for the `seeked` event.
-      const seekTime = 10e3;
+      const seekTime = 5e3;
       await seekTo(player, seekTime);
 
       // Expect currentTime to be updated.

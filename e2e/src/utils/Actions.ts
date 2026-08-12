@@ -48,8 +48,7 @@ export class PlayerEventTimeoutError extends Error {
  *
  * The runner re-mounts the view before every test, so the player handed out
  * here is often only milliseconds old while its predecessor is still being
- * released natively. Setting a source that early makes the iOS/tvOS players
- * fail with a MEDIA_AVPLAYER_ERROR, hence the settle time.
+ * released natively. The settle time keeps the two lifecycles apart.
  */
 export async function getTestPlayer(spec: TestScope): Promise<THEOplayer> {
   const player = await spec.findComponent(PLAYER_HOOK_ID);
