@@ -49,4 +49,6 @@ post_install do |installer|
     :mac_catalyst_enabled => false,
     # :ccache_enabled => true
   )
+  # On tvOS the Nielsen App SDK ships NielsenTVAppApi instead of NielsenAppApi.
+  nielsen_post_install(installer, "Pods-ReactNativeTHEOplayer-tvOS")
 end
