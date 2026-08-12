@@ -169,7 +169,7 @@ export const waitForPlayerEvents = async <EType extends Event<PlayerEventType>>(
     });
     listen(PlayerEventType.AD_EVENT, (event: AdEvent) => {
       if (event.subType === AdEventType.AD_ERROR) {
-        fail(new Error('Ad error'));
+        fail(new Error(`Ad error: ${JSON.stringify(event.ad ?? event)}`));
       }
     });
 
