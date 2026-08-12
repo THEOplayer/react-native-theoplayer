@@ -3,6 +3,15 @@ on:
   workflow_dispatch:
   pull_request:
     types: [opened, reopened, synchronize, ready_for_review]
+    paths:
+      - .github/workflows/pr_web.yml
+      - example/**
+      - e2e/**
+      - '!e2e/ios/**'
+      - '!e2e/android/**'
+      - package.json
+      - src/**
+      - web/**
 
 jobs:
   build:
