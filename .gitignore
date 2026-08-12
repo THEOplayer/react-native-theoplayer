@@ -88,6 +88,8 @@ src/manifest.json
 e2e/cavynext_results.md
 e2e/cavynext_results.json
 e2e/dist
+# Backup made by `cavynext run-web` while the test entry point is swapped in.
+e2e/index.notest.js
 
 # Example app
 example/dist

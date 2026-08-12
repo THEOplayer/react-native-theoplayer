@@ -15,7 +15,11 @@ if [[ -n "${E2E_BROWSER_BIN:-}" ]]; then
 elif [[ "$(uname)" == "Darwin" ]]; then
   BROWSER_BIN="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 else
-  BROWSER_BIN="$(command -v google-chrome || command -v chromium-browser || command -v chromium)"
+  BROWSER_BIN="$(command -v google-chrome || command -v chromium-browser || command -v chromium || true)"
+  if [[ -z "${BROWSER_BIN}" ]]; then
+    echo "No Chrome/Chromium binary found; set E2E_BROWSER_BIN to point at one." >&2
+    exit 1
+  fi
 fi
 
 # On CI there is no display; run Chrome headless.
