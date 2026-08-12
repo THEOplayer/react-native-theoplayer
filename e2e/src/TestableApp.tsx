@@ -1,4 +1,4 @@
-import React, { Component, StrictMode } from 'react';
+import React, { Component } from 'react';
 import { Tester, TestHookStore } from 'react-native-cavynext';
 import { Platform, SafeAreaView, StyleSheet, View, ViewStyle } from 'react-native';
 import { TestableTHEOplayerView } from './components/TestableTHEOplayerView';
@@ -31,15 +31,10 @@ const PLAYER_CONTAINER_STYLE: ViewStyle = {
   backgroundColor: '#000000',
 };
 
-export function TestableApp() {
-  return (
-    <StrictMode>
-      <App />
-    </StrictMode>
-  );
-}
-
-class App extends Component {
+// Deliberately not wrapped in <StrictMode>: its double-invoked mounts create
+// and destroy a second native player per test, which duplicates every log line
+// and races the player under test.
+export class TestableApp extends Component {
   player: THEOplayer | undefined = undefined;
 
   onPlayerReady = (player: THEOplayer) => {

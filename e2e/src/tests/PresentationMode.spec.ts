@@ -2,12 +2,14 @@ import { expect, TestScope } from 'react-native-cavynext';
 import { PlayerEventType, PresentationMode, PresentationModeChangeEvent, RenderingTarget, THEOplayer } from 'react-native-theoplayer';
 import { preparePlayerWithSource, waitForPlayerEvent, waitForPlayerEventType } from '../utils/Actions';
 import { sleep } from '../utils/TimeUtils';
-import { adSources, plainSources } from '../utils/SourceUtils';
+import { plainSources } from '../utils/SourceUtils';
 import { Log } from '../utils/Log';
 
 export default function (spec: TestScope) {
   const platform = spec.platform();
-  const sources = [...plainSources(platform), ...(platform !== 'ios' ? adSources(platform) : [])];
+  // Plain sources only: an IMA pre-roll adds nothing to presentation mode or
+  // rendering target coverage, but does make these specs depend on the ad server.
+  const sources = plainSources(platform);
 
   // Browsers only allow entering fullscreen from a user gesture, so the
   // presentation mode tests cannot run on web; report them as skipped.
