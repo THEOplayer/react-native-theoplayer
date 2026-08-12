@@ -24,24 +24,47 @@ if [[ -n "${CI:-}" ]]; then
   EXTRA_FLAGS=(--headless=new --no-sandbox --disable-gpu --window-size=1280,720)
 fi
 
-# Give webpack time to come up, then open the browser. Runs alongside the dev
-# server; the browser is cleaned up when this script is terminated.
-(
-  sleep 8
-  rm -rf "${USER_DATA_DIR}"
-  "${BROWSER_BIN}" \
-    --user-data-dir="${USER_DATA_DIR}" \
-    --no-first-run \
-    --no-default-browser-check \
-    --disable-background-timer-throttling \
-    --disable-backgrounding-occluded-windows \
-    --disable-renderer-backgrounding \
-    --autoplay-policy=no-user-gesture-required \
-    ${EXTRA_FLAGS[@]+"${EXTRA_FLAGS[@]}"} \
-    "${APP_URL}" &
-  BROWSER_PID=$!
-  trap 'kill "${BROWSER_PID}" 2>/dev/null || true' EXIT
-  wait "${BROWSER_PID}"
-) &
+BROWSER_PID=""
+WEBPACK_PID=""
 
-exec npx webpack serve --mode development --config web/webpack.config.js
+# Kills a process and everything it spawned: `npx` and the browser launcher
+# both wrap the process that actually has to go away.
+kill_tree() {
+  local pid=$1 child
+  for child in $(pgrep -P "${pid}" 2>/dev/null); do
+    kill_tree "${child}"
+  done
+  kill "${pid}" 2>/dev/null || true
+}
+
+cleanup() {
+  trap - EXIT INT TERM
+  for pid in "${BROWSER_PID}" "${WEBPACK_PID}"; do
+    if [[ -n "${pid}" ]]; then
+      kill_tree "${pid}"
+    fi
+  done
+}
+trap cleanup EXIT INT TERM
+
+npx webpack serve --mode development --config web/webpack.config.js &
+WEBPACK_PID=$!
+
+# Give webpack time to come up, then open the browser alongside it.
+sleep 8
+rm -rf "${USER_DATA_DIR}"
+"${BROWSER_BIN}" \
+  --user-data-dir="${USER_DATA_DIR}" \
+  --no-first-run \
+  --no-default-browser-check \
+  --disable-background-timer-throttling \
+  --disable-backgrounding-occluded-windows \
+  --disable-renderer-backgrounding \
+  --autoplay-policy=no-user-gesture-required \
+  ${EXTRA_FLAGS[@]+"${EXTRA_FLAGS[@]}"} \
+  "${APP_URL}" &
+BROWSER_PID=$!
+
+# Stay alive as long as the dev server runs: the cavynext CLI stops this script
+# when the test run ends, and the trap then takes the browser down with it.
+wait "${WEBPACK_PID}"

@@ -42,7 +42,7 @@ export function TestableApp() {
 class App extends Component {
   player: THEOplayer | undefined = undefined;
 
-  onPlayerReady(player: THEOplayer) {
+  onPlayerReady = (player: THEOplayer) => {
     Log.log('[TestableApp] Player is ready.');
     this.player = player;
 
@@ -52,22 +52,19 @@ class App extends Component {
     this.player.addEventListener(PlayerEventType.PLAYING, () => {
       Log.log('[TestableApp] Player event: PLAYING');
     });
-  }
-  onPlayerDestroy(_player: THEOplayer) {
+  };
+
+  onPlayerDestroy = (_player: THEOplayer) => {
     Log.log('[TestableApp] Player is destroyed.');
     this.player = undefined;
-  }
+  };
 
   render() {
     return (
       <Tester specs={Specs} store={testHookStore} waitTime={TESTER_WAIT_TIME}>
         <SafeAreaView style={[StyleSheet.absoluteFill, { backgroundColor: '#000000' }]}>
           <View style={PLAYER_CONTAINER_STYLE}>
-            <TestableTHEOplayerView
-              config={playerConfig}
-              onPlayerReady={(player) => this.onPlayerReady(player)}
-              onPlayerDestroy={(player) => this.onPlayerDestroy(player)}
-            />
+            <TestableTHEOplayerView config={playerConfig} onPlayerReady={this.onPlayerReady} onPlayerDestroy={this.onPlayerDestroy} />
           </View>
         </SafeAreaView>
       </Tester>
