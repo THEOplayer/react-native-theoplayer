@@ -12,6 +12,8 @@ import com.theoplayer.android.api.ads.CompanionAd
 import com.theoplayer.android.api.ads.ima.GoogleImaAd
 import com.theoplayer.android.api.ads.UniversalAdId
 import com.theoplayer.android.api.event.ads.AdIntegrationKind
+import com.theoplayer.util.BridgeUtils
+import org.json.JSONObject
 import java.lang.Exception
 
 private const val PROP_AD_SYSTEM = "adSystem"
@@ -49,6 +51,7 @@ private const val PROP_COMPANION_HEIGHT = "height"
 private const val PROP_COMPANION_RESOURCEURI = "resourceURI"
 private const val PROP_UNIVERSAL_AD_ID_REGISTRY = "adIdRegistry"
 private const val PROP_UNIVERSAL_AD_ID_VALUE = "adIdValue"
+private const val PROP_CUSTOM_DATA = "customData"
 
 private const val INVALID_DOUBLE = -1.0
 private const val INVALID_INT = -1
@@ -130,6 +133,12 @@ object AdAdapter {
       }
       adPayload.putArray(PROP_AD_WRAPPER_CREATIVE_IDS, wrapperCreativeIdsPayload)
     }
+    val customData = ad.customData
+    if (customData is JSONObject) {
+      adPayload.putMap(PROP_CUSTOM_DATA, BridgeUtils.fromJSONObjectToBridge(customData))
+    } else if (customData is Map<*, *>) {
+      adPayload.putMap(PROP_CUSTOM_DATA, BridgeUtils.fromJSONObjectToBridge(JSONObject(customData)))
+    }
     return adPayload
   }
 
@@ -146,6 +155,12 @@ object AdAdapter {
     adbreakPayload.putInt(PROP_ADBREAK_MAXDURATION,adbreak.maxDuration)
     adbreakPayload.putInt(PROP_ADBREAK_TIMEOFFSET, adbreak.timeOffset)
     adbreakPayload.putDouble(PROP_ADBREAK_MAXREMAININGDURATION, adbreak.maxRemainingDuration)
+    val customData = adbreak.customData
+    if (customData is JSONObject) {
+      adbreakPayload.putMap(PROP_CUSTOM_DATA, BridgeUtils.fromJSONObjectToBridge(customData))
+    } else if (customData is Map<*, *>) {
+      adbreakPayload.putMap(PROP_CUSTOM_DATA, BridgeUtils.fromJSONObjectToBridge(JSONObject(customData)))
+    }
     val adsPayload = Arguments.createArray()
     for (ad in adbreak.ads) {
       // Some ads in the ad break are possibly not loaded yet.

@@ -34,6 +34,7 @@ let PROP_ADBREAK_MAX_REMAINING_DURATION: String = "maxRemainingDuration"
 let PROP_ADBREAK_ADS: String = "ads"
 let PROP_ADBREAK_INTEGRATION: String = "integration"
 let PROP_ADBREAK_CUSTOM_INTEGRATION: String = "customIntegration"
+let PROP_CUSTOM_DATA: String = "customData"
 let PROP_COMPANION_AD_SLOT_ID: String = "adSlotId"
 let PROP_COMPANION_ALT_TEXT: String = "altText"
 let PROP_COMPANION_CLICK_THROUGH: String = "clickThrough"
@@ -48,6 +49,9 @@ class THEOplayerRCTAdAdapter {
         adData[PROP_AD_INTEGRATION] = ad.integration._rawValue
         if let customIntegration = ad.customIntegration {
             adData[PROP_AD_CUSTOM_INTEGRATION] = customIntegration
+        }
+        if let customData = ad.customData {
+            adData[PROP_CUSTOM_DATA] = customData
         }
         adData[PROP_AD_TYPE] = ad.type
         if let adId = ad.id {
@@ -180,6 +184,9 @@ class THEOplayerRCTAdAdapter {
         adBreakData[PROP_ADBREAK_MAX_REMAINING_DURATION] = adBreak.maxRemainingDuration
         adBreakData[PROP_ADBREAK_INTEGRATION] = adBreak.integration
         adBreakData[PROP_ADBREAK_CUSTOM_INTEGRATION] = adBreak.customIntegration
+        if let customData = adBreak.customData {
+            adBreakData[PROP_CUSTOM_DATA] = customData
+        }
         // process adds when adbreak contains them
         if !adBreak.ads.isEmpty {
             var adList: [[String:Any]] = []

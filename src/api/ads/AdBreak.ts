@@ -56,4 +56,12 @@ export interface AdBreak {
    * <br/> - This feature is not available in the Google IMA integration and will default to -1.
    */
   maxRemainingDuration: number | undefined;
+
+  /**
+   * Additional integration-specific data associated with this ad break.
+   *
+   * @remarks
+   * <br/> - The value depends on the ad integration. It may be `undefined` if the integration does not provide any custom data.
+   */
+  customData?: Record<string, unknown>;
 }

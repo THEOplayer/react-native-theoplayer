@@ -26,9 +26,10 @@ object BridgeUtils {
         while (iterator.hasNext()) {
           val key = iterator.next()
           when (val value = json.opt(key)) {
-//            null -> putNull(key)
+            null, JSONObject.NULL -> putNull(key)
             is Boolean -> putBoolean(key, value)
             is Int -> putInt(key, value)
+            is Long -> putDouble(key, value.toDouble())
             is Double -> putDouble(key, value)
             is String -> putString(key, value)
             is JSONObject -> putMap(key, fromJSONObjectToBridge(value))
@@ -50,9 +51,10 @@ object BridgeUtils {
       try {
         for (i in 0 until jsonArray.length()) {
           when (val value = jsonArray.opt(i)) {
-//        null -> writableArray.pushNull()
+            null, JSONObject.NULL -> pushNull()
             is Boolean -> pushBoolean(value)
             is Int -> pushInt(value)
+            is Long -> pushDouble(value.toDouble())
             is Double -> pushDouble(value)
             is String -> pushString(value)
             is JSONObject -> pushMap(fromJSONObjectToBridge(value))
