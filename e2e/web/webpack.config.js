@@ -90,6 +90,13 @@ module.exports = {
   },
   resolve: {
     extensions: ['.web.js', '.web.ts', '.web.tsx', '.js', '.ts', '.tsx'],
+    // The comscore web SDK references node builtins behind runtime guards;
+    // webpack 5 no longer polyfills them, so resolve them to nothing.
+    fallback: {
+      os: false,
+      http: false,
+      https: false,
+    },
     alias: {
       // Resolve react-native-theoplayer to its TypeScript source in the repo root.
       [pkg.name]: path.resolve(projectDirectory, pkg.source),
