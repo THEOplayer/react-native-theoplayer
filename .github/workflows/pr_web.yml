@@ -66,6 +66,9 @@ jobs:
 
       - name: Run web e2e tests
         working-directory: e2e
-        run: |
-          npm run test:e2e:web -- --markdown
-          cat cavynext_results.md >> $GITHUB_STEP_SUMMARY
+        run: npm run test:e2e:web -- --markdown
+
+      - name: Summarize results
+        working-directory: e2e
+        if: always()
+        run: cat cavynext_results.md >> $GITHUB_STEP_SUMMARY
