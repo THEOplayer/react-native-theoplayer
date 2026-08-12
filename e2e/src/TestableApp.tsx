@@ -41,12 +41,11 @@ export class TestableApp extends Component {
     Log.log('[TestableApp] Player is ready.');
     this.player = player;
 
-    this.player.addEventListener(PlayerEventType.PLAY, () => {
-      Log.log('[TestableApp] Player event: PLAY');
-    });
-    this.player.addEventListener(PlayerEventType.PLAYING, () => {
-      Log.log('[TestableApp] Player event: PLAYING');
-    });
+    for (const type of [PlayerEventType.PLAY, PlayerEventType.PLAYING, PlayerEventType.PAUSE] as const) {
+      this.player.addEventListener(type, () => {
+        Log.log(`[TestableApp] Player event: ${type} (paused: ${player.paused})`);
+      });
+    }
   };
 
   onPlayerDestroy = (_player: THEOplayer) => {
