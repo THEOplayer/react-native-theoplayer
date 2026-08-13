@@ -29,10 +29,15 @@ export function plainSources(platform: string): TestSourceDescription[] {
 }
 
 /**
- * The test sources with an IMA pre-roll for a platform.
+ * The test sources with an IMA pre-roll.
+ *
+ * A single source: an ad break plays out the same regardless of the content it
+ * interrupts, while every extra case is another ad session - on iOS a pair of
+ * WKWebViews whose web content process a loaded CI machine can take longer to
+ * launch than IMA waits for its ad request.
  */
-export function adSources(platform: string): TestSourceDescription[] {
-  return plainSources(platform).map(withPreRoll);
+export function adSources(): TestSourceDescription[] {
+  return [getTestSource(SourceType.HLS, AdType.IMA_PRE_ROLL)];
 }
 
 export function getTestSource(sourceType: SourceType, adType?: AdType): TestSourceDescription {
