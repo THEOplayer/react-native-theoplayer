@@ -11,7 +11,6 @@ on:
       - '!e2e/android/**'
       - package.json
       - src/**
-      - web/**
 
 jobs:
   build:
