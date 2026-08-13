@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+
+    <title>react-native-theoplayer e2e</title>
+
+    <!-- THEOplayer CSS, copied from the theoplayer package by webpack; it
+         sizes the video element inside the player container. -->
+    <link rel="stylesheet" type="text/css" href="ui.css" />
+
+    <!-- Load Google IMA/DAI libraries for the ad tests -->
+    <script type="text/javascript" src="//imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
+    <script type="text/javascript" src="//imasdk.googleapis.com/js/sdkloader/ima3_dai.js"></script>
+
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        background-color: #000;
+      }
+      /* Flex container so the react-native-web root (flex: 1) fills the
+         viewport; otherwise the app tree collapses to height 0. */
+      #app {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app" class="container"></div>
+  </body>
+</html>

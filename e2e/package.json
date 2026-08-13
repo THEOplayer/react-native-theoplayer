@@ -5,9 +5,11 @@
   "private": true,
   "scripts": {
     "start": "npx react-native start",
-    "test:e2e:android": "npx cavy run-android --terminal bash --mode release",
-    "test:e2e:ios": "npx cavy run-ios --terminal bash --scheme ReactNativeTHEOplayer",
-    "test:e2e:tvos": "npx cavy run-ios --terminal bash --scheme ReactNativeTHEOplayer-tvOS",
+    "test:e2e:android": "npx cavynext run-android --terminal bash --mode release",
+    "test:e2e:ios": "npx cavynext run-ios --terminal bash --scheme ReactNativeTHEOplayer",
+    "test:e2e:tvos": "npx cavynext run-ios --terminal bash --scheme ReactNativeTHEOplayer-tvOS",
+    "test:e2e:web": "npx cavynext run-web --buildCmd \"bash scripts/run_web_e2e.sh\"",
+    "build:web": "npx webpack build --mode development --config web/webpack.config.js",
     "lint": "eslint \"**/*.{ts,tsx}\"",
     "pod-install": "cd ios && RCT_NEW_ARCH_ENABLED=1 bundle exec pod install",
     "pod-update": "cd ios && RCT_NEW_ARCH_ENABLED=1 bundle exec pod update",
@@ -18,7 +20,6 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-native": "npm:react-native-tvos@^0.86.2-0",
-    "react-native-device-info": "^14.1.1",
     "react-native-status-bar-height": "^2.6.0",
     "react-native-svg": "^15.15.5",
     "react-native-theoplayer": "..",
@@ -36,18 +37,22 @@
     "@react-native/eslint-config": "0.86.2",
     "@react-native/metro-config": "0.86.2",
     "@react-native/typescript-config": "0.86.2",
-    "@types/cavy": "^3.2.9",
+    "@theoplayer/react-native-analytics-adobe": "^1.17.0",
+    "@theoplayer/react-native-analytics-comscore": "^1.15.0",
+    "@theoplayer/react-native-analytics-conviva": "^1.15.0",
+    "@theoplayer/react-native-analytics-nielsen": "^1.13.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "babel-loader": "^8.4.1",
     "babel-plugin-module-resolver": "^5.0.2",
     "babel-plugin-react-native-web": "^0.17.7",
-    "cavy": "github:tvanlaerhoven/cavy#v4.1.2",
-    "cavy-cli": "github:tvanlaerhoven/cavy-cli#v3.1.7",
     "copy-webpack-plugin": "^14.0.0",
     "eslint": "^8.57.1",
     "html-webpack-plugin": "^5.6.3",
     "npm-check-updates": "^17.1.13",
+    "react-native-cavynext": "^0.2.0",
+    "react-native-cavynext-cli": "^0.2.0",
+    "react-native-device-info": "^14.1.1",
     "react-native-svg-web": "^1.0.9",
     "typescript": "5.8.3",
     "webpack": "^5.105.0",
@@ -55,10 +60,7 @@
     "webpack-dev-server": "^5.2.6"
   },
   "overrides": {
-    "react-native": "$react-native",
-    "cavy": {
-      "react": "$react"
-    }
+    "react-native": "$react-native"
   },
   "engines": {
     "node": ">= 22.11.0"
