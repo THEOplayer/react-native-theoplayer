@@ -1,7 +1,7 @@
 import type { MetricsAPI } from 'react-native-theoplayer';
 import type { ChromelessPlayer } from 'theoplayer';
 
-export class THEOplayerWebMetricsAdapter implements MetricsAPI {
+export class MetricsWebAdapter implements MetricsAPI {
   private readonly _player: ChromelessPlayer;
 
   constructor(player: ChromelessPlayer) {

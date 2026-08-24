@@ -55,7 +55,7 @@ import { DefaultNativePlayerState } from './DefaultNativePlayerState';
 import { THEOAdsNativeAdapter } from './theoads/THEOAdsNativeAdapter';
 import { TheoLiveNativeAdapter } from './theolive/TheoLiveNativeAdapter';
 import { MediaControlNativeAdapter } from './media/MediaControlNativeAdapter';
-import { MetricsAdapter } from './metrics/MetricsAdapter';
+import { MetricsNativeAdapter } from './metrics/MetricsNativeAdapter';
 
 const NativePlayerModule = NativeModules.THEORCTPlayerModule;
 
@@ -69,7 +69,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   private readonly _textTrackStyleAdapter: TextTrackStyleAdapter;
   private readonly _theoliveAdapter: TheoLiveNativeAdapter;
   private readonly _mediaControlAdapter: MediaControlNativeAdapter;
-  private readonly _metricsAdapter: MetricsAdapter;
+  private readonly _metricsAdapter: MetricsNativeAdapter;
   private _externalEventRouter: EventBroadcastAPI | undefined = undefined;
   private _playerVersion!: PlayerVersion;
 
@@ -84,7 +84,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._textTrackStyleAdapter = new TextTrackStyleAdapter(this._view);
     this._theoliveAdapter = new TheoLiveNativeAdapter(this._view);
     this._mediaControlAdapter = new MediaControlNativeAdapter(this);
-    this._metricsAdapter = new MetricsAdapter(this._view);
+    this._metricsAdapter = new MetricsNativeAdapter(this._view);
     this.addEventListeners();
   }
 

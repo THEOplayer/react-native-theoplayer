@@ -3,7 +3,7 @@ import { NativeModules } from 'react-native';
 
 const NativeMetricsModule = NativeModules.THEORCTMetricsModule;
 
-export class MetricsAdapter implements MetricsAPI {
+export class MetricsNativeAdapter implements MetricsAPI {
   constructor(private readonly _view: THEOplayerView) {}
 
   currentBandwidthEstimate(): Promise<number> {

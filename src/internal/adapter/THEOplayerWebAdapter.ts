@@ -40,7 +40,7 @@ import { DefaultTextTrackState } from './DefaultTextTrackState';
 import { THEOAdsWebAdapter } from './theoads/THEOAdsWebAdapter';
 import { CMCDConnector, Configuration, createCMCDConnector, TransmissionMode } from '@theoplayer/cmcd-connector-web';
 import { TheoLiveWebAdapter } from './theolive/TheoLiveWebAdapter';
-import { THEOplayerWebMetricsAdapter } from './metrics/THEOplayerWebMetricsAdapter';
+import { MetricsWebAdapter } from './metrics/MetricsWebAdapter';
 
 const defaultBackgroundAudioConfiguration: BackgroundAudioConfiguration = {
   enabled: false,
@@ -57,7 +57,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   private readonly _textTrackState: TextTrackState;
   private readonly _presentationModeManager: WebPresentationModeManager;
   private readonly _theoliveAdapter: TheoLiveWebAdapter;
-  private readonly _metricsAdapter: THEOplayerWebMetricsAdapter;
+  private readonly _metricsAdapter: MetricsWebAdapter;
   private _player: NativeChromelessPlayer | undefined;
   private _eventForwarder: WebEventForwarder | undefined;
   private readonly _mediaSession: WebMediaSession;
@@ -76,7 +76,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     this._castAdapter = new THEOplayerWebCastAdapter(this._player);
     this._theoAdsAdapter = new THEOAdsWebAdapter(this._player);
     this._theoliveAdapter = new TheoLiveWebAdapter(this._player);
-    this._metricsAdapter = new THEOplayerWebMetricsAdapter(this._player);
+    this._metricsAdapter = new MetricsWebAdapter(this._player);
     this._textTrackState = new DefaultTextTrackState(this);
     this._eventForwarder = new WebEventForwarder(this._player, this);
     this._presentationModeManager = new WebPresentationModeManager(this._player, this);
