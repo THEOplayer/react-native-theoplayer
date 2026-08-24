@@ -218,6 +218,9 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
 #endif
     }
 
+    // Not used by the THEOplayerAdapter, which reads the value from its cached player state.
+    // This getter exists for the e2e test app, allowing it to verify that the value was
+    // effectively applied on the native player.
     @objc(getManageContentMatching:resolver:rejecter:)
     func getManageContentMatching(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
 #if os(tvOS)
