@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Added `THEOplayer.manageContentMatching` to let the player match the display mode (frame rate and dynamic range) of the TV to the content before playback starts on tvOS.
+
 ### Fixed
 
 - Fixed an issue on Android where destroying the player during a pending `MediaPlaybackService` bind could cause a crash.

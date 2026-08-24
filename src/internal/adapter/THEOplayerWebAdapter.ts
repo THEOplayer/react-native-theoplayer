@@ -355,6 +355,14 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     // unused
   }
 
+  get manageContentMatching(): boolean {
+    return false;
+  }
+
+  set manageContentMatching(_enable: boolean) {
+    // unused
+  }
+
   get keepScreenOn(): boolean {
     return false;
   }
