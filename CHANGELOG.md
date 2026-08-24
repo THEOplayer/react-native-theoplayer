@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Added `THEOplayer.manageContentMatching` to let the player match the display mode of the TV with the content before playback starts on tvOS.
+- Added `THEOplayer.manageContentMatching` to let the player match the display mode (frame rate and dynamic range) of the TV to the content before playback starts on tvOS.
 
 ### Fixed
 
