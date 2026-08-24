@@ -22,6 +22,9 @@ let TTS_PROP_COLOR_G = "g"
 let TTS_PROP_COLOR_B = "b"
 let TTS_PROP_COLOR_A = "a"
 
+let ERROR_CODE_PLAYER_ACCESS_FAILURE = "player_access_failure"
+let ERROR_MESSAGE_PLAYER_ACCESS_FAILURE = "Could not access THEOplayer"
+
 @objc(THEOplayerRCTPlayerAPI)
 class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
     @objc var bridge: RCTBridge!
@@ -212,6 +215,19 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                 player.manageContentMatching = enable
             }
         }
+#endif
+    }
+
+    @objc(getManageContentMatching:resolver:rejecter:)
+    func getManageContentMatching(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+#if os(tvOS)
+        withViewAndPlayer(node) { _, player in
+            resolve(player.manageContentMatching)
+        } onFailure: {
+            reject(ERROR_CODE_PLAYER_ACCESS_FAILURE, ERROR_MESSAGE_PLAYER_ACCESS_FAILURE, nil)
+        }
+#else
+        resolve(false)
 #endif
     }
 
