@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+- Added the `Metrics` API, accessible through `player.metrics`, with `currentBandwidthEstimate` returning the player's estimated available bandwidth in bits per second. On iOS/tvOS this value is only reported for THEOlive/HESP streams.
 - Added `THEOplayer.manageContentMatching` to let the player match the display mode (frame rate and dynamic range) of the TV to the content before playback starts on tvOS.
 
 ### Fixed

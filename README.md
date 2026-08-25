@@ -188,6 +188,7 @@ This section gives an overview of features, limitations and known issues:
 - [Fullscreen presentation](./doc/fullscreen.md)
 - [Media Control](./doc/mediacontrol.md)
 - [Media Caching](./doc/media-caching.md)
+- [Metrics](./doc/metrics.md)
 - [Migrating to THEOplayer 9.x](./doc/migrating-to-react-native-theoplayer-9.md)
 - [Migrating to THEOplayer 10.x🔥](./doc/migrating-to-react-native-theoplayer-10.md)
 - [Millicast](./doc/millicast.md)
