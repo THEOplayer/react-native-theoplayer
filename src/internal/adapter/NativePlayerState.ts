@@ -24,6 +24,7 @@ export interface PlaybackState {
   buffered: TimeRange[];
   presentationMode: PresentationMode;
   aspectRatio: AspectRatio;
+  manageContentMatching: boolean;
   renderingTarget: RenderingTarget;
 }
 

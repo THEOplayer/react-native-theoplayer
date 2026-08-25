@@ -492,6 +492,17 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     NativePlayerModule.setAspectRatio(this._view.nativeHandle, ratio);
   }
 
+  get manageContentMatching(): boolean {
+    return this._state.manageContentMatching;
+  }
+
+  set manageContentMatching(enable: boolean) {
+    if (Platform.OS === 'ios') {
+      this._state.manageContentMatching = enable;
+      NativePlayerModule.setManageContentMatching(this._view.nativeHandle, enable);
+    }
+  }
+
   get renderingTarget(): RenderingTarget {
     return this._state.renderingTarget;
   }
