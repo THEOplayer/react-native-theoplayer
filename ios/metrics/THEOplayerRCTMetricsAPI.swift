@@ -10,7 +10,7 @@ class THEOplayerRCTMetricsAPI: NSObject, RCTBridgeModule {
     @objc var bridge: RCTBridge!
 
     static func moduleName() -> String! {
-        return "THEORCTMetricsModule"
+        "THEORCTMetricsModule"
     }
 
     static func requiresMainQueueSetup() -> Bool {
