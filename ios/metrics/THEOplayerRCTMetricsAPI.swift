@@ -14,7 +14,7 @@ class THEOplayerRCTMetricsAPI: NSObject, RCTBridgeModule {
     }
 
     static func requiresMainQueueSetup() -> Bool {
-        return false
+        false
     }
 
     @objc(currentBandwidthEstimate:resolver:rejecter:)
