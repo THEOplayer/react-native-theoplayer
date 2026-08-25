@@ -183,6 +183,7 @@ This section gives an overview of features, limitations and known issues:
 - [Background playback and notifications](./doc/background.md)
 - [Casting with Chromecast and Airplay](./doc/cast.md)
 - [Common Media Client Data (CMCD)](./doc/cmcd.md)
+- [Content matching on tvOS](./doc/content-matching.md)
 - [Digital Rights Management (DRM)](./doc/drm.md)
 - [Expo](./doc/expo.md)
 - [Fullscreen presentation](./doc/fullscreen.md)
