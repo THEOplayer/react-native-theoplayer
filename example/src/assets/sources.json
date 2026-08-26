@@ -530,6 +530,36 @@
     }
   },
   {
+    "name": "THEOads • HLS • SGAI • L-shape",
+    "os": ["ios", "android", "web"],
+    "needsLicense": true,
+    "source": {
+      "sources": {
+        "src": "https://cluster.dev.theostream.live/nfl-unified-channel/hls/k8s/live/scte35.isml/.m3u8",
+        "type": "application/x-mpegurl",
+        "hlsDateRange": true
+      },
+      "ads": [
+        {
+          "integration": "theoads",
+          "networkCode": "51636543",
+          "customAssetKey": "nfl-sgai-demo",
+          "overrideLayout": "l-shape",
+          "backdropDoubleBox": "https://demo.theoads.live/img/THEOads_double_box.svg",
+          "backdropLShape": "https://demo.theoads.live/img/THEOads_L_Shape.svg"
+        }
+      ],
+      "metadata": {
+        "title": "THEOads L-shape",
+        "subtitle": "HLS • SGAI • L-shape layout",
+        "album": "OptiView React Native demos",
+        "mediaUri": "https://optiview.dolby.com",
+        "displayIconUri": "https://cdn.theoplayer.com/react-native-theoplayer/temp/THEOPlayer-200x200.png",
+        "artist": "Dolby"
+      }
+    }
+  },
+  {
     "name": "Big Buck Bunny • HLS • Thumbnails • Clear",
     "os": ["ios", "web"],
     "needsLicense": false,
