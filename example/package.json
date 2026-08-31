@@ -57,6 +57,6 @@
     "react-native": "$react-native"
   },
   "engines": {
-    "node": ">= 22.11.0"
+    "node": ">= 22.13.0"
   }
 }
