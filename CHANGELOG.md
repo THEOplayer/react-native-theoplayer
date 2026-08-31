@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed an issue on Android where destroying the player during a pending `MediaPlaybackService` bind could cause a crash.
 - Fixed an issue where `player.paused` remained `true` between the `play` and `playing` events.
 
+### Changed
+
+- Removed the `RCTRootContentView` import from the iOS bridging header, as it is removed in React Native 0.87.
+- Upgraded example app to support React Native v0.87.1.
+
 ## [11.6.0]
 
 ### Added
