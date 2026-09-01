@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { expect, TestScope } from 'react-native-cavynext';
 import { AdEventType, PlayerEventType, AdEvent, type Event, SourceDescription, THEOplayer } from 'react-native-theoplayer';
 import { getTestPlayer, waitForPlayerEvents, waitForPlayerEventTypes } from '../utils/Actions';
@@ -29,6 +30,15 @@ const AD_BREAK_TIMEOUT = { timeout: 60000 };
 const ATTEMPTS = 2;
 
 export default function (spec: TestScope) {
+  if (Platform.OS === 'web') {
+    // The IMA HTML5 SDK fails to issue its ad request from datacenter/CI
+    // environments (IMA error 1005 before the VAST tag is even fetched), so
+    // this test cannot pass on web CI. Native platforms use the native IMA
+    // SDKs through the platform network stack and are unaffected.
+    // See https://github.com/THEOplayer/react-native-theoplayer/pull/902#issuecomment-5481270151
+    return;
+  }
+
   spec.describe.each(adSources())('Set $description and auto-play', (testSource) => {
     spec.it('dispatches sourcechange, play, playing and ad events', async () => {
       const player = await getTestPlayer(spec);
