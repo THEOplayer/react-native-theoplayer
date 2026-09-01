@@ -1,25 +1,22 @@
 import { expect, TestScope } from 'react-native-cavynext';
-import { PlayerEventType, TextTrack, TextTrackEvent, TextTrackEventType, TextTrackKind, THEOplayer } from 'react-native-theoplayer';
-import mp4 from '../res/mp4.json';
+import {
+  PlayerEventType,
+  SourceDescription,
+  TextTrack,
+  TextTrackEvent,
+  TextTrackEventType,
+  TextTrackKind,
+  THEOplayer,
+} from 'react-native-theoplayer';
 import { preparePlayerWithSource, seekTo, waitForPlayerEvents } from '../utils/Actions';
 import { sleep } from '../utils/TimeUtils';
 
-// Side-load the Elephants Dream WebVTT tracks on the matching MP4 source.
-// The first cue starts around 15s.
-const SUBTITLE_SOURCE = {
-  ...mp4[0],
+const SIDE_LOADED_SOURCE: SourceDescription = {
   sources: {
-    ...mp4[0].sources,
     src: 'https://cdn.theoplayer.com/video/elephants-dream.mp4',
+    type: 'video/mp4',
   },
   textTracks: [
-    {
-      src: 'https://cdn.theoplayer.com/video/elephant/elephants-dream-subtitles-en.vtt',
-      kind: TextTrackKind.subtitles,
-      srclang: 'en',
-      label: 'English',
-      format: 'webvtt',
-    },
     {
       src: 'https://cdn.theoplayer.com/video/elephant/elephants-dream-subtitles-nl.vtt',
       kind: TextTrackKind.subtitles,
@@ -30,49 +27,54 @@ const SUBTITLE_SOURCE = {
   ],
 };
 
-const EXPECTED_LANGUAGES = ['en', 'nl'];
-// Seek just before the first cue so playback crosses a full cue (enter + exit)
-// quickly instead of waiting from the start.
-const SEEK_TIME = 13e3;
-// Reaching and crossing a cue is quick, but leave room for buffering on CI.
+const HLS_SOURCE: SourceDescription = {
+  sources: {
+    src: 'https://cdn.theoplayer.com/video/tears_of_steel/index.m3u8',
+    type: 'application/x-mpegurl',
+  },
+};
+
 const CUE_TIMEOUT = { timeout: 30000 };
 
 export default function (spec: TestScope) {
   spec.describe('Text tracks', () => {
-    spec.it('reports active cues while playing a selected subtitle track', async () => {
-      const player = await preparePlayerWithSource(spec, SUBTITLE_SOURCE);
+    spec.it('reports active cues from a side-loaded WebVTT track', async () => {
+      await expectCueEvents(spec, SIDE_LOADED_SOURCE, ['nl'], 'nl', 13e3);
+    });
 
-      // Tracks appear on `loadedmetadata`, which can trail the `playing` event.
-      const subtitleTracks = await waitForSubtitleTracks(player, EXPECTED_LANGUAGES.length);
-
-      // Both expected subtitle languages are present.
-      const languages = subtitleTracks.map((track) => track.language);
-      EXPECTED_LANGUAGES.forEach((language) => expect(languages).toContain(language));
-
-      // Select the Dutch track; `showing` mode makes its cues active and fires
-      // cue events as playback crosses them.
-      const dutch = subtitleTracks.find((track) => track.language === 'nl')!;
-
-      // A cue must be added, then become active and inactive at least once as
-      // playback crosses it: expect an `addcue`, an `entercue` and an `exitcue`
-      // for this track.
-      const cueEventsPromise = waitForPlayerEvents(
-        player,
-        [
-          { type: PlayerEventType.TEXT_TRACK, subType: TextTrackEventType.ADD_CUE, trackUid: dutch.uid } as Partial<TextTrackEvent>,
-          { type: PlayerEventType.TEXT_TRACK, subType: TextTrackEventType.ENTER_CUE, trackUid: dutch.uid } as Partial<TextTrackEvent>,
-          { type: PlayerEventType.TEXT_TRACK, subType: TextTrackEventType.EXIT_CUE, trackUid: dutch.uid } as Partial<TextTrackEvent>,
-        ],
-        false,
-        CUE_TIMEOUT,
-      );
-      player.selectedTextTrack = dutch.uid;
-
-      // Seek just before the first cue and let autoplay carry playback across it.
-      await seekTo(player, SEEK_TIME);
-      await cueEventsPromise;
+    spec.it('reports active cues from a WebVTT track declared by an HLS manifest', async () => {
+      await expectCueEvents(spec, HLS_SOURCE, ['cn', 'de', 'en', 'fr', 'nl'], 'nl', 21e3);
     });
   });
+}
+
+async function expectCueEvents(
+  spec: TestScope,
+  source: SourceDescription,
+  expectedLanguages: string[],
+  selectedLanguage: string,
+  seekTime: number,
+): Promise<void> {
+  const player = await preparePlayerWithSource(spec, source);
+  const subtitleTracks = await waitForSubtitleTracks(player, expectedLanguages.length);
+  const languages = subtitleTracks.map((track) => track.language);
+  expectedLanguages.forEach((language) => expect(languages).toContain(language));
+
+  const selectedTrack = subtitleTracks.find((track) => track.language === selectedLanguage)!;
+  const cueEventsPromise = waitForPlayerEvents(
+    player,
+    [
+      { type: PlayerEventType.TEXT_TRACK, subType: TextTrackEventType.ADD_CUE, trackUid: selectedTrack.uid } as Partial<TextTrackEvent>,
+      { type: PlayerEventType.TEXT_TRACK, subType: TextTrackEventType.ENTER_CUE, trackUid: selectedTrack.uid } as Partial<TextTrackEvent>,
+      { type: PlayerEventType.TEXT_TRACK, subType: TextTrackEventType.EXIT_CUE, trackUid: selectedTrack.uid } as Partial<TextTrackEvent>,
+    ],
+    false,
+    CUE_TIMEOUT,
+  );
+  player.selectedTextTrack = selectedTrack.uid;
+
+  await seekTo(player, seekTime);
+  await cueEventsPromise;
 }
 
 // Poll `player.textTracks` until the expected number of subtitle tracks is
