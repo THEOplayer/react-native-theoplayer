@@ -1,14 +1,36 @@
 import { expect, TestScope } from 'react-native-cavynext';
 import { PlayerEventType, TextTrack, TextTrackEvent, TextTrackEventType, TextTrackKind, THEOplayer } from 'react-native-theoplayer';
-import hls from '../res/hls.json';
+import mp4 from '../res/mp4.json';
 import { preparePlayerWithSource, seekTo, waitForPlayerEvents } from '../utils/Actions';
 import { sleep } from '../utils/TimeUtils';
 
-// The elephants-dream single-audio HLS stream carries two TTML subtitle
-// tracks: Chinese (zh) and French (fr). Its first cue starts around 15s.
-const SUBTITLE_SOURCE = hls.find((source) => JSON.stringify(source.sources).includes('elephants-dream'))!;
+// Side-load the Elephants Dream WebVTT tracks on the matching MP4 source.
+// The first cue starts around 15s.
+const SUBTITLE_SOURCE = {
+  ...mp4[0],
+  sources: {
+    ...mp4[0].sources,
+    src: 'https://cdn.theoplayer.com/video/elephants-dream.mp4',
+  },
+  textTracks: [
+    {
+      src: 'https://cdn.theoplayer.com/video/elephant/elephants-dream-subtitles-en.vtt',
+      kind: TextTrackKind.subtitles,
+      srclang: 'en',
+      label: 'English',
+      format: 'webvtt',
+    },
+    {
+      src: 'https://cdn.theoplayer.com/video/elephant/elephants-dream-subtitles-nl.vtt',
+      kind: TextTrackKind.subtitles,
+      srclang: 'nl',
+      label: 'Dutch',
+      format: 'webvtt',
+    },
+  ],
+};
 
-const EXPECTED_LANGUAGES = ['zh', 'fr'];
+const EXPECTED_LANGUAGES = ['en', 'nl'];
 // Seek just before the first cue so playback crosses a full cue (enter + exit)
 // quickly instead of waiting from the start.
 const SEEK_TIME = 13e3;
@@ -27,9 +49,9 @@ export default function (spec: TestScope) {
       const languages = subtitleTracks.map((track) => track.language);
       EXPECTED_LANGUAGES.forEach((language) => expect(languages).toContain(language));
 
-      // Select the French track; `showing` mode makes its cues active and fires
+      // Select the Dutch track; `showing` mode makes its cues active and fires
       // cue events as playback crosses them.
-      const french = subtitleTracks.find((track) => track.language === 'fr')!;
+      const dutch = subtitleTracks.find((track) => track.language === 'nl')!;
 
       // A cue must be added, then become active and inactive at least once as
       // playback crosses it: expect an `addcue`, an `entercue` and an `exitcue`
@@ -37,14 +59,14 @@ export default function (spec: TestScope) {
       const cueEventsPromise = waitForPlayerEvents(
         player,
         [
-          { type: PlayerEventType.TEXT_TRACK, subType: TextTrackEventType.ADD_CUE, trackUid: french.uid } as Partial<TextTrackEvent>,
-          { type: PlayerEventType.TEXT_TRACK, subType: TextTrackEventType.ENTER_CUE, trackUid: french.uid } as Partial<TextTrackEvent>,
-          { type: PlayerEventType.TEXT_TRACK, subType: TextTrackEventType.EXIT_CUE, trackUid: french.uid } as Partial<TextTrackEvent>,
+          { type: PlayerEventType.TEXT_TRACK, subType: TextTrackEventType.ADD_CUE, trackUid: dutch.uid } as Partial<TextTrackEvent>,
+          { type: PlayerEventType.TEXT_TRACK, subType: TextTrackEventType.ENTER_CUE, trackUid: dutch.uid } as Partial<TextTrackEvent>,
+          { type: PlayerEventType.TEXT_TRACK, subType: TextTrackEventType.EXIT_CUE, trackUid: dutch.uid } as Partial<TextTrackEvent>,
         ],
         false,
         CUE_TIMEOUT,
       );
-      player.selectedTextTrack = french.uid;
+      player.selectedTextTrack = dutch.uid;
 
       // Seek just before the first cue and let autoplay carry playback across it.
       await seekTo(player, SEEK_TIME);
