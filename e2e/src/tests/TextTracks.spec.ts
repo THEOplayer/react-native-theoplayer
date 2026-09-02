@@ -13,8 +13,8 @@ import { sleep } from '../utils/TimeUtils';
 
 const SIDE_LOADED_SOURCE: SourceDescription = {
   sources: {
-    src: 'https://cdn.theoplayer.com/video/elephants-dream.mp4',
-    type: 'video/mp4',
+    src: 'https://cdn.theoplayer.com/video/sintel/nosubs.m3u8',
+    type: 'application/x-mpegurl',
   },
   textTracks: [
     {
