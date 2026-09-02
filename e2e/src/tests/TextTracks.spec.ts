@@ -88,5 +88,9 @@ async function waitForSubtitleTracks(player: THEOplayer, count: number, timeout 
     }
     await sleep(250);
   }
-  throw new Error(`Timed out waiting for ${count} subtitle tracks; got ${player.textTracks.length} text tracks`);
+  throw new Error(
+    `Timed out waiting for ${count} subtitle tracks; got ${JSON.stringify(
+      player.textTracks.map(({ uid, kind, language, label, type }) => ({ uid, kind, language, label, type })),
+    )}`,
+  );
 }
