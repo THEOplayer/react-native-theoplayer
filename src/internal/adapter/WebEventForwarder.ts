@@ -86,6 +86,18 @@ import { fromNativeCue, fromNativeMediaTrack, fromNativeTextTrack } from './web/
 export class WebEventForwarder {
   private readonly _player: ChromelessPlayer;
   private readonly _facade: THEOplayerWebAdapter;
+  private readonly _textTrackListeners = new Map<
+    number,
+    {
+      track: NativeTextTrack;
+      addcue: (event: NativeTextTrackAddCueEvent) => void;
+      removecue: (event: NativeTextTrackRemoveCueEvent) => void;
+      entercue: (event: NativeTextTrackEnterCueEvent) => void;
+      exitcue: (event: NativeTextTrackExitCueEvent) => void;
+    }
+  >();
+  private readonly _forwardedTextTrackCues = new Map<number, Set<number>>();
+  private readonly _mediaTrackListeners = new Map<number, { track: NativeMediaTrack; listener: () => void }>();
 
   constructor(player: ChromelessPlayer, facade: THEOplayerWebAdapter) {
     this._player = player;
@@ -193,6 +205,20 @@ export class WebEventForwarder {
     this._player.ads?.removeEventListener(FORWARDED_ADBREAK_EVENTS, this.onAdBreakEvent);
     this._player.theoads?.removeEventListener(FORWARDED_THEOADS_EVENTS, this.onTheoAdsEvent);
     this._player.theoLive?.removeEventListener(FORWARDED_THEOLIVE_EVENTS, this.onTheoLiveEvent);
+
+    for (const listeners of this._textTrackListeners.values()) {
+      listeners.track.removeEventListener('addcue', listeners.addcue);
+      listeners.track.removeEventListener('removecue', listeners.removecue);
+      listeners.track.removeEventListener('entercue', listeners.entercue);
+      listeners.track.removeEventListener('exitcue', listeners.exitcue);
+    }
+    this._textTrackListeners.clear();
+    this._forwardedTextTrackCues.clear();
+
+    for (const listeners of this._mediaTrackListeners.values()) {
+      listeners.track.removeEventListener('activequalitychanged', listeners.listener);
+    }
+    this._mediaTrackListeners.clear();
   }
 
   private readonly onSourceChange = () => {
@@ -326,19 +352,38 @@ export class WebEventForwarder {
     if (track.kind === TextTrackKind.metadata) {
       track.mode = TextTrackMode.hidden;
     }
-    track.addEventListener('addcue', this.onAddTextTrackCue(track));
-    track.addEventListener('removecue', this.onRemoveTextTrackCue(track));
-    track.addEventListener('entercue', this.onEnterTextTrackCue(track));
-    track.addEventListener('exitcue', this.onExitTextTrackCue(track));
+    const listeners = {
+      track,
+      addcue: this.onAddTextTrackCue(track),
+      removecue: this.onRemoveTextTrackCue(track),
+      entercue: this.onEnterTextTrackCue(track),
+      exitcue: this.onExitTextTrackCue(track),
+    };
+    this._textTrackListeners.set(track.uid, listeners);
+    const replayedCues = new Set<number>();
+    track.cues?.forEach((cue) => replayedCues.add(cue.uid));
+    this._forwardedTextTrackCues.set(track.uid, replayedCues);
+    track.addEventListener('addcue', listeners.addcue);
+    track.addEventListener('removecue', listeners.removecue);
+    track.addEventListener('entercue', listeners.entercue);
+    track.addEventListener('exitcue', listeners.exitcue);
     this._facade.dispatchEvent(new DefaultTextTrackListEvent(TrackListEventType.ADD_TRACK, fromNativeTextTrack(track)));
+    track.cues?.forEach((cue) => {
+      this._facade.dispatchEvent(new DefaultTextTrackEvent(TextTrackEventType.ADD_CUE, track.uid, fromNativeCue(cue)));
+    });
   };
 
   private readonly onRemoveTextTrack = (event: RemoveTrackEvent) => {
     const track = event.track as NativeTextTrack;
-    track.removeEventListener('addcue', this.onAddTextTrackCue(track));
-    track.removeEventListener('removecue', this.onRemoveTextTrackCue(track));
-    track.removeEventListener('entercue', this.onEnterTextTrackCue(track));
-    track.removeEventListener('exitcue', this.onExitTextTrackCue(track));
+    const listeners = this._textTrackListeners.get(track.uid);
+    if (listeners) {
+      track.removeEventListener('addcue', listeners.addcue);
+      track.removeEventListener('removecue', listeners.removecue);
+      track.removeEventListener('entercue', listeners.entercue);
+      track.removeEventListener('exitcue', listeners.exitcue);
+      this._textTrackListeners.delete(track.uid);
+    }
+    this._forwardedTextTrackCues.delete(track.uid);
     this._facade.dispatchEvent(new DefaultTextTrackListEvent(TrackListEventType.REMOVE_TRACK, fromNativeTextTrack(track)));
   };
 
@@ -356,7 +401,9 @@ export class WebEventForwarder {
 
   private readonly onAddMediaTrack = (event: AddTrackEvent, trackType: MediaTrackType) => {
     const track = event.track as NativeMediaTrack;
-    track.addEventListener('activequalitychanged', this.onActiveQualityChanged(trackType, track));
+    const listener = this.onActiveQualityChanged(trackType, track);
+    this._mediaTrackListeners.set(track.uid, { track, listener });
+    track.addEventListener('activequalitychanged', listener);
     this._facade.dispatchEvent(new DefaultMediaTrackListEvent(TrackListEventType.ADD_TRACK, trackType, track as MediaTrack));
   };
 
@@ -370,7 +417,11 @@ export class WebEventForwarder {
 
   private readonly onRemoveMediaTrack = (event: RemoveTrackEvent, trackType: MediaTrackType) => {
     const track = event.track as NativeMediaTrack;
-    track.removeEventListener('activequalitychanged', this.onActiveQualityChanged(trackType, track));
+    const listeners = this._mediaTrackListeners.get(track.uid);
+    if (listeners) {
+      track.removeEventListener('activequalitychanged', listeners.listener);
+      this._mediaTrackListeners.delete(track.uid);
+    }
     this._facade.dispatchEvent(new DefaultMediaTrackListEvent(TrackListEventType.REMOVE_TRACK, trackType, track as MediaTrack));
   };
 
@@ -447,6 +498,10 @@ export class WebEventForwarder {
   private readonly onAddTextTrackCue = (track: NativeTextTrack) => (event: NativeTextTrackAddCueEvent) => {
     const { cue } = event;
     if (cue) {
+      const replayedCues = this._forwardedTextTrackCues.get(track.uid);
+      if (replayedCues?.has(cue.uid)) {
+        return;
+      }
       this._facade.dispatchEvent(new DefaultTextTrackEvent(TextTrackEventType.ADD_CUE, track.uid, fromNativeCue(cue)));
     }
   };
@@ -454,6 +509,10 @@ export class WebEventForwarder {
   private readonly onRemoveTextTrackCue = (track: NativeTextTrack) => (event: NativeTextTrackRemoveCueEvent) => {
     const { cue } = event;
     if (cue) {
+      const replayedCues = this._forwardedTextTrackCues.get(track.uid);
+      if (replayedCues) {
+        replayedCues.delete(cue.uid);
+      }
       this._facade.dispatchEvent(new DefaultTextTrackEvent(TextTrackEventType.REMOVE_CUE, track.uid, fromNativeCue(cue)));
     }
   };
