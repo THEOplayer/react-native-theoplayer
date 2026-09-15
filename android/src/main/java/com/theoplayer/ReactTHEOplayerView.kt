@@ -2,8 +2,10 @@ package com.theoplayer
 
 import android.annotation.SuppressLint
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.annotation.MainThread
 import com.facebook.react.bridge.*
 import com.facebook.react.uimanager.ThemedReactContext
 import com.theoplayer.android.api.ads.wrapper.AdsApiWrapper
@@ -38,6 +40,14 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
 
   val player: Player?
     get() = playerContext?.player
+
+  @MainThread
+  fun registerIntegration(integration: Integration): PlayerFacade.IntegrationRegistration {
+    val context = checkNotNull(playerContext) { "The player view has not been initialized." }
+    return checkNotNull(context.playerFacade) {
+      "Set config.usePlayerFacade to true at player creation before registering an integration."
+    }.registerIntegration(integration)
+  }
 
   init {
     reactContext.addLifecycleEventListener(this)

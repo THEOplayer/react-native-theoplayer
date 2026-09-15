@@ -47,6 +47,7 @@ private const val PROP_THEOLIVE_DISCOVERY_URL = "discoveryUrl"
 private const val PROP_HLS_DATERANGE = "hlsDateRange"
 private const val PROP_MULTIMEDIA_TUNNELING_ENABLED = "tunnelingEnabled"
 private const val PROP_DEBUG_LOGS_ENABLED = "debugLogsEnabled"
+private const val PROP_USE_PLAYER_FACADE = "usePlayerFacade"
 private const val PROP_SYSTEM_CAPTION_STYLE = "useSystemCaptionStyle"
 private const val PROP_CMCD = "cmcd"
 private const val PROP_CMCD_EXTERNAL_SESSION_ID = "externalSessionId"
@@ -56,6 +57,10 @@ private const val PROP_CMCD_ENDPOINT_URL = "url"
 
 
 class PlayerConfigAdapter(private val configProps: ReadableMap?) {
+
+  fun usePlayerFacade(): Boolean = configProps?.let {
+    it.hasKey(PROP_USE_PLAYER_FACADE) && !it.isNull(PROP_USE_PLAYER_FACADE) && it.getBoolean(PROP_USE_PLAYER_FACADE)
+  } ?: false
 
   /**
    * Whether debug logs from the native SDK should be enabled.

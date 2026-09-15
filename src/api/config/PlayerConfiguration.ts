@@ -153,6 +153,8 @@ export interface PlayerConfiguration {
    * <br/> - Source-level configuration can override player-level values. See {@link CmcdSourceConfiguration}.
    */
   cmcd?: CmcdPlayerConfiguration;
+
+  readonly usePlayerFacade?: boolean;
 }
 
 /**

@@ -102,9 +102,11 @@ class ReactTHEOplayerContext private constructor(
   }
 
   lateinit var playerView: THEOplayerView
+  lateinit var player: Player
+    private set
 
-  val player: Player
-    get() = playerView.player
+  val playerFacade: PlayerFacade?
+    get() = player as? PlayerFacade
 
   private val uiModeManager by lazy {
     reactContext.getSystemService(Context.UI_MODE_SERVICE) as? UiModeManager
@@ -248,6 +250,7 @@ class ReactTHEOplayerContext private constructor(
         mainHandler.post { measureAndLayout() }
       }
     }
+    player = PlayerFacade.create(playerView.player, configAdapter.usePlayerFacade())
 
     // By default, choose SURFACE_CONTROL/SURFACE_VIEW rendering target, based on API level.
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -508,6 +511,7 @@ class ReactTHEOplayerContext private constructor(
       mediaSessionConnector?.player = null
       mediaSessionConnector?.destroy()
     }
+    playerFacade?.close()
     playerView.onDestroy()
   }
 }
