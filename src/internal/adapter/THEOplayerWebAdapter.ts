@@ -41,6 +41,7 @@ import { THEOAdsWebAdapter } from './theoads/THEOAdsWebAdapter';
 import { CMCDConnector, Configuration, createCMCDConnector, TransmissionMode } from '@theoplayer/cmcd-connector-web';
 import { TheoLiveWebAdapter } from './theolive/TheoLiveWebAdapter';
 import { MetricsWebAdapter } from './metrics/MetricsWebAdapter';
+import { PlayerFacade } from './web/PlayerFacade';
 
 const defaultBackgroundAudioConfiguration: BackgroundAudioConfiguration = {
   enabled: false,
@@ -58,6 +59,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   private readonly _presentationModeManager: WebPresentationModeManager;
   private readonly _theoliveAdapter: TheoLiveWebAdapter;
   private readonly _metricsAdapter: MetricsWebAdapter;
+  private readonly _playerFacade: PlayerFacade | undefined;
   private _player: NativeChromelessPlayer | undefined;
   private _eventForwarder: WebEventForwarder | undefined;
   private readonly _mediaSession: WebMediaSession;
@@ -71,7 +73,8 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
 
   constructor(player: NativeChromelessPlayer, config?: PlayerConfiguration) {
     super();
-    this._player = player;
+    this._playerFacade = config?.usePlayerFacade === true ? new PlayerFacade(player) : undefined;
+    this._player = this._playerFacade?.player ?? player;
     this._adsAdapter = new THEOplayerWebAdsAdapter(this._player);
     this._castAdapter = new THEOplayerWebCastAdapter(this._player);
     this._theoAdsAdapter = new THEOAdsWebAdapter(this._player);
@@ -415,6 +418,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     this._cmcdConnector?.destroy();
     this._cmcdConnector = undefined;
     this._player?.removeEventListener('dimensionchange', this.onPlayerDimensionChange);
+    this._playerFacade?.close();
     this._player?.destroy();
     this._player = undefined;
   }

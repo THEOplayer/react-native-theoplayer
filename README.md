@@ -33,6 +33,50 @@ by the `@theoplayer/react-native-ui` package.
 It also gives a description of the properties of the `THEOplayerView` component, and
 a list of features and known limitations.
 
+### Web player facade
+
+On this branch, `usePlayerFacade: true` enables a web facade at `player.nativeHandle`.
+Integrations can register through `registerIntegration`, dispatch THEOplayer player
+and ad events (including `adclicked`), and supply a clock through `getCurrentTime()` in
+seconds. The wrapper forwards `adclicked` to React Native's ad-event stream.
+Close the registration before replacing an integration. Playback engines and ad
+schedulers should use `facade.contentPlayer`, not the facade's overridden ad clock.
+
+Integrations can provide an `ads` object implementing the Ads API and its event
+subscriptions. The stable public `player.ads` delegates to that object, including
+scheduling queries and controls. Existing listeners migrate when an integration
+registers or closes; native Ads behavior returns after removal. The earlier
+`getAdState()` and `shouldConsumeAdEvent(event)` hooks remain available for
+integrations without an Ads object. The facade never reconstructs ad lifecycle.
+
+`getMuted()` / `setMuted(value)` and `getVolume()` / `setVolume(value)` route audio
+through an integration. Setters return `true` when handled; otherwise the facade
+falls back to content. Nullish getter results also fall back to content.
+`registration.dispatchEvent(event)` accepts typed THEOplayer player and ad events.
+Ad events route to `player.ads` listeners; player events such as `playing`, `waiting`,
+and `volumechange` route to `player` listeners. Dispatch does not emit on the content
+player or pass through backing-event interceptors. Closed registrations cannot emit.
+`registration.dispatchPlayerEvent(event)` remains a compatible player-event entry point.
+Playback ownership and audio synchronization remain integration responsibilities.
+
+`registration.interceptPlayerEvent(type, callback)` lets an integration inspect a
+backing player event once before facade listeners receive it. Return `true` to
+consume the event, or `false` to forward it. Raw player listeners are unaffected.
+The returned disposer removes the interceptor. Existing interceptors remain until
+disposed or the facade is destroyed, allowing an integration to drain already-queued
+events after unregistering; a closed registration cannot install new interceptors.
+`registration.interceptPlayerEvents(callback)` applies the same policy to every
+subscribed backing-player event, including subscriptions added later. Type-specific
+interceptors run first; integration-dispatched events bypass both kinds. Use a
+type-specific interceptor when an event must be observed even without consumers.
+An optional `isSeeking()` integration hook overrides the public seeking state;
+nullish results fall back to the backing player.
+Pause/seek ownership, pending transitions, lifecycle exceptions and ad lifecycle
+decisions belong to the integration, not the facade.
+
+Focused facade regression tests (Node 22.18+):
+`node --test src/__tests__/PlayerFacade.test.ts`.
+
 ## Prerequisites
 
 For each platform, a dependency to the corresponding THEOplayer SDK is included through a dependency manager:

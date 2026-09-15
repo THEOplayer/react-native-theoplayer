@@ -12,7 +12,7 @@ import com.facebook.react.uimanager.common.UIManagerType
 import com.theoplayer.ads.AdEventAdapter
 import com.theoplayer.ads.AdEventAdapter.AdEventEmitter
 import com.theoplayer.android.api.THEOplayerGlobal
-import com.theoplayer.android.api.ads.theoads.theoAds
+import com.theoplayer.theoAds
 import com.theoplayer.android.api.error.THEOplayerException
 import com.theoplayer.android.api.event.EventListener
 import com.theoplayer.android.api.event.EventType
