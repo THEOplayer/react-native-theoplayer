@@ -2,6 +2,7 @@ package com.theoplayer
 
 import android.annotation.SuppressLint
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.facebook.react.bridge.*
@@ -68,6 +69,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
       playerView.layoutParams = layoutParams
       (playerView.parent as? ViewGroup)?.removeView(playerView)
       addView(playerView, 0, layoutParams)
+      measureAndLayoutPlayerView()
       presentationManager = PresentationManager(
         this,
         reactContext,
@@ -82,6 +84,24 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
     if (!isInitialized && BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
       config?.let { initialize(it) }
     }
+    measureAndLayoutPlayerView()
+  }
+
+  override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+    super.onSizeChanged(w, h, oldw, oldh)
+    measureAndLayoutPlayerView()
+  }
+
+  private fun measureAndLayoutPlayerView() {
+    val playerView = playerContext?.playerView ?: return
+    if (width == 0 || height == 0) return
+    if (playerView.width == width && playerView.height == height) return
+
+    playerView.measure(
+      View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
+      View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY)
+    )
+    playerView.layout(0, 0, width, height)
   }
 
   override fun setId(id: Int) {
