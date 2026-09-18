@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
+- Fixed media track kind typings to accept audio descriptions and other stream- or platform-specific values without type overrides.
 - Fixed an issue on Android where destroying the player during a pending `MediaPlaybackService` bind could cause a crash.
 - Fixed an issue on Android where the player could remain black when its view was attached after React Native had already assigned the layout.
 - Fixed an issue where `player.paused` remained `true` between the `play` and `playing` events.
