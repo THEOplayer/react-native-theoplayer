@@ -88,7 +88,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
 
     // Always create a media session connector so it can be toggled at runtime via mediaControl.setEnabled().
     // The initial enabled state is derived from config.mediaControl.mediaSessionEnabled.
-    this._mediaSession = new WebMediaSession(this, player, config?.mediaControl);
+    this._mediaSession = new WebMediaSession(this, this._player, config?.mediaControl);
   }
 
   get mediaControl(): MediaControlAPI {
@@ -418,9 +418,12 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     this._cmcdConnector?.destroy();
     this._cmcdConnector = undefined;
     this._player?.removeEventListener('dimensionchange', this.onPlayerDimensionChange);
-    this._playerFacade?.close();
-    this._player?.destroy();
-    this._player = undefined;
+    try {
+      this._player?.destroy();
+    } finally {
+      this._playerFacade?.close();
+      this._player = undefined;
+    }
   }
 
   private readonly onVisibilityChange = () => {

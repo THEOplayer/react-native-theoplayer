@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed Web facade ad-event interception so a single decision applies to all listeners.
+- Fixed Web media-session controls bypassing facade integration hooks and player teardown suppressing native-handle destruction events.
 - Fixed an issue on Android where destroying the player during a pending `MediaPlaybackService` bind could cause a crash.
 - Fixed an issue where `player.paused` remained `true` between the `play` and `playing` events.
 
