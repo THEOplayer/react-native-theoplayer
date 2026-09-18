@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Added web facade hooks for integration-owned player-event interception and ad-state queries.
+- Added opt-in Web and Android player facade hooks for integration-owned playback, audio, seeking, advertising state, event dispatch, and native-event interception.
 - Added the `Metrics` API, accessible through `player.metrics`, with `currentBandwidthEstimate` returning the player's estimated available bandwidth in bits per second. On iOS/tvOS this value is only reported for THEOlive/HESP streams.
 - Added `THEOplayer.manageContentMatching` to let the player match the display mode (frame rate and dynamic range) of the TV to the content before playback starts on tvOS.
 - Added a `testID` property on `THEOplayerView` to allow locating the player view from UI automation tools.

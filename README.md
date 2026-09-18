@@ -33,9 +33,11 @@ by the `@theoplayer/react-native-ui` package.
 It also gives a description of the properties of the `THEOplayerView` component, and
 a list of features and known limitations.
 
-### Web player facade
+### Player facade (Web and Android)
 
-On this branch, `usePlayerFacade: true` enables a web facade at `player.nativeHandle`.
+Set `usePlayerFacade: true` in the player configuration at creation to enable the facade.
+The default is `false`; iOS and tvOS do not support this option.
+On Web, the facade is available at `player.nativeHandle`.
 Integrations can register through `registerIntegration`, dispatch THEOplayer player
 and ad events (including `adclicked`), and supply a clock through `getCurrentTime()` in
 seconds. The wrapper forwards `adclicked` to React Native's ad-event stream.
@@ -74,8 +76,22 @@ nullish results fall back to the backing player.
 Pause/seek ownership, pending transitions, lifecycle exceptions and ad lifecycle
 decisions belong to the integration, not the facade.
 
+On Android, implement `com.theoplayer.integration.Integration` and call
+`ReactTHEOplayerView.registerIntegration(integration)` after the view is initialized.
+The returned `IntegrationRegistration` supports the same dispatch and interception
+semantics using native Android SDK events. Interceptor disposers implement `Closeable`;
+call `close()` to remove them. Access the raw engine through
+`(view.player as PlayerFacade).contentPlayer`. Time values are in seconds on both platforms.
+Android's `getAdState()` returns a `PlayerFacadeAdState`; its nullable result delegates
+to native Ads. The facade permits registration during native ads and does not infer
+state or suppress native ad events merely because an integration is registered.
+Native SDK extensions (`theoAds`, `ima`, `dai`) resolve against the raw player or Ads
+object through the facade-aware extensions in `com.theoplayer.integration`.
+
 Focused facade regression tests (Node 22.18+):
 `node --test src/__tests__/PlayerFacade.test.ts`.
+Android tests, from `example/android`:
+`./gradlew :react-native-theoplayer:testDebugUnitTest --tests 'com.theoplayer.integration.PlayerFacade*Test' --console=plain`.
 
 ## Prerequisites
 

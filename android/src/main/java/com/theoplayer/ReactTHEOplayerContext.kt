@@ -37,6 +37,7 @@ import com.theoplayer.android.connector.mediasession.MediaSessionConnector
 import com.theoplayer.audio.AudioBecomingNoisyManager
 import com.theoplayer.audio.AudioFocusManager
 import com.theoplayer.audio.BackgroundAudioConfig
+import com.theoplayer.integration.PlayerFacade
 import com.theoplayer.media.MediaControlProxy
 import com.theoplayer.media.MediaPlaybackService
 import com.theoplayer.media.MediaSessionConfig

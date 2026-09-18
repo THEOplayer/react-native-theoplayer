@@ -5,4 +5,4 @@
 - Keep facade implementations policy-free. Integrations own playback synchronization and advertising lifecycle; native player access must bypass facade overrides.
 - Use `bun run` for package scripts and Node as the runtime. Run `bun run typescript`, `bun run lint`, and focused Node tests with `node --test src/__tests__/PlayerFacade.test.ts` (Node 22.18+).
 - For library-only type checking, run `bun run typescript --project tsconfig.build.json`. The root typecheck also includes example and E2E sources.
-- Android facade tests run from `example/android`: `./gradlew :react-native-theoplayer:testDebugUnitTest --tests com.theoplayer.PlayerFacadeTest --console=plain`.
+- Android facade tests run from `example/android`: `./gradlew :react-native-theoplayer:testDebugUnitTest --tests 'com.theoplayer.integration.PlayerFacade*Test' --console=plain`.

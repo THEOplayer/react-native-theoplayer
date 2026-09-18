@@ -58,6 +58,7 @@ private const val PROP_CMCD_ENDPOINT_URL = "url"
 
 class PlayerConfigAdapter(private val configProps: ReadableMap?) {
 
+  /** Returns whether the player facade is enabled at creation. Missing or null values default to false. */
   fun usePlayerFacade(): Boolean = configProps?.let {
     it.hasKey(PROP_USE_PLAYER_FACADE) && !it.isNull(PROP_USE_PLAYER_FACADE) && it.getBoolean(PROP_USE_PLAYER_FACADE)
   } ?: false

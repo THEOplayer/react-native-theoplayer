@@ -4,7 +4,7 @@ import com.facebook.react.bridge.*
 import com.facebook.react.module.annotations.ReactModule
 import com.facebook.react.module.model.ReactModuleInfo
 import com.theoplayer.*
-import com.theoplayer.theoAds
+import com.theoplayer.integration.theoAds
 import com.theoplayer.theoads.THEOadsAdapter.fromInterstitialList
 import com.theoplayer.util.ViewResolver
 

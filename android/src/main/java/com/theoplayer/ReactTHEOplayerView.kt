@@ -13,6 +13,8 @@ import com.theoplayer.android.api.cast.Cast
 import com.theoplayer.android.api.error.THEOplayerException
 import com.theoplayer.android.api.player.Player
 import com.theoplayer.broadcast.EventBroadcastAdapter
+import com.theoplayer.integration.Integration
+import com.theoplayer.integration.IntegrationRegistration
 import com.theoplayer.presentation.PresentationManager
 import com.theoplayer.source.SourceAdapter
 
@@ -41,8 +43,19 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
   val player: Player?
     get() = playerContext?.player
 
+  /**
+   * Registers playback and advertising overrides on the player facade.
+   *
+   * Enable `config.usePlayerFacade` before creating the player and wait until this view is initialized.
+   * Only one integration can be registered at a time; close its registration before replacing it.
+   *
+   * @param integration The hooks and optional Ads API to use until registration closes.
+   * @return The registration used to dispatch events, intercept native events, and unregister.
+   * @throws IllegalStateException if the view is uninitialized, the facade is disabled or closed,
+   * or another integration is already registered.
+   */
   @MainThread
-  fun registerIntegration(integration: Integration): PlayerFacade.IntegrationRegistration {
+  fun registerIntegration(integration: Integration): IntegrationRegistration {
     val context = checkNotNull(playerContext) { "The player view has not been initialized." }
     return checkNotNull(context.playerFacade) {
       "Set config.usePlayerFacade to true at player creation before registering an integration."
