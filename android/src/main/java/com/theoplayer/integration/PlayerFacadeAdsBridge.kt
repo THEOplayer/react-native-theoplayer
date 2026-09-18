@@ -68,7 +68,8 @@ internal class PlayerFacadeAdsBridge(private val nativeApi: AdsApiWrapper) {
 
   fun setSource(source: SourceDescription?) = nativeApi.setSource(source)
 
-  fun schedule(ad: AdDescription) {
+  fun schedule(ad: AdDescription?) {
+    if (ad == null) return
     val ads = facade?.integrationAds
     if (ads != null) ads.schedule(ad) else nativeApi.schedule(ad)
   }

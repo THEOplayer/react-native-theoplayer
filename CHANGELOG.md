@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
+- Fixed Android facade builds when an ad description cannot be parsed for scheduling.
 - Fixed Web facade ad-event interception so a single decision applies to all listeners.
 - Fixed Web media-session controls bypassing facade integration hooks and player teardown suppressing native-handle destruction events.
 - Fixed Android facade integration ads being cast as native IMA ads, missing integration click/tap events, and native-handle destruction events being lost during teardown. Custom advertising must not overlap ongoing native IMA/DAI playback.

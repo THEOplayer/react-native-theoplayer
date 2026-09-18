@@ -163,6 +163,20 @@ class PlayerFacadeAdsBridgeTest {
     facade.close()
   }
 
+  @Test fun nullAdDescriptionsNeverReachNativeOrIntegrationScheduling() {
+    initialize()
+    bridge.schedule(null)
+    assertTrue(host.commands.isEmpty())
+    val custom = PlayerFacadeTestHost()
+    val registration = facade.registerIntegration(object : Integration { override val ads = custom.ads })
+    bridge.schedule(null)
+    assertTrue(custom.commands.isEmpty())
+    assertTrue(received.isEmpty())
+    registration.close()
+    bridge.destroy()
+    facade.close()
+  }
+
   @Test fun nestedSyntheticDispatchDoesNotChangeNativeEventOrigin() {
     initialize()
     val registration = facade.registerIntegration(object : Integration {})
