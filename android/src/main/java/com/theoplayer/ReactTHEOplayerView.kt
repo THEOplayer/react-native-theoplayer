@@ -15,6 +15,7 @@ import com.theoplayer.android.api.player.Player
 import com.theoplayer.broadcast.EventBroadcastAdapter
 import com.theoplayer.integration.Integration
 import com.theoplayer.integration.IntegrationRegistration
+import com.theoplayer.integration.PlayerFacadeAdsBridge
 import com.theoplayer.presentation.PresentationManager
 import com.theoplayer.source.SourceAdapter
 
@@ -35,7 +36,9 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
     private set
   private var config: PlayerConfigAdapter? = null
 
+  /** Native source-specific Ads adapter and event sink. Use [player]'s Ads API for integration-owned state. */
   val adsApi: AdsApiWrapper
+  internal val adBridge: PlayerFacadeAdsBridge
 
   val castApi: Cast?
     get() = playerContext?.playerView?.cast
@@ -65,6 +68,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
   init {
     reactContext.addLifecycleEventListener(this)
     adsApi = AdsApiWrapper()
+    adBridge = PlayerFacadeAdsBridge(adsApi)
   }
 
   fun initialize(config: PlayerConfigAdapter) {
@@ -86,7 +90,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
       config
     )
     playerContext?.apply {
-      adsApi.initialize(player, imaIntegration, daiIntegration)
+      adBridge.initialize(player, imaIntegration, daiIntegration)
       val layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
       playerView.layoutParams = layoutParams
       (playerView.parent as? ViewGroup)?.removeView(playerView)
@@ -151,7 +155,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
       Log.d(TAG, "releasePlayer")
     }
     reactContext.removeLifecycleEventListener(this)
-    adsApi.destroy()
+    adBridge.destroy()
 
     if (isInitialized) {
       eventEmitter.removeListeners(player)
@@ -164,7 +168,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
   fun setSource(source: ReadableMap?) {
     try {
       val sourceDescription = SourceAdapter().parseSourceFromJS(source)
-      adsApi.setSource(sourceDescription)
+      adBridge.setSource(sourceDescription)
       player?.source = sourceDescription
     } catch (exception: THEOplayerException) {
       Log.e(TAG, exception.message ?: "")

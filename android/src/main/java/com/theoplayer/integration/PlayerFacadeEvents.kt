@@ -11,18 +11,23 @@ internal class PlayerFacadeEvents<E : Event<*>>(
   private val source: () -> EventDispatcher<E>,
   private val consume: (E) -> Boolean = { false },
   private val after: (E) -> Unit = {},
+  private val isIntegrationSource: () -> Boolean = { false },
 ) : EventDispatcher<E>, Closeable {
   private val subscriptions = linkedMapOf<EventType<*>, PlayerFacadeEventSubscription<E>>()
   private val interceptors = linkedSetOf<(E) -> Boolean>()
   private val retainedTypes = mutableSetOf<EventType<*>>()
   private var closed = false
 
-  override fun <T : E> addEventListener(type: EventType<T>, listener: EventListener<in T>) {
+  override fun <T : E> addEventListener(type: EventType<T>, listener: EventListener<in T>) = addEventListener(type, listener, null)
+
+  fun <T : E> addEventListener(type: EventType<T>, listener: EventListener<in T>, integrationEvents: Boolean?) {
     check(!closed) { "The player facade has been closed." }
     val subscription = subscription(type)
     if (subscription.listeners.containsKey(listener)) return
     @Suppress("UNCHECKED_CAST")
-    subscription.listeners[listener] = { listener.handleEvent(it as T) }
+    subscription.listeners[listener] = { event, integrationEvent ->
+      if (integrationEvents == null || integrationEvents == integrationEvent) listener.handleEvent(event as T)
+    }
   }
 
   override fun <T : E> removeEventListener(type: EventType<T>, listener: EventListener<in T>) {
@@ -52,10 +57,10 @@ internal class PlayerFacadeEvents<E : Event<*>>(
     return Closeable { interceptors.remove(interceptor) }
   }
 
-  fun dispatch(event: E, isCurrent: () -> Boolean) {
+  fun dispatch(event: E, integrationEvent: Boolean = false, isCurrent: () -> Boolean) {
     val subscription = subscriptions[event.type] ?: return
     for ((listener, emit) in subscription.listeners.toMap()) {
-      if (!closed && isCurrent() && subscription.listeners.containsKey(listener)) emit(event)
+      if (!closed && isCurrent() && subscription.listeners.containsKey(listener)) emit(event, integrationEvent)
     }
   }
 
@@ -82,6 +87,7 @@ internal class PlayerFacadeEvents<E : Event<*>>(
   @Suppress("UNCHECKED_CAST")
   private fun bind(type: EventType<*>, subscription: PlayerFacadeEventSubscription<E>): () -> Unit {
     val backing = source()
+    val integrationEvent = isIntegrationSource()
     val eventType = type as EventType<E>
     var attached = true
     val isCurrent = { attached && subscriptions[type] === subscription && source() === backing }
@@ -94,7 +100,7 @@ internal class PlayerFacadeEvents<E : Event<*>>(
         for (interceptor in interceptors.toList()) {
           if (interceptor in interceptors && interceptor(event)) return@EventListener
         }
-        if (!consume(event)) dispatch(event, isCurrent)
+        if (!consume(event)) dispatch(event, integrationEvent, isCurrent)
       } finally {
         after(event)
       }

@@ -10,6 +10,10 @@ import com.theoplayer.android.api.event.ads.AdEvent
  * Enable `usePlayerFacade` at player creation and register through [com.theoplayer.ReactTHEOplayerView.registerIntegration].
  * Unimplemented hooks delegate to the content player. The integration owns playback synchronization,
  * advertising lifecycle, and events describing its public state. All hooks run on the main thread.
+ *
+ * Custom advertising must not overlap ongoing native IMA/DAI playback. Replacing or filtering native
+ * advertising events can suspend the React Native bridge's native DAI bookkeeping; fresh native state
+ * after hidden native playback is not guaranteed. Finish or reset native advertising before taking over.
  */
 @MainThread
 interface Integration {

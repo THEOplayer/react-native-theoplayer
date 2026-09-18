@@ -39,8 +39,9 @@ class PlayerFacade internal constructor(val contentPlayer: Player) : Player by c
     source = { contentPlayer },
     after = { event -> if (event.type == PlayerEventTypes.DESTROY) close() },
   )
-  private val adEvents = PlayerFacadeEvents(
+  internal val adEvents = PlayerFacadeEvents(
     source = { integration?.ads ?: nativeAds },
+    isIntegrationSource = { integration?.ads?.let { it !== nativeAds } == true },
     consume = { event ->
       val current = integration
       (current?.ads == null || current.ads === nativeAds) && current?.shouldConsumeAdEvent(event) == true
@@ -127,6 +128,21 @@ class PlayerFacade internal constructor(val contentPlayer: Player) : Player by c
     return current
   }
 
+  internal val integrationAds: Ads? get() = integration?.ads
+
+  internal fun adStateOverride(): PlayerFacadeAdState? {
+    val current = integration
+    return current?.ads?.let { PlayerFacadeAdState(it.isPlaying, it.currentAds, it.currentAdBreak) } ?: current?.getAdState()
+  }
+
+  internal fun destroyContent(destroy: () -> Unit) {
+    try {
+      destroy()
+    } finally {
+      close()
+    }
+  }
+
   internal fun isCurrent(current: IntegrationRegistration): Boolean = !closed && registration === current
 
   internal fun dispatchPlayerEvent(current: IntegrationRegistration, event: PlayerEvent<*>) {
@@ -134,7 +150,7 @@ class PlayerFacade internal constructor(val contentPlayer: Player) : Player by c
   }
 
   internal fun dispatchAdEvent(current: IntegrationRegistration, event: AdEvent<*>) {
-    if (isCurrent(current)) adEvents.dispatch(event) { isCurrent(current) }
+    if (isCurrent(current)) adEvents.dispatch(event, true) { isCurrent(current) }
   }
 
   internal fun unregister(current: IntegrationRegistration) {

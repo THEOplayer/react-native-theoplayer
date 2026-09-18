@@ -45,7 +45,7 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
   fun schedule(tag: Int, ad: ReadableMap) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
       try {
-        view?.adsApi?.schedule(sourceHelper.parseAdDescriptionFromJS(ad))
+        view?.adBridge?.schedule(sourceHelper.parseAdDescriptionFromJS(ad))
       } catch (exception: THEOplayerException) {
         Log.e(NAME, exception.message ?: ERR_SCHEDULE_AD)
       }
@@ -56,7 +56,7 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
   @ReactMethod
   fun currentAdBreak(tag: Int, promise: Promise) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      promise.resolve(if (view == null) Arguments.createMap() else AdAdapter.fromAdBreak(view.adsApi.currentAdBreak))
+      promise.resolve(if (view == null) Arguments.createMap() else AdAdapter.fromAdBreak(view.adBridge.currentAdBreak))
     }
   }
 
@@ -64,7 +64,7 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
   @ReactMethod
   fun currentAds(tag: Int, promise: Promise) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      promise.resolve(if (view == null) Arguments.createArray() else AdAdapter.fromAds(view.adsApi.currentAds))
+      promise.resolve(if (view == null) Arguments.createArray() else AdAdapter.fromAds(view.adBridge.currentAds))
     }
   }
 
@@ -72,7 +72,7 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
   @ReactMethod
   fun scheduledAdBreaks(tag: Int, promise: Promise) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      promise.resolve(if (view == null) Arguments.createArray() else AdAdapter.fromAdBreaks(view.adsApi.scheduledAdBreaks))
+      promise.resolve(if (view == null) Arguments.createArray() else AdAdapter.fromAdBreaks(view.adBridge.scheduledAdBreaks))
     }
   }
 
@@ -80,7 +80,7 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
   @ReactMethod
   fun playing(tag: Int, promise: Promise) {
     viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? ->
-      promise.resolve(view?.adsApi?.isPlaying ?: false)
+      promise.resolve(view?.adBridge?.isPlaying ?: false)
     }
   }
 
@@ -88,7 +88,7 @@ class AdsModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(c
   // NOTE: This will have no effect when the current linear ad is not (yet) skippable.
   @ReactMethod
   fun skip(tag: Int) {
-    viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? -> view?.adsApi?.skip() }
+    viewResolver.resolveViewByTag(tag) { view: ReactTHEOplayerView? -> view?.adBridge?.skip() }
   }
 
   @ReactMethod

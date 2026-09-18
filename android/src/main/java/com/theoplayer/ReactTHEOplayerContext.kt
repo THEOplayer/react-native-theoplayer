@@ -512,7 +512,7 @@ class ReactTHEOplayerContext private constructor(
       mediaSessionConnector?.player = null
       mediaSessionConnector?.destroy()
     }
-    playerFacade?.close()
-    playerView.onDestroy()
+    val facade = playerFacade
+    if (facade != null) facade.destroyContent { playerView.onDestroy() } else playerView.onDestroy()
   }
 }

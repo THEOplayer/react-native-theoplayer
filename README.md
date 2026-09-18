@@ -88,6 +88,13 @@ state or suppress native ad events merely because an integration is registered.
 Native SDK extensions (`theoAds`, `ima`, `dai`) resolve against the raw player or Ads
 object through the facade-aware extensions in `com.theoplayer.integration`.
 
+Custom advertising must not overlap ongoing native IMA/DAI playback on Android.
+Finish or reset native advertising before taking over. Replacing/filtering native
+ad events can suspend the RN bridge's native DAI bookkeeping, so fresh native state
+after hidden native playback is not guaranteed. `ReactTHEOplayerView.adsApi` remains
+the native source-specific adapter/event sink; use `view.player.ads` for facade state.
+React Native Ads queries and controls use a facade-aware bridge with native fallback.
+
 Focused facade regression tests (Node 22.18+):
 `node --test src/__tests__/PlayerFacade.test.ts`.
 Android tests, from `example/android`:
