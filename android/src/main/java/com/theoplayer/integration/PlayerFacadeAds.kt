@@ -18,6 +18,8 @@ import com.theoplayer.android.api.source.addescription.AdDescription
 /**
  * Stable advertising API whose state, controls, and event source follow the current [Integration].
  * Advertising lifecycle is owned by the integration, never inferred from dispatched events.
+ *
+ * Experimental API: subject to change or removal without notice.
  */
 @MainThread
 class PlayerFacadeAds internal constructor(

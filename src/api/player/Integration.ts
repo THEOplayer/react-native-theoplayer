@@ -7,6 +7,7 @@
  * <br/> - Omitted hooks and nullish getter results delegate to the content player.
  * <br/> - The integration owns playback synchronization and must dispatch events when its public state changes.
  *
+ * @experimental This API is subject to change or removal without notice.
  * @category Player
  * @platform web,android
  * @public

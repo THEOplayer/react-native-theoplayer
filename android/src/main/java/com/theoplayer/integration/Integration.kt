@@ -7,6 +7,8 @@ import com.theoplayer.android.api.event.ads.AdEvent
 /**
  * Optional playback and advertising overrides for [PlayerFacade].
  *
+ * Experimental API: subject to change or removal without notice.
+ *
  * Enable `usePlayerFacade` at player creation and register through [com.theoplayer.ReactTHEOplayerView.registerIntegration].
  * Unimplemented hooks delegate to the content player. The integration owns playback synchronization,
  * advertising lifecycle, and events describing its public state. All hooks run on the main thread.

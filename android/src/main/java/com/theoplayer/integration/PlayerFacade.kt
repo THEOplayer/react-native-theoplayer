@@ -19,6 +19,8 @@ import java.io.Closeable
 /**
  * Stable player surface with integration-owned playback, advertising state, and event interception.
  *
+ * Experimental API: subject to change or removal without notice.
+ *
  * Enable `usePlayerFacade` at player creation to expose this surface through [com.theoplayer.ReactTHEOplayerView.player].
  * Unhandled operations delegate to [contentPlayer]; the facade never owns playback or advertising lifecycle.
  *

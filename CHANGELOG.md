@@ -9,17 +9,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Added opt-in Web and Android player facade hooks for integration-owned playback, audio, seeking, advertising state, event dispatch, and native-event interception.
 - Added the `Metrics` API, accessible through `player.metrics`, with `currentBandwidthEstimate` returning the player's estimated available bandwidth in bits per second. On iOS/tvOS this value is only reported for THEOlive/HESP streams.
 - Added `THEOplayer.manageContentMatching` to let the player match the display mode (frame rate and dynamic range) of the TV to the content before playback starts on tvOS.
 - Added a `testID` property on `THEOplayerView` to allow locating the player view from UI automation tools.
 
 ### Fixed
 
-- Fixed Android facade builds when an ad description cannot be parsed for scheduling.
-- Fixed Web facade ad-event interception so a single decision applies to all listeners.
-- Fixed Web media-session controls bypassing facade integration hooks and player teardown suppressing native-handle destruction events.
-- Fixed Android facade integration ads being cast as native IMA ads, missing integration click/tap events, and native-handle destruction events being lost during teardown. Custom advertising must not overlap ongoing native IMA/DAI playback.
 - Fixed media track kind typings to accept audio descriptions and other stream- or platform-specific values without type overrides.
 - Fixed an issue on Android where destroying the player during a pending `MediaPlaybackService` bind could cause a crash.
 - Fixed an issue on Android where the player could remain black when its view was attached after React Native had already assigned the layout.

@@ -37,7 +37,11 @@ function delegate<T extends object, TOverrides extends object>(backing: () => T,
   });
 }
 
-/** Stable player surface with generic integration hooks; no playback or ad-lifecycle policy lives here. */
+/**
+ * Stable player surface with generic integration hooks; no playback or ad-lifecycle policy lives here.
+ *
+ * @internal
+ */
 export class PlayerFacade {
   readonly player: PlayerFacadeAPI;
   private readonly nativeAds: PlayerFacadeAPI['ads'] | undefined;

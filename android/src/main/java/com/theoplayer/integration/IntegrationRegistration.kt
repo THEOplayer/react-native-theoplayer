@@ -9,6 +9,8 @@ import java.io.Closeable
 /**
  * Controls event delivery and the lifetime of an Android facade integration.
  *
+ * Experimental API: subject to change or removal without notice.
+ *
  * Only the active registration can dispatch events or install interceptors. All operations run on the main thread.
  * Closing a registration restores native delegation without destroying either playback engine.
  */

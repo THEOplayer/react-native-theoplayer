@@ -164,6 +164,7 @@ export interface PlayerConfiguration {
    * <br/> - The content player remains available to integrations without facade overrides.
    * <br/> - This option has no effect on iOS or tvOS.
    *
+   * @experimental This API is subject to change or removal without notice.
    * @defaultValue false
    * @platform web,android
    */

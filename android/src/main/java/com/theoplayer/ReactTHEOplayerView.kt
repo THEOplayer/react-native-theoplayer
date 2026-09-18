@@ -49,6 +49,8 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
   /**
    * Registers playback and advertising overrides on the player facade.
    *
+   * Experimental API: subject to change or removal without notice.
+   *
    * Enable `config.usePlayerFacade` before creating the player and wait until this view is initialized.
    * Only one integration can be registered at a time; close its registration before replacing it.
    *
