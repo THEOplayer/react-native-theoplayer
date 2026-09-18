@@ -401,6 +401,32 @@ test('stable ads API delegates methods and migrates existing listeners across re
   facade.close();
 });
 
+test('native ad filtering decides once for all listeners and synthetic events bypass it', () => {
+  const listeners = new Set<(event: unknown) => void>();
+  const ads = {
+    addEventListener: (_type: string, listener: (event: unknown) => void) => listeners.add(listener),
+    removeEventListener: (_type: string, listener: (event: unknown) => void) => listeners.delete(listener),
+  };
+  const content = { ads, addEventListener: () => undefined, removeEventListener: () => undefined };
+  const facade = new PlayerFacade(content as unknown as ChromelessPlayer);
+  const seen: string[] = [];
+  facade.player.ads.addEventListener('adbegin', () => seen.push('first'));
+  facade.player.ads.addEventListener('adbegin', () => seen.push('second'));
+  let decisions = 0;
+  const registration = facade.player.registerIntegration({ shouldConsumeAdEvent: () => ++decisions === 1 });
+  const event = { type: 'adbegin' as const, date: new Date(), ad: {} as Ad };
+  for (const listener of [...listeners]) listener(event);
+  assert.deepEqual(seen, []);
+  assert.equal(decisions, 1);
+  for (const listener of [...listeners]) listener(event);
+  assert.deepEqual(seen, ['first', 'second']);
+  registration.dispatchEvent(event);
+  assert.deepEqual(seen, ['first', 'second', 'first', 'second']);
+  assert.equal(decisions, 2);
+  facade.close();
+  assert.equal(listeners.size, 0);
+});
+
 test('audio accessors use integration hooks and fall back after unregistering', () => {
   const content = { muted: false, volume: 0.8, addEventListener: () => undefined, removeEventListener: () => undefined };
   const facade = new PlayerFacade(content as unknown as ChromelessPlayer);
