@@ -37,6 +37,7 @@ import com.theoplayer.android.connector.mediasession.MediaSessionConnector
 import com.theoplayer.audio.AudioBecomingNoisyManager
 import com.theoplayer.audio.AudioFocusManager
 import com.theoplayer.audio.BackgroundAudioConfig
+import com.theoplayer.integration.PlayerFacade
 import com.theoplayer.media.MediaControlProxy
 import com.theoplayer.media.MediaPlaybackService
 import com.theoplayer.media.MediaSessionConfig
@@ -102,9 +103,11 @@ class ReactTHEOplayerContext private constructor(
   }
 
   lateinit var playerView: THEOplayerView
+  lateinit var player: Player
+    private set
 
-  val player: Player
-    get() = playerView.player
+  val playerFacade: PlayerFacade?
+    get() = player as? PlayerFacade
 
   private val uiModeManager by lazy {
     reactContext.getSystemService(Context.UI_MODE_SERVICE) as? UiModeManager
@@ -248,6 +251,7 @@ class ReactTHEOplayerContext private constructor(
         mainHandler.post { measureAndLayout() }
       }
     }
+    player = PlayerFacade.create(playerView.player, configAdapter.usePlayerFacade())
 
     // By default, choose SURFACE_CONTROL/SURFACE_VIEW rendering target, based on API level.
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -508,6 +512,7 @@ class ReactTHEOplayerContext private constructor(
       mediaSessionConnector?.player = null
       mediaSessionConnector?.destroy()
     }
-    playerView.onDestroy()
+    val facade = playerFacade
+    if (facade != null) facade.destroyContent { playerView.onDestroy() } else playerView.onDestroy()
   }
 }

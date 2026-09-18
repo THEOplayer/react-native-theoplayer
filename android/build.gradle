@@ -167,6 +167,7 @@ dependencies {
     implementation("com.theoplayer.theoplayer-sdk-android:core:$theoVersion")
     implementation("com.theoplayer.theoplayer-sdk-android:ads-wrapper:$theoAdsWrapperVersion")
     implementation("com.theoplayer.android-connector:mediasession:$theoMediaSessionVersion")
+    testImplementation("junit:junit:4.13.2")
 
     addOptiViewIntegration(enabledGoogleIMA || enabledGoogleDAI || enabledTHEOads, 'integration-ads-ima')
     addOptiViewIntegration(enabledGoogleDAI || enabledTHEOads, 'integration-ads-dai')
