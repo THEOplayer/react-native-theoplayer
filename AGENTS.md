@@ -6,3 +6,9 @@
 - Use `bun run` for package scripts and Node as the runtime. Run `bun run typescript`, `bun run lint`, and focused Node tests with `node --test src/__tests__/PlayerFacade*.test.ts` (Node 22.18+).
 - For library-only type checking, run `bun run typescript --project tsconfig.build.json`. The root typecheck also includes example and E2E sources.
 - Android facade tests run from `example/android`: `./gradlew :react-native-theoplayer:testDebugUnitTest --tests 'com.theoplayer.integration.PlayerFacade*Test' --console=plain`.
+
+## Pull requests
+
+- Every customer-facing change must add a `CHANGELOG.md` entry under `## [Unreleased]` in the matching section (`Added`, `Changed`, `Deprecated`, `Removed`, `Fixed`, or `Security`).
+- Changelog entries describe user-visible impact in one sentence; do not include ticket keys or implementation details.
+- Internal-only changes such as tests, CI, tooling, documentation, and example-app updates do not need changelog entries.

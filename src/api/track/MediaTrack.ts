@@ -4,10 +4,26 @@ import type { Quality } from './Quality';
 /**
  * Represents the category of a media track (audio or video).
  *
+ * @remarks
+ * The value depends on the stream and platform. Typical values include:
+ * <br/> - `'main'`: The primary track.
+ * <br/> - `'alternative'`: An alternative to the primary track.
+ * <br/> - `'commentary'`: A commentary track.
+ * <br/> - `'descriptions'`: Audio descriptions of the video content.
+ * <br/> - `'description'`: A variant of `'descriptions'` used by some streams or platforms.
+ * <br/> - `'main-desc'`: The primary audio track with audio descriptions.
+ * <br/> - `'translation'`: A translated audio track.
+ * <br/> - `'captions'`: A video track with captions.
+ * <br/> - `'sign'`: A sign-language video track.
+ * <br/> - `'subtitles'`: A video track with subtitles.
+ * <br/> - `''`: No kind is specified.
+ *
+ * This list is not exhaustive. Other string values are accepted and are not normalized.
+ *
  * @category Media and Text Tracks
  * @public
  */
-export type MediaTrackKind = 'main' | 'alternative';
+export type MediaTrackKind = string;
 
 /**
  * Represents a media track (audio or video) of a media resource.
@@ -35,9 +51,10 @@ export interface MediaTrack extends Track {
   readonly uid: number;
 
   /**
-   * The kind of the media track, represented by a value from the following list:
-   * <br/> - `'main'`: The track is the default track for playback
-   * <br/> - `'alternative'`: The track is not the default track for playback
+   * The kind of the media track, as reported by the underlying player.
+   *
+   * @remarks
+   * See {@link MediaTrackKind} for typical values. Other string values are possible.
    */
   readonly kind: MediaTrackKind;
 
