@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [11.7.0] - 18-09-26
+
+### Added
+
+- Added the `Metrics` API, accessible through `player.metrics`, with `currentBandwidthEstimate` returning the player's estimated available bandwidth in bits per second. On iOS/tvOS this value is only reported for THEOlive/HESP streams.
+- Added `THEOplayer.manageContentMatching` to let the player match the display mode (frame rate and dynamic range) of the TV to the content before playback starts on tvOS.
+- Added a `testID` property on `THEOplayerView` to allow locating the player view from UI automation tools.
+
+### Fixed
+
+- Fixed media track kind typings to accept audio descriptions and other stream- or platform-specific values without type overrides.
+- Fixed an issue on Android where destroying the player during a pending `MediaPlaybackService` bind could cause a crash.
+- Fixed an issue on Android where the player could remain black when its view was attached after React Native had already assigned the layout.
+- Fixed an issue where `player.paused` remained `true` between the `play` and `playing` events.
+
+### Changed
+
+- Removed the `RCTRootContentView` import from the iOS bridging header, as it is removed in React Native 0.87.
+- Upgraded example app to support React Native v0.87.1.
+
 ## [11.6.0]
 
 ### Added

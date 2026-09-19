@@ -475,11 +475,11 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
   }
 
   public render(): React.JSX.Element {
-    const { config, style, posterStyle, children } = this.props;
+    const { config, style, posterStyle, testID, children } = this.props;
     const { posterActive, poster } = this.state;
 
     return (
-      <View style={[styles.base, style, this.styleOverride()]}>
+      <View testID={testID} style={[styles.base, style, this.styleOverride()]}>
         <THEOplayerRCTView
           ref={this._root}
           style={StyleSheet.absoluteFill}

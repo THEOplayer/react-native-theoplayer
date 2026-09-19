@@ -6,6 +6,9 @@ require Pod::Executable.execute_command('node', ['-p',
 require_relative './PodConfig'
 
 source 'https://github.com/react-native-tvos/react-native-tvos-podspecs.git'
+# The Nielsen App SDK (pulled in by the nielsen analytics connector) lives on
+# Nielsen's own specs repo.
+source 'https://github.com/NielsenDigitalSDK/nielsenappsdk-ios-specs-dynamic.git'
 source 'https://cdn.cocoapods.org/'
 
 prepare_react_native_project!
@@ -46,4 +49,6 @@ post_install do |installer|
     :mac_catalyst_enabled => false,
     # :ccache_enabled => true
   )
+  # On tvOS the Nielsen App SDK ships NielsenTVAppApi instead of NielsenAppApi.
+  nielsen_post_install(installer, "Pods-ReactNativeTHEOplayer-tvOS")
 end

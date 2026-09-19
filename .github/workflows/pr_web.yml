@@ -3,6 +3,14 @@ on:
   workflow_dispatch:
   pull_request:
     types: [opened, reopened, synchronize, ready_for_review]
+    paths:
+      - .github/workflows/pr_web.yml
+      - example/**
+      - e2e/**
+      - '!e2e/ios/**'
+      - '!e2e/android/**'
+      - package.json
+      - src/**
 
 jobs:
   build:
@@ -31,3 +39,35 @@ jobs:
           name: web-release
           path: example/dist
           retention-days: 3
+
+  e2e:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Run npm install SDK
+        run: |
+          npm i -g corepack
+          npm ci
+
+      - name: Run npm install e2e
+        working-directory: e2e
+        run: npm ci
+
+      - name: Run web e2e tests
+        working-directory: e2e
+        run: npm run test:e2e:web -- --markdown
+
+      - name: Summarize results
+        working-directory: e2e
+        if: always()
+        run: cat cavynext_results.md >> $GITHUB_STEP_SUMMARY

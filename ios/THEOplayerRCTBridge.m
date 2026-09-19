@@ -99,6 +99,13 @@ RCT_EXTERN_METHOD(setPresentationMode:(nonnull NSNumber *)node
 RCT_EXTERN_METHOD(setAspectRatio:(nonnull NSNumber *)node
                   ratio:(nonnull NSString *)ratio)
 
+RCT_EXTERN_METHOD(setManageContentMatching:(nonnull NSNumber *)node
+                  enable:(BOOL)enable)
+
+RCT_EXTERN_METHOD(getManageContentMatching:(nonnull NSNumber *)node
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN_METHOD(setPipConfig:(nonnull NSNumber *)node
                   pipConfig:(NSDictionary)pipConfig)
 
@@ -180,6 +187,18 @@ RCT_EXTERN_METHOD(addFriendlyObstruction:(nonnull NSNumber *)node
                   obstruction:(NSDictionary)obstruction)
 
 RCT_EXTERN_METHOD(removeAllFriendlyObstructions:(nonnull NSNumber *)node)
+
+@end
+
+// ----------------------------------------------------------------------------
+// Metrics Module
+// ----------------------------------------------------------------------------
+
+@interface RCT_EXTERN_REMAP_MODULE(THEORCTMetricsModule, THEOplayerRCTMetricsAPI, NSObject)
+
+RCT_EXTERN_METHOD(currentBandwidthEstimate:(nonnull NSNumber *)node
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
 
 @end
 

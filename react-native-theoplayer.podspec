@@ -35,7 +35,7 @@ Pod::Spec.new do |s|
   s.platforms    = { :ios => "15.0", :tvos => "15.0" }
   s.source       = { :git => "https://www.theoplayer.com/.git", :tag => "#{s.version}" }
 
-  s.source_files = 'ios/*.{h,m,swift}', 'ios/ads/*.swift', 'ios/casting/*.swift', 'ios/contentprotection/*.swift', 'ios/pip/*.swift', 'ios/backgroundAudio/*.swift', 'ios/cache/*.swift', 'ios/sideloadedMetadata/*.swift', 'ios/eventBroadcasting/*.swift' , 'ios/ui/*.swift', 'ios/presentationMode/*.swift', 'ios/viewController/*.swift', 'ios/THEOlive/*.swift', 'ios/THEOads/*.swift', 'ios/millicast/*.swift', 'ios/cmcd/*.swift', 'ios/mediaControl/*.swift'
+  s.source_files = 'ios/*.{h,m,swift}', 'ios/ads/*.swift', 'ios/casting/*.swift', 'ios/contentprotection/*.swift', 'ios/pip/*.swift', 'ios/backgroundAudio/*.swift', 'ios/cache/*.swift', 'ios/sideloadedMetadata/*.swift', 'ios/eventBroadcasting/*.swift' , 'ios/ui/*.swift', 'ios/presentationMode/*.swift', 'ios/viewController/*.swift', 'ios/THEOlive/*.swift', 'ios/THEOads/*.swift', 'ios/millicast/*.swift', 'ios/cmcd/*.swift', 'ios/mediaControl/*.swift', 'ios/metrics/*.swift'
   s.resources = ['ios/*.css']
 
   # ReactNative Dependency
@@ -43,31 +43,31 @@ Pod::Spec.new do |s|
 
   # THEOplayer Dependency
   puts "Adding THEOplayerSDK-core"
-  s.dependency "THEOplayerSDK-core", "~> 11.4"
+  s.dependency "THEOplayerSDK-core", "~> 11.9"
 
   # THEOlive Dependency
   puts "Adding THEOplayer-Integration-THEOlive"
-  s.dependency "THEOplayer-Integration-THEOlive", "~> 11.4"
+  s.dependency "THEOplayer-Integration-THEOlive", "~> 11.9"
 
   # Feature based integration dependencies
   if theofeatures.include?("GOOGLE_IMA")
 	puts "Adding THEOplayer-Integration-GoogleIMA"
-    s.dependency "THEOplayer-Integration-GoogleIMA", "~> 11.4"
+    s.dependency "THEOplayer-Integration-GoogleIMA", "~> 11.9"
   end
 
   if theofeatures.include?("CHROMECAST")
 	puts "Adding THEOplayer-Integration-GoogleCast"
-    s.ios.dependency "THEOplayer-Integration-GoogleCast", "~> 11.4"
+    s.ios.dependency "THEOplayer-Integration-GoogleCast", "~> 11.9"
   end
 
   if theofeatures.include?("THEO_ADS")
 	puts "Adding THEOplayer-Integration-THEOads"
-    s.dependency "THEOplayer-Integration-THEOads", "~> 11.4"
+    s.dependency "THEOplayer-Integration-THEOads", "~> 11.9"
   end
 
   if theofeatures.include?("MILLICAST")
   puts "Adding THEOplayer-Integration-Millicast"
-    s.dependency "THEOplayer-Integration-Millicast", "~> 11.4"
+    s.dependency "THEOplayer-Integration-Millicast", "~> 11.9"
   end
 
   # Feature based connector dependencies

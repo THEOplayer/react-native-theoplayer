@@ -22,6 +22,9 @@ let TTS_PROP_COLOR_G = "g"
 let TTS_PROP_COLOR_B = "b"
 let TTS_PROP_COLOR_A = "a"
 
+let ERROR_CODE_PLAYER_ACCESS_FAILURE = "player_access_failure"
+let ERROR_MESSAGE_PLAYER_ACCESS_FAILURE = "Could not access THEOplayer"
+
 @objc(THEOplayerRCTPlayerAPI)
 class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
     @objc var bridge: RCTBridge!
@@ -202,6 +205,34 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
                 }
             }
         }
+
+    @objc(setManageContentMatching:enable:)
+    func setManageContentMatching(_ node: NSNumber, enable: Bool) -> Void {
+#if os(tvOS)
+        withViewAndPlayer(node) { _, player in
+            if player.manageContentMatching != enable {
+                if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Changing TheoPlayer's manageContentMatching to \(enable)") }
+                player.manageContentMatching = enable
+            }
+        }
+#endif
+    }
+
+    // Not used by the THEOplayerAdapter, which reads the value from its cached player state.
+    // This getter exists for the e2e test app, allowing it to verify that the value was
+    // effectively applied on the native player.
+    @objc(getManageContentMatching:resolver:rejecter:)
+    func getManageContentMatching(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+#if os(tvOS)
+        withViewAndPlayer(node) { _, player in
+            resolve(player.manageContentMatching)
+        } onFailure: {
+            reject(ERROR_CODE_PLAYER_ACCESS_FAILURE, ERROR_MESSAGE_PLAYER_ACCESS_FAILURE, nil)
+        }
+#else
+        resolve(false)
+#endif
+    }
 
     @objc(setPipConfig:pipConfig:)
     func setPipConfig(_ node: NSNumber, pipConfig: NSDictionary) -> Void {

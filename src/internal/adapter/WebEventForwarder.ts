@@ -2,7 +2,7 @@ import type {
   AdBreakEvent as NativeAdBreakEvent,
   AddTrackEvent,
   AdEvent as NativeAdEvent,
-  AdsEventMap as NativeAdsEventMap,
+  EventDispatcher,
   CastStateChangeEvent,
   ChromecastErrorEvent,
   ChromelessPlayer,
@@ -46,6 +46,7 @@ import {
 } from 'react-native-theoplayer';
 import type { Ad } from '../../api/ads/Ad';
 import type { AdBreak } from '../../api/ads/AdBreak';
+import type { PlayerFacadeAdsEventMap as NativeAdsEventMap } from './web/PlayerFacadeTypes';
 import type { THEOplayerWebAdapter } from './THEOplayerWebAdapter';
 import { BaseEvent } from './event/BaseEvent';
 import {
@@ -136,7 +137,7 @@ export class WebEventForwarder {
     this._player.cast?.chromecast?.addEventListener('error', this.onChromecastError);
     this._player.cast?.airplay?.addEventListener('statechange', this.onAirplayStateChange);
 
-    this._player.ads?.addEventListener(FORWARDED_AD_EVENTS, this.onAdEvent);
+    (this._player.ads as EventDispatcher<NativeAdsEventMap> | undefined)?.addEventListener(FORWARDED_AD_EVENTS, this.onAdEvent);
     this._player.ads?.addEventListener(FORWARDED_ADBREAK_EVENTS, this.onAdBreakEvent);
     this._player.theoads?.addEventListener(FORWARDED_THEOADS_EVENTS, this.onTheoAdsEvent);
     this._player.theoLive?.addEventListener(FORWARDED_THEOLIVE_EVENTS, this.onTheoLiveEvent);
@@ -189,7 +190,7 @@ export class WebEventForwarder {
     this._player.cast?.chromecast?.removeEventListener('error', this.onChromecastError);
     this._player.cast?.airplay?.removeEventListener('statechange', this.onAirplayStateChange);
 
-    this._player.ads?.removeEventListener(FORWARDED_AD_EVENTS, this.onAdEvent);
+    (this._player.ads as EventDispatcher<NativeAdsEventMap> | undefined)?.removeEventListener(FORWARDED_AD_EVENTS, this.onAdEvent);
     this._player.ads?.removeEventListener(FORWARDED_ADBREAK_EVENTS, this.onAdBreakEvent);
     this._player.theoads?.removeEventListener(FORWARDED_THEOADS_EVENTS, this.onTheoAdsEvent);
     this._player.theoLive?.removeEventListener(FORWARDED_THEOLIVE_EVENTS, this.onTheoLiveEvent);
@@ -491,6 +492,7 @@ const FORWARDED_AD_EVENTS = [
   AdEventType.AD_THIRD_QUARTILE,
   AdEventType.AD_SKIP,
   AdEventType.AD_IMPRESSION,
+  AdEventType.AD_CLICKED,
   AdEventType.AD_ERROR,
   AdEventType.AD_METADATA,
   AdEventType.AD_BUFFERING,

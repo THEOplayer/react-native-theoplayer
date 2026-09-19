@@ -11,6 +11,7 @@ import com.theoplayer.drm.ContentProtectionModule
 import com.theoplayer.cast.CastModule
 import com.theoplayer.broadcast.EventBroadcastModule
 import com.theoplayer.media.MediaControlModule
+import com.theoplayer.metrics.MetricsModule
 import com.theoplayer.player.PlayerModule
 import com.theoplayer.theolive.THEOliveModule
 import com.theoplayer.theoads.THEOadsModule
@@ -28,6 +29,7 @@ class ReactTHEOplayerPackage : BaseReactPackage() {
       THEOliveModule.NAME -> THEOliveModule(reactContext)
       THEOadsModule.NAME -> THEOadsModule(reactContext)
       MediaControlModule.NAME -> MediaControlModule(reactContext)
+      MetricsModule.NAME -> MetricsModule(reactContext)
       else -> null
     }
   }
@@ -48,6 +50,7 @@ class ReactTHEOplayerPackage : BaseReactPackage() {
         THEOliveModule.NAME to THEOliveModule.INFO,
         THEOadsModule.NAME to THEOadsModule.INFO,
         MediaControlModule.NAME to MediaControlModule.INFO,
+        MetricsModule.NAME to MetricsModule.INFO,
       )
     }
   }

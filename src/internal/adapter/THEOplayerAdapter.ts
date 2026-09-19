@@ -18,6 +18,7 @@ import {
   MediaTrackEventType,
   MediaTrackListEvent,
   MediaTrackType,
+  MetricsAPI,
   NativeHandleType,
   PiPConfiguration,
   PlayerEventMap,
@@ -54,6 +55,7 @@ import { DefaultNativePlayerState } from './DefaultNativePlayerState';
 import { THEOAdsNativeAdapter } from './theoads/THEOAdsNativeAdapter';
 import { TheoLiveNativeAdapter } from './theolive/TheoLiveNativeAdapter';
 import { MediaControlNativeAdapter } from './media/MediaControlNativeAdapter';
+import { MetricsNativeAdapter } from './metrics/MetricsNativeAdapter';
 
 const NativePlayerModule = NativeModules.THEORCTPlayerModule;
 
@@ -67,6 +69,7 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   private readonly _textTrackStyleAdapter: TextTrackStyleAdapter;
   private readonly _theoliveAdapter: TheoLiveNativeAdapter;
   private readonly _mediaControlAdapter: MediaControlNativeAdapter;
+  private readonly _metricsAdapter: MetricsNativeAdapter;
   private _externalEventRouter: EventBroadcastAPI | undefined = undefined;
   private _playerVersion!: PlayerVersion;
 
@@ -81,12 +84,14 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     this._textTrackStyleAdapter = new TextTrackStyleAdapter(this._view);
     this._theoliveAdapter = new TheoLiveNativeAdapter(this._view);
     this._mediaControlAdapter = new MediaControlNativeAdapter(this);
+    this._metricsAdapter = new MetricsNativeAdapter(this._view);
     this.addEventListeners();
   }
 
   private addEventListeners() {
     this.addEventListener(PlayerEventType.LOADED_METADATA, this.onLoadedMetadata);
     this.addEventListener(PlayerEventType.PAUSE, this.onPause);
+    this.addEventListener(PlayerEventType.PLAY, this.onPlay);
     this.addEventListener(PlayerEventType.PLAYING, this.onPlaying);
     this.addEventListener(PlayerEventType.TIME_UPDATE, this.onTimeupdate);
     this.addEventListener(PlayerEventType.DURATION_CHANGE, this.onDurationChange);
@@ -112,6 +117,10 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   private onPause = () => {
     this._state.paused = true;
+  };
+
+  private onPlay = () => {
+    this._state.paused = false;
   };
 
   private onPlaying = () => {
@@ -250,6 +259,10 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
 
   get mediaControl(): MediaControlAPI {
     return this._mediaControlAdapter;
+  }
+
+  get metrics(): MetricsAPI {
+    return this._metricsAdapter;
   }
 
   set autoplay(autoplay: boolean) {
@@ -477,6 +490,17 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
   set aspectRatio(ratio: AspectRatio) {
     this._state.aspectRatio = ratio;
     NativePlayerModule.setAspectRatio(this._view.nativeHandle, ratio);
+  }
+
+  get manageContentMatching(): boolean {
+    return this._state.manageContentMatching;
+  }
+
+  set manageContentMatching(enable: boolean) {
+    if (Platform.OS === 'ios') {
+      this._state.manageContentMatching = enable;
+      NativePlayerModule.setManageContentMatching(this._view.nativeHandle, enable);
+    }
   }
 
   get renderingTarget(): RenderingTarget {

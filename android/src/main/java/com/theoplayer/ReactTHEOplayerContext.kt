@@ -37,6 +37,7 @@ import com.theoplayer.android.connector.mediasession.MediaSessionConnector
 import com.theoplayer.audio.AudioBecomingNoisyManager
 import com.theoplayer.audio.AudioFocusManager
 import com.theoplayer.audio.BackgroundAudioConfig
+import com.theoplayer.integration.PlayerFacade
 import com.theoplayer.media.MediaControlProxy
 import com.theoplayer.media.MediaPlaybackService
 import com.theoplayer.media.MediaSessionConfig
@@ -51,6 +52,7 @@ class ReactTHEOplayerContext private constructor(
   private val mainHandler = Handler(Looper.getMainLooper())
   private var isBound = AtomicBoolean()
   private var binder: MediaPlaybackService.MediaPlaybackBinder? = null
+  private var isDestroyed = false
 
   private var audioBecomingNoisyManager = AudioBecomingNoisyManager(reactContext) {
     // Audio is about to become 'noisy' due to a change in audio outputs: pause the player
@@ -101,9 +103,11 @@ class ReactTHEOplayerContext private constructor(
   }
 
   lateinit var playerView: THEOplayerView
+  lateinit var player: Player
+    private set
 
-  val player: Player
-    get() = playerView.player
+  val playerFacade: PlayerFacade?
+    get() = player as? PlayerFacade
 
   private val uiModeManager by lazy {
     reactContext.getSystemService(Context.UI_MODE_SERVICE) as? UiModeManager
@@ -135,6 +139,17 @@ class ReactTHEOplayerContext private constructor(
 
   private val connection = object : ServiceConnection {
     override fun onServiceConnected(className: ComponentName, service: IBinder) {
+      // The context may have been destroyed while the bind was still pending.
+      // Do not attach the destroyed player/context to the service.
+      if (isDestroyed) {
+        try {
+          reactContext.unbindService(this)
+        } catch (e: IllegalArgumentException) {
+          // Connection was not registered or already unbound; ignore.
+        }
+        return
+      }
+
       binder = service as MediaPlaybackService.MediaPlaybackBinder
 
       // Get media session connector from service
@@ -202,11 +217,13 @@ class ReactTHEOplayerContext private constructor(
   }
 
   private fun unbindMediaPlaybackService() {
-    // This client is done interacting with the service: unbind.
-    // When there are no clients bound to the service, the system destroys the service.
-    if (binder?.isBinderAlive == true) {
-      if (isBound.getAndSet(false)) {
+    // Always unbind when isBound, regardless of whether the binder is alive yet: a pending
+    // bind must still be cancelled so a late callback cannot resurrect this.
+    if (isBound.getAndSet(false)) {
+      try {
         reactContext.unbindService(connection)
+      } catch (e: IllegalArgumentException) {
+        // Service was not registered or already unbound; ignore.
       }
     }
     binder = null
@@ -234,6 +251,7 @@ class ReactTHEOplayerContext private constructor(
         mainHandler.post { measureAndLayout() }
       }
     }
+    player = PlayerFacade.create(playerView.player, configAdapter.usePlayerFacade())
 
     // By default, choose SURFACE_CONTROL/SURFACE_VIEW rendering target, based on API level.
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -472,7 +490,12 @@ class ReactTHEOplayerContext private constructor(
   }
 
   fun destroy() {
+    isDestroyed = true
     removeListeners()
+
+    // The media session can be shared with other player contexts through the playback service.
+    // Determine ownership before unbinding, as that clears the binder needed to check it.
+    val ownedMediaSession = ownsMediaSession()
 
     if (BuildConfig.USE_PLAYBACK_SERVICE) {
       // Remove service from foreground
@@ -483,7 +506,13 @@ class ReactTHEOplayerContext private constructor(
     }
     audioFocusManager?.abandonAudioFocus()
     mediaControlProxy.destroy()
-    mediaSessionConnector?.destroy()
-    playerView.onDestroy()
+    if (ownedMediaSession) {
+      // Only tear down the session when another player did not take it over: a queued callback
+      // must never reach this destroyed player, but a newly-activated player must keep working.
+      mediaSessionConnector?.player = null
+      mediaSessionConnector?.destroy()
+    }
+    val facade = playerFacade
+    if (facade != null) facade.destroyContent { playerView.onDestroy() } else playerView.onDestroy()
   }
 }

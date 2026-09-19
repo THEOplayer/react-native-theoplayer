@@ -51,6 +51,8 @@ class AdEventAdapter(private val adsApi: AdsApiWrapper, eventEmitter: AdEventEmi
 
   init {
     adsApi.addAllEventsListener(eventListener)
+    adsApi.addEventListener(AdsEventTypes.AD_CLICKED, eventListener)
+    adsApi.addEventListener(AdsEventTypes.AD_TAPPED, eventListener)
   }
 
   companion object {
@@ -131,5 +133,7 @@ class AdEventAdapter(private val adsApi: AdsApiWrapper, eventEmitter: AdEventEmi
 
   fun destroy() {
     adsApi.removeAllEventsListener(eventListener)
+    adsApi.removeEventListener(AdsEventTypes.AD_CLICKED, eventListener)
+    adsApi.removeEventListener(AdsEventTypes.AD_TAPPED, eventListener)
   }
 }
