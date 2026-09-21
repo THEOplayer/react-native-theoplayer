@@ -26,16 +26,6 @@ For each platform, a dependency to the corresponding THEOplayer SDK is included 
 - Cocoapods for iOS
 - npm for Web
 
-### iOS and tvOS
-
-THEOplayer React Native SDK 11 requires iOS and tvOS 15.0 or newer.
-
-When building with Xcode 27, every application and dependency target must use a deployment target of 15.0 or newer.
-Applications built against the iOS 27 or tvOS 27 SDK must also adopt the
-[UIKit scene-based lifecycle](https://developer.apple.com/documentation/uikit/transitioning-to-the-uikit-scene-based-life-cycle).
-React Native 0.88 and newer provide native `SceneDelegate` support. Applications using React Native 0.79 through 0.87
-can start React Native from an app-owned `SceneDelegate` with `RCTReactNativeFactory`, as demonstrated by the example app.
-
 In order to use one of these THEOplayer SDKs, it is necessary to obtain a valid THEOplayer license for that specific
 platform, i.e. HTML5, Android, and/or iOS. You can sign up for a THEOplayer SDK license
 through [our portal](https://portal.theoplayer.com/).
