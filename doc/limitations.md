@@ -13,6 +13,5 @@ various dependency managers:
 
 This currently poses a limitation on the ability to include a SDK that is custom-built through
 [THEOplayer Portal](https://portal.theoplayer.com/).
-A custom-built library (an .aar of Android, framework for iOS and JavaScript library for web)
-including a specific set of features currently still needs to be configured inside
-`react-native-theoplayer` package itself.
+A custom-built library (a JavaScript library for web) including a specific set of features
+currently still needs to be configured inside `react-native-theoplayer` package itself.
