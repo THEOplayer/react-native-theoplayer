@@ -1,6 +1,6 @@
 import React, { createContext, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
 import { Platform } from 'react-native';
-import { MediaControlAction, THEOplayer } from 'react-native-theoplayer';
+import { MediaControlAction, PlayerEventType, THEOplayer } from 'react-native-theoplayer';
 import type { Source } from '../custom/Source';
 
 export interface Playlist {
@@ -114,10 +114,23 @@ export const PlaylistProvider = ({ player, sources, initialIndex, includeWithLic
     player.mediaControl?.setHandler(MediaControlAction.SKIP_TO_NEXT, handleNext);
     player.mediaControl?.setHandler(MediaControlAction.SKIP_TO_PREVIOUS, handlePrevious);
 
+    const handleEnded = () => {
+      setCurrentIndex((index) => {
+        const newIndex = index + 1;
+        if (newIndex < filteredSources.length) {
+          player.source = filteredSources[newIndex].source;
+          return newIndex;
+        }
+        return index;
+      });
+    };
+    player.addEventListener(PlayerEventType.ENDED, handleEnded);
+
     // Remove the handlers again, restoring the player's default behaviour.
     return () => {
       player.mediaControl?.setHandler(MediaControlAction.SKIP_TO_NEXT, undefined);
       player.mediaControl?.setHandler(MediaControlAction.SKIP_TO_PREVIOUS, undefined);
+      player.removeEventListener(PlayerEventType.ENDED, handleEnded);
     };
   }, [player, filteredSources]);
 
