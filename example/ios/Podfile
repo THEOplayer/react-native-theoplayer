@@ -8,6 +8,21 @@ source 'https://github.com/react-native-tvos/react-native-tvos-podspecs.git'
 source 'https://cdn.cocoapods.org/'
 # source 'https://github.com/THEOplayer/cocoapods-specs'
 
+# In this monorepo, node_modules/react-native-theoplayer is a symlink to the repo root, so the
+# podspec's own config lookup (__dir__ + "/../../") overshoots the repo and never finds
+# react-native-theoplayer.json. Relay its features here via THEO_FEATURES (which the podspec reads
+# first) so the react-native-theoplayer pod declares the selected integrations (e.g. GoogleIMA) and
+# the matching `#if canImport(...)` native code is compiled in.
+if ENV['THEO_FEATURES'].nil? || ENV['THEO_FEATURES'].strip.empty?
+  theo_config_path = File.join(__dir__, '..', '..', 'react-native-theoplayer.json')
+  if File.exist?(theo_config_path)
+    require 'json'
+    theo_features = (JSON.parse(File.read(theo_config_path)).dig('ios', 'features') || [])
+    ENV['THEO_FEATURES'] = theo_features.join(',') unless theo_features.empty?
+    Pod::UI.puts "THEOplayer features: #{ENV['THEO_FEATURES']}".green
+  end
+end
+
 prepare_react_native_project!
 config = use_native_modules!
 
