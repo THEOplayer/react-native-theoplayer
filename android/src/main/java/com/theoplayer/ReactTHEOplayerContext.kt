@@ -182,8 +182,10 @@ class ReactTHEOplayerContext private constructor(
         // Enable & bind background playback
         bindMediaPlaybackService()
       } else if (prevConfig?.enabled == true) {
-        // Stop & unbind MediaPlaybackService.
-        binder?.stopForegroundService()
+        // Stop & unbind MediaPlaybackService. Only the owner may stop the shared service.
+        if (ownsMediaSession()) {
+          binder?.stopForegroundService()
+        }
         unbindMediaPlaybackService()
 
         // Create a new media session.
@@ -498,8 +500,10 @@ class ReactTHEOplayerContext private constructor(
     val ownedMediaSession = ownsMediaSession()
 
     if (BuildConfig.USE_PLAYBACK_SERVICE) {
-      // Remove service from foreground
-      binder?.stopForegroundService()
+      // Only the owner may remove the shared service from foreground; another player may still use it.
+      if (ownedMediaSession) {
+        binder?.stopForegroundService()
+      }
 
       // Unbind client from background service so it can stop
       unbindMediaPlaybackService()

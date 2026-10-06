@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed an issue on Android where destroying the player during a pending `MediaPlaybackService` bind could cause a crash.
 - Fixed an issue on Android where the player could remain black when its view was attached after React Native had already assigned the layout.
 - Fixed an issue where `player.paused` remained `true` between the `play` and `playing` events.
+- Fixed an issue on Android where destroying a player, or disabling its background audio, stopped the shared playback service and removed the notification of another player that was still active.
 
 ### Changed
 
