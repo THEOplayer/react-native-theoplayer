@@ -48,11 +48,16 @@ export class NativeContentProtectionRegistry implements ContentProtectionAPI {
   }
 
   registerContentProtectionIntegration(integrationId: string, keySystemId: KeySystemId, integrationFactory: ContentProtectionIntegrationFactory) {
-    this.registeredFactories.push({
-      integrationId,
-      keySystemId,
-      integrationFactory,
-    });
+    // Replace a previous registration for the same (integrationId, keySystemId) pair:
+    // getFactory() matches the first entry, so pushing duplicates would leave stale
+    // factories active while the newly registered factory would never be used.
+    const existingIndex = this.registeredFactories.findIndex((f) => f.integrationId === integrationId && f.keySystemId === keySystemId);
+    const registration = { integrationId, keySystemId, integrationFactory };
+    if (existingIndex === -1) {
+      this.registeredFactories.push(registration);
+    } else {
+      this.registeredFactories[existingIndex] = registration;
+    }
     NativeContentProtectionModule.registerContentProtectionIntegration(integrationId, keySystemId);
   }
 
