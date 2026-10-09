@@ -102,7 +102,10 @@ private const val CMCD_USER_ID = "userId"
 private const val CMCD_EVENT_ENDPOINTS = "eventEndpoints"
 private const val CMCD_ENDPOINT_URL = "url"
 
-class SourceAdapter {
+/**
+ * @param defaultLiveOffset The player-level live offset in seconds, used for sources that do not specify their own `liveOffset`.
+ */
+class SourceAdapter(private val defaultLiveOffset: Double? = null) {
   private val gson = Gson()
 
   companion object {
@@ -257,9 +260,13 @@ class SourceAdapter {
       jsonTypedSource.optJSONObject(PROP_LATENCY_CONFIGURATION)?.let {
         tsBuilder.latencyConfiguration(parseLatencyConfiguration(it))
       }
-      if (jsonTypedSource.has(PROP_LIVE_OFFSET)) {
-        tsBuilder.liveOffset(jsonTypedSource.getDouble(PROP_LIVE_OFFSET))
+      // A source-level liveOffset takes precedence over the player-level default.
+      val liveOffset = if (jsonTypedSource.has(PROP_LIVE_OFFSET) && !jsonTypedSource.isNull(PROP_LIVE_OFFSET)) {
+        jsonTypedSource.getDouble(PROP_LIVE_OFFSET)
+      } else {
+        defaultLiveOffset
       }
+      liveOffset?.let { tsBuilder.liveOffset(it) }
       if (jsonTypedSource.has(PROP_HLS_DATERANGE)) {
         tsBuilder.hlsDateRange(jsonTypedSource.getBoolean(PROP_HLS_DATERANGE))
       }

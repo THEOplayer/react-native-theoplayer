@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed an issue where re-registering a content protection integration for the same key system kept the previously registered factory active, causing stale DRM integrations to be used for subsequent sources.
+- Fixed `liveOffset` in `PlayerConfiguration` not being applied on Android; it is now used as the default live offset for sources that do not specify their own `liveOffset`.
+- Fixed `sessionID` in the `ads.ima` player configuration being ignored on Android.
 
 ## [11.7.0] - 18-09-26
 

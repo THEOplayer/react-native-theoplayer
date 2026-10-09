@@ -18,6 +18,7 @@ import com.theoplayer.media.MediaSessionConfigAdapter
 
 private const val PROP_LICENSE = "license"
 private const val PROP_LICENSE_URL = "licenseUrl"
+private const val PROP_LIVE_OFFSET = "liveOffset"
 private const val PROP_PRELOAD = "preload"
 private const val PROP_UI_ENABLED = "uiEnabled"
 private const val PROP_CAST_STRATEGY = "strategy"
@@ -59,18 +60,18 @@ private const val PROP_CMCD_ENDPOINT_URL = "url"
 class PlayerConfigAdapter(private val configProps: ReadableMap?) {
 
   /** Returns whether the player facade is enabled at creation. Missing or null values default to false. */
-  fun usePlayerFacade(): Boolean = configProps?.let {
-    it.hasKey(PROP_USE_PLAYER_FACADE) && !it.isNull(PROP_USE_PLAYER_FACADE) && it.getBoolean(PROP_USE_PLAYER_FACADE)
-  } ?: false
+  fun usePlayerFacade(): Boolean = configProps?.getBooleanOrNull(PROP_USE_PLAYER_FACADE) ?: false
 
   /**
    * Whether debug logs from the native SDK should be enabled.
    */
-  fun debugLogsEnabled(): Boolean {
-    return configProps?.let {
-      if (it.hasKey(PROP_DEBUG_LOGS_ENABLED)) it.getBoolean(PROP_DEBUG_LOGS_ENABLED) else false
-    } ?: false
-  }
+  fun debugLogsEnabled(): Boolean = configProps?.getBooleanOrNull(PROP_DEBUG_LOGS_ENABLED) ?: false
+
+  /**
+   * The offset in seconds used to determine the live point, or null when not configured.
+   * The value is applied as the default live offset for sources that do not specify their own.
+   */
+  fun liveOffset(): Double? = configProps?.getDoubleOrNull(PROP_LIVE_OFFSET)
 
   /**
    * Get general THEOplayerConfig object; these properties apply:
@@ -80,11 +81,14 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
    */
   fun playerConfig(): THEOplayerConfig {
     return THEOplayerConfig.Builder().apply {
+      pip(PipConfiguration.Builder().build())
+      // Opt-out for auto-integrations for now
+      autoIntegrations(false)
       configProps?.run {
-        getString(PROP_LICENSE)?.let { license ->
+        getStringOrNull(PROP_LICENSE)?.let { license ->
           license(license)
         }
-        getString(PROP_LICENSE_URL)?.let { licenseUrl ->
+        getStringOrNull(PROP_LICENSE_URL)?.let { licenseUrl ->
           licenseUrl(licenseUrl)
         }
         if (hasKey(PROP_RETRY_CONFIG) || hasKey(PROP_USE_HTTPENGINE)) {
@@ -93,18 +97,9 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
         if (hasKey(PROP_THEOLIVE_CONFIG)) {
           theoLive(theoLiveConfig())
         }
-        pip(PipConfiguration.Builder().build())
-        // Opt-out for auto-integrations for now
-        autoIntegrations(false)
-        if (hasKey(PROP_HLS_DATERANGE)) {
-          hlsDateRange(getBoolean(PROP_HLS_DATERANGE))
-        }
-        if (hasKey(PROP_MULTIMEDIA_TUNNELING_ENABLED)) {
-          tunnelingEnabled(getBoolean(PROP_MULTIMEDIA_TUNNELING_ENABLED))
-        }
-        if (hasKey(PROP_SYSTEM_CAPTION_STYLE)) {
-          useSystemCaptionStyle(getBoolean(PROP_SYSTEM_CAPTION_STYLE))
-        }
+        getBooleanOrNull(PROP_HLS_DATERANGE)?.let { hlsDateRange(it) }
+        getBooleanOrNull(PROP_MULTIMEDIA_TUNNELING_ENABLED)?.let { tunnelingEnabled(it) }
+        getBooleanOrNull(PROP_SYSTEM_CAPTION_STYLE)?.let { useSystemCaptionStyle(it) }
         if (hasKey(PROP_CMCD)) {
           cmcd(cmcdConfig())
         }
@@ -122,21 +117,11 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
   private fun networkConfig(): NetworkConfiguration {
     return NetworkConfiguration.Builder().apply {
       configProps?.getMap(PROP_RETRY_CONFIG)?.run {
-        if (hasKey(PROP_RETRY_MAX_RETRIES)) {
-          maxRetries(getInt(PROP_RETRY_MAX_RETRIES))
-        }
-        if (hasKey(PROP_RETRY_MIN_BACKOFF)) {
-          minimumBackOff(getDouble(PROP_RETRY_MIN_BACKOFF).toLong())
-        }
-        if (hasKey(PROP_RETRY_MAX_BACKOFF)) {
-          maximumBackOff(getDouble(PROP_RETRY_MAX_BACKOFF).toLong())
-        }
+        getIntOrNull(PROP_RETRY_MAX_RETRIES)?.let { maxRetries(it) }
+        getDoubleOrNull(PROP_RETRY_MIN_BACKOFF)?.let { minimumBackOff(it.toLong()) }
+        getDoubleOrNull(PROP_RETRY_MAX_BACKOFF)?.let { maximumBackOff(it.toLong()) }
       }
-      configProps?.run {
-        if (hasKey(PROP_USE_HTTPENGINE)) {
-          useHttpEngine(getBoolean(PROP_USE_HTTPENGINE))
-        }
-      }
+      configProps?.getBooleanOrNull(PROP_USE_HTTPENGINE)?.let { useHttpEngine(it) }
     }.build()
   }
 
@@ -147,40 +132,26 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
    */
   fun imaSdkSettings(): ImaSdkSettings {
     return ImaSdkFactory.getInstance().createImaSdkSettings().apply {
+      // The partner provided player type.
+      setPlayerType("THEOplayer")
+      // The partner provided player version.
+      setPlayerVersion(THEOplayerGlobal.getVersion())
       configProps?.getMap(PROP_ADS_CONFIGURATION)?.getMap(PROP_IMA_CONFIGURATION)?.run {
         // Specifies whether VMAP and ad rules ad breaks are automatically played.
-        if (hasKey(PROP_AUTOPLAY_AD_BREAKS)) {
-          autoPlayAdBreaks = getBoolean(PROP_AUTOPLAY_AD_BREAKS)
-        }
+        getBooleanOrNull(PROP_AUTOPLAY_AD_BREAKS)?.let { autoPlayAdBreaks = it }
         // Feature flags and their states. Used to control experimental features.
-        if (hasKey(PROP_FEATURE_FLAGS)) {
-          val convertedMap: MutableMap<String, String> = mutableMapOf()
-          getMap(PROP_FEATURE_FLAGS)?.toHashMap()?.forEach { (key, value) ->
-            convertedMap[key] = value as String
-          }
-          setFeatureFlags(convertedMap)
+        getMap(PROP_FEATURE_FLAGS)?.toHashMap()?.let { flags ->
+          setFeatureFlags(flags.mapValues { (_, value) -> value as String })
         }
         // The maximum number of VAST redirects.
-        if (hasKey(PROP_MAX_REDIRECTS)) {
-          maxRedirects = getInt(PROP_MAX_REDIRECTS)
-        }
-        // The partner provided player type.
-        setPlayerType("THEOplayer")
-        // The partner provided player version.
-        setPlayerVersion(THEOplayerGlobal.getVersion())
+        getIntOrNull(PROP_MAX_REDIRECTS)?.let { maxRedirects = it }
         // The Publisher Provided Identification (PPID) sent with ads request.
-        if (hasKey(PROP_PPID)) {
-          setPpid(getString(PROP_PPID) ?: "")
-        }
+        getStringOrNull(PROP_PPID)?.let { setPpid(it) }
         // The session ID to identify a single user session. This should be a UUID. It
         // is used exclusively for frequency capping across the user session.
-        if (hasKey(PROP_SESSION_ID)) {
-          setSessionId(getString(PROP_PPID) ?: "")
-        }
+        getStringOrNull(PROP_SESSION_ID)?.let { setSessionId(it) }
         // Toggles debug mode which will output detailed log information to the console.
-        if (hasKey(PROP_ENABLE_DEBUG_MODE)) {
-          isDebugMode = getBoolean(PROP_ENABLE_DEBUG_MODE)
-        }
+        getBooleanOrNull(PROP_ENABLE_DEBUG_MODE)?.let { isDebugMode = it }
       }
     }
   }
@@ -191,38 +162,30 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
    * @see <a href="https://developers.google.com/interactive-media-ads/docs/sdks/android/client-side/api/reference/com/google/ads/interactivemedia/v3/api/AdsRenderingSettings">IMA SDK for Android</a>.
    */
   fun adsRenderSettings(): AdsRenderingSettings {
+    val adsProps = configProps?.getMap(PROP_ADS_CONFIGURATION)
     return ImaSdkFactory.getInstance().createAdsRenderingSettings().apply {
-      configProps?.getMap(PROP_ADS_CONFIGURATION)?.run {
-        if (hasKey(PROP_UI_ENABLED) && !getBoolean(PROP_UI_ENABLED)) {
+      adsProps?.run {
+        if (getBooleanOrNull(PROP_UI_ENABLED) == false) {
           setUiElements(emptySet())
           disableUi = true
         }
-        if (hasKey(PROP_PRELOAD)) {
-          val preloadTypeString = getString(PROP_PRELOAD)
-          enablePreloading = preloadTypeString !== "none"
+        getStringOrNull(PROP_PRELOAD)?.let { preloadType ->
+          enablePreloading = preloadType != "none"
         }
-        if (hasKey(PROP_ALLOWED_MIMETYPES)) {
-          setMimeTypes(ArrayList<String>().apply {
-            getArray(PROP_ALLOWED_MIMETYPES)?.toArrayList()?.forEach {
-              add(it as String)
-            }
-          })
+        getArray(PROP_ALLOWED_MIMETYPES)?.toArrayList()?.let { mimeTypes ->
+          setMimeTypes(ArrayList(mimeTypes.filterIsInstance<String>()))
         }
       }
       // bitrate and timeout are configured under the ima config
-      configProps?.getMap(PROP_ADS_CONFIGURATION)?.getMap(PROP_IMA_CONFIGURATION)?.run {
-        if (hasKey(PROP_BITRATE)) {
-          bitrateKbps = getInt(PROP_BITRATE)
-        }
+      adsProps?.getMap(PROP_IMA_CONFIGURATION)?.run {
+        getIntOrNull(PROP_BITRATE)?.let { bitrateKbps = it }
 
         // The time needs to be in milliseconds on android but seconds on ios.
         // we unify the prop from javascript by multiplying it by 1000 here
-        if (hasKey(PROP_IMA_AD_LOAD_TIMEOUT)) {
-          setLoadVideoTimeout(getInt(PROP_IMA_AD_LOAD_TIMEOUT) * 1000)
-        }
+        getIntOrNull(PROP_IMA_AD_LOAD_TIMEOUT)?.let { setLoadVideoTimeout(it * 1000) }
 
-        if (hasKey(PROP_IMA_FOCUS_SKIP_BUTTON_WHEN_AVAILABLE)) {
-          focusSkipButtonWhenAvailable = getBoolean(PROP_IMA_FOCUS_SKIP_BUTTON_WHEN_AVAILABLE)
+        getBooleanOrNull(PROP_IMA_FOCUS_SKIP_BUTTON_WHEN_AVAILABLE)?.let {
+          focusSkipButtonWhenAvailable = it
         }
       }
     }
@@ -277,14 +240,24 @@ class PlayerConfigAdapter(private val configProps: ReadableMap?) {
     )
   }
 
-  private fun theoLiveConfig (): THEOLiveConfig {
+  private fun theoLiveConfig(): THEOLiveConfig {
     val config = configProps?.getMap(PROP_THEOLIVE_CONFIG)
     return THEOLiveConfig.Builder(
-      externalSessionId = config?.getString(PROP_THEOLIVE_EXTERNAL_SESSION_ID),
-      analyticsDisabled = if (config?.hasKey(PROP_THEOLIVE_ANALYTICS_DISABLED) == true)
-        config.getBoolean(PROP_THEOLIVE_ANALYTICS_DISABLED)
-      else false,
-      discoveryUrl = config?.getString(PROP_THEOLIVE_DISCOVERY_URL)
+      externalSessionId = config?.getStringOrNull(PROP_THEOLIVE_EXTERNAL_SESSION_ID),
+      analyticsDisabled = config?.getBooleanOrNull(PROP_THEOLIVE_ANALYTICS_DISABLED) ?: false,
+      discoveryUrl = config?.getStringOrNull(PROP_THEOLIVE_DISCOVERY_URL)
     ).build()
   }
+
+  private fun ReadableMap.getBooleanOrNull(key: String): Boolean? =
+    if (hasKey(key) && !isNull(key)) getBoolean(key) else null
+
+  private fun ReadableMap.getIntOrNull(key: String): Int? =
+    if (hasKey(key) && !isNull(key)) getInt(key) else null
+
+  private fun ReadableMap.getDoubleOrNull(key: String): Double? =
+    if (hasKey(key) && !isNull(key)) getDouble(key) else null
+
+  private fun ReadableMap.getStringOrNull(key: String): String? =
+    if (hasKey(key) && !isNull(key)) getString(key) else null
 }

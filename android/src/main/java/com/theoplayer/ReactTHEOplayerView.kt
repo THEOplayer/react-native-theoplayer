@@ -188,7 +188,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
 
   fun setSource(source: ReadableMap?) {
     try {
-      val sourceDescription = SourceAdapter().parseSourceFromJS(source)
+      val sourceDescription = SourceAdapter(config?.liveOffset()).parseSourceFromJS(source)
       adBridge.setSource(sourceDescription)
       player?.source = sourceDescription
     } catch (exception: THEOplayerException) {
