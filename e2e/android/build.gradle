@@ -14,6 +14,8 @@ buildscript {
     kotlinVersion = "2.2.10"
     agpVersion = "8.13.0"
     rnrepoVersion = "0.2.2"
+    // comscore 6.16.0 requires compileSdk 37; pin until compileSdk is upgraded.
+    THEOplayerComscore_comscoreVersion = "6.15.0"
   }
   repositories {
     google()
