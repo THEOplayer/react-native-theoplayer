@@ -257,6 +257,9 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onCertificateRequestProcessedAsCertificate.") }
         if let requestId = result["requestId"] as? String,
            let completion = self.certificateRequestCompletions.removeValue(forKey: requestId) {
+            _ = self.requestIntegrationIds.removeValue(forKey: requestId)
+            _ = self.requestKeySystemIds.removeValue(forKey: requestId)
+            _ = self.requestIntegrationInstanceIds.removeValue(forKey: requestId)
             var bodyData = Data()
             if let base64body = result["base64body"] as? String {
                 bodyData = Data(base64Encoded: base64body, options: .ignoreUnknownCharacters) ?? Data()
@@ -327,6 +330,9 @@ class THEOplayerRCTContentProtectionAPI: RCTEventEmitter {
         if DEBUG_CONTENT_PROTECTION_API { print(CPI_TAG, "onLicenseRequestProcessedAsLicense.") }
         if let requestId = result["requestId"] as? String,
            let completion = self.licenseRequestCompletions.removeValue(forKey: requestId) {
+            _ = self.requestIntegrationIds.removeValue(forKey: requestId)
+            _ = self.requestKeySystemIds.removeValue(forKey: requestId)
+            _ = self.requestIntegrationInstanceIds.removeValue(forKey: requestId)
             var bodyData = Data()
             if let base64body = result["base64body"] as? String {
                 bodyData = Data(base64Encoded: base64body, options: .ignoreUnknownCharacters) ?? Data()

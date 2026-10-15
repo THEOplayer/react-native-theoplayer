@@ -54,6 +54,7 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
       isTurboModule = false,
     )
     const val REQUEST_TIMEOUT_MS = 10000L
+    const val PRUNE_INTERVAL_MS = 30000L
   }
 
   private val handler = Handler(Looper.getMainLooper())
@@ -67,8 +68,27 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
   // cleanup is detected through garbage collection and reported to JavaScript.
   private val integrationRefs: HashMap<String, WeakReference<ProxyContentProtectionIntegration>> = HashMap()
 
+  // Periodically reports collected proxy instances to JavaScript, so cleanup also
+  // happens when no further DRM events trigger it.
+  private val pruneRunnable = object : Runnable {
+    override fun run() {
+      pruneDisposedIntegrations()
+      if (integrationRefs.isNotEmpty()) {
+        handler.postDelayed(this, PRUNE_INTERVAL_MS)
+      }
+    }
+  }
+
   fun trackIntegration(integration: ProxyContentProtectionIntegration) {
     integrationRefs[integration.integrationInstanceId] = WeakReference(integration)
+    if (integrationRefs.size == 1) {
+      handler.postDelayed(pruneRunnable, PRUNE_INTERVAL_MS)
+    }
+  }
+
+  override fun invalidate() {
+    handler.removeCallbacks(pruneRunnable)
+    super.invalidate()
   }
 
   private fun pruneDisposedIntegrations() {
