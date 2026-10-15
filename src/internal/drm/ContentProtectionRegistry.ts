@@ -35,7 +35,7 @@ interface ExtractFaiplayContentIdEvent extends NativeContentProtectionEvent {
 export class NativeContentProtectionRegistry implements ContentProtectionAPI {
   private emitter: NativeEventEmitter;
   private registeredFactories: WrappedContentProtectionIntegrationFactory[] = [];
-  private currentIntegration: WrappedContentProtectionIntegration | undefined = undefined;
+  private integrations: Map<string, WrappedContentProtectionIntegration> = new Map();
 
   constructor() {
     this.emitter = new NativeEventEmitter(NativeContentProtectionModule);
@@ -45,6 +45,7 @@ export class NativeContentProtectionRegistry implements ContentProtectionAPI {
     this.emitter.addListener('onLicenseRequest', this.onLicenseRequest);
     this.emitter.addListener('onLicenseResponse', this.onLicenseResponse);
     this.emitter.addListener('onExtractFairplayContentId', this.onExtractFairplayContentId);
+    this.emitter.addListener('onIntegrationDisposed', this.onIntegrationDisposed);
   }
 
   registerContentProtectionIntegration(integrationId: string, keySystemId: KeySystemId, integrationFactory: ContentProtectionIntegrationFactory) {
@@ -60,10 +61,18 @@ export class NativeContentProtectionRegistry implements ContentProtectionAPI {
     return this.registeredFactories.find((init) => init.integrationId === integrationId && init.keySystemId === keySystemId)?.integrationFactory;
   }
 
-  private getIntegration(integrationId: string, keySystemId: string): ContentProtectionIntegration | undefined {
-    return this.currentIntegration?.integrationId === integrationId && this.currentIntegration?.keySystemId === keySystemId
-      ? this.currentIntegration?.integration
-      : undefined;
+  // Each native content protection integration instance gets its own registry entry,
+  // keyed by the integrationInstanceId emitted in bridge events. Events from native builds
+  // that predate per-instance routing do not carry an integrationInstanceId; these share a
+  // single legacy slot, matching the previous single-integration behaviour.
+  private integrationKey(event: NativeContentProtectionEvent): string {
+    return event.integrationInstanceId ?? '';
+  }
+
+  private getIntegration(event: NativeContentProtectionEvent): ContentProtectionIntegration | undefined {
+    const { integrationId, keySystemId } = event;
+    const wrapped = this.integrations.get(this.integrationKey(event));
+    return wrapped?.integrationId === integrationId && wrapped?.keySystemId === keySystemId ? wrapped?.integration : undefined;
   }
 
   private onBuildIntegrationRequest = (event: BuildEvent) => {
@@ -71,11 +80,11 @@ export class NativeContentProtectionRegistry implements ContentProtectionAPI {
     console.log('NativeContentProtectionModule', `onBuildIntegrationRequest ${integrationId} ${keySystemId}`);
     const factory = this.getFactory(integrationId, keySystemId);
     if (factory) {
-      this.currentIntegration = {
+      this.integrations.set(this.integrationKey(event), {
         integrationId,
         keySystemId,
         integration: factory.build(drmConfig),
-      };
+      });
       NativeContentProtectionModule.onBuildProcessed({ requestId, resultString: 'success' });
     } else {
       NativeContentProtectionModule.onBuildProcessed({
@@ -88,7 +97,7 @@ export class NativeContentProtectionRegistry implements ContentProtectionAPI {
   private onCertificateRequest = async (request: NativeCertificateRequest) => {
     const { requestId, integrationId, keySystemId } = request;
     console.log('NativeContentProtectionModule', `onCertificateRequest ${integrationId} ${keySystemId}`);
-    const integration = this.getIntegration(integrationId, keySystemId);
+    const integration = this.getIntegration(request);
     if (integration?.onCertificateRequest) {
       const result = await integration.onCertificateRequest(fromNativeCertificateRequest(request));
       // TODO: we also want to support ArrayBufferView results
@@ -107,7 +116,7 @@ export class NativeContentProtectionRegistry implements ContentProtectionAPI {
   private onCertificateResponse = async (response: NativeCertificateResponse) => {
     const { requestId, integrationId, keySystemId } = response;
     console.log('NativeContentProtectionModule', `onCertificateResponse ${integrationId} ${keySystemId}`);
-    const integration = this.getIntegration(integrationId, keySystemId);
+    const integration = this.getIntegration(response);
     if (integration?.onCertificateResponse) {
       const responseResult = await integration.onCertificateResponse(fromNativeCertificateResponse(response));
       // TODO: we also want to support ArrayBufferView results
@@ -121,7 +130,7 @@ export class NativeContentProtectionRegistry implements ContentProtectionAPI {
   private onLicenseRequest = async (request: NativeLicenseRequest) => {
     const { requestId, integrationId, keySystemId } = request;
     console.log('NativeContentProtectionModule', `onLicenseRequest ${integrationId} ${keySystemId}`);
-    const integration = this.getIntegration(integrationId, keySystemId);
+    const integration = this.getIntegration(request);
     // Optionally let the custom integration modify the request.
     if (integration?.onLicenseRequest) {
       const result = await integration.onLicenseRequest(fromNativeLicenseRequest(request));
@@ -141,7 +150,7 @@ export class NativeContentProtectionRegistry implements ContentProtectionAPI {
   private onLicenseResponse = async (response: NativeLicenseResponse) => {
     const { requestId, integrationId, keySystemId } = response;
     console.log('NativeContentProtectionModule', `onLicenseResponse ${integrationId} ${keySystemId}`);
-    const integration = this.getIntegration(integrationId, keySystemId);
+    const integration = this.getIntegration(response);
     if (integration?.onLicenseResponse) {
       const responseResult = await integration.onLicenseResponse(fromNativeLicenseResponse(response));
       // TODO: we also want to support ArrayBufferView results
@@ -155,7 +164,7 @@ export class NativeContentProtectionRegistry implements ContentProtectionAPI {
   private onExtractFairplayContentId = async (event: ExtractFaiplayContentIdEvent) => {
     const { integrationId, keySystemId, fairplaySkdUrl, requestId } = event;
     console.log('NativeContentProtectionModule', `onExtractFairplayContentId ${integrationId} ${keySystemId}`);
-    const integration = this.getIntegration(integrationId, keySystemId);
+    const integration = this.getIntegration(event);
     if (integration?.extractFairplayContentId) {
       const contentId = await integration.extractFairplayContentId(fairplaySkdUrl);
       NativeContentProtectionModule.onExtractFairplayContentIdProcessed({
@@ -169,6 +178,10 @@ export class NativeContentProtectionRegistry implements ContentProtectionAPI {
         contentId,
       });
     }
+  };
+
+  private onIntegrationDisposed = (event: NativeContentProtectionEvent) => {
+    this.integrations.delete(this.integrationKey(event));
   };
 }
 

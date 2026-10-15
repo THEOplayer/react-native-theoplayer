@@ -14,6 +14,7 @@ import com.theoplayer.android.api.contentprotection.*
 import com.theoplayer.android.api.error.ErrorCode
 import com.theoplayer.android.api.error.THEOplayerException
 import com.theoplayer.android.api.source.drm.DRMConfiguration
+import java.lang.ref.WeakReference
 
 data class BridgeRequest(
   val onResult: HashMap<String, (result: ReadableMap) -> Unit>,
@@ -35,6 +36,7 @@ private const val EVENT_LICENSE_REQUEST_PROCESSED_AS_REQUEST = "onLicenseRequest
 private const val EVENT_LICENSE_REQUEST_PROCESSED_AS_LICENSE = "onLicenseRequestProcessedAsLicense"
 private const val EVENT_LICENSE_RESPONSE = "onLicenseResponse"
 private const val EVENT_LICENSE_RESPONSE_PROCESSED = "onLicenseResponseProcessed"
+private const val EVENT_INTEGRATION_DISPOSED = "onIntegrationDisposed"
 
 @Suppress("unused")
 @ReactModule(name = ContentProtectionModule.NAME)
@@ -59,6 +61,28 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
   private var requestId: Int = 0
 
   private val requestQueue: HashMap<String, BridgeRequest> = HashMap()
+
+  // Weak references to every proxy integration instance built by the native SDK.
+  // The Android content protection API has no disposal callback, so instance
+  // cleanup is detected through garbage collection and reported to JavaScript.
+  private val integrationRefs: HashMap<String, WeakReference<ProxyContentProtectionIntegration>> = HashMap()
+
+  fun trackIntegration(integration: ProxyContentProtectionIntegration) {
+    integrationRefs[integration.integrationInstanceId] = WeakReference(integration)
+  }
+
+  private fun pruneDisposedIntegrations() {
+    val disposed = integrationRefs.filterValues { it.get() == null }.keys
+    disposed.forEach { integrationInstanceId ->
+      integrationRefs.remove(integrationInstanceId)
+      context.getJSModule(RCTDeviceEventEmitter::class.java).emit(
+        EVENT_INTEGRATION_DISPOSED,
+        Arguments.createMap().apply {
+          putString(PROP_INTEGRATION_INSTANCE_ID, integrationInstanceId)
+        }
+      )
+    }
+  }
 
   override fun getName(): String {
     return NAME
@@ -117,8 +141,8 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
     receive(EVENT_LICENSE_RESPONSE_PROCESSED, payload)
   }
 
-  fun onBuild(integrationId: String, keySystemId: KeySystemId, config: DRMConfiguration?) {
-    val payload = createBridgeData(integrationId, keySystemId)
+  fun onBuild(integrationId: String, keySystemId: KeySystemId, integrationInstanceId: String, config: DRMConfiguration?) {
+    val payload = createBridgeData(integrationId, keySystemId, integrationInstanceId)
     if (config != null) {
       payload.putMap(PROP_DRM_CONFIG, ContentProtectionAdapter.fromDRMConfiguration(config))
     }
@@ -132,10 +156,11 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
   fun onCertificateRequest(
     integrationId: String,
     keySystemId: KeySystemId,
+    integrationInstanceId: String,
     request: Request,
     callback: CertificateRequestCallback
   ) {
-    val payload = ContentProtectionAdapter.fromRequest(integrationId, keySystemId, request)
+    val payload = ContentProtectionAdapter.fromRequest(integrationId, keySystemId, integrationInstanceId, request)
     emit(
       EVENT_CERTIFICATE_REQUEST, payload,
       onResult = hashMapOf(
@@ -163,10 +188,11 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
   fun onCertificateResponse(
     integrationId: String,
     keySystemId: KeySystemId,
+    integrationInstanceId: String,
     response: Response,
     callback: CertificateResponseCallback
   ) {
-    val payload = ContentProtectionAdapter.fromResponse(integrationId, keySystemId, response)
+    val payload = ContentProtectionAdapter.fromResponse(integrationId, keySystemId, integrationInstanceId, response)
     emit(
       EVENT_CERTIFICATE_RESPONSE, payload,
       onResult = hashMapOf(
@@ -182,10 +208,11 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
   fun onLicenseRequest(
     integrationId: String,
     keySystemId: KeySystemId,
+    integrationInstanceId: String,
     request: Request,
     callback: LicenseRequestCallback
   ) {
-    val payload = ContentProtectionAdapter.fromRequest(integrationId, keySystemId, request)
+    val payload = ContentProtectionAdapter.fromRequest(integrationId, keySystemId, integrationInstanceId, request)
     emit(
       EVENT_LICENSE_REQUEST, payload,
       onResult = hashMapOf(
@@ -213,10 +240,11 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
   fun onLicenseResponse(
     integrationId: String,
     keySystemId: KeySystemId,
+    integrationInstanceId: String,
     response: Response,
     callback: LicenseResponseCallback
   ) {
-    val payload = ContentProtectionAdapter.fromResponse(integrationId, keySystemId, response)
+    val payload = ContentProtectionAdapter.fromResponse(integrationId, keySystemId, integrationInstanceId, response)
     emit(
       EVENT_LICENSE_RESPONSE, payload,
       onResult = hashMapOf(
@@ -246,6 +274,7 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
     onResult: HashMap<String, (result: ReadableMap) -> Unit>,
     onError: (error: THEOplayerException) -> Unit
   ) {
+    pruneDisposedIntegrations()
     val requestId = createRequestId()
     if (BuildConfig.DEBUG) {
       Log.d(NAME, "emit $eventName ($requestId)")
@@ -289,9 +318,14 @@ class ContentProtectionModule(private val context: ReactApplicationContext) :
     return (requestId++).toString()
   }
 
-  private fun createBridgeData(integrationId: String, keySystemId: KeySystemId): WritableMap {
+  private fun createBridgeData(
+    integrationId: String,
+    keySystemId: KeySystemId,
+    integrationInstanceId: String
+  ): WritableMap {
     return Arguments.createMap().apply {
       putString(PROP_INTEGRATION_ID, integrationId)
+      putString(PROP_INTEGRATION_INSTANCE_ID, integrationInstanceId)
       putString(PROP_KEYSYSTEM_ID, KeySystemAdapter.toString(keySystemId))
     }
   }
