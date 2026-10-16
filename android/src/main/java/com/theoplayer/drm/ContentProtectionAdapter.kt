@@ -22,6 +22,7 @@ private const val TAG = "ContentProtection"
 
 const val PROP_INTEGRATION: String = "integration"
 const val PROP_INTEGRATION_ID: String = "integrationId"
+const val PROP_INTEGRATION_INSTANCE_ID: String = "integrationInstanceId"
 const val PROP_INTEGRATION_PARAMETERS: String = "integrationParameters"
 const val PROP_REQUEST: String = "request"
 const val PROP_KEYSYSTEM_ID: String = "keySystemId"
@@ -51,9 +52,14 @@ const val PROP_VALUE: String = "value"
 
 object ContentProtectionAdapter {
 
-  private fun createBridgeData(integrationId: String, keySystemId: KeySystemId): WritableMap {
+  private fun createBridgeData(
+    integrationId: String,
+    keySystemId: KeySystemId,
+    integrationInstanceId: String
+  ): WritableMap {
     return Arguments.createMap().apply {
       putString(PROP_INTEGRATION_ID, integrationId)
+      putString(PROP_INTEGRATION_INSTANCE_ID, integrationInstanceId)
       putString(PROP_KEYSYSTEM_ID, KeySystemAdapter.toString(keySystemId))
     }
   }
@@ -176,8 +182,13 @@ object ContentProtectionAdapter {
     }
   }
 
-  fun fromRequest(integrationId: String, keySystemId: KeySystemId, request: Request): WritableMap {
-    val payload = createBridgeData(integrationId, keySystemId)
+  fun fromRequest(
+    integrationId: String,
+    keySystemId: KeySystemId,
+    integrationInstanceId: String,
+    request: Request
+  ): WritableMap {
+    val payload = createBridgeData(integrationId, keySystemId, integrationInstanceId)
     payload.putString(PROP_URL, request.url)
     payload.putString(PROP_METHOD, RequestMethodAdapter.toString(request.method))
     val headers = Arguments.createMap()
@@ -192,9 +203,10 @@ object ContentProtectionAdapter {
   fun fromResponse(
     integrationId: String,
     keySystemId: KeySystemId,
+    integrationInstanceId: String,
     response: Response
   ): WritableMap {
-    val payload = createBridgeData(integrationId, keySystemId)
+    val payload = createBridgeData(integrationId, keySystemId, integrationInstanceId)
     payload.putString(PROP_URL, response.url)
     payload.putInt(PROP_STATUS, response.status)
     payload.putString(PROP_STATUS_TEXT, response.statusText)
@@ -205,7 +217,7 @@ object ContentProtectionAdapter {
       }
     }
     payload.putMap(PROP_HEADERS, headers)
-    payload.putMap(PROP_REQUEST, fromRequest(integrationId, keySystemId, response.request))
+    payload.putMap(PROP_REQUEST, fromRequest(integrationId, keySystemId, integrationInstanceId, response.request))
     payload.putString(PROP_BASE64_BODY, Base64.encodeToString(response.body, Base64.DEFAULT))
     return payload
   }

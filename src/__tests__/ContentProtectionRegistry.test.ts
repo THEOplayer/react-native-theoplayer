@@ -60,10 +60,24 @@ function setup() {
   createdEmitters.length = 0;
   const registry = new NativeContentProtectionRegistry();
   const emitter = createdEmitters[createdEmitters.length - 1];
-  const buildIntegration = (integrationId: string, keySystemId: string) =>
-    emitter.listeners.get('onBuildIntegration')?.({ requestId: '1', integrationId, keySystemId, drmConfig: {} } as never);
-  return { registry, buildIntegration };
+  const buildIntegration = (integrationId: string, keySystemId: string, integrationInstanceId?: string) =>
+    emitter.listeners.get('onBuildIntegration')?.({ requestId: '1', integrationId, keySystemId, integrationInstanceId, drmConfig: {} } as never);
+  const emit = (eventType: string, event: object): Promise<void> | void => emitter.listeners.get(eventType)?.(event as never) as Promise<void> | void;
+  return { registry, emitter, buildIntegration, emit };
 }
+
+const licenseRequest = (integrationId: string, keySystemId: string, integrationInstanceId?: string) => ({
+  requestId: 'req-1',
+  integrationId,
+  keySystemId,
+  integrationInstanceId,
+  url: 'https://license.server/',
+  method: 'GET',
+  headers: {},
+  base64body: null,
+  useCredentials: false,
+  fairplaySkdUrl: undefined,
+});
 
 test('registerContentProtectionIntegration replaces a factory registered for the same integration and key system', () => {
   const { registry, buildIntegration } = setup();
@@ -122,4 +136,104 @@ test('each registration is still forwarded to the native module', () => {
 
   const registrations = nativeModuleCalls.filter((c) => c.method === 'registerContentProtectionIntegration');
   assert.equal(registrations.length, 2);
+});
+
+test('callbacks are routed to the integration instance matching the event instance identifier', async () => {
+  const { registry, buildIntegration, emit } = setup();
+  const calls: string[] = [];
+  const handledRequest = (tag: string) => () => {
+    calls.push(tag);
+    return { url: `handled-by-${tag}`, method: 'GET', headers: {}, body: null, useCredentials: false };
+  };
+  registry.registerContentProtectionIntegration('drm', 'widevine' as never, {
+    build: () => ({ onLicenseRequest: handledRequest('instance-a') }),
+  });
+  registry.registerContentProtectionIntegration('drm', 'fairplay' as never, {
+    build: () => ({ onLicenseRequest: handledRequest('instance-b') }),
+  });
+
+  buildIntegration('drm', 'widevine', 'instance-a');
+  buildIntegration('drm', 'fairplay', 'instance-b');
+
+  await emit('onLicenseRequest', licenseRequest('drm', 'widevine', 'instance-a'));
+  await emit('onLicenseRequest', licenseRequest('drm', 'fairplay', 'instance-b'));
+
+  assert.deepEqual(calls, ['instance-a', 'instance-b']);
+  const processed = nativeModuleCalls.filter((c) => c.method === 'onLicenseRequestProcessedAsRequest');
+  assert.deepEqual(
+    processed.map((c) => (c.args[0] as { url: string }).url),
+    ['handled-by-instance-a', 'handled-by-instance-b'],
+  );
+});
+
+test('building a second integration for the same integration id does not replace the first', async () => {
+  const { registry, buildIntegration, emit } = setup();
+  const calls: string[] = [];
+  let count = 0;
+  registry.registerContentProtectionIntegration('drm', 'widevine' as never, {
+    build: () => {
+      const tag = `built-${++count}`;
+      return {
+        onLicenseRequest: () => {
+          calls.push(tag);
+          return { url: `handled-by-${tag}` };
+        },
+      };
+    },
+  });
+
+  buildIntegration('drm', 'widevine', 'instance-a');
+  buildIntegration('drm', 'widevine', 'instance-b');
+
+  await emit('onLicenseRequest', licenseRequest('drm', 'widevine', 'instance-a'));
+  await emit('onLicenseRequest', licenseRequest('drm', 'widevine', 'instance-b'));
+
+  assert.deepEqual(calls, ['built-1', 'built-2']);
+});
+
+test('disposing an integration removes it from the registry', async () => {
+  const { registry, buildIntegration, emit } = setup();
+  const calls: string[] = [];
+  registry.registerContentProtectionIntegration('drm', 'widevine' as never, {
+    build: () => ({
+      onLicenseRequest: () => {
+        calls.push('handled');
+        return { url: 'handled' };
+      },
+    }),
+  });
+  buildIntegration('drm', 'widevine', 'instance-a');
+  emit('onIntegrationDisposed', { integrationId: 'drm', keySystemId: 'widevine', integrationInstanceId: 'instance-a' });
+
+  await emit('onLicenseRequest', licenseRequest('drm', 'widevine', 'instance-a'));
+
+  // The disposed integration must not handle the callback; the request passes through unmodified.
+  assert.deepEqual(calls, []);
+  const processed = nativeModuleCalls.filter((c) => c.method === 'onLicenseRequestProcessedAsRequest');
+  assert.equal(processed.length, 1);
+  assert.equal((processed[0].args[0] as { url: string }).url, 'https://license.server/');
+});
+
+test('events without an instance identifier keep the single-integration behaviour', async () => {
+  const { registry, buildIntegration, emit } = setup();
+  const calls: string[] = [];
+  let count = 0;
+  registry.registerContentProtectionIntegration('drm', 'widevine' as never, {
+    build: () => {
+      const tag = `built-${++count}`;
+      return {
+        onLicenseRequest: () => {
+          calls.push(tag);
+          return { url: `handled-by-${tag}` };
+        },
+      };
+    },
+  });
+
+  buildIntegration('drm', 'widevine');
+  buildIntegration('drm', 'widevine');
+
+  await emit('onLicenseRequest', licenseRequest('drm', 'widevine'));
+
+  assert.deepEqual(calls, ['built-2']);
 });

@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed an issue where re-registering a content protection integration for the same key system kept the previously registered factory active, causing stale DRM integrations to be used for subsequent sources.
+- Fixed an issue on iOS and Android where certificate and license requests from multiple concurrently playing DRM-protected sources could be processed by the wrong content protection integration, or bypass it entirely, causing license acquisition to fail.
 
 ## [11.7.0] - 18-09-26
 
