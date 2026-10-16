@@ -7,6 +7,8 @@ import THEOplayerSDK
 import THEOplayerTHEOliveIntegration
 #endif
 
+let PROP_ENDPOINT_SRC: String = "src"
+let PROP_ENDPOINT_SRC_TYPE: String = "srcType"
 let PROP_ENDPOINT_HESP_SRC: String = "hespSrc"
 let PROP_ENDPOINT_HLS_SRC: String = "hlsSrc"
 let PROP_ENDPOINT_HLS_MPEG_TS_SRC: String = "hlsMpegTsSrc"
@@ -69,6 +71,27 @@ class THEOplayerRCTTHEOliveEventAdapter {
         }
         endpointData[PROP_ENDPOINT_WEIGHT] = endpoint.weight
         endpointData[PROP_ENDPOINT_PRIORITY] = endpoint.priority
+        
+        // Unlike the web SDK, the native EndpointAPI does not carry a generic
+        // `src`/`srcType`; it is derived from the resolved source field.
+        let resolvedSource: (type: String, src: Any)?
+        if let hespSrc = endpoint.hespSrc {
+            resolvedSource = ("hesp", hespSrc)
+        } else if let hlsSrc = endpoint.hlsSrc {
+            resolvedSource = ("hls", hlsSrc)
+        } else if let hlsMpegTsSrc = endpoint.hlsMpegTsSrc {
+            resolvedSource = ("hlsMpegTs", hlsMpegTsSrc)
+        } else if let millicastSrc = endpoint.millicastSrc {
+            resolvedSource = ("millicast", millicastSrc.toJSONEncodableDictionary())
+        } else if let daiAssetKey = endpoint.daiAssetKey {
+            resolvedSource = ("dai", daiAssetKey)
+        } else {
+            resolvedSource = nil
+        }
+        if let resolvedSource = resolvedSource {
+            endpointData[PROP_ENDPOINT_SRC_TYPE] = resolvedSource.type
+            endpointData[PROP_ENDPOINT_SRC] = resolvedSource.src
+        }
         return endpointData
     }
     
