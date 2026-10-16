@@ -56,7 +56,7 @@ jobs:
           ./gradlew assembleRelease
 
       - name: Upload apk
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: Android APK
           path: |

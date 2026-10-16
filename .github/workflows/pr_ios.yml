@@ -110,14 +110,14 @@ jobs:
 
       - name: Upload crash logs
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: crash-logs-${{ matrix.platform }}
           path: ~/crashlog.logarchive
 
       - name: Upload screenshots
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: e2e-screenshots-${{ matrix.platform }}
           path: e2e/screenshots
