@@ -89,7 +89,7 @@ jobs:
           bundle exec pod update
 
       - name: Start iOS simulator
-        uses: futureware-tech/simulator-action@v4
+        uses: futureware-tech/simulator-action@v6
         with:
           model: ${{ matrix.platform == 'iOS' && 'iPhone 17' || 'Apple TV' }}
           os: ${{ matrix.platform }}
