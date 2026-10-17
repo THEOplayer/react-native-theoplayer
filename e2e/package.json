@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@theoplayer/react-native-ui": "^0.23.0",
-    "react": "19.2.3",
+    "react": "19.3.0",
     "react-dom": "19.2.3",
     "react-native": "npm:react-native-tvos@^0.86.2-0",
     "react-native-status-bar-height": "^2.6.0",
@@ -41,7 +41,7 @@
     "@theoplayer/react-native-analytics-comscore": "^1.15.0",
     "@theoplayer/react-native-analytics-conviva": "^1.15.0",
     "@theoplayer/react-native-analytics-nielsen": "^1.13.0",
-    "@types/react": "^19.2.14",
+    "@types/react": "^19.3.0",
     "@types/react-dom": "^19.2.3",
     "babel-loader": "^8.4.1",
     "babel-plugin-module-resolver": "^5.0.2",
