@@ -65,7 +65,7 @@
     "eslint-plugin-react-hooks": "^7.0.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.1",
-    "pod-install": "^0.1.39",
+    "pod-install": "^1.2.1",
     "prettier": "^3.5.3",
     "react": "^19.2.3",
     "react-native": "^0.86.2",
