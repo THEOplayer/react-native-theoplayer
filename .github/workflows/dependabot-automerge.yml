@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   automerge:
-    if: github.actor == 'dependabot[bot]' && github.event.pull_request.draft == false
+    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
       - name: Fetch dependabot metadata
@@ -22,10 +22,29 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
+      # Every updated dependency must be an npm dev or transitive dependency, or a
+      # GitHub Action, and the update must be a patch, or a minor from a known version
+      # >= 1.0.0 (a 0.x minor bump is breaking under semver). Majors, 0.x minors,
+      # published npm dependencies and Gradle updates require a human review.
+      - name: Check auto-merge policy
+        id: policy
+        env:
+          DEPS: ${{ steps.metadata.outputs.updated-dependencies-json }}
+        run: |
+          eligible=$(jq -r '
+            length > 0 and all(.[];
+              ((.packageEcosystem == "npm_and_yarn" and .dependencyType != "direct:production")
+                or .packageEcosystem == "github_actions")
+              and (.updateType == "version-update:semver-patch"
+                or (.updateType == "version-update:semver-minor"
+                  and .prevVersion != "" and (.prevVersion | ltrimstr("v") | startswith("0.") | not)))
+            )' <<< "$DEPS")
+          echo "eligible=$eligible" >> "$GITHUB_OUTPUT"
+          echo "Auto-merge eligible: $eligible"
+
       # GitHub merges the PR once all required status checks are green.
-      # Major updates stay manual; they still require a human review.
-      - name: Enable auto-merge for minor/patch updates
-        if: contains(fromJSON('["version-update:semver-patch","version-update:semver-minor"]'), steps.metadata.outputs.update-type)
+      - name: Enable auto-merge
+        if: steps.policy.outputs.eligible == 'true'
         run: gh pr merge --auto --squash "$PR_URL"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
