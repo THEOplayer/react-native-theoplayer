@@ -1,37 +1,68 @@
 version: 2
 updates:
+  # Library package. Minor and patch updates are grouped into a single weekly PR, majors into
+  # another. React Native-aligned packages and the THEOplayer SDK are upgraded manually as part
+  # of a coordinated React Native or SDK upgrade, so only their patch releases are proposed here.
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 2
+    cooldown:
+      default-days: 7
+    ignore:
+      - dependency-name: "react-native"
+        update-types: ["version-update:semver-minor", "version-update:semver-major"]
+      - dependency-name: "@react-native/*"
+        update-types: ["version-update:semver-minor", "version-update:semver-major"]
+      - dependency-name: "react"
+        update-types: ["version-update:semver-minor", "version-update:semver-major"]
+      - dependency-name: "@types/react"
+        update-types: ["version-update:semver-minor", "version-update:semver-major"]
+      - dependency-name: "theoplayer"
+        update-types: ["version-update:semver-minor", "version-update:semver-major"]
+    groups:
+      npm-minor-patch:
+        update-types: ["minor", "patch"]
+      npm-major:
+        update-types: ["major"]
+
+  # Example and E2E apps only receive security updates. Their dependency set follows the
+  # react-native-tvos template, and Dependabot-generated lockfiles for these apps drop entries
+  # that `npm ci` requires.
   - package-ecosystem: "npm"
     directory: "/example"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 0
   - package-ecosystem: "npm"
     directory: "/e2e"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 0
+
+  # One PR per Gradle dependency across all Android projects.
   - package-ecosystem: "gradle"
-    directory: "/android"
+    directories:
+      - "/android"
+      - "/example/android"
+      - "/e2e/android"
     schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 5
-  - package-ecosystem: "gradle"
-    directory: "/example/android"
-    schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 5
-  - package-ecosystem: "gradle"
-    directory: "/e2e/android"
-    schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 5
+      interval: "monthly"
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+    groups:
+      gradle:
+        group-by: dependency-name
+
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 5
+      interval: "monthly"
+    open-pull-requests-limit: 1
+    cooldown:
+      default-days: 7
+    groups:
+      github-actions:
+        patterns: ["*"]
