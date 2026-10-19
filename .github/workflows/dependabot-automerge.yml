@@ -37,7 +37,7 @@ jobs:
                 or .packageEcosystem == "github_actions")
               and (.updateType == "version-update:semver-patch"
                 or (.updateType == "version-update:semver-minor"
-                  and .prevVersion != "" and (.prevVersion | startswith("0.") | not)))
+                  and .prevVersion != "" and (.prevVersion | ltrimstr("v") | startswith("0.") | not)))
             )' <<< "$DEPS")
           echo "eligible=$eligible" >> "$GITHUB_OUTPUT"
           echo "Auto-merge eligible: $eligible"
