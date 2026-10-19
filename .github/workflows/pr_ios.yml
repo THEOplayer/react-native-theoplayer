@@ -12,8 +12,8 @@ jobs:
     outputs:
       ios: ${{ steps.filter.outputs.ios }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: dorny/paths-filter@v3
+      - uses: actions/checkout@v7
+      - uses: dorny/paths-filter@v4
         id: filter
         with:
           filters: |
@@ -39,7 +39,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Select Xcode ${{ matrix.xcode_version }}
         uses: maxim-lobanov/setup-xcode@v1
@@ -47,13 +47,13 @@ jobs:
           xcode-version: ${{ matrix.xcode_version }}
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: 'npm'
 
       - name: Cache Ruby Gems
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
@@ -61,7 +61,7 @@ jobs:
             ${{ runner.os }}-gems-
 
       - name: Cache CocoaPods
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: e2e/ios/Pods
           key: pods-${{ runner.os }}-${{ hashFiles('Podfile.lock') }}
@@ -89,7 +89,7 @@ jobs:
           bundle exec pod update
 
       - name: Start iOS simulator
-        uses: futureware-tech/simulator-action@v4
+        uses: futureware-tech/simulator-action@v6
         with:
           model: ${{ matrix.platform == 'iOS' && 'iPhone 17' || 'Apple TV' }}
           os: ${{ matrix.platform }}
@@ -110,14 +110,14 @@ jobs:
 
       - name: Upload crash logs
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: crash-logs-${{ matrix.platform }}
           path: ~/crashlog.logarchive
 
       - name: Upload screenshots
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: e2e-screenshots-${{ matrix.platform }}
           path: e2e/screenshots
