@@ -9,6 +9,8 @@ import THEOplayerTHEOliveIntegration
 
 let PROP_ENDPOINT_SRC: String = "src"
 let PROP_ENDPOINT_SRC_TYPE: String = "srcType"
+let PROP_ENDPOINT_PROVIDER: String = "provider"
+let PROP_ENDPOINT_AD_SYSTEM: String = "adSystem"
 let PROP_ENDPOINT_HESP_SRC: String = "hespSrc"
 let PROP_ENDPOINT_HLS_SRC: String = "hlsSrc"
 let PROP_ENDPOINT_HLS_MPEG_TS_SRC: String = "hlsMpegTsSrc"
@@ -71,26 +73,22 @@ class THEOplayerRCTTHEOliveEventAdapter {
         }
         endpointData[PROP_ENDPOINT_WEIGHT] = endpoint.weight
         endpointData[PROP_ENDPOINT_PRIORITY] = endpoint.priority
-        
-        // Unlike the web SDK, the native EndpointAPI does not carry a generic
-        // `src`/`srcType`; it is derived from the resolved source field.
-        let resolvedSource: (type: String, src: Any)?
-        if let hespSrc = endpoint.hespSrc {
-            resolvedSource = ("hesp", hespSrc)
-        } else if let hlsSrc = endpoint.hlsSrc {
-            resolvedSource = ("hls", hlsSrc)
-        } else if let hlsMpegTsSrc = endpoint.hlsMpegTsSrc {
-            resolvedSource = ("hlsMpegTs", hlsMpegTsSrc)
-        } else if let millicastSrc = endpoint.millicastSrc {
-            resolvedSource = ("millicast", millicastSrc.toJSONEncodableDictionary())
-        } else if let daiAssetKey = endpoint.daiAssetKey {
-            resolvedSource = ("dai", daiAssetKey)
-        } else {
-            resolvedSource = nil
+        switch endpoint.src {
+        case .url(let url):
+            endpointData[PROP_ENDPOINT_SRC] = url
+        case .millicast(let millicastSrc):
+            endpointData[PROP_ENDPOINT_SRC] = millicastSrc.toJSONEncodableDictionary()
+        case nil:
+            break
         }
-        if let resolvedSource = resolvedSource {
-            endpointData[PROP_ENDPOINT_SRC_TYPE] = resolvedSource.type
-            endpointData[PROP_ENDPOINT_SRC] = resolvedSource.src
+        if let srcType = endpoint.srcType {
+            endpointData[PROP_ENDPOINT_SRC_TYPE] = srcType
+        }
+        if let provider = endpoint.provider {
+            endpointData[PROP_ENDPOINT_PROVIDER] = provider
+        }
+        if let adSystem = endpoint.adSystem {
+            endpointData[PROP_ENDPOINT_AD_SYSTEM] = adSystem
         }
         return endpointData
     }

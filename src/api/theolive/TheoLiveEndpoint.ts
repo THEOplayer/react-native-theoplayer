@@ -24,9 +24,7 @@ export interface TheoLiveEndpoint {
    * For most endpoint types, this is the source URL string.
    * For millicast endpoints, this is a {@link EndpointMillicastSource} object.
    *
-   * On Android and iOS this is derived from the resolved source property
-   * (e.g. {@link TheoLiveEndpoint.hlsSrc}), as the native SDKs do not expose
-   * a generic `src` property.
+   * Undefined if the endpoint has no source.
    *
    * @platform android,ios,web
    */
@@ -36,24 +34,29 @@ export interface TheoLiveEndpoint {
    * The type of source (e.g. 'hesp', 'hls', 'hlsMpegTs', 'millicast', 'dai').
    *
    * @remarks
-   * On Android and iOS this is derived from the resolved source property,
-   * as the native SDKs do not expose a `srcType` property.
+   * Undefined if the endpoint has no source.
    *
    * @platform android,ios,web
    */
   srcType?: string;
 
   /**
-   * The provider of this endpoint (e.g. 'optiview').
+   * The provider of this endpoint (e.g. 'optiview', 'mediakind').
    *
-   * @platform android,web
+   * @remarks
+   * Unknown providers are reported verbatim. Undefined if the discovery response does not specify one.
+   *
+   * @platform android,ios,web
    */
   provider?: string;
 
   /**
-   * The ad system associated with this endpoint.
+   * The ad system associated with this endpoint (e.g. 'sgai', 'mediakind', 'dai').
    *
-   * @platform android
+   * @remarks
+   * Unknown ad systems are reported verbatim. Only populated for V3 distributions; undefined otherwise.
+   *
+   * @platform android,ios,web
    */
   adSystem?: string;
 
