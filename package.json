@@ -73,7 +73,7 @@
     "theoplayer": "^11.4.0",
     "typedoc": "^0.28.20",
     "typedoc-plugin-mdn-links": "^5.1.1",
-    "typescript": "5.1.6",
+    "typescript": "5.9.3",
     "typescript-eslint": "^8.30.1"
   },
   "peerDependencies": {
