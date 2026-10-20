@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed an issue where re-registering a content protection integration for the same key system kept the previously registered factory active, causing stale DRM integrations to be used for subsequent sources.
+- Fixed an issue on iOS and Android where certificate and license requests from multiple concurrently playing DRM-protected sources could be processed by the wrong content protection integration, or bypass it entirely, causing license acquisition to fail.
 
 ## [11.7.0] - 18-09-26
 
@@ -29,6 +30,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed an issue on Android where destroying the player during a pending `MediaPlaybackService` bind could cause a crash.
 - Fixed an issue on Android where the player could remain black when its view was attached after React Native had already assigned the layout.
 - Fixed an issue where `player.paused` remained `true` between the `play` and `playing` events.
+- Fixed an issue on Web and iOS Safari where cues already present when a text track was added, including daterange cues, did not produce `addcue` player events.
+- Fixed an issue where text and media track event listeners were not actually removed when a track was removed.
 
 ### Changed
 

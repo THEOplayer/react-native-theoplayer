@@ -1,0 +1,83 @@
+version: 2
+updates:
+  # Library package. Minor and patch updates are grouped into a single weekly PR. Major updates
+  # are done manually when needed. React Native-aligned packages and the THEOplayer SDK are
+  # upgraded as part of a coordinated React Native or SDK upgrade, so only their patch releases
+  # are proposed here.
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 1
+    cooldown:
+      default-days: 7
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-native"
+        update-types: ["version-update:semver-minor"]
+      - dependency-name: "@react-native/*"
+        update-types: ["version-update:semver-minor"]
+      - dependency-name: "react"
+        update-types: ["version-update:semver-minor"]
+      - dependency-name: "@types/react"
+        update-types: ["version-update:semver-minor"]
+      - dependency-name: "theoplayer"
+        update-types: ["version-update:semver-minor"]
+      # 0.x packages, where a minor release is a breaking release.
+      - dependency-name: "react-native-builder-bob"
+        update-types: ["version-update:semver-minor"]
+      - dependency-name: "typedoc"
+        update-types: ["version-update:semver-minor"]
+      - dependency-name: "pod-install"
+        update-types: ["version-update:semver-minor"]
+    groups:
+      npm-minor-patch:
+        update-types: ["minor", "patch"]
+
+  # Example and E2E apps only receive security updates. Their dependency set follows the
+  # react-native-tvos template, and Dependabot-generated lockfiles for these apps drop entries
+  # that `npm ci` requires.
+  - package-ecosystem: "npm"
+    directory: "/example"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 0
+  - package-ecosystem: "npm"
+    directory: "/e2e"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 0
+
+  # One PR per Gradle dependency across all Android projects. Major updates are done manually.
+  - package-ecosystem: "gradle"
+    directories:
+      - "/android"
+      - "/example/android"
+      - "/e2e/android"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      gradle:
+        group-by: dependency-name
+
+  # Major updates are done manually, e.g. when a runner deprecates an action's Node version.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 1
+    cooldown:
+      default-days: 7
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      github-actions:
+        patterns: ["*"]
