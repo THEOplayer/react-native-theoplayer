@@ -31,6 +31,10 @@ updates:
         update-types: ["version-update:semver-minor"]
       - dependency-name: "pod-install"
         update-types: ["version-update:semver-minor"]
+      # TypeScript does not follow semver: minor releases contain breaking changes, and the pinned
+      # compiler version determines the published declaration files.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-minor"]
     groups:
       npm-minor-patch:
         update-types: ["minor", "patch"]
@@ -63,6 +67,10 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
+      # The Gradle version follows the React Native template: newer Gradle minors bundle a Kotlin
+      # version that the React Native Gradle plugin cannot compile against.
+      - dependency-name: "gradle-wrapper"
+        update-types: ["version-update:semver-minor"]
     groups:
       gradle:
         group-by: dependency-name
