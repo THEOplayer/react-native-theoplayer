@@ -31,10 +31,11 @@ export interface TheoLiveEndpoint {
   src?: string | EndpointMillicastSource;
 
   /**
-   * The type of source (e.g. 'hesp', 'hls', 'hlsMpegTs', 'millicast', 'dai').
+   * The type of source (e.g. 'hesp', 'hls', 'hlsMpegTs', 'dash', 'millicast', 'dai').
    *
    * @remarks
    * Undefined if the endpoint has no source.
+   * The 'dash' type is only reported on Web; Android and iOS do not support DASH endpoints.
    *
    * @platform android,ios,web
    */
