@@ -67,6 +67,10 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
+      # The Gradle version follows the React Native template: newer Gradle minors bundle a Kotlin
+      # version that the React Native Gradle plugin cannot compile against.
+      - dependency-name: "gradle-wrapper"
+        update-types: ["version-update:semver-minor"]
     groups:
       gradle:
         group-by: dependency-name
