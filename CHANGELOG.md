@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added the `src`, `srcType`, `provider` and `adSystem` properties to the THEOlive `endpoint` object of the `endpointloaded` event on all platforms.
 - Added the `webrtc` playout delay options to `millicastSrc` on Android.
 
+### Changed
+
+- Raised the minimum supported THEOplayer SDK version to 11.14.0 on all platforms.
+
 ### Fixed
 
 - Fixed an issue where re-registering a content protection integration for the same key system kept the previously registered factory active, causing stale DRM integrations to be used for subsequent sources.

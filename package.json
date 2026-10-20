@@ -79,7 +79,7 @@
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
-    "theoplayer": "^11.4.0"
+    "theoplayer": "^11.14.0"
   },
   "peerDependenciesMeta": {
     "theoplayer": {
