@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Added `src` and `srcType` properties to the THEOlive `endpoint` object on the `endpointloaded` event on Android and iOS, and `provider` and `adSystem` on Android.
+- Added the `src`, `srcType`, `provider` and `adSystem` properties to the THEOlive `endpoint` object of the `endpointloaded` event on all platforms.
 - Added the `webrtc` playout delay options to `millicastSrc` on Android.
 
 ### Fixed
