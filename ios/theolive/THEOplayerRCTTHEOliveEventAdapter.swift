@@ -7,6 +7,10 @@ import THEOplayerSDK
 import THEOplayerTHEOliveIntegration
 #endif
 
+let PROP_ENDPOINT_SRC: String = "src"
+let PROP_ENDPOINT_SRC_TYPE: String = "srcType"
+let PROP_ENDPOINT_PROVIDER: String = "provider"
+let PROP_ENDPOINT_AD_SYSTEM: String = "adSystem"
 let PROP_ENDPOINT_HESP_SRC: String = "hespSrc"
 let PROP_ENDPOINT_HLS_SRC: String = "hlsSrc"
 let PROP_ENDPOINT_HLS_MPEG_TS_SRC: String = "hlsMpegTsSrc"
@@ -69,6 +73,23 @@ class THEOplayerRCTTHEOliveEventAdapter {
         }
         endpointData[PROP_ENDPOINT_WEIGHT] = endpoint.weight
         endpointData[PROP_ENDPOINT_PRIORITY] = endpoint.priority
+        switch endpoint.src {
+        case .url(let url):
+            endpointData[PROP_ENDPOINT_SRC] = url
+        case .millicast(let millicastSrc):
+            endpointData[PROP_ENDPOINT_SRC] = millicastSrc.toJSONEncodableDictionary()
+        case nil:
+            break
+        }
+        if let srcType = endpoint.srcType {
+            endpointData[PROP_ENDPOINT_SRC_TYPE] = srcType
+        }
+        if let provider = endpoint.provider {
+            endpointData[PROP_ENDPOINT_PROVIDER] = provider
+        }
+        if let adSystem = endpoint.adSystem {
+            endpointData[PROP_ENDPOINT_AD_SYSTEM] = adSystem
+        }
         return endpointData
     }
     
