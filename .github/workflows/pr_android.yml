@@ -3,18 +3,32 @@ on:
   workflow_dispatch:
   pull_request:
     types: [opened, reopened, synchronize, ready_for_review]
-    paths:
-      - .github/workflows/pr_android.yml
-      - example/**
-      - e2e/**
-      - '!e2e/ios/**'
-      - package.json
-      - src/**
-      - android/**
 
 jobs:
+  # Always register a check on every PR so it can be a required status check;
+  # the real build job below is skipped when no relevant files changed.
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      android: ${{ steps.filter.outputs.android }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            android:
+              - '.github/workflows/pr_android.yml'
+              - 'example/**'
+              - 'e2e/**'
+              - '!e2e/ios/**'
+              - 'package.json'
+              - 'src/**'
+              - 'android/**'
+
   build:
-    if: github.event.pull_request.draft == false
+    needs: changes
+    if: needs.changes.outputs.android == 'true' && github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     strategy:
       matrix:

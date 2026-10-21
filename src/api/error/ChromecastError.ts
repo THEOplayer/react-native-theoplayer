@@ -15,7 +15,7 @@
  * <br/> - The error codes correspond to the error codes documented in the {@link https://developers.google.com/cast/docs/reference/chrome/chrome.cast.html#.ErrorCode | Chromecast API reference}.
  *
  * @category Errors
- * @categort Casting
+ * @category Casting
  * @public
  */
 export type ChromecastErrorCode =
@@ -34,7 +34,7 @@ export type ChromecastErrorCode =
  * An error that occurred while casting or attempting to cast to Chromecast.
  *
  * @category Errors
- * @categort Casting
+ * @category Casting
  * @public
  */
 export interface ChromecastError {
