@@ -12,6 +12,7 @@ import {
   ChromecastErrorEvent,
   ContentProtectionErrorEvent,
   ContentProtectionErrorObject,
+  ContentProtectionSuccessEvent,
   CurrentSourceChangeEvent,
   DimensionChangeEvent,
   DurationChangeEvent,
@@ -320,5 +321,14 @@ export class DefaultChromecastErrorEvent extends BaseEvent<PlayerEventType.CAST_
 export class DefaultContentProtectionErrorEvent extends BaseEvent<PlayerEventType.CONTENT_PROTECTION_ERROR> implements ContentProtectionErrorEvent {
   constructor(public readonly error: ContentProtectionErrorObject) {
     super(PlayerEventType.CONTENT_PROTECTION_ERROR);
+  }
+}
+
+export class DefaultContentProtectionSuccessEvent
+  extends BaseEvent<PlayerEventType.CONTENT_PROTECTION_SUCCESS>
+  implements ContentProtectionSuccessEvent
+{
+  constructor() {
+    super(PlayerEventType.CONTENT_PROTECTION_SUCCESS);
   }
 }

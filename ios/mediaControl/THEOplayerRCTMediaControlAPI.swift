@@ -1,0 +1,79 @@
+//
+//  THEOplayerRCTMediaControlAPI.swift
+//
+
+import Foundation
+import UIKit
+import THEOplayerSDK
+
+@objc(THEOplayerRCTMediaControlAPI)
+class THEOplayerRCTMediaControlAPI: RCTEventEmitter {
+
+    override static func moduleName() -> String! {
+        return "THEOplayerRCTMediaControlAPI"
+    }
+
+    override static func requiresMainQueueSetup() -> Bool {
+        return false
+    }
+
+    override func supportedEvents() -> [String]! {
+        return ["MediaControlEvent"]
+    }
+
+    @objc(setHandler:action:)
+    func setHandler(_ node: NSNumber, action: String) -> Void {
+        DispatchQueue.main.async {
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView {
+                let mediaControlManager = theView.mediaControlManager
+                let mediaControlAction = THEOplayerRCTTypeUtils.mediaControlActionFromString(action)
+                mediaControlManager.setMediaControlActionHandler(action: mediaControlAction, handler: self.handlerForAction(action, node: node))
+                // Refresh the shared command center so the enabled state of the previous/next track and
+                // seek commands reflects the newly registered handler immediately.
+                theView.remoteCommandsManager.updateRemoteCommands()
+                if DEBUG_MEDIA_CONTROL_API { PrintUtils.printLog(logText: "[NATIVE] Handler set for \(action) action") }
+            }
+        }
+    }
+
+    @objc(removeHandler:action:)
+    func removeHandler(_ node: NSNumber, action: String) -> Void {
+        DispatchQueue.main.async {
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView {
+                let mediaControlManager = theView.mediaControlManager
+                let mediaControlAction = THEOplayerRCTTypeUtils.mediaControlActionFromString(action)
+                mediaControlManager.removeMediaControlActionHandler(action: mediaControlAction)
+                // Refresh the shared command center so the enabled state of the previous/next track and
+                // seek commands reflects the removed handler immediately.
+                theView.remoteCommandsManager.updateRemoteCommands()
+                if DEBUG_MEDIA_CONTROL_API { PrintUtils.printLog(logText: "[NATIVE] Handler removed for \(action) action") }
+            }
+        }
+    }
+
+    @objc(setEnabled:enabled:)
+    func setEnabled(_ node: NSNumber, enabled: Bool) -> Void {
+        DispatchQueue.main.async {
+            if let theView = self.bridge.uiManager.view(forReactTag: node) as? THEOplayerRCTView {
+                theView.mediaControlConfig.mediaSessionEnabled = enabled
+                if DEBUG_MEDIA_CONTROL_API { PrintUtils.printLog(logText: "[NATIVE] Media session \(enabled ? "enabled" : "disabled")") }
+            }
+        }
+    }
+    
+    private func handlerForAction(_ action: String, node: NSNumber) -> (() -> Void) {
+        return { [weak self] in
+            if let self = self {
+                self.sendEvent(
+                    withName: "MediaControlEvent",
+                    body: [
+                        "action": action,
+                        "tag": node
+                    ]
+                )
+            }
+            if DEBUG_MEDIA_CONTROL_API { PrintUtils.printLog(logText: "[NATIVE] Handler triggered for \(action) action") }
+        }
+    }
+        
+}

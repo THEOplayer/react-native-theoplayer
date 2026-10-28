@@ -34,32 +34,17 @@ import com.theoplayer.android.api.millicast.MillicastIntegrationFactory
 import com.theoplayer.android.api.player.Player
 import com.theoplayer.android.api.player.RenderingTarget
 import com.theoplayer.android.connector.mediasession.MediaSessionConnector
-import com.theoplayer.android.connector.mediasession.MediaSessionListener
 import com.theoplayer.audio.AudioBecomingNoisyManager
 import com.theoplayer.audio.AudioFocusManager
 import com.theoplayer.audio.BackgroundAudioConfig
+import com.theoplayer.integration.PlayerFacade
+import com.theoplayer.media.MediaControlProxy
 import com.theoplayer.media.MediaPlaybackService
-import com.theoplayer.media.MediaQueueNavigator
 import com.theoplayer.media.MediaSessionConfig
 import java.util.concurrent.atomic.AtomicBoolean
 
 private const val TAG = "ReactTHEOplayerContext"
 
-private const val ALLOWED_PLAYBACK_ACTIONS = (
-  PlaybackStateCompat.ACTION_PLAY_PAUSE or
-    PlaybackStateCompat.ACTION_PLAY or
-    PlaybackStateCompat.ACTION_PAUSE or
-    PlaybackStateCompat.ACTION_SEEK_TO or
-    PlaybackStateCompat.ACTION_FAST_FORWARD or
-    PlaybackStateCompat.ACTION_REWIND or
-    PlaybackStateCompat.ACTION_SET_PLAYBACK_SPEED)
-
-private const val ALLOWED_PLAY_PAUSE_ACTIONS = (
-  PlaybackStateCompat.ACTION_PLAY_PAUSE or
-    PlaybackStateCompat.ACTION_PLAY or
-    PlaybackStateCompat.ACTION_PAUSE)
-
-@Suppress("SimplifyBooleanWithConstants", "KotlinConstantConditions")
 class ReactTHEOplayerContext private constructor(
   private val reactContext: ThemedReactContext,
   private val configAdapter: PlayerConfigAdapter
@@ -67,7 +52,8 @@ class ReactTHEOplayerContext private constructor(
   private val mainHandler = Handler(Looper.getMainLooper())
   private var isBound = AtomicBoolean()
   private var binder: MediaPlaybackService.MediaPlaybackBinder? = null
-  private var mediaSessionConnector: MediaSessionConnector? = null
+  private var isDestroyed = false
+
   private var audioBecomingNoisyManager = AudioBecomingNoisyManager(reactContext) {
     // Audio is about to become 'noisy' due to a change in audio outputs: pause the player
     player.pause()
@@ -80,16 +66,48 @@ class ReactTHEOplayerContext private constructor(
       field = value
     }
 
-  var mediaSessionConfig: MediaSessionConfig = configAdapter.mediaSessionConfig()
-    set(value) {
-      applyMediaSessionConfig(mediaSessionConnector, value)
-      field = value
+  private var mediaSessionConnector: MediaSessionConnector? = null
+
+  private var mediaSessionConfig: MediaSessionConfig = configAdapter.mediaSessionConfig()
+  var mediaControlProxy: MediaControlProxy = MediaControlProxy()
+
+  /**
+   * Whether this player context currently owns the (potentially shared) media session.
+   *
+   * When multiple players run with background audio, they share a single [MediaPlaybackService]
+   * and its media session; only the player that most recently took ownership drives the lock-screen
+   * widget. Without a background service each player owns its own local session, so it always owns it.
+   */
+  private fun ownsMediaSession(): Boolean {
+    return binder?.isActivePlayerContext(this) ?: true
+  }
+
+  /**
+   * Enable or disable the media session for this player instance at runtime.
+   *
+   * When enabling, this player takes over the (potentially shared) media session: it becomes the
+   * active source for Now Playing metadata, remote commands and the foreground notification.
+   * When disabling, the shared session is only torn down if this player still owns it, so a
+   * newly-activated player is never clobbered regardless of the order in which enable/disable run.
+   */
+  fun setMediaSessionEnabled(enabled: Boolean) {
+    mediaSessionConfig = mediaSessionConfig.copy(mediaSessionEnabled = enabled)
+    if (enabled) {
+      // Take over the (shared) foreground service/notification for this player.
+      binder?.setPlayerContext(this)
+    } else if (!ownsMediaSession()) {
+      // Only tear down when we still own the session; otherwise another player already took over.
+      return
     }
+    applyMediaSessionConfig(mediaSessionConnector, mediaSessionConfig)
+  }
 
   lateinit var playerView: THEOplayerView
+  lateinit var player: Player
+    private set
 
-  val player: Player
-    get() = playerView.player
+  val playerFacade: PlayerFacade?
+    get() = player as? PlayerFacade
 
   private val uiModeManager by lazy {
     reactContext.getSystemService(Context.UI_MODE_SERVICE) as? UiModeManager
@@ -121,6 +139,17 @@ class ReactTHEOplayerContext private constructor(
 
   private val connection = object : ServiceConnection {
     override fun onServiceConnected(className: ComponentName, service: IBinder) {
+      // The context may have been destroyed while the bind was still pending.
+      // Do not attach the destroyed player/context to the service.
+      if (isDestroyed) {
+        try {
+          reactContext.unbindService(this)
+        } catch (e: IllegalArgumentException) {
+          // Connection was not registered or already unbound; ignore.
+        }
+        return
+      }
+
       binder = service as MediaPlaybackService.MediaPlaybackBinder
 
       // Get media session connector from service
@@ -130,26 +159,10 @@ class ReactTHEOplayerContext private constructor(
 
       // Pass player context
       binder?.setPlayerContext(this@ReactTHEOplayerContext)
-
-      // Apply background audio config
-      binder?.setEnablePlaybackControls(mediaSessionConfig)
     }
 
     override fun onServiceDisconnected(className: ComponentName?) {
       binder = null
-    }
-  }
-
-  private val mediaSessionListener = object : MediaSessionListener() {
-    override fun onStop() {
-      binder?.stopForegroundService()
-    }
-
-    override fun onPlay() {
-      // Optionally seek to live, if configured.
-      if (mediaSessionConfig.seekToLiveOnResume && player.duration.isInfinite()) {
-        player.currentTime = Double.POSITIVE_INFINITY
-      }
     }
   }
 
@@ -184,21 +197,6 @@ class ReactTHEOplayerContext private constructor(
     }
   }
 
-  private fun applyAllowedMediaControls() {
-    // Reduce allowed set of remote control playback actions for ads & live streams.
-    val isLive = player.duration.isInfinite()
-    val isInAd = player.ads.isPlaying
-    mediaSessionConnector?.enabledPlaybackActions = when {
-      // Allow trick-play for live events if configured
-      isLive && mediaSessionConfig.allowLivePlayPause -> ALLOWED_PLAY_PAUSE_ACTIONS
-      isLive && !mediaSessionConfig.allowLivePlayPause -> 0
-      // Do not allow playback actions during ad play-out
-      isInAd -> 0
-
-      else -> ALLOWED_PLAYBACK_ACTIONS
-    }
-  }
-
   private fun bindMediaPlaybackService() {
     // Bind to an existing service, if available
     // A bound service runs only as long as another application component is bound to it.
@@ -219,11 +217,13 @@ class ReactTHEOplayerContext private constructor(
   }
 
   private fun unbindMediaPlaybackService() {
-    // This client is done interacting with the service: unbind.
-    // When there are no clients bound to the service, the system destroys the service.
-    if (binder?.isBinderAlive == true) {
-      if (isBound.getAndSet(false)) {
+    // Always unbind when isBound, regardless of whether the binder is alive yet: a pending
+    // bind must still be cancelled so a late callback cannot resurrect this.
+    if (isBound.getAndSet(false)) {
+      try {
         reactContext.unbindService(connection)
+      } catch (e: IllegalArgumentException) {
+        // Service was not registered or already unbound; ignore.
       }
     }
     binder = null
@@ -251,6 +251,7 @@ class ReactTHEOplayerContext private constructor(
         mainHandler.post { measureAndLayout() }
       }
     }
+    player = PlayerFacade.create(playerView.player, configAdapter.usePlayerFacade())
 
     // By default, choose SURFACE_CONTROL/SURFACE_VIEW rendering target, based on API level.
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -264,6 +265,9 @@ class ReactTHEOplayerContext private constructor(
 
     addIntegrations()
     addListeners()
+
+    // Let the proxy track which media control actions are available for this player.
+    mediaControlProxy.setPlayer(player)
 
     audioFocusManager = AudioFocusManager(reactContext, player)
 
@@ -279,15 +283,8 @@ class ReactTHEOplayerContext private constructor(
     // Destroy any existent media session
     mediaSessionConnector?.destroy()
 
-    // Create and initialize the media session
-    val mediaSession = MediaSessionCompat(reactContext, TAG)
-
-    // Do not let MediaButtons restart the player when media session is not active.
-    // https://developer.android.com/media/legacy/media-buttons#restarting-inactive-mediasessions
-    mediaSession.setMediaButtonReceiver(null)
-
     // Create a MediaSessionConnector and attach the THEOplayer instance.
-    mediaSessionConnector = MediaSessionConnector(mediaSession).also {
+    mediaSessionConnector = MediaSessionConnector(MediaSessionCompat(reactContext, TAG)).also {
       applyMediaSessionConfig(it, mediaSessionConfig)
     }
   }
@@ -296,9 +293,15 @@ class ReactTHEOplayerContext private constructor(
     connector: MediaSessionConnector?,
     config: MediaSessionConfig
   ) {
-    connector?.apply {
+    if (connector == null) {
+      // Keep the proxy up to date even while there is no media session to attach to, as its config
+      // also drives the PiP controls.
+      mediaControlProxy.setConfig(config)
+      return
+    }
+
+    connector.apply {
       debug = BuildConfig.LOG_MEDIASESSION_EVENTS
-      removeListener(mediaSessionListener)
 
       player = this@ReactTHEOplayerContext.player
 
@@ -306,21 +309,16 @@ class ReactTHEOplayerContext private constructor(
       // is backgrounded.
       setActive(!isHostPaused && BuildConfig.EXTENSION_MEDIASESSION && config.mediaSessionEnabled)
 
-      skipForwardInterval = config.skipForwardInterval
-      skipBackwardsInterval = config.skipBackwardInterval
-
       // Pass metadata from source description
       setMediaSessionMetadata(player?.source)
 
       // Do not let MediaButtons restart the player when media session is not active.
       // https://developer.android.com/media/legacy/media-buttons#restarting-inactive-mediasessions
-      this.mediaSession.setMediaButtonReceiver(null)
+      mediaSession.setMediaButtonReceiver(null)
 
-      // Install a queue navigator, but only if we want to handle skip buttons.
-      if (mediaSessionConfig.convertSkipToSeek) {
-        queueNavigator = MediaQueueNavigator(mediaSessionConfig)
-      }
-      addListener(mediaSessionListener)
+      // Route all media control actions through the MediaControlProxy, which will decide whether to
+      // invoke the action or not.
+      mediaControlProxy.attach(this, binder, config)
     }
   }
 
@@ -390,12 +388,6 @@ class ReactTHEOplayerContext private constructor(
   private val onSourceChange = EventListener<SourceChangeEvent> {
     mediaSessionConnector?.setMediaSessionMetadata(player.source)
     binder?.updateNotification()
-    applyAllowedMediaControls()
-  }
-
-  private val onLoadedMetadata = EventListener<LoadedMetadataEvent> {
-    binder?.updateNotification()
-    applyAllowedMediaControls()
   }
 
   private val onPlay = EventListener<PlayEvent> {
@@ -403,14 +395,12 @@ class ReactTHEOplayerContext private constructor(
       bindMediaPlaybackService()
     }
     binder?.updateNotification(PlaybackStateCompat.STATE_PLAYING)
-    applyAllowedMediaControls()
     audioBecomingNoisyManager.setEnabled(true)
     audioFocusManager?.requestAudioFocus()
   }
 
   private val onPause = EventListener<PauseEvent> {
     binder?.updateNotification(PlaybackStateCompat.STATE_PAUSED)
-    applyAllowedMediaControls()
     audioBecomingNoisyManager.setEnabled(false)
   }
 
@@ -436,7 +426,6 @@ class ReactTHEOplayerContext private constructor(
   private fun addListeners() {
     player.apply {
       addEventListener(PlayerEventTypes.SOURCECHANGE, onSourceChange)
-      addEventListener(PlayerEventTypes.LOADEDMETADATA, onLoadedMetadata)
       addEventListener(PlayerEventTypes.PAUSE, onPause)
       addEventListener(PlayerEventTypes.PLAY, onPlay)
       addEventListener(PlayerEventTypes.ENDED, onEnded)
@@ -450,7 +439,6 @@ class ReactTHEOplayerContext private constructor(
   private fun removeListeners() {
     player.apply {
       removeEventListener(PlayerEventTypes.SOURCECHANGE, onSourceChange)
-      removeEventListener(PlayerEventTypes.LOADEDMETADATA, onLoadedMetadata)
       removeEventListener(PlayerEventTypes.PAUSE, onPause)
       removeEventListener(PlayerEventTypes.PLAY, onPlay)
       removeEventListener(PlayerEventTypes.ENDED, onEnded)
@@ -492,7 +480,9 @@ class ReactTHEOplayerContext private constructor(
    */
   fun onHostResume() {
     isHostPaused = false
-    mediaSessionConnector?.setActive(BuildConfig.EXTENSION_MEDIASESSION)
+    mediaSessionConnector?.setActive(
+      BuildConfig.EXTENSION_MEDIASESSION && mediaSessionConfig.mediaSessionEnabled
+    )
     playerView.onResume()
     if (!player.isPaused) {
       audioFocusManager?.requestAudioFocus()
@@ -500,9 +490,14 @@ class ReactTHEOplayerContext private constructor(
   }
 
   fun destroy() {
-    if (BuildConfig.USE_PLAYBACK_SERVICE) {
-      removeListeners()
+    isDestroyed = true
+    removeListeners()
 
+    // The media session can be shared with other player contexts through the playback service.
+    // Determine ownership before unbinding, as that clears the binder needed to check it.
+    val ownedMediaSession = ownsMediaSession()
+
+    if (BuildConfig.USE_PLAYBACK_SERVICE) {
       // Remove service from foreground
       binder?.stopForegroundService()
 
@@ -510,7 +505,14 @@ class ReactTHEOplayerContext private constructor(
       unbindMediaPlaybackService()
     }
     audioFocusManager?.abandonAudioFocus()
-    mediaSessionConnector?.destroy()
-    playerView.onDestroy()
+    mediaControlProxy.destroy()
+    if (ownedMediaSession) {
+      // Only tear down the session when another player did not take it over: a queued callback
+      // must never reach this destroyed player, but a newly-activated player must keep working.
+      mediaSessionConnector?.player = null
+      mediaSessionConnector?.destroy()
+    }
+    val facade = playerFacade
+    if (facade != null) facade.destroyContent { playerView.onDestroy() } else playerView.onDestroy()
   }
 }

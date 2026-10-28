@@ -1,19 +1,26 @@
-// noinspection JSUnusedGlobalSymbols
+// A player-specific test layer on top of react-native-cavynext.
+//
+// The player under test is registered in cavynext's TestHookStore (see
+// TestableTHEOplayerView), so specs obtain it through the regular cavynext
+// component lookup instead of a module-level global:
+//
+//   const player = await getTestPlayer(spec);
+//
+// All wait helpers reject with a `PlayerEventTimeoutError` (or the player's
+// own error) carrying a snapshot of the player state at the moment of
+// failure.
 
-import {
-  AdEvent,
-  AdEventType,
-  ErrorEvent,
-  type Event,
-  EventMap,
-  PlayerEventType,
-  SourceDescription,
-  StringKeyOf,
-  THEOplayer,
-} from 'react-native-theoplayer';
-import { getTestPlayer } from '../components/TestableTHEOplayerView';
+import { AdEvent, AdEventType, type Event, PlayerEventType, SourceDescription, THEOplayer } from 'react-native-theoplayer';
+import type { TestScope } from 'react-native-cavynext';
 import { logPlayerBuffer } from './PlayerUtils';
 import { Log } from './Log';
+
+// The identifier under which TestableTHEOplayerView registers the player in
+// the cavynext TestHookStore.
+export const PLAYER_HOOK_ID = 'Scene.player';
+
+// Time given to a freshly created native player before a test uses it.
+const PLAYER_SETTLE_TIME = 1000;
 
 export interface TestOptions {
   timeout: number;
@@ -23,22 +30,58 @@ export const defaultTestOptions: TestOptions = {
   timeout: 120000, // 2 minutes
 };
 
-export async function preparePlayerWithSource(source: SourceDescription, autoplay: boolean = true): Promise<THEOplayer> {
-  const player = await getTestPlayer();
-  let startUpPromise: Promise<Event<PlayerEventType>[]>;
-  if (autoplay) {
-    startUpPromise = waitForPlayerEventTypes(player, [PlayerEventType.SOURCE_CHANGE, PlayerEventType.PLAY, PlayerEventType.PLAYING]);
-  } else {
-    startUpPromise = waitForPlayerEventType(player, PlayerEventType.SOURCE_CHANGE);
+// Thrown when the expected events do not arrive in time. Carries the player
+// state snapshot so a CI log tells you where playback got stuck.
+export class PlayerEventTimeoutError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'PlayerEventTimeoutError';
   }
+}
 
-  // Start autoplay
+/**
+ * Obtain the player under test through the cavynext test hook store.
+ *
+ * The player is registered by TestableTHEOplayerView when it is ready and
+ * removed when it is destroyed, so this waits (up to the Tester's `waitTime`)
+ * for the current player instance.
+ *
+ * The runner re-mounts the view before every test, so the player handed out
+ * here is often only milliseconds old while its predecessor is still being
+ * released natively. The settle time keeps the two lifecycles apart.
+ */
+export async function getTestPlayer(spec: TestScope): Promise<THEOplayer> {
+  const player = await spec.findComponent(PLAYER_HOOK_ID);
+  await new Promise((resolve) => setTimeout(resolve, PLAYER_SETTLE_TIME));
+  return player as unknown as THEOplayer;
+}
+
+/**
+ * Set a source on the player under test and wait for it to be ready:
+ * `sourcechange` only without autoplay, or `sourcechange`, `play` and
+ * `playing` in order with autoplay.
+ */
+export async function preparePlayerWithSource(spec: TestScope, source: SourceDescription, autoplay: boolean = true): Promise<THEOplayer> {
+  const player = await getTestPlayer(spec);
+  const expected = autoplay ? [PlayerEventType.SOURCE_CHANGE, PlayerEventType.PLAY, PlayerEventType.PLAYING] : [PlayerEventType.SOURCE_CHANGE];
+
+  // Attach the listeners before touching the player, so no event can be missed.
+  const startUpPromise = waitForPlayerEventTypes(player, expected, autoplay);
+
   player.autoplay = autoplay;
   player.source = source;
 
-  // Wait for either `sourcechange` only or the `sourcechange`, `play` and `playing` combination.
   await startUpPromise;
   return player;
+}
+
+/**
+ * Seek the player and wait for the `seeked` event.
+ */
+export async function seekTo(player: THEOplayer, time: number, options = defaultTestOptions): Promise<void> {
+  const seekedPromise = waitForPlayerEventType(player, PlayerEventType.SEEKED, options);
+  player.currentTime = time;
+  await seekedPromise;
 }
 
 export const waitForPlayerEventType = async (
@@ -71,236 +114,133 @@ export const waitForPlayerEvent = async <EType extends Event<PlayerEventType>>(
   return waitForPlayerEvents(player, [expectedEvent], false, options);
 };
 
-let eventListIndex = 0; // increments for every playerEvent list that is evaluated.
+// Increments for every wait, to tell overlapping waits apart in the logs.
+let waitIndex = 0;
+
+/**
+ * Wait until the player has dispatched all expected events.
+ *
+ * expectedEvents - partial events; every own property must match the received
+ *                  event (e.g. `{ type: 'adevent', subType: 'adbegin' }`).
+ * inOrder        - when true, an expected event arriving before an earlier
+ *                  expected event fails the wait. Unrelated events are
+ *                  always ignored.
+ *
+ * Resolves with the events received, in arrival order. Rejects on player
+ * error, ad error, or timeout - always with an Error whose message includes
+ * a snapshot of the player state.
+ */
 export const waitForPlayerEvents = async <EType extends Event<PlayerEventType>>(
   player: THEOplayer,
   expectedEvents: Partial<EType>[],
   inOrder: boolean = true,
   options = defaultTestOptions,
 ): Promise<Event<PlayerEventType>[]> => {
+  const TAG = `[waitForPlayerEvents ${waitIndex++}]`;
   const receivedEvents: Event<PlayerEventType>[] = [];
-  const eventTimestamps = new Map<string, number>();
-  const eventsPromise = new Promise<Event<PlayerEventType>[]>((resolve, reject) => {
-    const onError = (err: ErrorEvent) => {
-      Log.error('[waitForPlayerEvents]', err);
-      player.removeEventListener(PlayerEventType.ERROR, onError);
-      reject(err);
-    };
-    const onAdError = (e: AdEvent) => {
-      if (e.subType === AdEventType.AD_ERROR) {
-        const err = 'Ad error';
-        Log.error('[waitForPlayerEvents]', err);
-        player.removeEventListener(PlayerEventType.AD_EVENT, onAdError);
-        reject(err);
-      }
-    };
-    const TAG: string = `[waitForPlayerEvents] eventList ${eventListIndex}:`;
-    eventListIndex += 1;
 
-    let unReceivedEvents = [...expectedEvents];
-    const uniqueEventTypes = [...new Set(unReceivedEvents.map((event) => event.type))];
-    uniqueEventTypes.forEach((eventType) => {
-      const onEvent = (receivedEvent: Event<PlayerEventType>) => {
-        receivedEvents.push(receivedEvent);
-        eventTimestamps.set((receivedEvent as AdEvent).subType ?? receivedEvent.type, Date.now());
-        Log.debug(TAG, `Handling received event ${JSON.stringify(receivedEvent)}`);
-        logDelayFromPreviousEvent(eventTimestamps, TAG);
-        Log.debug(TAG, `Added timestamp for ${receivedEvent.type} event.`);
-        if (inOrder && unReceivedEvents.length) {
-          const expectedEvent = unReceivedEvents[0];
-          Log.debug(TAG, `Was waiting for ${JSON.stringify(expectedEvent)}`);
-
-          // Received events must either not be in the expected, or be the first
-          const index = unReceivedEvents.findIndex((e) => propsMatch(e, receivedEvent));
-          if (index > 0) {
-            const err = `Expected '${expectedEvent.type}' event but received '${receivedEvent.type} event'`;
-            Log.error(TAG, err);
-            reject(err);
-          } else {
-            Log.debug(TAG, `Received ${receivedEvent.type} event was expected.`);
-          }
-        }
-
-        unReceivedEvents = unReceivedEvents.filter((event) => {
-          // When found, remove the listener
-          if (propsMatch(event, receivedEvent)) {
-            Log.debug(TAG, `   -> removing: ${JSON.stringify(event)}`);
-            return false;
-          }
-          // Only keep the unreceived events
-          Log.debug(TAG, `   -> keeping: ${JSON.stringify(event)}`);
-          return true;
-        });
-
-        // remove listener if no other unreceived events require it.
-        if (!unReceivedEvents.find((event) => event.type === receivedEvent.type)) {
-          Log.debug(TAG, `Removing listener for ${receivedEvent.type} from player`);
-          player.removeEventListener(receivedEvent.type, onEvent);
-        }
-
-        if (!unReceivedEvents.length) {
-          // Finished
-          Log.debug(TAG, `Resolving promise on received events.`);
-          resolve(receivedEvents);
-        }
-      };
-
-      player.addEventListener(eventType as PlayerEventType, onEvent);
-      Log.debug(TAG, `Added listener for ${eventType} to the player`);
-    });
-    player.addEventListener(PlayerEventType.ERROR, onError);
-    player.addEventListener(PlayerEventType.AD_EVENT, onAdError);
-  });
-
-  // Add rejection on time-out
-  const timeOutPromise = withEventTimeOut(eventsPromise, options.timeout, expectedEvents, receivedEvents);
-
-  // Add extra logging on error
-  return withPlayerStateLogOnError(player, timeOutPromise);
-};
-
-const withEventTimeOut = <TType extends StringKeyOf<EventMap<string>>, EType extends Event<TType>>(
-  promise: Promise<any>,
-  timeout: number,
-  expectedEvents: Partial<EType>[],
-  receivedEvents: EType[],
-): Promise<any> => {
-  return new Promise<void>((resolve, reject) => {
-    const handle = setTimeout(() => {
-      reject(
-        `Timeout waiting for next event, expecting [${expectedEvents.map((ev) => JSON.stringify(ev)).join(',')}] ` +
-          `already received [${receivedEvents.map((ev) => JSON.stringify(ev)).join(',')}]`,
-      );
-    }, timeout);
-    promise
-      .then((result: any) => {
-        clearTimeout(handle);
-        resolve(result);
-      })
-      .catch((reason) => {
-        reject(reason);
-      });
-  });
-};
-
-const withPlayerStateLogOnError = async (player: THEOplayer, promise: Promise<any>) => {
-  try {
-    return await promise;
-  } catch (e) {
-    throw (
-      (typeof e === 'string' ? e : JSON.stringify(e)) +
-      ` buffer: ${logPlayerBuffer(player)};` +
-      ` currentTime: ${player.currentTime};` +
-      ` paused: ${player.paused};`
-    );
-  }
-};
-
-export function expect(actual: any, desc?: string) {
-  const descPrefix = desc ? `${desc}: ` : '';
-
-  const logPass = (msg: string) => Log.log(`${descPrefix}${msg} ✅`);
-  const throwErr = (msg: string) => {
-    throw new Error(`${descPrefix}${msg} ❌`);
+  // Everything registered on the player, so cleanup is a single loop however
+  // the wait ends (success, error, or timeout).
+  const attached: [PlayerEventType, (event: any) => void][] = [];
+  const listen = (type: PlayerEventType, listener: (event: any) => void) => {
+    player.addEventListener(type, listener);
+    attached.push([type, listener]);
   };
-
-  return {
-    toBe(expected: any) {
-      if (actual === expected) logPass(`${actual} == ${expected}`);
-      else {
-        const errorMessage = `Expected ${actual} to be ${expected}`;
-        Log.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
-        throwErr(errorMessage);
-      }
-    },
-
-    toNotBe(expected: any) {
-      if (actual !== expected) logPass(`${actual} != ${expected}`);
-      else {
-        const errorMessage = `Expected ${actual} not to be ${expected}`;
-        Log.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
-        throwErr(errorMessage);
-      }
-    },
-
-    toEqual(expected: any) {
-      if (JSON.stringify(actual) === JSON.stringify(expected)) logPass(`Expected ${actual} to equal ${expected}`);
-      else {
-        const errorMessage = `Expected ${actual} to equal ${expected}`;
-        Log.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
-        throwErr(errorMessage);
-      }
-    },
-
-    toBeGreaterThan(expected: number) {
-      if (actual > expected) logPass(`${actual} > ${expected}`);
-      else {
-        const errorMessage = `Expected ${actual} to be greater than ${expected}`;
-        Log.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
-        throwErr(errorMessage);
-      }
-    },
-
-    toBeGreaterThanOrEqual(expected: number) {
-      if (actual >= expected) logPass(`${actual} >= ${expected}`);
-      else {
-        const errorMessage = `Expected ${actual} to be greater than or equal to ${expected}`;
-        Log.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
-        throwErr(errorMessage);
-      }
-    },
-
-    toBeSmallerThan(expected: number) {
-      if (actual < expected) logPass(`${actual} < ${expected}`);
-      else {
-        const errorMessage = `Expected ${actual} to be smaller than ${expected}`;
-        Log.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
-        throwErr(errorMessage);
-      }
-    },
-
-    toBeSmallerThanOrEqual(expected: number) {
-      if (actual <= expected) logPass(`${actual} <= ${expected}`);
-      else {
-        const errorMessage = `Expected ${actual} to be smaller than or equal to ${expected}`;
-        Log.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
-        throwErr(errorMessage);
-      }
-    },
-
-    toBeTruthy() {
-      if (actual) logPass(`${actual} is truthy`);
-      else {
-        const errorMessage = `Expected ${actual} to be truthy`;
-        Log.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
-        throwErr(errorMessage);
-      }
-    },
-
-    toBeFalsy() {
-      if (!actual) logPass(`${actual} is falsy`);
-      else {
-        const errorMessage = `Expected ${actual} to be falsy`;
-        Log.error(`[EXPECTATION NOT MET]: ${errorMessage}`);
-        throwErr(errorMessage);
-      }
-    },
-  };
-}
-
-function propsMatch(obj1: any, obj2: any): boolean {
-  return Object.keys(obj1).every((key) => obj1[key] === obj2[key]);
-}
-
-function logDelayFromPreviousEvent(eventTimestamps: Map<string, number>, tag: string) {
-  const entries = Array.from(eventTimestamps.entries()).sort((a, b) => b[1] - a[1]); // sort descending by timestamp
-  if (entries.length >= 2) {
-    const [lastType, lastTime] = entries[0];
-    const [secondLastType, secondLastTime] = entries[1];
-    const diffSeconds = (lastTime - secondLastTime) / 1000;
-    Log.debug(tag, `Time between ${lastType} and ${secondLastType} is ${diffSeconds.toFixed(2)} seconds`);
-    if (diffSeconds > 10) {
-      Log.warn(tag, `Long delay of ${diffSeconds.toFixed(2)} seconds between ${lastType} and ${secondLastType} events`);
+  const cleanup = () => {
+    for (const [type, listener] of attached) {
+      player.removeEventListener(type, listener);
     }
+    attached.length = 0;
+  };
+
+  let timeoutHandle: ReturnType<typeof setTimeout> | undefined;
+
+  const eventsPromise = new Promise<Event<PlayerEventType>[]>((resolve, reject) => {
+    const unReceivedEvents = [...expectedEvents];
+    let lastEventTime = Date.now();
+
+    const fail = (error: Error) => {
+      Log.error(TAG, error.message);
+      reject(error);
+    };
+
+    listen(PlayerEventType.ERROR, (event) => {
+      fail(new Error(`Player error: ${JSON.stringify(event.error ?? event)}`));
+    });
+    listen(PlayerEventType.AD_EVENT, (event: AdEvent) => {
+      if (event.subType === AdEventType.AD_ERROR) {
+        fail(new Error(`Ad error: ${JSON.stringify(event.ad ?? event)}`));
+      }
+    });
+
+    const onEvent = (receivedEvent: Event<PlayerEventType>) => {
+      // Ignore events this wait is not interested in (the ERROR/AD_EVENT
+      // watchers above have their own listeners).
+      if (!unReceivedEvents.some((event) => event.type === receivedEvent.type)) {
+        return;
+      }
+
+      receivedEvents.push(receivedEvent);
+      const now = Date.now();
+      Log.debug(TAG, `Received ${describeEvent(receivedEvent)} after ${((now - lastEventTime) / 1000).toFixed(2)}s`);
+      lastEventTime = now;
+
+      const index = unReceivedEvents.findIndex((event) => propsMatch(event, receivedEvent));
+      if (index < 0) {
+        // Same type but non-matching properties (e.g. another adevent
+        // subType): not one of ours, ignore it.
+        return;
+      }
+      if (inOrder && index > 0) {
+        fail(new Error(`Expected ${describeEvent(unReceivedEvents[0])} but received ${describeEvent(receivedEvent)}`));
+        return;
+      }
+
+      unReceivedEvents.splice(index, 1);
+      if (unReceivedEvents.length === 0) {
+        resolve(receivedEvents);
+      }
+    };
+
+    for (const eventType of new Set(expectedEvents.map((event) => event.type))) {
+      listen(eventType as PlayerEventType, onEvent);
+    }
+
+    timeoutHandle = setTimeout(() => {
+      fail(
+        new PlayerEventTimeoutError(
+          `Timeout waiting for ${unReceivedEvents.map(describeEvent).join(', ')}; ` +
+            `already received [${receivedEvents.map(describeEvent).join(', ')}]`,
+        ),
+      );
+    }, options.timeout);
+  });
+
+  try {
+    return await eventsPromise;
+  } catch (e) {
+    throw withPlayerState(e, player);
+  } finally {
+    clearTimeout(timeoutHandle);
+    cleanup();
   }
+};
+
+// Append a snapshot of the player state to an error, preserving the original
+// error type and stack.
+function withPlayerState(e: unknown, player: THEOplayer): Error {
+  const error = e instanceof Error ? e : new Error(String(e));
+  error.message += ` (buffer: ${logPlayerBuffer(player)};` + ` currentTime: ${player.currentTime};` + ` paused: ${player.paused})`;
+  return error;
+}
+
+// Compact, single-line description of a (partial) event for logs and errors.
+function describeEvent(event: Partial<Event<PlayerEventType>>): string {
+  const subType = (event as Partial<AdEvent>).subType;
+  return `'${event.type}${subType ? `/${subType}` : ''}'`;
+}
+
+// Every own property of `expected` matches the received event.
+function propsMatch(expected: any, received: any): boolean {
+  return Object.keys(expected).every((key) => expected[key] === received[key]);
 }

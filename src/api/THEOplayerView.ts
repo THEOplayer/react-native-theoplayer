@@ -24,6 +24,11 @@ export interface THEOplayerViewProps {
   posterStyle?: StyleProp<ImageStyle> | undefined;
 
   /**
+   * The testID applied to the player view, used to locate it from UI automation tools.
+   */
+  testID?: string;
+
+  /**
    * Callback for when the internal THEOplayer is ready.
    */
   onPlayerReady?: (player: THEOplayer) => void;

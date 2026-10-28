@@ -50,6 +50,32 @@ player.addEventListener(
 );
 ```
 
+### Reacting to a closed PiP window
+
+When the player leaves the picture-in-picture presentation mode, the `context.pip` property of the
+`presentationmodechange` event indicates whether the PiP window was closed by the user, or restored to the app:
+
+```typescript
+player.addEventListener(
+  PlayerEventType.PRESENTATIONMODE_CHANGE,
+  (event: PresentationModeChangeEvent) => {
+    if (
+      event.previousPresentationMode === PresentationMode.pip &&
+      event.context?.pip === PresentationModeChangePipContext.CLOSED
+    ) {
+      // The user closed the PiP window: stop play-out by clearing the source.
+      player.source = undefined;
+    }
+  }
+);
+```
+
+Clearing the source pauses play-out and unloads the current media resource, similar to the play-out stop that is
+applied by `backgroundAudioConfiguration.stopOnBackground`. It allows background playback
+to continue in case the app is backgrounded without transitioning to PiP. Note that the
+`backgroundAudioConfiguration.stopOnBackground` property is not suited for this purpose, as it also stops play-out
+when the app goes to the background without a PiP window; see [Background Playback](./background.md).
+
 Additional configuration is necessary depending on the platform the app runs on.
 
 ## Android

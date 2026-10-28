@@ -28,6 +28,14 @@ import com.theoplayer.android.connector.mediasession.MediaSessionConnector
 
 private const val TAG = "MediaNotification"
 
+// The controls to show while there is no player context to ask, matching a player that is not in an ad
+// and not live.
+private val DEFAULT_CONTROL_SLOTS = MediaControlSlots(
+  leading = MediaControlSlot.REWIND,
+  playPauseEnabled = true,
+  trailing = MediaControlSlot.FAST_FORWARD
+)
+
 class MediaNotificationBuilder(
   private val context: Context,
   private val notificationManager: NotificationManager,
@@ -86,12 +94,62 @@ class MediaNotificationBuilder(
     )
   )
 
+  private val skipToPreviousAction = NotificationCompat.Action(
+    R.drawable.ic_prev, context.getString(R.string.skip_to_previous),
+    MediaButtonReceiver.buildMediaButtonPendingIntent(
+      context,
+      PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS
+    )
+  )
+
+  private val skipToNextAction = NotificationCompat.Action(
+    R.drawable.ic_next, context.getString(R.string.skip_to_next),
+    MediaButtonReceiver.buildMediaButtonPendingIntent(
+      context,
+      PlaybackStateCompat.ACTION_SKIP_TO_NEXT
+    )
+  )
+
+  // Placeholder action, used when no media controls should be shown, as clearActions() does not work.
+  private val placeholderAction = NotificationCompat.Action(0, null, null)
+
+  /**
+   * Builds the notification actions for the media controls that the proxy reports as available.
+   */
+  private fun buildActions(
+    @PlaybackStateCompat.State playbackState: Int,
+    slots: MediaControlSlots
+  ): List<NotificationCompat.Action> {
+    val actions = listOfNotNull(
+      slots.leading?.let { notificationAction(it) },
+      if (slots.playPauseEnabled) playPauseAction(playbackState) else null,
+      slots.trailing?.let { notificationAction(it) }
+    )
+    // Add an empty placeholder action if there are none, as clearActions() does not work.
+    return actions.ifEmpty { listOf(placeholderAction) }
+  }
+
+  private fun notificationAction(slot: MediaControlSlot): NotificationCompat.Action {
+    return when (slot) {
+      MediaControlSlot.SKIP_TO_PREVIOUS -> skipToPreviousAction
+      MediaControlSlot.SKIP_TO_NEXT -> skipToNextAction
+      MediaControlSlot.REWIND -> rewindAction
+      MediaControlSlot.FAST_FORWARD -> forwardAction
+    }
+  }
+
+  private fun playPauseAction(@PlaybackStateCompat.State playbackState: Int): NotificationCompat.Action? {
+    return when (playbackState) {
+      PlaybackStateCompat.STATE_PAUSED -> playAction
+      PlaybackStateCompat.STATE_PLAYING -> pauseAction
+      else -> null
+    }
+  }
+
   fun build(
     @PlaybackStateCompat.State playbackState: Int,
     largeIcon: Bitmap?,
-    enableMediaControls: Boolean = true,
-    enableContentIntent: Boolean = true,
-    enableCancelButton: Boolean = true
+    mediaControlProxy: MediaControlProxy?
   ): Notification {
     val builder = channelId.let {
       if (it != null) {
@@ -114,9 +172,7 @@ class MediaNotificationBuilder(
       }
 
       // Enable launching the session activity by clicking the notification
-      if (enableContentIntent) {
-        setContentIntent(mediaSession.controller.sessionActivity)
-      }
+      setContentIntent(mediaSession.controller.sessionActivity)
 
       // Stop the service when the notification is swiped to dismiss
       setDeleteIntent(
@@ -157,19 +213,14 @@ class MediaNotificationBuilder(
       // on the eyes and avoid extremely bright or fluorescent colors.
       color = ContextCompat.getColor(context, R.color.app_primary_color)
 
-      // Add play/pause, rewind and fast-forward buttons.
-      if (enableMediaControls) {
-        addAction(rewindAction)
-        if (playbackState == PlaybackStateCompat.STATE_PAUSED) {
-          addAction(playAction)
-        } else if (playbackState == PlaybackStateCompat.STATE_PLAYING) {
-          addAction(pauseAction)
-        }
-        addAction(forwardAction)
+      // Add the play/pause and queue or trick-play buttons.
+      val actions = if (mediaControlProxy?.mediaControlsEnabled != false) {
+        buildActions(playbackState, mediaControlProxy?.controlSlots ?: DEFAULT_CONTROL_SLOTS)
       } else {
         // Add empty placeholder action as clearActions() does not work.
-        addAction(0, null, null)
+        listOf(placeholderAction)
       }
+      actions.forEach { addAction(it) }
 
       // Take advantage of MediaStyle features
       val style = androidx.media.app.NotificationCompat.MediaStyle()
@@ -178,26 +229,19 @@ class MediaNotificationBuilder(
       // companion devices to access and control the session.
       style.setMediaSession(mediaSession.sessionToken)
 
-      // Add up to 3 actions to be shown in the notification's standard-sized contentView.
-      if (enableMediaControls) {
-        // The Rewind, Play/Pause and FastForward actions.
-        style.setShowActionsInCompactView(0, 1, 2)
-      } else {
-        // The placeholder action, which was added above.
-        style.setShowActionsInCompactView(0)
-      }
+      // Show all actions added above in the notification's standard-sized contentView. There are never
+      // more than the 3 actions that fit: a play/pause action with a queue or trick-play action on each side.
+      style.setShowActionsInCompactView(*IntArray(actions.size) { it })
 
-      if (enableCancelButton) {
-        // In Android 5.0 (API level 21) and later you can swipe away a notification to
-        // stop the player once the service is no longer running in the foreground.
-        style.setShowCancelButton(true)
-        style.setCancelButtonIntent(
-          MediaButtonReceiver.buildMediaButtonPendingIntent(
-            context,
-            PlaybackStateCompat.ACTION_STOP
-          )
+      // In Android 5.0 (API level 21) and later you can swipe away a notification to
+      // stop the player once the service is no longer running in the foreground.
+      style.setShowCancelButton(true)
+      style.setCancelButtonIntent(
+        MediaButtonReceiver.buildMediaButtonPendingIntent(
+          context,
+          PlaybackStateCompat.ACTION_STOP
         )
-      }
+      )
       setStyle(style)
     }
     return builder.build()

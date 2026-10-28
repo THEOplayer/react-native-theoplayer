@@ -27,12 +27,12 @@ class THEOplayerRCTBackgroundAudioManager: NSObject, BackgroundPlaybackDelegate 
             let inPip = view.presentationModeManager.presentationMode == .pictureInPicture
             
             if stopOnBackground && !inPip {
-                if true || DEBUG_THEOPLAYER_INTERACTION { PrintUtils.printLog(logText: "[NATIVE] Moved to background, not in pip and stopOnBackground is enabled => stopping playback") }
+                if DEBUG_THEOPLAYER_INTERACTION { PrintUtils.printLog(logText: "[NATIVE] Moved to background, not in pip and stopOnBackground is enabled => stopping playback") }
                 player.stop()
                 return false
             }
             
-            view.nowPlayingManager.updateNowPlaying()
+            view.nowPlayingManager.updateNowPlayingInfo()
             return view.backgroundAudioConfig.enabled
         }
         return false

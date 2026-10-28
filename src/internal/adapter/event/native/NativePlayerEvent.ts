@@ -167,6 +167,8 @@ export interface NativeContentProtectionErrorEvent {
   error: ContentProtectionErrorObject;
 }
 
+export type NativeContentProtectionSuccessEvent = Record<string, never>;
+
 export interface NativePlayerStateEvent {
   readonly version: PlayerVersion;
 

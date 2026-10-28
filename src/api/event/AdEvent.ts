@@ -126,7 +126,7 @@ export enum AdEventType {
   /**
    * Dispatched when an ad is clicked.
    *
-   * @platform ios,android
+   * @platform ios,android,web
    */
   AD_CLICKED = 'adclicked',
 

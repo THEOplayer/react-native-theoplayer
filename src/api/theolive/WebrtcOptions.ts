@@ -6,7 +6,7 @@
  * to increase the jitter buffer size.
  *
  * @category THEOlive
- * @remark This is a hint, and factors like network jitter and audio/video sync latency affect the actual delay applied.
+ * @remarks This is a hint, and factors like network jitter and audio/video sync latency affect the actual delay applied.
  * @public
  */
 export interface WebrtcPlayoutDelay {

@@ -7,7 +7,9 @@ import {
   CmcdConfiguration,
   CmcdTransmissionMode,
   EventBroadcastAPI,
+  MediaControlAPI,
   MediaTrack,
+  MetricsAPI,
   NativeHandleType,
   PlayerConfiguration,
   PlayerEventMap,
@@ -38,6 +40,8 @@ import { DefaultTextTrackState } from './DefaultTextTrackState';
 import { THEOAdsWebAdapter } from './theoads/THEOAdsWebAdapter';
 import { CMCDConnector, Configuration, createCMCDConnector, TransmissionMode } from '@theoplayer/cmcd-connector-web';
 import { TheoLiveWebAdapter } from './theolive/TheoLiveWebAdapter';
+import { MetricsWebAdapter } from './metrics/MetricsWebAdapter';
+import { PlayerFacade } from './web/PlayerFacade';
 
 const defaultBackgroundAudioConfiguration: BackgroundAudioConfiguration = {
   enabled: false,
@@ -54,9 +58,11 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   private readonly _textTrackState: TextTrackState;
   private readonly _presentationModeManager: WebPresentationModeManager;
   private readonly _theoliveAdapter: TheoLiveWebAdapter;
+  private readonly _metricsAdapter: MetricsWebAdapter;
+  private readonly _playerFacade: PlayerFacade | undefined;
   private _player: NativeChromelessPlayer | undefined;
   private _eventForwarder: WebEventForwarder | undefined;
-  private _mediaSession: WebMediaSession | undefined = undefined;
+  private readonly _mediaSession: WebMediaSession;
   private _targetVideoQuality: number | number[] | undefined = undefined;
   private _backgroundAudioConfiguration: BackgroundAudioConfiguration = defaultBackgroundAudioConfiguration;
   private _pipConfiguration: PiPConfiguration = defaultPipConfiguration;
@@ -67,21 +73,30 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
 
   constructor(player: NativeChromelessPlayer, config?: PlayerConfiguration) {
     super();
-    this._player = player;
+    this._playerFacade = config?.usePlayerFacade === true ? new PlayerFacade(player) : undefined;
+    this._player = this._playerFacade?.player ?? player;
     this._adsAdapter = new THEOplayerWebAdsAdapter(this._player);
     this._castAdapter = new THEOplayerWebCastAdapter(this._player);
     this._theoAdsAdapter = new THEOAdsWebAdapter(this._player);
     this._theoliveAdapter = new TheoLiveWebAdapter(this._player);
+    this._metricsAdapter = new MetricsWebAdapter(this._player);
     this._textTrackState = new DefaultTextTrackState(this);
     this._eventForwarder = new WebEventForwarder(this._player, this);
     this._presentationModeManager = new WebPresentationModeManager(this._player, this);
     document.addEventListener('visibilitychange', this.onVisibilityChange);
     this._player.addEventListener('dimensionchange', this.onPlayerDimensionChange);
 
-    // Optionally create a media session connector
-    if (config?.mediaControl?.mediaSessionEnabled !== false) {
-      this._mediaSession = new WebMediaSession(this, player, config?.mediaControl);
-    }
+    // Always create a media session connector so it can be toggled at runtime via mediaControl.setEnabled().
+    // The initial enabled state is derived from config.mediaControl.mediaSessionEnabled.
+    this._mediaSession = new WebMediaSession(this, this._player, config?.mediaControl);
+  }
+
+  get mediaControl(): MediaControlAPI {
+    return this._mediaSession.mediaControlAdapter;
+  }
+
+  get metrics(): MetricsAPI {
+    return this._metricsAdapter;
   }
 
   get abr(): ABRConfiguration | undefined {
@@ -206,7 +221,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     this._backgroundAudioConfiguration = config;
 
     // Notify media session
-    this._mediaSession?.updateMediaSession();
+    this._mediaSession.updateMediaSession();
   }
 
   get volume(): number {
@@ -351,6 +366,14 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     // unused
   }
 
+  get manageContentMatching(): boolean {
+    return false;
+  }
+
+  set manageContentMatching(_enable: boolean) {
+    // unused
+  }
+
   get keepScreenOn(): boolean {
     return false;
   }
@@ -389,15 +412,18 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
   destroy(): void {
     this.dispatchEvent(new BaseEvent(PlayerEventType.DESTROY));
     this._eventForwarder?.unload();
-    this._mediaSession?.destroy();
+    this._mediaSession.destroy();
     document.removeEventListener('visibilitychange', this.onVisibilityChange);
     this._eventForwarder = undefined;
-    this._mediaSession = undefined;
     this._cmcdConnector?.destroy();
     this._cmcdConnector = undefined;
     this._player?.removeEventListener('dimensionchange', this.onPlayerDimensionChange);
-    this._player?.destroy();
-    this._player = undefined;
+    try {
+      this._player?.destroy();
+    } finally {
+      this._playerFacade?.close();
+      this._player = undefined;
+    }
   }
 
   private readonly onVisibilityChange = () => {
@@ -416,7 +442,7 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
       }
     }
     // Apply media session controls
-    this._mediaSession?.updateMediaSession();
+    this._mediaSession.updateMediaSession();
   };
 
   private readonly onPlayerDimensionChange = (event: DimensionChangeEvent) => {

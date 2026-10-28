@@ -7,7 +7,20 @@ import MediaPlayer
 class THEOplayerRCTNowPlayingManager {
     // MARK: Members
     private weak var player: THEOplayer?
-    private var nowPlayingInfo = [String : Any]()
+    private weak var view: THEOplayerRCTView?
+    private let nowPlayingQueue = DispatchQueue(label: "com.theoplayer.reactnative.nowplayinginfo")
+    private var nowPlayingInfoStorage = [String : Any]()
+    private var nowPlayingInfoGeneration: Int = 0
+    
+    // The player that most recently published Now Playing info to the process-wide info center.
+    // Used to scope clearing so a disabled player only clears its own info and never clobbers
+    // another (newly-active) owner during a multi-player hand-off.
+    private static weak var currentOwner: THEOplayerRCTNowPlayingManager?
+    
+    // MARK: computed
+    private var mediaSessionEnabled: Bool {
+        self.view?.mediaControlConfig.mediaSessionEnabled ?? DEFAULT_MEDIA_SESSION_ENABLED
+    }
     
     // MARK: player Listeners
     private var durationChangeListener: EventListener?
@@ -25,19 +38,25 @@ class THEOplayerRCTNowPlayingManager {
         // update elapsed time on close
         if let player = self.player {
             updateCurrentTime(player.currentTime)
-            self.processNowPlayingToInfoCenter()
+            self.processNowPlayingInfoToInfoCenter()
         }
         
         // clear nowPlayingInfo
-        self.nowPlayingInfo = [:]
-        self.clearNowPlayingOnInfoCenter()
+        self.clearNowPlayingInfoStorage()
+        if self.mediaSessionEnabled {
+            self.clearNowPlayingInfoOnInfoCenter()
+        } else {
+            // Disabled player being destroyed: still clean up, but only if it owns the shared info.
+            self.clearNowPlayingIfOwner()
+        }
         
         if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] Destroy, nowPlayingInfo cleared on infoCenter.") }
     }
     
     // MARK: - player setup / breakdown
-    func setPlayer(_ player: THEOplayer) {
+    func setPlayer(_ player: THEOplayer, view: THEOplayerRCTView?) {
         self.player = player;
+        self.view = view
         
         // attach listeners
         self.attachListeners()
@@ -61,37 +80,88 @@ class THEOplayerRCTNowPlayingManager {
         }
     }
     
-    func updateNowPlaying() {
-        // Reset any existing playing info
-        self.nowPlayingInfo = [:]
+    func updateNowPlayingInfo() {
+        // Reset any existing playing info; this invalidates any artwork fetch still in flight
+        let generation = self.clearNowPlayingInfoStorage()
+        
+        // When the media session is disabled we must not publish, nor unconditionally clear (that would
+        // clobber another active owner). Only clear if this player currently owns the shared info.
+        guard self.mediaSessionEnabled else {
+            self.clearNowPlayingIfOwner()
+            return
+        }
         
         // Gather new playing info
         if let player = self.player,
            let sourceDescription = player.source,
            let metadata = sourceDescription.metadata {
             let artWorkUrlString = self.getArtWorkUrlStringFromSourceDescription(sourceDescription)
-            self.nowPlayingInfo = [String : Any]()
             self.updateTitle(metadata.title)
-            self.updateArtist(metadata.metadataKeys?["artist"] as? String)
+            self.updateSubtitleOrArtist(subtitle: metadata.metadataKeys?["subtitle"] as? String,
+                                        artist: metadata.metadataKeys?["artist"] as? String)
             self.updateAlbum(metadata.metadataKeys?["album"] as? String)
-            self.updateSubtitle(metadata.metadataKeys?["subtitle"] as? String)
             self.updateDuration(player.duration)
             self.updateMediaType() // video
-            self.updatePlaybackRate(player.playbackRate)
+            self.updatePlaybackRate(player.paused ? 0 : player.playbackRate)
             self.updateServiceIdentifier(metadata.metadataKeys?["nowPlayingServiceIdentifier"] as? String)
             self.updateContentIdentifier(metadata.metadataKeys?["nowPlayingContentIdentifier"] as? String)
             self.updateCurrentTime(player.currentTime)
-            self.updateArtWork(artWorkUrlString) { [weak self] in
-                self?.processNowPlayingToInfoCenter()
+            self.updateArtWork(artWorkUrlString, generation: generation) { [weak self] in
+                self?.processNowPlayingInfoToInfoCenter()
             }
         } else {
-            self.clearNowPlayingOnInfoCenter()
+            self.clearNowPlayingInfoOnInfoCenter()
         }
     }
     
-    private func processNowPlayingToInfoCenter() {
-        let nowPlayingInfo = self.nowPlayingInfo
+    // MARK: - thread safe nowPlayingInfo access
+    // nowPlayingInfoStorage is touched both from the main thread (player event listeners,
+    // updateNowPlayingInfo, destroy) and from the URLSession delegate queue (artwork fetch
+    // completion). All access is serialized through nowPlayingQueue to avoid corrupting
+    // the dictionary storage.
+    //
+    // nowPlayingInfoGeneration identifies the source the storage is currently describing.
+    // It is bumped on every clear, so an artwork fetch that completes after a source change
+    // (or after the info was cleared) can detect that it is stale and skip both its write
+    // and the publication to the info center.
+    private func setNowPlayingInfoStorage(_ key: String, _ value: Any?) {
+        self.nowPlayingQueue.sync { self.nowPlayingInfoStorage[key] = value }
+    }
+    
+    // Writes only when the generation is still current; returns false when stale.
+    private func setNowPlayingInfoStorage(_ key: String, _ value: Any?, ifGeneration generation: Int) -> Bool {
+        self.nowPlayingQueue.sync {
+            guard generation == self.nowPlayingInfoGeneration else {
+                return false
+            }
+            self.nowPlayingInfoStorage[key] = value
+            return true
+        }
+    }
+    
+    private func isCurrentNowPlayingInfoGeneration(_ generation: Int) -> Bool {
+        self.nowPlayingQueue.sync { generation == self.nowPlayingInfoGeneration }
+    }
+    
+    private func getNowPlayingInfoStorage() -> [String : Any] {
+        self.nowPlayingQueue.sync { self.nowPlayingInfoStorage }
+    }
+    
+    @discardableResult
+    private func clearNowPlayingInfoStorage() -> Int {
+        self.nowPlayingQueue.sync {
+            self.nowPlayingInfoStorage = [:]
+            self.nowPlayingInfoGeneration += 1
+            return self.nowPlayingInfoGeneration
+        }
+    }
+    
+    private func processNowPlayingInfoToInfoCenter() {
+        guard self.mediaSessionEnabled else { return }
+        let nowPlayingInfo = self.getNowPlayingInfoStorage()
         if !nowPlayingInfo.isEmpty {
+            // This player is now publishing to the shared info center: claim ownership.
+            THEOplayerRCTNowPlayingManager.currentOwner = self
             Task { @MainActor in
                 MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
                 if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] nowPlayingInfo processed to infoCenter.") }
@@ -101,12 +171,31 @@ class THEOplayerRCTNowPlayingManager {
                 }
             }
         } else {
-            self.clearNowPlayingOnInfoCenter()
+            self.clearNowPlayingInfoOnInfoCenter()
         }
     }
     
-    private func clearNowPlayingOnInfoCenter() {
+    private func clearNowPlayingInfoOnInfoCenter() {
+        guard self.mediaSessionEnabled else { return }
+        if THEOplayerRCTNowPlayingManager.currentOwner === self {
+            THEOplayerRCTNowPlayingManager.currentOwner = nil
+        }
+        self.performClearOnInfoCenter()
+    }
+    
+    /// Clear the shared Now Playing info only if this player currently owns it. Bypasses the
+    /// mediaSessionEnabled guard so a player can clean up its own info at the moment it is disabled,
+    /// without clobbering another (newly-active) owner during a multi-player hand-off.
+    private func clearNowPlayingIfOwner() {
+        guard THEOplayerRCTNowPlayingManager.currentOwner === self else { return }
+        THEOplayerRCTNowPlayingManager.currentOwner = nil
+        self.performClearOnInfoCenter()
+    }
+    
+    private func performClearOnInfoCenter() {
         Task { @MainActor in
+            // Avoid redundant clears (and their log noise) when the info center is already empty.
+            guard MPNowPlayingInfoCenter.default().nowPlayingInfo?.isEmpty == false else { return }
             MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
             if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] clearing nowPlayingInfo (to nil) on infoCenter.") }
             
@@ -130,62 +219,70 @@ class THEOplayerRCTNowPlayingManager {
     
     private func updateTitle(_ metadataTitle: String?) {
         if let title = metadataTitle {
-            self.nowPlayingInfo[MPMediaItemPropertyTitle] = title
+            self.setNowPlayingInfoStorage(MPMediaItemPropertyTitle, title)
             if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] title [\(title)] stored in nowPlayingInfo.") }
         }
     }
     
-    private func updateArtist(_ metadataArtist: String?) {
-        if let artist = metadataArtist {
-            self.nowPlayingInfo[MPMediaItemPropertyArtist] = artist
-            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] artist [\(artist)] stored in nowPlayingInfo.") }
+    // MPMediaItemPropertyArtist holds the secondary line shown below the title. An audio
+    // stream typically describes it through an artist, while a video stream has no artist but
+    // can provide a subtitle (e.g. title "My Series" with subtitle "ep.8: My Episode Title").
+    // Only one of both can be displayed, so the subtitle takes precedence when both are set.
+    private func updateSubtitleOrArtist(subtitle metadataSubtitle: String?, artist metadataArtist: String?) {
+        if let subtitleOrArtist = metadataSubtitle ?? metadataArtist {
+            self.setNowPlayingInfoStorage(MPMediaItemPropertyArtist, subtitleOrArtist)
+            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] subtitle/artist [\(subtitleOrArtist)] stored in nowPlayingInfo.") }
         }
     }
     
     private func updateAlbum(_ metadataAlbum: String?) {
         if let album = metadataAlbum {
-            self.nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = album
+            self.setNowPlayingInfoStorage(MPMediaItemPropertyAlbumTitle, album)
             if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] album [\(album)] stored in nowPlayingInfo.") }
-        }
-    }
-    
-    private func updateSubtitle(_ metadataSubtitle: String?) {
-        if let subtitle = metadataSubtitle {
-            self.nowPlayingInfo[MPMediaItemPropertyArtist] = subtitle
-            if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] subtitle [\(subtitle)] stored in nowPlayingInfo.") }
         }
     }
     
     private func updateServiceIdentifier(_ serviceId: String?) {
         if let serviceId = serviceId {
-            self.nowPlayingInfo[MPNowPlayingInfoPropertyServiceIdentifier] = serviceId
+            self.setNowPlayingInfoStorage(MPNowPlayingInfoPropertyServiceIdentifier, serviceId)
             if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] serviceId [\(serviceId)] stored in nowPlayingInfo.") }
         }
     }
     
     private func updateContentIdentifier(_ contentId: String?) {
         if let contentId = contentId {
-            self.nowPlayingInfo[MPNowPlayingInfoPropertyExternalContentIdentifier] = contentId
+            self.setNowPlayingInfoStorage(MPNowPlayingInfoPropertyExternalContentIdentifier, contentId)
             if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] contentId [\(contentId)] stored in nowPlayingInfo.") }
         }
     }
     
     private func updateMediaType() {
-        self.nowPlayingInfo[MPNowPlayingInfoPropertyMediaType] = NSNumber(value: 2)
+        self.setNowPlayingInfoStorage(MPNowPlayingInfoPropertyMediaType, NSNumber(value: 2))
         if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] mediaType [hardcoded 2, for video] stored in nowPlayingInfo.") }
     }
     
-    private func updateArtWork(_ urlString: String?, completion: (() -> Void)?) {
+    private func updateArtWork(_ urlString: String?, generation: Int, completion: (() -> Void)?) {
         if let artUrlString = urlString,
            let artUrl = URL(string: artUrlString) {
             let dataTask = URLSession.shared.dataTask(with: artUrl) { [weak self] (data, _, _) in
+                guard let welf = self else {
+                    return
+                }
                 if let displayIconData = data,
                    let displayIcon = UIImage(data: displayIconData) {
-                    self?.nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: displayIcon.size) { size in
+                    let artWork = MPMediaItemArtwork(boundsSize: displayIcon.size) { size in
                         return displayIcon
+                    }
+                    guard welf.setNowPlayingInfoStorage(MPMediaItemPropertyArtwork, artWork, ifGeneration: generation) else {
+                        if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] Artwork arrived for an outdated source, discarding it.") }
+                        return
                     }
                     if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] Artwork stored in nowPlayingInfo.") }
                 } else {
+                    guard welf.isCurrentNowPlayingInfoGeneration(generation) else {
+                        if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] Artwork failed for an outdated source, discarding it.") }
+                        return
+                    }
                     if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] Failed to store artwork in nowPlayingInfo.") }
                 }
                 completion?()
@@ -197,22 +294,22 @@ class THEOplayerRCTNowPlayingManager {
     }
     
     private func updatePlaybackRate(_ playerPlaybackRate: Double) {
-        self.nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = NSNumber(value: playerPlaybackRate)
+        self.setNowPlayingInfoStorage(MPNowPlayingInfoPropertyPlaybackRate, NSNumber(value: playerPlaybackRate))
         if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] playbackrate [\(playerPlaybackRate)] stored in nowPlayingInfo.") }
     }
     
     private func updateCurrentTime(_ currentTime: Double) {
-        self.nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = NSNumber(value: currentTime)
+        self.setNowPlayingInfoStorage(MPNowPlayingInfoPropertyElapsedPlaybackTime, NSNumber(value: currentTime))
         if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] currentTime [\(currentTime)] stored in nowPlayingInfo.") }
     }
     
     private func updateDuration(_ duration: Double?) {
         if let duration = duration {
             let isLiveStream = duration.isInfinite
-            self.nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = isLiveStream
+            self.setNowPlayingInfoStorage(MPNowPlayingInfoPropertyIsLiveStream, isLiveStream)
             if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] isLiveStream [\(isLiveStream)] stored in nowPlayingInfo.") }
             if !isLiveStream {
-                self.nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = NSNumber(value: duration)
+                self.setNowPlayingInfoStorage(MPMediaItemPropertyPlaybackDuration, NSNumber(value: duration))
                 if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO] duration [\(duration)] stored in nowPlayingInfo.") }
             }
         }
@@ -230,7 +327,7 @@ class THEOplayerRCTNowPlayingManager {
                let wplayer = player,
                let duration = wplayer.duration {
                 welf.updateDuration(duration)
-                welf.processNowPlayingToInfoCenter()
+                welf.processNowPlayingInfoToInfoCenter()
             }
         }
         
@@ -241,7 +338,7 @@ class THEOplayerRCTNowPlayingManager {
                let wplayer = player {
                 welf.updatePlaybackRate(wplayer.playbackRate)
                 welf.updateCurrentTime(wplayer.currentTime)
-                welf.processNowPlayingToInfoCenter()
+                welf.processNowPlayingInfoToInfoCenter()
             }
         }
         
@@ -252,7 +349,7 @@ class THEOplayerRCTNowPlayingManager {
                let wplayer = player {
                 welf.updatePlaybackRate(0)
                 welf.updateCurrentTime(wplayer.currentTime)
-                welf.processNowPlayingToInfoCenter()
+                welf.processNowPlayingInfoToInfoCenter()
             }
         }
         
@@ -264,7 +361,7 @@ class THEOplayerRCTNowPlayingManager {
                let wplayer = player {
                 welf.updatePlaybackRate(wplayer.playbackRate)
                 welf.updateCurrentTime(wplayer.currentTime)
-                welf.processNowPlayingToInfoCenter()
+                welf.processNowPlayingInfoToInfoCenter()
             }
         }
         
@@ -275,14 +372,14 @@ class THEOplayerRCTNowPlayingManager {
                let wplayer = player {
                 welf.updatePlaybackRate(wplayer.playbackRate)
                 welf.updateCurrentTime(wplayer.currentTime)
-                welf.processNowPlayingToInfoCenter()
+                welf.processNowPlayingInfoToInfoCenter()
             }
         }
         
         // SOURCE_CHANGE
         self.sourceChangeListener = player.addEventListener(type: PlayerEventTypes.SOURCE_CHANGE) { [weak self] event in
             if DEBUG_NOWINFO { PrintUtils.printLog(logText: "[NATIVE][NOWPLAYINGINFO-EVENT] SOURCE_CHANGE \(event.source == nil ? "to nil" : "")") }
-            self?.updateNowPlaying()
+            self?.updateNowPlayingInfo()
         }
     }
     

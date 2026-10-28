@@ -48,6 +48,7 @@ RCT_EXPORT_VIEW_PROPERTY(onNativeDeviceOrientationChanged, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativePlayerReady, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativePresentationModeChange, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeContentProtectionError, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeContentProtectionSuccess, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeDimensionChange, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeVideoResize, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeAdEvent, RCTDirectEventBlock);
@@ -97,6 +98,13 @@ RCT_EXTERN_METHOD(setPresentationMode:(nonnull NSNumber *)node
 
 RCT_EXTERN_METHOD(setAspectRatio:(nonnull NSNumber *)node
                   ratio:(nonnull NSString *)ratio)
+
+RCT_EXTERN_METHOD(setManageContentMatching:(nonnull NSNumber *)node
+                  enable:(BOOL)enable)
+
+RCT_EXTERN_METHOD(getManageContentMatching:(nonnull NSNumber *)node
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(setPipConfig:(nonnull NSNumber *)node
                   pipConfig:(NSDictionary)pipConfig)
@@ -179,6 +187,18 @@ RCT_EXTERN_METHOD(addFriendlyObstruction:(nonnull NSNumber *)node
                   obstruction:(NSDictionary)obstruction)
 
 RCT_EXTERN_METHOD(removeAllFriendlyObstructions:(nonnull NSNumber *)node)
+
+@end
+
+// ----------------------------------------------------------------------------
+// Metrics Module
+// ----------------------------------------------------------------------------
+
+@interface RCT_EXTERN_REMAP_MODULE(THEORCTMetricsModule, THEOplayerRCTMetricsAPI, NSObject)
+
+RCT_EXTERN_METHOD(currentBandwidthEstimate:(nonnull NSNumber *)node
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
 
 @end
 
@@ -316,3 +336,18 @@ RCT_EXTERN_METHOD(setAdTagParameters:(nonnull NSNumber *)node
 
 @end
 
+// ----------------------------------------------------------------------------
+// MediaControl Module
+// ----------------------------------------------------------------------------
+@interface RCT_EXTERN_REMAP_MODULE(THEORCTMediaControlModule, THEOplayerRCTMediaControlAPI, RCTEventEmitter)
+
+RCT_EXTERN_METHOD(setHandler:(nonnull NSNumber *)node
+                  action:(nonnull NSString *)action)
+
+RCT_EXTERN_METHOD(removeHandler:(nonnull NSNumber *)node
+                  action:(nonnull NSString *)action)
+
+RCT_EXTERN_METHOD(setEnabled:(nonnull NSNumber *)node
+                  enabled:(BOOL)enabled)
+
+@end

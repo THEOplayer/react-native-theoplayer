@@ -153,6 +153,22 @@ export interface PlayerConfiguration {
    * <br/> - Source-level configuration can override player-level values. See {@link CmcdSourceConfiguration}.
    */
   cmcd?: CmcdPlayerConfiguration;
+
+  /**
+   * Whether to expose a stable player facade for integration-owned playback and advertising.
+   *
+   * @remarks
+   * <br/> - Set this option at player creation, before registering an integration.
+   * <br/> - On Web, the facade is exposed through {@link THEOplayer.nativeHandle}.
+   * <br/> - On Android, integrations register through the native `ReactTHEOplayerView` API.
+   * <br/> - The content player remains available to integrations without facade overrides.
+   * <br/> - This option has no effect on iOS or tvOS.
+   *
+   * @experimental This API is subject to change or removal without notice.
+   * @defaultValue false
+   * @platform web,android
+   */
+  readonly usePlayerFacade?: boolean;
 }
 
 /**

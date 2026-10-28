@@ -1,70 +1,64 @@
-import { TestScope } from 'cavy';
+import { expect, TestScope } from 'react-native-cavynext';
 import { PlayerEventType, PresentationMode, PresentationModeChangeEvent, RenderingTarget, THEOplayer } from 'react-native-theoplayer';
-import { expect, preparePlayerWithSource, waitForPlayerEvent, waitForPlayerEventType } from '../utils/Actions';
+import { preparePlayerWithSource, waitForPlayerEvent, waitForPlayerEventType } from '../utils/Actions';
 import { sleep } from '../utils/TimeUtils';
-import { Platform } from 'react-native';
-import { TestSourceDescription, TestSources } from '../utils/SourceUtils';
+import { plainSources } from '../utils/SourceUtils';
 import { Log } from '../utils/Log';
 
 export default function (spec: TestScope) {
-  TestSources()
-    .withPlain()
-    .withAdsIf(Platform.OS !== 'ios')
-    .forEach((testSource: TestSourceDescription) => {
-      const specDescription = `Switch between presentation modes during play-out of a ${testSource.description}`;
-      spec.describe(specDescription, function () {
-        const itDescription = 'dispatches presentationmodechange events between inline and fullscreen.';
-        spec.it(itDescription, async function () {
-          Log.debug(`### START TEST ###: ${specDescription} - ${itDescription}`);
-          const player = await preparePlayerWithSource(testSource.source);
+  const platform = spec.platform();
+  // Plain sources only: an IMA pre-roll adds nothing to presentation mode or
+  // rendering target coverage, but does make these specs depend on the ad server.
+  const sources = plainSources(platform);
 
-          // Switch to fullscreen.
-          const fullscreenPromise = waitForPlayerEvent(player, {
-            type: PlayerEventType.PRESENTATIONMODE_CHANGE,
-            presentationMode: PresentationMode.fullscreen,
-            previousPresentationMode: PresentationMode.inline,
-          } as PresentationModeChangeEvent);
-          player.presentationMode = PresentationMode.fullscreen;
+  // Browsers only allow entering fullscreen from a user gesture, so the
+  // presentation mode tests cannot run on web; report them as skipped.
+  spec.describeIf.each(sources)(platform !== 'web', 'Switch between presentation modes during play-out of a $description', (testSource) => {
+    spec.it('dispatches presentationmodechange events between inline and fullscreen.', async () => {
+      const player = await preparePlayerWithSource(spec, testSource.source);
 
-          //  Wait for 'presentationmodechange' event.
-          await fullscreenPromise;
+      // Switch to fullscreen.
+      const fullscreenPromise = waitForPlayerEvent(player, {
+        type: PlayerEventType.PRESENTATIONMODE_CHANGE,
+        presentationMode: PresentationMode.fullscreen,
+        previousPresentationMode: PresentationMode.inline,
+      } as PresentationModeChangeEvent);
+      player.presentationMode = PresentationMode.fullscreen;
 
-          // Play-out should not pause.
-          await sleep(500);
-          expect(player.paused).toBeFalsy();
+      // Wait for 'presentationmodechange' event.
+      await fullscreenPromise;
+      expect(player.presentationMode).toBe(PresentationMode.fullscreen);
 
-          // Switch back to inline.
-          const inlinePromise = waitForPlayerEvent(player, {
-            type: PlayerEventType.PRESENTATIONMODE_CHANGE,
-            presentationMode: PresentationMode.inline,
-            previousPresentationMode: PresentationMode.fullscreen,
-          } as PresentationModeChangeEvent);
-          player.presentationMode = PresentationMode.inline;
+      // Play-out should not pause.
+      await sleep(500);
+      expect(player.paused).toBeFalsy();
 
-          //  Wait for 'presentationmodechange' event.
-          await inlinePromise;
+      // Switch back to inline.
+      const inlinePromise = waitForPlayerEvent(player, {
+        type: PlayerEventType.PRESENTATIONMODE_CHANGE,
+        presentationMode: PresentationMode.inline,
+        previousPresentationMode: PresentationMode.fullscreen,
+      } as PresentationModeChangeEvent);
+      player.presentationMode = PresentationMode.inline;
 
-          // Play-out should not pause.
-          expect(player.paused).toBeFalsy();
-          Log.debug(`### END TEST ###: ${specDescription} - ${itDescription}`);
-        });
-      });
+      // Wait for 'presentationmodechange' event.
+      await inlinePromise;
+      expect(player.presentationMode).toBe(PresentationMode.inline);
 
-      if (Platform.OS === 'android') {
-        const specDescription = `Switch between rendering targets during play-out of a ${testSource.description}`;
-        spec.describe(specDescription, function () {
-          const itDescription = 'continues play-out.';
-          spec.it(itDescription, async function () {
-            Log.debug(`### START TEST ###: ${specDescription} - ${itDescription}`);
-            const player = await preparePlayerWithSource(testSource.source);
-
-            await switchRenderingTarget(player, RenderingTarget.TEXTURE_VIEW);
-            await switchRenderingTarget(player, RenderingTarget.SURFACE_VIEW);
-            Log.debug(`### END TEST ###: ${specDescription} - ${itDescription}`);
-          });
-        });
-      }
+      // Play-out should not pause.
+      expect(player.paused).toBeFalsy();
     });
+  });
+
+  // Rendering targets only exist on Android.
+  spec.describeIf.each(sources)(platform === 'android', 'Switch between rendering targets during play-out of a $description', (testSource) => {
+    spec.it('continues play-out.', async () => {
+      const player = await preparePlayerWithSource(spec, testSource.source);
+
+      await switchRenderingTarget(player, RenderingTarget.TEXTURE_VIEW);
+      await switchRenderingTarget(player, RenderingTarget.SURFACE_VIEW);
+    });
+  });
 }
 
 async function switchRenderingTarget(player: THEOplayer, renderingTarget: RenderingTarget, sleepTime: number = 500) {

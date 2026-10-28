@@ -1,60 +1,67 @@
-import { useCavy } from 'cavy';
+import { TesterContext, useCavy } from 'react-native-cavynext';
 import { THEOplayer, THEOplayerView, THEOplayerViewProps } from 'react-native-theoplayer';
-import React, { useCallback } from 'react';
+import React, { useCallback, useContext, useLayoutEffect, useRef } from 'react';
+import { PLAYER_HOOK_ID } from '../utils/Actions';
 import { Log } from '../utils/Log';
 
-let testPlayer: THEOplayer | undefined = undefined;
-let testPlayerId: number = 0;
-
 /**
- * Wait until the player is ready.
+ * A THEOplayerView that registers both itself and its player in the cavynext
+ * TestHookStore:
  *
- * @param timeout Delay after rejecting the player.
- * @param poll Delay before trying again.
+ *   - 'Scene.THEOplayerView' - the view component;
+ *   - PLAYER_HOOK_ID         - the THEOplayer instance, available from the
+ *                              `onPlayerReady` callback until the player is
+ *                              destroyed.
+ *
+ * Specs obtain the player via `getTestPlayer(spec)`, which waits for the hook
+ * to appear using cavynext's regular component lookup.
  */
-export const getTestPlayer = async (timeout = 20_000, poll = 1_000): Promise<THEOplayer> => {
-  return new Promise((resolve, reject) => {
-    const start = Date.now();
-    const checkPlayer = () => {
-      setTimeout(() => {
-        if (testPlayer) {
-          // Player is ready.
-          Log.debug(`[checkPlayer] Success: player ${testPlayerId} ready.`);
-          resolve(testPlayer);
-        } else if (Date.now() - start > timeout) {
-          // Too late.
-          Log.debug(`[checkPlayer] Failed: timeout reached for ${testPlayerId}.`);
-          reject('Player not ready');
-        } else {
-          // Wait & try again.
-          Log.debug(`[checkPlayer] Player ${testPlayerId} not ready yet. Retrying...`);
-          checkPlayer();
-        }
-      }, poll);
-    };
-    checkPlayer();
-  });
-};
-
 export const TestableTHEOplayerView = ({ onPlayerReady, onPlayerDestroy, ...props }: THEOplayerViewProps) => {
   const generateTestHook = useCavy();
-  const onPlayerReadyCallback = useCallback(
+  const store = useContext(TesterContext);
+  // The player owned by this component instance, so an unmounting instance
+  // can never unregister the player of its successor.
+  const ownPlayer = useRef<THEOplayer | undefined>(undefined);
+
+  const registerPlayer = useCallback(
     (player: THEOplayer) => {
-      testPlayerId++;
-      testPlayer = player;
-      Log.debug(`[TestableTHEOplayerView] onPlayerReady id: ${testPlayerId}`);
-      onPlayerReady?.(testPlayer);
+      ownPlayer.current = player;
+      store?.add(PLAYER_HOOK_ID, player as unknown as NonNullable<ReturnType<typeof store.get>>);
     },
-    [onPlayerReady],
+    [store],
   );
 
-  const onPlayerDestroyCallback = useCallback(() => {
-    Log.debug(`[TestableTHEOplayerView] onPlayerDestroy id: ${testPlayerId}`);
-    if (testPlayer !== undefined) {
-      onPlayerDestroy?.(testPlayer);
+  const unregisterPlayer = useCallback(() => {
+    if (ownPlayer.current && store?.get(PLAYER_HOOK_ID) === (ownPlayer.current as unknown)) {
+      store.remove(PLAYER_HOOK_ID);
     }
-    testPlayer = undefined;
-  }, [onPlayerDestroy]);
+    ownPlayer.current = undefined;
+  }, [store]);
+
+  // Unregister synchronously when this view unmounts (layout effects clean up
+  // during the React commit). The runner awaits the re-mount commit before a
+  // test starts, so a test can never grab the previous, about-to-be-destroyed
+  // player from the store; the player's own destroy callback fires later, in
+  // a passive effect.
+  useLayoutEffect(() => unregisterPlayer, [unregisterPlayer]);
+
+  const onPlayerReadyCallback = useCallback(
+    (player: THEOplayer) => {
+      Log.debug('[TestableTHEOplayerView] onPlayerReady');
+      registerPlayer(player);
+      onPlayerReady?.(player);
+    },
+    [registerPlayer, onPlayerReady],
+  );
+
+  const onPlayerDestroyCallback = useCallback(
+    (player: THEOplayer) => {
+      Log.debug('[TestableTHEOplayerView] onPlayerDestroy');
+      unregisterPlayer();
+      onPlayerDestroy?.(player);
+    },
+    [unregisterPlayer, onPlayerDestroy],
+  );
 
   return (
     <THEOplayerView

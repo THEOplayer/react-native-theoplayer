@@ -12,7 +12,7 @@ import com.facebook.react.uimanager.common.UIManagerType
 import com.theoplayer.ads.AdEventAdapter
 import com.theoplayer.ads.AdEventAdapter.AdEventEmitter
 import com.theoplayer.android.api.THEOplayerGlobal
-import com.theoplayer.android.api.ads.theoads.theoAds
+import com.theoplayer.integration.theoAds
 import com.theoplayer.android.api.error.THEOplayerException
 import com.theoplayer.android.api.event.EventListener
 import com.theoplayer.android.api.event.EventType
@@ -86,6 +86,7 @@ private const val EVENT_THEOADS_EVENT = "onNativeTHEOadsEvent"
 private const val EVENT_PRESENTATIONMODECHANGE = "onNativePresentationModeChange"
 private const val EVENT_VOLUMECHANGE = "onNativeVolumeChange"
 private const val EVENT_CONTENTPROTECTIONERROR = "onNativeContentProtectionError"
+private const val EVENT_CONTENTPROTECTIONSUCCESS = "onNativeContentProtectionSuccess"
 private const val EVENT_DIMENSIONCHANGE = "onNativeDimensionChange"
 private const val EVENT_VIDEORESIZE = "onNativeVideoResize"
 
@@ -134,6 +135,7 @@ class PlayerEventEmitter internal constructor(
     EVENT_PRESENTATIONMODECHANGE,
     EVENT_VOLUMECHANGE,
     EVENT_CONTENTPROTECTIONERROR,
+    EVENT_CONTENTPROTECTIONSUCCESS,
     EVENT_DIMENSIONCHANGE,
     EVENT_VIDEORESIZE
   )
@@ -174,6 +176,7 @@ class PlayerEventEmitter internal constructor(
       EVENT_PRESENTATIONMODECHANGE,
       EVENT_VOLUMECHANGE,
       EVENT_CONTENTPROTECTIONERROR,
+      EVENT_CONTENTPROTECTIONSUCCESS,
       EVENT_DIMENSIONCHANGE,
       EVENT_VIDEORESIZE
     )
@@ -251,6 +254,8 @@ class PlayerEventEmitter internal constructor(
       EventListener { event: VolumeChangeEvent -> onVolumeChange(event) }
     playerListeners[PlayerEventTypes.CONTENTPROTECTIONERROR] =
       EventListener { event: ContentProtectionErrorEvent -> onContentProtectionError(event) }
+    playerListeners[PlayerEventTypes.CONTENTPROTECTIONSUCCESS] =
+      EventListener<PlayerEvent<*>> { onContentProtectionSuccess() }
     playerListeners[PlayerEventTypes.RESIZE] =
       EventListener { event: ResizeEvent -> onResize(event) }
     textTrackListeners[TextTrackListEventTypes.ADDTRACK] =
@@ -407,7 +412,7 @@ class PlayerEventEmitter internal constructor(
   private fun onPause() {
     val player = playerView.player
     // Do not forward the pause event in case the content player is paused because the ad player starts.
-    if (player != null && (!playerView.adsApi.isPlaying || player.isPaused)) {
+    if (player != null && (!playerView.adBridge.isPlaying || player.isPaused)) {
       receiveEvent(EVENT_PAUSE, null)
     }
   }
@@ -489,6 +494,10 @@ class PlayerEventEmitter internal constructor(
       EVENT_CONTENTPROTECTIONERROR,
       PayloadBuilder().error(event.errorObject.code.id.toString(), event.errorObject.message).build()
     )
+  }
+
+  private fun onContentProtectionSuccess() {
+    receiveEvent(EVENT_CONTENTPROTECTIONSUCCESS, null)
   }
 
   private fun onResize(event: ResizeEvent) {

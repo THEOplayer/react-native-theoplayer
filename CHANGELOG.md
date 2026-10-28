@@ -15,6 +15,65 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed an issue on Android where `preferredKeySystems` in the content protection configuration was ignored.
 
+## [11.8.0] - 18-10-21
+
+### Added
+
+- Added the `src`, `srcType`, `provider` and `adSystem` properties to the THEOlive `endpoint` object of the `endpointloaded` event on all platforms.
+- Added the `webrtc` playout delay options to `millicastSrc` on Android.
+
+### Changed
+
+- Raised the minimum supported THEOplayer SDK version to 11.14.0 on all platforms.
+
+### Fixed
+
+- Fixed an issue where re-registering a content protection integration for the same key system kept the previously registered factory active, causing stale DRM integrations to be used for subsequent sources.
+- Fixed an issue on iOS and Android where certificate and license requests from multiple concurrently playing DRM-protected sources could be processed by the wrong content protection integration, or bypass it entirely, causing license acquisition to fail.
+
+## [11.7.0] - 18-09-26
+
+### Added
+
+- Added the `Metrics` API, accessible through `player.metrics`, with `currentBandwidthEstimate` returning the player's estimated available bandwidth in bits per second. On iOS/tvOS this value is only reported for THEOlive/HESP streams.
+- Added `THEOplayer.manageContentMatching` to let the player match the display mode (frame rate and dynamic range) of the TV to the content before playback starts on tvOS.
+- Added a `testID` property on `THEOplayerView` to allow locating the player view from UI automation tools.
+
+### Fixed
+
+- Fixed media track kind typings to accept audio descriptions and other stream- or platform-specific values without type overrides.
+- Fixed an issue on Android where destroying the player during a pending `MediaPlaybackService` bind could cause a crash.
+- Fixed an issue on Android where the player could remain black when its view was attached after React Native had already assigned the layout.
+- Fixed an issue where `player.paused` remained `true` between the `play` and `playing` events.
+- Fixed an issue on Web and iOS Safari where cues already present when a text track was added, including daterange cues, did not produce `addcue` player events.
+- Fixed an issue where text and media track event listeners were not actually removed when a track was removed.
+
+### Changed
+
+- Removed the `RCTRootContentView` import from the iOS bridging header, as it is removed in React Native 0.87.
+- Upgraded example app to support React Native v0.87.1.
+
+## [11.6.0]
+
+### Added
+
+- Added the `MediaControl` API for controlling the media session and lock screen controls with custom handlers.
+- Added support for the `contentprotectionsuccess` event on all platforms
+
+### Changed
+
+- Upgraded example app to support React Native v0.86.2.
+
+## [11.5.0]
+
+### Fixed
+
+- Fixed an issue on iOS where fetching the artwork for the `NowPlayingInfo` could cause a crash due to unsafe thread usage.
+
+### Added
+
+- Added `contentprotectionerror` player event on Web and Android platforms.
+
 ## [11.4.1] - 26-07-22
 
 ### Changed
@@ -24,10 +83,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed an issue on iOS where sideloaded texttracks were not stored for cached playout.
-
-### Added
-
-- Added `contentprotectionerror` player event on Web, Android, and iOS platforms.
 
 ## [11.4.0] - 26-07-06
 
@@ -686,7 +741,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- Upgrade example app to support React Native v0.75.
+- Upgraded example app to support React Native v0.75.
 
 ## [8.5.0] - 24-10-21
 

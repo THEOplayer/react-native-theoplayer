@@ -24,6 +24,7 @@ import {
   DefaultChromecastChangeEvent,
   DefaultChromecastErrorEvent,
   DefaultContentProtectionErrorEvent,
+  DefaultContentProtectionSuccessEvent,
   DefaultCurrentSourceChangeEvent,
   DefaultDimensionChangeEvent,
   DefaultDurationChangeEvent,
@@ -54,6 +55,7 @@ import type {
 import { toMediaTrackType, toMediaTrackTypeEventType, toTextTrackEventType, toTrackListEventType } from './adapter/event/native/NativeTrackEvent';
 import {
   NativeContentProtectionErrorEvent,
+  NativeContentProtectionSuccessEvent,
   NativeCurrentSourceChangeEvent,
   NativeDurationChangeEvent,
   NativeErrorEvent,
@@ -119,6 +121,7 @@ interface THEOplayerRCTViewProps {
   onNativePresentationModeChange: (event: NativeSyntheticEvent<NativePresentationModeChangeEvent>) => void;
   onNativeDeviceOrientationChanged: () => void;
   onNativeContentProtectionError: (event: NativeSyntheticEvent<NativeContentProtectionErrorEvent>) => void;
+  onNativeContentProtectionSuccess: (event: NativeSyntheticEvent<NativeContentProtectionSuccessEvent>) => void;
   onNativeDimensionChange: (event: NativeSyntheticEvent<NativeDimensionChangeEvent>) => void;
   onNativeVideoResize: (event: NativeSyntheticEvent<NativeVideoResizeEvent>) => void;
 }
@@ -429,6 +432,10 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
     this._facade?.dispatchEvent(new DefaultContentProtectionErrorEvent(event.nativeEvent.error));
   };
 
+  private _onContentProtectionSuccess = (_event: NativeSyntheticEvent<NativeContentProtectionSuccessEvent>) => {
+    this._facade?.dispatchEvent(new DefaultContentProtectionSuccessEvent());
+  };
+
   private _onVideoResize = (event: NativeSyntheticEvent<NativeVideoResizeEvent>) => {
     this._facade?.dispatchEvent(new DefaultVideoResizeEvent(event.nativeEvent.videoWidth, event.nativeEvent.videoHeight));
   };
@@ -468,11 +475,11 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
   }
 
   public render(): React.JSX.Element {
-    const { config, style, posterStyle, children } = this.props;
+    const { config, style, posterStyle, testID, children } = this.props;
     const { posterActive, poster } = this.state;
 
     return (
-      <View style={[styles.base, style, this.styleOverride()]}>
+      <View testID={testID} style={[styles.base, style, this.styleOverride()]}>
         <THEOplayerRCTView
           ref={this._root}
           style={StyleSheet.absoluteFill}
@@ -511,6 +518,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
           onNativePresentationModeChange={this._onPresentationModeChange}
           onNativeDeviceOrientationChanged={this._onDeviceOrientationChanged}
           onNativeContentProtectionError={this._onContentProtectionError}
+          onNativeContentProtectionSuccess={this._onContentProtectionSuccess}
           onNativeDimensionChange={this._onDimensionChange}
           onNativeVideoResize={this._onVideoResize}
         />
