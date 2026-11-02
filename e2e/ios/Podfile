@@ -28,6 +28,9 @@ target 'ReactNativeTHEOplayer' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
   google_cast_redirect
+  target 'ReactNativeTHEOplayerTests' do
+    inherit! :search_paths
+  end
 end
 
 target 'ReactNativeTHEOplayer-tvOS' do
@@ -37,6 +40,9 @@ target 'ReactNativeTHEOplayer-tvOS' do
     :hermes_enabled => false,
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
+  target 'ReactNativeTHEOplayer-tvOSTests' do
+    inherit! :search_paths
+  end
 end
 
 post_install do |installer|
@@ -50,4 +56,5 @@ post_install do |installer|
   resource_bundle_post_install(installer)
   # On tvOS the Nielsen App SDK ships NielsenTVAppApi instead of NielsenAppApi.
   nielsen_post_install(installer, "Pods-ReactNativeTHEOplayer-tvOS")
+  nielsen_post_install(installer, "Pods-ReactNativeTHEOplayer-tvOSTests")
 end
