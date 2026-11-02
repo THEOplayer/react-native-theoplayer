@@ -44,15 +44,13 @@ post_install do |installer|
     :mac_catalyst_enabled => false,
     # :ccache_enabled => true
   )
-  minimum_deployment_version = Gem::Version.new(min_ios_version_supported)
-  installer.pods_project.targets.each do |target|
-    target.build_configurations.each do |build_configuration|
-      ['IPHONEOS_DEPLOYMENT_TARGET', 'TVOS_DEPLOYMENT_TARGET'].each do |deployment_target_key|
-        deployment_target = build_configuration.build_settings[deployment_target_key]
-        next if deployment_target.nil? || Gem::Version.new(deployment_target) >= minimum_deployment_version
 
-        build_configuration.build_settings[deployment_target_key] = minimum_deployment_version.to_s
-      end
+  # React Native does not raise the iOS 9.0 target of Google Cast's PromisesObjC privacy bundle.
+  installer.pods_project.targets.each do |target|
+    next unless target.name == 'PromisesObjC-FBLPromises_Privacy'
+
+    target.build_configurations.each do |build_configuration|
+      build_configuration.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = min_ios_version_supported
     end
   end
 end
