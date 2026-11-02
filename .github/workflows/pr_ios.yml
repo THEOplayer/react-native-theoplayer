@@ -94,7 +94,7 @@ jobs:
         id: simulator
         uses: futureware-tech/simulator-action@v4
         with:
-          model: ${{ matrix.platform == 'iOS' && 'iPhone 17' || 'Apple TV' }}
+          model: ${{ matrix.platform == 'iOS' && 'iPhone 17' || '' }}
           os: ${{ matrix.platform }}
           os_version: '27.0'
           wait_for_boot: true
