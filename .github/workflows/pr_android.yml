@@ -72,6 +72,9 @@ jobs:
       - name: Gradle cache
         uses: gradle/actions/setup-gradle@v3
 
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
       - name: Run native ad bridge tests
         working-directory: e2e/android
         run: ./gradlew :react-native-theoplayer:testDebugUnitTest --tests 'com.theoplayer.ads.AdAdapterCustomDataTest' --tests 'com.theoplayer.integration.PlayerFacade*Test' --console=plain
