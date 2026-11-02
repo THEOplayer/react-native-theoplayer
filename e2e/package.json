@@ -13,7 +13,7 @@
     "lint": "eslint \"**/*.{ts,tsx}\"",
     "pod-install": "cd ios && RCT_NEW_ARCH_ENABLED=1 bundle exec pod install",
     "pod-update": "cd ios && RCT_NEW_ARCH_ENABLED=1 bundle exec pod update",
-    "update-dependencies": "npx ncu '/@theoplayer\\/.*/' -u"
+    "update-dependencies": "npm-check-updates '/@theoplayer\\/.*/' -u"
   },
   "dependencies": {
     "@theoplayer/react-native-ui": "^0.23.0",
