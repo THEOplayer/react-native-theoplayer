@@ -2,6 +2,7 @@ package com.theoplayer.ads
 
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReadableMap
+import com.facebook.react.bridge.ReadableType
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.bridge.WritableArray
 import com.google.ads.interactivemedia.v3.api.AdPodInfo
@@ -12,6 +13,8 @@ import com.theoplayer.android.api.ads.CompanionAd
 import com.theoplayer.android.api.ads.ima.GoogleImaAd
 import com.theoplayer.android.api.ads.UniversalAdId
 import com.theoplayer.android.api.event.ads.AdIntegrationKind
+import com.theoplayer.util.BridgeUtils
+import org.json.JSONObject
 import java.lang.Exception
 
 private const val PROP_AD_SYSTEM = "adSystem"
@@ -49,6 +52,7 @@ private const val PROP_COMPANION_HEIGHT = "height"
 private const val PROP_COMPANION_RESOURCEURI = "resourceURI"
 private const val PROP_UNIVERSAL_AD_ID_REGISTRY = "adIdRegistry"
 private const val PROP_UNIVERSAL_AD_ID_VALUE = "adIdValue"
+private const val PROP_CUSTOM_DATA = "customData"
 
 private const val INVALID_DOUBLE = -1.0
 private const val INVALID_INT = -1
@@ -130,6 +134,9 @@ object AdAdapter {
       }
       adPayload.putArray(PROP_AD_WRAPPER_CREATIVE_IDS, wrapperCreativeIdsPayload)
     }
+    fromCustomData(ad.customData)?.let {
+      adPayload.putMap(PROP_CUSTOM_DATA, it)
+    }
     return adPayload
   }
 
@@ -146,6 +153,9 @@ object AdAdapter {
     adbreakPayload.putInt(PROP_ADBREAK_MAXDURATION,adbreak.maxDuration)
     adbreakPayload.putInt(PROP_ADBREAK_TIMEOFFSET, adbreak.timeOffset)
     adbreakPayload.putDouble(PROP_ADBREAK_MAXREMAININGDURATION, adbreak.maxRemainingDuration)
+    fromCustomData(adbreak.customData)?.let {
+      adbreakPayload.putMap(PROP_CUSTOM_DATA, it)
+    }
     val adsPayload = Arguments.createArray()
     for (ad in adbreak.ads) {
       // Some ads in the ad break are possibly not loaded yet.
@@ -180,10 +190,27 @@ object AdAdapter {
     return companionsPayload
   }
 
+  private fun fromCustomData(customData: Any?): WritableMap? = when (customData) {
+    is JSONObject -> BridgeUtils.fromJSONObjectToBridge(customData)
+    is Map<*, *> -> BridgeUtils.fromJSONObjectToBridge(JSONObject(customData.filterKeys { it is String }))
+    else -> null
+  }
+
+  private fun parseCustomData(data: ReadableMap): Map<String, Any?>? =
+    if (data.hasKey(PROP_CUSTOM_DATA) && data.getType(PROP_CUSTOM_DATA) == ReadableType.Map) {
+      data.getMap(PROP_CUSTOM_DATA)?.toHashMap()
+    } else {
+      null
+    }
+
   /**
    * Convert a ReactNative Ad to a native Ad.
+   *
+   * @param ad The bridged ad, or null.
+   * @param parentAdBreak The owning break when parsing an ad nested in a break.
+   * @return The native ad, or null when the input is null.
    */
-  fun parseAd(ad: ReadableMap?): GoogleImaAd? {
+  fun parseAd(ad: ReadableMap?, parentAdBreak: AdBreak? = null): GoogleImaAd? {
     if (ad == null) {
       return null
     }
@@ -201,7 +228,7 @@ object AdAdapter {
       }
 
       override fun getAdBreak(): AdBreak? {
-        return parseAdBreak(ad.getMap(PROP_AD_BREAK))
+        return parentAdBreak ?: if (ad.hasKey(PROP_AD_BREAK)) parseAdBreak(ad.getMap(PROP_AD_BREAK)) else null
       }
 
       override fun getSkipOffset(): Int {
@@ -217,8 +244,7 @@ object AdAdapter {
       }
 
       override fun getCustomData(): Any? {
-        // Not supported yet
-        return null
+        return parseCustomData(ad)
       }
 
       override val imaAd: com.google.ads.interactivemedia.v3.api.Ad
@@ -256,7 +282,8 @@ object AdAdapter {
     }
     return object: AdBreak {
       override fun getAds(): List<Ad> {
-        return emptyList()
+        val ads = if (adBreak.hasKey(PROP_ADBREAK_ADS)) adBreak.getArray(PROP_ADBREAK_ADS) else null
+        return (0 until (ads?.size() ?: 0)).mapNotNull { parseAd(ads?.getMap(it), this) }
       }
 
       override fun getMaxDuration(): Int {
@@ -298,8 +325,7 @@ object AdAdapter {
       }
 
       override fun getCustomData(): Any? {
-        // Not supported yet
-        return null
+        return parseCustomData(adBreak)
       }
     }
   }
