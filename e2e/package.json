@@ -17,11 +17,11 @@
   },
   "dependencies": {
     "@theoplayer/react-native-ui": "^0.23.0",
-    "react": "19.2.3",
-    "react-dom": "19.2.3",
-    "react-native": "npm:react-native-tvos@^0.86.2-0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-native": "npm:react-native-tvos@^0.88.0-0",
     "react-native-status-bar-height": "^2.6.0",
-    "react-native-svg": "^15.15.5",
+    "react-native-svg": "^15.16.0",
     "react-native-theoplayer": "..",
     "react-native-web": "^0.21.1",
     "react-native-web-image-loader": "^0.1.1"
@@ -33,10 +33,10 @@
     "@react-native-community/cli": "20.2.0",
     "@react-native-community/cli-platform-android": "20.2.0",
     "@react-native-community/cli-platform-ios": "20.2.0",
-    "@react-native/babel-preset": "0.86.2",
-    "@react-native/eslint-config": "0.87.1",
-    "@react-native/metro-config": "0.86.2",
-    "@react-native/typescript-config": "0.86.2",
+    "@react-native/babel-preset": "0.88.1",
+    "@react-native/eslint-config": "0.88.1",
+    "@react-native/metro-config": "0.88.1",
+    "@react-native/typescript-config": "0.88.1",
     "@theoplayer/react-native-analytics-adobe": "^1.17.0",
     "@theoplayer/react-native-analytics-comscore": "^1.15.3",
     "@theoplayer/react-native-analytics-conviva": "^1.15.0",
@@ -63,6 +63,6 @@
     "react-native": "$react-native"
   },
   "engines": {
-    "node": ">= 22.11.0"
+    "node": ">= 22.13.0"
   }
 }
