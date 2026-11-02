@@ -74,6 +74,8 @@ jobs:
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
 
       - name: Run native ad bridge tests
         working-directory: e2e/android
