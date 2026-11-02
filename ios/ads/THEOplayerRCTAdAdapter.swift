@@ -34,6 +34,7 @@ let PROP_ADBREAK_MAX_REMAINING_DURATION: String = "maxRemainingDuration"
 let PROP_ADBREAK_ADS: String = "ads"
 let PROP_ADBREAK_INTEGRATION: String = "integration"
 let PROP_ADBREAK_CUSTOM_INTEGRATION: String = "customIntegration"
+let PROP_CUSTOM_DATA: String = "customData"
 let PROP_COMPANION_AD_SLOT_ID: String = "adSlotId"
 let PROP_COMPANION_ALT_TEXT: String = "altText"
 let PROP_COMPANION_CLICK_THROUGH: String = "clickThrough"
@@ -48,6 +49,9 @@ class THEOplayerRCTAdAdapter {
         adData[PROP_AD_INTEGRATION] = ad.integration._rawValue
         if let customIntegration = ad.customIntegration {
             adData[PROP_AD_CUSTOM_INTEGRATION] = customIntegration
+        }
+        if let customData = ad.customData {
+            adData[PROP_CUSTOM_DATA] = customData
         }
         adData[PROP_AD_TYPE] = ad.type
         if let adId = ad.id {
@@ -134,7 +138,7 @@ class THEOplayerRCTAdAdapter {
             return nil
         }
         
-        return NativeLinearGoogleImaAd(adBreak: THEOplayerRCTAdAdapter.toAdBreak(adBreakData: adData[PROP_AD_BREAK] as? [String:Any]),
+        let ad = NativeLinearGoogleImaAd(adBreak: THEOplayerRCTAdAdapter.toAdBreak(adBreakData: adData[PROP_AD_BREAK] as? [String:Any]),
                                        companions: THEOplayerRCTAdAdapter.toCompanionAds(companiondAdsData: adData[PROP_AD_COMPANIONS] as? [[String : Any]]),
                                        type: (adData[PROP_AD_TYPE] as? String) ?? "",
                                        id: adData[PROP_AD_ID] as? String,
@@ -155,6 +159,8 @@ class THEOplayerRCTAdAdapter {
                                        vastMediaBitrate: (adData[PROP_GOOGLE_AD_BITRATE] as? Int) ?? 0,
                                        universalAdIds: THEOplayerRCTAdAdapter.toUniversalAdIds(universalAdIdsData: adData[PROP_AD_UNIVERSAL_AD_IDS] as? [[String:Any]]),
                                        traffickingParameters: "") // TODO
+        ad.customData = adData[PROP_CUSTOM_DATA] as? [String: Any]
+        return ad
     }
     
     private class func toUniversalAdIds(universalAdIdsData: [[String:Any]]?) -> [THEOplayerSDK.UniversalAdId] {
@@ -178,8 +184,11 @@ class THEOplayerRCTAdAdapter {
         adBreakData[PROP_ADBREAK_MAX_DURATION] = adBreak.maxDuration
         adBreakData[PROP_ADBREAK_TIME_OFFSET] = adBreak.timeOffset
         adBreakData[PROP_ADBREAK_MAX_REMAINING_DURATION] = adBreak.maxRemainingDuration
-        adBreakData[PROP_ADBREAK_INTEGRATION] = adBreak.integration
+        adBreakData[PROP_ADBREAK_INTEGRATION] = adBreak.integration._rawValue
         adBreakData[PROP_ADBREAK_CUSTOM_INTEGRATION] = adBreak.customIntegration
+        if let customData = adBreak.customData {
+            adBreakData[PROP_CUSTOM_DATA] = customData
+        }
         // process adds when adbreak contains them
         if !adBreak.ads.isEmpty {
             var adList: [[String:Any]] = []
@@ -205,13 +214,15 @@ class THEOplayerRCTAdAdapter {
             }
         }
         
-        return NativeAdBreak(ads: ads,
+        let adBreak = NativeAdBreak(ads: ads,
                              id: adBreakData[PROP_ADBREAK_ID] as? String,
                              maxDuration: lround((adBreakData[PROP_ADBREAK_MAX_DURATION] as? Double) ?? 0),
                              maxRemainingDuration: (adBreakData[PROP_ADBREAK_MAX_REMAINING_DURATION] as? Double) ?? 0,
                              timeOffset: lround((adBreakData[PROP_ADBREAK_TIME_OFFSET] as? Double) ?? 0),
                              integration: THEOplayerRCTTypeUtils.adIntegrationKind((adBreakData[PROP_ADBREAK_INTEGRATION] as? String) ?? ""),
                              customIntegration: adBreakData[PROP_ADBREAK_CUSTOM_INTEGRATION] as? String)
+        adBreak.customData = adBreakData[PROP_CUSTOM_DATA] as? [String: Any]
+        return adBreak
     }
     
     class func defaultAdBreak() -> NativeAdBreak {

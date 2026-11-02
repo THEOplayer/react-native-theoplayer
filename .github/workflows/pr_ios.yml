@@ -99,6 +99,17 @@ jobs:
           os_version: '27.0'
           wait_for_boot: true
 
+      - name: Run native ad bridge tests
+        working-directory: e2e/ios
+        env:
+          RCT_NO_LAUNCH_PACKAGER: '1'
+        run: |
+          SCHEME="${{ matrix.platform == 'iOS' && 'ReactNativeTHEOplayer' || 'ReactNativeTHEOplayer-tvOS' }}"
+          xcodebuild test -workspace ReactNativeTHEOplayer.xcworkspace -scheme "$SCHEME" \
+            -destination "id=${{ steps.simulator.outputs.udid }}" \
+            -only-testing:"${SCHEME}Tests/AdAdapterCustomDataTests" \
+            CODE_SIGNING_ALLOWED=NO
+
       - name: Run e2e tests
         working-directory: e2e
         run: npm run test:e2e:${{ matrix.platform == 'iOS' && 'ios' || 'tvos' }} -- --udid "${{ steps.simulator.outputs.udid }}" --markdown
