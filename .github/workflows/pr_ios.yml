@@ -29,11 +29,11 @@ jobs:
   build:
     needs: changes
     if: needs.changes.outputs.ios == 'true' && github.event.pull_request.draft == false
-    runs-on: macos-15
+    runs-on: xcode-27
     strategy:
       fail-fast: false
       matrix:
-        xcode_version: [ '26.2.0' ]
+        xcode_version: [ '27.1.0' ]
         platform: [iOS, tvOS]
     name: Build for ${{ matrix.platform }} using XCode version ${{ matrix.xcode_version }}
 
@@ -56,17 +56,17 @@ jobs:
         uses: actions/cache@v4
         with:
           path: vendor/bundle
-          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-gems-${{ hashFiles('**/Gemfile.lock') }}
           restore-keys: |
-            ${{ runner.os }}-gems-
+            ${{ runner.os }}-${{ runner.arch }}-gems-
 
       - name: Cache CocoaPods
         uses: actions/cache@v4
         with:
           path: e2e/ios/Pods
-          key: pods-${{ runner.os }}-${{ hashFiles('Podfile.lock') }}
+          key: pods-${{ runner.os }}-${{ runner.arch }}-${{ matrix.xcode_version }}-${{ hashFiles('e2e/ios/Podfile.lock') }}
           restore-keys: |
-            pods-${{ runner.os }}-
+            pods-${{ runner.os }}-${{ runner.arch }}-${{ matrix.xcode_version }}-
 
       - name: Run patch scripts
         working-directory: e2e
@@ -89,15 +89,17 @@ jobs:
           bundle exec pod update
 
       - name: Start iOS simulator
+        id: simulator
         uses: futureware-tech/simulator-action@v4
         with:
           model: ${{ matrix.platform == 'iOS' && 'iPhone 17' || 'Apple TV' }}
           os: ${{ matrix.platform }}
-          os_version: '>=26.2'
+          os_version: '27.0'
+          wait_for_boot: true
 
       - name: Run e2e tests
         working-directory: e2e
-        run: npm run test:e2e:${{ matrix.platform == 'iOS' && 'ios' || 'tvos' }} -- --markdown
+        run: npm run test:e2e:${{ matrix.platform == 'iOS' && 'ios' || 'tvos' }} -- --udid "${{ steps.simulator.outputs.udid }}" --markdown
 
       - name: Summarize results
         working-directory: e2e
@@ -112,12 +114,12 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: crash-logs-${{ matrix.platform }}
+          name: crash-logs-${{ matrix.platform }}-xcode-${{ matrix.xcode_version }}
           path: ~/crashlog.logarchive
 
       - name: Upload screenshots
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: e2e-screenshots-${{ matrix.platform }}
+          name: e2e-screenshots-${{ matrix.platform }}-xcode-${{ matrix.xcode_version }}
           path: e2e/screenshots
