@@ -1364,7 +1364,7 @@ PODS:
   - react-native-google-cast/RNGoogleCast (4.6.2):
     - PromisesObjC
     - React
-  - react-native-safe-area-context (5.10.1):
+  - react-native-safe-area-context (5.6.2):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1378,8 +1378,8 @@ PODS:
     - React-graphics
     - React-ImageManager
     - React-jsi
-    - react-native-safe-area-context/common (= 5.10.1)
-    - react-native-safe-area-context/fabric (= 5.10.1)
+    - react-native-safe-area-context/common (= 5.6.2)
+    - react-native-safe-area-context/fabric (= 5.6.2)
     - React-NativeModulesApple
     - React-RCTFabric
     - React-renderercss
@@ -1389,7 +1389,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-safe-area-context/common (5.10.1):
+  - react-native-safe-area-context/common (5.6.2):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1412,7 +1412,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-safe-area-context/fabric (5.10.1):
+  - react-native-safe-area-context/fabric (5.6.2):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1436,7 +1436,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-theoplayer (11.7.0):
+  - react-native-theoplayer (11.8.0):
     - React-Core
     - THEOplayer-Connector-SideloadedSubtitle (> 11.0.1, ~> 11.0)
     - THEOplayer-Integration-GoogleCast (~> 11.14)
@@ -2284,8 +2284,8 @@ SPEC CHECKSUMS:
   React-microtasksnativemodule: ee36b923519dc23f3711a73941db90781da087af
   React-mutationobservernativemodule: 449425c5681ce9dcf7eb43a0952b6d86baadb9d9
   react-native-google-cast: d7bdfd1a0eeba84afde03b9722351ec29543e74c
-  react-native-safe-area-context: f2bf5d3db254014a48910436c4a58ab0c4e2fe1f
-  react-native-theoplayer: 066b846eecb0f65bcbb0b7e65f4015f0d06f12d1
+  react-native-safe-area-context: 839ca66874035361e526a8bcb1bfe7c2076c5c0d
+  react-native-theoplayer: 5edab13c83c0d702c61b6097ae1dfb4364842a1d
   React-NativeModulesApple: 1a23c1296a26b21ac1acfd49fe2d4acded82a476
   React-networking: ad19a277d13eb3241476cb1a3806113ad0b26d4b
   React-oscompat: c575093359e5ea6890f2aa421bac5c3260e4723c
@@ -2337,6 +2337,6 @@ SPEC CHECKSUMS:
   TinyCSV: fd6228edbcf1c07466ac34b76dac5e052143eaba
   Yoga: 506238f8e7575a3c20290b98402eabc8590f57cc
 
-PODFILE CHECKSUM: 33007f257475f3c6a7c57f33f1bc63c11b414c7c
+PODFILE CHECKSUM: 881b19be7642445f28b1c9dec037feea7bc60dd4
 
 COCOAPODS: 1.16.2

@@ -3,6 +3,7 @@ require Pod::Executable.execute_command('node', ['-p',
     "react-native/scripts/react_native_pods.rb",
     {paths: [process.argv[1]]},
   )', __dir__]).strip
+require_relative './PodConfig'
 
 source 'https://github.com/react-native-tvos/react-native-tvos-podspecs.git'
 source 'https://cdn.cocoapods.org/'
@@ -25,7 +26,7 @@ target 'ReactNativeTHEOplayer' do
     :path => config[:reactNativePath],
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
-  pod 'react-native-google-cast', :git => 'https://github.com/Danesz/react-native-google-cast.git', branch: 'feature/guestmode_apple_silicon'
+  google_cast_redirect
 end
 
 target 'ReactNativeTHEOplayer-tvOS' do
@@ -45,12 +46,5 @@ post_install do |installer|
     # :ccache_enabled => true
   )
 
-  # React Native does not raise the iOS 9.0 target of Google Cast's PromisesObjC privacy bundle.
-  installer.pods_project.targets.each do |target|
-    next unless target.name == 'PromisesObjC-FBLPromises_Privacy'
-
-    target.build_configurations.each do |build_configuration|
-      build_configuration.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = min_ios_version_supported
-    end
-  end
+  resource_bundle_post_install(installer)
 end
