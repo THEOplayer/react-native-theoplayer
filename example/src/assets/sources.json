@@ -694,5 +694,25 @@
         "artist": "Dolby"
       }
     }
+  },
+  {
+    "name": "THEOads • Back-to-back double box (spinner repro)",
+    "os": ["web"],
+    "needsLicense": true,
+    "source": {
+      "sources": [
+        {
+          "src": "https://v-theo.hudl.com/signaling-service/api/v1/6acfa8ea8832489e14fb28e2/hls/index.live.m3u8?v=2D69145F&pid=6acfa8ea8832489e14fb28dd&pfe=true",
+          "type": "application/x-mpegurl",
+          "hlsDateRange": true
+        }
+      ],
+      "ads": [
+        {
+          "integration": "theoads",
+          "networkCode": "29795821"
+        }
+      ]
+    }
   }
 ]

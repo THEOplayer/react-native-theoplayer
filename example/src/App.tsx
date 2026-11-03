@@ -67,6 +67,8 @@ const playerConfig: PlayerConfiguration = {
   // Get your THEOplayer license from https://portal.theoplayer.com/
   // Without a license, only demo sources hosted on '*.theoplayer.com' domains can be played.
   license: undefined,
+  // Reporter's production web config: muted autoplay and VPAID disabled (see `ads`).
+  mutedAutoplay: Platform.OS === 'web' ? 'all' : undefined,
   hlsDateRange: true,
   libraryLocation: 'theoplayer',
   cast: {
@@ -86,6 +88,7 @@ const playerConfig: PlayerConfiguration = {
   },
   ads: {
     theoads: true,
+    vpaidMode: 'disabled',
   },
   debugLogsEnabled: false, // Android only.
   useSystemCaptionStyle: false, // Android only.
