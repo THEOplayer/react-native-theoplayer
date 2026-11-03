@@ -1,3 +1,4 @@
+export * from './abr/barrel';
 export * from './ads/barrel';
 export * from './analytics/barrel';
 export * from './drm/barrel';

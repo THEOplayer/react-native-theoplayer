@@ -16,6 +16,7 @@ import type { ServerSideAdInsertionConfiguration } from './ads/ssai/ServerSideAd
 import type { AnalyticsDescription } from './analytics/AnalyticsDescription';
 import { CmcdSourceConfiguration } from '../cmcd/CmcdConfiguration';
 import { SourceLatencyConfiguration } from './latency/SourceLatencyConfiguration';
+import type { SourceAbrConfiguration } from './abr/SourceAbrConfiguration';
 
 /**
  * A type alias for a {@link TypedSource} media resource.
@@ -344,6 +345,13 @@ export interface BaseSource {
    * <br/> - Ignored for non-HLS streams.
    */
   hls?: HlsPlaybackConfiguration;
+
+  /**
+   * The source's ABR configuration.
+   *
+   * @platform web,android
+   */
+  abr?: SourceAbrConfiguration;
 }
 
 /**
