@@ -36,6 +36,11 @@ jobs:
       matrix:
         xcode_version: [ '27.1.0' ]
         platform: [iOS, tvOS]
+        include:
+          - platform: iOS
+            simulator: iPhone 17
+          - platform: tvOS
+            simulator: Apple TV 4K (3rd generation)
     name: Build for ${{ matrix.platform }} using XCode version ${{ matrix.xcode_version }}
 
     steps:
@@ -94,50 +99,16 @@ jobs:
         id: simulator
         uses: futureware-tech/simulator-action@v4
         with:
-          model: ${{ matrix.platform == 'iOS' && 'iPhone 17' || '' }}
+          model: ${{ matrix.simulator }}
           os: ${{ matrix.platform }}
           os_version: '27.0'
           wait_for_boot: true
+          shutdown_after_job: ${{ matrix.platform != 'tvOS' }}
 
       - name: Run e2e tests
-        if: matrix.platform == 'iOS'
         working-directory: e2e
-        run: npm run test:e2e:ios -- --udid "${{ steps.simulator.outputs.udid }}" --markdown
-
-      - name: Run tvOS e2e tests
-        if: matrix.platform == 'tvOS'
-        working-directory: e2e
-        env:
-          SIMULATOR_UDID: ${{ steps.simulator.outputs.udid }}
-        run: |
-          set -euo pipefail
-          npm run start -- --port 8081 > "$RUNNER_TEMP/metro-tvos.log" 2>&1 &
-          metro_pid=$!
-          trap 'kill "$metro_pid" 2>/dev/null || true' EXIT
-
-          for attempt in {1..60}; do
-            if curl --silent --fail http://localhost:8081/status; then
-              break
-            fi
-            sleep 1
-          done
-          if ! curl --silent --fail http://localhost:8081/status; then
-            cat "$RUNNER_TEMP/metro-tvos.log"
-            exit 1
-          fi
-
-          export E2E_DERIVED_DATA="$RUNNER_TEMP/theoplayer-tvos"
-          # The RN CLI can misclassify tvOS simulators as physical devices on Xcode 27.
-          npm run test:e2e:tvos -- --markdown --buildCmd 'set -eu
-            xcodebuild -workspace ios/ReactNativeTHEOplayer.xcworkspace \
-              -scheme ReactNativeTHEOplayer-tvOS -configuration Debug \
-              -sdk appletvsimulator -destination "id=$SIMULATOR_UDID" \
-              -derivedDataPath "$E2E_DERIVED_DATA" CODE_SIGNING_ALLOWED=NO build
-            app_path="$E2E_DERIVED_DATA/Build/Products/Debug-appletvsimulator/ReactNativeTHEOplayer-tvOS.app"
-            bundle_id=$(/usr/libexec/PlistBuddy -c Print:CFBundleIdentifier "$app_path/Info.plist")
-            xcrun simctl bootstatus "$SIMULATOR_UDID" -b
-            xcrun simctl install "$SIMULATOR_UDID" "$app_path"
-            xcrun simctl launch "$SIMULATOR_UDID" "$bundle_id"'
+        # --simulator forces the simulator path instead of relying on --udid device classification.
+        run: npm run test:e2e:${{ matrix.platform == 'iOS' && 'ios' || 'tvos' }} -- --simulator "${{ matrix.simulator }} (27.0)" --markdown
 
       - name: Summarize results
         working-directory: e2e
