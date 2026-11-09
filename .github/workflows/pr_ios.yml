@@ -120,16 +120,16 @@ jobs:
         if: always()
         run: cat cavynext_results.md >> $GITHUB_STEP_SUMMARY
 
-      - name: Collecting logs
-        if: failure()
-        run: xcrun simctl spawn booted log collect --output ~/crashlog.logarchive
-
-      - name: Upload crash logs
+      - name: Upload diagnostic reports
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: crash-logs-${{ matrix.platform }}-xcode-${{ matrix.xcode_version }}
-          path: ~/crashlog.logarchive
+          name: diagnostics-${{ matrix.platform }}-xcode-${{ matrix.xcode_version }}
+          if-no-files-found: warn
+          path: |
+            ~/Library/Logs/DiagnosticReports
+            ~/Library/Logs/CoreSimulator
+            ~/Library/Developer/CoreSimulator/Devices/${{ steps.simulator.outputs.udid }}/data/Library/Logs
 
       - name: Upload screenshots
         if: always()
