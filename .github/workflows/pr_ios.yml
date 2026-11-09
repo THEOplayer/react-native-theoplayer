@@ -44,7 +44,7 @@ jobs:
           - platform: tvOS
             simulator: Apple TV 4K (3rd generation)
             scheme: ReactNativeTHEOplayer-tvOS
-    name: Build for ${{ matrix.platform }} using XCode version ${{ matrix.xcode_version }}
+    name: Build for ${{ matrix.platform }}
 
     steps:
       - name: Checkout repository
