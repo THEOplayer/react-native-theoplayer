@@ -39,8 +39,10 @@ jobs:
         include:
           - platform: iOS
             simulator: iPhone 17
+            scheme: ReactNativeTHEOplayer
           - platform: tvOS
             simulator: Apple TV 4K (3rd generation)
+            scheme: ReactNativeTHEOplayer-tvOS
     name: Build for ${{ matrix.platform }} using XCode version ${{ matrix.xcode_version }}
 
     steps:
@@ -107,8 +109,11 @@ jobs:
 
       - name: Run e2e tests
         working-directory: e2e
-        # --simulator forces the simulator path instead of relying on --udid device classification.
-        run: npm run test:e2e:${{ matrix.platform == 'iOS' && 'ios' || 'tvos' }} -- --simulator "${{ matrix.simulator }} (27.0)" --markdown
+        # --buildCmd preserves simulator-name quoting that Cavynext's argument forwarding loses.
+        run: >-
+          npm run test:e2e:${{ matrix.platform == 'iOS' && 'ios' || 'tvos' }} -- --markdown
+          --buildCmd 'npx react-native run-ios --terminal bash
+          --scheme "${{ matrix.scheme }}" --simulator "${{ matrix.simulator }} (27.0)"'
 
       - name: Summarize results
         working-directory: e2e
