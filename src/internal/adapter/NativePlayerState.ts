@@ -25,6 +25,7 @@ export interface PlaybackState {
   presentationMode: PresentationMode;
   aspectRatio: AspectRatio;
   manageContentMatching: boolean;
+  allowsExternalPlayback: boolean;
   renderingTarget: RenderingTarget;
 }
 

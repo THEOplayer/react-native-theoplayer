@@ -374,6 +374,14 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     // unused
   }
 
+  get allowsExternalPlayback(): boolean {
+    return true;
+  }
+
+  set allowsExternalPlayback(_enable: boolean) {
+    // unused
+  }
+
   get keepScreenOn(): boolean {
     return false;
   }
