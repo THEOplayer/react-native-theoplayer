@@ -135,6 +135,7 @@ jobs:
               -derivedDataPath "$E2E_DERIVED_DATA" CODE_SIGNING_ALLOWED=NO build
             app_path="$E2E_DERIVED_DATA/Build/Products/Debug-appletvsimulator/ReactNativeTHEOplayer-tvOS.app"
             bundle_id=$(/usr/libexec/PlistBuddy -c Print:CFBundleIdentifier "$app_path/Info.plist")
+            xcrun simctl bootstatus "$SIMULATOR_UDID" -b
             xcrun simctl install "$SIMULATOR_UDID" "$app_path"
             xcrun simctl launch "$SIMULATOR_UDID" "$bundle_id"'
 
