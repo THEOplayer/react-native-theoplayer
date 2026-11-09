@@ -30,11 +30,12 @@ jobs:
   build:
     needs: changes
     if: needs.changes.outputs.ios == 'true' && github.event.pull_request.draft == false
-    runs-on: xcode-27
+    # Temporarily compare against the previous Xcode 26 toolchain.
+    runs-on: macos-15
     strategy:
       fail-fast: false
       matrix:
-        xcode_version: [ '27.1.0' ]
+        xcode_version: [ '26.2.0' ]
         platform: [iOS, tvOS]
         include:
           - platform: iOS
@@ -103,7 +104,7 @@ jobs:
         with:
           model: ${{ matrix.simulator }}
           os: ${{ matrix.platform }}
-          os_version: '27.0'
+          os_version: '26.2'
           wait_for_boot: true
           shutdown_after_job: ${{ matrix.platform != 'tvOS' }}
 
@@ -113,7 +114,7 @@ jobs:
         run: >-
           npm run test:e2e:${{ matrix.platform == 'iOS' && 'ios' || 'tvos' }} -- --markdown
           --buildCmd 'npx react-native run-ios --terminal bash
-          --scheme "${{ matrix.scheme }}" --simulator "${{ matrix.simulator }} (27.0)"'
+          --scheme "${{ matrix.scheme }}" --simulator "${{ matrix.simulator }} (26.2)"'
 
       - name: Summarize results
         working-directory: e2e
