@@ -204,7 +204,8 @@ export class WebMediaSession {
   private updatePositionState = () => {
     const { duration, playbackRate, currentTime } = this._player;
     const isLive = !isFinite(duration);
-    if (!isLive) {
+    // MediaSession rejects a zero playbackRate, which the player reports while casting.
+    if (!isLive && playbackRate !== 0) {
       mediaSession.setPositionState({
         // The duration is used to specify the duration in seconds.
         // It should always be positive and positive infinity can be used to indicate media without a defined end such as live playback.
