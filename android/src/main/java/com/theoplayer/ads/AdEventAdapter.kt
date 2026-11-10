@@ -65,7 +65,14 @@ class AdEventAdapter(private val adsApi: AdsApiWrapper, eventEmitter: AdEventEmi
       return if (event != null && eventType != null) {
         object : GoogleImaAdEvent {
           override val ad: GoogleImaAd?
-            get() = AdAdapter.parseAd(event.getMap(EVENT_PROP_AD))
+            get() {
+              val payload = event.getMap(EVENT_PROP_AD)
+              val adBreak = when (eventType) {
+                GoogleImaAdEventType.AD_BREAK_STARTED, GoogleImaAdEventType.AD_BREAK_ENDED -> AdAdapter.parseAdBreak(payload)
+                else -> null
+              }
+              return AdAdapter.parseAd(payload, adBreak)
+            }
           override val adData: Map<String, String>
             get() = mapOf()
           override fun getDate(): Date {
