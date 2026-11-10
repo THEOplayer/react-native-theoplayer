@@ -109,6 +109,19 @@ function setup(enabled = true) {
   return { adapter, facade, content, session, actions };
 }
 
+for (const enabled of [false, true]) {
+  test(`external playback assignments are ignored on Web (facade=${enabled})`, () => {
+    const { adapter, content } = setup(enabled);
+    assert.equal(adapter.allowsExternalPlayback, true);
+    adapter.allowsExternalPlayback = false;
+    assert.equal(adapter.allowsExternalPlayback, true);
+    adapter.allowsExternalPlayback = true;
+    assert.equal(adapter.allowsExternalPlayback, true);
+    assert.equal('allowsExternalPlayback' in content, false);
+    adapter.destroy();
+  });
+}
+
 test('media session uses facade clocks, commands, synthetic updates, and advertising state', () => {
   const { adapter, facade, content, session, actions } = setup();
   const commands: Array<string | number> = [];

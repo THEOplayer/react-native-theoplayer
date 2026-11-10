@@ -30,13 +30,21 @@ jobs:
   build:
     needs: changes
     if: needs.changes.outputs.ios == 'true' && github.event.pull_request.draft == false
-    runs-on: xcode-27
+    # Temporarily compare against the previous Xcode 26 toolchain.
+    runs-on: macos-15
     strategy:
       fail-fast: false
       matrix:
-        xcode_version: [ '27.1.0' ]
+        xcode_version: [ '26.2.0' ]
         platform: [iOS, tvOS]
-    name: Build for ${{ matrix.platform }} using XCode version ${{ matrix.xcode_version }}
+        include:
+          - platform: iOS
+            simulator: iPhone 17
+            scheme: ReactNativeTHEOplayer
+          - platform: tvOS
+            simulator: Apple TV 4K (3rd generation)
+            scheme: ReactNativeTHEOplayer-tvOS
+    name: Build for ${{ matrix.platform }}
 
     steps:
       - name: Checkout repository
@@ -94,30 +102,35 @@ jobs:
         id: simulator
         uses: futureware-tech/simulator-action@v4
         with:
-          model: ${{ matrix.platform == 'iOS' && 'iPhone 17' || '' }}
+          model: ${{ matrix.simulator }}
           os: ${{ matrix.platform }}
-          os_version: '27.0'
+          os_version: '26.2'
           wait_for_boot: true
+          shutdown_after_job: ${{ matrix.platform != 'tvOS' }}
 
       - name: Run e2e tests
         working-directory: e2e
-        run: npm run test:e2e:${{ matrix.platform == 'iOS' && 'ios' || 'tvos' }} -- --udid "${{ steps.simulator.outputs.udid }}" --markdown
+        # --buildCmd preserves simulator-name quoting that Cavynext's argument forwarding loses.
+        run: >-
+          npm run test:e2e:${{ matrix.platform == 'iOS' && 'ios' || 'tvos' }} -- --markdown
+          --buildCmd 'npx react-native run-ios --terminal bash
+          --scheme "${{ matrix.scheme }}" --simulator "${{ matrix.simulator }} (26.2)"'
 
       - name: Summarize results
         working-directory: e2e
         if: always()
         run: cat cavynext_results.md >> $GITHUB_STEP_SUMMARY
 
-      - name: Collecting logs
-        if: failure()
-        run: xcrun simctl spawn booted log collect --output ~/crashlog.logarchive
-
-      - name: Upload crash logs
+      - name: Upload diagnostic reports
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: crash-logs-${{ matrix.platform }}-xcode-${{ matrix.xcode_version }}
-          path: ~/crashlog.logarchive
+          name: diagnostics-${{ matrix.platform }}-xcode-${{ matrix.xcode_version }}
+          if-no-files-found: warn
+          path: |
+            ~/Library/Logs/DiagnosticReports
+            ~/Library/Logs/CoreSimulator
+            ~/Library/Developer/CoreSimulator/Devices/${{ steps.simulator.outputs.udid }}/data/Library/Logs
 
       - name: Upload screenshots
         if: always()
