@@ -34,6 +34,9 @@
     "pods": "cd example && pod-install --quiet",
     "docs": "typedoc --treatWarningsAsErrors"
   },
+  "swiftpmConfig": {
+    "name": "ReactNativeTHEOplayer"
+  },
   "lint-staged": {
     "(src|example|e2e)/**/*.{js,jsx,ts,tsx}": [
       "prettier --write"
