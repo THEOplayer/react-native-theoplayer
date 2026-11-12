@@ -16,6 +16,7 @@ let SD_PROP_PLAYOUT_DELAY_MAX: String = "maximum"
 
 extension THEOplayerRCTSourceDescriptionBuilder {
 
+#if canImport(THEOplayerTHEOliveIntegration)
     private static func buildWebrtcOptions(_ theoliveData: [String: Any]) -> WebrtcOptions? {
           let webrtc = theoliveData[SD_PROP_WEBRTC] as? NSDictionary
           let playoutDelay = webrtc?[SD_PROP_PLAYOUT_DELAY] as? NSDictionary
@@ -24,6 +25,7 @@ extension THEOplayerRCTSourceDescriptionBuilder {
           guard let playoutDelayMin, let playoutDelayMax else { return nil }
           return WebrtcOptions(playoutDelayMs: PlayoutDelay(minimum: playoutDelayMin, maximum: playoutDelayMax))
     }
+#endif
   
     /**
      Builds a THEOplayer SourceDescription that can be passed as a source for the THEOplayer.
