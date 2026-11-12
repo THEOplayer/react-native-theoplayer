@@ -1,6 +1,7 @@
 // THEOplayerRCTView.swift
 
 import Foundation
+import React
 import UIKit
 import THEOplayerSDK
 

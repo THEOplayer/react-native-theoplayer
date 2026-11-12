@@ -5,6 +5,7 @@
 
 import Foundation
 import UIKit
+import React
 
 @objc(THEOplayerRCTViewManager)
 class THEOplayerRCTViewManager: RCTViewManager {

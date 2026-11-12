@@ -1,6 +1,7 @@
 // THEOplayerRCTTextTrackEventHandler.swift
 
 import Foundation
+import React
 import THEOplayerSDK
 
 class THEOplayerRCTTextTrackEventHandler {

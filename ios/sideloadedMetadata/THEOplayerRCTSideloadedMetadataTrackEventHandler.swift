@@ -1,6 +1,7 @@
 // THEOplayerRCTSideloadedMetadataTrackEventHandler.swift
 
 import Foundation
+import React
 import THEOplayerSDK
 
 

@@ -1,6 +1,7 @@
 // THEOplayerRCTMainEventHandler.swift
 
 import Foundation
+import React
 import THEOplayerSDK
 
 public class THEOplayerRCTMainEventHandler {

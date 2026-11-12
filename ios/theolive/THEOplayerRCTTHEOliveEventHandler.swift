@@ -1,6 +1,7 @@
 // THEOplayerRCTTHEOliveEventHandler.swift
 
 import Foundation
+import React
 import THEOplayerSDK
 
 #if canImport(THEOplayerTHEOliveIntegration)

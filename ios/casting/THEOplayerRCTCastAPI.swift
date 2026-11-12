@@ -4,6 +4,7 @@
 //
 
 import Foundation
+import React
 
 let ERROR_CODE_CAST_ACCESS_FAILURE = "cast_access_failure"
 let ERROR_MESSAGE_CASTING_UNSUPPORTED_FEATURE = "Chromecast and Airplay are not supported by the provided SDK"

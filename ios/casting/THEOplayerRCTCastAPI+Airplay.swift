@@ -1,6 +1,7 @@
 //  THEOplayerRCTCastAPI+Airplay.swift
 
 import Foundation
+import React
 
 let ERROR_CODE_AIRPLAY_ACCESS_FAILURE = "airplay_access_failure"
 let ERROR_MESSAGE_AIRPLAY_UNSUPPORTED_FEATURE = "Airplay is not supported by the provided iOS SDK"
@@ -90,6 +91,5 @@ extension THEOplayerRCTCastAPI {
 
 #endif
 }
-
 
 

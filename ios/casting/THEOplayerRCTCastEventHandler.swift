@@ -1,6 +1,7 @@
 // THEOplayerRCTViewCastEventHandler.swift
 
 import Foundation
+import React
 import THEOplayerSDK
 
 let CAST_EVENT_PROP_TYPE: String = "type"

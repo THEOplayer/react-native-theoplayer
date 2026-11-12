@@ -3,6 +3,7 @@
 //  Theoplayer
 //
 import Foundation
+import React
 
 #if canImport(THEOplayerTHEOadsIntegration)
 import THEOplayerTHEOadsIntegration

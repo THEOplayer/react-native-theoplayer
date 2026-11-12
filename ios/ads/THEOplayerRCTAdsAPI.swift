@@ -4,6 +4,7 @@
 //
 import Foundation
 import UIKit
+import React
 #if canImport(THEOplayerGoogleIMAIntegration)
 import THEOplayerGoogleIMAIntegration
 #endif

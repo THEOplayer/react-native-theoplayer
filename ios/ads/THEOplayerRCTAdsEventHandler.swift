@@ -1,6 +1,7 @@
 // THEOplayerRCTViewAdEventHandler.swift
 
 import Foundation
+import React
 import THEOplayerSDK
 
 let AD_EVENT_PROP_TYPE: String = "type"
