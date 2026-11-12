@@ -1,4 +1,4 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 6.1
 import PackageDescription
 
 let package = Package(
@@ -13,11 +13,21 @@ let package = Package(
 	        ]
 	    ),
 	],
+	traits: [
+	    .trait(
+	        name: "GoogleIMA",
+	        description: "Enable Google IMA advertising support"
+	    ),
+	],
 	dependencies: [
 	    .package(
 	        url: "https://github.com/THEOplayer/theoplayer-sdk-apple",
 	        .upToNextMajor(from: "11.14.0")
 	    ),
+		.package(
+		    url: "https://github.com/googleads/swift-package-manager-google-interactive-media-ads-ios",
+		    exact: "3.33.0"
+		),
 		.package(
 		    name: "ReactNative",
 		    path: "../../../../xcframeworks"
@@ -42,6 +52,8 @@ let package = Package(
 		    name: "ReactNativeTHEOplayer",
 		    dependencies: [
 		        .product(name: "THEOplayerSDK", package: "theoplayer-sdk-apple"),
+				.product(name: "THEOplayerGoogleIMAIntegration", package: "theoplayer-sdk-apple", condition: .when(traits: ["GoogleIMA"])),
+				.product(name: "GoogleInteractiveMediaAds", package: "swift-package-manager-google-interactive-media-ads-ios", condition: .when(traits: ["GoogleIMA"])),
 		        .product(name: "ReactHeaders", package: "ReactNative"),
 		        .product(name: "ReactNativeHeaders", package: "ReactNative"),
 		        .product(name: "ReactNativeDependenciesHeaders", package: "ReactNative"),
