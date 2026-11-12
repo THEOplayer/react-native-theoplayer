@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
+- Fixed THEOlive events not being forwarded correctly on the New Architecture.
 - Fixed an issue on Android where `preferredKeySystems` in the content protection configuration was ignored.
 - Fixed ad-break integration identifiers being forwarded incorrectly on iOS and tvOS.
 
