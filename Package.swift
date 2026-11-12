@@ -4,7 +4,15 @@ import PackageDescription
 let package = Package(
     name: "ReactNativeTHEOplayer",
     platforms: [.iOS("15.1")],
-	products: [],
+	products: [
+	    .library(
+	        name: "ReactNativeTHEOplayer",
+	        targets: [
+	            "ReactNativeTHEOplayer",
+	            "ReactNativeTHEOplayerBridge"
+	        ]
+	    ),
+	],
 	dependencies: [
 	    .package(
 	        url: "https://github.com/THEOplayer/theoplayer-sdk-apple",
