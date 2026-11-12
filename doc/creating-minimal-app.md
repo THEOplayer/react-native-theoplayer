@@ -191,6 +191,15 @@ Some RN templates miss a specific Swift version setting for tvOS. To fix this ad
 SWIFT_VERSION 5.0
 ```
 
+The THEOplayer iOS SDK and its integrations are published to the
+[THEOplayer CocoaPods spec repository](https://github.com/THEOplayer/cocoapods-specs). Add it to the sources at the top of
+your app's `ios/Podfile`, before the CocoaPods CDN. Once a Podfile declares any `source`, CocoaPods no longer adds the CDN
+by default, so keep that line for all other dependencies:
+```ruby
+source 'https://github.com/THEOplayer/cocoapods-specs.git'
+source 'https://cdn.cocoapods.org/'
+```
+
 Run pod install in your app's ios folder
 ```bash
 pod install
