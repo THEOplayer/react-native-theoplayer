@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+- Added experimental iOS Swift Package Manager support for React Native 0.88, with Google IMA feature configuration through `theoplayer-features-spm`.
 - Added `THEOplayer.allowsExternalPlayback` to enable or disable AirPlay playback on iOS.
 - Added `abr` property to `TypedSource`, supporting `preferredVideoCodecs` and `preferredAudioCodecs` on Android and Web.
 - Added `contentprotectionerror` event bridging on iOS.

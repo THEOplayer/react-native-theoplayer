@@ -7,6 +7,9 @@
   "types": "lib/typescript/index.d.ts",
   "react-native": "src/index",
   "source": "src/index",
+  "bin": {
+    "theoplayer-features-spm": "scripts/configure-spm.js"
+  },
   "files": [
     "src",
     "lib",
@@ -17,6 +20,8 @@
     "react-native-theoplayer.json",
     "CHANGELOG.md",
     "app.plugin.js",
+    "Package.swift",
+    "scripts/configure-spm.js",
     "!lib/typescript/example",
     "!android/build",
     "!ios/build",
