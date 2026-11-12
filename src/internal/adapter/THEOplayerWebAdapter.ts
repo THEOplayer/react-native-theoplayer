@@ -427,9 +427,15 @@ export class THEOplayerWebAdapter extends DefaultEventDispatcher<PlayerEventMap>
     this._cmcdConnector = undefined;
     this._player?.removeEventListener('dimensionchange', this.onPlayerDimensionChange);
     try {
+      // The native player dispatches 'destroy' asynchronously, after destroy() returns, and the facade
+      // closes itself once it has forwarded that event (see PlayerFacade). Closing it here would detach
+      // every facade listener (e.g. the Bitmovin collector) before the event arrives.
       this._player?.destroy();
-    } finally {
+    } catch (error) {
+      // The native destroy failed, so no 'destroy' event will come to close the facade.
       this._playerFacade?.close();
+      throw error;
+    } finally {
       this._player = undefined;
     }
   }
