@@ -103,7 +103,7 @@ import PackageDescription
 
 let package = Package(
     name: "${moduleName}",
-    platforms: [.iOS("15.1")],
+    platforms: [.iOS("16.0")],
     products: [
         .library(
             name: "${moduleName}",
@@ -170,6 +170,7 @@ function main() {
 Run from the app root to configure experimental iOS SPM features from react-native-theoplayer.json.
 Supported features: ${Object.keys(featureTraits).join(', ')}.
 THEOlive is always included, matching the CocoaPods setup.
+iOS 16 or later is required.
 
   --sync      Run the app-installed React Native SPM sync after configuration.
               Requires an existing React Native SPM setup; does not migrate CocoaPods.

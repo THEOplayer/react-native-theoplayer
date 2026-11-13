@@ -3,7 +3,7 @@ import PackageDescription
 
 let package = Package(
     name: "ReactNativeTHEOplayer",
-    platforms: [.iOS("15.1")],
+    platforms: [.iOS("16.0")],
 	products: [
 	    .library(
 	        name: "ReactNativeTHEOplayer",
