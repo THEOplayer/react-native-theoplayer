@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed an issue on Web where player facade listeners, such as analytics connectors, did not receive the player's `destroy` event.
-- Fixed THEOlive events not being forwarded correctly on the New Architecture.
+- Fixed THEOlive events not being forwarded correctly on React Native v0.88.0+.
 - Fixed an issue on Android where `preferredKeySystems` in the content protection configuration was ignored.
 - Fixed ad-break integration identifiers being forwarded incorrectly on iOS and tvOS.
 
