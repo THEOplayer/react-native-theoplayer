@@ -70,9 +70,29 @@ public void onCreate(Bundle savedInstanceState) {
 
 #### Add feature flag to config
 
-To enable Chromecast you need to add the "CHROMECAST" [feature flag](./creating-minimal-app.md#getting-started-on-ios-and-tvos) to react-native-theoplayer.json (or theoplayer-config.json)
+To enable Chromecast, add the `CHROMECAST` [feature flag](./creating-minimal-app.md#getting-started-on-ios-and-tvos) to `react-native-theoplayer.json`.
+The CocoaPods setup also supports `theoplayer-config.json` as an alternative filename.
+
+#### SPM Dependencies
+
+For the experimental SPM setup, follow the [iOS/tvOS setup instructions](./creating-minimal-app.md#getting-started-on-ios-and-tvos)
+to generate and sync the selected features.
+`CHROMECAST` adds the THEOplayer Google Cast integration and Google's official `GoogleCastDynamic` SDK on iOS.
+The dynamic framework includes the Cast UI resources; do not add `GoogleCastStatic` or a second Google Cast framework through CocoaPods.
+Both Cast dependencies are excluded from tvOS builds, even when the shared feature configuration includes `CHROMECAST`.
 
 #### iOS Configuration
+
+Initialize `GCKCastContext` in the app's `AppDelegate`, before creating a player, using the receiver application ID for your app:
+
+```swift
+import GoogleCast
+
+// In application(_:didFinishLaunchingWithOptions:), before creating the player:
+let criteria = GCKDiscoveryCriteria(applicationID: "<receiverAppID>")
+let options = GCKCastOptions(discoveryCriteria: criteria)
+GCKCastContext.setSharedInstanceWith(options)
+```
 
 Specify NSBonjourServices in your Info.plist to allow local network discovery to succeed on iOS 14. You will need to add
 both _googlecast._tcp and _[your-app-id]._googlecast._tcp as services for device discovery to work properly.
@@ -101,6 +121,11 @@ network.
 </string>
 ```
 
+The app still provides a Cast control, for example a button calling `player.cast.chromecast?.start()`
+and another calling `player.cast.chromecast?.stop()` to end the session.
+The SDK presents the device dialog; `react-native-google-cast` is not required.
+See [Google's iOS sender setup](https://developers.google.com/cast/docs/ios_sender) for discovery and permission requirements.
+
 #### Combining with react-native-google-cast
 
 When using react-native-google-cast to render the CastButton, their documentation suggest to setup the CastContext as
@@ -113,7 +138,7 @@ The following options on the GCKCastOptions can be set as desired:
 1. options.startDiscoveryAfterFirstTapOnCastButton = false;  (set up how/when the castbutton is shown)
 2. options.suspendSessionsWhenBackgrounded = false;			 (set up the connection response be when backgrounding the app)
 
-For the experimental SPM setup, follow the [SPM Chromecast instructions](../README.md#chromecast-app-setup) and use Google's official dynamic SDK. Do not add a second Google Cast framework through CocoaPods.
+If `react-native-google-cast` is used, its native dependency must share the same Google Cast framework rather than installing a second copy.
 
 The CocoaPods example uses a [fork of react-native-google-cast](https://github.com/Danesz/react-native-google-cast/tree/feature/guestmode_apple_silicon) so both integrations depend on the same GoogleCast.xcframework. This originally addressed guest-mode and Apple Silicon packaging differences. Google removed guest mode in SDK 4.8.1; the fork does not restore that functionality in later SDK versions. To match the CocoaPods example:
 1. Add the following to your applications podFile:
