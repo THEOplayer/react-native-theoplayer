@@ -3,7 +3,7 @@ import PackageDescription
 
 let package = Package(
     name: "ReactNativeTHEOplayer",
-    platforms: [.iOS("16.0")],
+    platforms: [.iOS("16.0"), .tvOS("15.1")],
 	products: [
 	    .library(
 	        name: "ReactNativeTHEOplayer",
@@ -51,6 +51,10 @@ let package = Package(
 		    .upToNextMajor(from: "3.31.0")
 		),
 		.package(
+		    url: "https://github.com/googleads/swift-package-manager-google-interactive-media-ads-tvos",
+		    .upToNextMajor(from: "4.16.0")
+		),
+		.package(
 		    url: "https://github.com/millicast/millicast-sdk-swift-package",
 		    .upToNextMinor(from: "2.7.0")
 		),
@@ -90,7 +94,8 @@ let package = Package(
 				.product(name: "THEOplayerGoogleIMAIntegration", package: "theoplayer-sdk-apple", condition: .when(traits: ["GoogleIMA"])),
 				.product(name: "THEOplayerTHEOadsIntegration", package: "theoplayer-sdk-apple", condition: .when(traits: ["THEOads"])),
 				.product(name: "THEOplayerMillicastIntegration", package: "theoplayer-sdk-apple", condition: .when(traits: ["Millicast"])),
-				.product(name: "GoogleInteractiveMediaAds", package: "swift-package-manager-google-interactive-media-ads-ios", condition: .when(traits: ["GoogleIMASDK"])),
+				.product(name: "GoogleInteractiveMediaAds", package: "swift-package-manager-google-interactive-media-ads-ios", condition: .when(platforms: [.iOS], traits: ["GoogleIMASDK"])),
+				.product(name: "GoogleInteractiveMediaAdsTvOS", package: "swift-package-manager-google-interactive-media-ads-tvos", condition: .when(platforms: [.tvOS], traits: ["GoogleIMASDK"])),
 				.product(name: "MillicastSDK", package: "millicast-sdk-swift-package", condition: .when(traits: ["Millicast"])),
 				.product(name: "THEOplayerConnectorSideloadedSubtitle", package: "ios-connector", condition: .when(traits: ["SideloadedTextTracks"])),
 				.product(name: "THEOplayerGoogleCastIntegration", package: "theoplayer-sdk-apple", condition: .when(platforms: [.iOS], traits: ["GoogleCast"])),

@@ -79,6 +79,14 @@ function configureSpm(appRoot) {
       package: 'swift-package-manager-google-interactive-media-ads-ios',
       url: 'https://github.com/googleads/swift-package-manager-google-interactive-media-ads-ios',
       requirement: '.upToNextMajor(from: "3.31.0")',
+      platform: '.iOS',
+    });
+    nativeDependencies.push({
+      product: 'GoogleInteractiveMediaAdsTvOS',
+      package: 'swift-package-manager-google-interactive-media-ads-tvos',
+      url: 'https://github.com/googleads/swift-package-manager-google-interactive-media-ads-tvos',
+      requirement: '.upToNextMajor(from: "4.16.0")',
+      platform: '.tvOS',
     });
   }
   if (features.includes('MILLICAST')) {
@@ -103,6 +111,7 @@ function configureSpm(appRoot) {
       package: 'google-cast-ios-sdk',
       url: 'https://github.com/googlecast/google-cast-ios-sdk',
       requirement: '.upToNextMajor(from: "4.8.0")',
+      platform: '.iOS',
     });
   }
   // RN exposes this package and the player as siblings under its generated libs directory.
@@ -112,7 +121,7 @@ import PackageDescription
 
 let package = Package(
     name: "${moduleName}",
-    platforms: [.iOS("16.0")],
+    platforms: [.iOS("16.0"), .tvOS("15.1")],
     products: [
         .library(
             name: "${moduleName}",
@@ -145,7 +154,12 @@ ${nativeDependencies
   .map(
     (dependency) => `                .product(
                     name: "${dependency.product}",
-                    package: "${dependency.package}"
+                    package: "${dependency.package}"${
+                      dependency.platform
+                        ? `,
+                    condition: .when(platforms: [${dependency.platform}])`
+                        : ''
+                    }
                 ),
 `,
   )
@@ -176,10 +190,10 @@ function main() {
   if (args.length === 1 && (args[0] === '--help' || args[0] === '-h')) {
     console.log(`Usage: theoplayer-features-spm [--sync]
 
-Run from the app root to configure experimental iOS SPM features from react-native-theoplayer.json.
+Run from the app root to configure experimental iOS/tvOS SPM features from react-native-theoplayer.json.
 Supported features: ${Object.keys(featureTraits).join(', ')}.
 THEOlive is always included, matching the CocoaPods setup.
-iOS 16 or later is required.
+Requires iOS 16 or later, or tvOS 15.1 or later.
 
   --sync      Run the app-installed React Native SPM sync after configuration.
               Requires an existing React Native SPM setup; does not migrate CocoaPods.
@@ -194,10 +208,12 @@ iOS 16 or later is required.
   const sync = args.includes('--sync');
   let reactNativeCli;
   if (sync) {
-    if (!fs.existsSync(path.join(appRoot, 'ios', 'ReactNativeSPM', 'Scripts', 'sync-autolinking.sh'))) {
-      throw new Error(
-        '--sync requires an existing React Native SPM setup in ios/ReactNativeSPM. Configure RN SPM first; this command does not migrate CocoaPods.',
-      );
+    const hasSyncScript = fs.existsSync(path.join(appRoot, 'ios', 'ReactNativeSPM', 'Scripts', 'sync-autolinking.sh'));
+    const hasGeneratedPackages = ['generated/autolinking', 'xcframeworks'].every((directory) =>
+      fs.existsSync(path.join(appRoot, 'ios', 'build', directory, 'Package.swift')),
+    );
+    if (!hasSyncScript && !hasGeneratedPackages) {
+      throw new Error('--sync requires an existing React Native SPM setup. Configure RN SPM first; this command does not migrate CocoaPods.');
     }
     try {
       const reactNativePackageFile = require.resolve('react-native/package.json', { paths: [appRoot] });

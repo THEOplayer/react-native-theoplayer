@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
+- Fixed experimental Swift Package Manager dependency selection to exclude Google Cast on tvOS and use the tvOS IMA SDK for advertising.
 - Fixed an issue on Android where `preferredKeySystems` in the content protection configuration was ignored.
 - Fixed ad-break integration identifiers being forwarded incorrectly on iOS and tvOS.
 

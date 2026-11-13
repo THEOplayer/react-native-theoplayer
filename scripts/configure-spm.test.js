@@ -113,24 +113,40 @@ for (let selection = 0; selection < 2 ** supportedFeatures.length; selection++) 
     assert.equal(app.configure(features).status, 0);
     const manifest = fs.readFileSync(app.manifestFile, 'utf8');
     const playerManifest = fs.readFileSync(path.join(__dirname, '../Package.swift'), 'utf8');
-    assert.match(manifest, /platforms: \[\.iOS\("16\.0"\)\]/);
-    assert.match(playerManifest, /platforms: \[\.iOS\("16\.0"\)\]/);
-    for (const [selected, product, packageName, requirement] of [
+    assert.match(manifest, /platforms: \[\.iOS\("16\.0"\), \.tvOS\("15\.1"\)\]/);
+    assert.match(playerManifest, /platforms: \[\.iOS\("16\.0"\), \.tvOS\("15\.1"\)\]/);
+    for (const [selected, product, packageName, requirement, platform] of [
       [
         features.includes('GOOGLE_IMA') || features.includes('THEO_ADS'),
         'GoogleInteractiveMediaAds',
         'swift-package-manager-google-interactive-media-ads-ios',
         '.upToNextMajor(from: "3.31.0")',
+        '.iOS',
+      ],
+      [
+        features.includes('GOOGLE_IMA') || features.includes('THEO_ADS'),
+        'GoogleInteractiveMediaAdsTvOS',
+        'swift-package-manager-google-interactive-media-ads-tvos',
+        '.upToNextMajor(from: "4.16.0")',
+        '.tvOS',
       ],
       [features.includes('MILLICAST'), 'MillicastSDK', 'millicast-sdk-swift-package', '.upToNextMinor(from: "2.7.0")'],
       [features.includes('SIDELOADED_TEXTTRACKS'), 'THEOplayerConnectorSideloadedSubtitle', 'ios-connector', '.upToNextMajor(from: "11.0.2")'],
-      [features.includes('CHROMECAST'), 'GoogleCastDynamic', 'google-cast-ios-sdk', '.upToNextMajor(from: "4.8.0")'],
+      [features.includes('CHROMECAST'), 'GoogleCastDynamic', 'google-cast-ios-sdk', '.upToNextMajor(from: "4.8.0")', '.iOS'],
     ]) {
       assert.equal(manifest.includes(`name: "${product}"`), selected);
       assert.equal(manifest.includes(`package: "${packageName}"`), selected);
       assert.equal(manifest.toLowerCase().includes(`/${packageName.toLowerCase()}"`), selected);
       assert.equal(manifest.includes(requirement), selected);
       assert.ok(playerManifest.includes(requirement), 'Selector and player must use the same native SDK requirements');
+      if (selected && platform) {
+        assert.ok(
+          manifest.includes(
+            `name: "${product}",\n                    package: "${packageName}",\n                    condition: .when(platforms: [${platform}])`,
+          ),
+          `${product} must only participate on ${platform}`,
+        );
+      }
     }
     assert.equal(app.configure([]).status, 0);
     const disabledManifest = fs.readFileSync(app.manifestFile, 'utf8');
@@ -201,6 +217,34 @@ test('--sync respects the CLI path declared in React Native package metadata', (
   const result = app.configure([], ['--sync']);
   assert.equal(result.status, 0, result.stderr);
   assert.equal(fs.existsSync(invocationFile), true);
+});
+
+test('--sync recognizes generated RN SPM packages without the legacy sync script', (t) => {
+  const app = setup(t);
+  const { syncFile, invocationFile } = prepareSync(app);
+  fs.unlinkSync(syncFile);
+  for (const directory of ['generated/autolinking', 'xcframeworks']) {
+    const packageRoot = path.join(app.root, 'ios/build', directory);
+    fs.mkdirSync(packageRoot, { recursive: true });
+    fs.writeFileSync(path.join(packageRoot, 'Package.swift'), '// RN SPM fixture.\n');
+  }
+  const result = app.configure(['CHROMECAST'], ['--sync']);
+  assert.equal(result.status, 0, result.stderr);
+  assert.deepEqual(JSON.parse(fs.readFileSync(invocationFile, 'utf8')).args, ['spm', 'sync']);
+});
+
+test('--sync refuses an incomplete generated RN SPM setup before modifying configuration', (t) => {
+  const app = setup(t);
+  const { syncFile, invocationFile } = prepareSync(app);
+  fs.unlinkSync(syncFile);
+  const packageRoot = path.join(app.root, 'ios/build/generated/autolinking');
+  fs.mkdirSync(packageRoot, { recursive: true });
+  fs.writeFileSync(path.join(packageRoot, 'Package.swift'), '// RN SPM fixture.\n');
+  const result = app.configure([], ['--sync']);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /requires an existing React Native SPM setup/);
+  assert.equal(fs.existsSync(invocationFile), false);
+  assert.equal(fs.existsSync(app.manifestFile), false);
 });
 
 test('--sync refuses missing CLI executables before modifying configuration', (t) => {

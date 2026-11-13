@@ -115,7 +115,7 @@ If you have no previous experience in React Native, we encourage you to first ex
 [React Native Documentation](https://reactnative.dev/docs/getting-started),
 as it gives you a good start on one of the most popular app development frameworks.
 
-### Experimental iOS Swift Package Manager Support
+### Experimental iOS/tvOS Swift Package Manager Support
 
 This setup requires iOS 16 or later, an app already configured for React Native 0.88's experimental SPM support, and Swift tools 6.1 or later.
 Set the app's Xcode deployment target to iOS 16 or later before running SPM sync so RN's generated packages use a compatible minimum.
@@ -132,12 +132,19 @@ npx --no-install theoplayer-features-spm --sync
 The command generates `ios/THEOplayerFeatures`, registers it with RN's SPM autolinking, and runs RN sync.
 Rerun it after changing features or updating the generator, then build in Xcode.
 
+For tvOS, use `react-native-tvos` and set the app's deployment target to tvOS 15.1 or later.
+The same `ios.features` array configures both platforms; no separate tvOS feature list is needed.
+`CHROMECAST` can remain selected: both the Cast integration and Google's SDK are iOS-only dependencies and are not linked or embedded on tvOS.
+SwiftPM can still resolve and download their packages.
+Advertising uses Google's iOS IMA SDK on iOS and its tvOS IMA SDK on tvOS.
+The React Native app's SPM setup must supply tvOS React binaries; the standard iOS React package is not a tvOS runtime.
+
 Native version constraints are separate from feature selection:
 
 | Dependency | Current SPM requirement | CocoaPods comparison |
 | --- | --- | --- |
 | THEOplayer core and integrations | `11.14.0..<12.0.0` | Matches `~> 11.14`; all native products share one SPM package version. |
-| Google IMA SDK with `GOOGLE_IMA` or `THEO_ADS` | `3.31.0..<4.0.0` | Both integrations intentionally share the Google IMA integration's minimum, including THEOads-only builds. |
+| Google IMA SDK with `GOOGLE_IMA` or `THEO_ADS` | iOS: `3.31.0..<4.0.0`; tvOS: `4.16.0..<5.0.0` | Both integrations intentionally share the Google IMA integration's minimum for the platform, including THEOads-only builds. |
 | Millicast SDK | `2.7.0..<2.8.0` | Shared 2.7.x baseline across the supported THEOplayer versions, including releases whose podspecs permit older SDKs. |
 | Sideloaded subtitle connector | `11.0.2..<12.0.0` | Matches `~> 11.0`, `> 11.0.1`; its SPM package supplies Swifter 1.5.0 and SwiftSubtitles 0.9.1, matching CocoaPods. |
 | Google Cast SDK | `4.8.0..<5.0.0` | Matches `~> 4.8`; uses Google's official `GoogleCastDynamic` SPM product instead of the community-maintained CocoaPods packaging. |
@@ -151,7 +158,7 @@ The native THEOplayer SPM package currently omits vendor SDK requirements carrie
 The wrapper and generated selector therefore supply them explicitly. For manual feature configuration without the generator,
 enable the wrapper traits and supply the same SDK constraints and product dependencies.
 The SPM setup intentionally uses common vendor SDK baselines rather than reproducing every release-specific podspec range:
-THEOads and Google IMA share IMA 3.31 or later within 3.x, and Millicast uses the backward-compatible 2.7.x baseline.
+THEOads and Google IMA share IMA 3.31 or later within 3.x on iOS and 4.16 or later within 4.x on tvOS; Millicast uses the backward-compatible 2.7.x baseline.
 These baselines do not raise the THEOplayer minimum above 11.14.
 
 #### Chromecast App Setup
