@@ -38,6 +38,103 @@ test('changing JSON enables and disables IMA without changing app registration',
   assert.equal(fs.readFileSync(app.packageFile, 'utf8'), registration);
 });
 
+for (const [features, expectedTraits] of [
+  [['THEO_ADS'], ['THEOads']],
+  [['MILLICAST'], ['Millicast']],
+  [
+    ['GOOGLE_IMA', 'THEO_ADS'],
+    ['GoogleIMA', 'THEOads'],
+  ],
+  [
+    ['GOOGLE_IMA', 'MILLICAST'],
+    ['GoogleIMA', 'Millicast'],
+  ],
+  [
+    ['THEO_ADS', 'MILLICAST'],
+    ['THEOads', 'Millicast'],
+  ],
+  [
+    ['GOOGLE_IMA', 'THEO_ADS', 'MILLICAST'],
+    ['GoogleIMA', 'THEOads', 'Millicast'],
+  ],
+]) {
+  test(`JSON features ${features.join(', ')} select the corresponding traits`, (t) => {
+    const app = setup(t);
+    const result = app.configure(features);
+    assert.equal(result.status, 0, result.stderr);
+    const manifest = fs.readFileSync(app.manifestFile, 'utf8');
+    assert.deepEqual(JSON.parse(manifest.match(/traits: (\[[^\]]*\])/)[1]), expectedTraits);
+    assert.match(result.stdout, /THEOlive is always included/);
+  });
+}
+
+test('reordered and duplicate features do not rewrite an equivalent selection', (t) => {
+  const app = setup(t);
+  assert.equal(app.configure(['MILLICAST', 'THEO_ADS', 'GOOGLE_IMA', 'THEO_ADS']).status, 0);
+  const manifest = fs.readFileSync(app.manifestFile, 'utf8');
+  assert.deepEqual(JSON.parse(manifest.match(/traits: (\[[^\]]*\])/)[1]), ['GoogleIMA', 'THEOads', 'Millicast']);
+  const oldTime = new Date('2000-01-01T00:00:00Z');
+  fs.utimesSync(app.manifestFile, oldTime, oldTime);
+  assert.equal(app.configure(['GOOGLE_IMA', 'THEO_ADS', 'MILLICAST']).status, 0);
+  assert.equal(fs.statSync(app.manifestFile).mtimeMs, oldTime.getTime());
+});
+
+test('removing features removes stale traits from the generated selector', (t) => {
+  const app = setup(t);
+  for (const [features, expectedTraits] of [
+    [
+      ['GOOGLE_IMA', 'THEO_ADS', 'MILLICAST'],
+      ['GoogleIMA', 'THEOads', 'Millicast'],
+    ],
+    [['THEO_ADS'], ['THEOads']],
+    [[], []],
+  ]) {
+    assert.equal(app.configure(features).status, 0);
+    const manifest = fs.readFileSync(app.manifestFile, 'utf8');
+    assert.deepEqual(JSON.parse(manifest.match(/traits: (\[[^\]]*\])/)[1]), expectedTraits);
+  }
+});
+
+const supportedFeatures = ['GOOGLE_IMA', 'THEO_ADS', 'MILLICAST'];
+for (let selection = 0; selection < 2 ** supportedFeatures.length; selection++) {
+  const features = supportedFeatures.filter((_, index) => selection & (1 << index));
+  test(`selector explicitly references only selected native SDKs for ${features.join(', ') || 'no features'}`, (t) => {
+    const app = setup(t);
+    assert.equal(app.configure(features).status, 0);
+    const manifest = fs.readFileSync(app.manifestFile, 'utf8');
+    const playerManifest = fs.readFileSync(path.join(__dirname, '../Package.swift'), 'utf8');
+    for (const [selected, product, packageName, requirement] of [
+      [
+        features.includes('GOOGLE_IMA') || features.includes('THEO_ADS'),
+        'GoogleInteractiveMediaAds',
+        'swift-package-manager-google-interactive-media-ads-ios',
+        '.upToNextMajor(from: "3.31.0")',
+      ],
+      [features.includes('MILLICAST'), 'MillicastSDK', 'millicast-sdk-swift-package', '.upToNextMinor(from: "2.7.0")'],
+    ]) {
+      assert.equal(manifest.includes(`name: "${product}"`), selected);
+      assert.equal(manifest.includes(`package: "${packageName}"`), selected);
+      assert.equal(manifest.toLowerCase().includes(`/${packageName.toLowerCase()}"`), selected);
+      assert.equal(manifest.includes(requirement), selected);
+      assert.ok(playerManifest.includes(requirement), 'Selector and player must use the same native SDK requirements');
+    }
+    assert.equal(app.configure([]).status, 0);
+    const disabledManifest = fs.readFileSync(app.manifestFile, 'utf8');
+    assert.doesNotMatch(disabledManifest, /GoogleInteractiveMediaAds|MillicastSDK|https:\/\/github.com/);
+  });
+}
+
+test('switching advertising integrations keeps one shared IMA SDK requirement', (t) => {
+  const app = setup(t);
+  for (const features of [['GOOGLE_IMA', 'THEO_ADS'], ['THEO_ADS'], ['GOOGLE_IMA']]) {
+    assert.equal(app.configure(features).status, 0);
+    const manifest = fs.readFileSync(app.manifestFile, 'utf8');
+    assert.match(manifest, /\.upToNextMajor\(from: "3\.31\.0"\)/);
+    assert.doesNotMatch(manifest, /3\.18\.0|exact: "3\.33\.0"/);
+    assert.equal((manifest.match(/name: "GoogleInteractiveMediaAds"/g) ?? []).length, 1);
+  }
+});
+
 function prepareSync(app, exitCode = 0, cliPath = 'cli.js') {
   const packageRoot = path.join(app.root, 'node_modules/react-native');
   const cliFile = path.join(packageRoot, cliPath);
@@ -111,7 +208,7 @@ test('--sync propagates RN failure while retaining the generated configuration',
 test('--sync does not run RN when configuration validation fails', (t) => {
   const app = setup(t);
   const { invocationFile } = prepareSync(app);
-  const result = app.configure(['CHROMECAST'], ['--sync']);
+  const result = app.configure(['UNKNOWN_FEATURE'], ['--sync']);
   assert.equal(result.status, 1);
   assert.match(result.stderr, /Unsupported experimental SPM features/);
   assert.equal(fs.existsSync(invocationFile), false);
@@ -155,6 +252,9 @@ test('help describes the npm command without requiring app configuration or writ
     assert.equal(result.status, 0, result.stderr);
     assert.match(result.stdout, /Usage: theoplayer-features-spm \[--sync\]/);
     assert.match(result.stdout, /GOOGLE_IMA/);
+    assert.match(result.stdout, /THEO_ADS/);
+    assert.match(result.stdout, /MILLICAST/);
+    assert.match(result.stdout, /THEOlive is always included/);
     assert.equal(fs.readFileSync(app.packageFile, 'utf8'), registration);
     assert.equal(fs.existsSync(app.manifestFile), false);
   }
@@ -177,7 +277,7 @@ test('invalid and unsupported features fail without changing generated files', (
   const app = setup(t);
   assert.equal(app.configure([]).status, 0);
   const original = fs.readFileSync(app.manifestFile, 'utf8');
-  for (const features of ['GOOGLE_IMA', [null], ['CHROMECAST']]) {
+  for (const features of ['GOOGLE_IMA', [null], ['UNKNOWN_FEATURE'], ['__proto__']]) {
     const result = app.configure(features);
     assert.equal(result.status, 1);
     assert.match(result.stderr, /THEOplayer SPM configuration failed/);
@@ -262,7 +362,7 @@ test('invalid features do not add registration', (t) => {
   const app = setup(t);
   const contents = '{"name":"test-app"}';
   fs.writeFileSync(app.packageFile, contents);
-  const result = app.configure(['CHROMECAST']);
+  const result = app.configure(['UNKNOWN_FEATURE']);
   assert.equal(result.status, 1);
   assert.equal(fs.readFileSync(app.packageFile, 'utf8'), contents);
   assert.equal(fs.existsSync(app.manifestFile), false);
