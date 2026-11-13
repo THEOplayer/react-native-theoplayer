@@ -6,6 +6,7 @@ require Pod::Executable.execute_command('node', ['-p',
 require_relative './PodConfig'
 
 source 'https://github.com/react-native-tvos/react-native-tvos-podspecs.git'
+source 'https://github.com/THEOplayer/cocoapods-specs.git'
 nielsen_source
 source 'https://cdn.cocoapods.org/'
 
