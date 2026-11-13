@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Added experimental iOS Swift Package Manager support for React Native 0.88 on iOS 16 or later, including THEOlive and optional Google IMA, THEOads, Millicast, sideloaded subtitles, and Chromecast configured through `theoplayer-features-spm`.
+
+### Fixed
+
+- Fixed experimental Swift Package Manager dependency selection to exclude Google Cast on tvOS and use the tvOS IMA SDK for advertising.
+
 ## [11.10.0] - 19-11-26
 
 ### Added
@@ -23,7 +33,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Added experimental iOS Swift Package Manager support for React Native 0.88 on iOS 16 or later, including THEOlive and optional Google IMA, THEOads, Millicast, sideloaded subtitles, and Chromecast configured through `theoplayer-features-spm`.
 - Added `THEOplayer.allowsExternalPlayback` to enable or disable AirPlay playback on iOS.
 - Added `abr` property to `TypedSource`, supporting `preferredVideoCodecs` and `preferredAudioCodecs` on Android and Web.
 - Added `contentprotectionerror` event bridging on iOS.
