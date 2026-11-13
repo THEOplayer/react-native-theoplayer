@@ -29,6 +29,10 @@ let package = Package(
 	        description: "Enable Millicast streaming support"
 	    ),
 	    .trait(
+	        name: "SideloadedTextTracks",
+	        description: "Enable sideloaded subtitle support"
+	    ),
+	    .trait(
 	        name: "GoogleIMASDK",
 	        description: "Include the Google IMA SDK shared by advertising integrations"
 	    ),
@@ -45,6 +49,10 @@ let package = Package(
 		.package(
 		    url: "https://github.com/millicast/millicast-sdk-swift-package",
 		    .upToNextMinor(from: "2.7.0")
+		),
+		.package(
+		    url: "https://github.com/THEOplayer/iOS-Connector",
+		    .upToNextMajor(from: "11.0.2")
 		),
 		.package(
 		    name: "ReactNative",
@@ -76,6 +84,7 @@ let package = Package(
 				.product(name: "THEOplayerMillicastIntegration", package: "theoplayer-sdk-apple", condition: .when(traits: ["Millicast"])),
 				.product(name: "GoogleInteractiveMediaAds", package: "swift-package-manager-google-interactive-media-ads-ios", condition: .when(traits: ["GoogleIMASDK"])),
 				.product(name: "MillicastSDK", package: "millicast-sdk-swift-package", condition: .when(traits: ["Millicast"])),
+				.product(name: "THEOplayerConnectorSideloadedSubtitle", package: "ios-connector", condition: .when(traits: ["SideloadedTextTracks"])),
 		        .product(name: "ReactHeaders", package: "ReactNative"),
 		        .product(name: "ReactNativeHeaders", package: "ReactNative"),
 		        .product(name: "ReactNativeDependenciesHeaders", package: "ReactNative"),
