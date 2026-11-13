@@ -118,9 +118,9 @@ as it gives you a good start on one of the most popular app development framewor
 ### Experimental iOS Swift Package Manager Support
 
 This setup requires an app already configured for React Native 0.88's experimental SPM support and Swift tools 6.1 or later.
-It does not migrate an app from CocoaPods. THEOlive is always included; Google IMA, THEOads, and Millicast are optional.
+It does not migrate an app from CocoaPods. THEOlive is always included; Google IMA, THEOads, Millicast, and sideloaded subtitles are optional.
 
-Supported JSON features are `GOOGLE_IMA`, `THEO_ADS`, and `MILLICAST`.
+Supported JSON features are `GOOGLE_IMA`, `THEO_ADS`, `MILLICAST`, and `SIDELOADED_TEXTTRACKS`.
 
 Select features in the app's `react-native-theoplayer.json`, then run from the app root:
 
@@ -138,6 +138,7 @@ Native version constraints are separate from feature selection:
 | THEOplayer core and integrations | `11.14.0..<12.0.0` | Matches `~> 11.14`; all native products share one SPM package version. |
 | Google IMA SDK with `GOOGLE_IMA` or `THEO_ADS` | `3.31.0..<4.0.0` | Both integrations intentionally share the Google IMA integration's minimum, including THEOads-only builds. |
 | Millicast SDK | `2.7.0..<2.8.0` | Shared 2.7.x baseline across the supported THEOplayer versions, including releases whose podspecs permit older SDKs. |
+| Sideloaded subtitle connector | `11.0.2..<12.0.0` | Matches `~> 11.0`, `> 11.0.1`; its SPM package supplies Swifter 1.5.0 and SwiftSubtitles 0.9.1, matching CocoaPods. |
 
 An app-owned Swift package participating in RN's dependency graph can add exact version requirements within these ranges.
 Do not edit the generated selector to pin versions: the generator overwrites it.

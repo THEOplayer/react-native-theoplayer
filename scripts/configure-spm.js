@@ -9,6 +9,7 @@ const featureTraits = {
   GOOGLE_IMA: 'GoogleIMA',
   THEO_ADS: 'THEOads',
   MILLICAST: 'Millicast',
+  SIDELOADED_TEXTTRACKS: 'SideloadedTextTracks',
 };
 
 function writeIfChanged(file, contents) {
@@ -85,6 +86,14 @@ function configureSpm(appRoot) {
       package: 'millicast-sdk-swift-package',
       url: 'https://github.com/millicast/millicast-sdk-swift-package',
       requirement: '.upToNextMinor(from: "2.7.0")',
+    });
+  }
+  if (features.includes('SIDELOADED_TEXTTRACKS')) {
+    nativeDependencies.push({
+      product: 'THEOplayerConnectorSideloadedSubtitle',
+      package: 'ios-connector',
+      url: 'https://github.com/THEOplayer/iOS-Connector',
+      requirement: '.upToNextMajor(from: "11.0.2")',
     });
   }
   // RN exposes this package and the player as siblings under its generated libs directory.
