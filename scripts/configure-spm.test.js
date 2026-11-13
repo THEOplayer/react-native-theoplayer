@@ -108,6 +108,8 @@ for (let selection = 0; selection < 2 ** supportedFeatures.length; selection++) 
     assert.equal(app.configure(features).status, 0);
     const manifest = fs.readFileSync(app.manifestFile, 'utf8');
     const playerManifest = fs.readFileSync(path.join(__dirname, '../Package.swift'), 'utf8');
+    assert.match(manifest, /platforms: \[\.iOS\("16\.0"\)\]/);
+    assert.match(playerManifest, /platforms: \[\.iOS\("16\.0"\)\]/);
     for (const [selected, product, packageName, requirement] of [
       [
         features.includes('GOOGLE_IMA') || features.includes('THEO_ADS'),
@@ -261,6 +263,7 @@ test('help describes the npm command without requiring app configuration or writ
     assert.match(result.stdout, /THEO_ADS/);
     assert.match(result.stdout, /MILLICAST/);
     assert.match(result.stdout, /SIDELOADED_TEXTTRACKS/);
+    assert.match(result.stdout, /iOS 16 or later/);
     assert.match(result.stdout, /THEOlive is always included/);
     assert.equal(fs.readFileSync(app.packageFile, 'utf8'), registration);
     assert.equal(fs.existsSync(app.manifestFile), false);

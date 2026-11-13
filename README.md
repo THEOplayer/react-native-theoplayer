@@ -117,7 +117,8 @@ as it gives you a good start on one of the most popular app development framewor
 
 ### Experimental iOS Swift Package Manager Support
 
-This setup requires an app already configured for React Native 0.88's experimental SPM support and Swift tools 6.1 or later.
+This setup requires iOS 16 or later, an app already configured for React Native 0.88's experimental SPM support, and Swift tools 6.1 or later.
+Set the app's Xcode deployment target to iOS 16 or later before running SPM sync so RN's generated packages use a compatible minimum.
 It does not migrate an app from CocoaPods. THEOlive is always included; Google IMA, THEOads, Millicast, and sideloaded subtitles are optional.
 
 Supported JSON features are `GOOGLE_IMA`, `THEO_ADS`, `MILLICAST`, and `SIDELOADED_TEXTTRACKS`.
