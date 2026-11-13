@@ -113,7 +113,9 @@ The following options on the GCKCastOptions can be set as desired:
 1. options.startDiscoveryAfterFirstTapOnCastButton = false;  (set up how/when the castbutton is shown)
 2. options.suspendSessionsWhenBackgrounded = false;			 (set up the connection response be when backgrounding the app)
 
-In addition, react-native-google-cast currently does not include a full featured (guest mode combined with Apple M1 support) setup of the Google Cast SDK. Our THEOplayerCastIntegration however does, but combining both results in a clash of dependencies (both delivering a GoogleCast.xcframework). To overcome this double dependency we suggest to use a [fork of react-native-google-cast](https://github.com/Danesz/react-native-google-cast/tree/feature/guestmode_apple_silicon) that depends on the same GoogleCast.xcframework. To achieve this:
+For the experimental SPM setup, follow the [SPM Chromecast instructions](../README.md#chromecast-app-setup) and use Google's official dynamic SDK. Do not add a second Google Cast framework through CocoaPods.
+
+The CocoaPods example uses a [fork of react-native-google-cast](https://github.com/Danesz/react-native-google-cast/tree/feature/guestmode_apple_silicon) so both integrations depend on the same GoogleCast.xcframework. This originally addressed guest-mode and Apple Silicon packaging differences. Google removed guest mode in SDK 4.8.1; the fork does not restore that functionality in later SDK versions. To match the CocoaPods example:
 1. Add the following to your applications podFile:
 ```ruby
 pod 'react-native-google-cast', :git => 'https://github.com/Danesz/react-native-google-cast.git', branch: 'feature/guestmode_apple_silicon'

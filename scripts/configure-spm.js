@@ -10,6 +10,7 @@ const featureTraits = {
   THEO_ADS: 'THEOads',
   MILLICAST: 'Millicast',
   SIDELOADED_TEXTTRACKS: 'SideloadedTextTracks',
+  CHROMECAST: 'GoogleCast',
 };
 
 function writeIfChanged(file, contents) {
@@ -94,6 +95,14 @@ function configureSpm(appRoot) {
       package: 'ios-connector',
       url: 'https://github.com/THEOplayer/iOS-Connector',
       requirement: '.upToNextMajor(from: "11.0.2")',
+    });
+  }
+  if (features.includes('CHROMECAST')) {
+    nativeDependencies.push({
+      product: 'GoogleCastDynamic',
+      package: 'google-cast-ios-sdk',
+      url: 'https://github.com/googlecast/google-cast-ios-sdk',
+      requirement: '.upToNextMajor(from: "4.8.0")',
     });
   }
   // RN exposes this package and the player as siblings under its generated libs directory.

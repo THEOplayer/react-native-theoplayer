@@ -33,6 +33,10 @@ let package = Package(
 	        description: "Enable sideloaded subtitle support"
 	    ),
 	    .trait(
+	        name: "GoogleCast",
+	        description: "Enable Chromecast support"
+	    ),
+	    .trait(
 	        name: "GoogleIMASDK",
 	        description: "Include the Google IMA SDK shared by advertising integrations"
 	    ),
@@ -53,6 +57,10 @@ let package = Package(
 		.package(
 		    url: "https://github.com/THEOplayer/iOS-Connector",
 		    .upToNextMajor(from: "11.0.2")
+		),
+		.package(
+		    url: "https://github.com/googlecast/google-cast-ios-sdk",
+		    .upToNextMajor(from: "4.8.0")
 		),
 		.package(
 		    name: "ReactNative",
@@ -85,6 +93,8 @@ let package = Package(
 				.product(name: "GoogleInteractiveMediaAds", package: "swift-package-manager-google-interactive-media-ads-ios", condition: .when(traits: ["GoogleIMASDK"])),
 				.product(name: "MillicastSDK", package: "millicast-sdk-swift-package", condition: .when(traits: ["Millicast"])),
 				.product(name: "THEOplayerConnectorSideloadedSubtitle", package: "ios-connector", condition: .when(traits: ["SideloadedTextTracks"])),
+				.product(name: "THEOplayerGoogleCastIntegration", package: "theoplayer-sdk-apple", condition: .when(platforms: [.iOS], traits: ["GoogleCast"])),
+				.product(name: "GoogleCastDynamic", package: "google-cast-ios-sdk", condition: .when(platforms: [.iOS], traits: ["GoogleCast"])),
 		        .product(name: "ReactHeaders", package: "ReactNative"),
 		        .product(name: "ReactNativeHeaders", package: "ReactNative"),
 		        .product(name: "ReactNativeDependenciesHeaders", package: "ReactNative"),
