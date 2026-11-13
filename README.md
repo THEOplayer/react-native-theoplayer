@@ -105,7 +105,7 @@ Android tests, from `example/android`:
 For each platform, a dependency to the corresponding THEOplayer SDK is included through a dependency manager:
 
 - Gradle & Maven for Android
-- Cocoapods for iOS
+- CocoaPods for iOS, or experimental Swift Package Manager support as described below
 - npm for Web
 
 In order to use one of these THEOplayer SDKs, it is necessary to obtain a valid THEOplayer license for that specific platform,
@@ -114,6 +114,42 @@ i.e. HTML5, Android, and/or iOS. You can sign up for a THEOplayer SDK license th
 If you have no previous experience in React Native, we encourage you to first explore the
 [React Native Documentation](https://reactnative.dev/docs/getting-started),
 as it gives you a good start on one of the most popular app development frameworks.
+
+### Experimental iOS Swift Package Manager Support
+
+This setup requires an app already configured for React Native 0.88's experimental SPM support and Swift tools 6.1 or later.
+It does not migrate an app from CocoaPods. THEOlive is always included; Google IMA, THEOads, and Millicast are optional.
+
+Supported JSON features are `GOOGLE_IMA`, `THEO_ADS`, and `MILLICAST`.
+
+Select features in the app's `react-native-theoplayer.json`, then run from the app root:
+
+```sh
+npx --no-install theoplayer-features-spm --sync
+```
+
+The command generates `ios/THEOplayerFeatures`, registers it with RN's SPM autolinking, and runs RN sync.
+Rerun it after changing features or updating the generator, then build in Xcode.
+
+Native version constraints are separate from feature selection:
+
+| Dependency | Current SPM requirement | CocoaPods comparison |
+| --- | --- | --- |
+| THEOplayer core and integrations | `11.14.0..<12.0.0` | Matches `~> 11.14`; all native products share one SPM package version. |
+| Google IMA SDK with `GOOGLE_IMA` or `THEO_ADS` | `3.31.0..<4.0.0` | Both integrations intentionally share the Google IMA integration's minimum, including THEOads-only builds. |
+| Millicast SDK | `2.7.0..<2.8.0` | Shared 2.7.x baseline across the supported THEOplayer versions, including releases whose podspecs permit older SDKs. |
+
+An app-owned Swift package participating in RN's dependency graph can add exact version requirements within these ranges.
+Do not edit the generated selector to pin versions: the generator overwrites it.
+SwiftPM combines all requirements and rejects conflicting pins. Commit the app-owned manifest and Xcode's `Package.resolved`.
+Broadening a requirement does not automatically upgrade compatible locked versions.
+
+The native THEOplayer SPM package currently omits vendor SDK requirements carried by its CocoaPods integration podspecs.
+The wrapper and generated selector therefore supply them explicitly. For manual feature configuration without the generator,
+enable the wrapper traits and supply the same SDK constraints and product dependencies.
+The SPM setup intentionally uses common vendor SDK baselines rather than reproducing every release-specific podspec range:
+THEOads and Google IMA share IMA 3.31 or later within 3.x, and Millicast uses the backward-compatible 2.7.x baseline.
+These baselines do not raise the THEOplayer minimum above 11.14.
 
 ## How to use these guides
 

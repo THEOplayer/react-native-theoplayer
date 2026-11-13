@@ -16,7 +16,21 @@ let package = Package(
 	traits: [
 	    .trait(
 	        name: "GoogleIMA",
-	        description: "Enable Google IMA advertising support"
+	        description: "Enable Google IMA advertising support",
+	        enabledTraits: ["GoogleIMASDK"]
+	    ),
+	    .trait(
+	        name: "THEOads",
+	        description: "Enable THEOads advertising support",
+	        enabledTraits: ["GoogleIMASDK"]
+	    ),
+	    .trait(
+	        name: "Millicast",
+	        description: "Enable Millicast streaming support"
+	    ),
+	    .trait(
+	        name: "GoogleIMASDK",
+	        description: "Include the Google IMA SDK shared by advertising integrations"
 	    ),
 	],
 	dependencies: [
@@ -26,7 +40,11 @@ let package = Package(
 	    ),
 		.package(
 		    url: "https://github.com/googleads/swift-package-manager-google-interactive-media-ads-ios",
-		    exact: "3.33.0"
+		    .upToNextMajor(from: "3.31.0")
+		),
+		.package(
+		    url: "https://github.com/millicast/millicast-sdk-swift-package",
+		    .upToNextMinor(from: "2.7.0")
 		),
 		.package(
 		    name: "ReactNative",
@@ -52,8 +70,12 @@ let package = Package(
 		    name: "ReactNativeTHEOplayer",
 		    dependencies: [
 		        .product(name: "THEOplayerSDK", package: "theoplayer-sdk-apple"),
+		        .product(name: "THEOplayerTHEOliveIntegration", package: "theoplayer-sdk-apple"),
 				.product(name: "THEOplayerGoogleIMAIntegration", package: "theoplayer-sdk-apple", condition: .when(traits: ["GoogleIMA"])),
-				.product(name: "GoogleInteractiveMediaAds", package: "swift-package-manager-google-interactive-media-ads-ios", condition: .when(traits: ["GoogleIMA"])),
+				.product(name: "THEOplayerTHEOadsIntegration", package: "theoplayer-sdk-apple", condition: .when(traits: ["THEOads"])),
+				.product(name: "THEOplayerMillicastIntegration", package: "theoplayer-sdk-apple", condition: .when(traits: ["Millicast"])),
+				.product(name: "GoogleInteractiveMediaAds", package: "swift-package-manager-google-interactive-media-ads-ios", condition: .when(traits: ["GoogleIMASDK"])),
+				.product(name: "MillicastSDK", package: "millicast-sdk-swift-package", condition: .when(traits: ["Millicast"])),
 		        .product(name: "ReactHeaders", package: "ReactNative"),
 		        .product(name: "ReactNativeHeaders", package: "ReactNative"),
 		        .product(name: "ReactNativeDependenciesHeaders", package: "ReactNative"),
