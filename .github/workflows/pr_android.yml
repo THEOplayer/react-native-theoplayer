@@ -59,8 +59,9 @@ jobs:
           npm i -g corepack
           npm ci
           cd e2e
-          npm run update-dependencies
           npm ci
+          npm run update-dependencies
+          npm install
 
       - name: Enable KVM
         run: |
@@ -70,6 +71,15 @@ jobs:
 
       - name: Gradle cache
         uses: gradle/actions/setup-gradle@v3
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+
+      - name: Run native ad bridge tests
+        working-directory: e2e/android
+        run: ./gradlew :react-native-theoplayer:testDebugUnitTest --tests 'com.theoplayer.ads.AdAdapterCustomDataTest' --tests 'com.theoplayer.integration.PlayerFacade*Test' --console=plain
 
       - name: AVD cache
         uses: actions/cache@v4

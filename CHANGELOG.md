@@ -5,7 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [11.8.0] - 18-10-21
+## [11.9.0] - 13-11-26
+
+### Added
+
+- Added `THEOplayer.allowsExternalPlayback` to enable or disable AirPlay playback on iOS.
+- Added `abr` property to `TypedSource`, supporting `preferredVideoCodecs` and `preferredAudioCodecs` on Android and Web.
+- Added `contentprotectionerror` event bridging on iOS.
+- Added `customData` to `Ad` and `AdBreak`, including bidirectional event bridging on Android, iOS and tvOS.
+
+### Fixed
+
+- Fixed an issue on Web where player facade listeners, such as analytics connectors, did not receive the player's `destroy` event.
+- Fixed THEOlive events not being forwarded correctly on React Native v0.88.0+.
+- Fixed an issue on Android where `preferredKeySystems` in the content protection configuration was ignored.
+- Fixed ad-break integration identifiers being forwarded incorrectly on iOS and tvOS.
+
+## [11.8.0] - 18-10-26
 
 ### Added
 

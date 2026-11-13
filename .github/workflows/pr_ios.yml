@@ -19,6 +19,7 @@ jobs:
           filters: |
             ios:
               - '.github/workflows/pr_ios.yml'
+              - 'Gemfile'
               - 'example/**'
               - 'e2e/**'
               - '!e2e/android/**'
@@ -29,13 +30,21 @@ jobs:
   build:
     needs: changes
     if: needs.changes.outputs.ios == 'true' && github.event.pull_request.draft == false
+    # Temporarily compare against the previous Xcode 26 toolchain.
     runs-on: macos-15
     strategy:
       fail-fast: false
       matrix:
         xcode_version: [ '26.2.0' ]
         platform: [iOS, tvOS]
-    name: Build for ${{ matrix.platform }} using XCode version ${{ matrix.xcode_version }}
+        include:
+          - platform: iOS
+            simulator: iPhone 17
+            scheme: ReactNativeTHEOplayer
+          - platform: tvOS
+            simulator: Apple TV 4K (3rd generation)
+            scheme: ReactNativeTHEOplayer-tvOS
+    name: Build for ${{ matrix.platform }}
 
     steps:
       - name: Checkout repository
@@ -56,17 +65,17 @@ jobs:
         uses: actions/cache@v4
         with:
           path: vendor/bundle
-          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-gems-${{ hashFiles('Gemfile', '**/Gemfile.lock') }}
           restore-keys: |
-            ${{ runner.os }}-gems-
+            ${{ runner.os }}-${{ runner.arch }}-gems-
 
       - name: Cache CocoaPods
         uses: actions/cache@v4
         with:
           path: e2e/ios/Pods
-          key: pods-${{ runner.os }}-${{ hashFiles('Podfile.lock') }}
+          key: pods-${{ runner.os }}-${{ runner.arch }}-${{ matrix.xcode_version }}-${{ hashFiles('e2e/ios/Podfile.lock') }}
           restore-keys: |
-            pods-${{ runner.os }}-
+            pods-${{ runner.os }}-${{ runner.arch }}-${{ matrix.xcode_version }}-
 
       - name: Run patch scripts
         working-directory: e2e
@@ -77,8 +86,9 @@ jobs:
           npm i -g corepack
           npm ci
           cd e2e
-          npm run update-dependencies
           npm ci
+          npm run update-dependencies
+          npm install
 
       - name: Install Ruby dependencies
         run: bundle install
@@ -89,35 +99,53 @@ jobs:
           bundle exec pod update
 
       - name: Start iOS simulator
+        id: simulator
         uses: futureware-tech/simulator-action@v4
         with:
-          model: ${{ matrix.platform == 'iOS' && 'iPhone 17' || 'Apple TV' }}
+          model: ${{ matrix.simulator }}
           os: ${{ matrix.platform }}
-          os_version: '>=26.2'
+          os_version: '26.2'
+          wait_for_boot: true
+          shutdown_after_job: ${{ matrix.platform != 'tvOS' }}
+
+      - name: Run native ad bridge tests
+        working-directory: e2e/ios
+        env:
+          RCT_NO_LAUNCH_PACKAGER: '1'
+        run: |
+          SCHEME="${{ matrix.platform == 'iOS' && 'ReactNativeTHEOplayer' || 'ReactNativeTHEOplayer-tvOS' }}"
+          xcodebuild test -workspace ReactNativeTHEOplayer.xcworkspace -scheme "$SCHEME" \
+            -destination "id=${{ steps.simulator.outputs.udid }}" \
+            -only-testing:"${SCHEME}Tests/AdAdapterCustomDataTests" \
+            CODE_SIGNING_ALLOWED=NO
 
       - name: Run e2e tests
         working-directory: e2e
-        run: npm run test:e2e:${{ matrix.platform == 'iOS' && 'ios' || 'tvos' }} -- --markdown
+        # --buildCmd preserves simulator-name quoting that Cavynext's argument forwarding loses.
+        run: >-
+          npm run test:e2e:${{ matrix.platform == 'iOS' && 'ios' || 'tvos' }} -- --markdown
+          --buildCmd 'npx react-native run-ios --terminal bash
+          --scheme "${{ matrix.scheme }}" --simulator "${{ matrix.simulator }} (26.2)"'
 
       - name: Summarize results
         working-directory: e2e
         if: always()
         run: cat cavynext_results.md >> $GITHUB_STEP_SUMMARY
 
-      - name: Collecting logs
-        if: failure()
-        run: xcrun simctl spawn booted log collect --output ~/crashlog.logarchive
-
-      - name: Upload crash logs
+      - name: Upload diagnostic reports
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: crash-logs-${{ matrix.platform }}
-          path: ~/crashlog.logarchive
+          name: diagnostics-${{ matrix.platform }}-xcode-${{ matrix.xcode_version }}
+          if-no-files-found: warn
+          path: |
+            ~/Library/Logs/DiagnosticReports
+            ~/Library/Logs/CoreSimulator
+            ~/Library/Developer/CoreSimulator/Devices/${{ steps.simulator.outputs.udid }}/data/Library/Logs
 
       - name: Upload screenshots
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: e2e-screenshots-${{ matrix.platform }}
+          name: e2e-screenshots-${{ matrix.platform }}-xcode-${{ matrix.xcode_version }}
           path: e2e/screenshots

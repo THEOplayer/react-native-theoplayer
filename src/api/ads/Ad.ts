@@ -129,6 +129,16 @@ export interface Ad {
    * <br/> - Only supported for `'theo'` and `'google-ima'`.
    */
   universalAdIds: UniversalAdId[];
+
+  /**
+   * Additional integration-specific data associated with this ad.
+   *
+   * @remarks
+   * <br/> - The value depends on the ad integration. It may be `undefined` if the integration does not provide any custom data.
+   * <br/> - On native platforms, values must be JSON-serializable. Custom data is preserved both in events forwarded to JavaScript
+   * and in events broadcast to native listeners.
+   */
+  customData?: Record<string, unknown>;
 }
 
 /**
