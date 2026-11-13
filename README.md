@@ -119,9 +119,9 @@ as it gives you a good start on one of the most popular app development framewor
 
 This setup requires iOS 16 or later, an app already configured for React Native 0.88's experimental SPM support, and Swift tools 6.1 or later.
 Set the app's Xcode deployment target to iOS 16 or later before running SPM sync so RN's generated packages use a compatible minimum.
-It does not migrate an app from CocoaPods. THEOlive is always included; Google IMA, THEOads, Millicast, and sideloaded subtitles are optional.
+It does not migrate an app from CocoaPods. THEOlive is always included; Google IMA, THEOads, Millicast, sideloaded subtitles, and Chromecast are optional.
 
-Supported JSON features are `GOOGLE_IMA`, `THEO_ADS`, `MILLICAST`, and `SIDELOADED_TEXTTRACKS`.
+Supported JSON features are `GOOGLE_IMA`, `THEO_ADS`, `MILLICAST`, `SIDELOADED_TEXTTRACKS`, and `CHROMECAST`.
 
 Select features in the app's `react-native-theoplayer.json`, then run from the app root:
 
@@ -140,6 +140,7 @@ Native version constraints are separate from feature selection:
 | Google IMA SDK with `GOOGLE_IMA` or `THEO_ADS` | `3.31.0..<4.0.0` | Both integrations intentionally share the Google IMA integration's minimum, including THEOads-only builds. |
 | Millicast SDK | `2.7.0..<2.8.0` | Shared 2.7.x baseline across the supported THEOplayer versions, including releases whose podspecs permit older SDKs. |
 | Sideloaded subtitle connector | `11.0.2..<12.0.0` | Matches `~> 11.0`, `> 11.0.1`; its SPM package supplies Swifter 1.5.0 and SwiftSubtitles 0.9.1, matching CocoaPods. |
+| Google Cast SDK | `4.8.0..<5.0.0` | Matches `~> 4.8`; uses Google's official `GoogleCastDynamic` SPM product instead of the community-maintained CocoaPods packaging. |
 
 An app-owned Swift package participating in RN's dependency graph can add exact version requirements within these ranges.
 Do not edit the generated selector to pin versions: the generator overwrites it.
@@ -152,6 +153,31 @@ enable the wrapper traits and supply the same SDK constraints and product depend
 The SPM setup intentionally uses common vendor SDK baselines rather than reproducing every release-specific podspec range:
 THEOads and Google IMA share IMA 3.31 or later within 3.x, and Millicast uses the backward-compatible 2.7.x baseline.
 These baselines do not raise the THEOplayer minimum above 11.14.
+
+#### Chromecast App Setup
+
+`CHROMECAST` enables the THEOplayer Google Cast integration and Google's official dynamic SDK on iOS.
+The dynamic framework includes the Cast UI resources; do not add `GoogleCastStatic` or a second Google Cast framework alongside it.
+Google removed guest mode in SDK 4.8.1; the official package supplies the current supported functionality.
+
+Initialize `GCKCastContext` in the app's `AppDelegate`, before creating a player, using the receiver application ID for your app:
+
+```swift
+import GoogleCast
+
+// In application(_:didFinishLaunchingWithOptions:), before creating the player:
+let criteria = GCKDiscoveryCriteria(applicationID: "<receiverAppID>")
+let options = GCKCastOptions(discoveryCriteria: criteria)
+GCKCastContext.setSharedInstanceWith(options)
+```
+
+Add `NSLocalNetworkUsageDescription` to the app's `Info.plist`, plus `NSBonjourServices` entries
+`_googlecast._tcp` and `_<receiverAppID>._googlecast._tcp`, using that same receiver ID.
+The app still provides a Cast control, for example a button calling `player.cast.chromecast?.start()`, and configures discovery behavior.
+The SDK presents the device dialog; `react-native-google-cast` is not required.
+If `react-native-google-cast` is used,
+its native dependency must share the same Google Cast framework rather than installing another copy through CocoaPods.
+See [Google's iOS sender setup](https://developers.google.com/cast/docs/ios_sender) for discovery and permission requirements.
 
 ## How to use these guides
 

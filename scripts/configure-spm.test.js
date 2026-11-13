@@ -42,6 +42,7 @@ for (const [features, expectedTraits] of [
   [['THEO_ADS'], ['THEOads']],
   [['MILLICAST'], ['Millicast']],
   [['SIDELOADED_TEXTTRACKS'], ['SideloadedTextTracks']],
+  [['CHROMECAST'], ['GoogleCast']],
   [
     ['GOOGLE_IMA', 'THEO_ADS'],
     ['GoogleIMA', 'THEOads'],
@@ -61,6 +62,10 @@ for (const [features, expectedTraits] of [
   [
     ['GOOGLE_IMA', 'THEO_ADS', 'MILLICAST', 'SIDELOADED_TEXTTRACKS'],
     ['GoogleIMA', 'THEOads', 'Millicast', 'SideloadedTextTracks'],
+  ],
+  [
+    ['GOOGLE_IMA', 'THEO_ADS', 'MILLICAST', 'SIDELOADED_TEXTTRACKS', 'CHROMECAST'],
+    ['GoogleIMA', 'THEOads', 'Millicast', 'SideloadedTextTracks', 'GoogleCast'],
   ],
 ]) {
   test(`JSON features ${features.join(', ')} select the corresponding traits`, (t) => {
@@ -88,8 +93,8 @@ test('removing features removes stale traits from the generated selector', (t) =
   const app = setup(t);
   for (const [features, expectedTraits] of [
     [
-      ['GOOGLE_IMA', 'THEO_ADS', 'MILLICAST', 'SIDELOADED_TEXTTRACKS'],
-      ['GoogleIMA', 'THEOads', 'Millicast', 'SideloadedTextTracks'],
+      ['GOOGLE_IMA', 'THEO_ADS', 'MILLICAST', 'SIDELOADED_TEXTTRACKS', 'CHROMECAST'],
+      ['GoogleIMA', 'THEOads', 'Millicast', 'SideloadedTextTracks', 'GoogleCast'],
     ],
     [['THEO_ADS'], ['THEOads']],
     [[], []],
@@ -100,7 +105,7 @@ test('removing features removes stale traits from the generated selector', (t) =
   }
 });
 
-const supportedFeatures = ['GOOGLE_IMA', 'THEO_ADS', 'MILLICAST', 'SIDELOADED_TEXTTRACKS'];
+const supportedFeatures = ['GOOGLE_IMA', 'THEO_ADS', 'MILLICAST', 'SIDELOADED_TEXTTRACKS', 'CHROMECAST'];
 for (let selection = 0; selection < 2 ** supportedFeatures.length; selection++) {
   const features = supportedFeatures.filter((_, index) => selection & (1 << index));
   test(`selector explicitly references only selected native SDKs for ${features.join(', ') || 'no features'}`, (t) => {
@@ -119,6 +124,7 @@ for (let selection = 0; selection < 2 ** supportedFeatures.length; selection++) 
       ],
       [features.includes('MILLICAST'), 'MillicastSDK', 'millicast-sdk-swift-package', '.upToNextMinor(from: "2.7.0")'],
       [features.includes('SIDELOADED_TEXTTRACKS'), 'THEOplayerConnectorSideloadedSubtitle', 'ios-connector', '.upToNextMajor(from: "11.0.2")'],
+      [features.includes('CHROMECAST'), 'GoogleCastDynamic', 'google-cast-ios-sdk', '.upToNextMajor(from: "4.8.0")'],
     ]) {
       assert.equal(manifest.includes(`name: "${product}"`), selected);
       assert.equal(manifest.includes(`package: "${packageName}"`), selected);
@@ -128,7 +134,10 @@ for (let selection = 0; selection < 2 ** supportedFeatures.length; selection++) 
     }
     assert.equal(app.configure([]).status, 0);
     const disabledManifest = fs.readFileSync(app.manifestFile, 'utf8');
-    assert.doesNotMatch(disabledManifest, /GoogleInteractiveMediaAds|MillicastSDK|THEOplayerConnectorSideloadedSubtitle|https:\/\/github.com/);
+    assert.doesNotMatch(
+      disabledManifest,
+      /GoogleInteractiveMediaAds|MillicastSDK|THEOplayerConnectorSideloadedSubtitle|GoogleCastDynamic|https:\/\/github.com/,
+    );
   });
 }
 
@@ -263,7 +272,9 @@ test('help describes the npm command without requiring app configuration or writ
     assert.match(result.stdout, /THEO_ADS/);
     assert.match(result.stdout, /MILLICAST/);
     assert.match(result.stdout, /SIDELOADED_TEXTTRACKS/);
+    assert.match(result.stdout, /CHROMECAST/);
     assert.match(result.stdout, /iOS 16 or later/);
+    assert.doesNotMatch(result.stdout, /Chromecast is not supported/);
     assert.match(result.stdout, /THEOlive is always included/);
     assert.equal(fs.readFileSync(app.packageFile, 'utf8'), registration);
     assert.equal(fs.existsSync(app.manifestFile), false);
