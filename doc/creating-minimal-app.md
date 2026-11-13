@@ -149,33 +149,93 @@ React Native component updates and could affect performance in negative way.
 
 ## Getting started on iOS and tvOS
 
-To define which extra THEOplayer integrations need to be loaded for additional features, a config file needs to be added to you application folder:
+Create `react-native-theoplayer.json` in the app root, alongside `package.json`, to select optional THEOplayer integrations.
+The feature flags are shared by the CocoaPods and SPM setups. Use the same `ios.features` array for iOS and tvOS.
+Leave out features your app does not need to reduce its size, or leave the array empty for basic functionality.
+THEOlive is always included.
 
-Create a json file **[YourApplicationFolder]/react-native-theoplayer.json**, or **[YourApplicationFolder]/theoplayer-config.json**, on the same level as the node_modules folder (both alternatives offer the same functionality).
-
-Edit the file to reflect the features required for your application. The following example adds Google IMA and DAI, Chromecast, THEOads, Millicast and Sideloaded textTracks to the setup. If one of these is out of your applications scope, you can leave it out to reduce the app's size. When using only basic functionality, leave the features array empty.
-
-Example:
-```
+```json
 {
-	"ios": {
-		"features": [
-			"GOOGLE_IMA",
-			"CHROMECAST",
-			"THEO_ADS",
-			"MILLICAST",
-			"SIDELOADED_TEXTTRACKS"
-		]
-	}
+  "ios": {
+    "features": [
+      "GOOGLE_IMA",
+      "CHROMECAST",
+      "THEO_ADS",
+      "MILLICAST",
+      "SIDELOADED_TEXTTRACKS"
+    ]
+  }
 }
 ```
-- **GOOGLE_IMA**: adds an additional dependency to the THEOplayer-Integration-GoogleIMA cocoapod that delivers the IMA and DAI functionality
-- **CHROMECAST**: adds an additional dependency to the THEOplayer-Integration-GoogleCast cocoapod that delivers the chromecast functionality
-- **THEO_ADS**: adds an additional dependency to the THEOplayer-Integration-TheoAds cocoapod that delivers Server Guided Ad Insertion (SGAI) functionality
-- **MILLICAST**: adds an additional dependency to the THEOplayer-Integration-Millicast cocoapod that delivers the Millicast functionality
-- **SIDELOADED_TEXTTRACKS**: adds an additional dependency to the THEOplayer-Connector-SideloadedSubtitle cocoapod that delivers the sideloaded texttracks functionality
 
-Once the project has been setup correctly, define a valid HLS, Millicast or THEOlive source, eg.
+- **GOOGLE_IMA**: enables Google IMA and DAI advertising.
+- **CHROMECAST**: enables Chromecast on iOS; it can remain selected for tvOS, where it is excluded.
+- **THEO_ADS**: enables THEOads Server-Guided Ad Insertion (SGAI).
+- **MILLICAST**: enables Millicast playback.
+- **SIDELOADED_TEXTTRACKS**: enables sideloaded text tracks.
+
+After selecting features, follow one of the setup methods below for THEOplayer's native dependencies.
+
+<details>
+<summary>CocoaPods</summary>
+
+The CocoaPods setup reads the feature configuration and adds the corresponding native dependencies during `pod install`.
+It also supports `theoplayer-config.json` as an alternative filename.
+
+Some RN templates miss a specific Swift version setting for tvOS. To fix this add a custom build setting to your tvOS app target:
+```
+SWIFT_VERSION 5.0
+```
+
+Run pod install in your app's ios folder
+```bash
+pod install
+```
+
+</details>
+
+<details>
+<summary>SPM (experimental)</summary>
+
+This setup requires an app already configured for React Native 0.88's experimental SPM support and Swift tools 6.1 or later.
+The minimum deployment targets are iOS 16 and tvOS 15.1.
+Set the app's Xcode deployment target before running SPM sync so RN's generated packages use a compatible minimum.
+It does not migrate an app from CocoaPods.
+The SPM generator requires `react-native-theoplayer.json`; the alternative `theoplayer-config.json` is only supported by the CocoaPods setup.
+
+After configuring the shared feature flags, run from the app root:
+
+```sh
+npx --no-install theoplayer-features-spm --sync
+```
+
+The command generates `ios/THEOplayerFeatures`, registers it with RN's SPM autolinking, and runs RN sync.
+Rerun it after changing features or updating the generator, then build in Xcode. Do not run `pod install` for this SPM setup.
+
+For tvOS, use `react-native-tvos`.
+`CHROMECAST` can remain selected: both the Cast integration and Google's SDK are iOS-only dependencies and are not linked or embedded on tvOS.
+SwiftPM can still resolve and download their packages.
+Advertising uses Google's iOS IMA SDK on iOS and its tvOS IMA SDK on tvOS.
+The React Native app's SPM setup must supply tvOS React binaries; the standard iOS React package is not a tvOS runtime.
+
+#### Pinning Native Dependency Versions
+
+Native version constraints are separate from feature selection and are declared in the wrapper's `Package.swift` and generated selector.
+To pin a native dependency, add an exact version requirement in a custom, app-owned Swift package participating in RN's dependency graph.
+The selected version must satisfy the wrapper's and other packages' dependency constraints.
+Do not edit the generated `ios/THEOplayerFeatures` package to pin versions: the generator overwrites it.
+SwiftPM combines all requirements and rejects conflicting pins. Commit the app-owned manifest and Xcode's `Package.resolved`.
+Broadening a requirement does not automatically upgrade compatible locked versions.
+
+#### Chromecast App Setup
+
+When selecting `CHROMECAST`, also follow the [Chromecast setup guide](./cast.md#setup)
+for iOS initialization, discovery permissions, Cast controls, and SPM dependency considerations.
+
+</details>
+
+Once the project has been set up, define a valid HLS, Millicast or THEOlive source, for example:
+
 ```typescript
 const source = {
   sources: [
@@ -185,15 +245,6 @@ const source = {
     },
   ],
 };
-```
-Some RN templates miss a specific Swift version setting for tvOS. To fix this add a custom build setting to your tvOS app target:
-```
-SWIFT_VERSION 5.0
-```
-
-Run pod install in your app's ios folder
-```bash
-pod install
 ```
 
 ## Getting started on Web
@@ -231,4 +282,3 @@ that builds a UI on top of the `THEOplayerView` component, `@theoplayer/react-na
 
 We refer to the [documentation](https://github.com/THEOplayer/react-native-theoplayer-ui) of
 `@theoplayer/react-native-ui` on how to install and use it.
-
