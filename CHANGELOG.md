@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Added the `PlayerEventType.VIEW_TAP` event, dispatched when the user taps or clicks the player view, so UIs can show or hide their controls while letting taps through to elements drawn by the player, such as THEOads overlays.
+
 ## [11.7.0] - 18-09-26
 
 ### Added
