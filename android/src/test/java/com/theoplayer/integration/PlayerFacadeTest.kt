@@ -2,6 +2,8 @@ package com.theoplayer.integration
 
 import com.theoplayer.android.api.ads.Ad
 import com.theoplayer.android.api.ads.AdBreak
+import com.theoplayer.android.api.ads.ClientSideAdIntegrationFactory
+import com.theoplayer.android.api.ads.ServerSideAdIntegrationFactory
 import com.theoplayer.android.api.event.EventListener
 import com.theoplayer.android.api.event.ads.*
 import com.theoplayer.android.api.event.player.*
@@ -231,6 +233,27 @@ class PlayerFacadeTest {
     ads.removeEventListener(AdsEventTypes.AD_BEGIN, listener)
     host.emitAd(adBegin)
     assertEquals(2, count)
+    facade.close()
+  }
+
+  @Test fun stableAdsRegistersAdIntegrationsOnDelegatedAds() {
+    val host = PlayerFacadeTestHost()
+    val integrated = PlayerFacadeTestHost()
+    val facade = PlayerFacade(host.player)
+    val ads = facade.ads
+    val clientSide = ClientSideAdIntegrationFactory { throw AssertionError("not built") }
+    val serverSide = ServerSideAdIntegrationFactory { throw AssertionError("not built") }
+    ads.registerClientSideIntegration("client", clientSide)
+    ads.registerServerSideIntegration("server", serverSide)
+    assertEquals(listOf("registerClientSideIntegration", "registerServerSideIntegration"), host.commands)
+    val registration = facade.registerIntegration(object : Integration {
+      override val ads = integrated.ads
+    })
+    ads.registerClientSideIntegration("client", clientSide)
+    ads.registerServerSideIntegration("server", serverSide)
+    assertEquals(listOf("registerClientSideIntegration", "registerServerSideIntegration"), integrated.commands)
+    assertEquals(2, host.commands.size)
+    registration.close()
     facade.close()
   }
 

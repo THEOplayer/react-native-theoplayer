@@ -4,6 +4,7 @@ import androidx.annotation.MainThread
 import com.theoplayer.android.api.ads.Ad
 import com.theoplayer.android.api.ads.AdBreak
 import com.theoplayer.android.api.ads.Ads
+import com.theoplayer.android.api.ads.ClientSideAdIntegrationFactory
 import com.theoplayer.android.api.ads.Omid
 import com.theoplayer.android.api.ads.ServerSideAdIntegrationFactory
 import com.theoplayer.android.api.ads.dai.GoogleDaiIntegration
@@ -64,6 +65,10 @@ class PlayerFacadeAds internal constructor(
   /** Registers [factory] for [integrationId] on the currently delegated Ads API. */
   override fun registerServerSideIntegration(integrationId: String, factory: ServerSideAdIntegrationFactory) =
     backing.registerServerSideIntegration(integrationId, factory)
+
+  /** Registers [factory] for [integrationId] on the currently delegated Ads API. */
+  override fun registerClientSideIntegration(integrationId: String, factory: ClientSideAdIntegrationFactory) =
+    backing.registerClientSideIntegration(integrationId, factory)
 
   /** Adds [listener] for [type], preserving the subscription across integration changes. Duplicate listeners are ignored. */
   override fun <T : AdEvent<*>> addEventListener(type: EventType<T>, listener: EventListener<in T>) = events.addEventListener(type, listener)
