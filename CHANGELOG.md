@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- Raised the minimum supported THEOplayer Android SDK version to 11.16.0.
+- Ad integrations registered through the player facade's Ads API on Android now always register on the player, also while a player integration supplies the Ads API.
 
 ## [11.9.0] - 13-11-26
 

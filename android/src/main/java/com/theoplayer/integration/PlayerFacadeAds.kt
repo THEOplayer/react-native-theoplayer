@@ -4,9 +4,7 @@ import androidx.annotation.MainThread
 import com.theoplayer.android.api.ads.Ad
 import com.theoplayer.android.api.ads.AdBreak
 import com.theoplayer.android.api.ads.Ads
-import com.theoplayer.android.api.ads.ClientSideAdIntegrationFactory
 import com.theoplayer.android.api.ads.Omid
-import com.theoplayer.android.api.ads.ServerSideAdIntegrationFactory
 import com.theoplayer.android.api.ads.dai.GoogleDaiIntegration
 import com.theoplayer.android.api.ads.dai.dai as sdkDai
 import com.theoplayer.android.api.ads.ima.GoogleImaIntegration
@@ -19,6 +17,8 @@ import com.theoplayer.android.api.source.addescription.AdDescription
 /**
  * Stable advertising API whose state, controls, and event source follow the current [Integration].
  * Advertising lifecycle is owned by the integration, never inferred from dispatched events.
+ * Members not overridden here, including ad integration registrations, delegate to the native Ads
+ * API, also while an integration supplies `ads`.
  *
  * Experimental API: subject to change or removal without notice.
  */
@@ -27,7 +27,7 @@ class PlayerFacadeAds internal constructor(
   private val nativeAds: Ads,
   private val integration: () -> Integration?,
   private val events: PlayerFacadeEvents<AdEvent<*>>,
-) : Ads {
+) : Ads by nativeAds {
   private val backing: Ads get() = integration()?.ads ?: nativeAds
 
   /** Native IMA integration, resolved on the raw Ads API rather than this facade. */
@@ -61,14 +61,6 @@ class PlayerFacadeAds internal constructor(
 
   /** Returns the Open Measurement API of the currently delegated Ads API. */
   override fun getOmid(): Omid = backing.omid
-
-  /** Registers [factory] for [integrationId] on the currently delegated Ads API. */
-  override fun registerServerSideIntegration(integrationId: String, factory: ServerSideAdIntegrationFactory) =
-    backing.registerServerSideIntegration(integrationId, factory)
-
-  /** Registers [factory] for [integrationId] on the currently delegated Ads API. */
-  override fun registerClientSideIntegration(integrationId: String, factory: ClientSideAdIntegrationFactory) =
-    backing.registerClientSideIntegration(integrationId, factory)
 
   /** Adds [listener] for [type], preserving the subscription across integration changes. Duplicate listeners are ignored. */
   override fun <T : AdEvent<*>> addEventListener(type: EventType<T>, listener: EventListener<in T>) = events.addEventListener(type, listener)
