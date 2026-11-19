@@ -160,6 +160,16 @@ test('web: releasing the primary pointer on the player container dispatches a vi
   );
 });
 
+test('native: the poster lets taps through to the player view', () => {
+  const { Poster } = load(path.join(root, 'poster/Poster.tsx'), {
+    react: createReact(),
+    'react-native': { StyleSheet: { absoluteFill: {} }, View: 'View', Image: 'Image' },
+  });
+  const poster = Poster({ uri: 'https://example.com/poster.jpg' });
+  assert.equal(poster.type, 'View');
+  assert.equal(poster.props.pointerEvents, 'none');
+});
+
 test('web: releasing a secondary mouse button does not dispatch a view tap event', () => {
   const { adapter, container } = setupWeb();
   container.props.onPointerUp?.({ button: 2 });
