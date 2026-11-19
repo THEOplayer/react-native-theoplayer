@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed THEOlive events not being forwarded correctly on React Native v0.88.0+.
 - Fixed an issue on Android where `preferredKeySystems` in the content protection configuration was ignored.
 - Fixed ad-break integration identifiers being forwarded incorrectly on iOS and tvOS.
+- Fixed an issue on Android where key system URNs in `preferredKeySystems` were ignored.
 
 ## [11.8.0] - 18-10-26
 
