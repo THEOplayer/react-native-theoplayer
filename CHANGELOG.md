@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Added support for registering client-side ad integrations through the player facade's Ads API on Android.
+
+### Changed
+
+- Ad integrations registered through the player facade's Ads API on Android now always register on the player, also while a player integration supplies the Ads API.
+
 ### Fixed
 
 - Fixed a memory leak on Android where a player destroyed during playback stayed in memory.

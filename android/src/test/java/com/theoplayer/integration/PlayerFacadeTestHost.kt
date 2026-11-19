@@ -38,7 +38,7 @@ internal class PlayerFacadeTestHost {
         null
       }
       "removeEventListener" -> remove(adListeners, args)
-      "skip", "schedule", "registerServerSideIntegration" -> { commands.add(method); null }
+      "skip", "schedule", "registerServerSideIntegration", "registerClientSideIntegration" -> { commands.add(method); null }
       else -> null
     }
   }
