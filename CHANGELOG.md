@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [11.10.0] - 19-11-26
+
+### Added
+
+- Added support for registering client-side ad integrations through the player facade's Ads API on Android.
+
+### Changed
+
+- Ad integrations registered through the player facade's Ads API on Android now always register on the player, also while a player integration supplies the Ads API.
+
+### Fixed
+
+- Fixed a memory leak on Android where a player destroyed during playback stayed in memory.
+
 ## [11.9.0] - 13-11-26
 
 ### Added
@@ -20,6 +34,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed THEOlive events not being forwarded correctly on React Native v0.88.0+.
 - Fixed an issue on Android where `preferredKeySystems` in the content protection configuration was ignored.
 - Fixed ad-break integration identifiers being forwarded incorrectly on iOS and tvOS.
+- Fixed an issue on Android where key system URNs in `preferredKeySystems` were ignored.
 
 ## [11.8.0] - 18-10-26
 
