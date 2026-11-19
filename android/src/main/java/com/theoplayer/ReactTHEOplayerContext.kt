@@ -492,6 +492,7 @@ class ReactTHEOplayerContext private constructor(
   fun destroy() {
     isDestroyed = true
     removeListeners()
+    audioBecomingNoisyManager.setEnabled(false)
 
     // The media session can be shared with other player contexts through the playback service.
     // Determine ownership before unbinding, as that clears the binder needed to check it.
