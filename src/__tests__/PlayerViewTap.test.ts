@@ -140,10 +140,10 @@ test('the player event type list includes a view tap event', () => {
   assert.equal(loadPlayerEventType().VIEW_TAP, 'viewtap');
 });
 
-test('native: releasing a touch on the player view dispatches a view tap event', () => {
+test('native: a native view tap event dispatches a view tap event', () => {
   const { adapter, nativeView } = setupNative();
-  assert.equal(typeof nativeView.props.onTouchEnd, 'function');
-  nativeView.props.onTouchEnd({ nativeEvent: {} });
+  assert.equal(typeof nativeView.props.onNativeViewTap, 'function');
+  nativeView.props.onNativeViewTap({ nativeEvent: {} });
   assert.deepEqual(
     adapter.dispatched.map((event) => event.type),
     ['viewtap'],
