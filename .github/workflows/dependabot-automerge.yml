@@ -1,0 +1,51 @@
+name: Dependabot auto-merge
+
+# pull_request_target runs in the base-repo context so the token has write
+# access; dependabot-triggered pull_request runs get a read-only token and
+# cannot merge. Safe here because no code from the PR is checked out or run.
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize, ready_for_review]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  automerge:
+    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Every updated dependency must be an npm dev or transitive dependency, or a
+      # GitHub Action, and the update must be a patch, or a minor from a known version
+      # >= 1.0.0 (a 0.x minor bump is breaking under semver). Majors, 0.x minors,
+      # published npm dependencies and Gradle updates require a human review.
+      - name: Check auto-merge policy
+        id: policy
+        env:
+          DEPS: ${{ steps.metadata.outputs.updated-dependencies-json }}
+        run: |
+          eligible=$(jq -r '
+            length > 0 and all(.[];
+              ((.packageEcosystem == "npm_and_yarn" and .dependencyType != "direct:production")
+                or .packageEcosystem == "github_actions")
+              and (.updateType == "version-update:semver-patch"
+                or (.updateType == "version-update:semver-minor"
+                  and .prevVersion != "" and (.prevVersion | ltrimstr("v") | startswith("0.") | not)))
+            )' <<< "$DEPS")
+          echo "eligible=$eligible" >> "$GITHUB_OUTPUT"
+          echo "Auto-merge eligible: $eligible"
+
+      # GitHub merges the PR once all required status checks are green.
+      - name: Enable auto-merge
+        if: steps.policy.outputs.eligible == 'true'
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}

@@ -25,7 +25,7 @@ import type { TheoAdsEvent } from '../event/TheoAdsEvent';
 import type { TheoLiveEvent } from '../event/TheoLiveEvent';
 
 /**
- * The event types dispatched by the {@link Player}.
+ * The event types dispatched by the {@link react-native-theoplayer!THEOplayer}.
  *
  * @category Player
  * @category Events

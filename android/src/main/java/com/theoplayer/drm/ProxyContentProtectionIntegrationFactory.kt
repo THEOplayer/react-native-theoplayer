@@ -12,6 +12,8 @@ class ProxyContentProtectionIntegrationFactory(
 ) : ContentProtectionIntegrationFactory {
 
   override fun build(config: DRMConfiguration): ContentProtectionIntegration {
-    return ProxyContentProtectionIntegration(integrationId, keySystemId, config, module)
+    return ProxyContentProtectionIntegration(integrationId, keySystemId, config, module).also {
+      module.trackIntegration(it)
+    }
   }
 }

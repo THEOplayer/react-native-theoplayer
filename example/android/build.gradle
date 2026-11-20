@@ -11,8 +11,7 @@ buildscript {
     targetSdkVersion = 36
     ndkVersion = "29.0.14033849"
     castFrameworkVersion = "22.0.0"
-    kotlinVersion = "2.2.10"
-    agpVersion = "8.13.0"
+    kotlinVersion = "2.4.21"
     rnrepoVersion = "0.2.2"
   }
   repositories {
@@ -21,7 +20,7 @@ buildscript {
     maven { url "https://packages.rnrepo.org/releases" }
   }
   dependencies {
-    classpath("com.android.tools.build:gradle:$agpVersion")
+    classpath("com.android.tools.build:gradle")
     classpath("com.facebook.react:react-native-gradle-plugin")
     classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
     classpath("org.rnrepo.tools:prebuilds-plugin:$rnrepoVersion")

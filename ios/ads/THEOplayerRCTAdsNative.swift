@@ -30,6 +30,8 @@ class NativeAd: THEOplayerSDK.Ad {
     var clickThrough: String? = nil
     /**The type of custom ad integration.*/
     var customIntegration: String? = nil
+    /** Additional integration-specific data associated with this ad.*/
+    var customData: [String: Any]? = nil
 
     init(adBreak: AdBreak, companions: [THEOplayerSDK.CompanionAd], type: String, id: String? = nil, skipOffset: Int? = nil, resourceURI: String? = nil, width: Int? = nil, height: Int? = nil, isSlate: Bool = false, integration: THEOplayerSDK.AdIntegrationKind, duration: Int? = 0, clickThrough: String?, customIntegration: String?) {
         self.adBreak = adBreak
@@ -134,6 +136,8 @@ class NativeAdBreak: THEOplayerSDK.AdBreak {
        - For other integrations, this may be `nil`.
     */
    var id: String? = nil
+    /** Additional integration-specific data associated with this ad break.*/
+    var customData: [String: Any]? = nil
 
     init(ads: [Ad], id: String? = nil, maxDuration: Int, maxRemainingDuration: Double, timeOffset: Int, integration: THEOplayerSDK.AdIntegrationKind, customIntegration: String? = nil) {
         self.ads = ads

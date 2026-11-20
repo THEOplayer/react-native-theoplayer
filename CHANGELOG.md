@@ -11,6 +11,53 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added the `PlayerEventType.VIEW_TAP` event, dispatched when the user taps or clicks the player view, so UIs can show or hide their controls while letting taps through to elements drawn by the player, such as THEOads overlays.
 
+## [11.10.0] - 19-11-26
+
+### Added
+
+- Added support for registering client-side ad integrations through the player facade's Ads API on Android.
+
+### Changed
+
+- Ad integrations registered through the player facade's Ads API on Android now always register on the player, also while a player integration supplies the Ads API.
+
+### Fixed
+
+- Fixed a memory leak on Android where a player destroyed during playback stayed in memory.
+
+## [11.9.0] - 13-11-26
+
+### Added
+
+- Added `THEOplayer.allowsExternalPlayback` to enable or disable AirPlay playback on iOS.
+- Added `abr` property to `TypedSource`, supporting `preferredVideoCodecs` and `preferredAudioCodecs` on Android and Web.
+- Added `contentprotectionerror` event bridging on iOS.
+- Added `customData` to `Ad` and `AdBreak`, including bidirectional event bridging on Android, iOS and tvOS.
+
+### Fixed
+
+- Fixed an issue on Web where player facade listeners, such as analytics connectors, did not receive the player's `destroy` event.
+- Fixed THEOlive events not being forwarded correctly on React Native v0.88.0+.
+- Fixed an issue on Android where `preferredKeySystems` in the content protection configuration was ignored.
+- Fixed ad-break integration identifiers being forwarded incorrectly on iOS and tvOS.
+- Fixed an issue on Android where key system URNs in `preferredKeySystems` were ignored.
+
+## [11.8.0] - 18-10-26
+
+### Added
+
+- Added the `src`, `srcType`, `provider` and `adSystem` properties to the THEOlive `endpoint` object of the `endpointloaded` event on all platforms.
+- Added the `webrtc` playout delay options to `millicastSrc` on Android.
+
+### Changed
+
+- Raised the minimum supported THEOplayer SDK version to 11.14.0 on all platforms.
+
+### Fixed
+
+- Fixed an issue where re-registering a content protection integration for the same key system kept the previously registered factory active, causing stale DRM integrations to be used for subsequent sources.
+- Fixed an issue on iOS and Android where certificate and license requests from multiple concurrently playing DRM-protected sources could be processed by the wrong content protection integration, or bypass it entirely, causing license acquisition to fail.
+
 ## [11.7.0] - 18-09-26
 
 ### Added
@@ -25,6 +72,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed an issue on Android where destroying the player during a pending `MediaPlaybackService` bind could cause a crash.
 - Fixed an issue on Android where the player could remain black when its view was attached after React Native had already assigned the layout.
 - Fixed an issue where `player.paused` remained `true` between the `play` and `playing` events.
+- Fixed an issue on Web and iOS Safari where cues already present when a text track was added, including daterange cues, did not produce `addcue` player events.
+- Fixed an issue where text and media track event listeners were not actually removed when a track was removed.
 
 ### Changed
 

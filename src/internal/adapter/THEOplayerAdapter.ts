@@ -503,6 +503,17 @@ export class THEOplayerAdapter extends DefaultEventDispatcher<PlayerEventMap> im
     }
   }
 
+  get allowsExternalPlayback(): boolean {
+    return this._state.allowsExternalPlayback;
+  }
+
+  set allowsExternalPlayback(enable: boolean) {
+    if (Platform.OS === 'ios') {
+      this._state.allowsExternalPlayback = enable;
+      NativePlayerModule.setAllowsExternalPlayback(this._view.nativeHandle, enable);
+    }
+  }
+
   get renderingTarget(): RenderingTarget {
     return this._state.renderingTarget;
   }

@@ -39,7 +39,7 @@ export interface Interstitial {
   /**
    * The ad tag parameters that are used for this specific ad break.
    * @remarks
-   * <br/> - The set values are combined and potentially override parameters set on the {@link TheoAdDescription.adTagParameters} or through {@link TheoAds.replaceAdTagParameters}.
+   * <br/> - The set values are combined and potentially override parameters set on the {@link TheoAdDescription.adTagParameters} or through {@link TheoAdsAPI.replaceAdTagParameters}.
    */
   adTagParameters: Record<string, string>;
 }

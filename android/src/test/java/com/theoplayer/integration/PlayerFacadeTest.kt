@@ -2,6 +2,7 @@ package com.theoplayer.integration
 
 import com.theoplayer.android.api.ads.Ad
 import com.theoplayer.android.api.ads.AdBreak
+import com.theoplayer.android.api.ads.ServerSideAdIntegrationFactory
 import com.theoplayer.android.api.event.EventListener
 import com.theoplayer.android.api.event.ads.*
 import com.theoplayer.android.api.event.player.*
@@ -231,6 +232,23 @@ class PlayerFacadeTest {
     ads.removeEventListener(AdsEventTypes.AD_BEGIN, listener)
     host.emitAd(adBegin)
     assertEquals(2, count)
+    facade.close()
+  }
+
+  @Test fun stableAdsRegistersAdIntegrationsOnNativeAds() {
+    val host = PlayerFacadeTestHost()
+    val integrated = PlayerFacadeTestHost()
+    val facade = PlayerFacade(host.player)
+    val factory = ServerSideAdIntegrationFactory { throw AssertionError("not built") }
+    facade.ads.registerServerSideIntegration("server", factory)
+    assertEquals(listOf("registerServerSideIntegration"), host.commands)
+    val registration = facade.registerIntegration(object : Integration {
+      override val ads = integrated.ads
+    })
+    facade.ads.registerServerSideIntegration("server", factory)
+    assertEquals(listOf("registerServerSideIntegration", "registerServerSideIntegration"), host.commands)
+    assertTrue(integrated.commands.isEmpty())
+    registration.close()
     facade.close()
   }
 

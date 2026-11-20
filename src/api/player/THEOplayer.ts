@@ -216,6 +216,18 @@ export interface THEOplayer extends EventDispatcher<PlayerEventMap> {
   manageContentMatching: boolean;
 
   /**
+   * Whether the player allows external playback through AirPlay.
+   *
+   * @defaultValue `true`
+   * @platform ios
+   *
+   * @remarks
+   * <br/> - Not supported for THEOlive sources.
+   * <br/> - On Android and Web, assignments are ignored and the getter returns `true`; this does not indicate AirPlay support.
+   */
+  allowsExternalPlayback: boolean;
+
+  /**
    * Specifies where the player is displaying the video.
    *
    * @defaultValue `SURFACE_VIEW`

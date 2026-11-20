@@ -43,31 +43,31 @@ Pod::Spec.new do |s|
 
   # THEOplayer Dependency
   puts "Adding THEOplayerSDK-core"
-  s.dependency "THEOplayerSDK-core", "~> 11.9"
+  s.dependency "THEOplayerSDK-core", "~> 11.14"
 
   # THEOlive Dependency
   puts "Adding THEOplayer-Integration-THEOlive"
-  s.dependency "THEOplayer-Integration-THEOlive", "~> 11.9"
+  s.dependency "THEOplayer-Integration-THEOlive", "~> 11.14"
 
   # Feature based integration dependencies
   if theofeatures.include?("GOOGLE_IMA")
 	puts "Adding THEOplayer-Integration-GoogleIMA"
-    s.dependency "THEOplayer-Integration-GoogleIMA", "~> 11.9"
+    s.dependency "THEOplayer-Integration-GoogleIMA", "~> 11.14"
   end
 
   if theofeatures.include?("CHROMECAST")
 	puts "Adding THEOplayer-Integration-GoogleCast"
-    s.ios.dependency "THEOplayer-Integration-GoogleCast", "~> 11.9"
+    s.ios.dependency "THEOplayer-Integration-GoogleCast", "~> 11.14"
   end
 
   if theofeatures.include?("THEO_ADS")
 	puts "Adding THEOplayer-Integration-THEOads"
-    s.dependency "THEOplayer-Integration-THEOads", "~> 11.9"
+    s.dependency "THEOplayer-Integration-THEOads", "~> 11.14"
   end
 
   if theofeatures.include?("MILLICAST")
   puts "Adding THEOplayer-Integration-Millicast"
-    s.dependency "THEOplayer-Integration-Millicast", "~> 11.9"
+    s.dependency "THEOplayer-Integration-Millicast", "~> 11.14"
   end
 
   # Feature based connector dependencies

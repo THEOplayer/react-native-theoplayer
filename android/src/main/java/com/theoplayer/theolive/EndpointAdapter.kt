@@ -5,14 +5,25 @@ import com.facebook.react.bridge.WritableMap
 import com.theoplayer.android.api.theolive.ContentProtectionConfiguration
 import com.theoplayer.android.api.theolive.Endpoint
 import com.theoplayer.android.api.theolive.EndpointMillicastSource
+import com.theoplayer.android.api.theolive.EndpointSource
 import com.theoplayer.android.api.theolive.FairPlayConfiguration
 import com.theoplayer.android.api.theolive.KeySystemConfiguration
+import com.theoplayer.android.api.theolive.PlayoutDelay
+import com.theoplayer.android.api.theolive.WebRTCOptions
 
+private const val PROP_SRC = "src"
+private const val PROP_SRC_TYPE = "srcType"
+private const val PROP_PROVIDER = "provider"
+private const val PROP_AD_SYSTEM = "adSystem"
 private const val PROP_MILLICAST_SRC = "millicastSrc"
 private const val PROP_MILLICAST_NAME = "name"
 private const val PROP_MILLICAST_ACCOUNTID = "accountId"
 private const val PROP_MILLICAST_SUBSCRIBER_TOKEN ="subscriberToken"
 private const val PROP_MILLICAST_DIRECTOR_URL = "directorUrl"
+private const val PROP_MILLICAST_WEBRTC = "webrtc"
+private const val PROP_PLAYOUT_DELAY_MS = "playoutDelayMs"
+private const val PROP_PLAYOUT_DELAY_MINIMUM = "minimum"
+private const val PROP_PLAYOUT_DELAY_MAXIMUM = "maximum"
 private const val PROP_HESP_SRC = "hespSrc"
 private const val PROP_HLS_SRC = "hlsSrc"
 private const val PROP_HLS_MPEG_TS_SRC = "hlsMpegTsSrc"
@@ -32,12 +43,26 @@ private const val PROP_CERTIFICATE_URL = "certificateUrl"
 
 object EndpointAdapter {
 
+  private fun fromPlayoutDelay(playoutDelay: PlayoutDelay): WritableMap {
+    return Arguments.createMap().apply {
+      putInt(PROP_PLAYOUT_DELAY_MINIMUM, playoutDelay.minimum)
+      putInt(PROP_PLAYOUT_DELAY_MAXIMUM, playoutDelay.maximum)
+    }
+  }
+
+  private fun fromWebrtcOptions(webrtc: WebRTCOptions): WritableMap {
+    return Arguments.createMap().apply {
+      webrtc.playoutDelayMs?.let { putMap(PROP_PLAYOUT_DELAY_MS, fromPlayoutDelay(it)) }
+    }
+  }
+
   fun fromEndPointMillicastSource(millicastSource: EndpointMillicastSource): WritableMap {
     return Arguments.createMap().apply {
       putString(PROP_MILLICAST_NAME , millicastSource.name)
       putString(PROP_MILLICAST_ACCOUNTID, millicastSource.accountId)
       millicastSource.directorUrl?.let { putString(PROP_MILLICAST_DIRECTOR_URL, it) }
       millicastSource.subscriberToken?.let { putString(PROP_MILLICAST_SUBSCRIBER_TOKEN, it) }
+      millicastSource.webrtc?.let { putMap(PROP_MILLICAST_WEBRTC, fromWebrtcOptions(it)) }
     }
   }
 
@@ -50,12 +75,20 @@ object EndpointAdapter {
       endPoint.adSrc?.let { putString(PROP_AD_SRC, it) }
       endPoint.daiAssetKey?.let { putString(PROP_DAI_ASSET_KEY, it) }
       endPoint.cdn?.let { putString(PROP_CDN, it) }
+      endPoint.provider?.let { putString(PROP_PROVIDER, it) }
+      endPoint.adSystem?.let { putString(PROP_AD_SYSTEM, it) }
       endPoint.targetLatency?.let { putDouble(PROP_TARGET_LATENCY, it) }
       putInt(PROP_WEIGHT, endPoint.weight)
       putInt(PROP_PRIORITY, endPoint.priority)
       endPoint.contentProtection?.let {
         putMap(PROP_CONTENT_PROTECTION, fromContentProtection(it))
       }
+      when (val src = endPoint.src) {
+        is EndpointSource.Url -> putString(PROP_SRC, src.value)
+        is EndpointSource.Millicast -> putMap(PROP_SRC, fromEndPointMillicastSource(src.source))
+        null -> Unit
+      }
+      endPoint.srcType?.let { putString(PROP_SRC_TYPE, it) }
     }
   }
 

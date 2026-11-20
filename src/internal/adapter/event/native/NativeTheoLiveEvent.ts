@@ -38,7 +38,7 @@ export interface NativeTheoLiveEvent {
 
 export function fromNativeTheoLiveEvent(event: NativeSyntheticEvent<NativeTheoLiveEvent>): TheoLiveEvent {
   const { nativeEvent } = event;
-  switch (event.type) {
+  switch (nativeEvent.type) {
     case TheoLiveEventType.DISTRIBUTION_LOAD_START:
       return new DefaultTheoLiveDistributionEvent(TheoLiveEventType.DISTRIBUTION_LOAD_START, nativeEvent.distributionId ?? '');
     case TheoLiveEventType.DISTRIBUTION_LOADED:
@@ -50,6 +50,6 @@ export function fromNativeTheoLiveEvent(event: NativeSyntheticEvent<NativeTheoLi
     case TheoLiveEventType.INTENT_TO_FALLBACK:
       return new DefaultTheoLiveIntentToFallbackEvent(TheoLiveEventType.INTENT_TO_FALLBACK, nativeEvent.reason);
     default:
-      return new DefaultTheoLiveEvent(event.type as TheoLiveEventType);
+      return new DefaultTheoLiveEvent(nativeEvent.type);
   }
 }

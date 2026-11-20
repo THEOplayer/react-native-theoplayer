@@ -21,22 +21,27 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
     private weak var contentProtectionAPI: THEOplayerRCTContentProtectionAPI?
     private var integrationId: String!
     private var keySystemId: String!
+    private var integrationInstanceId: String = UUID().uuidString
     private var drmConfig: THEOplayerSDK.DRMConfiguration
     private var certificateResponseFinal = false
     private var licenseResponseFinal = false
-    
+
     init(contentProtectionAPI: THEOplayerRCTContentProtectionAPI?, integrationId: String, keySystemId: String, drmConfig: THEOplayerSDK.DRMConfiguration) {
         self.contentProtectionAPI = contentProtectionAPI
         self.integrationId = integrationId
         self.keySystemId = keySystemId
         self.drmConfig = drmConfig
-        self.contentProtectionAPI?.handleBuildIntegration(integrationId: integrationId, keySystemId: keySystemId, drmConfig: drmConfig, completion: { success in
+        self.contentProtectionAPI?.handleBuildIntegration(integrationId: integrationId, keySystemId: keySystemId, integrationInstanceId: self.integrationInstanceId, drmConfig: drmConfig, completion: { success in
             if success {
                 print(PROXY_INTEGRATION_TAG, "Successfully created a THEOplayer ContentProtectionIntegration for \(integrationId) - \(keySystemId)")
             } else {
                 print(PROXY_INTEGRATION_TAG, "WARNING: Failed to create a THEOplayer ContentProtectionIntegration for \(integrationId) - \(keySystemId)")
             }
         })
+    }
+
+    deinit {
+        self.contentProtectionAPI?.handleIntegrationDisposed(integrationId: self.integrationId, keySystemId: self.keySystemId, integrationInstanceId: self.integrationInstanceId)
     }
     
     func onCertificateRequest(request: CertificateRequest, callback: CertificateRequestCallback) {
@@ -45,7 +50,7 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
         let processedLocally = self.handleCertificateRequestLocally(drmConfig: drmConfig, callback: callback)
         if !processedLocally {
             if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "Handling certificate request through content protection integration.") }
-            self.contentProtectionAPI?.handleCertificateRequest(integrationId: self.integrationId, keySystemId: self.keySystemId, certificateRequest: request) { certificateData, error in
+            self.contentProtectionAPI?.handleCertificateRequest(integrationId: self.integrationId, keySystemId: self.keySystemId, integrationInstanceId: self.integrationInstanceId, certificateRequest: request) { certificateData, error in
                 if let error = error {
                     callback.error(error: error)
                     return
@@ -67,7 +72,7 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
             callback.respond(certificate: response.body)
         } else {
             if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "Certificate response was not final, processing...") }
-            self.contentProtectionAPI?.handleCertificateResponse(integrationId: self.integrationId, keySystemId: self.keySystemId, certificateResponse: response) { certificateData, error in
+            self.contentProtectionAPI?.handleCertificateResponse(integrationId: self.integrationId, keySystemId: self.keySystemId, integrationInstanceId: self.integrationInstanceId, certificateResponse: response) { certificateData, error in
                 if let error = error {
                     callback.error(error: error)
                     return
@@ -85,7 +90,7 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
     func onLicenseRequest(request: LicenseRequest, callback: LicenseRequestCallback) {
         if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "THEOplayer triggered an onLicenseRequest") }
         self.licenseResponseFinal = false
-        self.contentProtectionAPI?.handleLicenseRequest(integrationId: self.integrationId, keySystemId: self.keySystemId, licenseRequest: request) { licenseData, error in
+        self.contentProtectionAPI?.handleLicenseRequest(integrationId: self.integrationId, keySystemId: self.keySystemId, integrationInstanceId: self.integrationInstanceId, licenseRequest: request) { licenseData, error in
             if let error = error {
                 callback.error(error: error)
                 return
@@ -106,7 +111,7 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
             callback.respond(license: response.body)
         } else {
             if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "License response was not final, processing...") }
-            self.contentProtectionAPI?.handleLicenseResponse(integrationId: self.integrationId, keySystemId: self.keySystemId, licenseResponse: response) { licenseData, error in
+            self.contentProtectionAPI?.handleLicenseResponse(integrationId: self.integrationId, keySystemId: self.keySystemId, integrationInstanceId: self.integrationInstanceId, licenseResponse: response) { licenseData, error in
                 if let error = error {
                     callback.error(error: error)
                     return
@@ -123,7 +128,7 @@ class THEOplayerRCTProxyContentProtectionIntegration: THEOplayerSDK.ContentProte
     
     func onExtractFairplayContentId(skdUrl: String, callback: ExtractContentIdCallback) {
         if DEBUG_CONTENT_PROTECTION_API { print(PROXY_INTEGRATION_TAG, "THEOplayer triggered an extractFairplayContentId") }
-        self.contentProtectionAPI?.handleExtractFairplayContentId(integrationId: self.integrationId, keySystemId: self.keySystemId, skdUrl: skdUrl) { contentId, error in
+        self.contentProtectionAPI?.handleExtractFairplayContentId(integrationId: self.integrationId, keySystemId: self.keySystemId, integrationInstanceId: self.integrationInstanceId, skdUrl: skdUrl) { contentId, error in
             if let error = error {
                 print(PROXY_INTEGRATION_TAG, "We encountered an issue while extracting the fairplay contentId: \(error.localizedDescription)")
                 callback.error(error: error)

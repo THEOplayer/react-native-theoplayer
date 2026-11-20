@@ -3,18 +3,32 @@ on:
   workflow_dispatch:
   pull_request:
     types: [opened, reopened, synchronize, ready_for_review]
-    paths:
-      - .github/workflows/pr_web.yml
-      - example/**
-      - e2e/**
-      - '!e2e/ios/**'
-      - '!e2e/android/**'
-      - package.json
-      - src/**
 
 jobs:
+  # Always register a check on every PR so it can be a required status check;
+  # the real jobs below are skipped when no relevant files changed.
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      web: ${{ steps.filter.outputs.web }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            web:
+              - '.github/workflows/pr_web.yml'
+              - 'example/**'
+              - 'e2e/**'
+              - '!e2e/ios/**'
+              - '!e2e/android/**'
+              - 'package.json'
+              - 'src/**'
+
   build:
-    if: github.event.pull_request.draft == false
+    needs: changes
+    if: needs.changes.outputs.web == 'true' && github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -41,7 +55,8 @@ jobs:
           retention-days: 3
 
   e2e:
-    if: github.event.pull_request.draft == false
+    needs: changes
+    if: needs.changes.outputs.web == 'true' && github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
