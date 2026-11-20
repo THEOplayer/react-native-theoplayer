@@ -10,6 +10,11 @@ Using the THEOplayer Millicast integration, you can play your Millicast streams 
    The Millicast integration is available in the main [react-native-theoplayer](https://www.npmjs.com/package/react-native-theoplayer) package on npm.
 2. Add a Millicast source to your player's source.
 
+On iOS/tvOS, also enable the native integration: use `MILLICAST` in the CocoaPods
+feature JSON, or select the `Millicast` trait in Xcode for experimental SPM.
+Follow the [Apple native dependency setup](./creating-minimal-app.md#getting-started-on-ios-and-tvos);
+the SPM flow uses a direct package reference, not JSON-driven feature selection.
+
 ### Add a Millicast source
 
 After setting up THEOplayer in your app, set its source to a `SourceDescription` containing a `MillicastSource`.

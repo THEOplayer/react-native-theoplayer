@@ -2,11 +2,11 @@
 import PackageDescription
 
 let package = Package(
-    name: "ReactNativeTHEOplayer",
+    name: "react-native-theoplayer",
     platforms: [.iOS("16.0"), .tvOS("15.1")],
 	products: [
 	    .library(
-	        name: "ReactNativeTHEOplayer",
+	        name: "react-native-theoplayer",
 	        targets: [
 	            "ReactNativeTHEOplayer",
 	            "ReactNativeTHEOplayerBridge"
@@ -68,7 +68,7 @@ let package = Package(
 		),
 		.package(
 		    name: "ReactNative",
-		    path: "../../../../xcframeworks"
+		    path: "../../ios/build/xcframeworks"
 		),
 	],
 	targets: [

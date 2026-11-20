@@ -68,18 +68,20 @@ public void onCreate(Bundle savedInstanceState) {
 <details>
 <summary>iOS</summary>
 
-#### Add feature flag to config
+#### CocoaPods Dependencies
 
-To enable Chromecast, add the `CHROMECAST` [feature flag](./creating-minimal-app.md#getting-started-on-ios-and-tvos) to `react-native-theoplayer.json`.
-The CocoaPods setup also supports `theoplayer-config.json` as an alternative filename.
+With CocoaPods, add the `CHROMECAST` [feature flag](./creating-minimal-app.md#getting-started-on-ios-and-tvos)
+to `react-native-theoplayer.json` (or `theoplayer-config.json`).
 
 #### SPM Dependencies
 
 For the experimental SPM setup, follow the [iOS/tvOS setup instructions](./creating-minimal-app.md#getting-started-on-ios-and-tvos)
-to generate and sync the selected features.
-`CHROMECAST` adds the THEOplayer Google Cast integration and Google's official `GoogleCastDynamic` SDK on iOS.
+to disable THEOplayer autolinking and add its installed package to the app target in Xcode.
+Then select the `GoogleCast` trait on the `react-native-theoplayer` package entry.
+It adds the THEOplayer Google Cast integration and Google's official `GoogleCastDynamic` SDK on iOS;
+do not add those packages separately or use JSON to select SPM features.
 The dynamic framework includes the Cast UI resources; do not add `GoogleCastStatic` or a second Google Cast framework through CocoaPods.
-Both Cast dependencies are excluded from tvOS builds, even when the shared feature configuration includes `CHROMECAST`.
+Both Cast dependencies are excluded from tvOS builds, even when the `GoogleCast` trait is selected.
 
 #### iOS Configuration
 

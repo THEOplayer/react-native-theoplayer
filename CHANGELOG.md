@@ -9,11 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Added experimental iOS Swift Package Manager support for React Native 0.88 on iOS 16 or later, including THEOlive and optional Google IMA, THEOads, Millicast, sideloaded subtitles, and Chromecast configured through `theoplayer-features-spm`.
-
-### Fixed
-
-- Fixed experimental Swift Package Manager dependency selection to exclude Google Cast on tvOS and use the tvOS IMA SDK for advertising.
+- Added experimental Swift Package Manager support on iOS and tvOS, with optional native integrations selected through Xcode package traits.
 
 ## [11.10.0] - 19-11-26
 

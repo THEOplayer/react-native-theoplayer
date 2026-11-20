@@ -5,7 +5,7 @@ sidebar_position: 1
 # Creating a minimal demo app
 
 In this section we start from an empty React Native template, include a dependency to `react-native-theoplayer`,
-and deploy it on an Android or iOS device.
+and deploy it on an Android, iOS, or tvOS device.
 
 A user interface is added using the `@theoplayer/react-native-ui` package.
 
@@ -149,8 +149,17 @@ React Native component updates and could affect performance in negative way.
 
 ## Getting started on iOS and tvOS
 
+Choose one dependency manager for THEOplayer's native dependencies below.
+Both include core playback and THEOlive; optional integrations are selected differently:
+CocoaPods reads feature flags from JSON, while SPM uses Xcode package traits.
+If your app already uses CocoaPods and you want to switch to SPM, follow the
+[CocoaPods to SPM migration guide](./migrating-from-cocoapods-to-spm.md).
+
+<details>
+<summary>CocoaPods</summary>
+
 Create `react-native-theoplayer.json` in the app root, alongside `package.json`, to select optional THEOplayer integrations.
-The feature flags are shared by the CocoaPods and SPM setups. Use the same `ios.features` array for iOS and tvOS.
+Use the same `ios.features` array for iOS and tvOS.
 Leave out features your app does not need to reduce its size, or leave the array empty for basic functionality.
 THEOlive is always included.
 
@@ -173,11 +182,6 @@ THEOlive is always included.
 - **THEO_ADS**: enables THEOads Server-Guided Ad Insertion (SGAI).
 - **MILLICAST**: enables Millicast playback.
 - **SIDELOADED_TEXTTRACKS**: enables sideloaded text tracks.
-
-After selecting features, follow one of the setup methods below for THEOplayer's native dependencies.
-
-<details>
-<summary>CocoaPods</summary>
 
 The CocoaPods setup reads the feature configuration and adds the corresponding native dependencies during `pod install`.
 It also supports `theoplayer-config.json` as an alternative filename.
@@ -206,39 +210,94 @@ pod install
 <details>
 <summary>SPM (experimental)</summary>
 
-This setup requires an app already configured for React Native 0.88's experimental SPM support and Swift tools 6.1 or later.
+#### Prerequisites
+
+This setup requires an app already configured for React Native 0.88's experimental SPM support,
+Swift tools 6.1 or later, and an Xcode version that exposes package trait selection.
 The minimum deployment targets are iOS 16 and tvOS 15.1.
 Set the app's Xcode deployment target before running SPM sync so RN's generated packages use a compatible minimum.
-It does not migrate an app from CocoaPods.
-The SPM generator requires `react-native-theoplayer.json`; the alternative `theoplayer-config.json` is only supported by the CocoaPods setup.
+For Apple TV, use `react-native-tvos` and matching tvOS React binaries, not the standard iOS React binary.
+These steps do not migrate an app from CocoaPods; use the [migration guide](./migrating-from-cocoapods-to-spm.md) for that.
 
-After configuring the shared feature flags, run from the app root:
+The current manifest assumes a normal installation in `<app>/node_modules/react-native-theoplayer`
+and RN's generated React package at `<app>/ios/build/xcframeworks`.
+Linked checkouts, hoisted dependencies, and custom native directory layouts are not validated by these instructions.
 
-```sh
-npx --no-install theoplayer-features-spm --sync
+#### 1. Disable THEOplayer Autolinking
+
+Merge the following into the app's `react-native.config.js`, preserving any other dependencies and project settings:
+
+```js
+module.exports = {
+  dependencies: {
+    'react-native-theoplayer': {
+      platforms: {
+        ios: null,
+      },
+    },
+  },
+};
 ```
 
-The command generates `ios/THEOplayerFeatures`, registers it with RN's SPM autolinking, and runs RN sync.
-Rerun it after changing features or updating the generator, then build in Xcode. Do not run `pod install` for this SPM setup.
+Use this `ios` opt-out for both iOS and tvOS apps. It disables autolinking only for this library;
+RN still manages React, code generation, and other autolinked libraries.
+Keep it in the SPM app's configuration, not in shared library configuration that also serves CocoaPods apps.
 
-For tvOS, use `react-native-tvos`.
-`CHROMECAST` can remain selected: both the Cast integration and Google's SDK are iOS-only dependencies and are not linked or embedded on tvOS.
-SwiftPM can still resolve and download their packages.
+Refresh RN's generated packages from the app root:
+
+```sh
+npx --no-install react-native spm sync
+```
+
+#### 2. Add the Installed Package in Xcode
+
+1. Open the `.xcodeproj` configured by RN's SPM tooling.
+2. Select the project, then **Package Dependencies > + > Add Local**.
+3. Select `<app>/node_modules/react-native-theoplayer`, not RN's generated autolinking alias.
+4. Add the **react-native-theoplayer** library product to your **app target**. Do not choose **None**:
+   Xcode now handles linking this library instead of RN autolinking.
+
+With the usual `ios/` project location, Xcode stores the package location as `../node_modules/react-native-theoplayer`.
+The package's Swift and Objective-C targets are included by its library product; do not add their source files manually.
+
+#### 3. Select Traits and Build
+
+Select optional integrations in the **Traits** dropdown of the `react-native-theoplayer` package entry:
+
+| Trait | Optional native feature |
+| --- | --- |
+| `GoogleIMA` | Google IMA advertising |
+| `THEOads` | THEOads Server-Guided Ad Insertion |
+| `Millicast` | Millicast playback |
+| `SideloadedTextTracks` | Sideloaded subtitle connector |
+| `GoogleCast` | Chromecast on iOS |
+
+Leave optional traits unselected for core + THEOlive only. Use the same manual package setup even in that case.
+`GoogleIMA` and `THEOads` automatically enable the shared `GoogleIMASDK` trait; there is no need to select it separately.
+SwiftPM resolves the required integration, connector, and vendor packages automatically. Do not add them individually.
+Packages appearing in Xcode's resolved-package overview do not imply that all their products are linked into the app.
+
+`GoogleCast` can remain selected for tvOS: both Cast dependencies are excluded from tvOS builds.
 Advertising uses Google's iOS IMA SDK on iOS and its tvOS IMA SDK on tvOS.
-The React Native app's SPM setup must supply tvOS React binaries; the standard iOS React package is not a tvOS runtime.
 
-#### Pinning Native Dependency Versions
+Allow package resolution to finish, then build and run in Xcode.
+Feature changes require a native rebuild; reloading JavaScript is not enough.
+After updating the npm package, keep the existing Xcode reference and resolve packages again.
+Do not edit installed manifests, RN-generated packages, or re-add the library through autolinking.
 
-Native version constraints are separate from feature selection and are declared in the wrapper's `Package.swift` and generated selector.
-To pin a native dependency, add an exact version requirement in a custom, app-owned Swift package participating in RN's dependency graph.
-The selected version must satisfy the wrapper's and other packages' dependency constraints.
-Do not edit the generated `ios/THEOplayerFeatures` package to pin versions: the generator overwrites it.
-SwiftPM combines all requirements and rejects conflicting pins. Commit the app-owned manifest and Xcode's `Package.resolved`.
-Broadening a requirement does not automatically upgrade compatible locked versions.
+This single manual-reference flow is a workaround until React Native supports selecting package traits through autolinking.
+SPM does not read `react-native-theoplayer.json` or `theoplayer-config.json`, and no THEOplayer-specific generator or
+`THEOplayerFeatures` package is needed. Do not run `pod install` for a fully SPM-managed app.
+
+#### Native Dependency Versions
+
+Version requirements are declared in the installed package's `Package.swift`; Xcode's `Package.resolved` records the selected versions.
+For optional app-owned version constraints, see [pinning integration or connector versions](./migrating-from-cocoapods-to-spm.md#5-pinning-integration-or-connector-versions).
+Do not edit the manifest under `node_modules` to pin versions.
 
 #### Chromecast App Setup
 
-When selecting `CHROMECAST`, also follow the [Chromecast setup guide](./cast.md#setup)
+When selecting `GoogleCast`, also follow the [Chromecast setup guide](./cast.md#setup)
 for iOS initialization, discovery permissions, Cast controls, and SPM dependency considerations.
 
 </details>

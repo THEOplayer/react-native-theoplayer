@@ -38,7 +38,7 @@ a list of features and known limitations.
 For each platform, a dependency to the corresponding THEOplayer SDK is included through a dependency manager:
 
 - Gradle & Maven for Android
-- CocoaPods for iOS, or experimental Swift Package Manager support as described below
+- CocoaPods for iOS/tvOS, or experimental Swift Package Manager support as described below
 - npm for Web
 
 In order to use one of these THEOplayer SDKs, it is necessary to obtain a valid THEOplayer license for that specific platform,
@@ -50,8 +50,14 @@ If you have no previous experience in React Native, we encourage you to first ex
 ### Experimental iOS/tvOS Swift Package Manager Support
 
 Experimental SPM support is available for iOS and tvOS.
+Disable iOS autolinking for `react-native-theoplayer` in the app, add the installed package
+to the app target through Xcode's **Add Local** flow, and select optional integrations through its **Traits** dropdown.
+Use this same setup for core + THEOlive without optional integrations.
+This manual package setup is a workaround until React Native supports selecting traits through autolinking;
+it does not require a feature JSON file or THEOplayer-specific generator.
 See the [iOS/tvOS setup guide](doc/creating-minimal-app.md#getting-started-on-ios-and-tvos) and open the **SPM (experimental)** section
-for prerequisites, feature selection, native dependency versions, and Chromecast configuration.
+for prerequisites, package setup, traits, and Chromecast configuration.
+For an existing CocoaPods app, follow the [CocoaPods to SPM migration guide](./doc/migrating-from-cocoapods-to-spm.md).
 
 ## How to use these guides
 
@@ -195,6 +201,7 @@ This section gives an overview of features, limitations and known issues:
 - [Media Control](./doc/mediacontrol.md)
 - [Media Caching](./doc/media-caching.md)
 - [Metrics](./doc/metrics.md)
+- [Migrating from CocoaPods to SPM (experimental)](./doc/migrating-from-cocoapods-to-spm.md)
 - [Migrating to THEOplayer 9.x](./doc/migrating-to-react-native-theoplayer-9.md)
 - [Migrating to THEOplayer 10.x🔥](./doc/migrating-to-react-native-theoplayer-10.md)
 - [Millicast](./doc/millicast.md)
