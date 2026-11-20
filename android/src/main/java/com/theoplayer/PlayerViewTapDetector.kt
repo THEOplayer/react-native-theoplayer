@@ -11,7 +11,7 @@ import kotlin.math.abs
  *
  * @param touchSlop the maximum distance, in pixels, a pointer may move while still counting as a tap.
  */
-class PlayerViewTapDetector(private val touchSlop: Float) {
+internal class PlayerViewTapDetector(private val touchSlop: Float) {
   private var tapCandidate = false
   private var downX = 0f
   private var downY = 0f
