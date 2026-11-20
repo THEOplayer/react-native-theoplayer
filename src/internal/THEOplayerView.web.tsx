@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import type { THEOplayerViewProps } from 'react-native-theoplayer';
+import { PlayerEventType } from 'react-native-theoplayer';
 import { ChromelessPlayer } from 'theoplayer';
 import { THEOplayerWebAdapter } from './adapter/THEOplayerWebAdapter';
+import { BaseEvent } from './adapter/event/BaseEvent';
 import { useIsAttached } from './hooks/useIsAttached';
 
 export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProps>) {
@@ -55,6 +57,12 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [container, attachedToDocument]);
 
+  const onPointerUp = (event: React.PointerEvent) => {
+    if (event.button === 0) {
+      adapter.current?.dispatchEvent(new BaseEvent(PlayerEventType.VIEW_TAP));
+    }
+  };
+
   return (
     // Note: `display: contents` causes an element's children to appear as if they were direct children of the element's parent,
     // ignoring the element itself.
@@ -64,10 +72,10 @@ export function THEOplayerView(props: React.PropsWithChildren<THEOplayerViewProp
         // Handle aspect-ratio 16/9 with padding-top: 56.25% to support older versions.
         // {@link https://www.w3schools.com/howto/howto_css_aspect_ratio.asp}
         <div style={styles.containerNoAspectRatio}>
-          <div ref={container} style={styles.absoluteFillNoAspectRatio} className="theoplayer-container" />
+          <div ref={container} style={styles.absoluteFillNoAspectRatio} className="theoplayer-container" onPointerUp={onPointerUp} />
         </div>
       ) : (
-        <div ref={container} style={styles.container} className="theoplayer-container" />
+        <div ref={container} style={styles.container} className="theoplayer-container" onPointerUp={onPointerUp} />
       )}
       {children}
     </div>

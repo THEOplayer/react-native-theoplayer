@@ -14,7 +14,7 @@ export const Poster = (props: PosterProps) => {
     return <></>;
   }
   return (
-    <View style={[StyleSheet.absoluteFill, { justifyContent: 'center' }]}>
+    <View style={[StyleSheet.absoluteFill, { justifyContent: 'center' }]} pointerEvents={'none'}>
       <Image style={[{ aspectRatio: 16 / 9 }, props.style]} source={{ uri }} />
     </View>
   );

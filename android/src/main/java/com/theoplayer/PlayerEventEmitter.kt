@@ -89,6 +89,7 @@ private const val EVENT_CONTENTPROTECTIONERROR = "onNativeContentProtectionError
 private const val EVENT_CONTENTPROTECTIONSUCCESS = "onNativeContentProtectionSuccess"
 private const val EVENT_DIMENSIONCHANGE = "onNativeDimensionChange"
 private const val EVENT_VIDEORESIZE = "onNativeVideoResize"
+private const val EVENT_VIEWTAP = "onNativeViewTap"
 
 private const val EVENT_PROP_TYPE = "type"
 private const val EVENT_PROP_STATE = "state"
@@ -137,7 +138,8 @@ class PlayerEventEmitter internal constructor(
     EVENT_CONTENTPROTECTIONERROR,
     EVENT_CONTENTPROTECTIONSUCCESS,
     EVENT_DIMENSIONCHANGE,
-    EVENT_VIDEORESIZE
+    EVENT_VIDEORESIZE,
+    EVENT_VIEWTAP
   )
   annotation class VideoEvents
 
@@ -178,7 +180,8 @@ class PlayerEventEmitter internal constructor(
       EVENT_CONTENTPROTECTIONERROR,
       EVENT_CONTENTPROTECTIONSUCCESS,
       EVENT_DIMENSIONCHANGE,
-      EVENT_VIDEORESIZE
+      EVENT_VIDEORESIZE,
+      EVENT_VIEWTAP
     )
   }
 
@@ -307,6 +310,13 @@ class PlayerEventEmitter internal constructor(
       EVENT_PRESENTATIONMODECHANGE,
       PayloadBuilder().presentationMode(presentationMode, prevPresentationMode, context).build()
     )
+  }
+
+  /**
+   * Notifies JS that the user tapped the player view, including taps that an element drawn by the player handled.
+   */
+  fun emitViewTap() {
+    receiveEvent(EVENT_VIEWTAP, null)
   }
 
   fun preparePlayer(player: Player) {

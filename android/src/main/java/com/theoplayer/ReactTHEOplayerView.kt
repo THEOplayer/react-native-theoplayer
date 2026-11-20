@@ -2,7 +2,9 @@ package com.theoplayer
 
 import android.annotation.SuppressLint
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
+import android.view.ViewConfiguration
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.annotation.MainThread
@@ -35,6 +37,7 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
   var isInitialized: Boolean = false
     private set
   private var config: PlayerConfigAdapter? = null
+  private val tapDetector = PlayerViewTapDetector(ViewConfiguration.get(reactContext).scaledTouchSlop.toFloat())
 
   /** Native source-specific Ads adapter and event sink. Use [player]'s Ads API for integration-owned state. */
   val adsApi: AdsApiWrapper
@@ -130,6 +133,19 @@ class ReactTHEOplayerView(private val reactContext: ThemedReactContext) :
       View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY)
     )
     playerView.layout(0, 0, width, height)
+  }
+
+  /**
+   * Lets children, such as THEOads overlays, handle the touch first, and reports taps on the player view to JS.
+   * React Native does not deliver JS touch events for touches on this native view. Claims `ACTION_DOWN` when no
+   * child does, so the matching `ACTION_UP` is delivered here as well.
+   */
+  override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+    val handled = super.dispatchTouchEvent(event)
+    if (tapDetector.onTouchEvent(event.actionMasked, event.x, event.y)) {
+      eventEmitter.emitViewTap()
+    }
+    return handled || event.actionMasked == MotionEvent.ACTION_DOWN
   }
 
   override fun setId(id: Int) {

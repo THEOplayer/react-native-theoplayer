@@ -124,6 +124,7 @@ interface THEOplayerRCTViewProps {
   onNativeContentProtectionSuccess: (event: NativeSyntheticEvent<NativeContentProtectionSuccessEvent>) => void;
   onNativeDimensionChange: (event: NativeSyntheticEvent<NativeDimensionChangeEvent>) => void;
   onNativeVideoResize: (event: NativeSyntheticEvent<NativeVideoResizeEvent>) => void;
+  onNativeViewTap: () => void;
 }
 
 interface THEOplayerRCTViewState {
@@ -440,6 +441,10 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
     this._facade?.dispatchEvent(new DefaultVideoResizeEvent(event.nativeEvent.videoWidth, event.nativeEvent.videoHeight));
   };
 
+  private _onViewTap = () => {
+    this._facade?.dispatchEvent(new BaseEvent(PlayerEventType.VIEW_TAP));
+  };
+
   private _updatePoster = () => {
     this.setState({ poster: this._facade?.source?.poster });
   };
@@ -521,6 +526,7 @@ export class THEOplayerView extends PureComponent<React.PropsWithChildren<THEOpl
           onNativeContentProtectionSuccess={this._onContentProtectionSuccess}
           onNativeDimensionChange={this._onDimensionChange}
           onNativeVideoResize={this._onVideoResize}
+          onNativeViewTap={this._onViewTap}
         />
         {posterActive && <Poster uri={poster} style={posterStyle} />}
         {children}
