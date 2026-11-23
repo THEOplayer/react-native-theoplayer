@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Fixed an issue on Android where `preferredKeySystems` in the content protection configuration was ignored.
-- Fixed an issue on Web where `MediaSession.setPositionState` threw while casting because the player reports a zero `playbackRate`.
+- Fixed an issue on Web where `MediaSession.setPositionState` threw while casting because the player reports a zero `playbackRate`. The position state now falls back to a 1x rate so duration and position keep updating during the cast.
 
 ## [11.8.0] - 18-10-21
 
