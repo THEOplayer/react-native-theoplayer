@@ -15,15 +15,13 @@ There are two separate tasks:
 There is no THEOplayer-specific generator. React Native's tooling still manages
 React binaries, code generation, and the app's other autolinked libraries.
 
-## 1. Experimental Status and Prerequisites
+## 1. React Native Tooling and Prerequisites
 
-SPM itself is an established Apple dependency manager. The experimental part is
-React Native's integration with it: native-module discovery, generated packages,
-React binaries, code generation, and Xcode project setup.
-
-These instructions target React Native 0.88's experimental SPM tooling.
-Commands and generated project layouts can change between React Native releases.
-Check the help from the version installed in your app before starting:
+THEOplayer supports SPM on iOS and tvOS. Your app also needs React Native tooling
+that configures React binaries, code generation, native-module autolinking,
+and the Xcode project for SPM.
+Commands and generated project layouts depend on the installed tooling.
+Check its help before starting:
 
 ```sh
 npx --no-install react-native spm --help
@@ -32,7 +30,7 @@ npx --no-install react-native spm --help
 Before starting:
 
 - Use a `react-native-theoplayer` version that includes its SPM manifest.
-- Use a React Native version that provides the experimental SPM tooling.
+- Use React Native tooling that provides SPM integration.
 - Use Xcode with Swift tools 6.1 or later and package trait selection in its
   Package Dependencies settings.
 - Set the app's deployment target to iOS 16 or later, or tvOS 15.1 or later.
@@ -74,16 +72,20 @@ SwiftPM may resolve additional packages without linking all of their products.
 
 ## 3. Why the Package Is Added Manually
 
-React Native's experimental SPM autolinking does not currently provide the
-trait-selection controls needed here. Add THEOplayer directly to the Xcode
-project so its traits are configurable in Package Dependencies.
+If React Native's SPM autolinking does not expose package-trait selection,
+add THEOplayer directly to the Xcode project so its traits are configurable
+in Package Dependencies. This is a limitation of React Native's experimental
+autolinking, not of SwiftPM traits. See
+[React Native autolinking and package traits](./creating-minimal-app.md#react-native-autolinking-and-package-traits)
+for the explanation.
 
 Disable autolinking for this library first: do not combine RN's generated alias
 reference with a direct `node_modules` reference. They use different locations
 for the same package, and the current manifest expects the direct npm location.
 
-Use this one manual-reference setup for all SPM apps, including core-only apps,
-until RN supports selecting package traits through autolinking.
+The migration steps below use this manual-reference setup for all SPM apps,
+including core-only apps. Continue using it while your React Native tooling
+lacks trait selection through autolinking; no specific version is assumed.
 No generated feature package or edits to the installed manifest are needed.
 
 ## 4. Migration Steps
@@ -137,8 +139,9 @@ unrelated app-owned module registrations.
 
 ### Step C: Migrate the React Native Project
 
-Follow the migration flow supported by your installed RN tooling. For React Native
-0.88, migrate a CocoaPods-integrated project with:
+Follow the migration flow supported by your installed RN tooling. With tooling
+that provides the `spm add` migration command, migrate a CocoaPods-integrated
+project with:
 
 ```sh
 npx --no-install react-native spm add --deintegrate
@@ -341,7 +344,7 @@ and review the resulting `Package.resolved` change.
 
 ## 6. Migration Checklist
 
-- The app uses RN tooling and native libraries compatible with experimental SPM.
+- The app uses SPM-compatible native libraries and React Native tooling.
 - Deployment targets and React binaries match iOS or tvOS as appropriate.
 - The app disables iOS autolinking only for `react-native-theoplayer`.
 - Xcode directly references the normal npm folder and links its library product

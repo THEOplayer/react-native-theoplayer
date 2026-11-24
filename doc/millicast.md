@@ -11,7 +11,7 @@ Using the THEOplayer Millicast integration, you can play your Millicast streams 
 2. Add a Millicast source to your player's source.
 
 On iOS/tvOS, also enable the native integration: use `MILLICAST` in the CocoaPods
-feature JSON, or select the `Millicast` trait in Xcode for experimental SPM.
+feature JSON, or select the `Millicast` trait in Xcode for SPM.
 Follow the [Apple native dependency setup](./creating-minimal-app.md#getting-started-on-ios-and-tvos);
 the SPM flow uses a direct package reference, not JSON-driven feature selection.
 

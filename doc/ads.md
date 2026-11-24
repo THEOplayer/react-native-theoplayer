@@ -43,7 +43,7 @@ THEOplayer_extensionGoogleIMA = true
 
 With CocoaPods, enable the `GOOGLE_IMA` feature flag in `react-native-theoplayer.json`
 (or `theoplayer-config.json`).
-With experimental SPM, follow the [manual package setup](./creating-minimal-app.md#getting-started-on-ios-and-tvos)
+With SPM, follow the [manual package setup](./creating-minimal-app.md#getting-started-on-ios-and-tvos)
 and select the `GoogleIMA` trait on `react-native-theoplayer` in Xcode.
 The supporting `GoogleIMASDK` trait is enabled automatically; SPM does not use the JSON feature list.
 
@@ -118,7 +118,7 @@ Note that DAI support for Android is available as of SDK version 4.3.0.
 
 Google DAI uses the Google IMA integration. With CocoaPods, enable `GOOGLE_IMA` in
 `react-native-theoplayer.json` (or `theoplayer-config.json`).
-With experimental SPM, select the `GoogleIMA` trait after the
+With SPM, select the `GoogleIMA` trait after the
 [manual package setup](./creating-minimal-app.md#getting-started-on-ios-and-tvos).
 
 </details>
@@ -168,7 +168,7 @@ utilizing Server-Guided Ad-Insertion (SGAI). For more information we refer to th
 [THEOads](https://www.theoplayer.com/docs/theoads/) documentation.
 
 On iOS/tvOS, enable `THEO_ADS` in the CocoaPods feature JSON, or select the `THEOads`
-trait in Xcode for experimental SPM. Follow the
+trait in Xcode for SPM. Follow the
 [Apple native dependency setup](./creating-minimal-app.md#getting-started-on-ios-and-tvos)
 before using a THEOads source.
 

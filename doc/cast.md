@@ -75,7 +75,7 @@ to `react-native-theoplayer.json` (or `theoplayer-config.json`).
 
 #### SPM Dependencies
 
-For the experimental SPM setup, follow the [iOS/tvOS setup instructions](./creating-minimal-app.md#getting-started-on-ios-and-tvos)
+For the SPM setup, follow the [iOS/tvOS setup instructions](./creating-minimal-app.md#getting-started-on-ios-and-tvos)
 to disable THEOplayer autolinking and add its installed package to the app target in Xcode.
 Then select the `GoogleCast` trait on the `react-native-theoplayer` package entry.
 It adds the THEOplayer Google Cast integration and Google's official `GoogleCastDynamic` SDK on iOS;

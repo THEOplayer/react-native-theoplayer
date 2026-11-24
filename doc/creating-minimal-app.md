@@ -208,11 +208,11 @@ pod install
 </details>
 
 <details>
-<summary>SPM (experimental)</summary>
+<summary>SPM</summary>
 
 #### Prerequisites
 
-This setup requires an app already configured for React Native 0.88's experimental SPM support,
+This setup requires an app already configured for React Native's SPM integration,
 Swift tools 6.1 or later, and an Xcode version that exposes package trait selection.
 The minimum deployment targets are iOS 16 and tvOS 15.1.
 Set the app's Xcode deployment target before running SPM sync so RN's generated packages use a compatible minimum.
@@ -222,6 +222,21 @@ These steps do not migrate an app from CocoaPods; use the [migration guide](./mi
 The current manifest assumes a normal installation in `<app>/node_modules/react-native-theoplayer`
 and RN's generated React package at `<app>/ios/build/xcframeworks`.
 Linked checkouts, hoisted dependencies, and custom native directory layouts are not validated by these instructions.
+
+#### React Native Autolinking and Package Traits
+
+THEOplayer uses Swift package traits to select optional native integrations.
+SwiftPM supports these traits, but React Native's experimental SPM autolinking does not yet expose their selection.
+If your React Native tooling lacks that capability, use the following setup:
+
+1. Prevent React Native from autolinking `react-native-theoplayer`.
+2. Add its installed npm package manually to the app target in Xcode.
+3. Select the desired traits in Xcode.
+
+The detailed steps below use this manual setup, including for core + THEOlive apps without optional integrations.
+Other native libraries, including THEOplayer's React Native connectors, keep their normal autolinking.
+The workaround depends on the tooling's capabilities, not a particular React Native version:
+continue using it while trait selection is unavailable through autolinking.
 
 #### 1. Disable THEOplayer Autolinking
 
@@ -285,7 +300,6 @@ Feature changes require a native rebuild; reloading JavaScript is not enough.
 After updating the npm package, keep the existing Xcode reference and resolve packages again.
 Do not edit installed manifests, RN-generated packages, or re-add the library through autolinking.
 
-This single manual-reference flow is a workaround until React Native supports selecting package traits through autolinking.
 SPM does not read `react-native-theoplayer.json` or `theoplayer-config.json`, and no THEOplayer-specific generator or
 `THEOplayerFeatures` package is needed. Do not run `pod install` for a fully SPM-managed app.
 

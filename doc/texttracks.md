@@ -56,7 +56,7 @@ With CocoaPods, enable it in the `react-native-theoplayer.json` (or `theoplayer-
 }
 ```
 
-With experimental SPM, follow the [manual package setup](./creating-minimal-app.md#getting-started-on-ios-and-tvos)
+With SPM, follow the [manual package setup](./creating-minimal-app.md#getting-started-on-ios-and-tvos)
 and select the `SideloadedTextTracks` trait on `react-native-theoplayer` in Xcode.
 SwiftPM adds the subtitle connector automatically; no JSON feature file or separate local connector reference is needed.
 

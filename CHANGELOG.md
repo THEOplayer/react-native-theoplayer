@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Added experimental Swift Package Manager support on iOS and tvOS, with optional native integrations selected through Xcode package traits.
+- Added Swift Package Manager support on iOS and tvOS, with optional native integrations selected through Xcode package traits.
 
 ## [11.10.0] - 19-11-26
 
