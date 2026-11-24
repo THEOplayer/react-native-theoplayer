@@ -223,6 +223,25 @@ The current manifest assumes a normal installation in `<app>/node_modules/react-
 and RN's generated React package at `<app>/ios/build/xcframeworks`.
 Linked checkouts, hoisted dependencies, and custom native directory layouts are not validated by these instructions.
 
+#### Compatible Player Package
+
+The installed `react-native-theoplayer` package must contain `Package.swift`.
+For a reproducible SPM-enabled build, install this tested source revision:
+
+```sh
+npm install "react-native-theoplayer@git+https://github.com/THEOplayer/react-native-theoplayer.git#58c4d95f13451a7869c906aa007d66b2576c81bf"
+```
+
+This source build reports version `11.10.0`, but it is not the published npm
+`11.10.0` archive, which does not include SPM support. The commit pin identifies
+the compatible source precisely; it does not imply that an SPM-enabled release
+has already been published.
+
+Git and a working Node/npm build environment are required. npm builds the
+package during installation and places it in the normal
+`node_modules/react-native-theoplayer` folder, not a linked checkout.
+Do not use `--ignore-scripts` for this source installation.
+
 #### React Native Autolinking and Package Traits
 
 THEOplayer uses Swift package traits to select optional native integrations.
