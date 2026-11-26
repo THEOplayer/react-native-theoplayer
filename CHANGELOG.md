@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Added Swift Package Manager support on iOS and tvOS, with optional native integrations selected through Xcode package traits.
+- Added Swift Package Manager support on iOS for apps using standard React Native, with optional native integrations selected through Xcode package traits; tvOS apps should keep using CocoaPods until `react-native-tvos` supports React Native's SPM tooling.
 
 ## [11.10.0] - 19-11-26
 

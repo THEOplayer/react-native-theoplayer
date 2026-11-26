@@ -216,12 +216,23 @@ This setup requires an app already configured for React Native's SPM integration
 Swift tools 6.1 or later, and an Xcode version that exposes package trait selection.
 The minimum deployment targets are iOS 16 and tvOS 15.1.
 Set the app's Xcode deployment target before running SPM sync so RN's generated packages use a compatible minimum.
-For Apple TV, use `react-native-tvos` and matching tvOS React binaries, not the standard iOS React binary.
+SPM is currently limited to iOS apps using standard React Native; see the [react-native-tvos limitation](#known-limitation-react-native-tvos).
 These steps do not migrate an app from CocoaPods; use the [migration guide](./migrating-from-cocoapods-to-spm.md) for that.
 
 The current manifest assumes a normal installation in `<app>/node_modules/react-native-theoplayer`
 and RN's generated React package at `<app>/ios/build/xcframeworks`.
 Linked checkouts, hoisted dependencies, and custom native directory layouts are not validated by these instructions.
+
+#### Known Limitation: react-native-tvos
+
+SPM is not yet supported for apps that use `react-native-tvos`, which includes all tvOS apps.
+The `react-native spm` tooling shipped with `react-native-tvos` 0.88.x cannot download the fork's React binaries,
+so React Native's SPM setup fails before THEOplayer is added.
+Forcing the standard React Native version instead downloads iOS-only React binaries that cannot build for tvOS.
+
+Until `react-native-tvos` supports SPM, keep using CocoaPods for tvOS apps and for any app depending on `react-native-tvos`,
+including its iOS targets. THEOplayer's Swift package already declares tvOS, so no THEOplayer change is expected once
+that support is available.
 
 #### Compatible Player Package
 

@@ -38,7 +38,7 @@ a list of features and known limitations.
 For each platform, a dependency to the corresponding THEOplayer SDK is included through a dependency manager:
 
 - Gradle & Maven for Android
-- CocoaPods for iOS/tvOS, or Swift Package Manager support as described below
+- CocoaPods for iOS/tvOS, or Swift Package Manager support on iOS as described below
 - npm for Web
 
 In order to use one of these THEOplayer SDKs, it is necessary to obtain a valid THEOplayer license for that specific platform,
@@ -47,9 +47,11 @@ i.e. HTML5, Android, and/or iOS. You can sign up for a THEOplayer SDK license th
 If you have no previous experience in React Native, we encourage you to first explore the
 [React Native Documentation](https://reactnative.dev/docs/getting-started), as it gives you a good start on one of the most popular app development frameworks.
 
-### iOS/tvOS Swift Package Manager Support
+### iOS Swift Package Manager Support
 
-SPM support is available for iOS and tvOS using standard package manifests and traits.
+SPM support is available for iOS apps using standard React Native, with standard package manifests and traits.
+tvOS is not yet supported through SPM because `react-native-tvos` does not yet provide working React Native SPM tooling;
+keep using CocoaPods for tvOS apps. See the [known limitation](doc/creating-minimal-app.md#known-limitation-react-native-tvos).
 If your React Native SPM tooling does not expose trait selection through autolinking, use the
 [manual package setup](doc/creating-minimal-app.md#react-native-autolinking-and-package-traits):
 disable autolinking for `react-native-theoplayer`, add its installed package to the app target in Xcode,
