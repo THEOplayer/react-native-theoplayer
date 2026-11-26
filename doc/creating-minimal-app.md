@@ -214,7 +214,7 @@ pod install
 
 This setup requires an app already configured for React Native's SPM integration,
 Swift tools 6.1 or later, and an Xcode version that exposes package trait selection.
-The minimum deployment targets are iOS 16 and tvOS 15.1.
+The minimum deployment target is iOS 16.
 Set the app's Xcode deployment target before running SPM sync so RN's generated packages use a compatible minimum.
 SPM is currently limited to iOS apps using standard React Native; see the [react-native-tvos limitation](#known-limitation-react-native-tvos).
 These steps do not migrate an app from CocoaPods; use the [migration guide](./migrating-from-cocoapods-to-spm.md) for that.
@@ -284,7 +284,7 @@ module.exports = {
 };
 ```
 
-Use this `ios` opt-out for both iOS and tvOS apps. It disables autolinking only for this library;
+This `ios` opt-out disables autolinking only for this library;
 RN still manages React, code generation, and other autolinked libraries.
 Keep it in the SPM app's configuration, not in shared library configuration that also serves CocoaPods apps.
 
@@ -321,9 +321,6 @@ Leave optional traits unselected for core + THEOlive only. Use the same manual p
 `GoogleIMA` and `THEOads` automatically enable the shared `GoogleIMASDK` trait; there is no need to select it separately.
 SwiftPM resolves the required integration, connector, and vendor packages automatically. Do not add them individually.
 Packages appearing in Xcode's resolved-package overview do not imply that all their products are linked into the app.
-
-`GoogleCast` can remain selected for tvOS: both Cast dependencies are excluded from tvOS builds.
-Advertising uses Google's iOS IMA SDK on iOS and its tvOS IMA SDK on tvOS.
 
 Allow package resolution to finish, then build and run in Xcode.
 Feature changes require a native rebuild; reloading JavaScript is not enough.
