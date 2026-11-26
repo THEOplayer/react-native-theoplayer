@@ -17,7 +17,10 @@ React binaries, code generation, and the app's other autolinked libraries.
 
 ## 1. React Native Tooling and Prerequisites
 
-THEOplayer supports SPM on iOS and tvOS. Your app also needs React Native tooling
+THEOplayer supports SPM on iOS for apps using standard React Native. tvOS and other
+`react-native-tvos` apps cannot migrate yet; see the
+[react-native-tvos limitation](#react-native-tvos-limitation).
+Your app also needs React Native tooling
 that configures React binaries, code generation, native-module autolinking,
 and the Xcode project for SPM.
 Commands and generated project layouts depend on the installed tooling.
@@ -33,9 +36,10 @@ Before starting:
 - Use React Native tooling that provides SPM integration.
 - Use Xcode with Swift tools 6.1 or later and package trait selection in its
   Package Dependencies settings.
-- Set the app's deployment target to iOS 16 or later, or tvOS 15.1 or later.
-- For Apple TV, use `react-native-tvos` and matching tvOS React binaries.
-  The standard iOS React binary is not a tvOS runtime.
+- Set the app's deployment target to iOS 16 or later.
+- Use standard React Native. Apps depending on `react-native-tvos`, including all
+  tvOS apps, should stay on CocoaPods for now; see the
+  [react-native-tvos limitation](#react-native-tvos-limitation).
 - Check every other native React Native dependency for SPM support. THEOplayer's
   support does not automatically make the rest of the application compatible.
 - Save a working CocoaPods baseline in version control before changing the native
@@ -45,6 +49,15 @@ The current manifest assumes a normal npm installation at
 `<app>/node_modules/react-native-theoplayer` and RN's generated React package at
 `<app>/ios/build/xcframeworks`. Linked source checkouts, hoisted dependencies, and
 custom native directory layouts require separate validation.
+
+### react-native-tvos Limitation
+
+The `react-native spm` tooling shipped with `react-native-tvos` 0.88.x cannot
+download the fork's React binaries, so `spm add` fails for these apps. Forcing the
+standard React Native version instead downloads iOS-only React binaries that cannot
+build for tvOS. Keep `react-native-tvos` apps, including their iOS targets, on
+CocoaPods until the fork supports SPM. THEOplayer's Swift package already declares
+tvOS, so no THEOplayer change is expected once that support is available.
 
 ## 2. Translate JSON Features to Xcode Traits
 
@@ -66,8 +79,6 @@ SPM does not read `react-native-theoplayer.json` or `theoplayer-config.json`.
 Keep the JSON if other CocoaPods builds or unrelated settings still use it;
 otherwise it is no longer needed for Apple feature selection.
 
-The same traits can be selected for iOS and tvOS. `GoogleCast` is excluded from
-tvOS builds, and advertising uses the appropriate platform's IMA SDK.
 SwiftPM may resolve additional packages without linking all of their products.
 
 ## 3. Why the Package Is Added Manually
@@ -128,7 +139,7 @@ module.exports = {
 };
 ```
 
-Use this `ios` setting for iOS and tvOS apps. It opts out only THEOplayer, not
+This `ios` setting opts out only THEOplayer, not
 React itself or the app's other libraries.
 Use this opt-out only for builds moving to SPM; builds that remain on CocoaPods
 still need their normal autolinking.
@@ -200,8 +211,7 @@ Do not rerun `pod install` for a fully SPM-migrated app. If unrelated dependenci
 still require CocoaPods, their coexistence needs a deliberate, separately
 validated setup.
 
-Check every selected integration, not just basic playback. On tvOS, verify that
-Cast frameworks are absent even with the `GoogleCast` trait selected.
+Check every selected integration, not just basic playback.
 For Chromecast on iOS, retain the receiver setup and discovery permissions
 described in the [casting guide](./cast.md#setup).
 
@@ -345,7 +355,7 @@ and review the resulting `Package.resolved` change.
 ## 6. Migration Checklist
 
 - The app uses SPM-compatible native libraries and React Native tooling.
-- Deployment targets and React binaries match iOS or tvOS as appropriate.
+- The app uses standard React Native with an iOS 16 or later deployment target.
 - The app disables iOS autolinking only for `react-native-theoplayer`.
 - Xcode directly references the normal npm folder and links its library product
   to the app target.
