@@ -1,6 +1,7 @@
 //  THEOplayerRCTCastAPI+Chromecast.swift
 
 import Foundation
+import React
 
 let ERROR_CODE_CHROMECAST_ACCESS_FAILURE = "chromecast_access_failure"
 let ERROR_MESSAGE_CHROMECAST_UNSUPPORTED_FEATURE = "Chromecast is not supported by the provided iOS SDK"

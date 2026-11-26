@@ -3,6 +3,7 @@
 //
 
 import Foundation
+import React
 import THEOplayerSDK
 
 protocol EventReceiver {

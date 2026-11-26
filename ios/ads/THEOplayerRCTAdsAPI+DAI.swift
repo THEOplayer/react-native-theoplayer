@@ -2,6 +2,7 @@
 
 import Foundation
 import UIKit
+import React
 
 let ERROR_CODE_DAI_ACCESS_FAILURE = "dai_access_failure"
 let ERROR_CODE_DAI_GET_SNAPBACK_FAILED = "dai_get_snapback_failed"

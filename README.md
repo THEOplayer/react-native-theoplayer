@@ -38,15 +38,26 @@ a list of features and known limitations.
 For each platform, a dependency to the corresponding THEOplayer SDK is included through a dependency manager:
 
 - Gradle & Maven for Android
-- Cocoapods for iOS
+- CocoaPods for iOS/tvOS, or Swift Package Manager support as described below
 - npm for Web
 
 In order to use one of these THEOplayer SDKs, it is necessary to obtain a valid THEOplayer license for that specific platform,
 i.e. HTML5, Android, and/or iOS. You can sign up for a THEOplayer SDK license through [our portal](https://portal.theoplayer.com/).
 
 If you have no previous experience in React Native, we encourage you to first explore the
-[React Native Documentation](https://reactnative.dev/docs/getting-started),
-as it gives you a good start on one of the most popular app development frameworks.
+[React Native Documentation](https://reactnative.dev/docs/getting-started), as it gives you a good start on one of the most popular app development frameworks.
+
+### iOS/tvOS Swift Package Manager Support
+
+SPM support is available for iOS and tvOS using standard package manifests and traits.
+If your React Native SPM tooling does not expose trait selection through autolinking, use the
+[manual package setup](doc/creating-minimal-app.md#react-native-autolinking-and-package-traits):
+disable autolinking for `react-native-theoplayer`, add its installed package to the app target in Xcode,
+and select integrations through the package's **Traits** dropdown.
+This works without React Native autolinking support for traits and does not require a feature JSON file or THEOplayer-specific generator.
+See the [iOS/tvOS setup guide](doc/creating-minimal-app.md#getting-started-on-ios-and-tvos) and open the **SPM** section
+for prerequisites, package setup, traits, and Chromecast configuration.
+For an existing CocoaPods app, follow the [CocoaPods to SPM migration guide](./doc/migrating-from-cocoapods-to-spm.md).
 
 ## How to use these guides
 
@@ -190,6 +201,7 @@ This section gives an overview of features, limitations and known issues:
 - [Media Control](./doc/mediacontrol.md)
 - [Media Caching](./doc/media-caching.md)
 - [Metrics](./doc/metrics.md)
+- [Migrating from CocoaPods to SPM](./doc/migrating-from-cocoapods-to-spm.md)
 - [Migrating to THEOplayer 9.x](./doc/migrating-to-react-native-theoplayer-9.md)
 - [Migrating to THEOplayer 10.x🔥](./doc/migrating-to-react-native-theoplayer-10.md)
 - [Millicast](./doc/millicast.md)

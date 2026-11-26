@@ -1,6 +1,7 @@
 // RCTBridgeModule+ViewHelpers.swift
 
 import Foundation
+import React
 import THEOplayerSDK
 
 extension RCTBridgeModule {
