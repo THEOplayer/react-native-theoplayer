@@ -1,6 +1,7 @@
 // THEOplayerRCTPresentationModeEventHandler.swift
 
 import Foundation
+import React
 import THEOplayerSDK
 import UIKit
 

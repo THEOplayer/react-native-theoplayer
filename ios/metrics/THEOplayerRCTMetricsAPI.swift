@@ -3,6 +3,7 @@
 //  Theoplayer
 //
 import Foundation
+import React
 import UIKit
 
 @objc(THEOplayerRCTMetricsAPI)

@@ -29,6 +29,9 @@ DerivedData
 *.xcuserstate
 project.xcworkspace
 
+# Swift Package Manager build artifacts
+.build/
+
 # Android/IJ
 #
 .classpath

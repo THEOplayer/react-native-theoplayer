@@ -68,11 +68,33 @@ public void onCreate(Bundle savedInstanceState) {
 <details>
 <summary>iOS</summary>
 
-#### Add feature flag to config
+#### CocoaPods Dependencies
 
-To enable Chromecast you need to add the "CHROMECAST" [feature flag](./creating-minimal-app.md#getting-started-on-ios-and-tvos) to react-native-theoplayer.json (or theoplayer-config.json)
+With CocoaPods, add the `CHROMECAST` [feature flag](./creating-minimal-app.md#getting-started-on-ios-and-tvos)
+to `react-native-theoplayer.json` (or `theoplayer-config.json`).
+
+#### SPM Dependencies
+
+For the SPM setup, follow the [iOS/tvOS setup instructions](./creating-minimal-app.md#getting-started-on-ios-and-tvos)
+to disable THEOplayer autolinking and add its installed package to the app target in Xcode.
+Then select the `GoogleCast` trait on the `react-native-theoplayer` package entry.
+It adds the THEOplayer Google Cast integration and Google's official `GoogleCastDynamic` SDK on iOS;
+do not add those packages separately or use JSON to select SPM features.
+The dynamic framework includes the Cast UI resources; do not add `GoogleCastStatic` or a second Google Cast framework through CocoaPods.
+Both Cast dependencies are excluded from tvOS builds, even when the `GoogleCast` trait is selected.
 
 #### iOS Configuration
+
+Initialize `GCKCastContext` in the app's `AppDelegate`, before creating a player, using the receiver application ID for your app:
+
+```swift
+import GoogleCast
+
+// In application(_:didFinishLaunchingWithOptions:), before creating the player:
+let criteria = GCKDiscoveryCriteria(applicationID: "<receiverAppID>")
+let options = GCKCastOptions(discoveryCriteria: criteria)
+GCKCastContext.setSharedInstanceWith(options)
+```
 
 Specify NSBonjourServices in your Info.plist to allow local network discovery to succeed on iOS 14. You will need to add
 both _googlecast._tcp and _[your-app-id]._googlecast._tcp as services for device discovery to work properly.
@@ -101,6 +123,11 @@ network.
 </string>
 ```
 
+The app still provides a Cast control, for example a button calling `player.cast.chromecast?.start()`
+and another calling `player.cast.chromecast?.stop()` to end the session.
+The SDK presents the device dialog; `react-native-google-cast` is not required.
+See [Google's iOS sender setup](https://developers.google.com/cast/docs/ios_sender) for discovery and permission requirements.
+
 #### Combining with react-native-google-cast
 
 When using react-native-google-cast to render the CastButton, their documentation suggest to setup the CastContext as
@@ -113,7 +140,9 @@ The following options on the GCKCastOptions can be set as desired:
 1. options.startDiscoveryAfterFirstTapOnCastButton = false;  (set up how/when the castbutton is shown)
 2. options.suspendSessionsWhenBackgrounded = false;			 (set up the connection response be when backgrounding the app)
 
-In addition, react-native-google-cast currently does not include a full featured (guest mode combined with Apple M1 support) setup of the Google Cast SDK. Our THEOplayerCastIntegration however does, but combining both results in a clash of dependencies (both delivering a GoogleCast.xcframework). To overcome this double dependency we suggest to use a [fork of react-native-google-cast](https://github.com/Danesz/react-native-google-cast/tree/feature/guestmode_apple_silicon) that depends on the same GoogleCast.xcframework. To achieve this:
+If `react-native-google-cast` is used, its native dependency must share the same Google Cast framework rather than installing a second copy.
+
+The CocoaPods example uses a [fork of react-native-google-cast](https://github.com/Danesz/react-native-google-cast/tree/feature/guestmode_apple_silicon) so both integrations depend on the same GoogleCast.xcframework. This originally addressed guest-mode and Apple Silicon packaging differences. Google removed guest mode in SDK 4.8.1; the fork does not restore that functionality in later SDK versions. To match the CocoaPods example:
 1. Add the following to your applications podFile:
 ```ruby
 pod 'react-native-google-cast', :git => 'https://github.com/Danesz/react-native-google-cast.git', branch: 'feature/guestmode_apple_silicon'

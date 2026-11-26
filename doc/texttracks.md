@@ -45,8 +45,8 @@ player.source = {
 
 ### iOS/tvOS
 
-On iOS and tvOS, support for side-loaded tracks is provided by a separate connector, which is enabled by adding the
-feature to the `react-native-theoplayer.json` (or `theoplayer-config.json`) file in your app folder.
+On iOS and tvOS, support for side-loaded tracks is provided by a separate connector.
+With CocoaPods, enable it in the `react-native-theoplayer.json` (or `theoplayer-config.json`) file in your app folder:
 
 ```json
 {
@@ -55,6 +55,10 @@ feature to the `react-native-theoplayer.json` (or `theoplayer-config.json`) file
   }
 }
 ```
+
+With SPM, follow the [manual package setup](./creating-minimal-app.md#getting-started-on-ios-and-tvos)
+and select the `SideloadedTextTracks` trait on `react-native-theoplayer` in Xcode.
+SwiftPM adds the subtitle connector automatically; no JSON feature file or separate local connector reference is needed.
 
 ## Listening to text track events
 

@@ -17,6 +17,7 @@
     "react-native-theoplayer.json",
     "CHANGELOG.md",
     "app.plugin.js",
+    "Package.swift",
     "!lib/typescript/example",
     "!android/build",
     "!ios/build",
