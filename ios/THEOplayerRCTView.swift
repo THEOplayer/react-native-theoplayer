@@ -1,6 +1,7 @@
 // THEOplayerRCTView.swift
 
 import Foundation
+import AVFAudio
 import React
 import UIKit
 import THEOplayerSDK
@@ -82,6 +83,7 @@ public class THEOplayerRCTView: UIView {
             self.pipControlsManager.updatePipControls()
         }
     }
+    private(set) var initialAudioSessionMode: AVAudioSession.Mode?
     var backgroundAudioConfig = BackgroundAudioConfig() {
           didSet {
               self.backgroundAudioManager.updateInterruptionNotifications()
@@ -332,6 +334,13 @@ public class THEOplayerRCTView: UIView {
         self.parseCmcdConfig(configDict: configDict)
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] config prop updated.") }
         
+        #if os(iOS)
+        self.initialAudioSessionMode = (configDict["audioSessionMode"] as? String).map(THEOplayerRCTTypeUtils.audioSessionModeFromString)
+        if let mode = self.initialAudioSessionMode {
+            self.backgroundAudioManager.applyAVAudioSessionMode(mode)
+        }
+        #endif
+
         // Given the bridged config, create the initial THEOplayer instance
         self.createPlayer()
         

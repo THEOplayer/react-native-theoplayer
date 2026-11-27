@@ -5,6 +5,7 @@ import type { RetryConfiguration } from '../utils/RetryConfiguration';
 import type { UIConfiguration } from '../ui/UIConfiguration';
 import { TheoLiveConfiguration } from '../theolive/TheoLiveConfiguration';
 import type { CmcdPlayerConfiguration } from '../cmcd/CmcdConfiguration';
+import type { AudioSessionMode } from '../backgroundAudio/BackgroundAudioConfiguration';
 
 /**
  * Describes a player's configuration.
@@ -54,6 +55,18 @@ export interface PlayerConfiguration {
    * The configuration of media controls and media sessions across platforms.
    */
   mediaControl?: MediaControlConfiguration;
+
+  /**
+   * The native audio session mode to apply before creating the player.
+   *
+   * @remarks
+   * The audio session is shared by all players in the app. An explicit mode in
+   * `backgroundAudioConfiguration` can override this value after creation.
+   *
+   * @defaultValue `AudioSessionMode.MOVIE_PLAYBACK`
+   * @platform ios
+   */
+  readonly audioSessionMode?: AudioSessionMode;
 
   /**
    * The license for the player
