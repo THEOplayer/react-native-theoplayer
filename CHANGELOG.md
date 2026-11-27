@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+- Added an option to set the iOS audio session mode before player creation.
 - Added Swift Package Manager support on iOS for apps using standard React Native, with optional native integrations selected through Xcode package traits; tvOS apps should keep using CocoaPods until `react-native-tvos` supports React Native's SPM tooling.
 
 ### Fixed
