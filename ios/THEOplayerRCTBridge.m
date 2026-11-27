@@ -106,6 +106,13 @@ RCT_EXTERN_METHOD(getManageContentMatching:(nonnull NSNumber *)node
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(setAllowsExternalPlayback:(nonnull NSNumber *)node
+                  enable:(BOOL)enable)
+
+RCT_EXTERN_METHOD(getAllowsExternalPlayback:(nonnull NSNumber *)node
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN_METHOD(setPipConfig:(nonnull NSNumber *)node
                   pipConfig:(NSDictionary)pipConfig)
 

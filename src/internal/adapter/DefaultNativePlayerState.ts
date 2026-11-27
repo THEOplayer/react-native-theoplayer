@@ -31,6 +31,7 @@ export class DefaultNativePlayerState extends DefaultTextTrackState implements N
   preload: PreloadType = 'none';
   aspectRatio: AspectRatio = AspectRatio.FIT;
   manageContentMatching = false;
+  allowsExternalPlayback = true;
   renderingTarget: RenderingTarget = RenderingTarget.SURFACE_VIEW;
   keepScreenOn = true;
   audioTracks: MediaTrack[] = [];

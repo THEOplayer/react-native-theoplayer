@@ -9,14 +9,44 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Added `abr` property to `TypedSource`, supporting `preferredVideoCodecs` and `preferredAudioCodecs` on Android and Web.
+- Added Swift Package Manager support on iOS for apps using standard React Native, with optional native integrations selected through Xcode package traits; tvOS apps should keep using CocoaPods until `react-native-tvos` supports React Native's SPM tooling.
 
 ### Fixed
 
-- Fixed an issue on Android where `preferredKeySystems` in the content protection configuration was ignored.
-- Fixed an issue on Web where `MediaSession.setPositionState` threw while casting because the player reports a zero `playbackRate`. The position state now falls back to a 1x rate so duration and position keep updating during the cast.
+- Fixed an issue on Web where the media session position stopped updating and an error was thrown while casting.
 
-## [11.8.0] - 18-10-21
+## [11.10.0] - 19-11-26
+
+### Added
+
+- Added support for registering client-side ad integrations through the player facade's Ads API on Android.
+
+### Changed
+
+- Ad integrations registered through the player facade's Ads API on Android now always register on the player, also while a player integration supplies the Ads API.
+
+### Fixed
+
+- Fixed a memory leak on Android where a player destroyed during playback stayed in memory.
+
+## [11.9.0] - 13-11-26
+
+### Added
+
+- Added `THEOplayer.allowsExternalPlayback` to enable or disable AirPlay playback on iOS.
+- Added `abr` property to `TypedSource`, supporting `preferredVideoCodecs` and `preferredAudioCodecs` on Android and Web.
+- Added `contentprotectionerror` event bridging on iOS.
+- Added `customData` to `Ad` and `AdBreak`, including bidirectional event bridging on Android, iOS and tvOS.
+
+### Fixed
+
+- Fixed an issue on Web where player facade listeners, such as analytics connectors, did not receive the player's `destroy` event.
+- Fixed THEOlive events not being forwarded correctly on React Native v0.88.0+.
+- Fixed an issue on Android where `preferredKeySystems` in the content protection configuration was ignored.
+- Fixed ad-break integration identifiers being forwarded incorrectly on iOS and tvOS.
+- Fixed an issue on Android where key system URNs in `preferredKeySystems` were ignored.
+
+## [11.8.0] - 18-10-26
 
 ### Added
 

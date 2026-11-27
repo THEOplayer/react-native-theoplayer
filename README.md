@@ -33,87 +33,33 @@ by the `@theoplayer/react-native-ui` package.
 It also gives a description of the properties of the `THEOplayerView` component, and
 a list of features and known limitations.
 
-### Player facade (Web and Android)
-
-Set `usePlayerFacade: true` in the player configuration at creation to enable the facade.
-The default is `false`; iOS and tvOS do not support this option.
-On Web, the facade is available at `player.nativeHandle`.
-Integrations can register through `registerIntegration`, dispatch THEOplayer player
-and ad events (including `adclicked`), and supply a clock through `getCurrentTime()` in
-seconds. The wrapper forwards `adclicked` to React Native's ad-event stream.
-Close the registration before replacing an integration. Playback engines and ad
-schedulers should use `facade.contentPlayer`, not the facade's overridden ad clock.
-
-Integrations can provide an `ads` object implementing the Ads API and its event
-subscriptions. The stable public `player.ads` delegates to that object, including
-scheduling queries and controls. Existing listeners migrate when an integration
-registers or closes; native Ads behavior returns after removal. The earlier
-`getAdState()` and `shouldConsumeAdEvent(event)` hooks remain available for
-integrations without an Ads object. The facade never reconstructs ad lifecycle.
-
-`getMuted()` / `setMuted(value)` and `getVolume()` / `setVolume(value)` route audio
-through an integration. Setters return `true` when handled; otherwise the facade
-falls back to content. Nullish getter results also fall back to content.
-`registration.dispatchEvent(event)` accepts typed THEOplayer player and ad events.
-Ad events route to `player.ads` listeners; player events such as `playing`, `waiting`,
-and `volumechange` route to `player` listeners. Dispatch does not emit on the content
-player or pass through backing-event interceptors. Closed registrations cannot emit.
-`registration.dispatchPlayerEvent(event)` remains a compatible player-event entry point.
-Playback ownership and audio synchronization remain integration responsibilities.
-
-`registration.interceptPlayerEvent(type, callback)` lets an integration inspect a
-backing player event once before facade listeners receive it. Return `true` to
-consume the event, or `false` to forward it. Raw player listeners are unaffected.
-The returned disposer removes the interceptor. Existing interceptors remain until
-disposed or the facade is destroyed, allowing an integration to drain already-queued
-events after unregistering; a closed registration cannot install new interceptors.
-`registration.interceptPlayerEvents(callback)` applies the same policy to every
-subscribed backing-player event, including subscriptions added later. Type-specific
-interceptors run first; integration-dispatched events bypass both kinds. Use a
-type-specific interceptor when an event must be observed even without consumers.
-An optional `isSeeking()` integration hook overrides the public seeking state;
-nullish results fall back to the backing player.
-Pause/seek ownership, pending transitions, lifecycle exceptions and ad lifecycle
-decisions belong to the integration, not the facade.
-
-On Android, implement `com.theoplayer.integration.Integration` and call
-`ReactTHEOplayerView.registerIntegration(integration)` after the view is initialized.
-The returned `IntegrationRegistration` supports the same dispatch and interception
-semantics using native Android SDK events. Interceptor disposers implement `Closeable`;
-call `close()` to remove them. Access the raw engine through
-`(view.player as PlayerFacade).contentPlayer`. Time values are in seconds on both platforms.
-Android's `getAdState()` returns a `PlayerFacadeAdState`; its nullable result delegates
-to native Ads. The facade permits registration during native ads and does not infer
-state or suppress native ad events merely because an integration is registered.
-Native SDK extensions (`theoAds`, `ima`, `dai`) resolve against the raw player or Ads
-object through the facade-aware extensions in `com.theoplayer.integration`.
-
-Custom advertising must not overlap ongoing native IMA/DAI playback on Android.
-Finish or reset native advertising before taking over. Replacing/filtering native
-ad events can suspend the RN bridge's native DAI bookkeeping, so fresh native state
-after hidden native playback is not guaranteed. `ReactTHEOplayerView.adsApi` remains
-the native source-specific adapter/event sink; use `view.player.ads` for facade state.
-React Native Ads queries and controls use a facade-aware bridge with native fallback.
-
-Focused facade regression tests (Node 22.18+):
-`node --test src/__tests__/PlayerFacade.test.ts`.
-Android tests, from `example/android`:
-`./gradlew :react-native-theoplayer:testDebugUnitTest --tests 'com.theoplayer.integration.PlayerFacade*Test' --console=plain`.
-
 ## Prerequisites
 
 For each platform, a dependency to the corresponding THEOplayer SDK is included through a dependency manager:
 
 - Gradle & Maven for Android
-- Cocoapods for iOS
+- CocoaPods for iOS/tvOS, or Swift Package Manager support on iOS as described below
 - npm for Web
 
 In order to use one of these THEOplayer SDKs, it is necessary to obtain a valid THEOplayer license for that specific platform,
 i.e. HTML5, Android, and/or iOS. You can sign up for a THEOplayer SDK license through [our portal](https://portal.theoplayer.com/).
 
 If you have no previous experience in React Native, we encourage you to first explore the
-[React Native Documentation](https://reactnative.dev/docs/getting-started),
-as it gives you a good start on one of the most popular app development frameworks.
+[React Native Documentation](https://reactnative.dev/docs/getting-started), as it gives you a good start on one of the most popular app development frameworks.
+
+### iOS Swift Package Manager Support
+
+SPM support is available for iOS apps using standard React Native, with standard package manifests and traits.
+tvOS is not yet supported through SPM because `react-native-tvos` does not yet provide working React Native SPM tooling;
+keep using CocoaPods for tvOS apps. See the [known limitation](doc/creating-minimal-app.md#known-limitation-react-native-tvos).
+If your React Native SPM tooling does not expose trait selection through autolinking, use the
+[manual package setup](doc/creating-minimal-app.md#react-native-autolinking-and-package-traits):
+disable autolinking for `react-native-theoplayer`, add its installed package to the app target in Xcode,
+and select integrations through the package's **Traits** dropdown.
+This works without React Native autolinking support for traits and does not require a feature JSON file or THEOplayer-specific generator.
+See the [iOS/tvOS setup guide](doc/creating-minimal-app.md#getting-started-on-ios-and-tvos) and open the **SPM** section
+for prerequisites, package setup, traits, and Chromecast configuration.
+For an existing CocoaPods app, follow the [CocoaPods to SPM migration guide](./doc/migrating-from-cocoapods-to-spm.md).
 
 ## How to use these guides
 
@@ -257,6 +203,7 @@ This section gives an overview of features, limitations and known issues:
 - [Media Control](./doc/mediacontrol.md)
 - [Media Caching](./doc/media-caching.md)
 - [Metrics](./doc/metrics.md)
+- [Migrating from CocoaPods to SPM](./doc/migrating-from-cocoapods-to-spm.md)
 - [Migrating to THEOplayer 9.x](./doc/migrating-to-react-native-theoplayer-9.md)
 - [Migrating to THEOplayer 10.x🔥](./doc/migrating-to-react-native-theoplayer-10.md)
 - [Millicast](./doc/millicast.md)

@@ -3,6 +3,7 @@
 //
 
 import Foundation
+import React
 import UIKit
 import THEOplayerSDK
 
@@ -232,6 +233,26 @@ class THEOplayerRCTPlayerAPI: NSObject, RCTBridgeModule {
 #else
         resolve(false)
 #endif
+    }
+
+    @objc(setAllowsExternalPlayback:enable:)
+    func setAllowsExternalPlayback(_ node: NSNumber, enable: Bool) -> Void {
+        withViewAndPlayer(node) { _, player in
+            if player.allowsExternalPlayback != enable {
+                if DEBUG_PLAYER_API { PrintUtils.printLog(logText: "[NATIVE] Changing TheoPlayer's allowsExternalPlayback to \(enable)") }
+                player.allowsExternalPlayback = enable
+            }
+        }
+    }
+
+    // Used by the e2e test app to verify the native value rather than the adapter's cached state.
+    @objc(getAllowsExternalPlayback:resolver:rejecter:)
+    func getAllowsExternalPlayback(_ node: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+        withViewAndPlayer(node) { _, player in
+            resolve(player.allowsExternalPlayback)
+        } onFailure: {
+            reject(ERROR_CODE_PLAYER_ACCESS_FAILURE, ERROR_MESSAGE_PLAYER_ACCESS_FAILURE, nil)
+        }
     }
 
     @objc(setPipConfig:pipConfig:)

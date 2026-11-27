@@ -1,6 +1,7 @@
 // THEOplayerRCTMediaTrackEventHandler.swift
 
 import Foundation
+import React
 import THEOplayerSDK
 
 class THEOplayerRCTMediaTrackEventHandler {
