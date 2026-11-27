@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added Swift Package Manager support on iOS for apps using standard React Native, with optional native integrations selected through Xcode package traits; tvOS apps should keep using CocoaPods until `react-native-tvos` supports React Native's SPM tooling.
 
+### Fixed
+
+- Fixed an issue on Web where the media session position stopped updating and an error was thrown while casting.
+
 ## [11.10.0] - 19-11-26
 
 ### Added

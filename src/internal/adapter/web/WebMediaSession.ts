@@ -202,7 +202,10 @@ export class WebMediaSession {
   };
 
   private updatePositionState = () => {
-    const { duration, playbackRate, currentTime } = this._player;
+    const { duration, currentTime } = this._player;
+    // MediaSession rejects a zero playbackRate, which the player reports while casting.
+    // Fall back to 1x so the duration and position keep updating.
+    const playbackRate = this._player.playbackRate || 1;
     const isLive = !isFinite(duration);
     if (!isLive) {
       mediaSession.setPositionState({
