@@ -67,6 +67,7 @@ export enum PlayerEventType {
   VIDEO_RESIZE = 'videoresize',
   CONTENT_PROTECTION_ERROR = 'contentprotectionerror',
   CONTENT_PROTECTION_SUCCESS = 'contentprotectionsuccess',
+  VIEW_TAP = 'viewtap',
 }
 
 /**
@@ -256,4 +257,15 @@ export interface PlayerEventMap {
    * Dispatched when content protection succeeds, i.e. when the key session for a media track was successfully set up.
    */
   [PlayerEventType.CONTENT_PROTECTION_SUCCESS]: ContentProtectionSuccessEvent;
+
+  /**
+   * Dispatched when the user releases a touch, or the primary mouse button, on the player view.
+   *
+   * @remarks
+   * <br/> - Also dispatched when the tap lands on an element that the player draws on top of the video, such as a THEOads
+   * overlay, after that element has handled it.
+   * <br/> - Not dispatched for taps on views placed on top of the player view, such as UI controls.
+   * <br/> - UI implementations can use it to show or hide their controls while letting taps through to the player.
+   */
+  [PlayerEventType.VIEW_TAP]: Event<PlayerEventType.VIEW_TAP>;
 }

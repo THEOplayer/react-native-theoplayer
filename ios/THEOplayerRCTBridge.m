@@ -51,6 +51,7 @@ RCT_EXPORT_VIEW_PROPERTY(onNativeContentProtectionError, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeContentProtectionSuccess, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeDimensionChange, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeVideoResize, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onNativeViewTap, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeAdEvent, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeTHEOliveEvent, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onNativeTHEOadsEvent, RCTDirectEventBlock);

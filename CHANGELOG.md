@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+- Added the `PlayerEventType.VIEW_TAP` event, dispatched when the user taps or clicks the player view, so UIs can show or hide their controls while letting taps through to elements drawn by the player, such as THEOads overlays.
 - Added Swift Package Manager support on iOS for apps using standard React Native, with optional native integrations selected through Xcode package traits; tvOS apps should keep using CocoaPods until `react-native-tvos` supports React Native's SPM tooling.
 
 ### Fixed

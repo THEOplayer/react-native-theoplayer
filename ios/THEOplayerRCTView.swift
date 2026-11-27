@@ -32,6 +32,7 @@ public class THEOplayerRCTView: UIView {
     var textTrackEventHandler: THEOplayerRCTTextTrackEventHandler
     var mediaTrackEventHandler: THEOplayerRCTMediaTrackEventHandler
     var deviceEventHandler: THEOplayerRCTDeviceEventHandler
+    var viewTapHandler: THEOplayerRCTViewTapHandler
     var metadataTrackEventHandler: THEOplayerRCTSideloadedMetadataTrackEventHandler
     var adEventHandler: THEOplayerRCTAdsEventHandler
     var theoliveEventHandler: THEOplayerRCTTHEOliveEventHandler
@@ -107,6 +108,7 @@ public class THEOplayerRCTView: UIView {
         self.textTrackEventHandler = THEOplayerRCTTextTrackEventHandler()
         self.mediaTrackEventHandler = THEOplayerRCTMediaTrackEventHandler()
         self.deviceEventHandler = THEOplayerRCTDeviceEventHandler()
+        self.viewTapHandler = THEOplayerRCTViewTapHandler()
         self.metadataTrackEventHandler = THEOplayerRCTSideloadedMetadataTrackEventHandler()
         self.adEventHandler = THEOplayerRCTAdsEventHandler()
         self.theoliveEventHandler = THEOplayerRCTTHEOliveEventHandler()
@@ -121,6 +123,7 @@ public class THEOplayerRCTView: UIView {
         self.mediaControlManager = THEOplayerRCTMediaControlManager()
         super.init(frame: .zero)
         
+        self.viewTapHandler.attach(to: self)
         self.setupAppStateObservers()
     }
     
@@ -145,6 +148,7 @@ public class THEOplayerRCTView: UIView {
         self.textTrackEventHandler.destroy()
         self.mediaTrackEventHandler.destroy()
         self.deviceEventHandler.destroy()
+        self.viewTapHandler.destroy()
         self.adEventHandler.destroy()
         self.theoliveEventHandler.destroy()
         self.theoadsEventHandler.destroy()
@@ -541,6 +545,14 @@ public class THEOplayerRCTView: UIView {
     func setOnNativeDeviceOrientationChanged(nativeDeviceOrientationChanged: @escaping RCTDirectEventBlock) {
         self.deviceEventHandler.onNativeDeviceOrientationChanged = nativeDeviceOrientationChanged
         if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeDeviceOrientationChanged prop set.") }
+    }
+    
+    // MARK: - Gesture based view tap bridging
+    
+    @objc(setOnNativeViewTap:)
+    func setOnNativeViewTap(nativeViewTap: @escaping RCTDirectEventBlock) {
+        self.viewTapHandler.onNativeViewTap = nativeViewTap
+        if DEBUG_VIEW { PrintUtils.printLog(logText: "[NATIVE] nativeViewTap prop set.") }
     }
     
     // MARK: - Listener based CAST event bridging
