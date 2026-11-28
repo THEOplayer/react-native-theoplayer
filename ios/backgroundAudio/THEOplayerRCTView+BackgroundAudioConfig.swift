@@ -8,7 +8,7 @@ struct BackgroundAudioConfig {
     var enabled: Bool = false
     var stopOnBackground: Bool = false
     var shouldResumeAfterInterruption: Bool = false
-    var audioSessionMode: AVAudioSession.Mode = .moviePlayback
+    var audioSessionMode: AVAudioSession.Mode?
 }
 
 extension THEOplayerRCTView {

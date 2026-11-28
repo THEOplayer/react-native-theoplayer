@@ -62,15 +62,18 @@ class THEOplayerRCTBackgroundAudioManager: NSObject, BackgroundPlaybackDelegate 
     
     func updateAVAudioSessionMode() {
         guard let view = self.view else { return }
-        
+        self.applyAVAudioSessionMode(view.backgroundAudioConfig.audioSessionMode ?? view.initialAudioSessionMode ?? .moviePlayback)
+    }
+
+    func applyAVAudioSessionMode(_ mode: AVAudioSession.Mode) {
         do {
-            THEOplayer.automaticallyManageAudioSession = (view.backgroundAudioConfig.audioSessionMode == .moviePlayback)
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback, mode: view.backgroundAudioConfig.audioSessionMode)
-            if view.backgroundAudioConfig.audioSessionMode != .moviePlayback {
-                if DEBUG_INTERRUPTIONS { PrintUtils.printLog(logText: "[NATIVE] AVAudioSession mode updated to \(view.backgroundAudioConfig.audioSessionMode.rawValue)") }
+            THEOplayer.automaticallyManageAudioSession = (mode == .moviePlayback)
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback, mode: mode)
+            if mode != .moviePlayback {
+                if DEBUG_INTERRUPTIONS { PrintUtils.printLog(logText: "[NATIVE] AVAudioSession mode updated to \(mode.rawValue)") }
             }
         } catch {
-            if DEBUG_INTERRUPTIONS { PrintUtils.printLog(logText: "[NATIVE] Unable to update AVAudioSession mode to \(view.backgroundAudioConfig.audioSessionMode.rawValue): \(error)") }
+            if DEBUG_INTERRUPTIONS { PrintUtils.printLog(logText: "[NATIVE] Unable to update AVAudioSession mode to \(mode.rawValue): \(error)") }
         }
     }
     

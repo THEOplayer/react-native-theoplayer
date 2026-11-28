@@ -28,6 +28,18 @@ Other properties of the `backgroundAudioConfiguration` can be used to further cu
 | `shouldResumeAfterInterruption` | iOS                | Controls whether playback should automatically resume after an interruption, such as an incoming phone call.                                                          | `false`                           |                                                                                                                                                                       |         |
 | `audioSessionMode`              | iOS                | Specifies the [AVAudioSession.Mode](https://developer.apple.com/documentation/avfaudio/avaudiosession/mode)                                                           | `AudioSessionMode.MOVIE_PLAYBACK` |                                                                                                                                                                       |         |
 
+On iOS, use `PlayerConfiguration.audioSessionMode` to set the mode before the player is created:
+
+```tsx
+import { AudioSessionMode, THEOplayerView } from 'react-native-theoplayer';
+
+<THEOplayerView config={{ audioSessionMode: AudioSessionMode.SPOKEN_AUDIO }} />;
+```
+
+The audio session is shared by all players in the app. Setting `player.backgroundAudioConfiguration.audioSessionMode`
+still overrides the mode after creation. If a later background audio configuration does not specify a mode, the
+initial mode is used, or `MOVIE_PLAYBACK` if no initial mode was set.
+
 A use case for enabling `stopOnBackground` could be a live stream that should not be allowed to continue in the
 background, neither in paused nor playing state. The app should be designed to reload the source or the player page when coming back
 to the foreground.
